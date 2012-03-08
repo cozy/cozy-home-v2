@@ -1,0 +1,24 @@
+!!! 5
+html
+
+  head
+    title #{title}
+    script(src='/client/build/web/js/app.js')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+    link(rel='stylesheet', href='/client/build/web/css/main.css')
+
+  body
+
+    header#header
+      h2#header-title
+        a(href="#discover", title="home") Cozy
+        span just host it
+      #buttons
+        button#logout-button(class="btn", type="submit") Sign out
+
+    .container
+      #content  
+
+  script
+    require('main');
+

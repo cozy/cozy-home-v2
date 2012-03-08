@@ -1,0 +1,4 @@
+<p class="title"><%= @app.name %></p>
+<input class="button" type="submit" value="install"></input>
+<p class="info-text"></p>
+

@@ -1,0 +1,3 @@
+<a href="apps<%= @app.path %>"><%= @app.name %></a></p>
+<!--input class="button" type="submit" value="remove"></input-->
+<p class="info-text"></p>

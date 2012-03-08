@@ -1,0 +1,267 @@
+shadow()
+  -moz-box-shadow: arguments
+  -webkit-box-shadow: arguments
+  box-shadow: arguments
+
+rounded-border()
+  -webkit-border-radius: arguments
+  -moz-border-radius: arguments
+  border-radius: arguments
+  
+
+bgcolor = #F4D1A9
+maintitlecolor = #d46a2c
+titlecolor = #d46a2c
+linkcolor = #f68C4E
+menuhovercolor = #ffced8
+menuunselectedcolor = #c9b5a5
+
+body
+  background-color: bgcolor
+  
+a
+  color: linkcolor
+  font-weight bold
+
+a:hover
+  color: black
+
+h2
+  color maintitlecolor
+  font-size 30px
+  margin-bottom 24px
+  margin-top 24px
+
+.spacer
+  clear both
+
+.container
+  padding 0
+  margin-top 40px
+  margin-bottom 40px
+  background-color white
+  width 960px
+  border 2px solid #999 
+  rounded-border 3px 3px 3px 3px
+  shadow 3px 3px 4px 1px #b09782
+  min-height 600px
+
+.close 
+  float right
+
+.hidden
+  display none
+
+#text-container
+  width 610px
+
+/* Header */
+
+#header
+  padding 12px 12px
+  margin-top 0px
+  margin-bottom 40px
+  background-color white
+  width 936px
+  border 2px solid #999 
+  border-top 0
+  rounded-border 0px 0px 3px 3px
+  shadow 3px 3px 4px 1px #b09782
+  margin auto
+  text-align right
+  min-height 40px
+
+#header h2
+  float left
+  margin-top 3px
+  color linkcolor
+
+#header a 
+  color maintitlecolor
+  text-decoration none
+
+#header .alert
+  float left
+  padding 10px
+  margin 0 6px 0 18px
+
+#header p
+  margin 0
+
+/* Menu */
+#menu-left
+  height 100%
+  width 300px
+
+.menu-left-tab
+  padding 24px
+  font-weight bold
+  font-size 24px
+  border 1px solid #999 
+  border-left 0
+  border-top 0
+  shadow inset 0 0 10px menuunselectedcolor
+  background-color #efe2d7
+  
+.menu-left-tab:hover
+  background-color: menuhovercolor
+  cursor: pointer
+
+#menu-left a
+  color black
+
+#menu-left a:visited
+  color black
+
+#menu-left a:hover
+  text-decoration none
+
+.selected
+  border-right 0
+  background-color white
+  shadow inset 0 0 0px
+  border-bottom 1px solid black
+
+.selected:hover
+  background-color white
+  cursor default
+
+#menu-left
+  margin-left 0
+
+.last-tab
+  height 100%
+
+.last-selected-tab
+  border-bottom 0
+
+/* Texts */
+
+.text 
+  padding 24px
+
+.text p
+  font-size 16px
+  line-height 24px
+
+.question
+  font-weight bold
+
+/* Entrance */
+
+#title
+  font-size 90px
+  line-height 100px
+  display inline
+  color maintitlecolor
+
+#intro
+  margin-top 60px
+
+#slogan 
+  display inline
+  font-size 60px
+  margin-left 24px
+  color linkcolor
+
+
+/* Register form */
+
+#register-form .form-actions
+  background transparent
+  padding-bottom 0
+
+#register-form 
+  margin-bottom 0
+
+#register-form label
+  font-size 18px
+  line-height 32px
+
+#register-form .btn-primary, input
+  font-size 18px
+  line-height 32px
+  padding 10px
+
+#register-form .input-xlarge
+  height 20px
+
+#register-success
+  display: none
+
+#register-success h4
+  margin-top 10px
+
+#register-error h4
+  margin-top 10px
+  
+#register-error
+  display: none
+
+
+/* Login form */
+
+#login-form
+  margin-bottom 0
+
+#login-form-error
+  display none
+
+#login-form-success
+  display none
+
+#login-form .input-small
+  width 190px
+
+#login-form .btn
+  line-height 30px
+
+
+/* Account */
+  
+#account-name-container .btn
+  line-height 30px
+
+#account-name 
+  font-size 18px
+  margin-right 12px
+
+#use p
+  margin-top 60px
+  text-align center
+  font-size 24px
+  line-height 36px
+
+#use .quote-text
+  font-style italic
+
+#use .author
+  font-style none
+
+/* Dialogs */
+
+#confirm-dialog
+  display none
+
+
+/* Misc */
+
+#header-title span
+  margin-left 12px
+
+#header #buttons
+  margin-top 6px
+
+#content
+  padding 24px
+
+.application 
+  width 150px
+  height 150px
+  padding 24px
+  margin-left 12px
+  margin-top 12px
+  font-size 42px
+  line-height 48px
+  border 4px solid linkcolor
+  display inline-block
