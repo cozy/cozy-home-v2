@@ -9,5 +9,5 @@ class exports.Application extends BaseModel
     super()
     @slug = app.slug
     @name = app.name
-    @path = "/#{app.slug}/"
+    @path = "#{app.slug}/"
     

@@ -15823,7 +15823,7 @@ window.mocha = require('mocha');
       Application.__super__.constructor.call(this);
       this.slug = app.slug;
       this.name = app.name;
-      this.path = "/" + app.slug + "/";
+      this.path = "" + app.slug + "/";
     }
 
     return Application;
@@ -15952,7 +15952,7 @@ window.mocha = require('mocha');
   (function() {
     (function() {
     
-      __out.push('<a href="apps');
+      __out.push('<a href="apps/');
     
       __out.push(__sanitize(this.app.path));
     

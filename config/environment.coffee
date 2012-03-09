@@ -1,14 +1,29 @@
 express = require 'express'
 
-#httpProxy = require 'http-proxy'
-#routingProxy = new httpProxy.ReverseProxy()
-#apiProxy = (pattern, host, port) ->
-#  (req, res, next) ->
-#    if req.url.match(pattern)
-#      routingProxy.proxyRequest req, res, host: host, port: port
-#    else
-#      next()
 
+##
+# Authentication configuration
+# TODO find a right place to put this code
+
+passport = require 'passport'
+LocalStrategy = require('passport-local').Strategy
+
+passport.serializeUser = (user, done) ->
+    done null, user.email
+  
+passport.deserializeUser = (email, done) ->
+    User.find 1, (err, user) ->
+        done err, user
+
+passport.use new LocalStrategy (email, password, done) ->
+    User.find 1, (err, user) ->
+        user = null if user is undefined or not user
+        user = null if user.password != password
+        done(err, user)
+
+
+##
+# Common configuration
 
 app.configure ->
     cwd = process.cwd()
@@ -23,21 +38,7 @@ app.configure ->
     app.use express.cookieParser 'secret'
     app.use express.session secret: 'secret'
     app.use express.methodOverride()
+    app.use passport.initialize()
+    app.use passport.session()
     app.use app.router
-
-#    app.use apiProxy /noty-plus/, 4567, "localhost"
-    #require('proxy-by-url')({
-    # '/noty-plus': { port: 4567, host: 'localhost' },
-    #})
-
-
-# Tools
-#railway.tools.database = ->
-#    switch (railway.args.shift())
-#        when 'clean' then console.log "clean"
-#        when 'initialize' then console.log "initialize"
-#        else
-#            console.log 'Usage: railway database [clean|backup|restore]'
-
-
 
