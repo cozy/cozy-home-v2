@@ -3,28 +3,21 @@
 #
 
 
-
 ## Filters
 
 
 # Checks if user is authenticated, if not user is redirect to login page.
 checkAuthenticated = ->
-    if req.isAuthenticated()
-        next()
-    else
-        redirect('/login')
+    if req.isAuthenticated() then next() else redirect('/login')
 
 # Checks if user is authenticated, if not a simple 403 error is sent.
 # TODO Make application more script friendly, with challenge requests for
 # basic authentication.
 checkApiAuthenticated = ->
-    if req.isAuthenticated()
-        next()
-    else
-        send 403
+    if req.isAuthenticated() then next() else send 403
 
-before checkAuthenticated, { only: "index" }
-before checkApiAuthenticated, { except: ["init", "index"] }
+#before checkAuthenticated, { only: "index" }
+before checkApiAuthenticated, { except: ["init", "index", "users"] }
 
 
 
@@ -34,7 +27,7 @@ before checkApiAuthenticated, { except: ["init", "index"] }
 # Home page of the application, render browser UI.
 # TODO make layout work with jade templates
 action 'index', ->
-    layout(false)
+    layout false
     render title: "Cozy Home"
 
 
@@ -54,6 +47,7 @@ action 'clean', ->
                 send error: "Cleaning DB failed."
             else
                 destroyApplications
+
     destroyUsers()
 
 

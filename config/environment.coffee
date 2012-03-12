@@ -18,7 +18,7 @@ passport.deserializeUser = (email, done) ->
 passport.use new LocalStrategy (email, password, done) ->
     User.find 1, (err, user) ->
         user = null if user is undefined or not user
-        user = null if user.password != password
+        user = null if user and user.password != password
         done(err, user)
 
 

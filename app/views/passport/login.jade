@@ -1,0 +1,29 @@
+!!! 5
+html
+
+  head
+    title #{title}
+    script(src='/client/build/web/js/app.js')
+    script(src='/javascripts/login.js')
+
+    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+    link(rel='stylesheet', href='/client/build/web/css/main.css')
+
+    style
+      #login-error { width: 200px; }
+
+  body
+
+    header#header
+      h2#header-title
+        a(href="#discover", title="home") Cozy
+        span just host it
+
+    .container
+      #content
+        p enter your password to access to your Cozy
+        input#login-password(type="password")
+        #login-error(class="alert alert-error", style="display: block;")
+          p#login-form-error-text
+            | Wrong password
+

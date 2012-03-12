@@ -1,21 +1,29 @@
 class exports.MainRouter extends Backbone.Router
-  routes :
-    "home": "home"
-    "market": "market"
+    routes :
+        "home": "home"
+        "login": "login"
+        "market": "market"
+        "register": "register"
 
-  ## Route behaviors
+    ## Route behaviors
 
-  home: ->
-    @loadView(app.views.home)
+    home: ->
+        @loadView(app.views.home)
 
-  market: ->
-    @loadView(app.views.market)
+    market: ->
+        @loadView(app.views.market)
 
+    login: ->
+        @loadView(app.views.login)
 
-  ## functions
+    register: ->
+        @loadView(app.views.register)
 
-  # Fill main content with given view data.
-  loadView: (view) ->
-    $('#content').html view.render()
-    view.fetchData()
+    ## functions
+
+    # Fill main content with given view data.
+    loadView: (view) ->
+        $('#content').html view.render()
+        view.fetchData()
+        view.setListeners()
 

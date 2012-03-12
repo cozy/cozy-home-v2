@@ -1,0 +1,7 @@
+<p>Enter your password to access to your Cozy</p>
+<input id="login-password" type="password"></input>
+<div id="login-error" class="alert alert-error", style="display: block;">
+<p id="login-form-error-text">
+Wrong password
+</div>
+

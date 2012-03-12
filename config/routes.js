@@ -8,7 +8,10 @@ exports.routes = function (map) {
     map.get('/api/applications', 'applications#applications');
     map.get('/api/users', 'applications#users');
     map.get('/login', 'passport#login');
-    map.post('/login', 'passport#userLogin');
+    map.post('/login', 'passport#login');
+    map.get('/logout', 'passport#logout');
+    map.get('/authenticated', 'passport#isAuthenticated');
+    map.post('/register', 'passport#register');
 
     //map.all(':controller/:action');
     //map.all(':controller/:action/:id');

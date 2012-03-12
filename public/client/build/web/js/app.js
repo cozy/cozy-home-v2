@@ -15774,7 +15774,7 @@ window.mocha = require('mocha');
 
 }).call(this);
 }, "main": function(exports, require, module) {(function() {
-  var HomeView, MainRouter, MarketView;
+  var HomeView, LoginView, MainRouter, MarketView, RegisterView;
 
   window.app = {};
 
@@ -15792,14 +15792,35 @@ window.mocha = require('mocha');
 
   MarketView = require('views/market').MarketView;
 
+  LoginView = require('views/login_view').LoginView;
+
+  RegisterView = require('views/register_view').RegisterView;
+
   $(document).ready(function() {
     app.initialize = function() {
       app.routers.main = new MainRouter();
       app.views.home = new HomeView();
       app.views.market = new MarketView();
-      if (Backbone.history.getFragment() === '') {
-        return app.routers.main.navigate('home', true);
-      }
+      app.views.login = new LoginView();
+      app.views.register = new RegisterView();
+      return $.ajax({
+        type: "GET",
+        url: "/authenticated/",
+        success: function(data) {
+          if (data.success) {
+            if (Backbone.history.getFragment() === '') {
+              return app.routers.main.navigate('home', true);
+            }
+          } else if (data.nouser) {
+            return app.routers.main.navigate(app.views.register.path, true);
+          } else {
+            return app.routers.main.navigate('login', true);
+          }
+        },
+        error: function(data) {
+          return app.routers.main.navigate('login', true);
+        }
+      });
     };
     app.initialize();
     return Backbone.history.start();
@@ -15891,7 +15912,9 @@ window.mocha = require('mocha');
 
     MainRouter.prototype.routes = {
       "home": "home",
-      "market": "market"
+      "login": "login",
+      "market": "market",
+      "register": "register"
     };
 
     MainRouter.prototype.home = function() {
@@ -15902,9 +15925,18 @@ window.mocha = require('mocha');
       return this.loadView(app.views.market);
     };
 
+    MainRouter.prototype.login = function() {
+      return this.loadView(app.views.login);
+    };
+
+    MainRouter.prototype.register = function() {
+      return this.loadView(app.views.register);
+    };
+
     MainRouter.prototype.loadView = function(view) {
       $('#content').html(view.render());
-      return view.fetchData();
+      view.fetchData();
+      return view.setListeners();
     };
 
     return MainRouter;
@@ -16065,6 +16097,53 @@ window.mocha = require('mocha');
   }).call(__obj);
   __obj.safe = __objSafe, __obj.escape = __escape;
   return __out.join('');
+}}, "templates/login": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+    
+      __out.push('<p>Enter your password to access to your Cozy</p>\n<input id="login-password" type="password"></input>\n<div id="login-error" class="alert alert-error", style="display: block;">\n<p id="login-form-error-text">\nWrong password\n</div>\n\n');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
 }}, "templates/market": function(exports, require, module) {module.exports = function(__obj) {
   if (!__obj) __obj = {};
   var __out = [], __capture = function(callback) {
@@ -16106,6 +16185,53 @@ window.mocha = require('mocha');
     (function() {
     
       __out.push('<h1>Market Place</h1>\n<h2>Select application you want in your browser.</h2>\n\n<div id="app-list">\n  \n</div>\n\n');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "templates/register": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+    
+      __out.push('<p>Register to your cozy</p>\n<input id="register-email" type="text" placeholder="email"></input>\n<input id="register-password" type="password" placeholder="password"></input>\n<div id="register-error" class="alert alert-error", style="display: block;">\n<p id="register-error-text">\nWrong data (wrong email or too short password).\n</div>\n\n');
     
     }).call(this);
     
@@ -16255,7 +16381,8 @@ window.mocha = require('mocha');
     */
 
     function HomeView() {
-      this.fillApps = __bind(this.fillApps, this);      HomeView.__super__.constructor.call(this);
+      this.fillApps = __bind(this.fillApps, this);
+      this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
       this.apps = new AppCollection();
       this.apps.bind('reset', this.fillApps);
     }
@@ -16265,6 +16392,24 @@ window.mocha = require('mocha');
 
     /* Functions
     */
+
+    HomeView.prototype.logout = function() {
+      var _this = this;
+      return $.ajax({
+        type: 'GET',
+        url: "/logout/",
+        success: function(data) {
+          if (data.success) {
+            return app.routers.main.navigate('login', true);
+          } else {
+            return alert("Server error occured, logout failed.");
+          }
+        },
+        error: function() {
+          return alert("Server error occured, logout failed.");
+        }
+      });
+    };
 
     HomeView.prototype.fetchData = function() {
       return this.apps.fetch();
@@ -16285,10 +16430,89 @@ window.mocha = require('mocha');
     HomeView.prototype.render = function() {
       $(this.el).html(homeTemplate());
       this.appList = $("#app-list");
+      this.logoutButton = $("#logout-button");
+      this.logoutButton.show();
       return this.el;
     };
 
+    HomeView.prototype.setListeners = function() {
+      return this.logoutButton.click(this.logout);
+    };
+
     return HomeView;
+
+  })(Backbone.View);
+
+}).call(this);
+}, "views/login_view": function(exports, require, module) {(function() {
+  var template,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require('../templates/login');
+
+  exports.LoginView = (function(_super) {
+
+    __extends(LoginView, _super);
+
+    function LoginView() {
+      this.submitPassword = __bind(this.submitPassword, this);
+      LoginView.__super__.constructor.apply(this, arguments);
+    }
+
+    LoginView.prototype.id = 'login-view';
+
+    /* Constructor
+    */
+
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    LoginView.prototype.submitPassword = function() {
+      var _this = this;
+      this.errorAlert.hide();
+      return $.ajax({
+        type: 'POST',
+        url: "/login/",
+        data: {
+          password: this.passwordField.val()
+        },
+        success: function(data) {
+          if (data.success) {
+            return app.routers.main.navigate('home', true);
+          } else {
+            return _this.errorAlert.fadeIn();
+          }
+        },
+        error: function() {
+          return _this.errorAlert.fadeIn();
+        }
+      });
+    };
+
+    LoginView.prototype.fetchData = function() {
+      return true;
+    };
+
+    LoginView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    LoginView.prototype.setListeners = function() {
+      var _this = this;
+      this.passwordField = $("#login-password");
+      this.errorAlert = $("#login-error");
+      return this.passwordField.keyup(function(event) {
+        if (event.which === 13) return _this.submitPassword();
+      });
+    };
+
+    return LoginView;
 
   })(Backbone.View);
 
@@ -16348,6 +16572,83 @@ window.mocha = require('mocha');
     };
 
     return MarketView;
+
+  })(Backbone.View);
+
+}).call(this);
+}, "views/register_view": function(exports, require, module) {(function() {
+  var template,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require('../templates/register');
+
+  exports.RegisterView = (function(_super) {
+
+    __extends(RegisterView, _super);
+
+    function RegisterView() {
+      this.submitData = __bind(this.submitData, this);
+      RegisterView.__super__.constructor.apply(this, arguments);
+    }
+
+    RegisterView.prototype.id = 'register-view';
+
+    RegisterView.prototype.path = 'register';
+
+    /* Constructor
+    */
+
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    RegisterView.prototype.submitData = function() {
+      var _this = this;
+      this.errorAlert.hide();
+      return $.ajax({
+        type: 'POST',
+        url: "/register/",
+        data: {
+          email: this.emailField.val(),
+          password: this.passwordField.val()
+        },
+        success: function(data) {
+          if (data.success) {
+            return app.routers.main.navigate('login', true);
+          } else {
+            return _this.errorAlert.fadeIn();
+          }
+        },
+        error: function() {
+          return _this.errorAlert.fadeIn();
+        }
+      });
+    };
+
+    RegisterView.prototype.fetchData = function() {
+      return true;
+    };
+
+    RegisterView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    RegisterView.prototype.setListeners = function() {
+      var _this = this;
+      this.emailField = $("#register-email");
+      this.passwordField = $("#register-password");
+      this.errorAlert = $("#register-error");
+      return this.passwordField.keyup(function(event) {
+        if (event.which === 13) return _this.submitData();
+      });
+    };
+
+    return RegisterView;
 
   })(Backbone.View);
 

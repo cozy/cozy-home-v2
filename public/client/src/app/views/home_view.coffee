@@ -21,6 +21,18 @@ class exports.HomeView extends Backbone.View
 
   ### Functions ###
 
+  logout: =>
+    $.ajax
+        type: 'GET'
+        url: "/logout/"
+        success: (data) =>
+            if data.success
+                app.routers.main.navigate 'login', true
+            else
+                alert "Server error occured, logout failed."
+        error: =>
+           alert "Server error occured, logout failed."
+
   # Load data from server
   fetchData: ->
     @apps.fetch()
@@ -38,6 +50,11 @@ class exports.HomeView extends Backbone.View
   render: ->
     $(@el).html homeTemplate()
     @appList = $("#app-list")
+    @logoutButton = $("#logout-button")
+    @logoutButton.show()
 
     @el
+
+  setListeners: ->
+    @logoutButton.click @logout
 
