@@ -16,8 +16,8 @@ action 'login', ->
 # or not.
 action 'isAuthenticated', ->
     if not req.isAuthenticated()
-        User.find 1, (err, user) ->
-            if not err and user
+        User.all (err, users) ->
+            if not err and users.length
                 send success: false, nouser: false
             else
                 send success: false, nouser: true
@@ -33,11 +33,11 @@ action 'login', ->
         else
             send success: true,  msg: "Login succeeds"
 
-    authenticator = passport.authenticate 'local', (err, user2) ->
-        if err or user2 is undefined or not user2
+    authenticator = passport.authenticate 'local', (err, user) ->
+        if err or user is undefined or not user
             send success: false,  msg: "Wrong email or password", 403
         else
-            req.logIn user2, {}, answer
+            req.logIn user, {}, answer
 
     req.body["username"] = "owner"
     authenticator(req, res, next)
@@ -64,14 +64,16 @@ action 'register', ->
 
         user.save (err) ->
             if err
+                console.log err
                 send error: "Error occured"
             else
                 send success: "Register succeeds."
 
-    User.find 1, (err, user) ->
+    User.all (err, users) ->
         if err
+            console.log err
             send error: "Error occured"
-        else if user
+        else if users.length
             send error: "User already registered"
         else
             createUser()

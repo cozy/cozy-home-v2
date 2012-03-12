@@ -12,14 +12,26 @@ passport.serializeUser = (user, done) ->
     done null, user.email
   
 passport.deserializeUser = (email, done) ->
-    User.find 1, (err, user) ->
-        done err, user
+    User.all (err, users) ->
+        if users.length > 0
+            done err, users[0]
+        else
+            done err, null
 
 passport.use new LocalStrategy (email, password, done) ->
-    User.find 1, (err, user) ->
-        user = null if user is undefined or not user
-        user = null if user and user.password != password
-        done(err, user)
+    User.all (err, users) ->
+        if err
+            console.log err
+            done(err, null)
+        else if users is undefined or not users
+            done(err, null)
+        else if users and users.length == 0
+            done(err, null)
+        else if users[0].password != password
+            console.log "wrong password"
+            done(err, null)
+        else
+            done(err, users[0])
 
 
 ##
