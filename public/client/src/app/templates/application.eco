@@ -1,3 +1,7 @@
-<a href="apps/<%= @app.path %>"><%= @app.name %></a></p>
+<a href="apps/<%= @app.path %>" target="_blank">
+<div class="application-inner">
+<%= @app.name %>
 <!--input class="button" type="submit" value="remove"></input-->
 <p class="info-text"></p>
+</div>
+</a>

@@ -15988,11 +15988,11 @@ window.mocha = require('mocha');
     
       __out.push(__sanitize(this.app.path));
     
-      __out.push('">');
+      __out.push('" target="_blank">\n<div class="application-inner">\n');
     
       __out.push(__sanitize(this.app.name));
     
-      __out.push('</a></p>\n<!--input class="button" type="submit" value="remove"></input-->\n<p class="info-text"></p>\n');
+      __out.push('\n<!--input class="button" type="submit" value="remove"></input-->\n<p class="info-text"></p>\n</div>\n</a>\n');
     
     }).call(this);
     
@@ -16137,7 +16137,7 @@ window.mocha = require('mocha');
   (function() {
     (function() {
     
-      __out.push('<p>Enter your password to access to your Cozy</p>\n<input id="login-password" type="password"></input>\n<div id="login-error" class="alert alert-error", style="display: block;">\n<p id="login-form-error-text">\nWrong password\n</div>\n\n');
+      __out.push('<h2>Sign in</h2>\n<div id="login-form">\n    <p>\n    <input id="login-password" type="password" placeholder="Enter password...">\n    </input>\n    </p>\n    <div id="login-error" class="alert alert-error">\n        <div id="login-form-error-text">\n            wrong password\n        </div>\n    <div>\n</div>\n\n');
     
     }).call(this);
     
@@ -16507,6 +16507,9 @@ window.mocha = require('mocha');
       var _this = this;
       this.passwordField = $("#login-password");
       this.errorAlert = $("#login-error");
+      this.errorAlert.hide();
+      this.logoutButton = $("#logout-button");
+      this.logoutButton.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitPassword();
       });

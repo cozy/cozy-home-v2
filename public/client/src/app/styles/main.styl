@@ -88,155 +88,6 @@ h2
 #header p
   margin 0
 
-/* Menu */
-#menu-left
-  height 100%
-  width 300px
-
-.menu-left-tab
-  padding 24px
-  font-weight bold
-  font-size 24px
-  border 1px solid #999 
-  border-left 0
-  border-top 0
-  shadow inset 0 0 10px menuunselectedcolor
-  background-color #efe2d7
-  
-.menu-left-tab:hover
-  background-color: menuhovercolor
-  cursor: pointer
-
-#menu-left a
-  color black
-
-#menu-left a:visited
-  color black
-
-#menu-left a:hover
-  text-decoration none
-
-.selected
-  border-right 0
-  background-color white
-  shadow inset 0 0 0px
-  border-bottom 1px solid black
-
-.selected:hover
-  background-color white
-  cursor default
-
-#menu-left
-  margin-left 0
-
-.last-tab
-  height 100%
-
-.last-selected-tab
-  border-bottom 0
-
-/* Texts */
-
-.text 
-  padding 24px
-
-.text p
-  font-size 16px
-  line-height 24px
-
-.question
-  font-weight bold
-
-/* Entrance */
-
-#title
-  font-size 90px
-  line-height 100px
-  display inline
-  color maintitlecolor
-
-#intro
-  margin-top 60px
-
-#slogan 
-  display inline
-  font-size 60px
-  margin-left 24px
-  color linkcolor
-
-
-/* Register form */
-
-#register-form .form-actions
-  background transparent
-  padding-bottom 0
-
-#register-form 
-  margin-bottom 0
-
-#register-form label
-  font-size 18px
-  line-height 32px
-
-#register-form .btn-primary, input
-  font-size 18px
-  line-height 32px
-  padding 10px
-
-#register-form .input-xlarge
-  height 20px
-
-#register-success
-  display: none
-
-#register-success h4
-  margin-top 10px
-
-#register-error h4
-  margin-top 10px
-  
-#register-error
-  display: none
-
-
-/* Login form */
-
-#login-form
-  margin-bottom 0
-
-#login-form-error
-  display none
-
-#login-form-success
-  display none
-
-#login-form .input-small
-  width 190px
-
-#login-form .btn
-  line-height 30px
-
-
-/* Account */
-  
-#account-name-container .btn
-  line-height 30px
-
-#account-name 
-  font-size 18px
-  margin-right 12px
-
-#use p
-  margin-top 60px
-  text-align center
-  font-size 24px
-  line-height 36px
-
-#use .quote-text
-  font-style italic
-
-#use .author
-  font-style none
 
 /* Dialogs */
 
@@ -258,14 +109,38 @@ h2
 .application 
   width 150px
   height 150px
-  padding 24px
   margin-left 12px
   margin-top 12px
   font-size 42px
   line-height 48px
+  display inline-block
+
+.application-inner
+  width 136px
+  height 136px
+  padding 24px
   border 4px solid linkcolor
+
+.application a:hover
+  color linkcolor
+
+
+/** Login page */
+
+#login-error
   display inline-block
 
 #logout-button
   display none
 
+#login-error
+  width 360px
+
+#login-view 
+  text-align center
+
+#login-password
+  width 400px
+  font-size 36px
+  padding 6px
+  height 48px

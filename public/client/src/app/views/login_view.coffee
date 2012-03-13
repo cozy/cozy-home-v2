@@ -1,12 +1,14 @@
 template = require('../templates/login')
 
 
+# Describes screen which allows user to sign in
 class exports.LoginView extends Backbone.View
     id: 'login-view'
 
     ### Constructor ###
 
     ### Listeners ###
+
 
     ### Functions ###
 
@@ -28,6 +30,9 @@ class exports.LoginView extends Backbone.View
     fetchData: ->
         true
 
+
+    # Configuration
+
     render: ->
         $(@el).html template()
         @el
@@ -35,7 +40,11 @@ class exports.LoginView extends Backbone.View
     setListeners: ->
         @passwordField = $("#login-password")
         @errorAlert = $("#login-error")
+        @errorAlert.hide()
+        @logoutButton = $("#logout-button")
+        @logoutButton.hide()
 
         @passwordField.keyup (event) =>
              @submitPassword() if event.which == 13
 
+        #@passwordField.focus()
