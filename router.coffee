@@ -6,7 +6,7 @@ http = require('http')
 proxyPort = 80
 
 # Default port where requests are redirected
-defaultPort = 8000
+defaultPort = 3000
 # Routes for redirection depending on given path
 routes =
     "/noty-plus": 4567
@@ -29,9 +29,8 @@ proxyServer = httpProxy.createServer (req, res, proxy) ->
 
 # Start proxy server
 proxyServer.listen proxyPort
-
 console.log "Proxy listen on port " + proxyPort
 
 
-# Interesting links : 
+# Interesting link : 
 # https://github.com/centro/dcrp
