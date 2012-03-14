@@ -2,13 +2,8 @@
 # Actions to manage applications : home page + API.
 #
 
-
 ## Filters
 
-
-# Checks if user is authenticated, if not user is redirect to login page.
-checkAuthenticated = ->
-    if req.isAuthenticated() then next() else redirect('/login')
 
 # Checks if user is authenticated, if not a simple 403 error is sent.
 # TODO Make application more script friendly, with challenge requests for
@@ -16,9 +11,7 @@ checkAuthenticated = ->
 checkApiAuthenticated = ->
     if req.isAuthenticated() then next() else send 403
 
-#before checkAuthenticated, { only: "index" }
 before checkApiAuthenticated, { except: ["init", "index", "users"] }
-
 
 
 ## Actions
@@ -29,6 +22,19 @@ before checkApiAuthenticated, { except: ["init", "index", "users"] }
 action 'index', ->
     layout false
     render title: "Cozy Home"
+
+
+# Return list of applications available on this cozy instance.
+# TODO Check what could be done with "flash" express helper.
+action 'applications', ->
+    Application.all (errors, apps) ->
+        if errors
+            send error: "Retrieve applications failed.", 500
+        else
+            send rows: apps
+
+
+## Debug, to delete
 
 
 # Clear all DB data (development helper).
@@ -81,7 +87,7 @@ action 'users', ->
 
 
 # Return list of applications available on this cozy instance.
-# TODO Check what could be do with "flash" express helper.
+# TODO Check what could be done with "flash" express helper.
 action 'applications', ->
     Application.all (errors, apps) ->
         if errors

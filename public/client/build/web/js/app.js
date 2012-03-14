@@ -16649,6 +16649,7 @@ window.mocha = require('mocha');
       this.emailField = $("#register-email");
       this.passwordField = $("#register-password");
       this.errorAlert = $("#register-error");
+      this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitData();
       });

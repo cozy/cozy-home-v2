@@ -43,6 +43,7 @@ class exports.RegisterView extends Backbone.View
         @emailField = $("#register-email")
         @passwordField = $("#register-password")
         @errorAlert = $("#register-error")
+        @errorAlert.hide()
 
         @passwordField.keyup (event) =>
              @submitData() if event.which == 13

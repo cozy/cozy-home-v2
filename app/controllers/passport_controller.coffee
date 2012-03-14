@@ -2,40 +2,46 @@
 # Actions to manage authentication : login, logout, registration.
 ###
 
+
 passport = require("passport")
+response = require("../helpers/application_helper")
 
-
-# Render browser UI for login.
-# TODO enable layout with jade templates
-action 'login', ->
-    layout false
-    render title: "Cozy Home : sign in"
 
 # Returns true (key "success") if user is authenticated, false either.
 # If user is not authenticated, it adds a flag to tell if user is registered
 # or not.
 action 'isAuthenticated', ->
+
+    answer = (err, users) ->
+        if err
+            console.log err
+            send error: true, nouser: false, 500
+        else if users.length
+            send error: true, nouser: false
+        else
+            send error: true, nouser: true
+
     if not req.isAuthenticated()
-        User.all (err, users) ->
-            if not err and users.length
-                send success: false, nouser: false
-            else
-                send success: false, nouser: true
+        User.all answer
     else
-        send success: true
+        send success: true, msg: "User is authenticated."
+
 
 # Check user credentials and keep user authentication through session. 
 action 'login', ->
-
     answer = (err) ->
         if err
-            send success: false,  msg: "Login failed"
+            send error: true,  msg: "Login failed"
         else
             send success: true,  msg: "Login succeeds"
 
     authenticator = passport.authenticate 'local', (err, user) ->
-        if err or user is undefined or not user
-            send success: false,  msg: "Wrong email or password", 403
+        if err
+            console.log err
+            send error: true,  msg: "Server error occured.", 500
+        else if user is undefined or not user
+            console.log err if err
+            send error: true,  msg: "Wrong email or password", 400
         else
             req.logIn user, {}, answer
 
@@ -55,6 +61,13 @@ action 'register', ->
     email = req.body.email
     password = req.body.password
 
+    answer = (err) ->
+        if err
+            console.log err
+            send error: true,  msg: "Server error occured.", 500
+        else
+            send success: true, msg: "Register succeeds."
+
     createUser = () ->
         user = new User
             email: email
@@ -62,21 +75,14 @@ action 'register', ->
             password: password
             activated: true
 
-        user.save (err) ->
-            if err
-                console.log err
-                send error: "Error occured"
-            else
-                send success: "Register succeeds."
+        user.save answer
 
     User.all (err, users) ->
         if err
             console.log err
-            send error: "Error occured"
+            send error: true,  msg: "Server error occured.", 500
         else if users.length
-            send error: "User already registered"
+            send error: true,  msg: "User already registered.", 400
         else
             createUser()
-
-
 

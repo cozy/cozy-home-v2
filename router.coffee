@@ -9,7 +9,7 @@ proxyPort = 80
 defaultPort = 3000
 # Routes for redirection depending on given path
 routes =
-    "/noty-plus": 4567
+    "/noty-plus": 8001
 
 
 # Return port corresponding to given path, returns defaultPort if no
