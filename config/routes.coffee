@@ -10,3 +10,4 @@ exports.routes = (map) ->
     map.get('/api/users', 'applications#users')
     map.get('/clean', 'applications#clean')
     map.get('/init', 'applications#init')
+
