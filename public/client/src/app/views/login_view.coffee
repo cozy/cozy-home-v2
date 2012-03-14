@@ -4,6 +4,7 @@ template = require('../templates/login')
 # Describes screen which allows user to sign in
 class exports.LoginView extends Backbone.View
     id: 'login-view'
+    className: 'center'
 
     ### Constructor ###
 

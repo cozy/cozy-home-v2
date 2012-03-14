@@ -1,8 +1,13 @@
-<p>Register to your cozy</p>
-<input id="register-email" type="text" placeholder="email"></input>
-<input id="register-password" type="password" placeholder="password"></input>
-<div id="register-error" class="alert alert-error", style="display: block;">
-<p id="register-error-text">
-Wrong data (wrong email or too short password).
+<h2>Register to your Cozy</h2>
+<div id="login-form">
+    <p>
+    <input id="register-email" type="text" placeholder="email"></input>
+    <input id="register-password" type="password" placeholder="password">
+    </input>
+    </p>
+    <div id="register-error" class="alert alert-error main-alert">
+        <div id="register-error-text">
+            wrong data (wrong email or too short password).
+        </div>
+    </div>
 </div>
-

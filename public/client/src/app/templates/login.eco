@@ -4,10 +4,9 @@
     <input id="login-password" type="password" placeholder="Enter password...">
     </input>
     </p>
-    <div id="login-error" class="alert alert-error">
+    <div id="login-error" class="alert alert-error main-alert">
         <div id="login-form-error-text">
             wrong password
         </div>
     <div>
 </div>
-

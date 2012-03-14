@@ -16137,7 +16137,7 @@ window.mocha = require('mocha');
   (function() {
     (function() {
     
-      __out.push('<h2>Sign in</h2>\n<div id="login-form">\n    <p>\n    <input id="login-password" type="password" placeholder="Enter password...">\n    </input>\n    </p>\n    <div id="login-error" class="alert alert-error">\n        <div id="login-form-error-text">\n            wrong password\n        </div>\n    <div>\n</div>\n\n');
+      __out.push('<h2>Sign in</h2>\n<div id="login-form">\n    <p>\n    <input id="login-password" type="password" placeholder="Enter password...">\n    </input>\n    </p>\n    <div id="login-error" class="alert alert-error main-alert">\n        <div id="login-form-error-text">\n            wrong password\n        </div>\n    <div>\n</div>\n');
     
     }).call(this);
     
@@ -16231,7 +16231,7 @@ window.mocha = require('mocha');
   (function() {
     (function() {
     
-      __out.push('<p>Register to your cozy</p>\n<input id="register-email" type="text" placeholder="email"></input>\n<input id="register-password" type="password" placeholder="password"></input>\n<div id="register-error" class="alert alert-error", style="display: block;">\n<p id="register-error-text">\nWrong data (wrong email or too short password).\n</div>\n\n');
+      __out.push('<h2>Register to your Cozy</h2>\n<div id="login-form">\n    <p>\n    <input id="register-email" type="text" placeholder="email"></input>\n    <input id="register-password" type="password" placeholder="password">\n    </input>\n    </p>\n    <div id="register-error" class="alert alert-error main-alert">\n        <div id="register-error-text">\n            wrong data (wrong email or too short password).\n        </div>\n    </div>\n</div>\n');
     
     }).call(this);
     
@@ -16254,9 +16254,8 @@ window.mocha = require('mocha');
 
     ApplicationRow.prototype.className = "application";
 
-    ApplicationRow.prototype.events = {
-      "click .button": "onRemoveClicked"
-    };
+    /* Constructor
+    */
 
     function ApplicationRow(model) {
       this.model = model;
@@ -16264,25 +16263,19 @@ window.mocha = require('mocha');
       ApplicationRow.__super__.constructor.call(this, this.model);
     }
 
+    /* Listener
+    */
+
     ApplicationRow.prototype.onRemoveClicked = function(event) {
       event.preventDefault();
       return this.removeApp();
     };
 
-    ApplicationRow.prototype.removeApp = function() {
-      var _this = this;
-      this.$(".info-text").html("Removing...");
-      return $.ajax({
-        type: 'DELETE',
-        url: "/api/installed-apps/" + this.id + "/",
-        success: function() {
-          return _this.$(".info-text").html("Removed!");
-        },
-        error: function() {
-          return _this.$(".info-text").html("Remove failed.");
-        }
-      });
-    };
+    /* Functions
+    */
+
+    /* configuration
+    */
 
     ApplicationRow.prototype.render = function() {
       $(this.el).html(template({
@@ -16427,15 +16420,18 @@ window.mocha = require('mocha');
       });
     };
 
+    /* Configuration
+    */
+
     HomeView.prototype.render = function() {
       $(this.el).html(homeTemplate());
-      this.appList = $("#app-list");
-      this.logoutButton = $("#logout-button");
-      this.logoutButton.show();
       return this.el;
     };
 
     HomeView.prototype.setListeners = function() {
+      this.appList = $("#app-list");
+      this.logoutButton = $("#logout-button");
+      this.logoutButton.show();
       return this.logoutButton.click(this.logout);
     };
 
@@ -16462,6 +16458,8 @@ window.mocha = require('mocha');
     }
 
     LoginView.prototype.id = 'login-view';
+
+    LoginView.prototype.className = 'center';
 
     /* Constructor
     */
@@ -16598,6 +16596,8 @@ window.mocha = require('mocha');
 
     RegisterView.prototype.id = 'register-view';
 
+    RegisterView.prototype.className = 'center';
+
     RegisterView.prototype.path = 'register';
 
     /* Constructor
@@ -16635,6 +16635,9 @@ window.mocha = require('mocha');
     RegisterView.prototype.fetchData = function() {
       return true;
     };
+
+    /* Configuration
+    */
 
     RegisterView.prototype.render = function() {
       $(this.el).html(template());

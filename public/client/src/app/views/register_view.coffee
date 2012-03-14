@@ -1,13 +1,16 @@
 template = require('../templates/register')
 
-
+# Describes screen allowing user to register.
 class exports.RegisterView extends Backbone.View
     id: 'register-view'
+    className: 'center'
     path: 'register'
+
 
     ### Constructor ###
 
     ### Listeners ###
+
 
     ### Functions ###
 
@@ -27,9 +30,10 @@ class exports.RegisterView extends Backbone.View
             error: =>
                 @errorAlert.fadeIn()
             
-    # Load data from server
     fetchData: ->
         true
+
+    ### Configuration ###
 
     render: ->
         $(@el).html template()

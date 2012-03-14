@@ -4,6 +4,7 @@ AppRow = require('views/application').ApplicationRow
 AppCollection = require('collections/application').ApplicationCollection
 
 
+# View describing main screen for user once he is logged
 class exports.HomeView extends Backbone.View
   id: 'home-view'
 
@@ -19,6 +20,7 @@ class exports.HomeView extends Backbone.View
  
   ### Listeners ###
 
+
   ### Functions ###
 
   logout: =>
@@ -33,9 +35,11 @@ class exports.HomeView extends Backbone.View
         error: =>
            alert "Server error occured, logout failed."
 
+
   # Load data from server
   fetchData: ->
     @apps.fetch()
+
 
   # Grabs categories from server then display them as a list.
   fillApps: =>
@@ -45,16 +49,18 @@ class exports.HomeView extends Backbone.View
       row = new AppRow app
       el = row.render()
       @appList.append el
- 
+
+
+  ### Configuration ###
 
   render: ->
     $(@el).html homeTemplate()
-    @appList = $("#app-list")
-    @logoutButton = $("#logout-button")
-    @logoutButton.show()
-
     @el
 
   setListeners: ->
+    @appList = $("#app-list")
+    @logoutButton = $("#logout-button")
+
+    @logoutButton.show()
     @logoutButton.click @logout
 
