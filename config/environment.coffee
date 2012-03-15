@@ -56,21 +56,3 @@ app.configure ->
     app.use app.router
 
 
-#httpProxy = require('http-proxy')
-#proxy = new httpProxy.RoutingProxy()
-
-#doProxy(req, res, next)
-#    proxy.proxyRequest(req, res,
-#        host: 'localhost'
-#        port: 3000
-
-
-
-#   target:
-#       host: '127.0.0.1'
-#       port: '4567'
-
-#app.all "/noty-plus", (req, res) ->
-#    proxy.proxyRequest(req, res)
-
-
