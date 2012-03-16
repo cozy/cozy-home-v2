@@ -4,7 +4,6 @@
 
 
 passport = require("passport")
-response = require("../helpers/application_helper")
 
 
 # Returns true (key "success") if user is authenticated, false either.

@@ -52,7 +52,7 @@ action 'clean', ->
             if error
                 send error: "Cleaning DB failed."
             else
-                destroyApplications
+                destroyApplications()
 
     destroyUsers()
 
@@ -62,18 +62,21 @@ action 'clean', ->
 # TODO move to a railway command.
 action 'init', ->
 
+    create_app = ->
+        app = new Application(name: "Noty plus", state: "installed", index: 0, slug: "noty-plus")
+
+        app.save (error) ->
+            if error
+                send error: "Initialization failed."
+            else
+                send success: "Initialization succeeds."
+
     user = new User(email: "gelnior@free.fr", owner: true, password: "test", activated: true)
     user.save (error) ->
         if error
             send error: "Initialization failed."
         else
-            app = new Application(name: "Noty plus", state: "installed", index: 0, slug: "noty-plus")
-
-            app.save (error) ->
-                if error
-                    send error: "Initialization failed."
-                else
-                    send success: "Initialization succeeds."
+            create_app()
 
 
 # Return list of available users
