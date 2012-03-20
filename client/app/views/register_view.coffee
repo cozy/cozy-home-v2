@@ -18,7 +18,7 @@ class exports.RegisterView extends Backbone.View
         @errorAlert.hide()
         $.ajax
             type: 'POST'
-            url: "/register/"
+            url: "register/"
             data:
                 email: @emailField.val()
                 password: @passwordField.val()

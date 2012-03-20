@@ -48,30 +48,26 @@
     };
   }
 }).call(this);(this.require.define({
-  "models/appmarket": function(exports, require, module) {
+  "models/models": function(exports, require, module) {
     (function() {
-  var BaseModel,
-    __hasProp = Object.prototype.hasOwnProperty,
+  var __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  BaseModel = require("models/models").BaseModel;
+  exports.BaseModel = (function(_super) {
 
-  exports.App = (function(_super) {
+    __extends(BaseModel, _super);
 
-    __extends(App, _super);
-
-    App.prototype.url = '/api/market/apps/';
-
-    function App(app) {
-      App.__super__.constructor.call(this);
-      this.slug = app.slug;
-      this.name = app.name;
-      this.path = "/" + app.slug + "/";
+    function BaseModel() {
+      BaseModel.__super__.constructor.apply(this, arguments);
     }
 
-    return App;
+    BaseModel.prototype.isNew = function() {
+      return this.id === void 0;
+    };
 
-  })(BaseModel);
+    return BaseModel;
+
+  })(Backbone.Model);
 
 }).call(this);
 
@@ -137,62 +133,29 @@
   }
 }));
 (this.require.define({
-  "views/market": function(exports, require, module) {
+  "views/row": function(exports, require, module) {
     (function() {
-  var AppCollection, AppRow, homeTemplate,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
+  var __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  homeTemplate = require('../templates/market');
+  exports.BaseRow = (function(_super) {
 
-  AppRow = require('views/application').ApplicationRow;
+    __extends(BaseRow, _super);
 
-  AppCollection = require('collections/application').ApplicationCollection;
+    BaseRow.prototype.tagName = "div";
 
-  exports.MarketView = (function(_super) {
-
-    __extends(MarketView, _super);
-
-    MarketView.prototype.id = 'market-view';
-
-    /* Constructor
-    */
-
-    function MarketView() {
-      this.fillApps = __bind(this.fillApps, this);      MarketView.__super__.constructor.call(this);
-      this.apps = new AppCollection();
-      this.apps.bind('reset', this.fillApps);
+    function BaseRow(model) {
+      this.model = model;
+      BaseRow.__super__.constructor.call(this);
+      this.id = this.model.slug;
+      this.model.view = this;
     }
 
-    /* Listeners
-    */
-
-    /* Functions
-    */
-
-    MarketView.prototype.fetchData = function() {
-      return this.apps.fetch();
+    BaseRow.prototype.remove = function() {
+      return $(this.el).remove();
     };
 
-    MarketView.prototype.fillApps = function() {
-      var _this = this;
-      this.appList = $("#app-list");
-      this.appList.html(null);
-      return this.apps.forEach(function(app) {
-        var el, row;
-        row = new AppRow(app);
-        el = row.render();
-        return _this.appList.append(el);
-      });
-    };
-
-    MarketView.prototype.render = function() {
-      $(this.el).html(homeTemplate());
-      return this.el;
-    };
-
-    return MarketView;
+    return BaseRow;
 
   })(Backbone.View);
 
@@ -240,7 +203,7 @@
       var _this = this;
       return $.ajax({
         type: 'GET',
-        url: "/logout/",
+        url: "logout/",
         success: function(data) {
           if (data.success) {
             return app.routers.main.navigate('login', true);
@@ -332,7 +295,7 @@
       this.errorAlert.hide();
       return $.ajax({
         type: 'POST',
-        url: "/register/",
+        url: "register/",
         data: {
           email: this.emailField.val(),
           password: this.passwordField.val()
@@ -374,37 +337,6 @@
     };
 
     return RegisterView;
-
-  })(Backbone.View);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/row": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  exports.BaseRow = (function(_super) {
-
-    __extends(BaseRow, _super);
-
-    BaseRow.prototype.tagName = "div";
-
-    function BaseRow(model) {
-      this.model = model;
-      BaseRow.__super__.constructor.call(this);
-      this.id = this.model.slug;
-      this.model.view = this;
-    }
-
-    BaseRow.prototype.remove = function() {
-      return $(this.el).remove();
-    };
-
-    return BaseRow;
 
   })(Backbone.View);
 
@@ -470,6 +402,73 @@
   }
 }));
 (this.require.define({
+  "views/appmarket": function(exports, require, module) {
+    (function() {
+  var BaseRow, appTemplate,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  appTemplate = require('../templates/app');
+
+  BaseRow = require('views/row').BaseRow;
+
+  exports.AppRow = (function(_super) {
+
+    __extends(AppRow, _super);
+
+    AppRow.prototype.className = "app";
+
+    AppRow.prototype.events = {
+      "click .button": "onInstallClicked"
+    };
+
+    function AppRow(model) {
+      this.model = model;
+      this.onInstallClicked = __bind(this.onInstallClicked, this);
+      AppRow.__super__.constructor.call(this, this.model);
+    }
+
+    AppRow.prototype.onInstallClicked = function(event) {
+      event.preventDefault();
+      return this.installApp();
+    };
+
+    AppRow.prototype.installApp = function() {
+      var _this = this;
+      this.$(".info-text").html("Installing...");
+      return $.ajax({
+        type: 'POST',
+        dataType: "json",
+        contentType: "application/json",
+        url: "/api/installed-apps/",
+        data: '{"name": "' + this.model.name + '", "slug": "' + this.model.slug + '"}',
+        success: function() {
+          return _this.$(".info-text").html("Installed!");
+        },
+        error: function() {
+          return _this.$(".info-text").html("Install failed.");
+        }
+      });
+    };
+
+    AppRow.prototype.render = function() {
+      $(this.el).html(appTemplate({
+        app: this.model
+      }));
+      this.el.id = this.model.slug;
+      return this.el;
+    };
+
+    return AppRow;
+
+  })(BaseRow);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
   "views/login_view": function(exports, require, module) {
     (function() {
   var template,
@@ -506,7 +505,7 @@
       this.errorAlert.hide();
       return $.ajax({
         type: 'POST',
-        url: "/login/",
+        url: "login/",
         data: {
           password: this.passwordField.val()
         },
@@ -583,144 +582,94 @@
   }
 }));
 (this.require.define({
-  "views/appmarket": function(exports, require, module) {
+  "models/appmarket": function(exports, require, module) {
     (function() {
-  var BaseRow, appTemplate,
+  var BaseModel,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require("models/models").BaseModel;
+
+  exports.App = (function(_super) {
+
+    __extends(App, _super);
+
+    App.prototype.url = '/api/market/apps/';
+
+    function App(app) {
+      App.__super__.constructor.call(this);
+      this.slug = app.slug;
+      this.name = app.name;
+      this.path = "/" + app.slug + "/";
+    }
+
+    return App;
+
+  })(BaseModel);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/market": function(exports, require, module) {
+    (function() {
+  var AppCollection, AppRow, homeTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  appTemplate = require('../templates/app');
+  homeTemplate = require('../templates/market');
 
-  BaseRow = require('views/row').BaseRow;
+  AppRow = require('views/application').ApplicationRow;
 
-  exports.AppRow = (function(_super) {
+  AppCollection = require('collections/application').ApplicationCollection;
 
-    __extends(AppRow, _super);
+  exports.MarketView = (function(_super) {
 
-    AppRow.prototype.className = "app";
+    __extends(MarketView, _super);
 
-    AppRow.prototype.events = {
-      "click .button": "onInstallClicked"
-    };
+    MarketView.prototype.id = 'market-view';
 
-    function AppRow(model) {
-      this.model = model;
-      this.onInstallClicked = __bind(this.onInstallClicked, this);
-      AppRow.__super__.constructor.call(this, this.model);
+    /* Constructor
+    */
+
+    function MarketView() {
+      this.fillApps = __bind(this.fillApps, this);      MarketView.__super__.constructor.call(this);
+      this.apps = new AppCollection();
+      this.apps.bind('reset', this.fillApps);
     }
 
-    AppRow.prototype.onInstallClicked = function(event) {
-      event.preventDefault();
-      return this.installApp();
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    MarketView.prototype.fetchData = function() {
+      return this.apps.fetch();
     };
 
-    AppRow.prototype.installApp = function() {
+    MarketView.prototype.fillApps = function() {
       var _this = this;
-      this.$(".info-text").html("Installing...");
-      return $.ajax({
-        type: 'POST',
-        dataType: "json",
-        contentType: "application/json",
-        url: "/api/installed-apps/",
-        data: '{"name": "' + this.model.name + '", "slug": "' + this.model.slug + '"}',
-        success: function() {
-          return _this.$(".info-text").html("Installed!");
-        },
-        error: function() {
-          return _this.$(".info-text").html("Install failed.");
-        }
+      this.appList = $("#app-list");
+      this.appList.html(null);
+      return this.apps.forEach(function(app) {
+        var el, row;
+        row = new AppRow(app);
+        el = row.render();
+        return _this.appList.append(el);
       });
     };
 
-    AppRow.prototype.render = function() {
-      $(this.el).html(appTemplate({
-        app: this.model
-      }));
-      this.el.id = this.model.slug;
+    MarketView.prototype.render = function() {
+      $(this.el).html(homeTemplate());
       return this.el;
     };
 
-    return AppRow;
+    return MarketView;
 
-  })(BaseRow);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "routers/main_router": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  exports.MainRouter = (function(_super) {
-
-    __extends(MainRouter, _super);
-
-    function MainRouter() {
-      MainRouter.__super__.constructor.apply(this, arguments);
-    }
-
-    MainRouter.prototype.routes = {
-      "home": "home",
-      "login": "login",
-      "market": "market",
-      "register": "register"
-    };
-
-    MainRouter.prototype.home = function() {
-      return this.loadView(app.views.home);
-    };
-
-    MainRouter.prototype.market = function() {
-      return this.loadView(app.views.market);
-    };
-
-    MainRouter.prototype.login = function() {
-      return this.loadView(app.views.login);
-    };
-
-    MainRouter.prototype.register = function() {
-      return this.loadView(app.views.register);
-    };
-
-    MainRouter.prototype.loadView = function(view) {
-      $('#content').html(view.render());
-      view.fetchData();
-      return view.setListeners();
-    };
-
-    return MainRouter;
-
-  })(Backbone.Router);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "models/models": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  exports.BaseModel = (function(_super) {
-
-    __extends(BaseModel, _super);
-
-    function BaseModel() {
-      BaseModel.__super__.constructor.apply(this, arguments);
-    }
-
-    BaseModel.prototype.isNew = function() {
-      return this.id === void 0;
-    };
-
-    return BaseModel;
-
-  })(Backbone.Model);
+  })(Backbone.View);
 
 }).call(this);
 
@@ -1136,5 +1085,56 @@
   __obj.safe = __objSafe, __obj.escape = __escape;
   return __out.join('');
 }
+  }
+}));
+(this.require.define({
+  "routers/main_router": function(exports, require, module) {
+    (function() {
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  exports.MainRouter = (function(_super) {
+
+    __extends(MainRouter, _super);
+
+    function MainRouter() {
+      MainRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    MainRouter.prototype.routes = {
+      "home": "home",
+      "login": "login",
+      "market": "market",
+      "register": "register"
+    };
+
+    MainRouter.prototype.home = function() {
+      return this.loadView(app.views.home);
+    };
+
+    MainRouter.prototype.market = function() {
+      return this.loadView(app.views.market);
+    };
+
+    MainRouter.prototype.login = function() {
+      return this.loadView(app.views.login);
+    };
+
+    MainRouter.prototype.register = function() {
+      return this.loadView(app.views.register);
+    };
+
+    MainRouter.prototype.loadView = function(view) {
+      $('#content').html(view.render());
+      view.fetchData();
+      return view.setListeners();
+    };
+
+    return MainRouter;
+
+  })(Backbone.Router);
+
+}).call(this);
+
   }
 }));

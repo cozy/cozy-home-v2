@@ -26,7 +26,7 @@ class exports.HomeView extends Backbone.View
   logout: =>
     $.ajax
         type: 'GET'
-        url: "/logout/"
+        url: "logout/"
         success: (data) =>
             if data.success
                 app.routers.main.navigate 'login', true

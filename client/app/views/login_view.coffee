@@ -17,7 +17,7 @@ class exports.LoginView extends Backbone.View
         @errorAlert.hide()
         $.ajax
             type: 'POST'
-            url: "/login/"
+            url: "login/"
             data: password: @passwordField.val()
             success: (data) =>
                 if data.success
