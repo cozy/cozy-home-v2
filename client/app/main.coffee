@@ -21,7 +21,7 @@ $(document).ready ->
 
     $.ajax
       type: "GET"
-      url: "/authenticated/"
+      url: "authenticated/"
       success: (data) ->
         if data.success
             if Backbone.history.getFragment() is ''
@@ -35,3 +35,4 @@ $(document).ready ->
       
   app.initialize()
   Backbone.history.start()
+
