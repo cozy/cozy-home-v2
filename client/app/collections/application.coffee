@@ -6,7 +6,7 @@ Application = require("models/application").Application
 class exports.ApplicationCollection extends BaseCollection
     
   model: Application
-  url: '/api/applications/'
+  url: 'api/applications/'
 
   constructor: () ->
     super()
