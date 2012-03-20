@@ -1,3 +1,4 @@
+
 /*!
  * jQuery JavaScript Library v1.7.1
  * http://jquery.com/
@@ -13,6 +14,7 @@
  *
  * Date: Mon Nov 21 21:11:03 2011 -0500
  */
+
 (function( window, undefined ) {
 
 // Use the correct document accordingly with window argument (sandbox)
