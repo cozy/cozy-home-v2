@@ -71,12 +71,14 @@ action 'init', ->
             else
                 send success: "Initialization succeeds."
 
-    user = new User(email: "gelnior@free.fr", owner: true, password: "test", activated: true)
-    user.save (error) ->
-        if error
-            send error: "Initialization failed."
-        else
-            create_app()
+    create_app()
+
+#    user = new User(email: "gelnior@free.fr", owner: true, password: "test", activated: true)
+#    user.save (error) ->
+#        if error
+#            send error: "Initialization failed."
+#        else
+#            create_app()
 
 
 # Return list of available users
