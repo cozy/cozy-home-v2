@@ -6,6 +6,8 @@ express = require 'express'
 # TODO find a right place to put this code
 
 passport = require 'passport'
+bcrypt = require 'bcrypt'
+
 LocalStrategy = require('passport-local').Strategy
 
 passport.serializeUser = (user, done) ->
@@ -18,21 +20,28 @@ passport.deserializeUser = (email, done) ->
         else
             done err, null
 
+
 passport.use new LocalStrategy (email, password, done) ->
     User.all (err, users) ->
+        checkResult = (err, res) ->
+            if err
+                console.log "bcrypt checking failed"
+                done err, null
+            else if res
+                done err, users[0]
+            else
+                console.log "wrong password"
+                done err, null
+
         if err
             console.log err
-            done(err, null)
+            done err, null
         else if users is undefined or not users
-            done(err, null)
+            done err, null
         else if users and users.length == 0
-            done(err, null)
-        else if users[0].password != password
-            console.log "wrong password"
-            done(err, null)
+            done err, null
         else
-            done(err, users[0])
-
+            bcrypt.compare password, users[0].password, checkResult
 
 
 ##

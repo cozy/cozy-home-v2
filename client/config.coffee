@@ -5,7 +5,7 @@ exports.config =
   files:
     javascripts:
       # Describes how files will be compiled & joined together.
-      # Available formats:
+      # Available formatsu
       # * 'outputFilePath'
       # * map of ('outputFilePath': /regExp that matches input path/)
       # * map of ('outputFilePath': function that takes input path)

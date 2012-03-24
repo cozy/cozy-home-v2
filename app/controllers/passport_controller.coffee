@@ -68,10 +68,13 @@ action 'register', ->
             send success: true, msg: "Register succeeds."
 
     createUser = () ->
+        bcrypt = require('bcrypt')
+        salt = bcrypt.genSaltSync(10)
+        hash = bcrypt.hashSync(password, salt)
         user = new User
             email: email
             owner: true
-            password: password
+            password: hash
             activated: true
 
         user.save answer
