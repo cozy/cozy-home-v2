@@ -14,11 +14,16 @@ class exports.LoginView extends Backbone.View
     ### Functions ###
 
     submitPassword: =>
+      @logUser @passwordField.val()
+
+    # Send a login request to backend. If it succeeds, home view is displayed
+    # else an error message is displayed.
+    logUser: (password) =>
         @errorAlert.hide()
         $.ajax
             type: 'POST'
             url: "login/"
-            data: password: @passwordField.val()
+            data: password: password
             success: (data) =>
                 if data.success
                     app.routers.main.navigate 'home', true
@@ -26,7 +31,7 @@ class exports.LoginView extends Backbone.View
                     @errorAlert.fadeIn()
             error: =>
                 @errorAlert.fadeIn()
-            
+
     # Load data from server
     fetchData: ->
         true

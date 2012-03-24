@@ -15,16 +15,20 @@ class exports.RegisterView extends Backbone.View
     ### Functions ###
 
     submitData: =>
+        email = @emailField.val()
+        password = @passwordField.val()
+
+
         @errorAlert.hide()
         $.ajax
             type: 'POST'
             url: "register/"
             data:
-                email: @emailField.val()
-                password: @passwordField.val()
+                email: email
+                password: password
             success: (data) =>
                 if data.success
-                    app.routers.main.navigate 'login', true
+                    app.views.login.logUser password
                 else
                     @errorAlert.fadeIn()
             error: =>

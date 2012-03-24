@@ -4,6 +4,7 @@ class exports.MainRouter extends Backbone.Router
         "login": "login"
         "market": "market"
         "register": "register"
+        "account": "account"
 
     ## Route behaviors
 
@@ -18,6 +19,9 @@ class exports.MainRouter extends Backbone.Router
 
     register: ->
         @loadView(app.views.register)
+
+    account: ->
+        @loadView(app.views.account)
 
     ## functions
 

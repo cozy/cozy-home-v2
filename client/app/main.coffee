@@ -9,6 +9,7 @@ HomeView = require('views/home_view').HomeView
 MarketView = require('views/market').MarketView
 LoginView = require('views/login_view').LoginView
 RegisterView = require('views/register_view').RegisterView
+AccountView = require('views/account_view').AccountView
 
 # app bootstrapping on document ready
 $(document).ready ->
@@ -18,6 +19,7 @@ $(document).ready ->
     app.views.market = new MarketView()
     app.views.login = new LoginView()
     app.views.register = new RegisterView()
+    app.views.account = new AccountView()
 
     $.ajax
       type: "GET"
