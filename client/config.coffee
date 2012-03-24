@@ -30,7 +30,7 @@ exports.config =
         before: ['vendor/styles/bootstrap.css']
 
     templates:
-      defaultExtension: 'eco'
+      defaultExtension: 'jade'
       joinTo: 'javascripts/app.js'
 
   # Change this if you're using something other than backbone (e.g. 'ember').
