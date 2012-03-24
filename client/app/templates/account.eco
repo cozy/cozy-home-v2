@@ -1,0 +1,13 @@
+<h1>Account</h1>
+<form id="account-form">
+<p>
+<label for="account-email-field">email</label>
+<input id="account-email-field" type="text" />
+<label for="account-password1-field">
+fill this field to set a new password</label>
+<input id="account-password1-field" type="password" />
+<label for="account-password2-field">confirm new password</label>
+<input id="account-password2-field" type="password" />
+</p>
+<button class="btn" type="submit" id="account-form-button">Send changes</button>
+</form>

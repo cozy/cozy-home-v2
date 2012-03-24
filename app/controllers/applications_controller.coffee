@@ -18,20 +18,28 @@ before checkApiAuthenticated, { except: ["init", "index", "users"] }
 
 
 # Home page of the application, render browser UI.
-# TODO make layout work with jade templates
 action 'index', ->
     layout false
     render title: "Cozy Home"
 
 
 # Return list of applications available on this cozy instance.
-# TODO Check what could be done with "flash" express helper.
 action 'applications', ->
     Application.all (errors, apps) ->
         if errors
             send error: "Retrieve applications failed.", 500
         else
             send rows: apps
+
+
+# Return list of available users
+# TODO create a user package and move this action to it.
+action 'users', ->
+    User.all (errors, users) ->
+        if errors
+            send error: "Retrieve users failed.", 500
+        else
+            send rows: users
 
 
 ## Debug, to delete
@@ -61,7 +69,6 @@ action 'clean', ->
 # Initialize DB data (development helper).
 # TODO move to a railway command.
 action 'init', ->
-
     create_app = ->
         app = new Application(name: "Noty plus", state: "installed", index: 0, slug: "noty-plus")
 
@@ -72,33 +79,5 @@ action 'init', ->
                 send success: "Initialization succeeds."
 
     create_app()
-
-#    user = new User(email: "gelnior@free.fr", owner: true, password: "test", activated: true)
-#    user.save (error) ->
-#        if error
-#            send error: "Initialization failed."
-#        else
-#            create_app()
-
-
-# Return list of available users
-# TODO create a user package and move this action to it.
-action 'users', ->
-    User.all (errors, users) ->
-        if errors
-            send error: "Retrieve users failed.", 500
-        else
-            send rows: users
-
-
-# Return list of applications available on this cozy instance.
-# TODO Check what could be done with "flash" express helper.
-action 'applications', ->
-    Application.all (errors, apps) ->
-        if errors
-            send error: "Retrieve applications failed.", 500
-        else
-            send rows: apps
-
 
 

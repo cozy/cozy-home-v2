@@ -54,7 +54,6 @@ action 'logout', ->
     send success: "Log out succeeds."
 
 
-# TODO use bcrypt to store password.
 # TODO Check email and password validity
 action 'register', ->
     email = req.body.email
@@ -68,9 +67,13 @@ action 'register', ->
             send success: true, msg: "Register succeeds."
 
     createUser = () ->
+
+        # Encrypt password
         bcrypt = require('bcrypt')
         salt = bcrypt.genSaltSync(10)
         hash = bcrypt.hashSync(password, salt)
+
+        # Create user
         user = new User
             email: email
             owner: true
