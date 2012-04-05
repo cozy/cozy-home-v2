@@ -47,6 +47,8 @@ class exports.LoginView extends Backbone.View
         @passwordField = $("#login-password")
         @errorAlert = $("#login-error")
         @errorAlert.hide()
+        @accountButton = $("#account-button")
+        @accountButton.hide()
         @logoutButton = $("#logout-button")
         @logoutButton.hide()
 

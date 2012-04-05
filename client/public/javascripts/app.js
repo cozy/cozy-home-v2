@@ -48,94 +48,26 @@
     };
   }
 }).call(this);(this.require.define({
-  "views/register_view": function(exports, require, module) {
-    (function() {
-  var template,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  template = require('../templates/register');
-
-  exports.RegisterView = (function(_super) {
-
-    __extends(RegisterView, _super);
-
-    function RegisterView() {
-      this.submitData = __bind(this.submitData, this);
-      RegisterView.__super__.constructor.apply(this, arguments);
-    }
-
-    RegisterView.prototype.id = 'register-view';
-
-    RegisterView.prototype.className = 'center';
-
-    RegisterView.prototype.path = 'register';
-
-    /* Constructor
-    */
-
-    /* Listeners
-    */
-
-    /* Functions
-    */
-
-    RegisterView.prototype.submitData = function() {
-      var email, password,
-        _this = this;
-      email = this.emailField.val();
-      password = this.passwordField.val();
-      this.errorAlert.hide();
-      return $.ajax({
-        type: 'POST',
-        url: "register/",
-        data: {
-          email: email,
-          password: password
-        },
-        success: function(data) {
-          if (data.success) {
-            return app.views.login.logUser(password);
-          } else {
-            return _this.errorAlert.fadeIn();
-          }
-        },
-        error: function() {
-          return _this.errorAlert.fadeIn();
-        }
-      });
-    };
-
-    RegisterView.prototype.fetchData = function() {
-      return true;
-    };
-
-    /* Configuration
-    */
-
-    RegisterView.prototype.render = function() {
-      $(this.el).html(template());
-      return this.el;
-    };
-
-    RegisterView.prototype.setListeners = function() {
-      var _this = this;
-      this.emailField = $("#register-email");
-      this.passwordField = $("#register-password");
-      this.errorAlert = $("#register-error");
-      this.errorAlert.hide();
-      return this.passwordField.keyup(function(event) {
-        if (event.which === 13) return _this.submitData();
-      });
-    };
-
-    return RegisterView;
-
-  })(Backbone.View);
-
-}).call(this);
-
+  "templates/register": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<h2>Register to your Cozy</h2><div');
+buf.push(attrs({ 'id':('login-form') }));
+buf.push('><p><input');
+buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
+buf.push('/><input');
+buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
+buf.push('/><div');
+buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+buf.push('><div');
+buf.push(attrs({ 'id':('register-error-text') }));
+buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
+}
+return buf.join("");
+};
   }
 }));
 (this.require.define({
@@ -201,101 +133,6 @@
   }
 }));
 (this.require.define({
-  "templates/account": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h1>Account</h1><form');
-buf.push(attrs({ 'id':('account-form') }));
-buf.push('><p><label>email:<input');
-buf.push(attrs({ 'id':('account-email-field'), 'type':("text") }));
-buf.push('/></label><label>fill this field to set a new password:<input');
-buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
-buf.push('/></label><label>confirm new password:<input');
-buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
-buf.push('/></label><button');
-buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
-buf.push('>Send changes</button></p></form>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
-  "templates/appmarket": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<p');
-buf.push(attrs({ "class": ('title') }));
-buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '<input');
-buf.push(attrs({ 'type':("submit"), 'value':("install"), "class": ("button") }));
-buf.push('/></p><div');
-buf.push(attrs({ "class": ('info-text') }));
-buf.push('></div>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
-  "templates/register": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h2>Register to your Cozy</h2><div');
-buf.push(attrs({ 'id':('login-form') }));
-buf.push('><p><input');
-buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
-buf.push('/><input');
-buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
-buf.push('/><div');
-buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-buf.push('><div');
-buf.push(attrs({ 'id':('register-error-text') }));
-buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
-  "templates/market": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h1>Market Place</h1><h2>Select application you want in your browser.</h2><div');
-buf.push(attrs({ 'id':('app-list') }));
-buf.push('></div>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
-  "templates/home": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<div');
-buf.push(attrs({ 'id':('app-list') }));
-buf.push('></div>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
   "views/row": function(exports, require, module) {
     (function() {
   var __hasProp = Object.prototype.hasOwnProperty,
@@ -319,55 +156,6 @@ return buf.join("");
     };
 
     return BaseRow;
-
-  })(Backbone.View);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/account_view": function(exports, require, module) {
-    (function() {
-  var template,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  template = require('../templates/account');
-
-  exports.AccountView = (function(_super) {
-
-    __extends(AccountView, _super);
-
-    AccountView.prototype.id = 'account-view';
-
-    /* Constructor
-    */
-
-    function AccountView() {
-      AccountView.__super__.constructor.call(this);
-    }
-
-    AccountView.prototype.fetchData = function() {
-      var _this = this;
-      return $.get("api/users/", function(data) {
-        return _this.emailField.val(data.rows[0].email);
-      });
-    };
-
-    /* Configuration
-    */
-
-    AccountView.prototype.render = function() {
-      $(this.el).html(template());
-      return this.el;
-    };
-
-    AccountView.prototype.setListeners = function() {
-      return this.emailField = $("#account-email-field");
-    };
-
-    return AccountView;
 
   })(Backbone.View);
 
@@ -437,125 +225,6 @@ return buf.join("");
 
 }).call(this);
 
-  }
-}));
-(this.require.define({
-  "views/home_view": function(exports, require, module) {
-    (function() {
-  var AppCollection, AppRow, homeTemplate,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  homeTemplate = require('../templates/home');
-
-  AppRow = require('views/application').ApplicationRow;
-
-  AppCollection = require('collections/application').ApplicationCollection;
-
-  exports.HomeView = (function(_super) {
-
-    __extends(HomeView, _super);
-
-    HomeView.prototype.id = 'home-view';
-
-    /* Constructor
-    */
-
-    function HomeView() {
-      this.fillApps = __bind(this.fillApps, this);
-      this.account = __bind(this.account, this);
-      this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
-      this.apps = new AppCollection();
-      this.apps.bind('reset', this.fillApps);
-    }
-
-    /* Listeners
-    */
-
-    /* Functions
-    */
-
-    HomeView.prototype.logout = function() {
-      var _this = this;
-      return $.ajax({
-        type: 'GET',
-        url: "logout/",
-        success: function(data) {
-          if (data.success) {
-            return app.routers.main.navigate('login', true);
-          } else {
-            return alert("Server error occured, logout failed.");
-          }
-        },
-        error: function() {
-          return alert("Server error occured, logout failed.");
-        }
-      });
-    };
-
-    HomeView.prototype.account = function() {
-      return app.routers.main.navigate('account', true);
-    };
-
-    HomeView.prototype.fetchData = function() {
-      return this.apps.fetch();
-    };
-
-    HomeView.prototype.fillApps = function() {
-      var _this = this;
-      this.appList = $("#app-list");
-      this.appList.html(null);
-      return this.apps.forEach(function(app) {
-        var el, row;
-        row = new AppRow(app);
-        el = row.render();
-        return _this.appList.append(el);
-      });
-    };
-
-    /* Configuration
-    */
-
-    HomeView.prototype.render = function() {
-      $(this.el).html(homeTemplate());
-      return this.el;
-    };
-
-    HomeView.prototype.setListeners = function() {
-      this.appList = $("#app-list");
-      this.logoutButton = $("#logout-button");
-      this.accountButton = $("#account-button");
-      this.logoutButton.show();
-      this.logoutButton.click(this.logout);
-      return this.accountButton.click(this.account);
-    };
-
-    return HomeView;
-
-  })(Backbone.View);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "templates/application": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<a');
-buf.push(attrs({ 'href':("apps/" + (app.path) + ""), 'target':("_blank") }));
-buf.push('><div');
-buf.push(attrs({ "class": ('application-inner') }));
-buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
-buf.push(attrs({ "class": ('info-text') }));
-buf.push('></p></div></a>');
-}
-return buf.join("");
-};
   }
 }));
 (this.require.define({
@@ -683,6 +352,258 @@ return buf.join("");
   }
 }));
 (this.require.define({
+  "views/register_view": function(exports, require, module) {
+    (function() {
+  var template,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require('../templates/register');
+
+  exports.RegisterView = (function(_super) {
+
+    __extends(RegisterView, _super);
+
+    function RegisterView() {
+      this.submitData = __bind(this.submitData, this);
+      RegisterView.__super__.constructor.apply(this, arguments);
+    }
+
+    RegisterView.prototype.id = 'register-view';
+
+    RegisterView.prototype.className = 'center';
+
+    RegisterView.prototype.path = 'register';
+
+    /* Constructor
+    */
+
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    RegisterView.prototype.submitData = function() {
+      var email, password,
+        _this = this;
+      email = this.emailField.val();
+      password = this.passwordField.val();
+      this.errorAlert.hide();
+      return $.ajax({
+        type: 'POST',
+        url: "register/",
+        data: {
+          email: email,
+          password: password
+        },
+        success: function(data) {
+          if (data.success) {
+            return app.views.login.logUser(password);
+          } else {
+            return _this.errorAlert.fadeIn();
+          }
+        },
+        error: function() {
+          return _this.errorAlert.fadeIn();
+        }
+      });
+    };
+
+    RegisterView.prototype.fetchData = function() {
+      return true;
+    };
+
+    /* Configuration
+    */
+
+    RegisterView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    RegisterView.prototype.setListeners = function() {
+      var _this = this;
+      this.emailField = $("#register-email");
+      this.passwordField = $("#register-password");
+      this.errorAlert = $("#register-error");
+      this.errorAlert.hide();
+      return this.passwordField.keyup(function(event) {
+        if (event.which === 13) return _this.submitData();
+      });
+    };
+
+    return RegisterView;
+
+  })(Backbone.View);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "templates/application": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<a');
+buf.push(attrs({ 'href':("apps/" + (app.path) + ""), 'target':("_blank") }));
+buf.push('><div');
+buf.push(attrs({ "class": ('application-inner') }));
+buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
+buf.push(attrs({ "class": ('info-text') }));
+buf.push('></p></div></a>');
+}
+return buf.join("");
+};
+  }
+}));
+(this.require.define({
+  "templates/appmarket": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<p');
+buf.push(attrs({ "class": ('title') }));
+buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '<input');
+buf.push(attrs({ 'type':("submit"), 'value':("install"), "class": ("button") }));
+buf.push('/></p><div');
+buf.push(attrs({ "class": ('info-text') }));
+buf.push('></div>');
+}
+return buf.join("");
+};
+  }
+}));
+(this.require.define({
+  "templates/account": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<h1>Account</h1><form');
+buf.push(attrs({ 'id':('account-form') }));
+buf.push('><p><label>email:<input');
+buf.push(attrs({ 'id':('account-email-field'), 'type':("text") }));
+buf.push('/></label><label>fill this field to set a new password:<input');
+buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
+buf.push('/></label><label>confirm new password:<input');
+buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
+buf.push('/></label><button');
+buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
+buf.push('>Send changes</button></p></form>');
+}
+return buf.join("");
+};
+  }
+}));
+(this.require.define({
+  "templates/market": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<h1>Market Place</h1><h2>Select application you want in your browser.</h2><div');
+buf.push(attrs({ 'id':('app-list') }));
+buf.push('></div>');
+}
+return buf.join("");
+};
+  }
+}));
+(this.require.define({
+  "views/account_view": function(exports, require, module) {
+    (function() {
+  var template,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require('../templates/account');
+
+  exports.AccountView = (function(_super) {
+
+    __extends(AccountView, _super);
+
+    AccountView.prototype.id = 'account-view';
+
+    /* Constructor
+    */
+
+    function AccountView() {
+      AccountView.__super__.constructor.call(this);
+    }
+
+    AccountView.prototype.fetchData = function() {
+      var _this = this;
+      return $.get("api/users/", function(data) {
+        return _this.emailField.val(data.rows[0].email);
+      });
+    };
+
+    /* Configuration
+    */
+
+    AccountView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    AccountView.prototype.setListeners = function() {
+      return this.emailField = $("#account-email-field");
+    };
+
+    return AccountView;
+
+  })(Backbone.View);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "templates/login": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<h2>Sign in</h2><div');
+buf.push(attrs({ 'id':('login-form') }));
+buf.push('><p><input');
+buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
+buf.push('/></p><div');
+buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+buf.push('><div');
+buf.push(attrs({ 'id':('login-form-error-text') }));
+buf.push('><wrong>password</wrong></div></div></div>');
+}
+return buf.join("");
+};
+  }
+}));
+(this.require.define({
+  "templates/home": function(exports, require, module) {
+    module.exports = function anonymous(locals, attrs, escape, rethrow) {
+var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div');
+buf.push(attrs({ 'id':('app-list') }));
+buf.push('></div>');
+}
+return buf.join("");
+};
+  }
+}));
+(this.require.define({
   "routers/main_router": function(exports, require, module) {
     (function() {
   var __hasProp = Object.prototype.hasOwnProperty,
@@ -733,182 +654,6 @@ return buf.join("");
     return MainRouter;
 
   })(Backbone.Router);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/login_view": function(exports, require, module) {
-    (function() {
-  var template,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  template = require('../templates/login');
-
-  exports.LoginView = (function(_super) {
-
-    __extends(LoginView, _super);
-
-    function LoginView() {
-      this.logUser = __bind(this.logUser, this);
-      this.submitPassword = __bind(this.submitPassword, this);
-      LoginView.__super__.constructor.apply(this, arguments);
-    }
-
-    LoginView.prototype.id = 'login-view';
-
-    LoginView.prototype.className = 'center';
-
-    /* Constructor
-    */
-
-    /* Listeners
-    */
-
-    /* Functions
-    */
-
-    LoginView.prototype.submitPassword = function() {
-      return this.logUser(this.passwordField.val());
-    };
-
-    LoginView.prototype.logUser = function(password) {
-      var _this = this;
-      this.errorAlert.hide();
-      return $.ajax({
-        type: 'POST',
-        url: "login/",
-        data: {
-          password: password
-        },
-        success: function(data) {
-          if (data.success) {
-            return app.routers.main.navigate('home', true);
-          } else {
-            return _this.errorAlert.fadeIn();
-          }
-        },
-        error: function() {
-          return _this.errorAlert.fadeIn();
-        }
-      });
-    };
-
-    LoginView.prototype.fetchData = function() {
-      return true;
-    };
-
-    LoginView.prototype.render = function() {
-      $(this.el).html(template());
-      return this.el;
-    };
-
-    LoginView.prototype.setListeners = function() {
-      var _this = this;
-      this.passwordField = $("#login-password");
-      this.errorAlert = $("#login-error");
-      this.errorAlert.hide();
-      this.logoutButton = $("#logout-button");
-      this.logoutButton.hide();
-      return this.passwordField.keyup(function(event) {
-        if (event.which === 13) return _this.submitPassword();
-      });
-    };
-
-    return LoginView;
-
-  })(Backbone.View);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "collections/appmarket": function(exports, require, module) {
-    (function() {
-  var App, BaseCollection,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  BaseCollection = require("collections/collections").BaseCollection;
-
-  App = require("models/app").App;
-
-  exports.AppCollection = (function(_super) {
-
-    __extends(AppCollection, _super);
-
-    AppCollection.prototype.model = App;
-
-    AppCollection.prototype.url = '/api/market/apps/';
-
-    function AppCollection() {
-      AppCollection.__super__.constructor.call(this);
-    }
-
-    return AppCollection;
-
-  })(BaseCollection);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "collections/collections": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  exports.BaseCollection = (function(_super) {
-
-    __extends(BaseCollection, _super);
-
-    function BaseCollection() {
-      BaseCollection.__super__.constructor.apply(this, arguments);
-    }
-
-    BaseCollection.prototype.parse = function(response) {
-      return response.rows;
-    };
-
-    return BaseCollection;
-
-  })(Backbone.Collection);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "collections/application": function(exports, require, module) {
-    (function() {
-  var Application, BaseCollection,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  BaseCollection = require("collections/collections").BaseCollection;
-
-  Application = require("models/application").Application;
-
-  exports.ApplicationCollection = (function(_super) {
-
-    __extends(ApplicationCollection, _super);
-
-    ApplicationCollection.prototype.model = Application;
-
-    ApplicationCollection.prototype.url = 'api/applications/';
-
-    function ApplicationCollection() {
-      ApplicationCollection.__super__.constructor.call(this);
-    }
-
-    return ApplicationCollection;
-
-  })(BaseCollection);
 
 }).call(this);
 
@@ -1001,23 +746,285 @@ return buf.join("");
   }
 }));
 (this.require.define({
-  "templates/login": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h2>Sign in</h2><div');
-buf.push(attrs({ 'id':('login-form') }));
-buf.push('><p><input');
-buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
-buf.push('/></p><div');
-buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-buf.push('><div');
-buf.push(attrs({ 'id':('login-form-error-text') }));
-buf.push('><wrong>password</wrong></div></div></div>');
-}
-return buf.join("");
-};
+  "collections/collections": function(exports, require, module) {
+    (function() {
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  exports.BaseCollection = (function(_super) {
+
+    __extends(BaseCollection, _super);
+
+    function BaseCollection() {
+      BaseCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    BaseCollection.prototype.parse = function(response) {
+      return response.rows;
+    };
+
+    return BaseCollection;
+
+  })(Backbone.Collection);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "collections/appmarket": function(exports, require, module) {
+    (function() {
+  var App, BaseCollection,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  BaseCollection = require("collections/collections").BaseCollection;
+
+  App = require("models/app").App;
+
+  exports.AppCollection = (function(_super) {
+
+    __extends(AppCollection, _super);
+
+    AppCollection.prototype.model = App;
+
+    AppCollection.prototype.url = '/api/market/apps/';
+
+    function AppCollection() {
+      AppCollection.__super__.constructor.call(this);
+    }
+
+    return AppCollection;
+
+  })(BaseCollection);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "collections/application": function(exports, require, module) {
+    (function() {
+  var Application, BaseCollection,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  BaseCollection = require("collections/collections").BaseCollection;
+
+  Application = require("models/application").Application;
+
+  exports.ApplicationCollection = (function(_super) {
+
+    __extends(ApplicationCollection, _super);
+
+    ApplicationCollection.prototype.model = Application;
+
+    ApplicationCollection.prototype.url = 'api/applications/';
+
+    function ApplicationCollection() {
+      ApplicationCollection.__super__.constructor.call(this);
+    }
+
+    return ApplicationCollection;
+
+  })(BaseCollection);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/login_view": function(exports, require, module) {
+    (function() {
+  var template,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require('../templates/login');
+
+  exports.LoginView = (function(_super) {
+
+    __extends(LoginView, _super);
+
+    function LoginView() {
+      this.logUser = __bind(this.logUser, this);
+      this.submitPassword = __bind(this.submitPassword, this);
+      LoginView.__super__.constructor.apply(this, arguments);
+    }
+
+    LoginView.prototype.id = 'login-view';
+
+    LoginView.prototype.className = 'center';
+
+    /* Constructor
+    */
+
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    LoginView.prototype.submitPassword = function() {
+      return this.logUser(this.passwordField.val());
+    };
+
+    LoginView.prototype.logUser = function(password) {
+      var _this = this;
+      this.errorAlert.hide();
+      return $.ajax({
+        type: 'POST',
+        url: "login/",
+        data: {
+          password: password
+        },
+        success: function(data) {
+          if (data.success) {
+            return app.routers.main.navigate('home', true);
+          } else {
+            return _this.errorAlert.fadeIn();
+          }
+        },
+        error: function() {
+          return _this.errorAlert.fadeIn();
+        }
+      });
+    };
+
+    LoginView.prototype.fetchData = function() {
+      return true;
+    };
+
+    LoginView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    LoginView.prototype.setListeners = function() {
+      var _this = this;
+      this.passwordField = $("#login-password");
+      this.errorAlert = $("#login-error");
+      this.errorAlert.hide();
+      this.accountButton = $("#account-button");
+      this.accountButton.hide();
+      this.logoutButton = $("#logout-button");
+      this.logoutButton.hide();
+      return this.passwordField.keyup(function(event) {
+        if (event.which === 13) return _this.submitPassword();
+      });
+    };
+
+    return LoginView;
+
+  })(Backbone.View);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/home_view": function(exports, require, module) {
+    (function() {
+  var AppCollection, AppRow, homeTemplate,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  homeTemplate = require('../templates/home');
+
+  AppRow = require('views/application').ApplicationRow;
+
+  AppCollection = require('collections/application').ApplicationCollection;
+
+  exports.HomeView = (function(_super) {
+
+    __extends(HomeView, _super);
+
+    HomeView.prototype.id = 'home-view';
+
+    /* Constructor
+    */
+
+    function HomeView() {
+      this.fillApps = __bind(this.fillApps, this);
+      this.account = __bind(this.account, this);
+      this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
+      this.apps = new AppCollection();
+      this.apps.bind('reset', this.fillApps);
+    }
+
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    HomeView.prototype.logout = function() {
+      var _this = this;
+      return $.ajax({
+        type: 'GET',
+        url: "logout/",
+        success: function(data) {
+          if (data.success) {
+            return app.routers.main.navigate('login', true);
+          } else {
+            return alert("Server error occured, logout failed.");
+          }
+        },
+        error: function() {
+          return alert("Server error occured, logout failed.");
+        }
+      });
+    };
+
+    HomeView.prototype.account = function() {
+      return app.routers.main.navigate('account', true);
+    };
+
+    HomeView.prototype.fetchData = function() {
+      return this.apps.fetch();
+    };
+
+    HomeView.prototype.fillApps = function() {
+      var _this = this;
+      this.appList = $("#app-list");
+      this.appList.html(null);
+      return this.apps.forEach(function(app) {
+        var el, row;
+        row = new AppRow(app);
+        el = row.render();
+        return _this.appList.append(el);
+      });
+    };
+
+    /* Configuration
+    */
+
+    HomeView.prototype.render = function() {
+      $(this.el).html(homeTemplate());
+      return this.el;
+    };
+
+    HomeView.prototype.setListeners = function() {
+      this.appList = $("#app-list");
+      if (this.logoutButton === void 0) {
+        this.logoutButton = $("#logout-button");
+        this.logoutButton.click(this.logout);
+      }
+      if (this.accountButton === void 0) {
+        this.accountButton = $("#account-button");
+        this.accountButton.click(this.account);
+      }
+      this.accountButton.show();
+      return this.logoutButton.show();
+    };
+
+    return HomeView;
+
+  })(Backbone.View);
+
+}).call(this);
+
   }
 }));

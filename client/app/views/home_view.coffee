@@ -62,10 +62,14 @@ class exports.HomeView extends Backbone.View
 
   setListeners: ->
     @appList = $("#app-list")
-    @logoutButton = $("#logout-button")
-    @accountButton = $("#account-button")
 
+    if @logoutButton == undefined
+        @logoutButton = $("#logout-button")
+        @logoutButton.click @logout
+    if @accountButton == undefined
+        @accountButton = $("#account-button")
+        @accountButton.click @account
+    
+    @accountButton.show()
     @logoutButton.show()
-    @logoutButton.click @logout
-    @accountButton.click @account
 
