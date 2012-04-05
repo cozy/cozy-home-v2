@@ -1,4 +1,4 @@
-#
+
 # Actions to manage applications : home page + API.
 #
 

@@ -28,6 +28,7 @@ action 'isAuthenticated', ->
 
 # Check user credentials and keep user authentication through session. 
 action 'login', ->
+
     answer = (err) ->
         if err
             send error: true,  msg: "Login failed"
@@ -50,12 +51,14 @@ action 'login', ->
 
 # Clear authentication credentials from session for current user.
 action 'logout', ->
+
     req.logOut()
     send success: "Log out succeeds."
 
 
 # TODO Check email and password validity
 action 'register', ->
+
     email = req.body.email
     password = req.body.password
 
@@ -67,7 +70,6 @@ action 'register', ->
             send success: true, msg: "Register succeeds."
 
     createUser = () ->
-
         # Encrypt password
         bcrypt = require('bcrypt')
         salt = bcrypt.genSaltSync(10)
