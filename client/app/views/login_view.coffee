@@ -44,15 +44,18 @@ class exports.LoginView extends Backbone.View
         @el
 
     setListeners: ->
-        @passwordField = $("#login-password")
-        @errorAlert = $("#login-error")
-        @errorAlert.hide()
-        @accountButton = $("#account-button")
+        @passwordField = $ "#login-password"
+        @homeButton = $ "#home-button"
+        @homeButton.hide()
+        @accountButton = $ "#account-button"
         @accountButton.hide()
-        @logoutButton = $("#logout-button")
+        @logoutButton = $ "#logout-button"
         @logoutButton.hide()
 
+
+        @passwordField = $ "#login-password"
+        @errorAlert = $ "#login-error"
+        @errorAlert.hide()
         @passwordField.keyup (event) =>
              @submitPassword() if event.which == 13
 
-        #@passwordField.focus()

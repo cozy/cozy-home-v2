@@ -36,8 +36,12 @@ class exports.HomeView extends Backbone.View
            alert "Server error occured, logout failed."
 
 
+  home: =>
+    app.routers.main.navigate 'home', true
+
   account: =>
     app.routers.main.navigate 'account', true
+
 
   # Load data from server
   fetchData: ->
@@ -69,7 +73,11 @@ class exports.HomeView extends Backbone.View
     if @accountButton == undefined
         @accountButton = $("#account-button")
         @accountButton.click @account
+    if @homeButton == undefined
+        @homeButton = $("#home-button")
+        @homeButton.click @home
     
+    @homeButton.hide()
     @accountButton.show()
     @logoutButton.show()
 

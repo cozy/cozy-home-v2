@@ -22,4 +22,9 @@ class exports.AccountView extends Backbone.View
     @el
 
   setListeners: ->
+    @accountButton = $ "#account-button"
+    @accountButton.hide()
+    @homeButton = $ "#home-button"
+    @homeButton.show()
     @emailField = $ "#account-email-field"
+

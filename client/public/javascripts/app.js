@@ -48,23 +48,21 @@
     };
   }
 }).call(this);(this.require.define({
-  "templates/register": function(exports, require, module) {
+  "templates/login": function(exports, require, module) {
     module.exports = function anonymous(locals, attrs, escape, rethrow) {
 var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<h2>Register to your Cozy</h2><div');
+buf.push('<h2>Sign in</h2><div');
 buf.push(attrs({ 'id':('login-form') }));
 buf.push('><p><input');
-buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
-buf.push('/><input');
-buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
-buf.push('/><div');
-buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
+buf.push('/></p><div');
+buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
 buf.push('><div');
-buf.push(attrs({ 'id':('register-error-text') }));
-buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
+buf.push(attrs({ 'id':('login-form-error-text') }));
+buf.push('><wrong>password</wrong></div></div></div>');
 }
 return buf.join("");
 };
@@ -127,37 +125,6 @@ return buf.join("");
     app.initialize();
     return Backbone.history.start();
   });
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/row": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  exports.BaseRow = (function(_super) {
-
-    __extends(BaseRow, _super);
-
-    BaseRow.prototype.tagName = "div";
-
-    function BaseRow(model) {
-      this.model = model;
-      BaseRow.__super__.constructor.call(this);
-      this.id = this.model.slug;
-      this.model.view = this;
-    }
-
-    BaseRow.prototype.remove = function() {
-      return $(this.el).remove();
-    };
-
-    return BaseRow;
-
-  })(Backbone.View);
 
 }).call(this);
 
@@ -519,73 +486,57 @@ return buf.join("");
   }
 }));
 (this.require.define({
-  "views/account_view": function(exports, require, module) {
-    (function() {
-  var template,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  template = require('../templates/account');
-
-  exports.AccountView = (function(_super) {
-
-    __extends(AccountView, _super);
-
-    AccountView.prototype.id = 'account-view';
-
-    /* Constructor
-    */
-
-    function AccountView() {
-      AccountView.__super__.constructor.call(this);
-    }
-
-    AccountView.prototype.fetchData = function() {
-      var _this = this;
-      return $.get("api/users/", function(data) {
-        return _this.emailField.val(data.rows[0].email);
-      });
-    };
-
-    /* Configuration
-    */
-
-    AccountView.prototype.render = function() {
-      $(this.el).html(template());
-      return this.el;
-    };
-
-    AccountView.prototype.setListeners = function() {
-      return this.emailField = $("#account-email-field");
-    };
-
-    return AccountView;
-
-  })(Backbone.View);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "templates/login": function(exports, require, module) {
+  "templates/register": function(exports, require, module) {
     module.exports = function anonymous(locals, attrs, escape, rethrow) {
 var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<h2>Sign in</h2><div');
+buf.push('<h2>Register to your Cozy</h2><div');
 buf.push(attrs({ 'id':('login-form') }));
 buf.push('><p><input');
-buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
-buf.push('/></p><div');
-buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
+buf.push('/><input');
+buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
+buf.push('/><div');
+buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
 buf.push('><div');
-buf.push(attrs({ 'id':('login-form-error-text') }));
-buf.push('><wrong>password</wrong></div></div></div>');
+buf.push(attrs({ 'id':('register-error-text') }));
+buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
 }
 return buf.join("");
 };
+  }
+}));
+(this.require.define({
+  "views/row": function(exports, require, module) {
+    (function() {
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  exports.BaseRow = (function(_super) {
+
+    __extends(BaseRow, _super);
+
+    BaseRow.prototype.tagName = "div";
+
+    function BaseRow(model) {
+      this.model = model;
+      BaseRow.__super__.constructor.call(this);
+      this.id = this.model.slug;
+      this.model.view = this;
+    }
+
+    BaseRow.prototype.remove = function() {
+      return $(this.el).remove();
+    };
+
+    return BaseRow;
+
+  })(Backbone.View);
+
+}).call(this);
+
   }
 }));
 (this.require.define({
@@ -904,18 +855,74 @@ return buf.join("");
     LoginView.prototype.setListeners = function() {
       var _this = this;
       this.passwordField = $("#login-password");
-      this.errorAlert = $("#login-error");
-      this.errorAlert.hide();
+      this.homeButton = $("#home-button");
+      this.homeButton.hide();
       this.accountButton = $("#account-button");
       this.accountButton.hide();
       this.logoutButton = $("#logout-button");
       this.logoutButton.hide();
+      this.passwordField = $("#login-password");
+      this.errorAlert = $("#login-error");
+      this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitPassword();
       });
     };
 
     return LoginView;
+
+  })(Backbone.View);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/account_view": function(exports, require, module) {
+    (function() {
+  var template,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require('../templates/account');
+
+  exports.AccountView = (function(_super) {
+
+    __extends(AccountView, _super);
+
+    AccountView.prototype.id = 'account-view';
+
+    /* Constructor
+    */
+
+    function AccountView() {
+      AccountView.__super__.constructor.call(this);
+    }
+
+    AccountView.prototype.fetchData = function() {
+      var _this = this;
+      return $.get("api/users/", function(data) {
+        return _this.emailField.val(data.rows[0].email);
+      });
+    };
+
+    /* Configuration
+    */
+
+    AccountView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    AccountView.prototype.setListeners = function() {
+      this.accountButton = $("#account-button");
+      this.accountButton.hide();
+      this.homeButton = $("#home-button");
+      this.homeButton.show();
+      return this.emailField = $("#account-email-field");
+    };
+
+    return AccountView;
 
   })(Backbone.View);
 
@@ -949,6 +956,7 @@ return buf.join("");
     function HomeView() {
       this.fillApps = __bind(this.fillApps, this);
       this.account = __bind(this.account, this);
+      this.home = __bind(this.home, this);
       this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
       this.apps = new AppCollection();
       this.apps.bind('reset', this.fillApps);
@@ -976,6 +984,10 @@ return buf.join("");
           return alert("Server error occured, logout failed.");
         }
       });
+    };
+
+    HomeView.prototype.home = function() {
+      return app.routers.main.navigate('home', true);
     };
 
     HomeView.prototype.account = function() {
@@ -1016,6 +1028,11 @@ return buf.join("");
         this.accountButton = $("#account-button");
         this.accountButton.click(this.account);
       }
+      if (this.homeButton === void 0) {
+        this.homeButton = $("#home-button");
+        this.homeButton.click(this.home);
+      }
+      this.homeButton.hide();
       this.accountButton.show();
       return this.logoutButton.show();
     };
