@@ -4,9 +4,9 @@
 , "main": "server.js"
 , "dependencies":
   { "jade":             ">= 0"
-  , "express":          ">= 2.2.2"
-  , "connect":          ">= 1.4.2"
-  , "railway":          ">= 0.1.6"
+  , "express":          "= 2.5.8"
+  , "connect":          "= 1.8.6"
+  , "railway":          "= 0.2.11"
   , "coffee-script":    ">= 1.1.1"
   , "mime":             ">= 1.2.2"
   , "qs":               ">= 0.1.0"
