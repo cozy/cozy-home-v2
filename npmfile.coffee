@@ -1,1 +1,1 @@
-require 'ejs-ext'
+require 'jugglingdb'
