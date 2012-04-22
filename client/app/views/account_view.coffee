@@ -15,12 +15,22 @@ class exports.AccountView extends Backbone.View
       @emailField.val data.rows[0].email
 
   onDataSubmit: (event) =>
-    data =
+    form =
         email: $("#account-email-field").val()
         password1: $("#account-password1-field").val()
         password2: $("#account-password2-field").val()
 
-    alert data.email + " " + data.password1 + " " + data.password2
+    $.ajax
+        type: 'POST'
+        url: "api/user/"
+        data: form
+        success: (data) =>
+            if data.success
+                alert "Data were correctly changed."
+            else
+                alert "Something went wrong, your data were not updated."
+        error: =>
+            alert "Server errer occured, change failed."
 
 
   ### Configuration ###

@@ -8,7 +8,4 @@ exports.routes = (map) ->
     map.get('/logout', 'passport#logout')
 
     map.get('/api/users', 'users#users')
-
-    map.get('/clean', 'applications#clean')
-    map.get('/init', 'applications#init')
-
+    map.post('/api/user', 'passport#changePassword')
