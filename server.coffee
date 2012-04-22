@@ -1,5 +1,4 @@
 #!/usr/bin/env coffee
-
 app = module.exports = require('railway').createServer()
 
 if not module.parent
