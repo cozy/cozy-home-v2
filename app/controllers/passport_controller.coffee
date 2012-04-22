@@ -11,7 +11,7 @@ passport = require("passport")
 # or not.
 action 'isAuthenticated', ->
 
-    answer = (err, users) ->
+    checkUserExistence = (err, users) ->
         if err
             console.log err
             send error: true, nouser: false, 500
@@ -21,7 +21,7 @@ action 'isAuthenticated', ->
             send error: true, nouser: true
 
     if not req.isAuthenticated()
-        User.all answer
+        User.all checkUserExistence
     else
         send success: true, msg: "User is authenticated."
 
