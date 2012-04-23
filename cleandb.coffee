@@ -3,7 +3,7 @@ eyes = require 'eyes'
 
 # Small script to remove all data for Cozy home.
 
-destroyApplications = () ->
+destroyApplications = ->
     Application.destroyAll (error) ->
          if error
              console.log error.stack
