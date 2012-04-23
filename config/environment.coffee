@@ -1,4 +1,5 @@
 express = require 'express'
+RedisStore = require('connect-redis')(express)
 
 
 ##
@@ -19,7 +20,6 @@ passport.deserializeUser = (email, done) ->
             done err, users[0]
         else
             done err, null
-
 
 passport.use new LocalStrategy (email, password, done) ->
     User.all (err, users) ->
@@ -58,7 +58,7 @@ app.configure ->
     app.use express.static cwd + '/client/public', maxAge: 86400000
     app.use express.bodyParser()
     app.use express.cookieParser 'secret'
-    app.use express.session secret: 'secret'
+    app.use express.session secret: 'secret', store: new RedisStore(db:'cozy')
     app.use express.methodOverride()
     app.use passport.initialize()
     app.use passport.session()
