@@ -12,6 +12,7 @@
   , "qs":               ">= 0.1.0"
   , "passport":         ">= 0.1.6"
   , "passport-local":   ">= 0.1.1"
+  , "connect-redis":    ">= 0"
   , "bcrypt":           ">= 0.5.0"
   , "jugglingdb":       ">= 0"
   , "mongoose":         ">= 2.5.10" 
