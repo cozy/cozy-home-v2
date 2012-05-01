@@ -5,7 +5,7 @@ eyes = require 'eyes'
 ## Small script to intialize list of available applications.
 
 app = new Application
-    name: "Noty plus"
+    name: "My Pedia"
     state: "installed"
     index: 0
     slug: "noty-plus"

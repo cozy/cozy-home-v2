@@ -82,16 +82,13 @@ action 'register', ->
             send success: true, msg: "Register succeeds."
 
     createUser = () ->
-        # Encrypt password
         hash = cryptPassword password
 
-        # Create user
         user = new User
             email: email
             owner: true
             password: hash
             activated: true
-
         user.save answer
 
     User.all (err, users) ->

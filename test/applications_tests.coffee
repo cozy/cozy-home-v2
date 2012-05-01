@@ -92,10 +92,10 @@ before (done) ->
     client.post "login", password: password, (error, response, body) ->
         done()
 
-describe "GET api/applications/", ->
+describe "Applications", ->
 
     describe "GET /api/applications Get all applications", ->
-        it "When I send a request to retrieve all notes", (done) ->
+        it "When I send a request to retrieve all applications", (done) ->
             client.get "api/applications", (error, response, body) ->
                 storeResponse error, response, body, done
 
@@ -106,4 +106,19 @@ describe "GET api/applications/", ->
             should.exist bodyTest.rows
             bodyTest.rows.length.should.equal 1
             bodyTest.rows[0].name.should.equal "Noty plus"
+
+describe "Users", ->
+
+    describe "GET /api/users Get all users", ->
+        it "When I send a request to retrieve all users", (done) ->
+            client.get "api/users", (error, response, body) ->
+                storeResponse error, response, body, done
+
+        it "Then I got expected users in a list", ->
+            responseTest.statusCode.should.equal 200
+            should.exist bodyTest
+            bodyTest = JSON.parse bodyTest
+            should.exist bodyTest.rows
+            bodyTest.rows.length.should.equal 1
+            bodyTest.rows[0].email.should.equal email
 
