@@ -951,7 +951,6 @@ return buf.join("");
     };
 
     LoginView.prototype.displayError = function(text) {
-      alert(text);
       $("#login-form-error-text").html(text);
       return this.errorAlert.show();
     };
