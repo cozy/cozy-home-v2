@@ -3253,4 +3253,4 @@ h2{color:#d46a2c;font-size:30px;margin-bottom:24px;margin-top:24px}
 a{cursor:pointer}
 #register-view input{width:400px;font-size:30px;padding:6px;height:48px}
 #register-error{width:780px}
-#account-view h1{color:#d46a2c;margin-bottom:40px}
+#reset-view h1,#account-view h1{color:#d46a2c;margin-bottom:40px}

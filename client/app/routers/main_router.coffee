@@ -5,23 +5,29 @@ class exports.MainRouter extends Backbone.Router
         "market": "market"
         "register": "register"
         "account": "account"
+        "password/reset/:key": "resetPassword"
 
     ## Route behaviors
 
     home: ->
-        @loadView(app.views.home)
+        @loadView app.views.home
 
     market: ->
-        @loadView(app.views.market)
+        @loadView app.views.market
 
     login: ->
-        @loadView(app.views.login)
+        @loadView app.views.login
 
     register: ->
-        @loadView(app.views.register)
+        @loadView app.views.register
 
     account: ->
-        @loadView(app.views.account)
+        @loadView app.views.account
+
+    resetPassword: (key) ->
+        @loadView app.views.reset
+        app.views.reset.setKey key
+
 
     ## functions
 
@@ -30,4 +36,5 @@ class exports.MainRouter extends Backbone.Router
         $('#content').html view.render()
         view.fetchData()
         view.setListeners()
+
 
