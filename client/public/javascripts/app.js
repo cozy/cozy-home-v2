@@ -201,7 +201,6 @@
       url: "authenticated/",
       success: function(data) {
         if (data.success) {
-          console.log(data);
           if (Backbone.history.getFragment() === '') {
             return app.routers.main.navigate('home', true);
           } else if (data.nouser) {
@@ -483,7 +482,7 @@ buf.push('><test></test></div></div><div');
 buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
 buf.push('><div');
 buf.push(attrs({ 'id':('login-form-error-text') }));
-buf.push('><wrong>password</wrong></div></div></div>');
+buf.push('></div></div></div>');
 }
 return buf.join("");
 };
@@ -920,11 +919,13 @@ return buf.join("");
           if (data.success) {
             return app.routers.main.navigate('home', true);
           } else {
-            return _this.errorAlert.fadeIn();
+            return _this.displayError(data.msg);
           }
         },
-        error: function() {
-          return _this.errorAlert.fadeIn();
+        error: function(data) {
+          var info;
+          info = JSON.parse(data.responseText);
+          return _this.displayError(info.msg);
         }
       });
     };
@@ -940,7 +941,7 @@ return buf.join("");
           if (data.success) {
             return _this.displayInfo(data.success);
           } else {
-            return _this.displayError(data.error);
+            return _this.displayError(data.msg);
           }
         },
         error: function() {
@@ -950,6 +951,7 @@ return buf.join("");
     };
 
     LoginView.prototype.displayError = function(text) {
+      alert(text);
       $("#login-form-error-text").html(text);
       return this.errorAlert.show();
     };

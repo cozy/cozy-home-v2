@@ -29,14 +29,17 @@ class exports.LoginView extends Backbone.View
                 if data.success
                     app.routers.main.navigate 'home', true
                 else
-                    @errorAlert.fadeIn()
-            error: =>
-                @errorAlert.fadeIn()
+                    @displayError data.msg
+            error: (data) =>
+                info = JSON.parse data.responseText
+                @displayError info.msg
 
     # Load data from server
     fetchData: ->
 
 
+    # Send a password reset request to backend. If it succeeds, instructions 
+    # are displayed else an error message is displayed.
     onForgotButtonClicked: =>
         $.ajax
             type: "POST"
@@ -45,7 +48,7 @@ class exports.LoginView extends Backbone.View
                 if data.success
                     @displayInfo data.success
                 else
-                    @displayError data.error
+                    @displayError data.msg
             error: =>
                 @displayError "Server error occured."
 
