@@ -3221,16 +3221,16 @@ a.thumbnail:hover {
     margin-left: 30px;
   }
 }
-body{background-color:#f4d1a9}
+body{background-color:#9999ad}
 a{color:#f68c4e;font-weight:bold}
 a:hover{color:#000}
 h2{color:#d46a2c;font-size:30px;margin-bottom:24px;margin-top:24px}
 .spacer{clear:both}
-.container{padding:0;margin-top:40px;margin-bottom:40px;background-color:#fff;width:960px;border:2px solid #999;-webkit-border-radius:3px 3px 3px 3px;-moz-border-radius:3px 3px 3px 3px;border-radius:3px 3px 3px 3px;-moz-box-shadow:3px 3px 4px 1px #b09782;-webkit-box-shadow:3px 3px 4px 1px #b09782;box-shadow:3px 3px 4px 1px #b09782;min-height:260px}
+.container{padding:0;margin-top:40px;margin-bottom:40px;background-color:#fff;width:960px;border:2px solid #999;-webkit-border-radius:3px 3px 3px 3px;-moz-border-radius:3px 3px 3px 3px;border-radius:3px 3px 3px 3px;-moz-box-shadow:3px 3px 4px 1px #666;-webkit-box-shadow:3px 3px 4px 1px #666;box-shadow:3px 3px 4px 1px #666;min-height:260px}
 .close{float:right}
 .hidden{display:none}
 #text-container{width:610px}
-#header{padding:12px 12px;margin-top:0;margin-bottom:40px;background-color:#fff;width:936px;border:2px solid #999;border-top:0;-webkit-border-radius:0 0 3px 3px;-moz-border-radius:0 0 3px 3px;border-radius:0 0 3px 3px;-moz-box-shadow:3px 3px 4px 1px #b09782;-webkit-box-shadow:3px 3px 4px 1px #b09782;box-shadow:3px 3px 4px 1px #b09782;margin:auto;text-align:right;min-height:40px}
+#header{padding:12px 12px;margin-top:0;margin-bottom:40px;background-color:#fff;width:936px;border:2px solid #999;border-top:0;-webkit-border-radius:0 0 3px 3px;-moz-border-radius:0 0 3px 3px;border-radius:0 0 3px 3px;-moz-box-shadow:3px 3px 4px 1px #666;-webkit-box-shadow:3px 3px 4px 1px #666;box-shadow:3px 3px 4px 1px #666;margin:auto;text-align:right;min-height:40px}
 #header h2{float:left;margin-top:3px;color:#f68c4e}
 #header a{color:#d46a2c;text-decoration:none}
 #header .alert{float:left;padding:10px;margin:0 6px 0 18px}
@@ -3242,12 +3242,15 @@ h2{color:#d46a2c;font-size:30px;margin-bottom:24px;margin-top:24px}
 .application{width:150px;height:150px;margin-left:12px;margin-top:12px;font-size:42px;line-height:48px;display:inline-block}
 .application-inner{width:136px;height:136px;padding:24px;border:2px solid #f68c4e;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f69c5e), color-stop(1, #f6bd8f));background:-webkit-linear-gradient(top, #f69c5e 0%, #f6bd8f 100%);background:-moz-linear-gradient(top, #f69c5e 0%, #f6bd8f 100%);background:linear-gradient(top, #f69c5e 0%, #f6bd8f 100%);-moz-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;color:#ffeff3;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px}
 .application a:hover{text-decoration:none}
-.application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6bd8f), color-stop(1, #f6bd8f));background:-webkit-linear-gradient(top, #f6bd8f 0%, #f6bd8f 100%);background:-moz-linear-gradient(top, #f6bd8f 0%, #f6bd8f 100%);background:linear-gradient(top, #f6bd8f 0%, #f6bd8f 100%)}
+.application-inner:active{-moz-box-shadow:none;-webkit-box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
+.application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6ac7e), color-stop(1, #f6cd9f));background:-webkit-linear-gradient(top, #f6ac7e 0%, #f6cd9f 100%);background:-moz-linear-gradient(top, #f6ac7e 0%, #f6cd9f 100%);background:linear-gradient(top, #f6ac7e 0%, #f6cd9f 100%)}
 #logout-button{display:none}
 .center{text-align:center}
 .main-alert{display:inline-block}
 #login-error{width:360px}
 #login-view{text-align:center}
 #login-password{width:400px;font-size:30px;padding:6px;height:48px}
+a{cursor:pointer}
 #register-view input{width:400px;font-size:30px;padding:6px;height:48px}
 #register-error{width:780px}
+#account-view h1{color:#d46a2c;margin-bottom:40px}

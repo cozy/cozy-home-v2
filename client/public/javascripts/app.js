@@ -457,7 +457,13 @@ buf.push('<h2>Sign in</h2><div');
 buf.push(attrs({ 'id':('login-form') }));
 buf.push('><p><input');
 buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
-buf.push('/></p><div');
+buf.push('/></p><p><a');
+buf.push(attrs({ 'id':('forgot-password-button') }));
+buf.push('>forgot password ?</a></p><div');
+buf.push(attrs({ 'id':('login-info'), "class": ('alert') + ' ' + ('main-alert') }));
+buf.push('><div');
+buf.push(attrs({ 'id':('login-info-text') }));
+buf.push('><test></test></div></div><div');
 buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
 buf.push('><div');
 buf.push(attrs({ 'id':('login-form-error-text') }));
@@ -840,6 +846,7 @@ return buf.join("");
     __extends(LoginView, _super);
 
     function LoginView() {
+      this.onForgotButtonClicked = __bind(this.onForgotButtonClicked, this);
       this.logUser = __bind(this.logUser, this);
       this.submitPassword = __bind(this.submitPassword, this);
       LoginView.__super__.constructor.apply(this, arguments);
@@ -864,6 +871,7 @@ return buf.join("");
 
     LoginView.prototype.logUser = function(password) {
       var _this = this;
+      if (this.errorAlert != null) this.errorAlert = $("#login-error");
       this.errorAlert.hide();
       return $.ajax({
         type: 'POST',
@@ -884,8 +892,34 @@ return buf.join("");
       });
     };
 
-    LoginView.prototype.fetchData = function() {
-      return true;
+    LoginView.prototype.fetchData = function() {};
+
+    LoginView.prototype.onForgotButtonClicked = function() {
+      var _this = this;
+      return $.ajax({
+        type: "POST",
+        url: "login/forgot/",
+        success: function(data) {
+          if (data.success) {
+            return _this.displayInfo(data.success);
+          } else {
+            return _this.displayError(data.error);
+          }
+        },
+        error: function() {
+          return _this.displayError("Server error occured.");
+        }
+      });
+    };
+
+    LoginView.prototype.displayError = function(text) {
+      $("#login-form-error-text").html(text);
+      return this.errorAlert.show();
+    };
+
+    LoginView.prototype.displayInfo = function(text) {
+      $("#login-info-text").html(text);
+      return this.infoAlert.show();
     };
 
     LoginView.prototype.render = function() {
@@ -902,7 +936,11 @@ return buf.join("");
       this.accountButton.hide();
       this.logoutButton = $("#logout-button");
       this.logoutButton.hide();
+      this.forgotButton = $("#forgot-password-button");
+      this.forgotButton.click(this.onForgotButtonClicked);
       this.passwordField = $("#login-password");
+      this.infoAlert = $("#login-info");
+      this.infoAlert.hide();
       this.errorAlert = $("#login-error");
       this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
