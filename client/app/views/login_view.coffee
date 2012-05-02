@@ -35,7 +35,30 @@ class exports.LoginView extends Backbone.View
 
     # Load data from server
     fetchData: ->
-        true
+
+
+    onForgotButtonClicked: =>
+        $.ajax
+            type: "POST"
+            url: "login/forgot/"
+            success: (data) =>
+                if data.success
+                    @displayInfo data.success
+                else
+                    @displayError data.error
+            error: =>
+                @displayError "Server error occured."
+
+    # Show error div and fill it with given text
+    displayError: (text) ->
+        $("#login-form-error-text").html text
+        @errorAlert.show()
+
+    # Show info div and fill it with given text
+    displayInfo: (text) ->
+        $("#login-info-text").html text
+        @infoAlert.show()
+
 
 
     # Configuration
@@ -52,9 +75,12 @@ class exports.LoginView extends Backbone.View
         @accountButton.hide()
         @logoutButton = $ "#logout-button"
         @logoutButton.hide()
-
+        @forgotButton = $ "#forgot-password-button"
+        @forgotButton.click @onForgotButtonClicked
 
         @passwordField = $ "#login-password"
+        @infoAlert = $ "#login-info"
+        @infoAlert.hide()
         @errorAlert = $ "#login-error"
         @errorAlert.hide()
         @passwordField.keyup (event) =>
