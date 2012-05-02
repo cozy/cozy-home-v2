@@ -27,7 +27,7 @@ class exports.ResetView extends Backbone.View
     sendForm: (form) ->
         $.ajax
             type: "POST"
-            url: "/password/reset/#{key}"
+            url: "password/reset/#{@key}"
             data: form
             success: (data) =>
                 if data.success

@@ -1192,9 +1192,9 @@ return buf.join("");
 
     ResetView.prototype.sendForm = function(form) {
       var _this = this;
-      $.ajax({
+      return $.ajax({
         type: "POST",
-        url: "/password/reset/" + key,
+        url: "password/reset/" + this.key,
         data: form,
         success: function(data) {
           if (data.success) {
@@ -1208,7 +1208,6 @@ return buf.join("");
           return alert("Server errer occured, change failed.");
         }
       });
-      return console.log(form);
     };
 
     /* Configuration

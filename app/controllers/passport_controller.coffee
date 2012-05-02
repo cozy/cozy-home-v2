@@ -157,11 +157,13 @@ action "resetPassword", ->
     key = params.key
     newPassword = req.body.password1
 
-    utils.checkKey key,
-        success: ->
-           client.setKey "resetKey", "", ->
-               changeUserData user
-        failure: -> send error: "Key is not valid.", 500
+    checkKey = (user) ->
+        utils.checkKey key,
+            success: ->
+               client = redis.createClient()
+               client.set "resetKey", "", ->
+                   changeUserData user
+            failure: -> send error: "Key is not valid.", 500
 
     changeUserData = (user) ->
         data = {}
@@ -183,6 +185,6 @@ action "resetPassword", ->
         else if users.length == 0
             send error: true,  msg: "No user registered.", 400
         else
-            setKey users[0]
+            checkKey users[0]
 
 
