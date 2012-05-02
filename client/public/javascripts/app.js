@@ -201,13 +201,14 @@
       url: "authenticated/",
       success: function(data) {
         if (data.success) {
+          console.log(data);
           if (Backbone.history.getFragment() === '') {
             return app.routers.main.navigate('home', true);
           } else if (data.nouser) {
             return app.routers.main.navigate(app.views.register.path, true);
-          } else {
-            return app.routers.main.navigate('login', true);
           }
+        } else {
+          return app.routers.main.navigate('login', true);
         }
       },
       error: function(data) {
@@ -225,7 +226,7 @@
       app.views.register = new RegisterView();
       app.views.account = new AccountView();
       app.views.reset = new ResetView();
-      if (!window.location.hash.indexOf("password/reset")) {
+      if (window.location.hash.indexOf("password/reset") < 0) {
         return checkAuthentication();
       }
     };

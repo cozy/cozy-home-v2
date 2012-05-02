@@ -24,8 +24,9 @@ checkAuthentication = ->
                     app.routers.main.navigate 'home', true
                 else if data.nouser
                     app.routers.main.navigate app.views.register.path, true
-                else
-                    app.routers.main.navigate 'login', true
+            else
+                app.routers.main.navigate 'login', true
+
         error: (data) ->
             app.routers.main.navigate 'login', true
 
@@ -41,7 +42,7 @@ $(document).ready ->
         app.views.account = new AccountView()
         app.views.reset = new ResetView()
 
-        if not window.location.hash.indexOf "password/reset"
+        if window.location.hash.indexOf("password/reset") < 0
             checkAuthentication()
 
     app.initialize()

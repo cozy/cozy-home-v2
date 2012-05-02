@@ -28,8 +28,6 @@ exports.checkKey = (key, callbacks) ->
             console.log err
             send error: true,  msg: "Server error occured.", 500
         else
-            console.log res
-            console.log key
             if res == key
                 callbacks.success(res)
             else
