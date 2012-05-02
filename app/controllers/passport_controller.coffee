@@ -2,16 +2,9 @@
 # Actions to manage authentication : login, logout, registration.
 ###
 
-
 passport = require("passport")
-
-
-# Crypt given password with bcrypt algorithm.
-cryptPassword = (password) ->
-    bcrypt = require('bcrypt')
-    salt = bcrypt.genSaltSync(10)
-    hash = bcrypt.hashSync(password, salt)
-    hash
+redis = require("redis")
+utils = require("../../lib/passport_utils")
 
 
 # Returns true (key "success") if user is authenticated, false either.
@@ -82,7 +75,7 @@ action 'register', ->
             send success: true, msg: "Register succeeds."
 
     createUser = () ->
-        hash = cryptPassword password
+        hash = utils.cryptPassword password
 
         user = new User
             email: email
@@ -114,7 +107,7 @@ action 'changePassword', ->
             data.email = newEmail
 
         if newPassword? and newPassword.length > 0
-            data.password = cryptPassword newPassword
+            data.password = utils.cryptPassword newPassword
         
         user.updateAttributes data, (err) ->
             if err
@@ -131,4 +124,65 @@ action 'changePassword', ->
             send error: true,  msg: "No user registered.", 400
         else
             changeUserData users[0]
+
+        
+# Generate a random key to allow user to connect to his cozy and change his 
+# password without being logged in.
+action "forgotPassword", ->
+    User.all (err, users) ->
+        if err
+            console.log err
+            send error: true,  msg: "Server error occured.", 500
+        else if users.length == 0
+            redirect "/"
+        else
+            user = users[0]
+            key = utils.genResetKey()
+
+            utils.sendResetEmail user, key, (err, result)->
+                console.log err if err
+                send success: "An email has been sent to your email address, follow its instructions to get a new password."
+
+
+# Check key validity, then redirect to password reset view or to root route
+# if key is not valid.
+action "resetForm", ->
+    utils.checkKey params.key,
+        success: -> redirect "/#password/reset/#{params.key}"
+        failure: -> redirect "/"
+
+# Check key validity. If key is valid, the user password is change with its
+# data.
+action "resetPassword", ->
+    key = params.key
+    newPassword = req.body.password1
+
+    utils.checkKey key,
+        success: ->
+           client.setKey "resetKey", "", ->
+               changeUserData user
+        failure: -> send error: "Key is not valid.", 500
+
+    changeUserData = (user) ->
+        data = {}
+
+        if newPassword? and newPassword.length > 0
+            data.password = utils.cryptPassword newPassword
+        
+        user.updateAttributes data, (err) ->
+            if err
+                console.log err
+                send error: 'User cannot be updated', 400
+            else
+                send success: 'Password updated successfully'
+
+    User.all (err, users) ->
+        if err
+            console.log err
+            send error: true,  msg: "Server error occured.", 500
+        else if users.length == 0
+            send error: true,  msg: "No user registered.", 400
+        else
+            setKey users[0]
+
 
