@@ -16,12 +16,14 @@
   , "bcrypt":           ">= 0.5.0"
   , "jugglingdb":       ">= 0"
   , "mongoose":         ">= 2.5.10" 
+  , "mailer":           ">= 0.6.7"
+  , "randomstring":     ">= 1.0.1"
+  , "redis":            ">= 0.7.2"
   , "mocha":            ">= 0"
   , "request":          ">= 0"
-  , "should":          ">= 0"
+  , "should":           ">= 0"
   }
 , "scripts":
   { "test": "mocha test/* --reporter spec --require should --compilers coffee:coffee-script"
   }
 }
-
