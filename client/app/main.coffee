@@ -22,8 +22,8 @@ checkAuthentication = ->
             if data.success
                 if Backbone.history.getFragment() is ''
                     app.routers.main.navigate 'home', true
-                else if data.nouser
-                    app.routers.main.navigate app.views.register.path, true
+            else if data.nouser
+                app.routers.main.navigate app.views.register.path, true
             else
                 app.routers.main.navigate 'login', true
 

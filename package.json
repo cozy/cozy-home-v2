@@ -19,6 +19,7 @@
   , "mailer":           ">= 0.6.7"
   , "randomstring":     ">= 1.0.1"
   , "redis":            ">= 0.7.2"
+  , "restler":          ">= 0"
   , "mocha":            ">= 0"
   , "request":          ">= 0"
   , "should":           ">= 0"

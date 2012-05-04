@@ -203,9 +203,9 @@
         if (data.success) {
           if (Backbone.history.getFragment() === '') {
             return app.routers.main.navigate('home', true);
-          } else if (data.nouser) {
-            return app.routers.main.navigate(app.views.register.path, true);
           }
+        } else if (data.nouser) {
+          return app.routers.main.navigate(app.views.register.path, true);
         } else {
           return app.routers.main.navigate('login', true);
         }
