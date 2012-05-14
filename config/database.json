@@ -3,7 +3,8 @@
   , "url":      "mongodb://127.0.0.1/cozy-home"
   }
 , "test":
-  { "driver":   "memory"
+  { "driver":   "mongoose"
+  , "url":      "mongodb://127.0.0.1/cozy-home"
   }
 , "production":
   { "driver":   "mongoose"

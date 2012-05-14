@@ -1,5 +1,4 @@
 fs = require 'fs'
-{exec} = require 'child_process'
 
 # Grab test files 
 walk = (dir, fileList) ->
@@ -15,6 +14,7 @@ walk = (dir, fileList) ->
           fileList.push(filename)
   fileList
 
+{exec} = require 'child_process'
 testFiles = walk("test", [])
 
 
@@ -26,7 +26,6 @@ task 'tests', 'run tests through mocha', ->
     if err
       console.log "Running mocha caught exception: \n" + err
     console.log stdout
-
 
 option '-f', '--file [FILE]', 'test file to run'
 
@@ -40,4 +39,10 @@ task 'tests:file', 'run test through mocha for a given file', (options) ->
       console.log "Running mocha caught exception: \n" + err
     console.log stdout
 
+task "xunit", "", ->
+  process.env.TZ = "Europe/Paris"
+  command = "mocha "
+  command += " --require should --compilers coffee:coffee-script -R xunit > xunit.xml"
+  exec command, (err, stdout, stderr) ->
+    console.log stdout
 

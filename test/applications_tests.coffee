@@ -1,6 +1,6 @@
 should = require('should')
 client = require('./client')
-app = require('../server')
+server = require('../server')
 
 
 email = "test@test.com"
@@ -16,7 +16,6 @@ storeResponse = (error, response, body, done) ->
     responseTest = null
     bodyTest = null
     if error
-        console.log error
         false.should.be.ok()
     else
         responseTest = response
@@ -25,7 +24,6 @@ storeResponse = (error, response, body, done) ->
 
 handleResponse = (error, response, body, done) ->
     if error
-        console.log error
         false.should.be.ok()
     done()
 
@@ -37,19 +35,14 @@ clearDb = (callback) ->
     destroyApplications = ->
         Application.destroyAll (error) ->
              if error
-                 console.log error.stack
-                 console.log "Cleaning Applications failed."
                  callback()
              else
-                 console.log "All applications are removed."
                  callback()
 
     destroyUsers = ->
         User.destroyAll (error) ->
             if error
-                 console.log error.stack
-                 console.log "Cleaning Users failed."
-                 callback()
+                callback()
             else
                  destroyApplications()
             
@@ -84,15 +77,16 @@ initDb = (callback) ->
             
     createApp()
 
-before (done) ->
-    clearDb ->
-        initDb done
-
-before (done) ->
-    client.post "login", password: password, (error, response, body) ->
-        done()
 
 describe "Applications", ->
+
+    before (done) ->
+        server.listen(3000)
+        clearDb ->
+            initDb ->
+                client.post "login", password: password, \
+                            (error, response, body) ->
+                    done()
 
     describe "GET /api/applications Get all applications", ->
         it "When I send a request to retrieve all applications", (done) ->
@@ -108,6 +102,10 @@ describe "Applications", ->
             bodyTest.rows[0].name.should.equal "Noty plus"
 
 describe "Users", ->
+
+    after (done) ->
+        server.close()
+        done()
 
     describe "GET /api/users Get all users", ->
         it "When I send a request to retrieve all users", (done) ->
