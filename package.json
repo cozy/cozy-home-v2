@@ -16,7 +16,7 @@
   , "bcrypt":           ">= 0.5.0"
   , "jugglingdb":       ">= 0"
   , "mongoose":         ">= 2.5.10" 
-  , "mailer":           ">= 0.6.7"
+  , "nodemailer":           ">= 0.3.0"
   , "randomstring":     ">= 1.0.1"
   , "redis":            ">= 0.7.2"
   , "restler":          ">= 0"
