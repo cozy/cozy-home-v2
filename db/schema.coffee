@@ -4,6 +4,7 @@ User = define 'User', ->
     property 'password', String
     property 'owner', Boolean, default: false
     property 'activated', Boolean, default: false
+    property 'url', String, index: true
 
 
 # Application descrbies an application installed inside the Cozy instance.
