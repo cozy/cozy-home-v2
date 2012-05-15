@@ -6,7 +6,6 @@ User.all (err, users) ->
         process.exit(0)
     else
         user = users[0]
-        console.log user.email
         url = process.argv[2]
         user.updateAttributes { url: url }, (err) ->
             console.log err if err
