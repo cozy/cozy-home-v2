@@ -1,4 +1,4 @@
-# Cozy Notes
+# Cozy Home
 
 Cozy Home manages applications installed on your Cozy platform.
 
