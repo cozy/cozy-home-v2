@@ -42,7 +42,7 @@ task 'tests:file', 'run test through mocha for a given file', (options) ->
 task "xunit", "", ->
   process.env.TZ = "Europe/Paris"
   command = "mocha "
-  command += " --require should --compilers coffee:coffee-script -R tap > test_result.tap"
+  command += " --require should --compilers coffee:coffee-script -R xunit > xunit.xml"
   exec command, (err, stdout, stderr) ->
     console.log stdout
 
