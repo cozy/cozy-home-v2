@@ -10,7 +10,7 @@ app = new Application
     slug: "notes"
     icon: "notes_icon.png"
     description: """
-    Manage and organize all stuff about your notes and your interests.
+    Organize your interests
     """
 
 app.save (error) ->
