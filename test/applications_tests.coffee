@@ -101,6 +101,7 @@ describe "Applications", ->
             bodyTest.rows.length.should.equal 1
             bodyTest.rows[0].name.should.equal "Noty plus"
 
+
 describe "Users", ->
 
     after (done) ->
