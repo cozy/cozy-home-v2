@@ -253,10 +253,13 @@
     Application.prototype.url = '/api/applications/';
 
     function Application(app) {
+      this.app = app;
       Application.__super__.constructor.call(this);
       this.slug = app.slug;
       this.name = app.name;
-      this.path = "" + app.slug + "/";
+      this.description = app.description;
+      this.icon = app.icon;
+      this;
     }
 
     return Application;
@@ -416,12 +419,14 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<a');
-buf.push(attrs({ 'href':("apps/" + (app.path) + ""), 'target':("_blank") }));
+buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
 buf.push('><div');
 buf.push(attrs({ "class": ('application-inner') }));
-buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
+buf.push('><img');
+buf.push(attrs({ 'src':("images/" + (app.icon) + "") }));
+buf.push('/>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
 buf.push(attrs({ "class": ('info-text') }));
-buf.push('></p></div></a>');
+buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div></a>');
 }
 return buf.join("");
 };
@@ -455,6 +460,8 @@ with (locals || {}) {
 var interp;
 buf.push('<div');
 buf.push(attrs({ 'id':('app-list') }));
+buf.push('></div><div');
+buf.push(attrs({ "class": ('spacer') }));
 buf.push('></div>');
 }
 return buf.join("");
