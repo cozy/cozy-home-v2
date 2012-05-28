@@ -19,7 +19,7 @@ class exports.LoginView extends Backbone.View
     # Send a login request to backend. If it succeeds, home view is displayed
     # else an error message is displayed.
     logUser: (password) =>
-        @errorAlert = $ "#login-error" if @errorAlert?
+        @errorAlert = $ "#login-error" if not @errorAlert?
         @errorAlert.hide()
         $.ajax
             type: 'POST'

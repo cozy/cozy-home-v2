@@ -27,7 +27,7 @@ class exports.RegisterView extends Backbone.View
                 email: email
                 password: password
             success: (data) =>
-                if data.success
+                if data.success == true
                     app.views.login.logUser password
                 else
                     @errorAlert.fadeIn()
@@ -35,7 +35,6 @@ class exports.RegisterView extends Backbone.View
                 @errorAlert.fadeIn()
             
     fetchData: ->
-        true
 
     ### Configuration ###
 
@@ -47,6 +46,7 @@ class exports.RegisterView extends Backbone.View
         @emailField = $("#register-email")
         @passwordField = $("#register-password")
         @errorAlert = $("#register-error")
+        console.log @errorAlert
         @errorAlert.hide()
 
         @passwordField.keyup (event) =>

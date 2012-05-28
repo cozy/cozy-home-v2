@@ -907,7 +907,7 @@ return buf.join("");
 
     LoginView.prototype.logUser = function(password) {
       var _this = this;
-      if (this.errorAlert != null) this.errorAlert = $("#login-error");
+      if (!(this.errorAlert != null)) this.errorAlert = $("#login-error");
       this.errorAlert.hide();
       return $.ajax({
         type: 'POST',
@@ -1106,7 +1106,7 @@ return buf.join("");
           password: password
         },
         success: function(data) {
-          if (data.success) {
+          if (data.success === true) {
             return app.views.login.logUser(password);
           } else {
             return _this.errorAlert.fadeIn();
@@ -1118,9 +1118,7 @@ return buf.join("");
       });
     };
 
-    RegisterView.prototype.fetchData = function() {
-      return true;
-    };
+    RegisterView.prototype.fetchData = function() {};
 
     /* Configuration
     */
@@ -1135,6 +1133,7 @@ return buf.join("");
       this.emailField = $("#register-email");
       this.passwordField = $("#register-password");
       this.errorAlert = $("#register-error");
+      console.log(this.errorAlert);
       this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitData();
