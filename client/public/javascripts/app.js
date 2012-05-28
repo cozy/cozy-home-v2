@@ -1133,7 +1133,6 @@ return buf.join("");
       this.emailField = $("#register-email");
       this.passwordField = $("#register-password");
       this.errorAlert = $("#register-error");
-      console.log(this.errorAlert);
       this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitData();
