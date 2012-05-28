@@ -1,5 +1,4 @@
 server = require './server'
-eyes = require 'eyes'
 
 # Small script to remove all data for Cozy home.
 
@@ -10,7 +9,7 @@ destroyApplications = ->
              console.log "Cleaning Applications failed."
              process.exit(0)
          else
-             console.log "All applications are removed."
+             console.log "All applications and users are removed."
              process.exit(0)
 
 destroyUsers = ->
