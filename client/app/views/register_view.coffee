@@ -46,7 +46,6 @@ class exports.RegisterView extends Backbone.View
         @emailField = $("#register-email")
         @passwordField = $("#register-password")
         @errorAlert = $("#register-error")
-        console.log @errorAlert
         @errorAlert.hide()
 
         @passwordField.keyup (event) =>

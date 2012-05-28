@@ -60,6 +60,9 @@ h2
 .hidden
   display none
 
+.spacer 
+  clear both
+
 #text-container
   width 610px
 
@@ -114,10 +117,11 @@ h2
 
 #content
   padding 24px
+  min-height 270px
 
 .application 
   width 150px
-  height 150px
+  height 200px
   margin-left 12px
   margin-top 12px
   font-size 42px
@@ -125,11 +129,12 @@ h2
   display inline-block
 
 .application-inner
+  text-align center
   width 136px
-  height 136px
-  padding 24px
+  height 200px
+  padding 24px 18px
   border 2px solid linkcolor
-  background linear-gradient(top, bgcolorbuttons 0%, bgclearcolorbuttons 100%)
+  background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
   shadow 1px 1px 3px shadowcolor
   color textcolorapplication 
   border-radius 12px
@@ -141,7 +146,7 @@ h2
   shadow none
 
 .application-inner:hover  
-  background linear-gradient(top, bgcolorhoverbuttons 0%, bgclearcolorhoverbuttons 100%)
+  background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
 
 #logout-button
   display none

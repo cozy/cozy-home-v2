@@ -1,4 +1,5 @@
-a(href="apps/#{app.path}", target="_blank")
+a(href="apps/#{app.slug}/", target="_blank")
   .application-inner
+    img(src="images/#{app.icon}")
     #{app.name}
-    p.info-text
+    p.info-text #{app.description}

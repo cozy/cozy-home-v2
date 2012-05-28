@@ -238,6 +238,39 @@
   }
 }));
 (this.require.define({
+  "models/application": function(exports, require, module) {
+    (function() {
+  var BaseModel,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require("models/models").BaseModel;
+
+  exports.Application = (function(_super) {
+
+    __extends(Application, _super);
+
+    Application.prototype.url = '/api/applications/';
+
+    function Application(app) {
+      this.app = app;
+      Application.__super__.constructor.call(this);
+      this.slug = app.slug;
+      this.name = app.name;
+      this.description = app.description;
+      this.icon = app.icon;
+      this;
+    }
+
+    return Application;
+
+  })(BaseModel);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
   "models/appmarket": function(exports, require, module) {
     (function() {
   var BaseModel,
@@ -386,12 +419,14 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<a');
-buf.push(attrs({ 'href':("apps/" + (app.path) + ""), 'target':("_blank") }));
+buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
 buf.push('><div');
 buf.push(attrs({ "class": ('application-inner') }));
-buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
+buf.push('><img');
+buf.push(attrs({ 'src':("images/" + (app.icon) + "") }));
+buf.push('/>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
 buf.push(attrs({ "class": ('info-text') }));
-buf.push('></p></div></a>');
+buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div></a>');
 }
 return buf.join("");
 };
@@ -425,6 +460,8 @@ with (locals || {}) {
 var interp;
 buf.push('<div');
 buf.push(attrs({ 'id':('app-list') }));
+buf.push('></div><div');
+buf.push(attrs({ "class": ('spacer') }));
 buf.push('></div>');
 }
 return buf.join("");
@@ -1103,7 +1140,6 @@ return buf.join("");
       this.emailField = $("#register-email");
       this.passwordField = $("#register-password");
       this.errorAlert = $("#register-error");
-      console.log(this.errorAlert);
       this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitData();

@@ -1,14 +1,17 @@
 server = require './server'
-eyes = require 'eyes'
 
 
 ## Small script to intialize list of available applications.
 
 app = new Application
-    name: "My Pedia"
+    name: "Notes"
     state: "installed"
     index: 0
-    slug: "noty-plus"
+    slug: "notes"
+    icon: "notes_icon.png"
+    description: """
+    Organize your interests
+    """
 
 app.save (error) ->
     if error

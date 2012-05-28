@@ -5,9 +5,11 @@ class exports.Application extends BaseModel
 
   url: '/api/applications/'
 
-  constructor: (app) ->
+  constructor: (@app) ->
     super()
     @slug = app.slug
     @name = app.name
-    @path = "#{app.slug}/"
+    @description = app.description
+    @icon = app.icon
+    @
     
