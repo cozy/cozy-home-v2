@@ -318,7 +318,6 @@
     };
 
     User.prototype.login = function(callbacks) {
-      console.log(callbacks);
       return client.post("login/", {
         password: this.password
       }, callbacks);
