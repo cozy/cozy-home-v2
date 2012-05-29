@@ -110,37 +110,6 @@
   }
 }));
 (this.require.define({
-  "collections/appmarket": function(exports, require, module) {
-    (function() {
-  var App, BaseCollection,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  BaseCollection = require("collections/collections").BaseCollection;
-
-  App = require("models/app").App;
-
-  exports.AppCollection = (function(_super) {
-
-    __extends(AppCollection, _super);
-
-    AppCollection.prototype.model = App;
-
-    AppCollection.prototype.url = '/api/market/apps/';
-
-    function AppCollection() {
-      AppCollection.__super__.constructor.call(this);
-    }
-
-    return AppCollection;
-
-  })(BaseCollection);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
   "collections/collections": function(exports, require, module) {
     (function() {
   var __hasProp = Object.prototype.hasOwnProperty,
@@ -169,7 +138,7 @@
 (this.require.define({
   "main": function(exports, require, module) {
     (function() {
-  var AccountView, HomeView, LoginView, MainRouter, MarketView, RegisterView, ResetView, checkAuthentication;
+  var AccountView, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication;
 
   window.app = {};
 
@@ -184,8 +153,6 @@
   MainRouter = require('routers/main_router').MainRouter;
 
   HomeView = require('views/home_view').HomeView;
-
-  MarketView = require('views/market').MarketView;
 
   LoginView = require('views/login_view').LoginView;
 
@@ -220,7 +187,6 @@
     app.initialize = function() {
       app.routers.main = new MainRouter();
       app.views.home = new HomeView();
-      app.views.market = new MarketView();
       app.views.login = new LoginView();
       app.views.register = new RegisterView();
       app.views.account = new AccountView();
@@ -263,36 +229,6 @@
     }
 
     return Application;
-
-  })(BaseModel);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "models/appmarket": function(exports, require, module) {
-    (function() {
-  var BaseModel,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  BaseModel = require("models/models").BaseModel;
-
-  exports.App = (function(_super) {
-
-    __extends(App, _super);
-
-    App.prototype.url = '/api/market/apps/';
-
-    function App(app) {
-      App.__super__.constructor.call(this);
-      this.slug = app.slug;
-      this.name = app.name;
-      this.path = "/" + app.slug + "/";
-    }
-
-    return App;
 
   })(BaseModel);
 
@@ -427,25 +363,6 @@ buf.push(attrs({ 'src':("images/" + (app.icon) + "") }));
 buf.push('/>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
 buf.push(attrs({ "class": ('info-text') }));
 buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div></a>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
-  "templates/appmarket": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<p');
-buf.push(attrs({ "class": ('title') }));
-buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '<input');
-buf.push(attrs({ 'type':("submit"), 'value':("install"), "class": ("button") }));
-buf.push('/></p><div');
-buf.push(attrs({ "class": ('info-text') }));
-buf.push('></div>');
 }
 return buf.join("");
 };
@@ -693,73 +610,6 @@ return buf.join("");
   }
 }));
 (this.require.define({
-  "views/appmarket": function(exports, require, module) {
-    (function() {
-  var BaseRow, appTemplate,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  appTemplate = require('../templates/app');
-
-  BaseRow = require('views/row').BaseRow;
-
-  exports.AppRow = (function(_super) {
-
-    __extends(AppRow, _super);
-
-    AppRow.prototype.className = "app";
-
-    AppRow.prototype.events = {
-      "click .button": "onInstallClicked"
-    };
-
-    function AppRow(model) {
-      this.model = model;
-      this.onInstallClicked = __bind(this.onInstallClicked, this);
-      AppRow.__super__.constructor.call(this, this.model);
-    }
-
-    AppRow.prototype.onInstallClicked = function(event) {
-      event.preventDefault();
-      return this.installApp();
-    };
-
-    AppRow.prototype.installApp = function() {
-      var _this = this;
-      this.$(".info-text").html("Installing...");
-      return $.ajax({
-        type: 'POST',
-        dataType: "json",
-        contentType: "application/json",
-        url: "/api/installed-apps/",
-        data: '{"name": "' + this.model.name + '", "slug": "' + this.model.slug + '"}',
-        success: function() {
-          return _this.$(".info-text").html("Installed!");
-        },
-        error: function() {
-          return _this.$(".info-text").html("Install failed.");
-        }
-      });
-    };
-
-    AppRow.prototype.render = function() {
-      $(this.el).html(appTemplate({
-        app: this.model
-      }));
-      this.el.id = this.model.slug;
-      return this.el;
-    };
-
-    return AppRow;
-
-  })(BaseRow);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
   "views/home_view": function(exports, require, module) {
     (function() {
   var AppCollection, AppRow, homeTemplate,
@@ -861,6 +711,8 @@ return buf.join("");
         this.homeButton = $("#home-button");
         this.homeButton.click(this.home);
       }
+      this.buttons = $("#buttons");
+      this.buttons.show();
       this.homeButton.hide();
       this.accountButton.show();
       return this.logoutButton.show();
@@ -1002,70 +854,6 @@ return buf.join("");
   }
 }));
 (this.require.define({
-  "views/market": function(exports, require, module) {
-    (function() {
-  var AppCollection, AppRow, homeTemplate,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  homeTemplate = require('../templates/market');
-
-  AppRow = require('views/application').ApplicationRow;
-
-  AppCollection = require('collections/application').ApplicationCollection;
-
-  exports.MarketView = (function(_super) {
-
-    __extends(MarketView, _super);
-
-    MarketView.prototype.id = 'market-view';
-
-    /* Constructor
-    */
-
-    function MarketView() {
-      this.fillApps = __bind(this.fillApps, this);      MarketView.__super__.constructor.call(this);
-      this.apps = new AppCollection();
-      this.apps.bind('reset', this.fillApps);
-    }
-
-    /* Listeners
-    */
-
-    /* Functions
-    */
-
-    MarketView.prototype.fetchData = function() {
-      return this.apps.fetch();
-    };
-
-    MarketView.prototype.fillApps = function() {
-      var _this = this;
-      this.appList = $("#app-list");
-      this.appList.html(null);
-      return this.apps.forEach(function(app) {
-        var el, row;
-        row = new AppRow(app);
-        el = row.render();
-        return _this.appList.append(el);
-      });
-    };
-
-    MarketView.prototype.render = function() {
-      $(this.el).html(homeTemplate());
-      return this.el;
-    };
-
-    return MarketView;
-
-  })(Backbone.View);
-
-}).call(this);
-
-  }
-}));
-(this.require.define({
   "views/register_view": function(exports, require, module) {
     (function() {
   var template,
@@ -1141,6 +929,8 @@ return buf.join("");
       this.passwordField = $("#register-password");
       this.errorAlert = $("#register-error");
       this.errorAlert.hide();
+      this.buttons = $("#buttons");
+      this.buttons.hide();
       return this.passwordField.keyup(function(event) {
         if (event.which === 13) return _this.submitData();
       });

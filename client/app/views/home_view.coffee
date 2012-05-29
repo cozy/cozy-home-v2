@@ -77,6 +77,9 @@ class exports.HomeView extends Backbone.View
         @homeButton = $("#home-button")
         @homeButton.click @home
     
+    @buttons = $("#buttons")
+    @buttons.show()
+
     @homeButton.hide()
     @accountButton.show()
     @logoutButton.show()
