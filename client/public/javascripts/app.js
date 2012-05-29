@@ -136,6 +136,33 @@
   }
 }));
 (this.require.define({
+  "helpers/client": function(exports, require, module) {
+    (function() {
+
+  exports.post = function(url, data, callbacks) {
+    var _this = this;
+    return $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      success: function(response) {
+        if (response.success === true) {
+          return callbacks.success(response);
+        } else {
+          return callbacks.error(response);
+        }
+      },
+      error: function() {
+        return callbacks.error(response);
+      }
+    });
+  };
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
   "main": function(exports, require, module) {
     (function() {
   var AccountView, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication;
@@ -257,6 +284,45 @@
     return BaseModel;
 
   })(Backbone.Model);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "models/user": function(exports, require, module) {
+    (function() {
+  var BaseModel, client,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require("models/models").BaseModel;
+
+  client = require('../helpers/client');
+
+  exports.User = (function(_super) {
+
+    __extends(User, _super);
+
+    function User(email, password) {
+      this.email = email;
+      this.password = password;
+      User.__super__.constructor.call(this);
+    }
+
+    User.prototype.register = function(callbacks) {
+      return client.post("register", {
+        email: this.email,
+        password: this.password
+      }, {
+        success: callbacks.success,
+        error: callbacks.error
+      });
+    };
+
+    return User;
+
+  })(BaseModel);
 
 }).call(this);
 
@@ -856,12 +922,14 @@ return buf.join("");
 (this.require.define({
   "views/register_view": function(exports, require, module) {
     (function() {
-  var template,
+  var User, template,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   template = require('../templates/register');
+
+  User = require('../models/user').User;
 
   exports.RegisterView = (function(_super) {
 
@@ -888,24 +956,16 @@ return buf.join("");
     */
 
     RegisterView.prototype.submitData = function() {
-      var email, password,
+      var email, password, user,
         _this = this;
       email = this.emailField.val();
       password = this.passwordField.val();
+      user = new User(email, password);
       this.errorAlert.hide();
-      return $.ajax({
-        type: 'POST',
-        url: "register/",
-        data: {
-          email: email,
-          password: password
-        },
-        success: function(data) {
-          if (data.success === true) {
-            return app.views.login.logUser(password);
-          } else {
-            return _this.errorAlert.fadeIn();
-          }
+      return user.register({
+        success: function() {
+          console.log("Success !");
+          return app.views.login.logUser(password);
         },
         error: function() {
           return _this.errorAlert.fadeIn();

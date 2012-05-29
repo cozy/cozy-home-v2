@@ -1,5 +1,5 @@
 template = require('../templates/register')
-client = require('../helpers/client')
+User = require('../models/user').User
 
 # Describes screen allowing user to register.
 class exports.RegisterView extends Backbone.View
@@ -24,6 +24,7 @@ class exports.RegisterView extends Backbone.View
         @errorAlert.hide()
         user.register
             success: =>
+                console.log "Success !"
                 app.views.login.logUser password
             error: =>
                 @errorAlert.fadeIn()
