@@ -139,6 +139,24 @@
   "helpers/client": function(exports, require, module) {
     (function() {
 
+  exports.get = function(url, callbacks) {
+    var _this = this;
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      success: function(response) {
+        if (response.success === true) {
+          return callbacks.success(response);
+        } else {
+          return callbacks.error(response);
+        }
+      },
+      error: function(response) {
+        return callbacks.error(response);
+      }
+    });
+  };
+
   exports.post = function(url, data, callbacks) {
     var _this = this;
     return $.ajax({
@@ -321,6 +339,10 @@
       return client.post("login/", {
         password: this.password
       }, callbacks);
+    };
+
+    User.prototype.logout = function(callbacks) {
+      return client.get("logout/", callbacks);
     };
 
     return User;
@@ -681,12 +703,14 @@ return buf.join("");
 (this.require.define({
   "views/home_view": function(exports, require, module) {
     (function() {
-  var AppCollection, AppRow, homeTemplate,
+  var AppCollection, AppRow, User, homeTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   homeTemplate = require('../templates/home');
+
+  User = require("../models/user").User;
 
   AppRow = require('views/application').ApplicationRow;
 
@@ -717,16 +741,12 @@ return buf.join("");
     */
 
     HomeView.prototype.logout = function() {
-      var _this = this;
-      return $.ajax({
-        type: 'GET',
-        url: "logout/",
+      var user,
+        _this = this;
+      user = new User();
+      return user.logout({
         success: function(data) {
-          if (data.success) {
-            return app.routers.main.navigate('login', true);
-          } else {
-            return alert("Server error occured, logout failed.");
-          }
+          return app.routers.main.navigate('login', true);
         },
         error: function() {
           return alert("Server error occured, logout failed.");

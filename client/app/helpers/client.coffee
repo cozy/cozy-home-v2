@@ -1,3 +1,17 @@
+# Simple HTTP client to request backend easily.
+
+
+exports.get = (url, callbacks) ->
+    $.ajax
+        type: 'GET'
+        url: url
+        success: (response) =>
+            if response.success == true
+                callbacks.success response
+            else
+                callbacks.error response
+        error: (response) =>
+            callbacks.error response
 
 exports.post = (url, data, callbacks) ->
     $.ajax
