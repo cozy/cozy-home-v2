@@ -12,14 +12,14 @@ describe "Register", ->
 
     before (done) ->
         app.listen 3000
-        helpers.init done
+        helpers.init false, done
 
     before (done) ->
         @browser = new Browser()
         @browser.visit "http://localhost:3000/", =>
             done()
 
-    it "When I connect the first time on my newebe", ->
+    it "When I connect the first time on my cozy", ->
 
     it "Then I expect that register form is displayed", ->
         should.exist @browser.query("#register-email")

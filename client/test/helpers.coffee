@@ -1,5 +1,6 @@
+utils = require "../../lib/passport_utils"
 
-exports.init = (callback) ->
+exports.init = (withUser, callback) ->
     app = new Application
         name: "Notes"
         state: "installed"
@@ -10,9 +11,21 @@ exports.init = (callback) ->
         Organize your interests
         """
 
+    hash = utils.cryptPassword "password"
+
+    user = new User
+        email: "test@mycozycloud.com"
+        owner: true
+        password: hash
+        activated: true
+        url: "http://localhost:3000/"
+
     exports.clearAll ->
         app.save ->
-            callback()
+            if withUser
+                user.save -> callback()
+            else
+                callback()
 
 exports.clearAll = (callback) ->
     Application.destroyAll ->

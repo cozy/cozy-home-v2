@@ -152,7 +152,7 @@
           return callbacks.error(response);
         }
       },
-      error: function() {
+      error: function(response) {
         return callbacks.error(response);
       }
     });
