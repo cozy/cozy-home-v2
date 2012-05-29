@@ -1,4 +1,5 @@
 template = require('../templates/register')
+client = require('../helpers/client')
 
 # Describes screen allowing user to register.
 class exports.RegisterView extends Backbone.View
@@ -18,19 +19,12 @@ class exports.RegisterView extends Backbone.View
         email = @emailField.val()
         password = @passwordField.val()
 
+        user = new User(email, password)
 
         @errorAlert.hide()
-        $.ajax
-            type: 'POST'
-            url: "register/"
-            data:
-                email: email
-                password: password
-            success: (data) =>
-                if data.success == true
-                    app.views.login.logUser password
-                else
-                    @errorAlert.fadeIn()
+        user.register
+            success: =>
+                app.views.login.logUser password
             error: =>
                 @errorAlert.fadeIn()
             
