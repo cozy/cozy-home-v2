@@ -13,6 +13,5 @@ class exports.User extends BaseModel
             callbacks
 
     login: (callbacks) ->
-        console.log callbacks
         client.post "login/", { password: @password }, callbacks
 

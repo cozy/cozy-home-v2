@@ -136,6 +136,33 @@
   }
 }));
 (this.require.define({
+  "helpers/client": function(exports, require, module) {
+    (function() {
+
+  exports.post = function(url, data, callbacks) {
+    var _this = this;
+    return $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      success: function(response) {
+        if (response.success === true) {
+          return callbacks.success(response);
+        } else {
+          return callbacks.error(response);
+        }
+      },
+      error: function(response) {
+        return callbacks.error(response);
+      }
+    });
+  };
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
   "main": function(exports, require, module) {
     (function() {
   var AccountView, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication;
@@ -762,6 +789,134 @@ return buf.join("");
     };
 
     return HomeView;
+
+  })(Backbone.View);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/login_view": function(exports, require, module) {
+    (function() {
+  var User, template,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  template = require("../templates/login");
+
+  User = require("../models/user").User;
+
+  exports.LoginView = (function(_super) {
+
+    __extends(LoginView, _super);
+
+    function LoginView() {
+      this.onForgotButtonClicked = __bind(this.onForgotButtonClicked, this);
+      this.logUser = __bind(this.logUser, this);
+      this.submitPassword = __bind(this.submitPassword, this);
+      LoginView.__super__.constructor.apply(this, arguments);
+    }
+
+    LoginView.prototype.id = 'login-view';
+
+    LoginView.prototype.className = 'center';
+
+    /* Constructor
+    */
+
+    /* Listeners
+    */
+
+    /* Functions
+    */
+
+    LoginView.prototype.submitPassword = function() {
+      return this.logUser(this.passwordField.val());
+    };
+
+    LoginView.prototype.logUser = function(password) {
+      var user,
+        _this = this;
+      if (!(this.errorAlert != null)) this.errorAlert = $("#login-error");
+      this.errorAlert.hide();
+      user = new User(null, password);
+      return user.login({
+        success: function(data) {
+          return app.routers.main.navigate('home', true);
+        },
+        error: function(data) {
+          var info;
+          if ((data != null ? data.responseText : void 0) != null) {
+            if ((data != null ? data.responseText : void 0) != null) {
+              info = JSON.parse(data.responseText);
+            }
+          } else {
+            info = data.msg;
+          }
+          return _this.displayError(info.msg);
+        }
+      });
+    };
+
+    LoginView.prototype.fetchData = function() {};
+
+    LoginView.prototype.onForgotButtonClicked = function() {
+      var _this = this;
+      return $.ajax({
+        type: "POST",
+        url: "login/forgot/",
+        success: function(data) {
+          if (data.success) {
+            return _this.displayInfo(data.success);
+          } else {
+            return _this.displayError(data.msg);
+          }
+        },
+        error: function() {
+          return _this.displayError("Server error occured.");
+        }
+      });
+    };
+
+    LoginView.prototype.displayError = function(text) {
+      $("#login-form-error-text").html(text);
+      return this.errorAlert.show();
+    };
+
+    LoginView.prototype.displayInfo = function(text) {
+      $("#login-info-text").html(text);
+      return this.infoAlert.show();
+    };
+
+    LoginView.prototype.render = function() {
+      $(this.el).html(template());
+      return this.el;
+    };
+
+    LoginView.prototype.setListeners = function() {
+      var _this = this;
+      this.passwordField = $("#login-password");
+      this.homeButton = $("#home-button");
+      this.homeButton.hide();
+      this.accountButton = $("#account-button");
+      this.accountButton.hide();
+      this.logoutButton = $("#logout-button");
+      this.logoutButton.hide();
+      this.forgotButton = $("#forgot-password-button");
+      this.forgotButton.click(this.onForgotButtonClicked);
+      this.passwordField = $("#login-password");
+      this.infoAlert = $("#login-info");
+      this.infoAlert.hide();
+      this.errorAlert = $("#login-error");
+      this.errorAlert.hide();
+      return this.passwordField.keyup(function(event) {
+        if (event.which === 13) return _this.submitPassword();
+      });
+    };
+
+    return LoginView;
 
   })(Backbone.View);
 
