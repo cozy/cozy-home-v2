@@ -6,7 +6,7 @@ exports.get = (url, callbacks) ->
         type: 'GET'
         url: url
         success: (response) =>
-            if response.success == true
+            if response.success
                 callbacks.success response
             else
                 callbacks.error response
@@ -19,7 +19,7 @@ exports.post = (url, data, callbacks) ->
         url: url
         data: data
         success: (response) =>
-            if response.success == true
+            if response.success
                 callbacks.success response
             else
                 callbacks.error response

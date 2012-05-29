@@ -42,7 +42,7 @@ describe "Login & logout", ->
 
         it "Then I expect that sign in form is displayed", ->
             @browser.isVisible("#login-password").should.be.ok
-
+ 
         it "And that navigation buttons and application list are hidden", ->
             @browser.isVisible("#buttons button").should.not.be.ok
             @browser.isVisible("#app-list").should.not.be.ok

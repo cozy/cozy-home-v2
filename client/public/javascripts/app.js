@@ -145,7 +145,7 @@
       type: 'GET',
       url: url,
       success: function(response) {
-        if (response.success === true) {
+        if (response.success) {
           return callbacks.success(response);
         } else {
           return callbacks.error(response);
@@ -164,7 +164,7 @@
       url: url,
       data: data,
       success: function(response) {
-        if (response.success === true) {
+        if (response.success) {
           return callbacks.success(response);
         } else {
           return callbacks.error(response);
@@ -630,6 +630,8 @@ return buf.join("");
       this.accountButton.hide();
       this.homeButton = $("#home-button");
       this.homeButton.show();
+      this.logoutButton = $("#logout-button");
+      this.logoutButton.show();
       this.emailField = $("#account-email-field");
       this.accountDataButton = $("#account-form-button");
       return this.accountDataButton.click(this.onDataSubmit);

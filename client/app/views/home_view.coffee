@@ -30,7 +30,7 @@ class exports.HomeView extends Backbone.View
         success: (data) =>
             app.routers.main.navigate 'login', true
         error: =>
-           alert "Server error occured, logout failed."
+            alert "Server error occured, logout failed."
 
   home: =>
     app.routers.main.navigate 'home', true
