@@ -6,9 +6,9 @@ exports.post = (url, data, callbacks) ->
         data: data
         success: (response) =>
             if response.success == true
-                callbacks.success(response)
+                callbacks.success response
             else
-                callbacks.error(response)
+                callbacks.error response
         error: (response) =>
             callbacks.error response
 
