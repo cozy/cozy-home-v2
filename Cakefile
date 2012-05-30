@@ -52,3 +52,10 @@ task "xunit", "", ->
   exec command, (err, stdout, stderr) ->
     console.log stdout
 
+task "xunit:client", "", ->
+  process.env.TZ = "Europe/Paris"
+  command = "mocha client/test/*"
+  command += " --require should --compilers coffee:coffee-script -R xunit > xunitclient.xml"
+  exec command, (err, stdout, stderr) ->
+    console.log stdout
+
