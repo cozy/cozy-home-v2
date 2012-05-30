@@ -1,11 +1,12 @@
 should = require('should')
-client = require('./client')
+client = require('../common/test/client')
 app = require('../server')
 
 
 email = "test@test.com"
 password = "password"
 
+client = new client.Client("http://localhost:3000/")
 
 ## Helpers
 

@@ -23,6 +23,7 @@
   , "mocha":            ">= 0"
   , "request":          ">= 0"
   , "should":           ">= 0"
+  , "zombie":           ">= 0"
   }
 , "scripts":
   { "test": "cake tests"

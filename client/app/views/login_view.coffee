@@ -1,4 +1,5 @@
-template = require('../templates/login')
+template = require "../templates/login"
+User = require("../models/user").User
 
 
 # Describes screen which allows user to sign in
@@ -21,17 +22,16 @@ class exports.LoginView extends Backbone.View
     logUser: (password) =>
         @errorAlert = $ "#login-error" if not @errorAlert?
         @errorAlert.hide()
-        $.ajax
-            type: 'POST'
-            url: "login/"
-            data: password: password
+
+        user = new User(null, password)
+        user.login
             success: (data) =>
-                if data.success
-                    app.routers.main.navigate 'home', true
-                else
-                    @displayError data.msg
+                app.routers.main.navigate 'home', true
             error: (data) =>
-                info = JSON.parse data.responseText
+                if data?.responseText?
+                    info = JSON.parse data.responseText if data?.responseText?
+                else
+                    info = data.msg
                 @displayError info.msg
 
     # Load data from server

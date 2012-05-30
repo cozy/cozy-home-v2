@@ -44,6 +44,8 @@ class exports.AccountView extends Backbone.View
     @accountButton.hide()
     @homeButton = $ "#home-button"
     @homeButton.show()
+    @logoutButton = $ "#logout-button"
+    @logoutButton.show()
     @emailField = $ "#account-email-field"
 
     @accountDataButton = $ "#account-form-button"

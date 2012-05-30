@@ -1,4 +1,5 @@
 homeTemplate = require('../templates/home')
+User = require("../models/user").User
 
 AppRow = require('views/application').ApplicationRow
 AppCollection = require('collections/application').ApplicationCollection
@@ -24,17 +25,12 @@ class exports.HomeView extends Backbone.View
   ### Functions ###
 
   logout: =>
-    $.ajax
-        type: 'GET'
-        url: "logout/"
+    user = new User()
+    user.logout
         success: (data) =>
-            if data.success
-                app.routers.main.navigate 'login', true
-            else
-                alert "Server error occured, logout failed."
+            app.routers.main.navigate 'login', true
         error: =>
-           alert "Server error occured, logout failed."
-
+            alert "Server error occured, logout failed."
 
   home: =>
     app.routers.main.navigate 'home', true
@@ -77,6 +73,9 @@ class exports.HomeView extends Backbone.View
         @homeButton = $("#home-button")
         @homeButton.click @home
     
+    @buttons = $("#buttons")
+    @buttons.show()
+
     @homeButton.hide()
     @accountButton.show()
     @logoutButton.show()
