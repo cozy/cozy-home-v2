@@ -6,7 +6,7 @@ server = require('../server')
 email = "test@test.com"
 password = "password"
 
-client = new client.Client("http://localhost:3000/")
+client = new client.Client("http://localhost:8888/")
 
 ## Helpers
 
@@ -82,7 +82,7 @@ initDb = (callback) ->
 describe "Applications", ->
 
     before (done) ->
-        server.listen(3000)
+        server.listen(8888)
         clearDb ->
             initDb ->
                 client.post "login", password: password, \
