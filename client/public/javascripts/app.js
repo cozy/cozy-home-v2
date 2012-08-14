@@ -129,6 +129,50 @@ window.require.define({"collections/collections": function(exports, require, mod
   
 }});
 
+window.require.define({"helpers": function(exports, require, module) {
+  (function() {
+
+    exports.BrunchApplication = (function() {
+
+      function BrunchApplication() {
+        var _this = this;
+        $(function() {
+          _this.initialize(_this);
+          return Backbone.history.start();
+        });
+      }
+
+      BrunchApplication.prototype.initialize = function() {
+        return null;
+      };
+
+      return BrunchApplication;
+
+    })();
+
+    exports.selectAll = function(input) {
+      return input.setSelection(0, input.val().length);
+    };
+
+    exports.slugify = function(string) {
+      var _slugify_hyphenate_re, _slugify_strip_re;
+      _slugify_strip_re = /[^\w\s-]/g;
+      _slugify_hyphenate_re = /[-\s]+/g;
+      string = string.replace(_slugify_strip_re, '').trim().toLowerCase();
+      string = string.replace(_slugify_hyphenate_re, '-');
+      return string;
+    };
+
+    exports.getPathRegExp = function(path) {
+      var slashReg;
+      slashReg = new RegExp("/", "g");
+      return "^" + (path.replace(slashReg, "\/"));
+    };
+
+  }).call(this);
+  
+}});
+
 window.require.define({"helpers/client": function(exports, require, module) {
   (function() {
 
@@ -173,19 +217,13 @@ window.require.define({"helpers/client": function(exports, require, module) {
   
 }});
 
-window.require.define({"main": function(exports, require, module) {
+window.require.define({"initialize": function(exports, require, module) {
   (function() {
-    var AccountView, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication;
+    var AccountView, BrunchApplication, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication,
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    window.app = {};
-
-    app.routers = {};
-
-    app.models = {};
-
-    app.collections = {};
-
-    app.views = {};
+    BrunchApplication = require('helpers').BrunchApplication;
 
     MainRouter = require('routers/main_router').MainRouter;
 
@@ -220,21 +258,34 @@ window.require.define({"main": function(exports, require, module) {
       });
     };
 
-    $(document).ready(function() {
-      app.initialize = function() {
-        app.routers.main = new MainRouter();
-        app.views.home = new HomeView();
-        app.views.login = new LoginView();
-        app.views.register = new RegisterView();
-        app.views.account = new AccountView();
-        app.views.reset = new ResetView();
+    exports.Application = (function(_super) {
+
+      __extends(Application, _super);
+
+      function Application() {
+        Application.__super__.constructor.apply(this, arguments);
+      }
+
+      Application.prototype.initialize = function() {
+        this.routers = {};
+        this.views = {};
+        this.routers.main = new MainRouter;
+        this.views.home = new HomeView;
+        this.views.login = new LoginView();
+        this.views.register = new RegisterView();
+        this.views.account = new AccountView();
+        this.views.reset = new ResetView();
+        $("body").html(require("templates/layout"));
         if (window.location.hash.indexOf("password/reset") < 0) {
           return checkAuthentication();
         }
       };
-      app.initialize();
-      return Backbone.history.start();
-    });
+
+      return Application;
+
+    })(BrunchApplication);
+
+    window.app = new exports.Application;
 
   }).call(this);
   
@@ -318,7 +369,7 @@ window.require.define({"models/user": function(exports, require, module) {
       }
 
       User.prototype.register = function(callbacks) {
-        return client.post("register", {
+        return client.post("register/", {
           email: this.email,
           password: this.password
         }, callbacks);
@@ -390,7 +441,7 @@ window.require.define({"routers/main_router": function(exports, require, module)
       };
 
       MainRouter.prototype.loadView = function(view) {
-        $('#content').html(view.render());
+        $("#content").html(view.render());
         view.fetchData();
         return view.setListeners();
       };
@@ -419,7 +470,15 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
   buf.push('/></label><button');
   buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button></p></form>');
+  buf.push('>Send changes</button></p><div');
+  buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') }));
+  buf.push('><div');
+  buf.push(attrs({ 'id':('account-info-text') }));
+  buf.push('></div></div><div');
+  buf.push(attrs({ 'id':('account-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+  buf.push('><div');
+  buf.push(attrs({ 'id':('account-form-error-text') }));
+  buf.push('></div></div></form>');
   }
   return buf.join("");
   };
@@ -461,6 +520,36 @@ window.require.define({"templates/home": function(exports, require, module) {
   };
 }});
 
+window.require.define({"templates/layout": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<header');
+  buf.push(attrs({ 'id':('header') }));
+  buf.push('><h2');
+  buf.push(attrs({ 'id':('header-title') }));
+  buf.push('><a');
+  buf.push(attrs({ 'href':("http://www.mycozycloud.com/"), 'target':("_blank"), 'title':("home") }));
+  buf.push('>Cozy Cloud\n</a></h2><div');
+  buf.push(attrs({ 'id':('buttons') }));
+  buf.push('><button');
+  buf.push(attrs({ 'id':('account-button'), 'type':("submit"), "class": ("btn") }));
+  buf.push('>Account</button><button');
+  buf.push(attrs({ 'id':('home-button'), 'type':("submit"), "class": ("btn") }));
+  buf.push('>Applications</button><button');
+  buf.push(attrs({ 'id':('logout-button'), 'type':("submit"), "class": ("btn") }));
+  buf.push('>Sign out</button></div></header><div');
+  buf.push(attrs({ "class": ('container') }));
+  buf.push('><div');
+  buf.push(attrs({ 'id':('content') }));
+  buf.push('></div></div>');
+  }
+  return buf.join("");
+  };
+}});
+
 window.require.define({"templates/login": function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
@@ -477,7 +566,7 @@ window.require.define({"templates/login": function(exports, require, module) {
   buf.push(attrs({ 'id':('login-info'), "class": ('alert') + ' ' + ('main-alert') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('login-info-text') }));
-  buf.push('><test></test></div></div><div');
+  buf.push('></div></div><div');
   buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('login-form-error-text') }));
@@ -580,19 +669,39 @@ window.require.define({"views/account_view": function(exports, require, module) 
           password1: $("#account-password1-field").val(),
           password2: $("#account-password2-field").val()
         };
+        this.infoAlert.hide();
+        this.errorAlert.hide();
         return $.ajax({
           type: 'POST',
           url: "api/user/",
           data: form,
           success: function(data) {
+            var errorString, msg, msgs, _i, _len;
             if (data.success) {
-              return alert("Data were correctly changed.");
+              _this.infoAlert.html(data.msg);
+              return _this.infoAlert.show();
             } else {
-              return alert("Something went wrong, your data were not updated.");
+              msgs = JSON.parse(data.responseText).msg;
+              errorString = "";
+              for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+                msg = msgs[_i];
+                errorString += msg + "<br />";
+              }
+              _this.errorAlert.html(errorString);
+              return _this.errorAlert.show();
             }
           },
-          error: function() {
-            return alert("Server errer occured, change failed.");
+          error: function(data) {
+            var errorString, msg, msgs, _i, _len;
+            msgs = JSON.parse(data.responseText).msg;
+            errorString = "";
+            for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+              msg = msgs[_i];
+              console.log(msg);
+              errorString += msg + "<br />";
+            }
+            _this.errorAlert.html(errorString);
+            return _this.errorAlert.show();
           }
         });
       };
@@ -606,13 +715,26 @@ window.require.define({"views/account_view": function(exports, require, module) 
       };
 
       AccountView.prototype.setListeners = function() {
-        this.accountButton = $("#account-button");
-        this.accountButton.hide();
-        this.homeButton = $("#home-button");
-        this.homeButton.show();
-        this.logoutButton = $("#logout-button");
-        this.logoutButton.show();
+        if (app.views.home.logoutButton === void 0) {
+          app.views.home.logoutButton = $("#logout-button");
+          app.views.home.logoutButton.click(app.views.home.logout);
+        }
+        if (app.views.home.accountButton === void 0) {
+          app.views.home.accountButton = $("#account-button");
+          app.views.home.accountButton.click(app.views.home.account);
+        }
+        if (app.views.home.homeButton === void 0) {
+          app.views.home.homeButton = $("#home-button");
+          app.views.home.homeButton.click(app.views.home.home);
+        }
+        app.views.home.homeButton.show();
+        app.views.home.accountButton.hide();
+        app.views.home.logoutButton.show();
         this.emailField = $("#account-email-field");
+        this.infoAlert = $("#account-info");
+        this.infoAlert.hide();
+        this.errorAlert = $("#account-error");
+        this.errorAlert.hide();
         this.accountDataButton = $("#account-form-button");
         return this.accountDataButton.click(this.onDataSubmit);
       };
@@ -963,14 +1085,18 @@ window.require.define({"views/register_view": function(exports, require, module)
         email = this.emailField.val();
         password = this.passwordField.val();
         user = new User(email, password);
-        this.errorAlert.hide();
-        return user.register({
-          success: function() {
-            return app.views.login.logUser(password);
-          },
-          error: function() {
-            return _this.errorAlert.fadeIn();
-          }
+        return this.errorAlert.fadeOut(function() {
+          return user.register({
+            success: function() {
+              return app.views.login.logUser(password);
+            },
+            error: function(data) {
+              var error;
+              error = JSON.parse(data.responseText);
+              _this.errorAlert.html(error.msg);
+              return _this.errorAlert.fadeIn();
+            }
+          });
         });
       };
 
