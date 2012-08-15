@@ -1,83 +1,79 @@
 (function(/*! Brunch !*/) {
   'use strict';
 
-  if (!this.require) {
-    var modules = {};
-    var cache = {};
-    var __hasProp = ({}).hasOwnProperty;
+  var globals = typeof window !== 'undefined' ? window : global;
+  if (typeof globals.require === 'function') return;
 
-    var expand = function(root, name) {
-      var results = [], parts, part;
-      if (/^\.\.?(\/|$)/.test(name)) {
-        parts = [root, name].join('/').split('/');
-      } else {
-        parts = name.split('/');
+  var modules = {};
+  var cache = {};
+
+  var has = function(object, name) {
+    return hasOwnProperty.call(object, name);
+  };
+
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
+    }
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
       }
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part == '..') {
-          results.pop();
-        } else if (part != '.' && part != '') {
-          results.push(part);
-        }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function(name) {
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
+      return require(absolute);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var module = {id: name, exports: {}};
+    definition(module.exports, localRequire(name), module);
+    var exports = cache[name] = module.exports;
+    return exports;
+  };
+
+  var require = function(name) {
+    var path = expand(name, '.');
+
+    if (has(cache, path)) return cache[path];
+    if (has(modules, path)) return initModule(path, modules[path]);
+
+    var dirIndex = expand(path, './index');
+    if (has(cache, dirIndex)) return cache[dirIndex];
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+
+    throw new Error('Cannot find module "' + name + '"');
+  };
+
+  var define = function(bundle) {
+    for (var key in bundle) {
+      if (has(bundle, key)) {
+        modules[key] = bundle[key];
       }
-      return results.join('/');
-    };
-
-    var getFullPath = function(path, fromCache) {
-      var store = fromCache ? cache : modules;
-      var dirIndex;
-      if (__hasProp.call(store, path)) return path;
-      dirIndex = expand(path, './index');
-      if (__hasProp.call(store, dirIndex)) return dirIndex;
-    };
-    
-    var cacheModule = function(name, path, contentFn) {
-      var module = {id: path, exports: {}};
-      try {
-        cache[path] = module.exports;
-        contentFn(module.exports, function(name) {
-          return require(name, dirname(path));
-        }, module);
-        cache[path] = module.exports;
-      } catch (err) {
-        delete cache[path];
-        throw err;
-      }
-      return cache[path];
-    };
-
-    var require = function(name, root) {
-      var path = expand(root, name);
-      var fullPath;
-
-      if (fullPath = getFullPath(path, true)) {
-        return cache[fullPath];
-      } else if (fullPath = getFullPath(path, false)) {
-        return cacheModule(name, fullPath, modules[fullPath]);
-      } else {
-        throw new Error("Cannot find module '" + name + "'");
-      }
-    };
-
-    var dirname = function(path) {
-      return path.split('/').slice(0, -1).join('/');
-    };
-
-    this.require = function(name) {
-      return require(name, '');
-    };
-
-    this.require.brunch = true;
-    this.require.define = function(bundle) {
-      for (var key in bundle) {
-        if (__hasProp.call(bundle, key)) {
-          modules[key] = bundle[key];
-        }
-      }
-    };
+    }
   }
-}).call(this);
+
+  globals.require = require;
+  globals.require.define = define;
+  globals.require.brunch = true;
+})();
+
 (function (con) {
     // the dummy function
     function dummy() {};
@@ -89,7 +85,9 @@
 // we do this crazy little dance so that the `console` object
 // inside the function is a name that can be shortened to a single
 // letter by the compressor to make the compressed script as tiny
-// as possible.
+// as possible.;
+
+
 /*!
  * jQuery JavaScript Library v1.7.1
  * http://jquery.com/
@@ -9357,6 +9355,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 
 })( window );
+;
+
 //     Underscore.js 1.3.1
 //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Underscore is freely distributable under the MIT license.
@@ -10356,6 +10356,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   };
 
 }).call(this);
+;
+
 //     Backbone.js 0.9.1
 
 //     (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
@@ -11646,8 +11648,10 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   };
 
 }).call(this);
+;
 
-var jade = (function(exports){
+
+jade = (function(exports){
 /*!
  * Jade - runtime
  * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
@@ -11677,41 +11681,97 @@ if (!Object.keys) {
       }
     }
     return arr;
-  } 
+  }
+}
+
+/**
+ * Merge two attribute objects giving precedence
+ * to values in object `b`. Classes are special-cased
+ * allowing for arrays and merging/joining appropriately
+ * resulting in a string.
+ *
+ * @param {Object} a
+ * @param {Object} b
+ * @return {Object} a
+ * @api private
+ */
+
+exports.merge = function merge(a, b) {
+  var ac = a['class'];
+  var bc = b['class'];
+
+  if (ac || bc) {
+    ac = ac || [];
+    bc = bc || [];
+    if (!Array.isArray(ac)) ac = [ac];
+    if (!Array.isArray(bc)) bc = [bc];
+    ac = ac.filter(nulls);
+    bc = bc.filter(nulls);
+    a['class'] = ac.concat(bc).join(' ');
+  }
+
+  for (var key in b) {
+    if (key != 'class') {
+      a[key] = b[key];
+    }
+  }
+
+  return a;
+};
+
+/**
+ * Filter null `val`s.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function nulls(val) {
+  return val != null;
 }
 
 /**
  * Render the given attributes object.
  *
  * @param {Object} obj
+ * @param {Object} escaped
  * @return {String}
  * @api private
  */
 
-exports.attrs = function attrs(obj){
+exports.attrs = function attrs(obj, escaped){
   var buf = []
     , terse = obj.terse;
+
   delete obj.terse;
   var keys = Object.keys(obj)
     , len = keys.length;
+
   if (len) {
     buf.push('');
     for (var i = 0; i < len; ++i) {
       var key = keys[i]
         , val = obj[key];
+
       if ('boolean' == typeof val || null == val) {
         if (val) {
           terse
             ? buf.push(key)
             : buf.push(key + '="' + key + '"');
         }
+      } else if (0 == key.indexOf('data') && 'string' != typeof val) {
+        buf.push(key + "='" + JSON.stringify(val) + "'");
       } else if ('class' == key && Array.isArray(val)) {
         buf.push(key + '="' + exports.escape(val.join(' ')) + '"');
-      } else {
+      } else if (escaped && escaped[key]) {
         buf.push(key + '="' + exports.escape(val) + '"');
+      } else {
+        buf.push(key + '="' + val + '"');
       }
     }
   }
+
   return buf.join(' ');
 };
 
@@ -11725,7 +11785,7 @@ exports.attrs = function attrs(obj){
 
 exports.escape = function escape(html){
   return String(html)
-    .replace(/&(?!\w+;)/g, '&amp;')
+    .replace(/&(?!(\w+|\#\d+);)/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
@@ -11748,7 +11808,7 @@ exports.rethrow = function rethrow(err, filename, lineno){
     , str = require('fs').readFileSync(filename, 'utf8')
     , lines = str.split('\n')
     , start = Math.max(lineno - context, 0)
-    , end = Math.min(lines.length, lineno + context); 
+    , end = Math.min(lines.length, lineno + context);
 
   // Error context
   var context = lines.slice(start, end).map(function(line, i){
@@ -11761,7 +11821,7 @@ exports.rethrow = function rethrow(err, filename, lineno){
 
   // Alter exception message
   err.path = filename;
-  err.message = (filename || 'Jade') + ':' + lineno 
+  err.message = (filename || 'Jade') + ':' + lineno
     + '\n' + context + '\n\n' + err.message;
   throw err;
 };
@@ -11769,6 +11829,9 @@ exports.rethrow = function rethrow(err, filename, lineno){
   return exports;
 
 })({});
+;
+
+
 (function (global, module) {
 
   if ('undefined' == typeof module) {
@@ -12916,6 +12979,8 @@ exports.rethrow = function rethrow(err, filename, lineno){
   , 'undefined' != typeof module ? module : {}
   , 'undefined' != typeof exports ? exports : {}
 );
+;
+
 ;(function(){
 
 
@@ -16141,4 +16206,5 @@ window.mocha = require('mocha');
     return runner.run();
   };
 })();
-})();
+})();;
+

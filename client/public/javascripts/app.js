@@ -1,89 +1,83 @@
 (function(/*! Brunch !*/) {
   'use strict';
 
-  if (!this.require) {
-    var modules = {};
-    var cache = {};
-    var __hasProp = ({}).hasOwnProperty;
+  var globals = typeof window !== 'undefined' ? window : global;
+  if (typeof globals.require === 'function') return;
 
-    var expand = function(root, name) {
-      var results = [], parts, part;
-      if (/^\.\.?(\/|$)/.test(name)) {
-        parts = [root, name].join('/').split('/');
-      } else {
-        parts = name.split('/');
+  var modules = {};
+  var cache = {};
+
+  var has = function(object, name) {
+    return hasOwnProperty.call(object, name);
+  };
+
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
+    }
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
       }
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part == '..') {
-          results.pop();
-        } else if (part != '.' && part != '') {
-          results.push(part);
-        }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function(name) {
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
+      return require(absolute);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var module = {id: name, exports: {}};
+    definition(module.exports, localRequire(name), module);
+    var exports = cache[name] = module.exports;
+    return exports;
+  };
+
+  var require = function(name) {
+    var path = expand(name, '.');
+
+    if (has(cache, path)) return cache[path];
+    if (has(modules, path)) return initModule(path, modules[path]);
+
+    var dirIndex = expand(path, './index');
+    if (has(cache, dirIndex)) return cache[dirIndex];
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+
+    throw new Error('Cannot find module "' + name + '"');
+  };
+
+  var define = function(bundle) {
+    for (var key in bundle) {
+      if (has(bundle, key)) {
+        modules[key] = bundle[key];
       }
-      return results.join('/');
-    };
-
-    var getFullPath = function(path, fromCache) {
-      var store = fromCache ? cache : modules;
-      var dirIndex;
-      if (__hasProp.call(store, path)) return path;
-      dirIndex = expand(path, './index');
-      if (__hasProp.call(store, dirIndex)) return dirIndex;
-    };
-    
-    var cacheModule = function(name, path, contentFn) {
-      var module = {id: path, exports: {}};
-      try {
-        cache[path] = module.exports;
-        contentFn(module.exports, function(name) {
-          return require(name, dirname(path));
-        }, module);
-        cache[path] = module.exports;
-      } catch (err) {
-        delete cache[path];
-        throw err;
-      }
-      return cache[path];
-    };
-
-    var require = function(name, root) {
-      var path = expand(root, name);
-      var fullPath;
-
-      if (fullPath = getFullPath(path, true)) {
-        return cache[fullPath];
-      } else if (fullPath = getFullPath(path, false)) {
-        return cacheModule(name, fullPath, modules[fullPath]);
-      } else {
-        throw new Error("Cannot find module '" + name + "'");
-      }
-    };
-
-    var dirname = function(path) {
-      return path.split('/').slice(0, -1).join('/');
-    };
-
-    this.require = function(name) {
-      return require(name, '');
-    };
-
-    this.require.brunch = true;
-    this.require.define = function(bundle) {
-      for (var key in bundle) {
-        if (__hasProp.call(bundle, key)) {
-          modules[key] = bundle[key];
-        }
-      }
-    };
+    }
   }
-}).call(this);
-(this.require.define({
-  "collections/application": function(exports, require, module) {
-    (function() {
+
+  globals.require = require;
+  globals.require.define = define;
+  globals.require.brunch = true;
+})();
+
+window.require.define({"collections/application": function(exports, require, module) {
   var Application, BaseCollection,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseCollection = require("collections/collections").BaseCollection;
 
@@ -104,23 +98,19 @@
     return ApplicationCollection;
 
   })(BaseCollection);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "collections/collections": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+window.require.define({"collections/collections": function(exports, require, module) {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   exports.BaseCollection = (function(_super) {
 
     __extends(BaseCollection, _super);
 
     function BaseCollection() {
-      BaseCollection.__super__.constructor.apply(this, arguments);
+      return BaseCollection.__super__.constructor.apply(this, arguments);
     }
 
     BaseCollection.prototype.parse = function(response) {
@@ -130,15 +120,52 @@
     return BaseCollection;
 
   })(Backbone.Collection);
+  
+}});
 
-}).call(this);
+window.require.define({"helpers": function(exports, require, module) {
+  
+  exports.BrunchApplication = (function() {
 
-  }
-}));
-(this.require.define({
-  "helpers/client": function(exports, require, module) {
-    (function() {
+    function BrunchApplication() {
+      var _this = this;
+      $(function() {
+        _this.initialize(_this);
+        return Backbone.history.start();
+      });
+    }
 
+    BrunchApplication.prototype.initialize = function() {
+      return null;
+    };
+
+    return BrunchApplication;
+
+  })();
+
+  exports.selectAll = function(input) {
+    return input.setSelection(0, input.val().length);
+  };
+
+  exports.slugify = function(string) {
+    var _slugify_hyphenate_re, _slugify_strip_re;
+    _slugify_strip_re = /[^\w\s-]/g;
+    _slugify_hyphenate_re = /[-\s]+/g;
+    string = string.replace(_slugify_strip_re, '').trim().toLowerCase();
+    string = string.replace(_slugify_hyphenate_re, '-');
+    return string;
+  };
+
+  exports.getPathRegExp = function(path) {
+    var slashReg;
+    slashReg = new RegExp("/", "g");
+    return "^" + (path.replace(slashReg, "\/"));
+  };
+  
+}});
+
+window.require.define({"helpers/client": function(exports, require, module) {
+  
   exports.get = function(url, callbacks) {
     var _this = this;
     return $.ajax({
@@ -175,25 +202,15 @@
       }
     });
   };
+  
+}});
 
-}).call(this);
+window.require.define({"initialize": function(exports, require, module) {
+  var AccountView, BrunchApplication, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  }
-}));
-(this.require.define({
-  "main": function(exports, require, module) {
-    (function() {
-  var AccountView, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication;
-
-  window.app = {};
-
-  app.routers = {};
-
-  app.models = {};
-
-  app.collections = {};
-
-  app.views = {};
+  BrunchApplication = require('helpers').BrunchApplication;
 
   MainRouter = require('routers/main_router').MainRouter;
 
@@ -228,32 +245,41 @@
     });
   };
 
-  $(document).ready(function() {
-    app.initialize = function() {
-      app.routers.main = new MainRouter();
-      app.views.home = new HomeView();
-      app.views.login = new LoginView();
-      app.views.register = new RegisterView();
-      app.views.account = new AccountView();
-      app.views.reset = new ResetView();
+  exports.Application = (function(_super) {
+
+    __extends(Application, _super);
+
+    function Application() {
+      return Application.__super__.constructor.apply(this, arguments);
+    }
+
+    Application.prototype.initialize = function() {
+      this.routers = {};
+      this.views = {};
+      this.routers.main = new MainRouter;
+      this.views.home = new HomeView;
+      this.views.login = new LoginView();
+      this.views.register = new RegisterView();
+      this.views.account = new AccountView();
+      this.views.reset = new ResetView();
+      $("body").html(require("templates/layout"));
       if (window.location.hash.indexOf("password/reset") < 0) {
         return checkAuthentication();
       }
     };
-    app.initialize();
-    return Backbone.history.start();
-  });
 
-}).call(this);
+    return Application;
 
-  }
-}));
-(this.require.define({
-  "models/application": function(exports, require, module) {
-    (function() {
+  })(BrunchApplication);
+
+  window.app = new exports.Application;
+  
+}});
+
+window.require.define({"models/application": function(exports, require, module) {
   var BaseModel,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseModel = require("models/models").BaseModel;
 
@@ -271,28 +297,25 @@
       this.description = app.description;
       this.icon = app.icon;
       this;
+
     }
 
     return Application;
 
   })(BaseModel);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "models/models": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+window.require.define({"models/models": function(exports, require, module) {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   exports.BaseModel = (function(_super) {
 
     __extends(BaseModel, _super);
 
     function BaseModel() {
-      BaseModel.__super__.constructor.apply(this, arguments);
+      return BaseModel.__super__.constructor.apply(this, arguments);
     }
 
     BaseModel.prototype.isNew = function() {
@@ -302,17 +325,13 @@
     return BaseModel;
 
   })(Backbone.Model);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "models/user": function(exports, require, module) {
-    (function() {
+window.require.define({"models/user": function(exports, require, module) {
   var BaseModel, client,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseModel = require("models/models").BaseModel;
 
@@ -329,7 +348,7 @@
     }
 
     User.prototype.register = function(callbacks) {
-      return client.post("register", {
+      return client.post("register/", {
         email: this.email,
         password: this.password
       }, callbacks);
@@ -348,23 +367,19 @@
     return User;
 
   })(BaseModel);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "routers/main_router": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+window.require.define({"routers/main_router": function(exports, require, module) {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   exports.MainRouter = (function(_super) {
 
     __extends(MainRouter, _super);
 
     function MainRouter() {
-      MainRouter.__super__.constructor.apply(this, arguments);
+      return MainRouter.__super__.constructor.apply(this, arguments);
     }
 
     MainRouter.prototype.routes = {
@@ -402,7 +417,7 @@
     };
 
     MainRouter.prototype.loadView = function(view) {
-      $('#content').html(view.render());
+      $("#content").html(view.render());
       view.fetchData();
       return view.setListeners();
     };
@@ -410,165 +425,114 @@
     return MainRouter;
 
   })(Backbone.Router);
+  
+}});
 
-}).call(this);
+window.require.define({"templates/account": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<h1>Account</h1><form id="account-form"><p><label>email:<input id="account-email-field" type="text"/></label><label>fill this field to set a new password:<input id="account-password1-field" type="password"/></label><label>confirm new password:<input id="account-password2-field" type="password"/></label><button id="account-form-button" type="submit" class="btn">Send changes</button></p><div id="account-info" class="alert main-alert"><div id="account-info-text"> </div></div><div id="account-error" class="alert alert-error main-alert"><div id="account-form-error-text"> </div></div></form>');
+  }
+  return buf.join("");
+  };
+}});
 
+window.require.define({"templates/application": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a');
+  buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }, {"href":true,"target":true}));
+  buf.push('><div class="application-inner"><img');
+  buf.push(attrs({ 'src':("images/" + (app.icon) + "") }, {"src":true}));
+  buf.push('/><' + (app.name) + '></' + (app.name) + '><p class="info-text">' + escape((interp = app.description) == null ? '' : interp) + '</p></div></a>');
   }
-}));
-(this.require.define({
-  "templates/account": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h1>Account</h1><form');
-buf.push(attrs({ 'id':('account-form') }));
-buf.push('><p><label>email:<input');
-buf.push(attrs({ 'id':('account-email-field'), 'type':("text") }));
-buf.push('/></label><label>fill this field to set a new password:<input');
-buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
-buf.push('/></label><label>confirm new password:<input');
-buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
-buf.push('/></label><button');
-buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
-buf.push('>Send changes</button></p></form>');
-}
-return buf.join("");
-};
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/home": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div id="app-list"></div><div class="spacer"> </div>');
   }
-}));
-(this.require.define({
-  "templates/application": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<a');
-buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
-buf.push('><div');
-buf.push(attrs({ "class": ('application-inner') }));
-buf.push('><img');
-buf.push(attrs({ 'src':("images/" + (app.icon) + "") }));
-buf.push('/>' + escape((interp = app.name) == null ? '' : interp) + '\n<p');
-buf.push(attrs({ "class": ('info-text') }));
-buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div></a>');
-}
-return buf.join("");
-};
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/layout": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<header id="header"><h2 id="header-title"><a href="http://www.mycozycloud.com/" target="_blank" title="home"> \nCozy Cloud</a></h2><div id="buttons"><button id="account-button" type="submit" class="btn">Account</button><button id="home-button" type="submit" class="btn">Applications</button><button id="logout-button" type="submit" class="btn">Sign out</button></div></header><div class="container"><div id="content"></div></div>');
   }
-}));
-(this.require.define({
-  "templates/home": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<div');
-buf.push(attrs({ 'id':('app-list') }));
-buf.push('></div><div');
-buf.push(attrs({ "class": ('spacer') }));
-buf.push('></div>');
-}
-return buf.join("");
-};
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/login": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<h2>Sign in</h2><div id="login-form"><p><input id="login-password" type="password" placeholder="enter your password..."/></p><p><a id="forgot-password-button">forgot password ?</a></p><div id="login-info" class="alert main-alert"><div id="login-info-text"> </div></div><div id="login-error" class="alert alert-error main-alert"><div id="login-form-error-text"> </div></div></div>');
   }
-}));
-(this.require.define({
-  "templates/login": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h2>Sign in</h2><div');
-buf.push(attrs({ 'id':('login-form') }));
-buf.push('><p><input');
-buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
-buf.push('/></p><p><a');
-buf.push(attrs({ 'id':('forgot-password-button') }));
-buf.push('>forgot password ?</a></p><div');
-buf.push(attrs({ 'id':('login-info'), "class": ('alert') + ' ' + ('main-alert') }));
-buf.push('><div');
-buf.push(attrs({ 'id':('login-info-text') }));
-buf.push('><test></test></div></div><div');
-buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-buf.push('><div');
-buf.push(attrs({ 'id':('login-form-error-text') }));
-buf.push('></div></div></div>');
-}
-return buf.join("");
-};
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/market": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<h1>Market Place</h1><h2>Select application you want in your browser.</h2><div id="app-list"></div>');
   }
-}));
-(this.require.define({
-  "templates/market": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h1>Market Place</h1><h2>Select application you want in your browser.</h2><div');
-buf.push(attrs({ 'id':('app-list') }));
-buf.push('></div>');
-}
-return buf.join("");
-};
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/register": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<h2>Register to your Cozy</h2><div id="login-form"><p><input id="register-email" type="text" placeholder="email"/><input id="register-password" type="password" placeholder="password"/><div id="register-error" class="alert alert-error main-alert"><div id="register-error-text"><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
   }
-}));
-(this.require.define({
-  "templates/register": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h2>Register to your Cozy</h2><div');
-buf.push(attrs({ 'id':('login-form') }));
-buf.push('><p><input');
-buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
-buf.push('/><input');
-buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
-buf.push('/><div');
-buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-buf.push('><div');
-buf.push(attrs({ 'id':('register-error-text') }));
-buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
-}
-return buf.join("");
-};
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/reset": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<h1>Reset Password</h1><form id="reset-form"><p><label>fill this field to set a new password:<input id="reset-password1-field" type="password"/></label><label>confirm new password:<input id="reset-password2-field" type="password"/></label><button id="reset-form-button" type="submit" class="btn">Send changes</button></p></form>');
   }
-}));
-(this.require.define({
-  "templates/reset": function(exports, require, module) {
-    module.exports = function anonymous(locals, attrs, escape, rethrow) {
-var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<h1>Reset Password</h1><form');
-buf.push(attrs({ 'id':('reset-form') }));
-buf.push('><p><label>fill this field to set a new password:<input');
-buf.push(attrs({ 'id':('reset-password1-field'), 'type':("password") }));
-buf.push('/></label><label>confirm new password:<input');
-buf.push(attrs({ 'id':('reset-password2-field'), 'type':("password") }));
-buf.push('/></label><button');
-buf.push(attrs({ 'id':('reset-form-button'), 'type':("submit"), "class": ("btn") }));
-buf.push('>Send changes</button></p></form>');
-}
-return buf.join("");
-};
-  }
-}));
-(this.require.define({
-  "views/account_view": function(exports, require, module) {
-    (function() {
+  return buf.join("");
+  };
+}});
+
+window.require.define({"views/account_view": function(exports, require, module) {
   var template,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   template = require('../templates/account');
 
@@ -581,8 +545,10 @@ return buf.join("");
     /* Constructor
     */
 
+
     function AccountView() {
-      this.onDataSubmit = __bind(this.onDataSubmit, this);      AccountView.__super__.constructor.call(this);
+      this.onDataSubmit = __bind(this.onDataSubmit, this);
+      AccountView.__super__.constructor.call(this);
     }
 
     AccountView.prototype.fetchData = function() {
@@ -600,19 +566,39 @@ return buf.join("");
         password1: $("#account-password1-field").val(),
         password2: $("#account-password2-field").val()
       };
+      this.infoAlert.hide();
+      this.errorAlert.hide();
       return $.ajax({
         type: 'POST',
         url: "api/user/",
         data: form,
         success: function(data) {
+          var errorString, msg, msgs, _i, _len;
           if (data.success) {
-            return alert("Data were correctly changed.");
+            _this.infoAlert.html(data.msg);
+            return _this.infoAlert.show();
           } else {
-            return alert("Something went wrong, your data were not updated.");
+            msgs = JSON.parse(data.responseText).msg;
+            errorString = "";
+            for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+              msg = msgs[_i];
+              errorString += msg + "<br />";
+            }
+            _this.errorAlert.html(errorString);
+            return _this.errorAlert.show();
           }
         },
-        error: function() {
-          return alert("Server errer occured, change failed.");
+        error: function(data) {
+          var errorString, msg, msgs, _i, _len;
+          msgs = JSON.parse(data.responseText).msg;
+          errorString = "";
+          for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+            msg = msgs[_i];
+            console.log(msg);
+            errorString += msg + "<br />";
+          }
+          _this.errorAlert.html(errorString);
+          return _this.errorAlert.show();
         }
       });
     };
@@ -620,19 +606,33 @@ return buf.join("");
     /* Configuration
     */
 
+
     AccountView.prototype.render = function() {
       $(this.el).html(template());
       return this.el;
     };
 
     AccountView.prototype.setListeners = function() {
-      this.accountButton = $("#account-button");
-      this.accountButton.hide();
-      this.homeButton = $("#home-button");
-      this.homeButton.show();
-      this.logoutButton = $("#logout-button");
-      this.logoutButton.show();
+      if (app.views.home.logoutButton === void 0) {
+        app.views.home.logoutButton = $("#logout-button");
+        app.views.home.logoutButton.click(app.views.home.logout);
+      }
+      if (app.views.home.accountButton === void 0) {
+        app.views.home.accountButton = $("#account-button");
+        app.views.home.accountButton.click(app.views.home.account);
+      }
+      if (app.views.home.homeButton === void 0) {
+        app.views.home.homeButton = $("#home-button");
+        app.views.home.homeButton.click(app.views.home.home);
+      }
+      app.views.home.homeButton.show();
+      app.views.home.accountButton.hide();
+      app.views.home.logoutButton.show();
       this.emailField = $("#account-email-field");
+      this.infoAlert = $("#account-info");
+      this.infoAlert.hide();
+      this.errorAlert = $("#account-error");
+      this.errorAlert.hide();
       this.accountDataButton = $("#account-form-button");
       return this.accountDataButton.click(this.onDataSubmit);
     };
@@ -640,18 +640,14 @@ return buf.join("");
     return AccountView;
 
   })(Backbone.View);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/application": function(exports, require, module) {
-    (function() {
+window.require.define({"views/application": function(exports, require, module) {
   var BaseRow, template,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   template = require('../templates/application');
 
@@ -666,14 +662,17 @@ return buf.join("");
     /* Constructor
     */
 
+
     function ApplicationRow(model) {
       this.model = model;
       this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
       ApplicationRow.__super__.constructor.call(this, this.model);
     }
 
     /* Listener
     */
+
 
     ApplicationRow.prototype.onRemoveClicked = function(event) {
       event.preventDefault();
@@ -683,8 +682,10 @@ return buf.join("");
     /* Functions
     */
 
+
     /* configuration
     */
+
 
     ApplicationRow.prototype.render = function() {
       $(this.el).html(template({
@@ -697,18 +698,14 @@ return buf.join("");
     return ApplicationRow;
 
   })(BaseRow);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/home_view": function(exports, require, module) {
-    (function() {
+window.require.define({"views/home_view": function(exports, require, module) {
   var AppCollection, AppRow, User, homeTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   homeTemplate = require('../templates/home');
 
@@ -727,11 +724,16 @@ return buf.join("");
     /* Constructor
     */
 
+
     function HomeView() {
       this.fillApps = __bind(this.fillApps, this);
+
       this.account = __bind(this.account, this);
+
       this.home = __bind(this.home, this);
-      this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
+
+      this.logout = __bind(this.logout, this);
+      HomeView.__super__.constructor.call(this);
       this.apps = new AppCollection();
       this.apps.bind('reset', this.fillApps);
     }
@@ -739,8 +741,10 @@ return buf.join("");
     /* Listeners
     */
 
+
     /* Functions
     */
+
 
     HomeView.prototype.logout = function() {
       var user,
@@ -783,6 +787,7 @@ return buf.join("");
     /* Configuration
     */
 
+
     HomeView.prototype.render = function() {
       $(this.el).html(homeTemplate());
       return this.el;
@@ -812,18 +817,14 @@ return buf.join("");
     return HomeView;
 
   })(Backbone.View);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/login_view": function(exports, require, module) {
-    (function() {
+window.require.define({"views/login_view": function(exports, require, module) {
   var User, template,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   template = require("../templates/login");
 
@@ -835,9 +836,11 @@ return buf.join("");
 
     function LoginView() {
       this.onForgotButtonClicked = __bind(this.onForgotButtonClicked, this);
+
       this.logUser = __bind(this.logUser, this);
+
       this.submitPassword = __bind(this.submitPassword, this);
-      LoginView.__super__.constructor.apply(this, arguments);
+      return LoginView.__super__.constructor.apply(this, arguments);
     }
 
     LoginView.prototype.id = 'login-view';
@@ -847,11 +850,14 @@ return buf.join("");
     /* Constructor
     */
 
+
     /* Listeners
     */
 
+
     /* Functions
     */
+
 
     LoginView.prototype.submitPassword = function() {
       return this.logUser(this.passwordField.val());
@@ -860,7 +866,9 @@ return buf.join("");
     LoginView.prototype.logUser = function(password) {
       var user,
         _this = this;
-      if (!(this.errorAlert != null)) this.errorAlert = $("#login-error");
+      if (!(this.errorAlert != null)) {
+        this.errorAlert = $("#login-error");
+      }
       this.errorAlert.hide();
       user = new User(null, password);
       return user.login({
@@ -933,25 +941,23 @@ return buf.join("");
       this.errorAlert = $("#login-error");
       this.errorAlert.hide();
       return this.passwordField.keyup(function(event) {
-        if (event.which === 13) return _this.submitPassword();
+        if (event.which === 13) {
+          return _this.submitPassword();
+        }
       });
     };
 
     return LoginView;
 
   })(Backbone.View);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/register_view": function(exports, require, module) {
-    (function() {
+window.require.define({"views/register_view": function(exports, require, module) {
   var User, template,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   template = require('../templates/register');
 
@@ -963,7 +969,7 @@ return buf.join("");
 
     function RegisterView() {
       this.submitData = __bind(this.submitData, this);
-      RegisterView.__super__.constructor.apply(this, arguments);
+      return RegisterView.__super__.constructor.apply(this, arguments);
     }
 
     RegisterView.prototype.id = 'register-view';
@@ -975,11 +981,14 @@ return buf.join("");
     /* Constructor
     */
 
+
     /* Listeners
     */
 
+
     /* Functions
     */
+
 
     RegisterView.prototype.submitData = function() {
       var email, password, user,
@@ -987,14 +996,18 @@ return buf.join("");
       email = this.emailField.val();
       password = this.passwordField.val();
       user = new User(email, password);
-      this.errorAlert.hide();
-      return user.register({
-        success: function() {
-          return app.views.login.logUser(password);
-        },
-        error: function() {
-          return _this.errorAlert.fadeIn();
-        }
+      return this.errorAlert.fadeOut(function() {
+        return user.register({
+          success: function() {
+            return app.views.login.logUser(password);
+          },
+          error: function(data) {
+            var error;
+            error = JSON.parse(data.responseText);
+            _this.errorAlert.html(error.msg);
+            return _this.errorAlert.fadeIn();
+          }
+        });
       });
     };
 
@@ -1002,6 +1015,7 @@ return buf.join("");
 
     /* Configuration
     */
+
 
     RegisterView.prototype.render = function() {
       $(this.el).html(template());
@@ -1017,25 +1031,23 @@ return buf.join("");
       this.buttons = $("#buttons");
       this.buttons.hide();
       return this.passwordField.keyup(function(event) {
-        if (event.which === 13) return _this.submitData();
+        if (event.which === 13) {
+          return _this.submitData();
+        }
       });
     };
 
     return RegisterView;
 
   })(Backbone.View);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/reset_view": function(exports, require, module) {
-    (function() {
+window.require.define({"views/reset_view": function(exports, require, module) {
   var template,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   template = require('../templates/reset');
 
@@ -1048,8 +1060,10 @@ return buf.join("");
     /* Constructor
     */
 
+
     function ResetView() {
-      this.onDataSubmit = __bind(this.onDataSubmit, this);      ResetView.__super__.constructor.call(this);
+      this.onDataSubmit = __bind(this.onDataSubmit, this);
+      ResetView.__super__.constructor.call(this);
     }
 
     ResetView.prototype.fetchData = function() {};
@@ -1095,6 +1109,7 @@ return buf.join("");
     /* Configuration
     */
 
+
     ResetView.prototype.render = function() {
       $(this.el).html(template());
       return this.el;
@@ -1114,16 +1129,12 @@ return buf.join("");
     return ResetView;
 
   })(Backbone.View);
+  
+}});
 
-}).call(this);
-
-  }
-}));
-(this.require.define({
-  "views/row": function(exports, require, module) {
-    (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+window.require.define({"views/row": function(exports, require, module) {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   exports.BaseRow = (function(_super) {
 
@@ -1145,8 +1156,6 @@ return buf.join("");
     return BaseRow;
 
   })(Backbone.View);
+  
+}});
 
-}).call(this);
-
-  }
-}));

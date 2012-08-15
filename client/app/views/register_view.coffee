@@ -21,12 +21,14 @@ class exports.RegisterView extends Backbone.View
 
         user = new User(email, password)
 
-        @errorAlert.hide()
-        user.register
-            success: =>
-                app.views.login.logUser password
-            error: =>
-                @errorAlert.fadeIn()
+        @errorAlert.fadeOut =>
+            user.register
+                success: =>
+                    app.views.login.logUser password
+                error: (data) =>
+                    error = JSON.parse data.responseText
+                    @errorAlert.html error.msg
+                    @errorAlert.fadeIn()
             
     fetchData: ->
 
