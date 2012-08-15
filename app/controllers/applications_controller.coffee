@@ -1,4 +1,3 @@
-
 # Actions to manage applications : home page + API.
 #
 
@@ -6,8 +5,6 @@
 
 
 # Checks if user is authenticated, if not a simple 403 error is sent.
-# TODO Make application more script friendly, with challenge requests for
-# basic authentication.
 checkApiAuthenticated = ->
     if req.isAuthenticated() then next() else send 403
 
@@ -30,5 +27,4 @@ action 'applications', ->
             send error: "Retrieve applications failed.", 500
         else
             send rows: apps
-
 
