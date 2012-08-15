@@ -3221,6 +3221,7 @@ a.thumbnail:hover {
     margin-left: 30px;
   }
 }
+<<<<<<< HEAD
 body{background-color:#9999ad}
 a{color:#f68c4e;font-weight:bold}
 a:hover{color:#000}
@@ -3256,3 +3257,174 @@ a{cursor:pointer}
 #register-view input{width:400px;font-size:30px;padding:6px;height:48px}
 #register-error{width:780px}
 #reset-view h1,#account-view h1{color:#d46a2c;margin-bottom:40px}
+=======
+body {
+  background-color: #9999ad;
+}
+a {
+  color: #f68c4e;
+  font-weight: bold;
+}
+a:hover {
+  color: #000;
+}
+h2 {
+  color: #d46a2c;
+  font-size: 30px;
+  margin-bottom: 24px;
+  margin-top: 24px;
+}
+.spacer {
+  clear: both;
+}
+.container {
+  padding: 0;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  background-color: #fff;
+  width: 960px;
+  border: 2px solid #999;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  -moz-box-shadow: 3px 3px 4px 1px #668;
+  -webkit-box-shadow: 3px 3px 4px 1px #668;
+  box-shadow: 3px 3px 4px 1px #668;
+  min-height: 260px;
+}
+.close {
+  float: right;
+}
+.hidden {
+  display: none;
+}
+.spacer {
+  clear: both;
+}
+#text-container {
+  width: 610px;
+}
+/* Header */
+#header {
+  margin-top: 0px;
+  margin-bottom: 40px;
+  background-color: #fff;
+  -webkit-border-radius: 0px 0px 3px 3px;
+  -moz-border-radius: 0px 0px 3px 3px;
+  border-radius: 0px 0px 3px 3px;
+  -moz-box-shadow: 3px 3px 4px 1px #668;
+  -webkit-box-shadow: 3px 3px 4px 1px #668;
+  box-shadow: 3px 3px 4px 1px #668;
+  text-align: right;
+  min-height: 70px;
+}
+#header h2 {
+  float: left;
+  margin-top: 3px;
+  color: #f68c4e;
+}
+#header a {
+  color: #d46a2c;
+  text-decoration: none;
+}
+#header .alert {
+  float: left;
+  padding: 10px;
+  margin: 0 6px 0 18px;
+}
+#header p {
+  margin: 0;
+}
+/* Dialogs */
+#confirm-dialog {
+  display: none;
+}
+/* Misc */
+#header #buttons {
+  float: right;
+  margin: 20px 12px 0 0;
+}
+#header {
+  text-align: left;
+  width: 100%;
+}
+#header-title {
+  padding: 12px;
+}
+#content {
+  padding: 24px;
+}
+.application {
+  width: 150px;
+  height: 200px;
+  margin-left: 12px;
+  margin-top: 12px;
+  font-size: 42px;
+  line-height: 48px;
+  display: inline-block;
+}
+.application-inner {
+  text-align: center;
+  width: 136px;
+  height: 200px;
+  padding: 24px 18px;
+  border: 2px solid #f68c4e;
+  background: linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);
+  -moz-box-shadow: 1px 1px 3px #444;
+  -webkit-box-shadow: 1px 1px 3px #444;
+  box-shadow: 1px 1px 3px #444;
+  color: #ffeff3;
+  border-radius: 12px;
+}
+.application a:hover {
+  text-decoration: none;
+}
+.application-inner:active {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.application-inner:hover {
+  background: linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%);
+}
+#logout-button {
+  display: none;
+}
+.center {
+  text-align: center;
+}
+/* Login page */
+.main-alert {
+  display: inline-block;
+}
+#login-error {
+  width: 360px;
+}
+#login-view {
+  text-align: center;
+}
+#login-password {
+  width: 400px;
+  font-size: 30px;
+  padding: 6px;
+  height: 48px;
+}
+a {
+  cursor: pointer;
+}
+/* Register page */
+#register-view input {
+  width: 400px;
+  font-size: 30px;
+  padding: 6px;
+  height: 48px;
+}
+#register-error {
+  width: 780px;
+}
+#reset-view h1,
+#account-view h1 {
+  color: #d46a2c;
+  margin-bottom: 40px;
+}
+>>>>>>> clean ui for correct message displaying + debug

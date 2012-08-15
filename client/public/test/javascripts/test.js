@@ -75,6 +75,7 @@
 })();
 
 window.require.define({"test/task_model_test": function(exports, require, module) {
+<<<<<<< HEAD
   (function() {
 
     describe('Suscribe', function() {
@@ -86,10 +87,21 @@ window.require.define({"test/task_model_test": function(exports, require, module
     });
 
   }).call(this);
+=======
+  
+  describe('Suscribe', function() {
+    before(function() {});
+    after(function() {});
+    return describe("Test", function() {
+      return it("Then it displays an error message.", function() {});
+    });
+  });
+>>>>>>> clean ui for correct message displaying + debug
   
 }});
 
 window.require.define({"test/test-helpers": function(exports, require, module) {
+<<<<<<< HEAD
   (function() {
 
     module.exports = {
@@ -100,6 +112,15 @@ window.require.define({"test/test-helpers": function(exports, require, module) {
     };
 
   }).call(this);
+=======
+  
+  module.exports = {
+    expect: require('chai').expect,
+    should: require('chai').should,
+    sinon: require('sinon'),
+    $: require('jquery')
+  };
+>>>>>>> clean ui for correct message displaying + debug
   
 }});
 
