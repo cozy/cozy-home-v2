@@ -24,7 +24,8 @@
   { "mocha":            ">= 0"
   , "request":          ">= 0"
   , "chai":             ">= 0"
-  , "zombie":             ">= 0"
+  , "zombie":           ">= 0"
+  , "eyes":             ">= 0"
   }
 , "scripts":
   { "test": "cake tests"
