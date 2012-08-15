@@ -20,17 +20,33 @@ class exports.AccountView extends Backbone.View
         password1: $("#account-password1-field").val()
         password2: $("#account-password2-field").val()
 
+
+    @infoAlert.hide()
+    @errorAlert.hide()
+
     $.ajax
         type: 'POST'
         url: "api/user/"
         data: form
         success: (data) =>
             if data.success
-                alert "Data were correctly changed."
+                @infoAlert.html data.msg
+                @infoAlert.show()
             else
-                alert "Something went wrong, your data were not updated."
-        error: =>
-            alert "Server errer occured, change failed."
+                msgs = JSON.parse(data.responseText).msg
+                errorString = ""
+                for msg in msgs
+                    errorString += msg + "<br />"
+                @errorAlert.html errorString
+                @errorAlert.show()
+        error: (data) =>
+            msgs = JSON.parse(data.responseText).msg
+            errorString = ""
+            for msg in msgs
+                console.log msg
+                errorString += msg + "<br />"
+            @errorAlert.html errorString
+            @errorAlert.show()
 
 
   ### Configuration ###
@@ -40,13 +56,23 @@ class exports.AccountView extends Backbone.View
     @el
 
   setListeners: ->
-    @accountButton = $ "#account-button"
-    @accountButton.hide()
-    @homeButton = $ "#home-button"
-    @homeButton.show()
-    @logoutButton = $ "#logout-button"
-    @logoutButton.show()
+    if app.views.home.logoutButton == undefined
+        app.views.home.logoutButton = $("#logout-button")
+        app.views.home.logoutButton.click app.views.home.logout
+    if app.views.home.accountButton == undefined
+        app.views.home.accountButton = $("#account-button")
+        app.views.home.accountButton.click app.views.home.account
+    if app.views.home.homeButton == undefined
+        app.views.home.homeButton = $("#home-button")
+        app.views.home.homeButton.click app.views.home.home
+    app.views.home.homeButton.show()
+    app.views.home.accountButton.hide()
+    app.views.home.logoutButton.show()
     @emailField = $ "#account-email-field"
+    @infoAlert = $ "#account-info"
+    @infoAlert.hide()
+    @errorAlert = $ "#account-error"
+    @errorAlert.hide()
 
     @accountDataButton = $ "#account-form-button"
     @accountDataButton.click @onDataSubmit
