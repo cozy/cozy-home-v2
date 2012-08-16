@@ -125,7 +125,6 @@ describe "Applications", ->
                 done()
 
         it "Then I got expected application in a list", ->
-            console.log @body
             @body.rows.length.should.equal 2
             @body.rows[1].name.should.equal "My App"
 
