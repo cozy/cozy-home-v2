@@ -1,3 +1,5 @@
+@import 'nib'
+
 shadow()
   -moz-box-shadow: arguments
   -webkit-box-shadow: arguments
@@ -118,9 +120,12 @@ h2
 #content
   padding 24px
 
+#app-list
+  margin-bottom 20px
+
 .application 
   width 150px
-  height 200px
+  height 100px
   margin-left 12px
   margin-right 46px
   margin-top 12px
@@ -131,13 +136,12 @@ h2
 .application-inner
   text-align center
   width 136px
-  height 200px
-  padding 24px 18px
+  height 100px
   border 2px solid linkcolor
-  background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
   shadow 1px 1px 3px shadowcolor
-  color textcolorapplication 
   border-radius 12px
+  color white
+  background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
 
 .application a:hover
   text-decoration: none
@@ -147,6 +151,12 @@ h2
 
 .application-inner:hover  
   background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
+
+.app-title
+  font-size: 20px
+  line-height: 22px
+  font-weight: bold
+  margin-top: 20px
 
 #logout-button
   display none
