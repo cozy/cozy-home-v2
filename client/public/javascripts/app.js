@@ -770,8 +770,12 @@ window.require.define({"templates/home": function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
+<<<<<<< HEAD
   buf.push('<div id="app-list"></div><div class="spacer"> </div>');
 >>>>>>> clean ui for correct message displaying + debug
+=======
+  buf.push('<div id="app-list"></div><div class="spacer"> </div><button id="add-app-button" class="btn btn-info">Add a new application</button><form id="add-app-form" class="well"><p><label>name:</label><input type="text" id="app-name-field" class="span3"/></p><p><label>description:</label><input type="text" id="app-description-field" class="span3"/></p><p><label>Git URL:</label><input type="text" id="app-git-field" class="span3"/></p><p><button id="add-app-submit" type="submit" class="btn">Install</button></p></form>');
+>>>>>>> add code to display app form when application button is clicked
   }
   return buf.join("");
   };
@@ -1284,6 +1288,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
 =======
 
     function HomeView() {
+      this.onAddClicked = __bind(this.onAddClicked, this);
+
       this.fillApps = __bind(this.fillApps, this);
 
       this.account = __bind(this.account, this);
@@ -1362,8 +1368,17 @@ window.require.define({"views/home_view": function(exports, require, module) {
         });
       };
 
+<<<<<<< HEAD
       /* Configuration
       */
+=======
+    HomeView.prototype.onAddClicked = function() {
+      return this.addApplicationForm.toggle();
+    };
+
+    /* Configuration
+    */
+>>>>>>> add code to display app form when application button is clicked
 
 <<<<<<< HEAD
       HomeView.prototype.render = function() {
@@ -1378,6 +1393,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
     };
 >>>>>>> clean ui for correct message displaying + debug
 
+<<<<<<< HEAD
       HomeView.prototype.setListeners = function() {
         this.appList = $("#app-list");
         if (this.logoutButton === void 0) {
@@ -1398,6 +1414,32 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.accountButton.show();
         return this.logoutButton.show();
       };
+=======
+    HomeView.prototype.setListeners = function() {
+      this.appList = $("#app-list");
+      if (this.logoutButton === void 0) {
+        this.logoutButton = $("#logout-button");
+        this.logoutButton.click(this.logout);
+      }
+      if (this.accountButton === void 0) {
+        this.accountButton = $("#account-button");
+        this.accountButton.click(this.account);
+      }
+      if (this.homeButton === void 0) {
+        this.homeButton = $("#home-button");
+        this.homeButton.click(this.home);
+      }
+      this.buttons = $("#buttons");
+      this.buttons.show();
+      this.homeButton.hide();
+      this.accountButton.show();
+      this.logoutButton.show();
+      this.addApplicationButton = this.$("#add-app-button");
+      this.addApplicationButton.click(this.onAddClicked);
+      this.addApplicationForm = this.$("#add-app-form");
+      return this.addApplicationForm.hide();
+    };
+>>>>>>> add code to display app form when application button is clicked
 
       return HomeView;
 

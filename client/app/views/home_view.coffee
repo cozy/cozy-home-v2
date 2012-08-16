@@ -53,6 +53,9 @@ class exports.HomeView extends Backbone.View
       el = row.render()
       @appList.append el
 
+  onAddClicked: =>
+      @addApplicationForm.toggle()
+
 
   ### Configuration ###
 
@@ -80,3 +83,8 @@ class exports.HomeView extends Backbone.View
     @accountButton.show()
     @logoutButton.show()
 
+
+    @addApplicationButton = @$("#add-app-button")
+    @addApplicationButton.click @onAddClicked
+    @addApplicationForm = @$("#add-app-form")
+    @addApplicationForm.hide()
