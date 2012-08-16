@@ -3240,7 +3240,7 @@ h2{color:#d46a2c;font-size:30px;margin-bottom:24px;margin-top:24px}
 #header-title span{margin-left:12px}
 #header #buttons{margin-top:6px}
 #content{padding:24px;min-height:270px}
-.application{width:150px;height:200px;margin-left:12px;margin-top:12px;font-size:42px;line-height:48px;display:inline-block}
+.application{width:150px;height:200px;margin-left:12px;margin-right:46px;margin-top:12px;font-size:42px;line-height:48px;float:left}
 .application-inner{text-align:center;width:136px;height:200px;padding:24px 18px;border:2px solid #f68c4e;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6bd8f), color-stop(1, #f69c5e));background:-webkit-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:-moz-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);-moz-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;color:#ffeff3;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px}
 .application a:hover{text-decoration:none}
 .application-inner:active{-moz-box-shadow:none;-webkit-box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
