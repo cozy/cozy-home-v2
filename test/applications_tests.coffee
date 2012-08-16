@@ -1,4 +1,4 @@
-should = require('should')
+should = require('chai').Should()
 client = require('../common/test/client')
 server = require('../server')
 
@@ -101,6 +101,33 @@ describe "Applications", ->
             should.exist bodyTest.rows
             bodyTest.rows.length.should.equal 1
             bodyTest.rows[0].name.should.equal "Noty plus"
+
+    describe "POST /api/applications/install Install a new application", ->
+        it "When I send a request to install an application", (done) ->
+            data =
+                name: "My App",
+                description: "description",
+                git: "git@github.com:mycozycloud/my-app.git"
+            client.post "api/applications/install", \
+                        data, (error, response, body) =>
+                @response = response
+                @body = body
+                done()
+
+        it "Then it sends me back my app with an id and a state", ->
+            @response.statusCode.should.equal 201
+            should.exist @body.id
+            should.exist @body.state
+
+        it "When I send a request to retrieve all applications", (done) ->
+            client.get "api/applications", (error, response, body) =>
+                @body = JSON.parse body
+                done()
+
+        it "Then I got expected application in a list", ->
+            console.log @body
+            @body.rows.length.should.equal 2
+            @body.rows[1].name.should.equal "My App"
 
 
 describe "Users", ->
