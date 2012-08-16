@@ -1,3 +1,17 @@
 #app-list
 .spacer  
 
+button#add-app-button.btn.btn-info Add a new application
+
+form#add-app-form.well
+    p
+        label name:
+        input(type="text", class="span3", id="app-name-field")
+    p
+        label description:
+        input(type="text", class="span3", id="app-description-field")
+    p
+        label Git URL:
+        input(type="text", class="span3", id="app-git-field")
+    p
+        button#add-app-submit.btn(type="submit") Install

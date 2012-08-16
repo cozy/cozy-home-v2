@@ -462,7 +462,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="app-list"></div><div class="spacer"> </div>');
+  buf.push('<div id="app-list"></div><div class="spacer"> </div><button id="add-app-button" class="btn btn-info">Add a new application</button><form id="add-app-form" class="well"><p><label>name:</label><input type="text" id="app-name-field" class="span3"/></p><p><label>description:</label><input type="text" id="app-description-field" class="span3"/></p><p><label>Git URL:</label><input type="text" id="app-git-field" class="span3"/></p><p><button id="add-app-submit" type="submit" class="btn">Install</button></p></form>');
   }
   return buf.join("");
   };
@@ -726,6 +726,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
 
     function HomeView() {
+      this.onAddClicked = __bind(this.onAddClicked, this);
+
       this.fillApps = __bind(this.fillApps, this);
 
       this.account = __bind(this.account, this);
@@ -784,6 +786,10 @@ window.require.define({"views/home_view": function(exports, require, module) {
       });
     };
 
+    HomeView.prototype.onAddClicked = function() {
+      return this.addApplicationForm.toggle();
+    };
+
     /* Configuration
     */
 
@@ -811,7 +817,11 @@ window.require.define({"views/home_view": function(exports, require, module) {
       this.buttons.show();
       this.homeButton.hide();
       this.accountButton.show();
-      return this.logoutButton.show();
+      this.logoutButton.show();
+      this.addApplicationButton = this.$("#add-app-button");
+      this.addApplicationButton.click(this.onAddClicked);
+      this.addApplicationForm = this.$("#add-app-form");
+      return this.addApplicationForm.hide();
     };
 
     return HomeView;

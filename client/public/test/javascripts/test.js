@@ -74,13 +74,38 @@
   globals.require.brunch = true;
 })();
 
-window.require.define({"test/task_model_test": function(exports, require, module) {
-  
-  describe('Suscribe', function() {
-    before(function() {});
+window.require.define({"test/application_view_test": function(exports, require, module) {
+  var HomeView;
+
+  HomeView = require("views/home_view").HomeView;
+
+  describe('Manage applications', function() {
+    before(function() {
+      this.view = new HomeView();
+      this.view.render();
+      return this.view.setListeners();
+    });
     after(function() {});
-    return describe("Test", function() {
-      return it("Then it displays an error message.", function() {});
+    describe("Display installation form", function() {
+      it("When I click on add application button", function() {
+        return this.view.addApplicationButton.click();
+      });
+      it("It displays a form to describe new app", function() {
+        return expect(this.view.addApplicationForm.is(":visible")).to.be.ok;
+      });
+      it("When I click on add application button", function() {
+        return this.view.addApplicationButton.click();
+      });
+      return it("It displays a form to describe new app", function() {
+        return expect(this.view.addApplicationForm.is(":visible")).to.not.be.ok;
+      });
+    });
+    return describe("Add first available applications", function() {
+      it("When I click on install application buttonp", function() {});
+      it("Then loading process is started and displayed", function() {});
+      it("When loading process is finished", function() {});
+      it("Then app is marked as installed", function() {});
+      return it("And app is listed inside my apps", function() {});
     });
   });
   
@@ -90,11 +115,10 @@ window.require.define({"test/test-helpers": function(exports, require, module) {
   
   module.exports = {
     expect: require('chai').expect,
-    should: require('chai').should,
     sinon: require('sinon'),
     $: require('jquery')
   };
   
 }});
 
-window.require('test/task_model_test');
+window.require('test/application_view_test');
