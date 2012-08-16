@@ -1,6 +1,7 @@
 exports.routes = (map) ->
     map.get '/', 'applications#index'
     map.get '/api/applications', 'applications#applications'
+    map.get '/api/applications/install', 'applications#install'
 
     map.get '/authenticated', 'passport#isAuthenticated'
     map.post '/register', 'passport#register'
