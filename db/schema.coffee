@@ -4,7 +4,11 @@ User = define 'User', ->
     property 'password', String
     property 'owner', Boolean, default: false
     property 'activated', Boolean, default: false
-    property 'url', String
+
+
+# Data linked to current CozyInstance
+CozyInstance = define 'CozyInstance', ->
+    property 'domain', String
 
 
 # Application descrbies an application installed inside the Cozy instance.

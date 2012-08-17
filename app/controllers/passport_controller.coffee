@@ -74,7 +74,7 @@ action 'register', ->
         else
             send success: true, msg: "Register succeeds."
 
-    createUser = () ->
+    createUser = (url) ->
         hash = utils.cryptPassword password
 
         user = new User
@@ -82,14 +82,25 @@ action 'register', ->
             owner: true
             password: hash
             activated: true
+            url: url
         user.save answer
 
     User.all (err, users) ->
         if err
             console.log err
             send error: true,  msg: "Server error occured.", 500
+
         else if users.length
-            send error: true,  msg: "User already registered.", 400
+            if not users[0].name?
+                send error: true,  msg: "User already registered.", 400
+            else
+                users[0].destroy (err) ->
+                    if err
+                        console.log err
+                        send error: true,  msg: "Server error occured.", 500
+                    else
+                        createUser(users[0].url)
+
         else
             createUser()
 
@@ -139,9 +150,19 @@ action "forgotPassword", ->
             user = users[0]
             key = utils.genResetKey()
 
-            utils.sendResetEmail user, key, (err, result)->
-                console.log err if err
-                send success: "An email has been sent to your email address, follow its instructions to get a new password."
+            CozyInstance.all (err, instances) ->
+                if err
+                    console.log err
+                    send error: true,  msg: "Server error occured.", 500
+                else
+                    if instances.length > 0
+                        instance = instances[0]
+                    else
+                        instance = CozyInstance domain: "domain.not.set"
+                    utils.sendResetEmail instance, user, key, (err, result)->
+                        console.log err if err
+                        send success: "An email has been sent to your email\
+address, follow its instructions to get a new password."
 
 
 # Check key validity, then redirect to password reset view or to root route

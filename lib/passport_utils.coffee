@@ -36,18 +36,18 @@ exports.checkKey = (key, callbacks) ->
 
 # Send email giving user email address he can connect on to change his
 # password. The validity of the address depends on the given key.
-exports.sendResetEmail = (user, key, callback) ->
+exports.sendResetEmail = (instance, user, key, callback) ->
     nodemailer = require "nodemailer"
     transport = nodemailer.createTransport("SMTP", {})
     transport.sendMail
         to : user.email
-        from : "no-reply@mycozycloud.com"
+        from : "no-reply@" + instance.domain
         subject : "[Cozy] Reset password procedure"
         text: """
 You told to your cozy that you forgot your password. No worry about that, just 
 go to following url and you will be able to set a new one:
 
-#{user.url}password/reset/#{key}
+https://#{instance.domain}/password/reset/#{key}
 """
     , (error, response) ->
         transport.close()
