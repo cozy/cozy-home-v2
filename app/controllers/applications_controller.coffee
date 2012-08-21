@@ -12,9 +12,9 @@ checkApiAuthenticated = ->
 
 before checkApiAuthenticated, { except: ["init", "index", "users"] }
 
+# Load application corresponding to slug given in params
 before 'load application', ->
-    console.log params.id
-    Application.all where: { slug: params.id }, (err, apps) =>
+    Application.all where: { slug: params.slug }, (err, apps) =>
         if err
             console.log err
             send error: 'An error occured', 500
@@ -72,7 +72,8 @@ action "install", ->
                                 send app, 201
                     else
                         app.state = "installed"
-                        app.port = result.port
+                        console.log result
+                        app.port = result.drone.port
                         app.save (err) ->
                             if err
                                 send
