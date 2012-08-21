@@ -16,8 +16,9 @@ Application = define 'Application', ->
     property 'name', String, index: true
     property 'slug', String
     property 'state', String
-    property 'index', Number
     property 'date', String, default: Date.now
     property 'icon', String
     property 'description', String
+    property 'git', String
+    property 'port', Number
 

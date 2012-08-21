@@ -21,6 +21,7 @@
   , "redis":            ">= 0.7.2"
   , "unicode":          ">= 0.3.1"
   , "async":            "0"
+  , "haibu":            "= 0.8.4"
   }
 , "devDependencies":
   { "mocha":            ">= 0"
