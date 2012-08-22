@@ -309,13 +309,48 @@ window.require.define({"initialize": function(exports, require, module) {
   
 }});
 
+window.require.define({"lib/request": function(exports, require, module) {
+  (function() {
+
+    exports.request = function(type, url, data, callbacks) {
+      return $.ajax({
+        type: type,
+        url: url,
+        data: data,
+        success: callbacks.success,
+        error: callbacks.error
+      });
+    };
+
+    exports.get = function(url, callbacks) {
+      return exports.request("GET", url, null, callbacks);
+    };
+
+    exports.post = function(url, data, callbacks) {
+      return exports.request("POST", url, data, callbacks);
+    };
+
+    exports.put = function(url, data, callbacks) {
+      return exports.request("PUT", url, data, callbacks);
+    };
+
+    exports.del = function(url, callbacks) {
+      return exports.request("DELETE", url, null, callbacks);
+    };
+
+  }).call(this);
+  
+}});
+
 window.require.define({"models/application": function(exports, require, module) {
   (function() {
-    var BaseModel,
+    var BaseModel, client,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
     BaseModel = require("models/models").BaseModel;
+
+    client = require("lib/request");
 
     exports.Application = (function(_super) {
 
@@ -330,11 +365,22 @@ window.require.define({"models/application": function(exports, require, module) 
         this.name = app.name;
         this.description = app.description;
         this.icon = app.icon;
+        this.git = app.git;
         this;
       }
 
       Application.prototype.install = function(callbacks) {
-        return callbacks.success();
+        var data;
+        data = {
+          name: this.name,
+          description: this.description,
+          git: this.git
+        };
+        return client.post('/api/applications/install', data, callbacks);
+      };
+
+      Application.prototype.uninstall = function(callbacks) {
+        return client.del("/api/applications/" + this.slug + "/uninstall", callbacks);
       };
 
       return Application;
@@ -520,7 +566,9 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ "class": ('app-title') }));
   buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p><p');
   buf.push(attrs({ "class": ('info-text') }));
-  buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div></a>');
+  buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
+  buf.push('>uninstall</button></div></a>');
   }
   return buf.join("");
   };
@@ -534,9 +582,11 @@ window.require.define({"templates/home": function(exports, require, module) {
   var interp;
   buf.push('<div');
   buf.push(attrs({ 'id':('app-list') }));
-  buf.push('></div><div');
+  buf.push('><div');
   buf.push(attrs({ "class": ('spacer') }));
-  buf.push('></div><button');
+  buf.push('>&nbsp;  </div></div><div');
+  buf.push(attrs({ "class": ('spacer') }));
+  buf.push('>&nbsp;  </div><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') + ' ' + ('btn-info') }));
   buf.push('>Add a new application</button><form');
   buf.push(attrs({ 'id':('add-app-form'), "class": ('well') }));
@@ -802,6 +852,10 @@ window.require.define({"views/application": function(exports, require, module) {
 
       ApplicationRow.prototype.className = "application";
 
+      ApplicationRow.prototype.events = {
+        "click .remove-app": "onRemoveClicked"
+      };
+
       /* Constructor
       */
 
@@ -821,6 +875,19 @@ window.require.define({"views/application": function(exports, require, module) {
 
       /* Functions
       */
+
+      ApplicationRow.prototype.removeApp = function() {
+        var _this = this;
+        this.$(".remove-app").html("Removing...");
+        return this.model.uninstall({
+          success: function() {
+            return _this.$(".remove-app").html("Removed!");
+          },
+          error: function() {
+            return _this.$(".remove-app").html("Remove failed.");
+          }
+        });
+      };
 
       /* configuration
       */

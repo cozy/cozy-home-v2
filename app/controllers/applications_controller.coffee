@@ -1,23 +1,32 @@
 # Actions to manage applications : home page + API.
 #
 
-## Filters
-
 slugify = require "../../lib/slug"
 {AppManager} = require "../../lib/paas"
+
+
+# Helpers
+
+send_error = (msg, code=500) ->
+    if msg
+        send error: true, msg: msg, code
+    else
+        send error: true, msg: "Server error occured", code
+
 
 # Checks if user is authenticated, if not a simple 403 error is sent.
 checkApiAuthenticated = ->
     if req.isAuthenticated() then next() else send 403
 
-before checkApiAuthenticated, { except: ["init", "index", "users"] }
+before checkApiAuthenticated, \
+    { except: ["init", "index", "users", "applications"] }
 
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all where: { slug: params.slug }, (err, apps) =>
         if err
             console.log err
-            send error: 'An error occured', 500
+            send_error()
         else if apps is null or apps.length == 0
             send error: 'Application not found', 404
         else
@@ -39,73 +48,66 @@ action 'index', ->
 action 'applications', ->
     Application.all (errors, apps) ->
         if errors
-            send error: "Retrieve applications failed.", 500
+            send_error "Retrieve applications failed."
         else
             send rows: apps
 
+
+# Set up app into 3 places :
+# * haibu, application manager
+# * proxy, cozy router
+# * database
+# Send an error if an application already has same slug.
 action "install", ->
     body.slug = slugify body.name
     body.state = "installing"
 
+    setupApp = (app) ->
+        manager = new AppManager
+        manager.installApp app, (err, result) ->
+            if err
+                app.state = "broken"
+                app.save (err) ->
+                    if err then send_error() else send app, 201
+            else
+                app.state = "installed"
+                console.log result
+                app.port = result.drone.port
+                app.save (err) ->
+                    if err then send_error() else send app, 201
+
     Application.all where: { slug: body.slug }, (err, apps) ->
         if err
-            send error: true, msg: "Server error occured", 500
-        if apps.length
-            send error: true, msg: "There is already an app for that name", 400
-        
+            send_error()
+        else if apps.length
+            send_error "There is already an app with similar name", 400
         else
             Application.create body, (err, app) ->
-                if err
-                    send error: true, msg: "Server error occured", 500
-
-                manager = new AppManager
-                manager.installApp app, (err, result) ->
-                    if err
-                        app.state = "broken"
-                        app.save (err) ->
-                            if err
-                                send
-                                    error: true,
-                                    msg: "Server error occured"
-                                    , 500
-                            else
-                                send app, 201
-                    else
-                        app.state = "installed"
-                        console.log result
-                        app.port = result.drone.port
-                        app.save (err) ->
-                            if err
-                                send
-                                    error: true,
-                                    msg: "Server error occured"
-                                    , 500
-                            else
-                                send app, 201
+                if err then send_error() else setupApp app
 
 
-send_error = (msg) ->
-    if msg
-        send error: true, msg: msg, 500
-    else
-        send error: true, msg: "Server error occured", 500
-
-                                
+# Remove app from 3 places :
+# * haibu, application manager
+# * proxy, cozy router
+# * database
 action "uninstall", ->
-    
+
+    markAppAsBroken = =>
+        @app.state = "broken"
+        @app.save (err) ->
+            if err
+                send_error()
+            else
+                send_error "uninstallation failed"
+
+    removeAppFromDb = =>
+        @app.destroy (err) ->
+            if err
+                console.log err
+                send_error 'Cannot destroy app'
+            else
+                send success: 'Application succesfuly uninstalled'
+
     manager = new AppManager
     manager.uninstallApp @app, (err, result) =>
-        if err
-            @app.state = "broken"
-            @app.save (err) ->
-                if err
-                    send_error()
-                else
-                    send_error "uninstallation failed"
-        else
-            @app.destroy (err) ->
-                if err
-                    console.log err
-                    send_error 'Cannot destroy app'
-                else
-                    send success: 'Application succesfuly uninstalled'
+        if err then markAppAsBroken() else removeAppFromDb()
