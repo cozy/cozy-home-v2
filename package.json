@@ -1,6 +1,6 @@
 { "name": "cozyhome"
 , "version": "0.0.1"
-, "engines": ["node >= 0.6.0"]
+, "engine": { "node = 0.6.x" }
 , "main": "server.js"
 , "dependencies":
   { "jade":             ">= 0.27.2"
