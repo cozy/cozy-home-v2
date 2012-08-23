@@ -1,8 +1,4 @@
-window.app = {}
-app.routers = {}
-app.models = {}
-app.collections = {}
-app.views = {}
+{BrunchApplication} = require 'helpers'
 
 MainRouter = require('routers/main_router').MainRouter
 HomeView = require('views/home_view').HomeView
@@ -30,19 +26,27 @@ checkAuthentication = ->
             app.routers.main.navigate 'login', true
 
 
-# app bootstrapping on document ready
-$(document).ready ->
-    app.initialize = ->
-        app.routers.main = new MainRouter()
-        app.views.home = new HomeView()
-        app.views.login = new LoginView()
-        app.views.register = new RegisterView()
-        app.views.account = new AccountView()
-        app.views.reset = new ResetView()
+class exports.Application extends BrunchApplication
+  # This callback would be executed on document ready event.
+  # If you have a big application, perhaps it's a good idea to
+  # group things by their type e.g. `@views = {}; @views.home = new HomeView`.
+  initialize: ->
+    @initializeJQueryExtensions()
 
-        if window.location.hash.indexOf("password/reset") < 0
-            checkAuthentication()
+    @routers = {}
+    @views = {}
 
-    app.initialize()
-    Backbone.history.start()
+    @routers.main = new MainRouter
+    @views.home = new HomeView
+    @views.login = new LoginView()
+    @views.register = new RegisterView()
+    @views.account = new AccountView()
+    @views.reset = new ResetView()
 
+    # render layout
+    $("body").html require("templates/layout")
+    if window.location.hash.indexOf("password/reset") < 0
+        checkAuthentication()
+
+
+window.app = new exports.Application

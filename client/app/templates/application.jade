@@ -1,5 +1,8 @@
 a(href="apps/#{app.slug}/", target="_blank")
   .application-inner
-    img(src="images/#{app.icon}")
-    #{app.name}
+    p
+      img(src="apps/#{app.slug}/icons/main_icon.png", alt=app.name)
+    p.app-title #{app.name}
     p.info-text #{app.description}
+  .application-outer.center
+    button.btn.remove-app uninstall

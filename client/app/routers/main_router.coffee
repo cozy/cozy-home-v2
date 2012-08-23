@@ -33,7 +33,7 @@ class exports.MainRouter extends Backbone.Router
 
     # Fill main content with given view data.
     loadView: (view) ->
-        $('#content').html view.render()
+        $("#content").html view.render()
         view.fetchData()
         view.setListeners()
 

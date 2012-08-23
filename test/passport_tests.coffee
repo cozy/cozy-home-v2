@@ -1,12 +1,13 @@
-should = require('should')
+should = require('chai').Should()
 client = require('../common/test/client')
 app = require('../server')
+eyes = require "eyes"
 
 
 email = "test@test.com"
 password = "password"
 
-client = new client.Client("http://localhost:3000/")
+client = new client.Client("http://localhost:8888/")
 
 ## Helpers
 
@@ -24,8 +25,7 @@ storeResponse = (error, response, body, done) ->
     done()
 
 handleResponse = (error, response, body, done) ->
-    if error
-        false.should.be.ok()
+    false.should.be.ok() if error
     done()
 
 testAuthentication = (isAuthenticated, isUser) ->
@@ -44,11 +44,8 @@ testAuthentication = (isAuthenticated, isUser) ->
 clearDb = (callback) ->
 
     destroyApplications = ->
-        Application.destroyAll (error) ->
-             if error
-                 callback()
-             else
-                 callback()
+        Application.destroyAll ->
+            callback()
 
     destroyUsers = ->
         User.destroyAll (error) ->
@@ -63,7 +60,7 @@ clearDb = (callback) ->
 describe "Register", ->
 
     before (done) ->
-        app.listen(3000)
+        app.listen(8888)
         clearDb done
 
     after (done) ->
@@ -116,3 +113,34 @@ describe "Register", ->
 
     it "Then I got a response telling me that user is not authenticated", ->
         testAuthentication false, true
+
+describe "Register failure", ->
+
+    before (done) ->
+        app.listen(8888)
+        clearDb done
+
+    after (done) ->
+        app.close()
+        done()
+
+    it "When I send a register request with a wrong string as email", (done) ->
+        data = email: "wrongemail", password: password
+        client.post "register", data, (error, response, body) =>
+            @response = response
+            @body = body
+            done()
+
+    it "Then an error response is returned.", ->
+        @response.statusCode.should.equal 400
+        @body.error.should.equal true
+
+    it "When I send a register request with a too short password", (done) ->
+        data = email: email, password: "pas"
+        client.post "register", data, (error, response, body) =>
+            @response = response
+            @body = body
+            done()
+
+    it "Then an error response is returned.", ->
+        @response.statusCode.should.equal 400

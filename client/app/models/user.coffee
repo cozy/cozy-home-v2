@@ -9,7 +9,7 @@ class exports.User extends BaseModel
    
     # Send a register request with user password and email as data.
     register: (callbacks) ->
-        client.post "register", { email: @email, password: @password }, \
+        client.post "register/", { email: @email, password: @password }, \
             callbacks
 
     login: (callbacks) ->
