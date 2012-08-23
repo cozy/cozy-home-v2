@@ -11,6 +11,7 @@ apps = [
         index: 0
         slug: "notes"
         icon: "notes_icon.png"
+        port: 8001
         description: """
         Organize your interests
         """
@@ -20,6 +21,7 @@ apps = [
         index: 1
         slug: "todos"
         icon: "todos_icon.png"
+        port: 8002
         description: """
         Get Things Done
         """
@@ -29,6 +31,7 @@ apps = [
         index: 0
         slug: "mails"
         icon: "mails_icon.png"
+        port: 8003
         description: """
         Manage your emails
         """
@@ -39,7 +42,6 @@ saveFunc = (app) ->
         app.save callback
 
 saveFuncs = (saveFunc(app) for app in apps)
-console.log saveFuncs
 
 async.series saveFuncs, ->
     console.log "Initialization succeeds."

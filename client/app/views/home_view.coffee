@@ -22,24 +22,43 @@ class exports.HomeView extends Backbone.View
   ### Listeners ###
 
   onAddClicked: =>
-    @addApplicationForm.toggle()
+    @installAppButton.removeClass "btn-success"
+    @installAppButton.removeClass "btn-danger"
+    @installAppButton.addClass "btn-warning"
+    @installAppButton.html "install"
+    @addApplicationForm.slideToggle()
 
   onInstallClicked: =>
     data =
       name: @$("#app-name-field").val()
       description: @$("#app-description-field").val()
       git: @$("#app-git-field").val()
+    @errorAlert.hide()
+    @installAppButton.removeClass "btn-success"
+    @installAppButton.removeClass "btn-danger"
+    @installAppButton.addClass "btn-warning"
 
     if @checkData data
         @errorAlert.hide()
+        @installAppButton.html "installing..."
+        @installInfo.spin "extralarge"
 
         app = new Application data
         app.install
             success: =>
                 @apps.add app
-                @displayInfo "Application successfully installed"
+                @installAppButton.html "Install succeeds!"
+                @installAppButton.removeClass "btn-warning"
+                @installAppButton.addClass "btn-success"
+                @installInfo.spin()
+                setTimeout =>
+                    @addApplicationForm.slideToggle()
+                , 2000
             error: (data) =>
-                @displayError data.msg
+                @installAppButton.html "Install failed"
+                @installAppButton.removeClass "btn-warning"
+                @installAppButton.addClass "btn-danger"
+                @installInfo.spin()
     else
         @displayError "All fields are required"
 
@@ -65,9 +84,12 @@ class exports.HomeView extends Backbone.View
 
   # Add an application row to the app list.
   addAppRow: (app) =>
+      console.log app
       row = new AppRow app
       el = row.render()
       @appList.append el
+      @$(el).hide()
+      @$(el).fadeIn()
 
   # Check that given data are corrects.
   checkData: (data) =>
@@ -131,3 +153,7 @@ class exports.HomeView extends Backbone.View
     @appNameField = @$("#app-name-field")
     @appDescriptionField = @$("#app-description-field")
     @appGitField = @$("#app-git-field")
+
+    @installInfo = @$(".install-info")
+    @errorAlert.hide()
+    @infoAlert.hide()

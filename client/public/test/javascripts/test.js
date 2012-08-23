@@ -74,85 +74,175 @@
   globals.require.brunch = true;
 })();
 
-<<<<<<< HEAD
-window.require.define({"test/task_model_test": function(exports, require, module) {
-<<<<<<< HEAD
+window.require.define({"test/application_collection_test": function(exports, require, module) {
   (function() {
+    var Application, ApplicationCollection, HomeView;
 
-    describe('Suscribe', function() {
-      before(function() {});
+    ApplicationCollection = require("collections/application").ApplicationCollection;
+
+    Application = require("models/application").Application;
+
+    HomeView = require("views/home_view").HomeView;
+
+    describe('Application Collection', function() {
+      before(function() {
+        this.view = new HomeView();
+        this.view.render();
+        this.view.setListeners();
+        return this.apps = new ApplicationCollection(this.view);
+      });
       after(function() {});
-      return describe("Test", function() {
-        return it("Then it displays an error message.", function() {});
+      describe("binding reset", function() {
+        it("When I add 3 apps silently to the collection and fire reset event", function() {
+          this.apps.add(new Application({
+            name: "app 01",
+            silent: true
+          }));
+          this.apps.add(new Application({
+            name: "app 02",
+            silent: true
+          }));
+          this.apps.add(new Application({
+            name: "app 03",
+            silent: true
+          }));
+          return this.apps.onReset();
+        });
+        return it("Then it displays 3 apps inside app list", function() {
+          return expect(this.view.$("#app-list .application").length).to.equal(3);
+        });
+      });
+      return describe("binding add", function() {
+        it("When I add 1 app to the collection", function() {
+          this.view.clearApps();
+          this.apps.reset([]);
+          return this.apps.add(new Application({
+            name: "app 01"
+          }));
+        });
+        return it("Then it displays 1 app inside app list", function() {
+          return expect(this.view.$("#app-list .application").length).to.equal(1);
+        });
       });
     });
 
   }).call(this);
-=======
   
-  describe('Suscribe', function() {
-    before(function() {});
-=======
+}});
+
 window.require.define({"test/application_view_test": function(exports, require, module) {
-  var HomeView;
+  (function() {
+    var Application, HomeView;
 
-  HomeView = require("views/home_view").HomeView;
+    HomeView = require("views/home_view").HomeView;
 
-  describe('Manage applications', function() {
-    before(function() {
-      this.view = new HomeView();
-      this.view.render();
-      return this.view.setListeners();
+    Application = require("models/application").Application;
+
+    describe('Manage applications', function() {
+      before(function() {
+        this.view = new HomeView();
+        this.view.render();
+        return this.view.setListeners();
+      });
+      describe("unit test", function() {
+        it("addAppRow", function() {
+          this.view.addAppRow(new Application({
+            name: "app 01"
+          }));
+          return expect(this.view.$(".application").length).to.equal(1);
+        });
+        it("clearApps", function() {
+          this.view.clearApps();
+          return expect(this.view.$(".application").length).to.equal(0);
+        });
+        it("checkData", function() {
+          var data;
+          data = {};
+          expect(this.view.checkData(data)).to.be.ok;
+          data = {
+            name: "test"
+          };
+          expect(this.view.checkData(data)).to.be.ok;
+          data = {
+            name: "test",
+            description: void 0
+          };
+          expect(this.view.checkData(data)).to.not.be.ok;
+          data = {
+            name: "test",
+            description: ""
+          };
+          expect(this.view.checkData(data)).to.not.be.ok;
+          data = {
+            name: "test",
+            description: "desc"
+          };
+          return expect(this.view.checkData(data)).to.be.ok;
+        });
+        it("displayInfo", function() {
+          this.view.displayInfo("test");
+          expect(this.view.infoAlert.is(":visible")).to.be.ok;
+          return expect(this.view.infoAlert.html()).to.equal("test");
+        });
+        return it("displayError", function() {
+          this.view.displayError("test");
+          expect(this.view.errorAlert.is(":visible")).to.be.ok;
+          expect(this.view.errorAlert.html()).to.equal("test");
+          return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
+        });
+      });
+      describe("Display installation form", function() {
+        it("When I click on add application button", function() {
+          return this.view.addApplicationButton.click();
+        });
+        it("It displays a form to describe new app", function() {
+          return expect(this.view.addApplicationForm.is(":visible")).to.be.ok;
+        });
+        it("When I click on add application button", function() {
+          return this.view.addApplicationButton.click();
+        });
+        return it("It displays a form to describe new app", function() {
+          return expect(this.view.addApplicationForm.is(":visible")).to.not.be.ok;
+        });
+      });
+      return describe("Add a new application", function() {
+        return describe("Wrong data", function() {
+          it("When I click on install application button", function() {
+            this.data = {
+              name: "My App",
+              slug: "my-app",
+              description: "Awesome app",
+              state: "running",
+              index: 0,
+              git: "git@github.com:mycozycloud/my-app.git"
+            };
+            this.view.appNameField.val(this.data.name);
+            return this.view.installAppButton.click();
+          });
+          return it("Then error message is diplayed", function() {
+            expect(this.view.errorAlert.is(":visible")).to.be.ok;
+            return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
+          });
+        });
+      });
     });
->>>>>>> add code to display app form when application button is clicked
-    after(function() {});
-    describe("Display installation form", function() {
-      it("When I click on add application button", function() {
-        return this.view.addApplicationButton.click();
-      });
-      it("It displays a form to describe new app", function() {
-        return expect(this.view.addApplicationForm.is(":visible")).to.be.ok;
-      });
-      it("When I click on add application button", function() {
-        return this.view.addApplicationButton.click();
-      });
-      return it("It displays a form to describe new app", function() {
-        return expect(this.view.addApplicationForm.is(":visible")).to.not.be.ok;
-      });
-    });
-    return describe("Add first available applications", function() {
-      it("When I click on install application buttonp", function() {});
-      it("Then loading process is started and displayed", function() {});
-      it("When loading process is finished", function() {});
-      it("Then app is marked as installed", function() {});
-      return it("And app is listed inside my apps", function() {});
-    });
-  });
->>>>>>> clean ui for correct message displaying + debug
+
+  }).call(this);
   
 }});
 
 window.require.define({"test/test-helpers": function(exports, require, module) {
-<<<<<<< HEAD
   (function() {
 
     module.exports = {
       expect: require('chai').expect,
-      should: require('chai').should,
       sinon: require('sinon'),
       $: require('jquery')
     };
 
   }).call(this);
-=======
-  
-  module.exports = {
-    expect: require('chai').expect,
-    sinon: require('sinon'),
-    $: require('jquery')
-  };
->>>>>>> clean ui for correct message displaying + debug
   
 }});
 
+window.require('test/application_collection_test');
 window.require('test/application_view_test');

@@ -5,8 +5,8 @@ BaseRow = require('views/row').BaseRow
 class exports.ApplicationRow extends BaseRow
   className: "application"
 
-#  events:
-#    "click .button": "onRemoveClicked"
+  events:
+    "click .remove-app": "onRemoveClicked"
 
 
   ### Constructor ####
@@ -24,15 +24,13 @@ class exports.ApplicationRow extends BaseRow
 
   ### Functions ###
 
-#  removeApp: ->
-#    @$(".info-text").html "Removing..."
-#    $.ajax
-#     type: 'DELETE'
-#     url: "/api/installed-apps/#{@id}/"
-#     success: =>
-#       @$(".info-text").html "Removed!"
-#     error: =>
-#       @$(".info-text").html "Remove failed."
+  removeApp: ->
+    @$(".remove-app").html "Removing..."
+    @model.uninstall
+        success: =>
+           @$(".remove-app").html "Removed!"
+        error: =>
+           @$(".remove-app").html "Remove failed."
 
   ### configuration ###
 
