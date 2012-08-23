@@ -13,13 +13,13 @@ Application.all (err, apps) ->
         for app in apps
             if app.name == "Notes"
                 app.port = 8001
-                app.git = "git://github.com/mycozycloud/cozy-notes.git"
+                app.git = "https://github.com/mycozycloud/cozy-notes.git"
             else if app.name == "Todos"
                 app.port = 8002
-                app.git = "git://github.com/mycozycloud/cozy-todos.git"
+                app.git = "https://github.com/mycozycloud/cozy-todos.git"
             else if app.name == "Emails"
                 app.port = 8003
-                app.git = "git://github.com/mycozycloud/cozy-mails.git"
+                app.git = "https://github.com/mycozycloud/cozy-mails.git"
         saveFuncs = (saveFunc(app) for app in apps)
         async.series saveFuncs, ->
             console.log "Patch succeeds."
