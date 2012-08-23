@@ -32,7 +32,7 @@ class exports.AppManager
     # Add a new route that matches given app to proxy.
     _addRouteToProxy: (app, result, callback) ->
         data =
-            route: "/apps/#{app.slug}"
+            route: "/apps/#{app.slug}/"
             port: result.drone.port
 
         @proxyClient.post "routes/add", data, (error, response, body) ->
@@ -64,7 +64,7 @@ creating a new route"
     # Remove from proxy the route that matches given app.
     _removeRouteFromProxy: (app, result, callback) ->
         data =
-            route: "/apps/#{app.slug}"
+            route: "/apps/#{app.slug}/"
 
         @proxyClient.put "routes/del", data, (error, response, body) ->
             if error

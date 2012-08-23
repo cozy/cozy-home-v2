@@ -1,7 +1,7 @@
 # Actions to manage applications : home page + API.
 #
 
-slugify = require "../../lib/slug"
+slugify = require "../../common/slug"
 {AppManager} = require "../../lib/paas"
 
 
@@ -68,13 +68,21 @@ action "install", ->
             if err
                 app.state = "broken"
                 app.save (err) ->
-                    if err then send_error() else send app, 201
+                    if err
+                        send_error()
+                    else
+                        send
+                            error: true
+                            success: false
+                            app:app
+                            , 201
             else
                 app.state = "installed"
-                console.log result
                 app.port = result.drone.port
                 app.save (err) ->
-                    if err then send_error() else send app, 201
+                    if err
+                        send_error()
+                    else send { success: true, app: app }, 201
 
     Application.all where: { slug: body.slug }, (err, apps) ->
         if err
@@ -106,7 +114,7 @@ action "uninstall", ->
                 console.log err
                 send_error 'Cannot destroy app'
             else
-                send success: 'Application succesfuly uninstalled'
+                send success: true, msg: 'Application succesfuly uninstalled'
 
     manager = new AppManager
     manager.uninstallApp @app, (err, result) =>

@@ -10,3 +10,4 @@ Application::getHaibuDescriptor = (app, callback) ->
     scripts:
         start: "server.coffee"
 
+
