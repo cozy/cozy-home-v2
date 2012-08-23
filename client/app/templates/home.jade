@@ -1,23 +1,26 @@
-#app-list
-  .spacer &nbsp;  
-.spacer &nbsp;  
+#app-list.clearfix
+  div.clearfix
+div.clearfix
 
-button#add-app-button.btn.btn-info Add a new application
+div.app-tools
+  button#add-app-button.btn.btn-info
+    | <i class="icon-plus icon-white"></i>
+    | add a new application
 
-form#add-app-form.well
-    p
-        label name:
-        input(type="text", class="span3", id="app-name-field")
-    p
-        label description:
-        input(type="text", class="span3", id="app-description-field")
-    p
-        label Git URL:
-        input(type="text", class="span3", id="app-git-field")
-    p
-        button#add-app-submit.btn(type="submit") Install
 
-    div.info.alert.main-alert
+  form#add-app-form.well
+    div.install-info.pull-right
+    p
+      label name
+      input(type="text", class="span3", id="app-name-field", length="200")
+    p
+      label description
+      input(type="text", class="span3", id="app-description-field")
+    p
+      label Git URL
+      input(type="text", class="span3", id="app-git-field")
+    p
+      button#add-app-submit.btn.btn-warning(type="submit") install
 
     div.error.alert.alert-error.main-alert
-
+    div.info.alert.main-alert

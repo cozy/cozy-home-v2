@@ -47,11 +47,8 @@ h2
 
 .container
   padding 0
-  margin-top 40px
-  margin-bottom 40px
   background-color white
-  width 960px
-  border 2px solid #999 
+  width 100%
   rounded-border 3px 3px 3px 3px
   shadow 3px 3px 4px 1px bgshadowcolor
   min-height 260px
@@ -60,10 +57,10 @@ h2
   float right
 
 .hidden
-  display none
+  display: none
 
-.spacer 
-  clear both
+.center 
+  text-align center
 
 #text-container
   width 610px
@@ -72,9 +69,8 @@ h2
 
 #header
   margin-top 0px
-  margin-bottom 40px
+  margin-bottom 8px
   background-color white
-  rounded-border 0px 0px 3px 3px
   shadow 3px 3px 4px 1px bgshadowcolor
   text-align right
   min-height 70px
@@ -121,22 +117,20 @@ h2
   padding 24px
 
 #app-list
-  margin-bottom 20px
+  margin-bottom 80px
 
 .application 
-  width 150px
-  height 160px
-  margin-left 15px
-  margin-right 15px
-  margin-top 12px
+  width 170px
+  height 240px
+  margin 12px
   font-size 42px
   line-height 48px
   float left
 
 .application-inner
   text-align center
-  width 136px
-  height 160px
+  width 156px
+  height 240px
   border 2px solid linkcolor
   shadow 1px 1px 3px shadowcolor
   border-radius 12px
@@ -152,18 +146,34 @@ h2
 .application-inner:hover  
   background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
 
+.application-inner img
+  margin-top: 10px
+
 .app-title
-  font-size: 20px
+  font-size: 40px
   line-height: 22px
   font-weight: bold
   margin-top: 20px
 
+.info-text
+  font-size: 18px
+
+.app-tools 
+    margin 12px
+
 #logout-button
   display none
 
-.center
-  text-align center
+#add-app-form input
+    width: 50%
 
+#add-app-submit
+  font-weight: bold
+  font-size: 20px
+
+.install-info
+  width: 40%
+  text-align center
 
 /* Login page */
 

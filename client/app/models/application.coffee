@@ -16,7 +16,6 @@ class exports.Application extends BaseModel
         @
         
 
-
     # Send to server installation request.
     # Will create a new app in the database.
     install: (callbacks) ->
@@ -26,7 +25,12 @@ class exports.Application extends BaseModel
             description: @description
             git: @git
 
-        client.post '/api/applications/install', data, callbacks
+        client.post '/api/applications/install', data,
+            success: (data) =>
+                @slug = data.app.slug
+                @state = data.app.state
+                callbacks.success data.app
+            error: callbacks.error
 
     # Send to server uninstallation request.
     # Will delete the app in the database.
