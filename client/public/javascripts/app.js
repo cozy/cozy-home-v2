@@ -422,13 +422,13 @@ window.require.define({"models/application": function(exports, require, module) 
       Application.prototype.url = '/api/applications/';
 
       function Application(app) {
-        this.app = app;
         Application.__super__.constructor.call(this);
         this.slug = app.slug;
         this.name = app.name;
         this.description = app.description;
         this.icon = app.icon;
         this.git = app.git;
+        this.state = app.state;
         this;
       }
 
@@ -634,7 +634,7 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push('><div');
   buf.push(attrs({ "class": ('application-inner') }));
   buf.push('><p><img');
-  buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png"), 'alt':(app.name) }));
+  buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
   buf.push('/></p><p');
   buf.push(attrs({ "class": ('app-title') }));
   buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p><p');
@@ -663,25 +663,39 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push(attrs({ "class": ('clearfix') }));
   buf.push('></div><div');
   buf.push(attrs({ "class": ('app-tools') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') + ' ' + ('btn-info') }));
-  buf.push('><i class="icon-plus icon-white"></i>\nadd a new application\n</button><form');
-  buf.push(attrs({ 'id':('add-app-form'), "class": ('well') }));
+  buf.push('><i class="icon-plus icon-white"></i>\nadd a new application\n</button><button');
+  buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
+  buf.push('>manage applications\n</button></div></div><div');
+  buf.push(attrs({ 'id':('add-app-modal'), "class": ('modal') + ' ' + ('right') + ' ' + ('hide') }));
   buf.push('><div');
-  buf.push(attrs({ "class": ('install-info') + ' ' + ('pull-right') }));
-  buf.push('></div><p><label>name</label><input');
+  buf.push(attrs({ "class": ('modal-header') }));
+  buf.push('><button');
+  buf.push(attrs({ 'type':("button"), 'data-dismiss':("modal"), 'aria-hidden':("true"), "class": ('close') }));
+  buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
+  buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
+  buf.push('><p><label>name</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'length':("200"), "class": ("span3") }));
   buf.push('/></p><p><label>description</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-description-field"), "class": ("span3") }));
   buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
-  buf.push('/></p><p><button');
-  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-warning') }));
-  buf.push('>install</button></p><div');
+  buf.push('/></p><div');
   buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
   buf.push('></div><div');
   buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
-  buf.push('></div></form></div>');
+  buf.push('></div></div><div');
+  buf.push(attrs({ "class": ('modal-footer') }));
+  buf.push('><button');
+  buf.push(attrs({ "class": ('loading-indicator') }));
+  buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><button');
+  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-warning') }));
+  buf.push('>install</button><button');
+  buf.push(attrs({ 'id':('add-app-close'), "class": ('btn') }));
+  buf.push('>close</button></div></div>');
   }
   return buf.join("");
   };
@@ -976,6 +990,10 @@ window.require.define({"views/application": function(exports, require, module) {
           app: this.model
         }));
         this.el.id = this.model.slug;
+        if (this.model.state === "broken") {
+          $(this.el).addClass("broken");
+          $(this.el).find(".application-inner").append('<p class="broken-notifier">broken app<p>');
+        }
         return this.el;
       };
 
@@ -1022,8 +1040,11 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.account = __bind(this.account, this);
         this.home = __bind(this.home, this);
         this.logout = __bind(this.logout, this);
+        this.onCloseAddAppClicked = __bind(this.onCloseAddAppClicked, this);
+        this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
         this.onInstallClicked = __bind(this.onInstallClicked, this);
         this.onAddClicked = __bind(this.onAddClicked, this);      HomeView.__super__.constructor.call(this);
+        this.isManaging = false;
         this.apps = new AppCollection(this);
       }
 
@@ -1035,7 +1056,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.installAppButton.removeClass("btn-danger");
         this.installAppButton.addClass("btn-warning");
         this.installAppButton.html("install");
-        return this.addApplicationForm.slideToggle();
+        this.addApplicationForm.show();
+        return this.addApplicationModal.toggle();
       };
 
       HomeView.prototype.onInstallClicked = function() {
@@ -1053,7 +1075,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         if (this.checkData(data)) {
           this.errorAlert.hide();
           this.installAppButton.html("installing...");
-          this.installInfo.spin("extralarge");
+          this.installInfo.spin();
           app = new Application(data);
           return app.install({
             success: function() {
@@ -1064,7 +1086,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
               _this.installInfo.spin();
               return setTimeout(function() {
                 return _this.addApplicationForm.slideToggle();
-              }, 2000);
+              }, 1000);
             },
             error: function(data) {
               _this.installAppButton.html("Install failed");
@@ -1076,6 +1098,15 @@ window.require.define({"views/home_view": function(exports, require, module) {
         } else {
           return this.displayError("All fields are required");
         }
+      };
+
+      HomeView.prototype.onManageAppsClicked = function() {
+        $(".application-outer").toggle();
+        return this.isManaging = !this.isManaging;
+      };
+
+      HomeView.prototype.onCloseAddAppClicked = function() {
+        return this.addApplicationModal.hide();
       };
 
       /* Functions
@@ -1114,7 +1145,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
         el = row.render();
         this.appList.append(el);
         this.$(el).hide();
-        return this.$(el).fadeIn();
+        this.$(el).fadeIn();
+        if (this.isManaging) return this.$(el).find(".application-outer").show();
       };
 
       HomeView.prototype.checkData = function(data) {
@@ -1173,7 +1205,9 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.addApplicationButton = this.$("#add-app-button");
         this.addApplicationButton.click(this.onAddClicked);
         this.addApplicationForm = this.$("#add-app-form");
-        this.addApplicationForm.hide();
+        this.addApplicationModal = this.$("#add-app-modal");
+        this.manageAppsButton = this.$("#manage-app-button");
+        this.manageAppsButton.click(this.onManageAppsClicked);
         this.installAppButton = this.$("#add-app-submit");
         this.installAppButton.click(this.onInstallClicked);
         this.infoAlert = this.$("#add-app-form .info");
@@ -1181,9 +1215,13 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.appNameField = this.$("#app-name-field");
         this.appDescriptionField = this.$("#app-description-field");
         this.appGitField = this.$("#app-git-field");
-        this.installInfo = this.$(".install-info");
+        this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
-        return this.infoAlert.hide();
+        this.infoAlert.hide();
+        this.addApplicationCloseCross = this.$("#add-app-modal .close");
+        this.addApplicationCloseButton = this.$("#add-app-close");
+        this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
+        return this.addApplicationCloseButton.click(this.onCloseAddAppClicked);
       };
 
       return HomeView;

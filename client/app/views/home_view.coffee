@@ -16,6 +16,7 @@ class exports.HomeView extends Backbone.View
   constructor: ->
     super()
 
+    @isManaging = false
     @apps = new AppCollection @
 
  
@@ -26,7 +27,8 @@ class exports.HomeView extends Backbone.View
     @installAppButton.removeClass "btn-danger"
     @installAppButton.addClass "btn-warning"
     @installAppButton.html "install"
-    @addApplicationForm.slideToggle()
+    @addApplicationForm.show()
+    @addApplicationModal.toggle()
 
   onInstallClicked: =>
     data =
@@ -41,7 +43,7 @@ class exports.HomeView extends Backbone.View
     if @checkData data
         @errorAlert.hide()
         @installAppButton.html "installing..."
-        @installInfo.spin "extralarge"
+        @installInfo.spin()
 
         app = new Application data
         app.install
@@ -53,7 +55,7 @@ class exports.HomeView extends Backbone.View
                 @installInfo.spin()
                 setTimeout =>
                     @addApplicationForm.slideToggle()
-                , 2000
+                , 1000
             error: (data) =>
                 @installAppButton.html "Install failed"
                 @installAppButton.removeClass "btn-warning"
@@ -61,6 +63,13 @@ class exports.HomeView extends Backbone.View
                 @installInfo.spin()
     else
         @displayError "All fields are required"
+
+  onManageAppsClicked: =>
+      $(".application-outer").toggle()
+      @isManaging = not @isManaging
+
+  onCloseAddAppClicked: =>
+      @addApplicationModal.hide()
 
   ### Functions ###
 
@@ -90,6 +99,7 @@ class exports.HomeView extends Backbone.View
       @appList.append el
       @$(el).hide()
       @$(el).fadeIn()
+      @$(el).find(".application-outer").show() if @isManaging
 
   # Check that given data are corrects.
   checkData: (data) =>
@@ -144,7 +154,9 @@ class exports.HomeView extends Backbone.View
     @addApplicationButton = @$("#add-app-button")
     @addApplicationButton.click @onAddClicked
     @addApplicationForm = @$("#add-app-form")
-    @addApplicationForm.hide()
+    @addApplicationModal = @$("#add-app-modal")
+    @manageAppsButton = @$("#manage-app-button")
+    @manageAppsButton.click @onManageAppsClicked
     @installAppButton = @$("#add-app-submit")
     @installAppButton.click @onInstallClicked
     @infoAlert = @$("#add-app-form .info")
@@ -154,6 +166,11 @@ class exports.HomeView extends Backbone.View
     @appDescriptionField = @$("#app-description-field")
     @appGitField = @$("#app-git-field")
 
-    @installInfo = @$(".install-info")
+    @installInfo = @$("#add-app-modal .loading-indicator")
     @errorAlert.hide()
     @infoAlert.hide()
+
+    @addApplicationCloseCross = @$("#add-app-modal .close")
+    @addApplicationCloseButton = @$("#add-app-close")
+    @addApplicationCloseCross.click @onCloseAddAppClicked
+    @addApplicationCloseButton.click @onCloseAddAppClicked

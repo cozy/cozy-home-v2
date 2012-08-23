@@ -1,15 +1,22 @@
 #app-list.clearfix
-  div.clearfix
-div.clearfix
+  .clearfix
+.clearfix
 
-div.app-tools
-  button#add-app-button.btn.btn-info
-    | <i class="icon-plus icon-white"></i>
-    | add a new application
+.app-tools
+  .btn-group
+      button#add-app-button.btn.btn-info
+        | <i class="icon-plus icon-white"></i>
+        | add a new application
+      button#manage-app-button.btn
+        | manage applications
 
+#add-app-modal.modal.right.hide
+  .modal-header
+    button.close(type="button", data-dismiss="modal", aria-hidden="true") 
+        |&times;
+    h3 Application installer
 
-  form#add-app-form.well
-    div.install-info.pull-right
+  div#add-app-form.modal-body
     p
       label name
       input(type="text", class="span3", id="app-name-field", length="200")
@@ -19,8 +26,12 @@ div.app-tools
     p
       label Git URL
       input(type="text", class="span3", id="app-git-field")
-    p
-      button#add-app-submit.btn.btn-warning(type="submit") install
+    .error.alert.alert-error.main-alert
+    .info.alert.main-alert
 
-    div.error.alert.alert-error.main-alert
-    div.info.alert.main-alert
+
+  .modal-footer
+    button.loading-indicator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    button#add-app-submit.btn.btn-warning(type="submit") install
+    button#add-app-close.btn close
+

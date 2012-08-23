@@ -3,39 +3,43 @@ BaseRow = require('views/row').BaseRow
 
 # Row displaying application name and attributes
 class exports.ApplicationRow extends BaseRow
-  className: "application"
+    className: "application"
 
-  events:
-    "click .remove-app": "onRemoveClicked"
-
-
-  ### Constructor ####
-
-  constructor: (@model) ->
-    super(@model)
+    events:
+        "click .remove-app": "onRemoveClicked"
 
 
-  ### Listener ###
+    ### Constructor ####
 
-  onRemoveClicked: (event) =>
-    event.preventDefault()
-    @removeApp()
+    constructor: (@model) ->
+        super(@model)
 
 
-  ### Functions ###
+    ### Listener ###
 
-  removeApp: ->
-    @$(".remove-app").html "Removing..."
-    @model.uninstall
-        success: =>
-           @$(".remove-app").html "Removed!"
-        error: =>
-           @$(".remove-app").html "Remove failed."
+    onRemoveClicked: (event) =>
+        event.preventDefault()
+        @removeApp()
 
-  ### configuration ###
 
-  render: ->
-    $(@el).html(template(app: @model))
-    @el.id = @model.slug
-    @el
+    ### Functions ###
+
+    removeApp: ->
+        @$(".remove-app").html "Removing..."
+        @model.uninstall
+                success: =>
+                        @$(".remove-app").html "Removed!"
+                error: =>
+                        @$(".remove-app").html "Remove failed."
+
+    ### configuration ###
+
+    render: ->
+        $(@el).html(template(app: @model))
+        @el.id = @model.slug
+        if @model.state == "broken"
+             $(@el).addClass "broken"
+             $(@el).find(".application-inner").append '<p class="broken-notifier">broken app<p>'
+             
+        @el
 
