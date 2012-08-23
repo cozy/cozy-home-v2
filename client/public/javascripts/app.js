@@ -160,9 +160,71 @@ window.require.define({"helpers": function(exports, require, module) {
         });
       }
 
-      BrunchApplication.prototype.initialize = function() {
-        return null;
+      BrunchApplication.prototype.initializeJQueryExtensions = function() {
+        return $.fn.spin = function(opts, color) {
+          var presets;
+          presets = {
+            tiny: {
+              lines: 8,
+              length: 2,
+              width: 2,
+              radius: 3
+            },
+            small: {
+              lines: 8,
+              length: 4,
+              width: 3,
+              radius: 5
+            },
+            large: {
+              lines: 10,
+              length: 8,
+              width: 4,
+              radius: 8
+            },
+            extralarge: {
+              lines: 10,
+              length: 30,
+              width: 12,
+              radius: 30,
+              top: 30,
+              left: 60
+            }
+          };
+          if (Spinner) {
+            return this.each(function() {
+              var $this, spinner;
+              $this = $(this);
+              spinner = $this.data("spinner");
+              console.log($this.data());
+              console.log(spinner);
+              if (spinner != null) {
+                spinner.stop();
+                return $this.data("spinner", null);
+              } else if (opts !== false) {
+                if (typeof opts === "string") {
+                  if (opts in presets) {
+                    opts = presets[opts];
+                  } else {
+                    opts = {};
+                  }
+                  if (color) opts.color = color;
+                }
+                spinner = new Spinner($.extend({
+                  color: $this.css("color")
+                }, opts));
+                spinner.spin(this);
+                return $this.data("spinner", spinner);
+              }
+            });
+          } else {
+            throw "Spinner class not available.";
+            return null;
+          }
+        };
       };
+
+      BrunchApplication.prototype.initialize = function() {};
 
       return BrunchApplication;
 
@@ -285,6 +347,7 @@ window.require.define({"initialize": function(exports, require, module) {
       }
 
       Application.prototype.initialize = function() {
+        this.initializeJQueryExtensions();
         this.routers = {};
         this.views = {};
         this.routers.main = new MainRouter;
@@ -370,13 +433,21 @@ window.require.define({"models/application": function(exports, require, module) 
       }
 
       Application.prototype.install = function(callbacks) {
-        var data;
+        var data,
+          _this = this;
         data = {
           name: this.name,
           description: this.description,
           git: this.git
         };
-        return client.post('/api/applications/install', data, callbacks);
+        return client.post('/api/applications/install', data, {
+          success: function(data) {
+            _this.slug = data.app.slug;
+            _this.state = data.app.state;
+            return callbacks.success(data.app);
+          },
+          error: callbacks.error
+        });
       };
 
       Application.prototype.uninstall = function(callbacks) {
@@ -562,11 +633,15 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
   buf.push('><div');
   buf.push(attrs({ "class": ('application-inner') }));
-  buf.push('><p');
+  buf.push('><p><img');
+  buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png"), 'alt':(app.name) }));
+  buf.push('/></p><p');
   buf.push(attrs({ "class": ('app-title') }));
   buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p><p');
   buf.push(attrs({ "class": ('info-text') }));
-  buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p><button');
+  buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div><div');
+  buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
+  buf.push('><button');
   buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
   buf.push('>uninstall</button></div></a>');
   }
@@ -581,28 +656,32 @@ window.require.define({"templates/home": function(exports, require, module) {
   with (locals || {}) {
   var interp;
   buf.push('<div');
-  buf.push(attrs({ 'id':('app-list') }));
+  buf.push(attrs({ 'id':('app-list'), "class": ('clearfix') }));
   buf.push('><div');
-  buf.push(attrs({ "class": ('spacer') }));
-  buf.push('>&nbsp;  </div></div><div');
-  buf.push(attrs({ "class": ('spacer') }));
-  buf.push('>&nbsp;  </div><button');
+  buf.push(attrs({ "class": ('clearfix') }));
+  buf.push('></div></div><div');
+  buf.push(attrs({ "class": ('clearfix') }));
+  buf.push('></div><div');
+  buf.push(attrs({ "class": ('app-tools') }));
+  buf.push('><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') + ' ' + ('btn-info') }));
-  buf.push('>Add a new application</button><form');
+  buf.push('><i class="icon-plus icon-white"></i>\nadd a new application\n</button><form');
   buf.push(attrs({ 'id':('add-app-form'), "class": ('well') }));
-  buf.push('><p><label>name:</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), "class": ("span3") }));
-  buf.push('/></p><p><label>description:</label><input');
+  buf.push('><div');
+  buf.push(attrs({ "class": ('install-info') + ' ' + ('pull-right') }));
+  buf.push('></div><p><label>name</label><input');
+  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'length':("200"), "class": ("span3") }));
+  buf.push('/></p><p><label>description</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-description-field"), "class": ("span3") }));
-  buf.push('/></p><p><label>Git URL:</label><input');
+  buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><p><button');
-  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') }));
-  buf.push('>Install</button></p><div');
-  buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
-  buf.push('></div><div');
+  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-warning') }));
+  buf.push('>install</button></p><div');
   buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('></div></form>');
+  buf.push('></div><div');
+  buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
+  buf.push('></div></form></div>');
   }
   return buf.join("");
   };
@@ -952,7 +1031,11 @@ window.require.define({"views/home_view": function(exports, require, module) {
       */
 
       HomeView.prototype.onAddClicked = function() {
-        return this.addApplicationForm.toggle();
+        this.installAppButton.removeClass("btn-success");
+        this.installAppButton.removeClass("btn-danger");
+        this.installAppButton.addClass("btn-warning");
+        this.installAppButton.html("install");
+        return this.addApplicationForm.slideToggle();
       };
 
       HomeView.prototype.onInstallClicked = function() {
@@ -963,16 +1046,31 @@ window.require.define({"views/home_view": function(exports, require, module) {
           description: this.$("#app-description-field").val(),
           git: this.$("#app-git-field").val()
         };
+        this.errorAlert.hide();
+        this.installAppButton.removeClass("btn-success");
+        this.installAppButton.removeClass("btn-danger");
+        this.installAppButton.addClass("btn-warning");
         if (this.checkData(data)) {
           this.errorAlert.hide();
+          this.installAppButton.html("installing...");
+          this.installInfo.spin("extralarge");
           app = new Application(data);
           return app.install({
             success: function() {
               _this.apps.add(app);
-              return _this.displayInfo("Application successfully installed");
+              _this.installAppButton.html("Install succeeds!");
+              _this.installAppButton.removeClass("btn-warning");
+              _this.installAppButton.addClass("btn-success");
+              _this.installInfo.spin();
+              return setTimeout(function() {
+                return _this.addApplicationForm.slideToggle();
+              }, 2000);
             },
             error: function(data) {
-              return _this.displayError(data.msg);
+              _this.installAppButton.html("Install failed");
+              _this.installAppButton.removeClass("btn-warning");
+              _this.installAppButton.addClass("btn-danger");
+              return _this.installInfo.spin();
             }
           });
         } else {
@@ -1011,9 +1109,12 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
       HomeView.prototype.addAppRow = function(app) {
         var el, row;
+        console.log(app);
         row = new AppRow(app);
         el = row.render();
-        return this.appList.append(el);
+        this.appList.append(el);
+        this.$(el).hide();
+        return this.$(el).fadeIn();
       };
 
       HomeView.prototype.checkData = function(data) {
@@ -1079,7 +1180,10 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.errorAlert = this.$("#add-app-form .error");
         this.appNameField = this.$("#app-name-field");
         this.appDescriptionField = this.$("#app-description-field");
-        return this.appGitField = this.$("#app-git-field");
+        this.appGitField = this.$("#app-git-field");
+        this.installInfo = this.$(".install-info");
+        this.errorAlert.hide();
+        return this.infoAlert.hide();
       };
 
       return HomeView;
