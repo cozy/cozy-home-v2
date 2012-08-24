@@ -1230,7 +1230,6 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
-        this.installInfo.spin();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
         this.addApplicationCloseButton = this.$("#add-app-close");
         this.addApplicationCloseCross.click(this.onCloseAddAppClicked);

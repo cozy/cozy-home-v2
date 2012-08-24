@@ -169,7 +169,6 @@ class exports.HomeView extends Backbone.View
     @installInfo = @$("#add-app-modal .loading-indicator")
     @errorAlert.hide()
     @infoAlert.hide()
-    @installInfo.spin()
 
     @addApplicationCloseCross = @$("#add-app-modal .close")
     @addApplicationCloseButton = @$("#add-app-close")
