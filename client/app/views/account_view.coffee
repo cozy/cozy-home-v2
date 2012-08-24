@@ -10,16 +10,19 @@ class exports.AccountView extends Backbone.View
   constructor: ->
     super()
 
+
+  # Fetch data from backend and fill form with collected data.
   fetchData: ->
     $.get "api/users/", (data) =>
       @emailField.val data.rows[0].email
 
+  # When data are submited, it sends a request to backend to save them.
+  # If an error occurs, message is displayed.
   onDataSubmit: (event) =>
     form =
         email: $("#account-email-field").val()
         password1: $("#account-password1-field").val()
         password2: $("#account-password2-field").val()
-
 
     @infoAlert.hide()
     @errorAlert.hide()
@@ -33,20 +36,20 @@ class exports.AccountView extends Backbone.View
                 @infoAlert.html data.msg
                 @infoAlert.show()
             else
-                msgs = JSON.parse(data.responseText).msg
-                errorString = ""
-                for msg in msgs
-                    errorString += msg + "<br />"
-                @errorAlert.html errorString
-                @errorAlert.show()
+                @displayErrors JSON.parse(data.responseText).msg
         error: (data) =>
-            msgs = JSON.parse(data.responseText).msg
-            errorString = ""
-            for msg in msgs
-                console.log msg
-                errorString += msg + "<br />"
-            @errorAlert.html errorString
-            @errorAlert.show()
+            @displayErrors JSON.parse(data.responseText).msg
+        
+
+    ### Functions ###
+
+    displayErrors: (msgs) =>
+        errorString = ""
+        for msg in msgs
+            console.log msg
+            errorString += msg + "<br />"
+        @errorAlert.html errorString
+        @errorAlert.show()
 
 
   ### Configuration ###

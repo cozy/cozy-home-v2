@@ -6,6 +6,29 @@ AppCollection = require('collections/application').ApplicationCollection
 Application = require("models/application").Application
 
 
+class InstallButton
+
+    constructor: (@button) ->
+
+    displayOrange: (text) ->
+        @button.html text
+        @button.removeClass "btn-success"
+        @button.removeClass "btn-danger"
+        @button.addClass "btn-warning"
+
+    displayGreen: (text) ->
+        @button.html text
+        @button.addClass "btn-success"
+        @button.removeClass "btn-danger"
+        @button.removeClass "btn-warning"
+
+    displayRed: (text) ->
+        @button.html text
+        @button.removeClass "btn-success"
+        @button.addClass  "btn-danger"
+        @button.removeClass "btn-warning"
+
+
 # View describing main screen for user once he is logged
 class exports.HomeView extends Backbone.View
   id: 'home-view'
@@ -23,10 +46,8 @@ class exports.HomeView extends Backbone.View
   ### Listeners ###
 
   onAddClicked: =>
-    @installAppButton.removeClass "btn-success"
-    @installAppButton.removeClass "btn-danger"
-    @installAppButton.addClass "btn-warning"
-    @installAppButton.html "install"
+    @installAppButton.displayOrange "install"
+
     @addApplicationForm.show()
     @addApplicationModal.toggle()
 
@@ -35,31 +56,26 @@ class exports.HomeView extends Backbone.View
       name: @$("#app-name-field").val()
       description: @$("#app-description-field").val()
       git: @$("#app-git-field").val()
+
     @errorAlert.hide()
-    @installAppButton.removeClass "btn-success"
-    @installAppButton.removeClass "btn-danger"
-    @installAppButton.addClass "btn-warning"
+    @installAppButton.displayOrange "install"
 
     if @checkData data
         @errorAlert.hide()
-        @installAppButton.html "installing..."
+        @installAppButton.button.html "installing..."
         @installInfo.spin()
 
         app = new Application data
         app.install
             success: =>
                 @apps.add app
-                @installAppButton.html "Install succeeds!"
-                @installAppButton.removeClass "btn-warning"
-                @installAppButton.addClass "btn-success"
+                @installAppButton.displayGreen "Install succeeds!"
                 @installInfo.spin()
                 setTimeout =>
                     @addApplicationForm.slideToggle()
                 , 1000
             error: (data) =>
-                @installAppButton.html "Install failed"
-                @installAppButton.removeClass "btn-warning"
-                @installAppButton.addClass "btn-danger"
+                @installAppButton.displayRed "Install failed"
                 @installInfo.spin()
     else
         @displayError "All fields are required"
@@ -120,6 +136,10 @@ class exports.HomeView extends Backbone.View
     @errorAlert.html msg
     @errorAlert.show()
 
+  selectNavButton: (button) ->
+    @buttons.find("li").removeClass "active"
+    button.parent().addClass "active"
+
   fetchData: ->
     @apps.fetch()
 
@@ -129,10 +149,6 @@ class exports.HomeView extends Backbone.View
   render: ->
     $(@el).html homeTemplate()
     @el
-
-  selectNavButton: (button) ->
-    @buttons.find("li").removeClass "active"
-    button.parent().addClass "active"
 
   setListeners: ->
     @appList = $("#app-list")
@@ -157,8 +173,8 @@ class exports.HomeView extends Backbone.View
     @addApplicationModal = @$("#add-app-modal")
     @manageAppsButton = @$("#manage-app-button")
     @manageAppsButton.click @onManageAppsClicked
-    @installAppButton = @$("#add-app-submit")
-    @installAppButton.click @onInstallClicked
+    @installAppButton = new InstallButton @$("#add-app-submit")
+    @installAppButton.button.click @onInstallClicked
     @infoAlert = @$("#add-app-form .info")
     @errorAlert = @$("#add-app-form .error")
 
