@@ -1,6 +1,4 @@
-
 Application.validatesUniquenessOf 'slug', message: 'slug is not unique'
-
 
 Application.destroySome = (condition, callback) ->
 
@@ -23,3 +21,17 @@ Application.destroySome = (condition, callback) ->
 
 Application.destroyAll = (callback) ->
     Application.destroySome {}, callback
+
+
+# Build descriptor required by haibu from application data.
+Application::getHaibuDescriptor = (app, callback) ->
+    user: "cozy"
+    name: @slug
+    domain: "127.0.0.1"
+    repository:
+        type: "git",
+        url: @git
+    scripts:
+        start: "server.coffee"
+
+

@@ -43,7 +43,8 @@ class exports.AppManager
                 callback new Error "Something went wrong on proxy side when \
 creating a new route"
             else
-                console.log "Proxy successfuly updated"
+                console.log "Proxy successfuly updated with " + \
+                            "#{data.route} => #{data.port}"
                 callback null, result
 
     # Send a uninstall request to haibu server ("clean" request).

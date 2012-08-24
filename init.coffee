@@ -1,9 +1,11 @@
 server = require './server'
 async = require "async"
 
+{AppManager} = new require("./lib/paas")
 
 ## Small script to intialize list of available applications.
 
+appManager = new AppManager()
 apps = [
     new Application
         name: "Notes"
@@ -42,11 +44,13 @@ apps = [
 
 saveFunc = (app) ->
     (callback) ->
-        app.save callback
+        app.save ->
+            appManager._addRouteToProxy app, { drone: port: app.port }, callback
 
 saveFuncs = (saveFunc(app) for app in apps)
 
 async.series saveFuncs, ->
     console.log "Initialization succeeds."
+
     process.exit(0)
 
