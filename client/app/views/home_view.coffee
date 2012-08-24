@@ -93,7 +93,6 @@ class exports.HomeView extends Backbone.View
 
   # Add an application row to the app list.
   addAppRow: (app) =>
-      console.log app
       row = new AppRow app
       el = row.render()
       @appList.append el
@@ -131,6 +130,10 @@ class exports.HomeView extends Backbone.View
     $(@el).html homeTemplate()
     @el
 
+  selectNavButton: (button) ->
+    @buttons.find("li").removeClass "active"
+    button.parent().addClass "active"
+
   setListeners: ->
     @appList = $("#app-list")
 
@@ -145,11 +148,8 @@ class exports.HomeView extends Backbone.View
         @homeButton.click @home
     
     @buttons = $("#buttons")
-    @buttons.show()
-
-    @homeButton.hide()
-    @accountButton.show()
-    @logoutButton.show()
+    @selectNavButton @homeButton
+    @buttons.fadeIn()
 
     @addApplicationButton = @$("#add-app-button")
     @addApplicationButton.click @onAddClicked

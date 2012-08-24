@@ -1,11 +1,22 @@
-header#header
-  h2#header-title
-      a(href="http://www.mycozycloud.com/", target="_blank", title="home") 
-        | Cozy Cloud
-    #buttons
-      button#account-button(class="btn", type="submit") Account
-      button#home-button(class="btn", type="submit") Applications
-      button#logout-button(class="btn", type="submit") Sign out
+header#header.navbar
+  .navbar-inner
+      h2#header-title
+          a(href="http://www.mycozycloud.com/", target="_blank", title="home") 
+            | Cozy Cloud
+        #buttons
+              ul.nav
+                li.active
+                  a#home-button
+                    i.icon-home
+                    span &nbsp;Home
+                li
+                  a#account-button
+                    i.icon-user
+                    span &nbsp;Account
+                li
+                  a#logout-button
+                    span Sign out&nbsp;
+                    i.icon-arrow-right
 
 .container
   #content

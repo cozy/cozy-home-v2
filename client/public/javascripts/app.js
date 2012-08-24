@@ -599,25 +599,25 @@ window.require.define({"templates/account": function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h1>Account</h1><form');
-  buf.push(attrs({ 'id':('account-form') }));
-  buf.push('><p><label>email:<input');
+  buf.push('<form');
+  buf.push(attrs({ 'id':('account-form'), "class": ('well') }));
+  buf.push('><p><label>email</label><input');
   buf.push(attrs({ 'id':('account-email-field'), 'type':("text") }));
-  buf.push('/></label><label>fill this field to set a new password:<input');
+  buf.push('/></p><p><label>fill this field to set a new password</label><input');
   buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
-  buf.push('/></label><label>confirm new password:<input');
+  buf.push('/></p><p><label>confirm new password</label><input');
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
-  buf.push('/></label><button');
+  buf.push('/></p><p><button');
   buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button></p><div');
-  buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') }));
+  buf.push('>Send changes</button><div');
+  buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-info-text') }));
   buf.push('></div></div><div');
-  buf.push(attrs({ 'id':('account-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+  buf.push(attrs({ 'id':('account-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-form-error-text') }));
-  buf.push('></div></div></form>');
+  buf.push('></div></div></p></form>');
   }
   return buf.join("");
   };
@@ -656,7 +656,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   with (locals || {}) {
   var interp;
   buf.push('<div');
-  buf.push(attrs({ 'id':('app-list'), "class": ('clearfix') }));
+  buf.push(attrs({ 'id':('app-list'), "class": ('clearfix') + ' ' + ('well') }));
   buf.push('><div');
   buf.push(attrs({ "class": ('clearfix') }));
   buf.push('></div></div><div');
@@ -666,7 +666,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('><div');
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') + ' ' + ('btn-info') }));
+  buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') + ' ' + ('btn-success') }));
   buf.push('><i class="icon-plus icon-white"></i>\nadd a new application\n</button><button');
   buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
   buf.push('>manage applications\n</button></div></div><div');
@@ -708,20 +708,32 @@ window.require.define({"templates/layout": function(exports, require, module) {
   with (locals || {}) {
   var interp;
   buf.push('<header');
-  buf.push(attrs({ 'id':('header') }));
+  buf.push(attrs({ 'id':('header'), "class": ('navbar') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('navbar-inner') }));
   buf.push('><h2');
   buf.push(attrs({ 'id':('header-title') }));
   buf.push('><a');
   buf.push(attrs({ 'href':("http://www.mycozycloud.com/"), 'target':("_blank"), 'title':("home") }));
   buf.push('>Cozy Cloud\n</a></h2><div');
   buf.push(attrs({ 'id':('buttons') }));
-  buf.push('><button');
-  buf.push(attrs({ 'id':('account-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Account</button><button');
-  buf.push(attrs({ 'id':('home-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Applications</button><button');
-  buf.push(attrs({ 'id':('logout-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Sign out</button></div></header><div');
+  buf.push('><ul');
+  buf.push(attrs({ "class": ('nav') }));
+  buf.push('><li');
+  buf.push(attrs({ "class": ('active') }));
+  buf.push('><a');
+  buf.push(attrs({ 'id':('home-button') }));
+  buf.push('><i');
+  buf.push(attrs({ "class": ('icon-home') }));
+  buf.push('></i><span>&nbsp;Home</span></a></li><li><a');
+  buf.push(attrs({ 'id':('account-button') }));
+  buf.push('><i');
+  buf.push(attrs({ "class": ('icon-user') }));
+  buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
+  buf.push(attrs({ 'id':('logout-button') }));
+  buf.push('><span>Sign out&nbsp;</span><i');
+  buf.push(attrs({ "class": ('icon-arrow-right') }));
+  buf.push('></i></a></li></ul></div></div></header><div');
   buf.push(attrs({ "class": ('container') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('content') }));
@@ -908,9 +920,7 @@ window.require.define({"views/account_view": function(exports, require, module) 
           app.views.home.homeButton = $("#home-button");
           app.views.home.homeButton.click(app.views.home.home);
         }
-        app.views.home.homeButton.show();
-        app.views.home.accountButton.hide();
-        app.views.home.logoutButton.show();
+        app.views.home.selectNavButton(app.views.home.accountButton);
         this.emailField = $("#account-email-field");
         this.infoAlert = $("#account-info");
         this.infoAlert.hide();
@@ -1140,7 +1150,6 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
       HomeView.prototype.addAppRow = function(app) {
         var el, row;
-        console.log(app);
         row = new AppRow(app);
         el = row.render();
         this.appList.append(el);
@@ -1183,6 +1192,11 @@ window.require.define({"views/home_view": function(exports, require, module) {
         return this.el;
       };
 
+      HomeView.prototype.selectNavButton = function(button) {
+        this.buttons.find("li").removeClass("active");
+        return button.parent().addClass("active");
+      };
+
       HomeView.prototype.setListeners = function() {
         this.appList = $("#app-list");
         if (this.logoutButton === void 0) {
@@ -1198,10 +1212,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
           this.homeButton.click(this.home);
         }
         this.buttons = $("#buttons");
-        this.buttons.show();
-        this.homeButton.hide();
-        this.accountButton.show();
-        this.logoutButton.show();
+        this.selectNavButton(this.homeButton);
+        this.buttons.fadeIn();
         this.addApplicationButton = this.$("#add-app-button");
         this.addApplicationButton.click(this.onAddClicked);
         this.addApplicationForm = this.$("#add-app-form");
@@ -1333,12 +1345,8 @@ window.require.define({"views/login_view": function(exports, require, module) {
       LoginView.prototype.setListeners = function() {
         var _this = this;
         this.passwordField = $("#login-password");
-        this.homeButton = $("#home-button");
-        this.homeButton.hide();
-        this.accountButton = $("#account-button");
-        this.accountButton.hide();
-        this.logoutButton = $("#logout-button");
-        this.logoutButton.hide();
+        this.buttons = $("#buttons");
+        this.buttons.hide();
         this.forgotButton = $("#forgot-password-button");
         this.forgotButton.click(this.onForgotButtonClicked);
         this.passwordField = $("#login-password");

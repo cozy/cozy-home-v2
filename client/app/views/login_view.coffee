@@ -72,12 +72,8 @@ class exports.LoginView extends Backbone.View
 
     setListeners: ->
         @passwordField = $ "#login-password"
-        @homeButton = $ "#home-button"
-        @homeButton.hide()
-        @accountButton = $ "#account-button"
-        @accountButton.hide()
-        @logoutButton = $ "#logout-button"
-        @logoutButton.hide()
+        @buttons = $ "#buttons"
+        @buttons.hide()
         @forgotButton = $ "#forgot-password-button"
         @forgotButton.click @onForgotButtonClicked
 

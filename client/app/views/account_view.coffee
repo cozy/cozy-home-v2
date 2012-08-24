@@ -65,9 +65,7 @@ class exports.AccountView extends Backbone.View
     if app.views.home.homeButton == undefined
         app.views.home.homeButton = $("#home-button")
         app.views.home.homeButton.click app.views.home.home
-    app.views.home.homeButton.show()
-    app.views.home.accountButton.hide()
-    app.views.home.logoutButton.show()
+    app.views.home.selectNavButton app.views.home.accountButton
     @emailField = $ "#account-email-field"
     @infoAlert = $ "#account-info"
     @infoAlert.hide()
