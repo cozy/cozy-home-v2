@@ -690,7 +690,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('></div></div><div');
   buf.push(attrs({ "class": ('modal-footer') }));
   buf.push('><button');
-  buf.push(attrs({ "class": ('loading-indicator') }));
+  buf.push(attrs({ "class": ('pull-left') + ' ' + ('loading-indicator') }));
   buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><button');
   buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-warning') }));
   buf.push('>install</button><button');
@@ -1230,6 +1230,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
+        this.installInfo.spin();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
         this.addApplicationCloseButton = this.$("#add-app-close");
         this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
