@@ -1,5 +1,5 @@
 # Actions to manage applications : home page + API.
-#
+
 
 slugify = require "../../common/slug"
 {AppManager} = require "../../lib/paas"
