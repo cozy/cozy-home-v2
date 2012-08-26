@@ -26,6 +26,7 @@ class exports.LoginView extends Backbone.View
         user = new User(null, password)
         user.login
             success: (data) =>
+                app.views.home.buttons.show()
                 app.routers.main.navigate 'home', true
             error: (data) =>
                 if data?.responseText?

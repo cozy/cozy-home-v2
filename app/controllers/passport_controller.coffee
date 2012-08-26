@@ -42,7 +42,7 @@ action 'login', ->
             send error: true,  msg: "Server error occured.", 500
         else if user is undefined or not user
             console.log err if err
-            send error: true,  msg: "Wrong email or password", 400
+            send error: true,  msg: "Wrong password", 400
         else
             req.logIn user, {}, answer
 

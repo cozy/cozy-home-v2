@@ -46,10 +46,8 @@ class exports.ResetView extends Backbone.View
         @el
 
     setListeners: ->
-        @accountButton = $ "#account-button"
-        @accountButton.hide()
-        @homeButton = $ "#home-button"
-        @homeButton.hide()
+        @buttons = $ "#buttons"
+        @buttons.hide()
 
         @passwordField1 = $("#reset-password1-field")
         @passwordField2 = $("#reset-password2-field")
