@@ -4,8 +4,8 @@
 
 .app-tools
   .btn-group
-      button#add-app-button.btn.btn-success
-        | <i class="icon-plus icon-white"></i>
+      button#add-app-button.btn
+        | <i class="icon-plus"></i>
         | add a new application
       button#manage-app-button.btn
         | manage applications
@@ -19,10 +19,11 @@
   div#add-app-form.modal-body
     p
       label name
-      input(type="text", class="span3", id="app-name-field", length="200")
+      input(type="text", class="span3", id="app-name-field", maxlength="8")
     p
       label description
-      input(type="text", class="span3", id="app-description-field")
+      input(type="text", class="span3", id="app-description-field",
+            maxlength="40")
     p
       label Git URL
       input(type="text", class="span3", id="app-git-field")
@@ -33,5 +34,4 @@
   .modal-footer
     button.pull-left.loading-indicator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     button#add-app-submit.btn.btn-warning(type="submit") install
-    button#add-app-close.btn close
 

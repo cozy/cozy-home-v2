@@ -666,8 +666,8 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('><div');
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') + ' ' + ('btn-success') }));
-  buf.push('><i class="icon-plus icon-white"></i>\nadd a new application\n</button><button');
+  buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
+  buf.push('><i class="icon-plus"></i>\nadd a new application\n</button><button');
   buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
   buf.push('>manage applications\n</button></div></div><div');
   buf.push(attrs({ 'id':('add-app-modal'), "class": ('modal') + ' ' + ('right') + ' ' + ('hide') }));
@@ -678,9 +678,9 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
   buf.push('><p><label>name</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'length':("200"), "class": ("span3") }));
+  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("8"), "class": ("span3") }));
   buf.push('/></p><p><label>description</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-description-field"), "class": ("span3") }));
+  buf.push(attrs({ 'type':("text"), 'id':("app-description-field"), 'maxlength':("40"), "class": ("span3") }));
   buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
@@ -693,9 +693,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push(attrs({ "class": ('pull-left') + ' ' + ('loading-indicator') }));
   buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><button');
   buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-warning') }));
-  buf.push('>install</button><button');
-  buf.push(attrs({ 'id':('add-app-close'), "class": ('btn') }));
-  buf.push('>close</button></div></div>');
+  buf.push('>install</button></div></div>');
   }
   return buf.join("");
   };
@@ -1040,12 +1038,14 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.button.html(text);
         this.button.removeClass("btn-success");
         this.button.removeClass("btn-danger");
+        this.button.removeClass("disabled");
         return this.button.addClass("btn-warning");
       };
 
       InstallButton.prototype.displayGreen = function(text) {
         this.button.html(text);
         this.button.addClass("btn-success");
+        this.button.addClass("disabled");
         this.button.removeClass("btn-danger");
         return this.button.removeClass("btn-warning");
       };
@@ -1054,6 +1054,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.button.html(text);
         this.button.removeClass("btn-success");
         this.button.addClass("btn-danger");
+        this.button.removeClass("disabled");
         return this.button.removeClass("btn-warning");
       };
 
@@ -1250,10 +1251,9 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
+        this.installInfo.spin();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
-        this.addApplicationCloseButton = this.$("#add-app-close");
-        this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-        return this.addApplicationCloseButton.click(this.onCloseAddAppClicked);
+        return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
       };
 
       return HomeView;

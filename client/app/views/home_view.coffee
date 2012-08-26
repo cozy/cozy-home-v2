@@ -14,11 +14,13 @@ class InstallButton
         @button.html text
         @button.removeClass "btn-success"
         @button.removeClass "btn-danger"
+        @button.removeClass "disabled"
         @button.addClass "btn-warning"
 
     displayGreen: (text) ->
         @button.html text
         @button.addClass "btn-success"
+        @button.addClass "disabled"
         @button.removeClass "btn-danger"
         @button.removeClass "btn-warning"
 
@@ -26,6 +28,7 @@ class InstallButton
         @button.html text
         @button.removeClass "btn-success"
         @button.addClass  "btn-danger"
+        @button.removeClass "disabled"
         @button.removeClass "btn-warning"
 
 
@@ -185,8 +188,7 @@ class exports.HomeView extends Backbone.View
     @installInfo = @$("#add-app-modal .loading-indicator")
     @errorAlert.hide()
     @infoAlert.hide()
+    @installInfo.spin()
 
     @addApplicationCloseCross = @$("#add-app-modal .close")
-    @addApplicationCloseButton = @$("#add-app-close")
     @addApplicationCloseCross.click @onCloseAddAppClicked
-    @addApplicationCloseButton.click @onCloseAddAppClicked

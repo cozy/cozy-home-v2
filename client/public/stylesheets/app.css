@@ -5661,7 +5661,7 @@ h2{font-size:30px;margin-bottom:24px;margin-top:24px}
 .broken .application-inner,.broken .application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #aaa), color-stop(1, #666));background:-webkit-linear-gradient(top, #aaa 0%, #666 100%);background:-moz-linear-gradient(top, #aaa 0%, #666 100%);background:linear-gradient(top, #aaa 0%, #666 100%);border-color:#aaa}
 .broken .broken-notifier{font-size:18px;color:#f00}
 .application-outer{display:none}
-.loading-indicator{margin-top:18px;margin-left:18px;border:0;background:transparent}
+.loading-indicator{margin-top:10px;margin-left:10px;border:0;background:transparent}
 #add-app-close,#add-app-submit{margin-top:5px}
 .main-alert{display:inline-block}
 #login-error{width:360px}
