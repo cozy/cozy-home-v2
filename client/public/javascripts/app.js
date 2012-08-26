@@ -746,48 +746,6 @@ window.require.define({"templates/home": function(exports, require, module) {
   };
 }});
 
-window.require.define({"templates/layout": function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<header');
-  buf.push(attrs({ 'id':('header'), "class": ('navbar') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('navbar-inner') }));
-  buf.push('><h2');
-  buf.push(attrs({ 'id':('header-title') }));
-  buf.push('><a');
-  buf.push(attrs({ 'href':("http://www.mycozycloud.com/"), 'target':("_blank"), 'title':("home") }));
-  buf.push('>Cozy Cloud\n</a></h2><div');
-  buf.push(attrs({ 'id':('buttons') }));
-  buf.push('><ul');
-  buf.push(attrs({ "class": ('nav') }));
-  buf.push('><li');
-  buf.push(attrs({ "class": ('active') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':('home-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-home') }));
-  buf.push('></i><span>&nbsp;Home</span></a></li><li><a');
-  buf.push(attrs({ 'id':('account-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-user') }));
-  buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
-  buf.push(attrs({ 'id':('logout-button') }));
-  buf.push('><span>Sign out&nbsp;</span><i');
-  buf.push(attrs({ "class": ('icon-arrow-right') }));
-  buf.push('></i></a></li></ul></div></div></header><div');
-  buf.push(attrs({ "class": ('container') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('content') }));
-  buf.push('></div></div>');
-  }
-  return buf.join("");
-  };
-}});
-
 window.require.define({"templates/login": function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
