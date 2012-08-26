@@ -1,0 +1,37 @@
+#app-list.clearfix.well
+  .clearfix
+.clearfix
+
+.app-tools
+  .btn-group
+      button#add-app-button.btn
+        | <i class="icon-plus"></i>
+        | add a new application
+      button#manage-app-button.btn
+        | manage applications
+
+#add-app-modal.modal.right.hide
+  .modal-header
+    button.close(type="button", data-dismiss="modal", aria-hidden="true") 
+        |&times;
+    h3 Application installer
+
+  div#add-app-form.modal-body
+    p
+      label name
+      input(type="text", class="span3", id="app-name-field", maxlength="8")
+    p
+      label description
+      input(type="text", class="span3", id="app-description-field",
+            maxlength="40")
+    p
+      label Git URL
+      input(type="text", class="span3", id="app-git-field")
+    .error.alert.alert-error.main-alert
+    .info.alert.main-alert
+
+
+  .modal-footer
+    button.pull-left.loading-indicator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    button#add-app-submit.btn.btn-warning(type="submit") install
+
