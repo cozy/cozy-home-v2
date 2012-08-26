@@ -113,7 +113,7 @@ describe "Application installation", ->
         @proxy = fakeServer msg: "ok", 201, (body) ->
             should.exist body.route
             should.exist body.port
-            body.route.should.equal "/apps/my-app/"
+            body.route.should.equal "/apps/my-app"
             body.port.should.equal 8001
         @proxy.listen(4000)
 
@@ -178,7 +178,7 @@ describe "Application uninstallation", ->
         @haibu.listen 9002
         @proxy = fakeServer msg: "ok", 204, (body) ->
             should.exist body.route
-            body.route.should.equal "/apps/my-app/"
+            body.route.should.equal "/apps/my-app"
         @proxy.listen 4000
 
     after ->
