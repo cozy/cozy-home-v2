@@ -299,7 +299,7 @@ window.require.define({"helpers/client": function(exports, require, module) {
 
 window.require.define({"initialize": function(exports, require, module) {
   (function() {
-    var AccountView, BrunchApplication, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication,
+    var AccountView, ApplicationsView, BrunchApplication, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -316,6 +316,8 @@ window.require.define({"initialize": function(exports, require, module) {
     AccountView = require('views/account_view').AccountView;
 
     ResetView = require('views/reset_view').ResetView;
+
+    ApplicationsView = require('views/applications_view').ApplicationsView;
 
     checkAuthentication = function() {
       return $.ajax({
@@ -350,13 +352,16 @@ window.require.define({"initialize": function(exports, require, module) {
         this.initializeJQueryExtensions();
         this.routers = {};
         this.views = {};
-        this.routers.main = new MainRouter;
-        this.views.home = new HomeView;
+        this.routers.main = new MainRouter();
+        this.views.home = new HomeView();
         this.views.login = new LoginView();
         this.views.register = new RegisterView();
         this.views.account = new AccountView();
         this.views.reset = new ResetView();
-        $("body").html(require("templates/layout"));
+        this.views.applications = new ApplicationsView();
+        console.log(this.views.home.render());
+        $("body").html(this.views.home.render());
+        this.views.home.setListeners();
         if (window.location.hash.indexOf("password/reset") < 0) {
           return checkAuthentication();
         }
@@ -548,18 +553,18 @@ window.require.define({"routers/main_router": function(exports, require, module)
       MainRouter.prototype.routes = {
         "home": "home",
         "login": "login",
-        "market": "market",
+        "applications": "applications",
         "register": "register",
         "account": "account",
         "password/reset/:key": "resetPassword"
       };
 
       MainRouter.prototype.home = function() {
-        return this.loadView(app.views.home);
+        return this.applications();
       };
 
-      MainRouter.prototype.market = function() {
-        return this.loadView(app.views.market);
+      MainRouter.prototype.applications = function() {
+        return this.loadView(app.views.applications);
       };
 
       MainRouter.prototype.login = function() {
@@ -649,7 +654,7 @@ window.require.define({"templates/application": function(exports, require, modul
   };
 }});
 
-window.require.define({"templates/home": function(exports, require, module) {
+window.require.define({"templates/applications": function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -699,7 +704,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   };
 }});
 
-window.require.define({"templates/layout": function(exports, require, module) {
+window.require.define({"templates/home": function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -809,15 +814,17 @@ window.require.define({"templates/reset": function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h1>Reset Password</h1><form');
+  buf.push('<h1>Reset Password</h1><div');
+  buf.push(attrs({ "class": ('well') }));
+  buf.push('><form');
   buf.push(attrs({ 'id':('reset-form') }));
-  buf.push('><p><label>fill this field to set a new password:<input');
+  buf.push('><p><label>fill this field to set a new password:</label><input');
   buf.push(attrs({ 'id':('reset-password1-field'), 'type':("password") }));
-  buf.push('/></label><label>confirm new password:<input');
+  buf.push('/></p><p><label>confirm new password:</label><input');
   buf.push(attrs({ 'id':('reset-password2-field'), 'type':("password") }));
-  buf.push('/></label><button');
+  buf.push('/></p><p><button');
   buf.push(attrs({ 'id':('reset-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button></p></form>');
+  buf.push('>Send changes</button></p></form></div>');
   }
   return buf.join("");
   };
@@ -1011,14 +1018,14 @@ window.require.define({"views/application": function(exports, require, module) {
   
 }});
 
-window.require.define({"views/home_view": function(exports, require, module) {
+window.require.define({"views/applications_view": function(exports, require, module) {
   (function() {
-    var AppCollection, AppRow, Application, InstallButton, User, homeTemplate,
+    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    homeTemplate = require('../templates/home');
+    applicationsTemplate = require('../templates/applications');
 
     User = require("../models/user").User;
 
@@ -1062,28 +1069,25 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
     })();
 
-    exports.HomeView = (function(_super) {
+    exports.ApplicationsView = (function(_super) {
 
-      __extends(HomeView, _super);
+      __extends(ApplicationsView, _super);
 
-      HomeView.prototype.id = 'home-view';
+      ApplicationsView.prototype.id = 'applications-view';
 
       /* Constructor
       */
 
-      function HomeView() {
+      function ApplicationsView() {
         this.displayError = __bind(this.displayError, this);
         this.displayInfo = __bind(this.displayInfo, this);
         this.checkData = __bind(this.checkData, this);
         this.addAppRow = __bind(this.addAppRow, this);
         this.clearApps = __bind(this.clearApps, this);
-        this.account = __bind(this.account, this);
-        this.home = __bind(this.home, this);
-        this.logout = __bind(this.logout, this);
         this.onCloseAddAppClicked = __bind(this.onCloseAddAppClicked, this);
         this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
         this.onInstallClicked = __bind(this.onInstallClicked, this);
-        this.onAddClicked = __bind(this.onAddClicked, this);      HomeView.__super__.constructor.call(this);
+        this.onAddClicked = __bind(this.onAddClicked, this);      ApplicationsView.__super__.constructor.call(this);
         this.isManaging = false;
         this.apps = new AppCollection(this);
       }
@@ -1091,13 +1095,13 @@ window.require.define({"views/home_view": function(exports, require, module) {
       /* Listeners
       */
 
-      HomeView.prototype.onAddClicked = function() {
+      ApplicationsView.prototype.onAddClicked = function() {
         this.installAppButton.displayOrange("install");
         this.addApplicationForm.show();
         return this.addApplicationModal.toggle();
       };
 
-      HomeView.prototype.onInstallClicked = function() {
+      ApplicationsView.prototype.onInstallClicked = function() {
         var app, data,
           _this = this;
         data = {
@@ -1131,45 +1135,23 @@ window.require.define({"views/home_view": function(exports, require, module) {
         }
       };
 
-      HomeView.prototype.onManageAppsClicked = function() {
+      ApplicationsView.prototype.onManageAppsClicked = function() {
         $(".application-outer").toggle();
         return this.isManaging = !this.isManaging;
       };
 
-      HomeView.prototype.onCloseAddAppClicked = function() {
+      ApplicationsView.prototype.onCloseAddAppClicked = function() {
         return this.addApplicationModal.hide();
       };
 
       /* Functions
       */
 
-      HomeView.prototype.logout = function() {
-        var user,
-          _this = this;
-        user = new User();
-        return user.logout({
-          success: function(data) {
-            return app.routers.main.navigate('login', true);
-          },
-          error: function() {
-            return alert("Server error occured, logout failed.");
-          }
-        });
-      };
-
-      HomeView.prototype.home = function() {
-        return app.routers.main.navigate('home', true);
-      };
-
-      HomeView.prototype.account = function() {
-        return app.routers.main.navigate('account', true);
-      };
-
-      HomeView.prototype.clearApps = function() {
+      ApplicationsView.prototype.clearApps = function() {
         return this.appList.html(null);
       };
 
-      HomeView.prototype.addAppRow = function(app) {
+      ApplicationsView.prototype.addAppRow = function(app) {
         var el, row;
         row = new AppRow(app);
         el = row.render();
@@ -1179,7 +1161,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         if (this.isManaging) return this.$(el).find(".application-outer").show();
       };
 
-      HomeView.prototype.checkData = function(data) {
+      ApplicationsView.prototype.checkData = function(data) {
         var property, rightData;
         rightData = true;
         for (property in data) {
@@ -1189,52 +1171,32 @@ window.require.define({"views/home_view": function(exports, require, module) {
         return rightData;
       };
 
-      HomeView.prototype.displayInfo = function(msg) {
+      ApplicationsView.prototype.displayInfo = function(msg) {
         this.errorAlert.hide();
         this.infoAlert.html(msg);
         return this.infoAlert.show();
       };
 
-      HomeView.prototype.displayError = function(msg) {
+      ApplicationsView.prototype.displayError = function(msg) {
         this.infoAlert.hide();
         this.errorAlert.html(msg);
         return this.errorAlert.show();
       };
 
-      HomeView.prototype.selectNavButton = function(button) {
-        this.buttons.find("li").removeClass("active");
-        return button.parent().addClass("active");
-      };
+      /* Init functions
+      */
 
-      HomeView.prototype.fetchData = function() {
+      ApplicationsView.prototype.fetchData = function() {
         return this.apps.fetch();
       };
 
-      /* Configuration
-      */
-
-      HomeView.prototype.render = function() {
-        $(this.el).html(homeTemplate());
+      ApplicationsView.prototype.render = function() {
+        $(this.el).html(applicationsTemplate());
         return this.el;
       };
 
-      HomeView.prototype.setListeners = function() {
-        this.appList = $("#app-list");
-        if (this.logoutButton === void 0) {
-          this.logoutButton = $("#logout-button");
-          this.logoutButton.click(this.logout);
-        }
-        if (this.accountButton === void 0) {
-          this.accountButton = $("#account-button");
-          this.accountButton.click(this.account);
-        }
-        if (this.homeButton === void 0) {
-          this.homeButton = $("#home-button");
-          this.homeButton.click(this.home);
-        }
-        this.buttons = $("#buttons");
-        this.selectNavButton(this.homeButton);
-        this.buttons.fadeIn();
+      ApplicationsView.prototype.setListeners = function() {
+        this.appList = this.$("#app-list");
         this.addApplicationButton = this.$("#add-app-button");
         this.addApplicationButton.click(this.onAddClicked);
         this.addApplicationForm = this.$("#add-app-form");
@@ -1254,6 +1216,91 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.installInfo.spin();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
         return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
+      };
+
+      return ApplicationsView;
+
+    })(Backbone.View);
+
+  }).call(this);
+  
+}});
+
+window.require.define({"views/home_view": function(exports, require, module) {
+  (function() {
+    var User, homeTemplate,
+      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    homeTemplate = require('../templates/home');
+
+    User = require("../models/user").User;
+
+    exports.HomeView = (function(_super) {
+
+      __extends(HomeView, _super);
+
+      function HomeView() {
+        this.account = __bind(this.account, this);
+        this.home = __bind(this.home, this);
+        this.logout = __bind(this.logout, this);
+        HomeView.__super__.constructor.apply(this, arguments);
+      }
+
+      HomeView.prototype.id = 'home-view';
+
+      /* Functions
+      */
+
+      HomeView.prototype.logout = function() {
+        var user,
+          _this = this;
+        user = new User();
+        return user.logout({
+          success: function(data) {
+            return app.routers.main.navigate('login', true);
+          },
+          error: function() {
+            return alert("Server error occured, logout failed.");
+          }
+        });
+      };
+
+      HomeView.prototype.home = function() {
+        app.routers.main.navigate('home', true);
+        return this.selectNavButton(this.homeButton);
+      };
+
+      HomeView.prototype.account = function() {
+        app.routers.main.navigate('account', true);
+        return this.selectNavButton(this.accountButton);
+      };
+
+      HomeView.prototype.selectNavButton = function(button) {
+        this.buttons.find("li").removeClass("active");
+        return button.parent().addClass("active");
+      };
+
+      /* Configuration
+      */
+
+      HomeView.prototype.render = function() {
+        $(this.el).html(homeTemplate());
+        return this.el;
+      };
+
+      HomeView.prototype.setListeners = function() {
+        this.appList = $("#app-list");
+        this.logoutButton = $("#logout-button");
+        this.logoutButton.click(this.logout);
+        this.accountButton = $("#account-button");
+        this.accountButton.click(this.account);
+        this.homeButton = $("#home-button");
+        this.homeButton.click(this.home);
+        this.buttons = this.$("#buttons");
+        this.selectNavButton(this.homeButton);
+        return this.buttons.fadeIn();
       };
 
       return HomeView;
@@ -1311,6 +1358,7 @@ window.require.define({"views/login_view": function(exports, require, module) {
         user = new User(null, password);
         return user.login({
           success: function(data) {
+            app.views.home.buttons.show();
             return app.routers.main.navigate('home', true);
           },
           error: function(data) {
@@ -1545,10 +1593,8 @@ window.require.define({"views/reset_view": function(exports, require, module) {
       };
 
       ResetView.prototype.setListeners = function() {
-        this.accountButton = $("#account-button");
-        this.accountButton.hide();
-        this.homeButton = $("#home-button");
-        this.homeButton.hide();
+        this.buttons = $("#buttons");
+        this.buttons.hide();
         this.passwordField1 = $("#reset-password1-field");
         this.passwordField2 = $("#reset-password2-field");
         this.resetDataButton = $("#reset-form-button");

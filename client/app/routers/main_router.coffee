@@ -2,7 +2,7 @@ class exports.MainRouter extends Backbone.Router
     routes :
         "home": "home"
         "login": "login"
-        "market": "market"
+        "applications": "applications"
         "register": "register"
         "account": "account"
         "password/reset/:key": "resetPassword"
@@ -10,10 +10,10 @@ class exports.MainRouter extends Backbone.Router
     ## Route behaviors
 
     home: ->
-        @loadView app.views.home
+        @applications()
 
-    market: ->
-        @loadView app.views.market
+    applications: ->
+        @loadView app.views.applications
 
     login: ->
         @loadView app.views.login

@@ -6,6 +6,7 @@ LoginView = require('views/login_view').LoginView
 RegisterView = require('views/register_view').RegisterView
 AccountView = require('views/account_view').AccountView
 ResetView = require('views/reset_view').ResetView
+ApplicationsView = require('views/applications_view').ApplicationsView
 
 # Check if user is authenticated, it it is the cas, he is redirected to login
 # page.
@@ -36,15 +37,20 @@ class exports.Application extends BrunchApplication
     @routers = {}
     @views = {}
 
-    @routers.main = new MainRouter
-    @views.home = new HomeView
+    @routers.main = new MainRouter()
+    @views.home = new HomeView()
     @views.login = new LoginView()
     @views.register = new RegisterView()
     @views.account = new AccountView()
     @views.reset = new ResetView()
+    @views.applications = new ApplicationsView()
 
+    
     # render layout
-    $("body").html require("templates/layout")
+    console.log @views.home.render()
+    $("body").html @views.home.render()
+    @views.home.setListeners()
+
     if window.location.hash.indexOf("password/reset") < 0
         checkAuthentication()
 
