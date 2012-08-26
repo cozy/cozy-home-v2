@@ -49,8 +49,8 @@ class exports.ResetView extends Backbone.View
         @buttons = $ "#buttons"
         @buttons.hide()
 
-        @passwordField1 = $("#reset-password1-field")
-        @passwordField2 = $("#reset-password2-field")
+        @passwordField1 = $ "#reset-password1-field"
+        @passwordField2 = $ "#reset-password2-field"
 
         @resetDataButton = $ "#reset-form-button"
         @resetDataButton.click @onDataSubmit
