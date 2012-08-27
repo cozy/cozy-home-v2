@@ -5632,7 +5632,7 @@ h2{font-size:30px;margin-bottom:24px;margin-top:24px}
 .hidden{display:none}
 .center{text-align:center}
 #text-container{width:610px}
-#header{margin-top:0;margin-bottom:8px;background-color:#fff;-moz-box-shadow:3px 3px 4px 1px #668;-webkit-box-shadow:3px 3px 4px 1px #668;-webkit-box-shadow:3px 3px 4px 1px #668;-moz-box-shadow:3px 3px 4px 1px #668;box-shadow:3px 3px 4px 1px #668;-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;border-radius:0 0 4px 4px;text-align:right;}
+#header{margin-top:0;margin-bottom:8px;background-color:#fff;-moz-box-shadow:3px 3px 4px 1px #668;-webkit-box-shadow:3px 3px 4px 1px #668;-webkit-box-shadow:3px 3px 4px 1px #668;-moz-box-shadow:3px 3px 4px 1px #668;box-shadow:3px 3px 4px 1px #668;-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;border-radius:0 0 4px 4px;}
 #header .navbar-inner{padding-right:5px;-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;border-radius:0 0 4px 4px;background-color:#fff;background-image:none}
 #header h2{float:left;color:#f68c4e}
 #header a{text-decoration:none}
@@ -5640,14 +5640,13 @@ h2{font-size:30px;margin-bottom:24px;margin-top:24px}
 #header a:hover{color:#f68c4e}
 @media (max-width: 600px){#buttons span{display:none}
 }#confirm-dialog{display:none}
-#header #buttons{float:right}
-#header{text-align:left;width:100%}
+#buttons{float:right}
 #header-title{font-size:28px;margin:0}
 #content{padding:24px}
 #app-list{margin-bottom:0}
 .application{width:155px;height:250px;margin:6px;margin-bottom:54px;font-size:42px;line-height:48px;float:left}
-.application-inner{text-align:center;width:140px;height:250px;border:2px solid #f68c4e;-moz-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px;color:#fff;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6bd8f), color-stop(1, #f69c5e));background:-webkit-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:-moz-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:linear-gradient(top, #f6bd8f 0%, #f69c5e 100%)}
 .application a:hover{text-decoration:none}
+.application-inner{text-align:center;width:140px;height:250px;border:2px solid #f68c4e;-moz-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px;color:#fff;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6bd8f), color-stop(1, #f69c5e));background:-webkit-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:-moz-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:linear-gradient(top, #f6bd8f 0%, #f69c5e 100%)}
 .application-inner:active{-moz-box-shadow:none;-webkit-box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6cd9f), color-stop(1, #f6ac7e));background:-webkit-linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%);background:-moz-linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%);background:linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%)}
 .application-inner img{margin-top:10px}
@@ -5655,7 +5654,8 @@ h2{font-size:30px;margin-bottom:24px;margin-top:24px}
 .info-text{font-size:14px;line-height:20px}
 .app-tools{margin-top:12px}
 .modal{width:340px;margin:auto;top:10%;left:auto}
-#add-app-form input{width:96%}
+#app-description-field,#app-git-field{width:96%}
+#app-name-field{width:70px}
 #add-app-submit{font-weight:bold;font-size:20px}
 .install-info{width:40%;text-align:center}
 .broken .application-inner,.broken .application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #aaa), color-stop(1, #666));background:-webkit-linear-gradient(top, #aaa 0%, #666 100%);background:-moz-linear-gradient(top, #aaa 0%, #666 100%);background:linear-gradient(top, #aaa 0%, #666 100%);border-color:#aaa}

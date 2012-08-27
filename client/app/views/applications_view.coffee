@@ -63,7 +63,8 @@ class exports.ApplicationsView extends Backbone.View
     @errorAlert.hide()
     @installAppButton.displayOrange "install"
 
-    if @checkData data
+    dataChecking = @checkData data
+    if not dataChecking.error
         @errorAlert.hide()
         @installAppButton.button.html "installing..."
         @installInfo.spin()
@@ -81,10 +82,10 @@ class exports.ApplicationsView extends Backbone.View
                 @installAppButton.displayRed "Install failed"
                 @installInfo.spin()
     else
-        @displayError "All fields are required"
+        @displayError dataChecking.msg
 
   onManageAppsClicked: =>
-      $(".application-outer").toggle()
+      @$(".application-outer").toggle()
       @isManaging = not @isManaging
 
   onCloseAddAppClicked: =>
@@ -111,7 +112,17 @@ class exports.ApplicationsView extends Backbone.View
     for property of data
       rightData = data[property]? and data[property].length > 0
       break if not rightData
-    rightData
+
+    if not rightData
+        error: true, msg: "All fields are required"
+
+    else if not data.git?.match /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/
+        {
+            error: true
+            msg: "Git url should be of form https://.../my-repo.git"
+        }
+    else
+        error: false
 
   # Display message inside info box.
   displayInfo: (msg) =>
@@ -155,7 +166,6 @@ class exports.ApplicationsView extends Backbone.View
     @installInfo = @$ "#add-app-modal .loading-indicator"
     @errorAlert.hide()
     @infoAlert.hide()
-    @installInfo.spin()
 
     @addApplicationCloseCross = @$ "#add-app-modal .close"
     @addApplicationCloseCross.click @onCloseAddAppClicked

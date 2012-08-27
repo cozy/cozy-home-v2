@@ -17,14 +17,14 @@ checkAuthentication = ->
         success: (data) ->
             if data.success
                 if Backbone.history.getFragment() is ''
-                    app.routers.main.navigate 'home', true
+                    app?.routers.main.navigate 'home', true
             else if data.nouser
-                app.routers.main.navigate app.views.register.path, true
+                app?.routers.main.navigate app.views.register.path, true
             else
-                app.routers.main.navigate 'login', true
+                app?.routers.main.navigate 'login', true
 
         error: (data) ->
-            app.routers.main.navigate 'login', true
+            app?.routers.main.navigate 'login', true
 
 
 class exports.Application extends BrunchApplication
@@ -47,7 +47,6 @@ class exports.Application extends BrunchApplication
 
     
     # render layout
-    console.log @views.home.render()
     $("body").html @views.home.render()
     @views.home.setListeners()
 

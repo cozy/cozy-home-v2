@@ -1,14 +1,14 @@
-{HomeView} = require "views/home_view"
+{ApplicationsView} = require "views/applications_view"
 {Application} = require "models/application"
 
 describe 'Manage applications', ->
 
     before ->
-        @view = new HomeView()
+        @view = new ApplicationsView()
         @view.render()
         @view.setListeners()
 
-    describe "unit test", ->
+    describe "unit tests", ->
         
         it "addAppRow", ->
             @view.addAppRow new Application
@@ -20,16 +20,18 @@ describe 'Manage applications', ->
             expect(@view.$(".application").length).to.equal 0
 
         it "checkData", ->
-            data = {}
-            expect(@view.checkData data).to.be.ok
-            data = name: "test"
-            expect(@view.checkData data).to.be.ok
-            data = name: "test", description: undefined
-            expect(@view.checkData data).to.not.be.ok
-            data = name: "test", description: ""
-            expect(@view.checkData data).to.not.be.ok
-            data = name: "test", description: "desc"
-            expect(@view.checkData data).to.be.ok
+            data = git: "https://github.com/mycozycloud/cozy-notes.git"
+            expect(@view.checkData(data).error).to.not.be.ok
+            data.name = "test"
+            expect(@view.checkData(data).error).to.not.be.ok
+            data.description = undefined
+            expect(@view.checkData(data).error).to.be.ok
+            data.description = ""
+            expect(@view.checkData(data).error).to.be.ok
+            data.description = "desc"
+            expect(@view.checkData(data).error).to.not.be.ok
+            data.git = "blabla"
+            expect(@view.checkData(data).error).to.be.ok
 
         it "displayInfo", ->
             @view.displayInfo "test"
@@ -42,19 +44,36 @@ describe 'Manage applications', ->
             expect(@view.errorAlert.html()).to.equal "test"
             expect(@view.infoAlert.is(":visible")).to.not.be.ok
 
+        it "onManageAppsClicked", ->
+            @view.addAppRow new Application
+                name: "app 01"
+            @view.onManageAppsClicked()
+            expect(@view.$(".application-outer").is("visible")).to.be.ok
+            expect(@view.isManaging).to.be.ok
+            @view.onManageAppsClicked()
+            expect(@view.$(".application-outer").is("visible")).not.to.be.ok
+
 
     describe "Display installation form", ->
         it "When I click on add application button", ->
+            @view.addApplicationModal.hide()
             @view.addApplicationButton.click()
 
         it "It displays a form to describe new app", ->
-            expect(@view.addApplicationForm.is(":visible")).to.be.ok
+            expect(@view.addApplicationModal.is(":visible")).to.be.ok
 
         it "When I click on add application button", ->
             @view.addApplicationButton.click()
 
-        it "It displays a form to describe new app", ->
-            expect(@view.addApplicationForm.is(":visible")).to.not.be.ok
+        it "It hides the form", ->
+            expect(@view.addApplicationModal.is(":visible")).to.not.be.ok
+
+        it "When I display the form and I click on close button", ->
+            @view.addApplicationButton.click()
+            @view.addApplicationCloseCross.click()
+
+        it "It hides the form", ->
+            expect(@view.addApplicationModal.is(":visible")).to.not.be.ok
 
 
     describe "Add a new application", ->
@@ -69,7 +88,7 @@ describe 'Manage applications', ->
                     index: 0
                     git: "git@github.com:mycozycloud/my-app.git"
                 @view.appNameField.val @data.name
-                @view.installAppButton.click()
+                @view.installAppButton.button.click()
 
             it "Then error message is diplayed", ->
                 expect(@view.errorAlert.is(":visible")).to.be.ok

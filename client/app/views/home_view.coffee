@@ -12,16 +12,16 @@ class exports.HomeView extends Backbone.View
     user = new User()
     user.logout
         success: (data) =>
-            app.routers.main.navigate 'login', true
+            app?.routers.main.navigate 'login', true
         error: =>
             alert "Server error occured, logout failed."
 
   home: =>
-    app.routers.main.navigate 'home', true
+    app?.routers.main.navigate 'home', true
     @selectNavButton @homeButton
 
   account: =>
-    app.routers.main.navigate 'account', true
+    app?.routers.main.navigate 'account', true
     @selectNavButton @accountButton
 
   selectNavButton: (button) ->

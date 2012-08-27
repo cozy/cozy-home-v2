@@ -1,11 +1,11 @@
 {ApplicationCollection} = require "collections/application"
 {Application} = require "models/application"
-{HomeView} = require "views/home_view"
+{ApplicationsView} = require "views/applications_view"
 
 describe 'Application Collection', ->
 
     before ->
-        @view = new HomeView()
+        @view = new ApplicationsView()
         @view.render()
         @view.setListeners()
         @apps = new ApplicationCollection @view

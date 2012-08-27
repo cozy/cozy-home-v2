@@ -326,16 +326,16 @@ window.require.define({"initialize": function(exports, require, module) {
         success: function(data) {
           if (data.success) {
             if (Backbone.history.getFragment() === '') {
-              return app.routers.main.navigate('home', true);
+              return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
             }
           } else if (data.nouser) {
-            return app.routers.main.navigate(app.views.register.path, true);
+            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate(app.views.register.path, true) : void 0;
           } else {
-            return app.routers.main.navigate('login', true);
+            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
           }
         },
         error: function(data) {
-          return app.routers.main.navigate('login', true);
+          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
         }
       });
     };
@@ -359,7 +359,6 @@ window.require.define({"initialize": function(exports, require, module) {
         this.views.account = new AccountView();
         this.views.reset = new ResetView();
         this.views.applications = new ApplicationsView();
-        console.log(this.views.home.render());
         $("body").html(this.views.home.render());
         this.views.home.setListeners();
         if (window.location.hash.indexOf("password/reset") < 0) {
@@ -705,48 +704,6 @@ window.require.define({"templates/applications": function(exports, require, modu
 }});
 
 window.require.define({"templates/home": function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<header');
-  buf.push(attrs({ 'id':('header'), "class": ('navbar') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('navbar-inner') }));
-  buf.push('><h2');
-  buf.push(attrs({ 'id':('header-title') }));
-  buf.push('><a');
-  buf.push(attrs({ 'href':("http://www.mycozycloud.com/"), 'target':("_blank"), 'title':("home") }));
-  buf.push('>Cozy Cloud\n</a></h2><div');
-  buf.push(attrs({ 'id':('buttons') }));
-  buf.push('><ul');
-  buf.push(attrs({ "class": ('nav') }));
-  buf.push('><li');
-  buf.push(attrs({ "class": ('active') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':('home-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-home') }));
-  buf.push('></i><span>&nbsp;Home</span></a></li><li><a');
-  buf.push(attrs({ 'id':('account-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-user') }));
-  buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
-  buf.push(attrs({ 'id':('logout-button') }));
-  buf.push('><span>Sign out&nbsp;</span><i');
-  buf.push(attrs({ "class": ('icon-arrow-right') }));
-  buf.push('></i></a></li></ul></div></div></header><div');
-  buf.push(attrs({ "class": ('container') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('content') }));
-  buf.push('></div></div>');
-  }
-  return buf.join("");
-  };
-}});
-
-window.require.define({"templates/layout": function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -1144,7 +1101,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.onInstallClicked = function() {
-        var app, data,
+        var app, data, dataChecking,
           _this = this;
         data = {
           name: this.$("#app-name-field").val(),
@@ -1153,7 +1110,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
         };
         this.errorAlert.hide();
         this.installAppButton.displayOrange("install");
-        if (this.checkData(data)) {
+        dataChecking = this.checkData(data);
+        if (!dataChecking.error) {
           this.errorAlert.hide();
           this.installAppButton.button.html("installing...");
           this.installInfo.spin();
@@ -1173,12 +1131,12 @@ window.require.define({"views/applications_view": function(exports, require, mod
             }
           });
         } else {
-          return this.displayError("All fields are required");
+          return this.displayError(dataChecking.msg);
         }
       };
 
       ApplicationsView.prototype.onManageAppsClicked = function() {
-        $(".application-outer").toggle();
+        this.$(".application-outer").toggle();
         return this.isManaging = !this.isManaging;
       };
 
@@ -1204,13 +1162,27 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.checkData = function(data) {
-        var property, rightData;
+        var property, rightData, _ref;
         rightData = true;
         for (property in data) {
           rightData = (data[property] != null) && data[property].length > 0;
           if (!rightData) break;
         }
-        return rightData;
+        if (!rightData) {
+          return {
+            error: true,
+            msg: "All fields are required"
+          };
+        } else if (!((_ref = data.git) != null ? _ref.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/) : void 0)) {
+          return {
+            error: true,
+            msg: "Git url should be of form https://.../my-repo.git"
+          };
+        } else {
+          return {
+            error: false
+          };
+        }
       };
 
       ApplicationsView.prototype.displayInfo = function(msg) {
@@ -1255,7 +1227,6 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
-        this.installInfo.spin();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
         return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
       };
@@ -1301,7 +1272,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         user = new User();
         return user.logout({
           success: function(data) {
-            return app.routers.main.navigate('login', true);
+            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
           },
           error: function() {
             return alert("Server error occured, logout failed.");
@@ -1310,12 +1281,16 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       HomeView.prototype.home = function() {
-        app.routers.main.navigate('home', true);
+        if (typeof app !== "undefined" && app !== null) {
+          app.routers.main.navigate('home', true);
+        }
         return this.selectNavButton(this.homeButton);
       };
 
       HomeView.prototype.account = function() {
-        app.routers.main.navigate('account', true);
+        if (typeof app !== "undefined" && app !== null) {
+          app.routers.main.navigate('account', true);
+        }
         return this.selectNavButton(this.accountButton);
       };
 
