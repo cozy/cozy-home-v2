@@ -106,12 +106,12 @@ window.require.define({"collections/application": function(exports, require, mod
         var _this = this;
         this.view.clearApps();
         return this.forEach(function(app) {
-          return _this.view.addAppRow(app);
+          return _this.view.addApplication(app);
         });
       };
 
       ApplicationCollection.prototype.onAdd = function(app) {
-        return this.view.addAppRow(app);
+        return this.view.addApplication(app);
       };
 
       return ApplicationCollection;
@@ -326,16 +326,16 @@ window.require.define({"initialize": function(exports, require, module) {
         success: function(data) {
           if (data.success) {
             if (Backbone.history.getFragment() === '') {
-              return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+              return window.app.routers.main.navigate('home', true);
             }
           } else if (data.nouser) {
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate(app.views.register.path, true) : void 0;
+            return window.app.routers.main.navigate(app.views.register.path, true);
           } else {
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
+            return window.app.routers.main.navigate('login', true);
           }
         },
         error: function(data) {
-          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
+          return window.app.routers.main.navigate('login', true);
         }
       });
     };
@@ -360,7 +360,10 @@ window.require.define({"initialize": function(exports, require, module) {
         this.views.reset = new ResetView();
         this.views.applications = new ApplicationsView();
         $("body").html(this.views.home.render());
+        console.log($("body").html());
         this.views.home.setListeners();
+        this.views.home.fetch();
+        window.app = this;
         if (window.location.hash.indexOf("password/reset") < 0) {
           return checkAuthentication();
         }
@@ -370,7 +373,7 @@ window.require.define({"initialize": function(exports, require, module) {
 
     })(BrunchApplication);
 
-    window.app = new exports.Application;
+    new exports.Application;
 
   }).call(this);
   
@@ -555,7 +558,8 @@ window.require.define({"routers/main_router": function(exports, require, module)
         "applications": "applications",
         "register": "register",
         "account": "account",
-        "password/reset/:key": "resetPassword"
+        "password/reset/:key": "resetPassword",
+        "apps/:slug": "application"
       };
 
       MainRouter.prototype.home = function() {
@@ -564,6 +568,10 @@ window.require.define({"routers/main_router": function(exports, require, module)
 
       MainRouter.prototype.applications = function() {
         return this.loadView(app.views.applications);
+      };
+
+      MainRouter.prototype.application = function(slug) {
+        return app.views.home.loadApp(slug);
       };
 
       MainRouter.prototype.login = function() {
@@ -653,6 +661,36 @@ window.require.define({"templates/application": function(exports, require, modul
   };
 }});
 
+window.require.define({"templates/application_button": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<li');
+  buf.push(attrs({ "class": ('app-button') }));
+  buf.push('><a');
+  buf.push(attrs({ 'id':("" + (app.slug) + "") }));
+  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</a></li>');
+  }
+  return buf.join("");
+  };
+}});
+
+window.require.define({"templates/application_iframe": function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<iframe');
+  buf.push(attrs({ 'src':("apps/" + (id) + "/"), 'id':("" + (id) + "-frame") }));
+  buf.push('></iframe>');
+  }
+  return buf.join("");
+  };
+}});
+
 window.require.define({"templates/applications": function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
@@ -712,7 +750,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('<header');
   buf.push(attrs({ 'id':('header'), "class": ('navbar') }));
   buf.push('><div');
-  buf.push(attrs({ "class": ('navbar-inner') }));
+  buf.push(attrs({ "class": ('navbar-inner') + ' ' + ('clearfix') }));
   buf.push('><h2');
   buf.push(attrs({ 'id':('header-title') }));
   buf.push('><a');
@@ -735,9 +773,13 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push(attrs({ 'id':('logout-button') }));
   buf.push('><span>Sign out&nbsp;</span><i');
   buf.push(attrs({ "class": ('icon-arrow-right') }));
-  buf.push('></i></a></li></ul></div></div></header><div');
-  buf.push(attrs({ "class": ('container') }));
+  buf.push('></i></a></li></ul><ul');
+  buf.push(attrs({ "class": ('nav') }));
+  buf.push('></ul></div></div></header><div');
+  buf.push(attrs({ "class": ('home-body') }));
   buf.push('><div');
+  buf.push(attrs({ 'id':('app-frames') }));
+  buf.push('></div><div');
   buf.push(attrs({ 'id':('content') }));
   buf.push('></div></div>');
   }
@@ -1081,7 +1123,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.displayError = __bind(this.displayError, this);
         this.displayInfo = __bind(this.displayInfo, this);
         this.checkData = __bind(this.checkData, this);
-        this.addAppRow = __bind(this.addAppRow, this);
+        this.addApplication = __bind(this.addApplication, this);
         this.clearApps = __bind(this.clearApps, this);
         this.onCloseAddAppClicked = __bind(this.onCloseAddAppClicked, this);
         this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
@@ -1121,9 +1163,10 @@ window.require.define({"views/applications_view": function(exports, require, mod
           app = new Application(data);
           return app.install({
             success: function(data) {
-              if (data != null ? data.success : void 0) {
+              if ((data.success != null) && data.success === true) {
                 isInstalling = false;
                 _this.apps.add(app);
+                if (app != null) app.views.home.addApplication(app);
                 _this.installAppButton.displayGreen("Install succeeds!");
                 _this.installInfo.spin();
                 return setTimeout(function() {
@@ -1132,6 +1175,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
               } else {
                 isInstalling = false;
                 _this.apps.add(app);
+                if (app != null) app.views.home.addApplication(app);
                 _this.installAppButton.displayRed("Install failed");
                 return _this.installInfo.spin();
               }
@@ -1164,9 +1208,9 @@ window.require.define({"views/applications_view": function(exports, require, mod
         return this.appList.html(null);
       };
 
-      ApplicationsView.prototype.addAppRow = function(app) {
+      ApplicationsView.prototype.addApplication = function(application) {
         var el, row;
-        row = new AppRow(app);
+        row = new AppRow(application);
         el = row.render();
         this.appList.append(el);
         this.$(el).hide();
@@ -1254,12 +1298,18 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
 window.require.define({"views/home_view": function(exports, require, module) {
   (function() {
-    var User, homeTemplate,
+    var AppCollection, User, appButtonTemplate, appIframeTemplate, homeTemplate,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
     homeTemplate = require('../templates/home');
+
+    appButtonTemplate = require("../templates/application_button");
+
+    appIframeTemplate = require("../templates/application_iframe");
+
+    AppCollection = require('collections/application').ApplicationCollection;
 
     User = require("../models/user").User;
 
@@ -1267,14 +1317,17 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
       __extends(HomeView, _super);
 
+      HomeView.prototype.id = 'home-view';
+
       function HomeView() {
+        this.onAppButtonClicked = __bind(this.onAppButtonClicked, this);
+        this.addApplication = __bind(this.addApplication, this);
+        this.clearApps = __bind(this.clearApps, this);
         this.account = __bind(this.account, this);
         this.home = __bind(this.home, this);
-        this.logout = __bind(this.logout, this);
-        HomeView.__super__.constructor.apply(this, arguments);
+        this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
+        this.apps = new AppCollection(this);
       }
-
-      HomeView.prototype.id = 'home-view';
 
       /* Functions
       */
@@ -1294,6 +1347,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       HomeView.prototype.home = function() {
+        this.content.show();
+        this.frames.hide();
         if (typeof app !== "undefined" && app !== null) {
           app.routers.main.navigate('home', true);
         }
@@ -1301,6 +1356,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       HomeView.prototype.account = function() {
+        this.content.show();
+        this.frames.hide();
         if (typeof app !== "undefined" && app !== null) {
           app.routers.main.navigate('account', true);
         }
@@ -1312,8 +1369,56 @@ window.require.define({"views/home_view": function(exports, require, module) {
         return button.parent().addClass("active");
       };
 
+      HomeView.prototype.clearApps = function() {
+        this.$(".app-button a").unbind();
+        return this.$(".app-button").remove();
+      };
+
+      HomeView.prototype.addApplication = function(application) {
+        this.buttons.find(".nav:last").append(appButtonTemplate({
+          app: application
+        }));
+        return this.buttons.find("#" + application.slug).click(this.onAppButtonClicked);
+      };
+
+      HomeView.prototype.onAppButtonClicked = function(event) {
+        var id;
+        id = event.target.id;
+        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + id, true) : void 0;
+      };
+
+      HomeView.prototype.loadApp = function(slug) {
+        var frame;
+        this.frames.show();
+        frame = this.$("#" + slug + "-frame");
+        if (frame.length === 0) {
+          this.frames.append(appIframeTemplate({
+            id: slug
+          }));
+          frame = this.$("#" + slug + "-frame");
+        }
+        this.content.hide();
+        this.$("#app-frames iframe").hide();
+        frame.show();
+        console.log(slug);
+        this.selectNavButton(this.$("#" + slug));
+        return this.selectedApp = slug;
+      };
+
       /* Configuration
       */
+
+      HomeView.prototype.fetch = function() {
+        var _this = this;
+        return this.apps.fetch({
+          success: function() {
+            if (_this.selectedApp != null) {
+              _this.selectNavButton(_this.$("#" + _this.selectedApp));
+            }
+            return _this.selectedApp = null;
+          }
+        });
+      };
 
       HomeView.prototype.render = function() {
         $(this.el).html(homeTemplate());
@@ -1321,15 +1426,16 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       HomeView.prototype.setListeners = function() {
-        this.appList = $("#app-list");
-        this.logoutButton = $("#logout-button");
+        this.logoutButton = this.$("#logout-button");
         this.logoutButton.click(this.logout);
-        this.accountButton = $("#account-button");
+        this.accountButton = this.$("#account-button");
         this.accountButton.click(this.account);
-        this.homeButton = $("#home-button");
+        this.homeButton = this.$("#home-button");
         this.homeButton.click(this.home);
         this.buttons = this.$("#buttons");
         this.selectNavButton(this.homeButton);
+        this.frames = this.$("#app-frames");
+        this.content = this.$("#content");
         return this.buttons.fadeIn();
       };
 

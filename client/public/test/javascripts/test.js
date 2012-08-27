@@ -145,8 +145,8 @@ window.require.define({"test/application_view_test": function(exports, require, 
         return this.view.setListeners();
       });
       describe("unit tests", function() {
-        it("addAppRow", function() {
-          this.view.addAppRow(new Application({
+        it("addApplication", function() {
+          this.view.addApplication(new Application({
             name: "app 01"
           }));
           return expect(this.view.$(".application").length).to.equal(1);
@@ -184,14 +184,13 @@ window.require.define({"test/application_view_test": function(exports, require, 
           return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
         });
         return it("onManageAppsClicked", function() {
-          this.view.addAppRow(new Application({
+          this.view.addApplication(new Application({
             name: "app 01"
           }));
           this.view.onManageAppsClicked();
-          expect(this.view.$(".application-outer").is("visible")).to.be.ok;
           expect(this.view.isManaging).to.be.ok;
           this.view.onManageAppsClicked();
-          return expect(this.view.$(".application-outer").is("visible")).not.to.be.ok;
+          return expect(this.view.isManaging).to.not.be.ok;
         });
       });
       describe("Display installation form", function() {
@@ -265,11 +264,20 @@ window.require.define({"test/home_view_test": function(exports, require, module)
           this.view.account();
           return expect(this.view.accountButton.parent().hasClass("active")).to.be.ok;
         });
-        return it("selectNavButton", function() {
+        it("selectNavButton", function() {
           this.view.selectNavButton(this.view.homeButton);
           expect(this.view.homeButton.parent().hasClass("active")).to.be.ok;
           this.view.selectNavButton(this.view.accountButton);
           return expect(this.view.accountButton.parent().hasClass("active")).to.be.ok;
+        });
+        it("addApplication", function() {});
+        it("clearApps", function() {
+          this.view.clearApps();
+          return expect(this.view.$(".app-button").length).to.equal(0);
+        });
+        return it("loadApp", function() {
+          var app1;
+          return app1 = new Application;
         });
       });
     });

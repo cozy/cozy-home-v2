@@ -6,6 +6,7 @@ class exports.MainRouter extends Backbone.Router
         "register": "register"
         "account": "account"
         "password/reset/:key": "resetPassword"
+        "apps/:slug": "application"
 
     ## Route behaviors
 
@@ -14,6 +15,9 @@ class exports.MainRouter extends Backbone.Router
 
     applications: ->
         @loadView app.views.applications
+
+    application: (slug) ->
+        app.views.home.loadApp slug
 
     login: ->
         @loadView app.views.login
