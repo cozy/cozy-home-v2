@@ -8,6 +8,7 @@ AccountView = require('views/account_view').AccountView
 ResetView = require('views/reset_view').ResetView
 ApplicationsView = require('views/applications_view').ApplicationsView
 
+
 # Check if user is authenticated, it it is the cas, he is redirected to login
 # page.
 checkAuthentication = ->
@@ -17,14 +18,14 @@ checkAuthentication = ->
         success: (data) ->
             if data.success
                 if Backbone.history.getFragment() is ''
-                    app?.routers.main.navigate 'home', true
+                    window.app.routers.main.navigate 'home', true
             else if data.nouser
-                app?.routers.main.navigate app.views.register.path, true
+                window.app.routers.main.navigate app.views.register.path, true
             else
-                app?.routers.main.navigate 'login', true
+                window.app.routers.main.navigate 'login', true
 
         error: (data) ->
-            app?.routers.main.navigate 'login', true
+            window.app.routers.main.navigate 'login', true
 
 
 class exports.Application extends BrunchApplication
@@ -46,12 +47,17 @@ class exports.Application extends BrunchApplication
     @views.applications = new ApplicationsView()
 
     
+    
     # render layout
     $("body").html @views.home.render()
+    console.log $("body").html()
+    
     @views.home.setListeners()
+    @views.home.fetch()
 
+    window.app = @
     if window.location.hash.indexOf("password/reset") < 0
         checkAuthentication()
 
+new exports.Application
 
-window.app = new exports.Application
