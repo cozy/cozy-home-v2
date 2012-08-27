@@ -20,7 +20,6 @@ class exports.Application extends BaseModel
     # Send to server installation request.
     # Will create a new app in the database.
     install: (callbacks) ->
-
         data =
             name: @name
             description: @description
