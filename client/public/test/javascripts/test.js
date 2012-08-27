@@ -76,17 +76,17 @@
 
 window.require.define({"test/application_collection_test": function(exports, require, module) {
   (function() {
-    var Application, ApplicationCollection, HomeView;
+    var Application, ApplicationCollection, ApplicationsView;
 
     ApplicationCollection = require("collections/application").ApplicationCollection;
 
     Application = require("models/application").Application;
 
-    HomeView = require("views/home_view").HomeView;
+    ApplicationsView = require("views/applications_view").ApplicationsView;
 
     describe('Application Collection', function() {
       before(function() {
-        this.view = new HomeView();
+        this.view = new ApplicationsView();
         this.view.render();
         this.view.setListeners();
         return this.apps = new ApplicationCollection(this.view);
@@ -132,19 +132,19 @@ window.require.define({"test/application_collection_test": function(exports, req
 
 window.require.define({"test/application_view_test": function(exports, require, module) {
   (function() {
-    var Application, HomeView;
+    var Application, ApplicationsView;
 
-    HomeView = require("views/home_view").HomeView;
+    ApplicationsView = require("views/applications_view").ApplicationsView;
 
     Application = require("models/application").Application;
 
     describe('Manage applications', function() {
       before(function() {
-        this.view = new HomeView();
+        this.view = new ApplicationsView();
         this.view.render();
         return this.view.setListeners();
       });
-      describe("unit test", function() {
+      describe("unit tests", function() {
         it("addAppRow", function() {
           this.view.addAppRow(new Application({
             name: "app 01"
@@ -157,52 +157,63 @@ window.require.define({"test/application_view_test": function(exports, require, 
         });
         it("checkData", function() {
           var data;
-          data = {};
-          expect(this.view.checkData(data)).to.be.ok;
           data = {
-            name: "test"
+            git: "https://github.com/mycozycloud/cozy-notes.git"
           };
-          expect(this.view.checkData(data)).to.be.ok;
-          data = {
-            name: "test",
-            description: void 0
-          };
-          expect(this.view.checkData(data)).to.not.be.ok;
-          data = {
-            name: "test",
-            description: ""
-          };
-          expect(this.view.checkData(data)).to.not.be.ok;
-          data = {
-            name: "test",
-            description: "desc"
-          };
-          return expect(this.view.checkData(data)).to.be.ok;
+          expect(this.view.checkData(data).error).to.not.be.ok;
+          data.name = "test";
+          expect(this.view.checkData(data).error).to.not.be.ok;
+          data.description = void 0;
+          expect(this.view.checkData(data).error).to.be.ok;
+          data.description = "";
+          expect(this.view.checkData(data).error).to.be.ok;
+          data.description = "desc";
+          expect(this.view.checkData(data).error).to.not.be.ok;
+          data.git = "blabla";
+          return expect(this.view.checkData(data).error).to.be.ok;
         });
         it("displayInfo", function() {
           this.view.displayInfo("test");
           expect(this.view.infoAlert.is(":visible")).to.be.ok;
           return expect(this.view.infoAlert.html()).to.equal("test");
         });
-        return it("displayError", function() {
+        it("displayError", function() {
           this.view.displayError("test");
           expect(this.view.errorAlert.is(":visible")).to.be.ok;
           expect(this.view.errorAlert.html()).to.equal("test");
           return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
         });
+        return it("onManageAppsClicked", function() {
+          this.view.addAppRow(new Application({
+            name: "app 01"
+          }));
+          this.view.onManageAppsClicked();
+          expect(this.view.$(".application-outer").is("visible")).to.be.ok;
+          expect(this.view.isManaging).to.be.ok;
+          this.view.onManageAppsClicked();
+          return expect(this.view.$(".application-outer").is("visible")).not.to.be.ok;
+        });
       });
       describe("Display installation form", function() {
         it("When I click on add application button", function() {
+          this.view.addApplicationModal.hide();
           return this.view.addApplicationButton.click();
         });
         it("It displays a form to describe new app", function() {
-          return expect(this.view.addApplicationForm.is(":visible")).to.be.ok;
+          return expect(this.view.addApplicationModal.is(":visible")).to.be.ok;
         });
         it("When I click on add application button", function() {
           return this.view.addApplicationButton.click();
         });
-        return it("It displays a form to describe new app", function() {
-          return expect(this.view.addApplicationForm.is(":visible")).to.not.be.ok;
+        it("It hides the form", function() {
+          return expect(this.view.addApplicationModal.is(":visible")).to.not.be.ok;
+        });
+        it("When I display the form and I click on close button", function() {
+          this.view.addApplicationButton.click();
+          return this.view.addApplicationCloseCross.click();
+        });
+        return it("It hides the form", function() {
+          return expect(this.view.addApplicationModal.is(":visible")).to.not.be.ok;
         });
       });
       return describe("Add a new application", function() {
@@ -217,12 +228,48 @@ window.require.define({"test/application_view_test": function(exports, require, 
               git: "git@github.com:mycozycloud/my-app.git"
             };
             this.view.appNameField.val(this.data.name);
-            return this.view.installAppButton.click();
+            return this.view.installAppButton.button.click();
           });
           return it("Then error message is diplayed", function() {
             expect(this.view.errorAlert.is(":visible")).to.be.ok;
             return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
           });
+        });
+      });
+    });
+
+  }).call(this);
+  
+}});
+
+window.require.define({"test/home_view_test": function(exports, require, module) {
+  (function() {
+    var Application, HomeView;
+
+    HomeView = require("views/home_view").HomeView;
+
+    Application = require("initialize").Application;
+
+    describe('Manage applications', function() {
+      before(function() {
+        this.view = new HomeView();
+        this.view.render();
+        return this.view.setListeners();
+      });
+      return describe("unit tests", function() {
+        it("home", function() {
+          this.view.home();
+          return expect(this.view.homeButton.parent().hasClass("active")).to.be.ok;
+        });
+        it("account", function() {
+          this.view.account();
+          return expect(this.view.accountButton.parent().hasClass("active")).to.be.ok;
+        });
+        return it("selectNavButton", function() {
+          this.view.selectNavButton(this.view.homeButton);
+          expect(this.view.homeButton.parent().hasClass("active")).to.be.ok;
+          this.view.selectNavButton(this.view.accountButton);
+          return expect(this.view.accountButton.parent().hasClass("active")).to.be.ok;
         });
       });
     });
@@ -246,3 +293,4 @@ window.require.define({"test/test-helpers": function(exports, require, module) {
 
 window.require('test/application_collection_test');
 window.require('test/application_view_test');
+window.require('test/home_view_test');
