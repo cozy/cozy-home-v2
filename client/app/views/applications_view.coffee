@@ -43,6 +43,7 @@ class exports.ApplicationsView extends Backbone.View
     super()
 
     @isManaging = false
+    @isInstalling = false
     @apps = new AppCollection @
 
  
@@ -55,6 +56,8 @@ class exports.ApplicationsView extends Backbone.View
     @addApplicationModal.toggle()
 
   onInstallClicked: =>
+    return true if @isInstalling
+    isInstalling = true
     data =
       name: @$("#app-name-field").val()
       description: @$("#app-description-field").val()
@@ -71,17 +74,27 @@ class exports.ApplicationsView extends Backbone.View
 
         app = new Application data
         app.install
-            success: =>
-                @apps.add app
-                @installAppButton.displayGreen "Install succeeds!"
-                @installInfo.spin()
-                setTimeout =>
-                    @addApplicationForm.slideToggle()
-                , 1000
+            success: (data) =>
+                if data?.success
+                    isInstalling = false
+                    @apps.add app
+                    @installAppButton.displayGreen "Install succeeds!"
+                    @installInfo.spin()
+                    setTimeout =>
+                        @addApplicationForm.slideToggle()
+                    , 1000
+                else
+                    isInstalling = false
+                    @apps.add app
+                    @installAppButton.displayRed "Install failed"
+                    @installInfo.spin()
+
             error: (data) =>
+                isInstalling = false
                 @installAppButton.displayRed "Install failed"
                 @installInfo.spin()
     else
+        isInstalling = false
         @displayError dataChecking.msg
 
   onManageAppsClicked: =>

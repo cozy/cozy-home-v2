@@ -1088,6 +1088,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.onInstallClicked = __bind(this.onInstallClicked, this);
         this.onAddClicked = __bind(this.onAddClicked, this);      ApplicationsView.__super__.constructor.call(this);
         this.isManaging = false;
+        this.isInstalling = false;
         this.apps = new AppCollection(this);
       }
 
@@ -1101,8 +1102,10 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.onInstallClicked = function() {
-        var app, data, dataChecking,
+        var app, data, dataChecking, isInstalling,
           _this = this;
+        if (this.isInstalling) return true;
+        isInstalling = true;
         data = {
           name: this.$("#app-name-field").val(),
           description: this.$("#app-description-field").val(),
@@ -1117,20 +1120,30 @@ window.require.define({"views/applications_view": function(exports, require, mod
           this.installInfo.spin();
           app = new Application(data);
           return app.install({
-            success: function() {
-              _this.apps.add(app);
-              _this.installAppButton.displayGreen("Install succeeds!");
-              _this.installInfo.spin();
-              return setTimeout(function() {
-                return _this.addApplicationForm.slideToggle();
-              }, 1000);
+            success: function(data) {
+              if (data != null ? data.success : void 0) {
+                isInstalling = false;
+                _this.apps.add(app);
+                _this.installAppButton.displayGreen("Install succeeds!");
+                _this.installInfo.spin();
+                return setTimeout(function() {
+                  return _this.addApplicationForm.slideToggle();
+                }, 1000);
+              } else {
+                isInstalling = false;
+                _this.apps.add(app);
+                _this.installAppButton.displayRed("Install failed");
+                return _this.installInfo.spin();
+              }
             },
             error: function(data) {
+              isInstalling = false;
               _this.installAppButton.displayRed("Install failed");
               return _this.installInfo.spin();
             }
           });
         } else {
+          isInstalling = false;
           return this.displayError(dataChecking.msg);
         }
       };
