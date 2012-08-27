@@ -28,7 +28,7 @@ textcolorapplication = #FFEFF3
 
 body
   background-color: bgcolor
-  min-width: 380px
+  min-width: 320px
   
 a
   color: linkcolor
@@ -69,10 +69,13 @@ h2
 
 #header
   margin-top 0px
-  margin-bottom 8px
+  //margin-bottom 8px
+  margin-bottom 0px
   background-color white
   shadow 3px 3px 4px 1px bgshadowcolor
-  rounded-border 0 0 4px 4px
+  border-bottom 1px solid #CCC
+  background-color: white
+  //rounded-border 0 0 4px 4px
 
   .navbar-inner
     padding-right 5px
@@ -93,10 +96,6 @@ h2
   a:hover
     color: linkcolor 
 
-@media (max-width: 600px)
-  #buttons span
-    display: none
-
 
 /* Dialogs */
 
@@ -111,8 +110,14 @@ h2
   float right
 
 #header-title
-  font-size: 28px
+  width: 17%
+  font-size: 20px
   margin: 0
+
+
+@media (max-width: 700px)
+  #header-title
+    display: none
 
 #content
   padding 24px
@@ -258,3 +263,43 @@ a
   display: none
   margin-bottom: 0
 
+#home-view 
+    height 100%
+    overflow:hidden
+
+// Applications
+
+iframe
+    width 100%
+    height 100%
+    border 0
+
+body
+    height 100%
+        
+html
+    height 100%
+        
+#app-frames
+    height 100%
+    display:none
+
+.home-body
+    background: white
+    width:100%
+    height: 100%
+
+.navbar .nav
+    float: right
+
+#buttons
+    text-align right
+    width: 83%
+
+@media (max-width: 600px)
+  #buttons span
+    display: none
+
+@media (max-width: 600px)
+  #buttons
+    width: 100%

@@ -75,9 +75,10 @@ class exports.ApplicationsView extends Backbone.View
         app = new Application data
         app.install
             success: (data) =>
-                if data?.success
+                if data.success? and data.success == true
                     isInstalling = false
                     @apps.add app
+                    app?.views.home.addApplication app
                     @installAppButton.displayGreen "Install succeeds!"
                     @installInfo.spin()
                     setTimeout =>
@@ -86,6 +87,7 @@ class exports.ApplicationsView extends Backbone.View
                 else
                     isInstalling = false
                     @apps.add app
+                    app?.views.home.addApplication app
                     @installAppButton.displayRed "Install failed"
                     @installInfo.spin()
 
@@ -111,13 +113,15 @@ class exports.ApplicationsView extends Backbone.View
       @appList.html null
 
   # Add an application row to the app list.
-  addAppRow: (app) =>
-      row = new AppRow app
+  # Add application to home view toolbar
+  addApplication: (application) =>
+      row = new AppRow application
       el = row.render()
       @appList.append el
       @$(el).hide()
       @$(el).fadeIn()
       @$(el).find(".application-outer").show() if @isManaging
+      # Call to home view should be more proper.
 
   # Check that given data are corrects.
   checkData: (data) =>

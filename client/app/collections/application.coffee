@@ -18,8 +18,8 @@ class exports.ApplicationCollection extends BaseCollection
     onReset: =>
         @view.clearApps()
         @forEach (app) =>
-            @view.addAppRow app
+            @view.addApplication app
 
     # Add added app to the view app list.
     onAdd: (app) =>
-        @view.addAppRow app
+        @view.addApplication app

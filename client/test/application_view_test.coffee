@@ -10,8 +10,8 @@ describe 'Manage applications', ->
 
     describe "unit tests", ->
         
-        it "addAppRow", ->
-            @view.addAppRow new Application
+        it "addApplication", ->
+            @view.addApplication new Application
                 name: "app 01"
             expect(@view.$(".application").length).to.equal 1
 
@@ -45,13 +45,12 @@ describe 'Manage applications', ->
             expect(@view.infoAlert.is(":visible")).to.not.be.ok
 
         it "onManageAppsClicked", ->
-            @view.addAppRow new Application
+            @view.addApplication new Application
                 name: "app 01"
             @view.onManageAppsClicked()
-            expect(@view.$(".application-outer").is("visible")).to.be.ok
             expect(@view.isManaging).to.be.ok
             @view.onManageAppsClicked()
-            expect(@view.$(".application-outer").is("visible")).not.to.be.ok
+            expect(@view.isManaging).to.not.be.ok
 
 
     describe "Display installation form", ->
