@@ -73,7 +73,6 @@ h2
   background-color white
   shadow 3px 3px 4px 1px bgshadowcolor
   rounded-border 0 0 4px 4px
-  text-align right
 
   .navbar-inner
     padding-right 5px
@@ -91,8 +90,8 @@ h2
   p
     margin 0
 
-#header a:hover
-  color: linkcolor 
+  a:hover
+    color: linkcolor 
 
 @media (max-width: 600px)
   #buttons span
@@ -108,12 +107,8 @@ h2
 /* Misc */
 
 
-#header #buttons
+#buttons
   float right
-
-#header
-  text-align: left
-  width 100%
 
 #header-title
   font-size: 28px
@@ -134,6 +129,9 @@ h2
   line-height 48px
   float left
 
+.application a:hover
+  text-decoration: none
+
 .application-inner
   text-align center
   width 140px
@@ -143,9 +141,6 @@ h2
   border-radius 12px
   color white
   background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
-
-.application a:hover
-  text-decoration: none
 
 .application-inner:active
   shadow none
@@ -175,8 +170,13 @@ h2
     top: 10%
     left: auto
 
-#add-app-form input
+
+#app-description-field
+#app-git-field
   width: 96%
+
+#app-name-field
+  width: 70px
 
 #add-app-submit
   font-weight: bold
