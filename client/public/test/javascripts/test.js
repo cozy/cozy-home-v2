@@ -275,10 +275,7 @@ window.require.define({"test/home_view_test": function(exports, require, module)
           this.view.clearApps();
           return expect(this.view.$(".app-button").length).to.equal(0);
         });
-        return it("loadApp", function() {
-          var app1;
-          return app1 = new Application;
-        });
+        return it("loadApp", function() {});
       });
     });
 

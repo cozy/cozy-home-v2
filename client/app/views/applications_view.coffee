@@ -75,10 +75,10 @@ class exports.ApplicationsView extends Backbone.View
         app = new Application data
         app.install
             success: (data) =>
-                if data.success? and data.success == true
+                if data.name?
                     isInstalling = false
                     @apps.add app
-                    app?.views.home.addApplication app
+                    window.app.views.home.addApplication app
                     @installAppButton.displayGreen "Install succeeds!"
                     @installInfo.spin()
                     setTimeout =>
@@ -87,7 +87,7 @@ class exports.ApplicationsView extends Backbone.View
                 else
                     isInstalling = false
                     @apps.add app
-                    app?.views.home.addApplication app
+                    window.app.views.home.addApplication app
                     @installAppButton.displayRed "Install failed"
                     @installInfo.spin()
 

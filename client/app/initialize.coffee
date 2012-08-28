@@ -50,7 +50,6 @@ class exports.Application extends BrunchApplication
     
     # render layout
     $("body").html @views.home.render()
-    console.log $("body").html()
     
     @views.home.setListeners()
     @views.home.fetch()

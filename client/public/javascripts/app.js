@@ -360,7 +360,6 @@ window.require.define({"initialize": function(exports, require, module) {
         this.views.reset = new ResetView();
         this.views.applications = new ApplicationsView();
         $("body").html(this.views.home.render());
-        console.log($("body").html());
         this.views.home.setListeners();
         this.views.home.fetch();
         window.app = this;
@@ -1163,10 +1162,10 @@ window.require.define({"views/applications_view": function(exports, require, mod
           app = new Application(data);
           return app.install({
             success: function(data) {
-              if ((data.success != null) && data.success === true) {
+              if (data.name != null) {
                 isInstalling = false;
                 _this.apps.add(app);
-                if (app != null) app.views.home.addApplication(app);
+                window.app.views.home.addApplication(app);
                 _this.installAppButton.displayGreen("Install succeeds!");
                 _this.installInfo.spin();
                 return setTimeout(function() {
@@ -1175,7 +1174,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
               } else {
                 isInstalling = false;
                 _this.apps.add(app);
-                if (app != null) app.views.home.addApplication(app);
+                window.app.views.home.addApplication(app);
                 _this.installAppButton.displayRed("Install failed");
                 return _this.installInfo.spin();
               }
@@ -1400,7 +1399,6 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.content.hide();
         this.$("#app-frames iframe").hide();
         frame.show();
-        console.log(slug);
         this.selectNavButton(this.$("#" + slug));
         return this.selectedApp = slug;
       };
