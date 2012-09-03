@@ -19,6 +19,8 @@ class exports.HomeView extends Backbone.View
     user = new User()
     user.logout
         success: (data) =>
+            @content.show()
+            @frames.hide()
             app?.routers.main.navigate 'login', true
         error: =>
             alert "Server error occured, logout failed."

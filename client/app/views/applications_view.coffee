@@ -75,7 +75,7 @@ class exports.ApplicationsView extends Backbone.View
         app = new Application data
         app.install
             success: (data) =>
-                if data.name?
+                if data.status? == "broken"
                     isInstalling = false
                     @apps.add app
                     window.app.views.home.addApplication app

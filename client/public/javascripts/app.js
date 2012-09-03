@@ -1162,7 +1162,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
           app = new Application(data);
           return app.install({
             success: function(data) {
-              if (data.name != null) {
+              if ((data.status != null) === "broken") {
                 isInstalling = false;
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
@@ -1337,6 +1337,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
         user = new User();
         return user.logout({
           success: function(data) {
+            _this.content.show();
+            _this.frames.hide();
             return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
           },
           error: function() {
