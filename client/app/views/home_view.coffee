@@ -32,7 +32,6 @@ class exports.HomeView extends Backbone.View
     app?.routers.main.navigate 'home', true
     @selectNavButton @homeButton
 
-
   # Display account manager page, hides app frames, active account button.
   account: =>
     @content.show()

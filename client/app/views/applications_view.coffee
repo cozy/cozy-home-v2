@@ -57,7 +57,7 @@ class exports.ApplicationsView extends Backbone.View
 
   onInstallClicked: =>
     return true if @isInstalling
-    isInstalling = true
+    @isInstalling = true
     data =
       name: @$("#app-name-field").val()
       description: @$("#app-description-field").val()
@@ -79,16 +79,15 @@ class exports.ApplicationsView extends Backbone.View
                     isInstalling = false
                     @apps.add app
                     window.app.views.home.addApplication app
-                    @installAppButton.displayGreen "Install succeeds!"
+                    @installAppButton.displayRed "Install failed"
                     @installInfo.spin()
                     setTimeout =>
                         @addApplicationForm.slideToggle()
                     , 1000
                 else
-                    isInstalling = false
                     @apps.add app
                     window.app.views.home.addApplication app
-                    @installAppButton.displayRed "Install failed"
+                    @installAppButton.displayGreen "Install succeeds!"
                     @installInfo.spin()
 
             error: (data) =>

@@ -1146,7 +1146,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
         var app, data, dataChecking, isInstalling,
           _this = this;
         if (this.isInstalling) return true;
-        isInstalling = true;
+        this.isInstalling = true;
         data = {
           name: this.$("#app-name-field").val(),
           description: this.$("#app-description-field").val(),
@@ -1162,24 +1162,25 @@ window.require.define({"views/applications_view": function(exports, require, mod
           app = new Application(data);
           return app.install({
             success: function(data) {
+              var isInstalling;
               if ((data.status != null) === "broken") {
                 isInstalling = false;
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
-                _this.installAppButton.displayGreen("Install succeeds!");
+                _this.installAppButton.displayRed("Install failed");
                 _this.installInfo.spin();
                 return setTimeout(function() {
                   return _this.addApplicationForm.slideToggle();
                 }, 1000);
               } else {
-                isInstalling = false;
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
-                _this.installAppButton.displayRed("Install failed");
+                _this.installAppButton.displayGreen("Install succeeds!");
                 return _this.installInfo.spin();
               }
             },
             error: function(data) {
+              var isInstalling;
               isInstalling = false;
               _this.installAppButton.displayRed("Install failed");
               return _this.installInfo.spin();

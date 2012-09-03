@@ -27,10 +27,10 @@ class exports.ApplicationRow extends BaseRow
     removeApp: ->
         @$(".remove-app").html "Removing..."
         @model.uninstall
-                success: =>
-                        @$(".remove-app").html "Removed!"
-                error: =>
-                        @$(".remove-app").html "Remove failed."
+            success: =>
+                @$(".remove-app").html "Removed!"
+            error: =>
+                @$(".remove-app").html "Remove failed."
 
     ### configuration ###
 
