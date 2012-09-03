@@ -19,6 +19,7 @@ class exports.AccountView extends Backbone.View
   # When data are submited, it sends a request to backend to save them.
   # If an error occurs, message is displayed.
   onDataSubmit: (event) =>
+    @loadingIndicator.spin()
     form =
         email: $("#account-email-field").val()
         password1: $("#account-password1-field").val()
@@ -37,19 +38,20 @@ class exports.AccountView extends Backbone.View
                 @infoAlert.show()
             else
                 @displayErrors JSON.parse(data.responseText).msg
+            @loadingIndicator.spin()
         error: (data) =>
             @displayErrors JSON.parse(data.responseText).msg
+            @loadingIndicator.spin()
         
 
-    ### Functions ###
+  ### Functions ###
 
-    displayErrors: (msgs) =>
-        errorString = ""
-        for msg in msgs
-            console.log msg
-            errorString += msg + "<br />"
-        @errorAlert.html errorString
-        @errorAlert.show()
+  displayErrors: (msgs) =>
+      errorString = ""
+      for msg in msgs
+          errorString += msg + "<br />"
+      @errorAlert.html errorString
+      @errorAlert.show()
 
 
   ### Configuration ###
@@ -77,4 +79,6 @@ class exports.AccountView extends Backbone.View
 
     @accountDataButton = $ "#account-form-button"
     @accountDataButton.click @onDataSubmit
+
+    @loadingIndicator = @$ ".loading-indicator"
 

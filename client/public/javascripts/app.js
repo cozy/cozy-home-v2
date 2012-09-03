@@ -620,7 +620,9 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
   buf.push('/></p><p><button');
   buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button><div');
+  buf.push('>Send changes</button><span');
+  buf.push(attrs({ "class": ('loading-indicator') }));
+  buf.push('></span><div');
   buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-info-text') }));
@@ -889,6 +891,7 @@ window.require.define({"views/account_view": function(exports, require, module) 
       */
 
       function AccountView() {
+        this.displayErrors = __bind(this.displayErrors, this);
         this.onDataSubmit = __bind(this.onDataSubmit, this);      AccountView.__super__.constructor.call(this);
       }
 
@@ -902,6 +905,7 @@ window.require.define({"views/account_view": function(exports, require, module) 
       AccountView.prototype.onDataSubmit = function(event) {
         var form,
           _this = this;
+        this.loadingIndicator.spin();
         form = {
           email: $("#account-email-field").val(),
           password1: $("#account-password1-field").val(),
@@ -909,37 +913,38 @@ window.require.define({"views/account_view": function(exports, require, module) 
         };
         this.infoAlert.hide();
         this.errorAlert.hide();
-        $.ajax({
+        return $.ajax({
           type: 'POST',
           url: "api/user/",
           data: form,
           success: function(data) {
             if (data.success) {
               _this.infoAlert.html(data.msg);
-              return _this.infoAlert.show();
+              _this.infoAlert.show();
             } else {
-              return _this.displayErrors(JSON.parse(data.responseText).msg);
+              _this.displayErrors(JSON.parse(data.responseText).msg);
             }
+            return _this.loadingIndicator.spin();
           },
           error: function(data) {
-            return _this.displayErrors(JSON.parse(data.responseText).msg);
+            _this.displayErrors(JSON.parse(data.responseText).msg);
+            return _this.loadingIndicator.spin();
           }
         });
-        return {
-          /* Functions
-          */
-          displayErrors: function(msgs) {
-            var errorString, msg, _i, _len;
-            errorString = "";
-            for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-              msg = msgs[_i];
-              console.log(msg);
-              errorString += msg + "<br />";
-            }
-            _this.errorAlert.html(errorString);
-            return _this.errorAlert.show();
-          }
-        };
+      };
+
+      /* Functions
+      */
+
+      AccountView.prototype.displayErrors = function(msgs) {
+        var errorString, msg, _i, _len;
+        errorString = "";
+        for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+          msg = msgs[_i];
+          errorString += msg + "<br />";
+        }
+        this.errorAlert.html(errorString);
+        return this.errorAlert.show();
       };
 
       /* Configuration
@@ -970,7 +975,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
         this.errorAlert = $("#account-error");
         this.errorAlert.hide();
         this.accountDataButton = $("#account-form-button");
-        return this.accountDataButton.click(this.onDataSubmit);
+        this.accountDataButton.click(this.onDataSubmit);
+        return this.loadingIndicator = this.$(".loading-indicator");
       };
 
       return AccountView;

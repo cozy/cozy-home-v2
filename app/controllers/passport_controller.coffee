@@ -137,7 +137,9 @@ action 'changePassword', ->
                     console.log err
                     send error: true, msg: 'User cannot be updated', 400
                 else
-                    send success: true, msg: 'Password updated successfully'
+                    send
+                        success: true,
+                        msg: 'Account informations updated successfully'
 
     User.all (err, users) ->
         if err
