@@ -1,6 +1,7 @@
 # Cozy Home
 
-Cozy Home manages applications installed on your Cozy platform.
+Cozy Home manages applications installed on your Cozy platform. It is the
+entry point to all your cozy apps.
 
 
 # About Cozy
