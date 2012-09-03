@@ -1322,6 +1322,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.onAppButtonClicked = __bind(this.onAppButtonClicked, this);
         this.addApplication = __bind(this.addApplication, this);
         this.clearApps = __bind(this.clearApps, this);
+        this.setFrameSize = __bind(this.setFrameSize, this);
         this.account = __bind(this.account, this);
         this.home = __bind(this.home, this);
         this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
@@ -1363,6 +1364,12 @@ window.require.define({"views/home_view": function(exports, require, module) {
           app.routers.main.navigate('account', true);
         }
         return this.selectNavButton(this.accountButton);
+      };
+
+      HomeView.prototype.setFrameSize = function() {
+        var header;
+        header = this.$("#header");
+        return this.frames.height($(window).height() - header.height());
       };
 
       HomeView.prototype.selectNavButton = function(button) {
@@ -1436,7 +1443,9 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.selectNavButton(this.homeButton);
         this.frames = this.$("#app-frames");
         this.content = this.$("#content");
-        return this.buttons.fadeIn();
+        this.buttons.fadeIn();
+        $(window).resize(this.setFrameSize);
+        return this.setFrameSize();
       };
 
       return HomeView;

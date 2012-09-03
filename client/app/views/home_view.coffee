@@ -32,6 +32,7 @@ class exports.HomeView extends Backbone.View
     app?.routers.main.navigate 'home', true
     @selectNavButton @homeButton
 
+
   # Display account manager page, hides app frames, active account button.
   account: =>
     @content.show()
@@ -39,6 +40,11 @@ class exports.HomeView extends Backbone.View
     app?.routers.main.navigate 'account', true
     @selectNavButton @accountButton
 
+  # Small trick to size properly iframe.
+  setFrameSize: =>
+    header = @$ "#header"
+    @frames.height $(window).height() - header.height()
+    
   # Desactivate all buttons and activate given button (visual activation).
   selectNavButton: (button) ->
     @buttons.find("li").removeClass "active"
@@ -100,4 +106,7 @@ class exports.HomeView extends Backbone.View
     @frames = @$("#app-frames")
     @content = @$("#content")
     @buttons.fadeIn()
+
+    $(window).resize @setFrameSize
+    @setFrameSize()
 
