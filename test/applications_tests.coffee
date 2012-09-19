@@ -164,7 +164,7 @@ describe "Application installation", ->
 
         it "Then I got expected application in a list", ->
             @body.rows.length.should.equal 2
-            @body.rows[1].name.should.equal "My App"
+            @body.rows[0].name.should.equal "My App"
 
 
 describe "Application uninstallation", ->
