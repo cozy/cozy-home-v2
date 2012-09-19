@@ -1,5 +1,5 @@
 haibu = require('haibu')
-HttpClient = require("../common/test/client").Client
+HttpClient = require("request-json").JsonClient
 
 
 # Class to facilitate communications with Haibu, the application server 

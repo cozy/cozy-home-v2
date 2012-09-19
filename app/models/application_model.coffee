@@ -1,5 +1,10 @@
+# Validators
+
 # TODO find a way to make this validation works.
 #Application.validatesUniquenessOf 'slug', message: 'slug is not unique'
+
+
+# Access functions
 
 Application.all = (params, callback) ->
     Application.request "all", params, callback
