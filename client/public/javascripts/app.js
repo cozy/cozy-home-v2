@@ -1168,9 +1168,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
           app = new Application(data);
           return app.install({
             success: function(data) {
-              var isInstalling;
+              _this.isInstalling = false;
               if ((data.status != null) === "broken") {
-                isInstalling = false;
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
                 _this.installAppButton.displayRed("Install failed");
@@ -1186,8 +1185,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
               }
             },
             error: function(data) {
-              var isInstalling;
-              isInstalling = false;
+              _this.isInstalling = false;
               _this.installAppButton.displayRed("Install failed");
               return _this.installInfo.spin();
             }
