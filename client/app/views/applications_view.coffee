@@ -75,8 +75,8 @@ class exports.ApplicationsView extends Backbone.View
         app = new Application data
         app.install
             success: (data) =>
+                @isInstalling = false
                 if data.status? == "broken"
-                    isInstalling = false
                     @apps.add app
                     window.app.views.home.addApplication app
                     @installAppButton.displayRed "Install failed"
@@ -91,7 +91,7 @@ class exports.ApplicationsView extends Backbone.View
                     @installInfo.spin()
 
             error: (data) =>
-                isInstalling = false
+                @isInstalling = false
                 @installAppButton.displayRed "Install failed"
                 @installInfo.spin()
     else

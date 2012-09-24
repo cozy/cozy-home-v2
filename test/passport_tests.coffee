@@ -1,5 +1,5 @@
 should = require('chai').Should()
-client = require('../common/test/client')
+Client = require('request-json').JsonClient
 app = require('../server')
 eyes = require "eyes"
 
@@ -7,7 +7,7 @@ eyes = require "eyes"
 email = "test@test.com"
 password = "password"
 
-client = new client.Client("http://localhost:8888/")
+client = new Client("http://localhost:8888/")
 
 ## Helpers
 
@@ -31,7 +31,7 @@ handleResponse = (error, response, body, done) ->
 testAuthentication = (isAuthenticated, isUser) ->
     responseTest.statusCode.should.equal 200
     should.exist bodyTest
-    bodyTest = JSON.parse bodyTest
+    bodyTest = bodyTest
     if isAuthenticated
         bodyTest.success.should.equal true
     else

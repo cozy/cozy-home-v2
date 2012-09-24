@@ -1,11 +1,11 @@
 should = require('chai').Should()
-client = require('../common/test/client')
+Client = require('request-json').JsonClient
 app = require('../server')
 
 email = "test@test.com"
 password = "password"
 
-client = new client.Client("http://localhost:8888/")
+client = new Client("http://localhost:8888/")
 
 # Initializers 
 
