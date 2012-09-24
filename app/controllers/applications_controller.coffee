@@ -23,7 +23,7 @@ before checkApiAuthenticated, \
 
 # Load application corresponding to slug given in params
 before 'load application', ->
-    Application.all where: { slug: params.slug }, (err, apps) =>
+    Application.all key: params.slug, (err, apps) =>
         if err
             console.log err
             send_error()
@@ -69,7 +69,7 @@ action "install", ->
                 app.state = "broken"
                 app.save (err) ->
                     if err
-                        send_error()
+                        send_error err.message
                     else
                         send
                             error: true
@@ -81,17 +81,20 @@ action "install", ->
                 app.port = result.drone.port
                 app.save (err) ->
                     if err
-                        send_error()
+                        send_error err.message
                     else send { success: true, app: app }, 201
 
-    Application.all where: { slug: body.slug }, (err, apps) ->
+    Application.all key: body.slug, (err, apps) ->
         if err
-            send_error()
+            send_error err.message
         else if apps.length
             send_error "There is already an app with similar name", 400
         else
             Application.create body, (err, app) ->
-                if err then send_error() else setupApp app
+                if err
+                    send_error err.message
+                else
+                    setupApp app
 
 
 # Remove app from 3 places :

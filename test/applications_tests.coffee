@@ -1,13 +1,13 @@
 http = require('http')
 should = require('chai').Should()
-client = require('../common/test/client')
+Client = require('request-json').JsonClient
 server = require('../server')
 
 
 email = "test@test.com"
 password = "password"
 
-client = new client.Client("http://localhost:8888/")
+client = new Client("http://localhost:8888/")
 
 ## Helpers
 
@@ -130,7 +130,7 @@ describe "Application installation", ->
         it "Then I got expected application in a list", ->
             responseTest.statusCode.should.equal 200
             should.exist bodyTest
-            bodyTest = JSON.parse bodyTest
+            bodyTest = bodyTest
             should.exist bodyTest.rows
             bodyTest.rows.length.should.equal 1
             bodyTest.rows[0].name.should.equal "Noty plus"
@@ -159,12 +159,12 @@ describe "Application installation", ->
 
         it "When I send a request to retrieve all applications", (done) ->
             client.get "api/applications", (error, response, body) =>
-                @body = JSON.parse body
+                @body = body
                 done()
 
         it "Then I got expected application in a list", ->
             @body.rows.length.should.equal 2
-            @body.rows[1].name.should.equal "My App"
+            @body.rows[0].name.should.equal "My App"
 
 
 describe "Application uninstallation", ->
@@ -188,10 +188,10 @@ describe "Application uninstallation", ->
     describe "DELETE /api/applications/:slug/uninstall Remove an app", ->
         
         it "When I send a request to uninstall an application", (done) ->
-            client.delete "api/applications/my-app/uninstall", \
+            client.del "api/applications/my-app/uninstall", \
                           (error, response, body) =>
                 @response = response
-                @body = JSON.parse body
+                @body = body
                 done()
 
         it "Then it sends me a success response", ->
@@ -201,7 +201,7 @@ describe "Application uninstallation", ->
             
         it "When I send a request to retrieve all applications", (done) ->
             client.get "api/applications", (error, response, body) =>
-                @body = JSON.parse body
+                @body = body
                 done()
 
         it "Then I got not see my application in the list", ->
@@ -223,7 +223,7 @@ describe "Users", ->
         it "Then I got expected users in a list", ->
             responseTest.statusCode.should.equal 200
             should.exist bodyTest
-            bodyTest = JSON.parse bodyTest
+            bodyTest = bodyTest
             should.exist bodyTest.rows
             bodyTest.rows.length.should.equal 1
             bodyTest.rows[0].email.should.equal email
