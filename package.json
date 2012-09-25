@@ -15,12 +15,12 @@
   , "connect-redis":    ">= 1.4.1"
   , "bcrypt":           ">= 0.7.1"
   , "jugglingdb":       ">= 0.1.12"
-  , "nodemailer":       ">= 0.3.0"
+  , "nodemailer":       ">= 0.3.28"
   , "randomstring":     ">= 1.0.1"
   , "redis":            ">= 0.7.2"
   , "unicode":          ">= 0.3.1"
   , "async":            "0"
-  , "haibu":            "= 0.8.4"
+  , "haibu":            "= 0.9.5-1"
   , "request-json":            "= 0.2.8"
   , "jugglingdb-cozy-adapter": "= 0.1.4"
   }
@@ -28,8 +28,6 @@
   { "mocha":            ">= 0"
   , "request":          ">= 0"
   , "chai":             ">= 0"
-  , "zombie":           ">= 0"
-  , "eyes":             ">= 0"
   }
 , "scripts":
   { "test": "cake tests"
