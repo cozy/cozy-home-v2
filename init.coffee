@@ -29,17 +29,17 @@ apps = [
         description: """
         Get Things Done
         """
-    new Application
-        name: "Emails"
-        state: "installed"
-        index: 0
-        slug: "mails"
-        icon: "mails_icon.png"
-        port: 8003
-        git: "git://github.com/mycozycloud/cozy-mails.git"
-        description: """
-        Manage your emails
-        """
+    #new Application
+        #name: "Emails"
+        #state: "installed"
+        #index: 0
+        #slug: "mails"
+        #icon: "mails_icon.png"
+        #port: 8003
+        #git: "git://github.com/mycozycloud/cozy-mails.git"
+        #description: """
+        #Manage your emails
+        #"""
     ]
 
 saveFunc = (app) ->
