@@ -15,7 +15,8 @@ CozyInstance.all (err, instances) ->
                 console.log "Domain name set with #{domain}"
                 process.exit(0)
     else
-        instance = instances[O]
+        instance = instances[0]
+        instance.domain = domain
         instance.save (err) ->
             if err
                 console.log err
