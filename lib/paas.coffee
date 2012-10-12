@@ -1,4 +1,4 @@
-haibu = require('haibu')
+haibu = require('haibu-api')
 HttpClient = require("request-json").JsonClient
 
 
@@ -9,15 +9,18 @@ class exports.AppManager
     # Setup haibu client and proxyClient.
     constructor: ->
         @proxyClient = new HttpClient "http://localhost:4000/"
-        @client = new haibu.drone.Client
+        @client = haibu.createClient(
             host: '127.0.0.1'
             port: 9002
+        ).drone
 
     # 1. Send a install request to haibu server ("start" request).
     # 2. Send a request to proxy to add a new route
     installApp: (app, callback) ->
 
         console.info "Request haibu for spawning #{app.name}..."
+        console.log JSON.stringify(@client)
+        
         @client.start app.getHaibuDescriptor(), (err, result) =>
             if err
                 console.log "Error spawning app: #{app.name}"
@@ -32,10 +35,10 @@ class exports.AppManager
     # Add a new route that matches given app to proxy.
     _addRouteToProxy: (app, result, callback) ->
         data =
-            route: "/apps/#{app.slug}"
+            route: "#{app.slug}"
             port: result.drone.port
 
-        @proxyClient.post "routes/add", data, (error, response, body) ->
+        @proxyClient.post "routes/", data, (error, response, body) ->
             if error
                 console.log error.message
                 callback error
@@ -64,10 +67,7 @@ creating a new route"
 
     # Remove from proxy the route that matches given app.
     _removeRouteFromProxy: (app, result, callback) ->
-        data =
-            route: "/apps/#{app.slug}"
-
-        @proxyClient.put "routes/del", data, (error, response, body) ->
+        @proxyClient.del "routes/#{app.slug}", (error, response, body) ->
             if error
                 console.log error.message
                 callback error
