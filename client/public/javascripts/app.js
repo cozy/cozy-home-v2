@@ -155,8 +155,7 @@ window.require.define({"helpers": function(exports, require, module) {
       function BrunchApplication() {
         var _this = this;
         $(function() {
-          _this.initialize(_this);
-          return Backbone.history.start();
+          return _this.initialize(_this);
         });
       }
 
@@ -299,7 +298,7 @@ window.require.define({"helpers/client": function(exports, require, module) {
 
 window.require.define({"initialize": function(exports, require, module) {
   (function() {
-    var AccountView, ApplicationsView, BrunchApplication, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication,
+    var AccountView, ApplicationsView, BrunchApplication, HomeView, MainRouter,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -309,36 +308,9 @@ window.require.define({"initialize": function(exports, require, module) {
 
     HomeView = require('views/home_view').HomeView;
 
-    LoginView = require('views/login_view').LoginView;
-
-    RegisterView = require('views/register_view').RegisterView;
-
     AccountView = require('views/account_view').AccountView;
 
-    ResetView = require('views/reset_view').ResetView;
-
     ApplicationsView = require('views/applications_view').ApplicationsView;
-
-    checkAuthentication = function() {
-      return $.ajax({
-        type: "GET",
-        url: "authenticated/",
-        success: function(data) {
-          if (data.success) {
-            if (Backbone.history.getFragment() === '') {
-              return window.app.routers.main.navigate('home', true);
-            }
-          } else if (data.nouser) {
-            return window.app.routers.main.navigate(app.views.register.path, true);
-          } else {
-            return window.app.routers.main.navigate('login', true);
-          }
-        },
-        error: function(data) {
-          return window.app.routers.main.navigate('login', true);
-        }
-      });
-    };
 
     exports.Application = (function(_super) {
 
@@ -354,17 +326,15 @@ window.require.define({"initialize": function(exports, require, module) {
         this.views = {};
         this.routers.main = new MainRouter();
         this.views.home = new HomeView();
-        this.views.login = new LoginView();
-        this.views.register = new RegisterView();
         this.views.account = new AccountView();
-        this.views.reset = new ResetView();
         this.views.applications = new ApplicationsView();
         $("body").html(this.views.home.render());
         this.views.home.setListeners();
         this.views.home.fetch();
         window.app = this;
-        if (window.location.hash.indexOf("password/reset") < 0) {
-          return checkAuthentication();
+        Backbone.history.start();
+        if (Backbone.history.getFragment() === '') {
+          return window.app.routers.main.navigate('home', true);
         }
       };
 
@@ -513,19 +483,6 @@ window.require.define({"models/user": function(exports, require, module) {
         User.__super__.constructor.call(this);
       }
 
-      User.prototype.register = function(callbacks) {
-        return client.post("register/", {
-          email: this.email,
-          password: this.password
-        }, callbacks);
-      };
-
-      User.prototype.login = function(callbacks) {
-        return client.post("login/", {
-          password: this.password
-        }, callbacks);
-      };
-
       User.prototype.logout = function(callbacks) {
         return client.get("logout/", callbacks);
       };
@@ -553,11 +510,8 @@ window.require.define({"routers/main_router": function(exports, require, module)
 
       MainRouter.prototype.routes = {
         "home": "home",
-        "login": "login",
         "applications": "applications",
-        "register": "register",
         "account": "account",
-        "password/reset/:key": "resetPassword",
         "apps/:slug": "application"
       };
 
@@ -573,21 +527,8 @@ window.require.define({"routers/main_router": function(exports, require, module)
         return app.views.home.loadApp(slug);
       };
 
-      MainRouter.prototype.login = function() {
-        return this.loadView(app.views.login);
-      };
-
-      MainRouter.prototype.register = function() {
-        return this.loadView(app.views.register);
-      };
-
       MainRouter.prototype.account = function() {
         return this.loadView(app.views.account);
-      };
-
-      MainRouter.prototype.resetPassword = function(key) {
-        this.loadView(app.views.reset);
-        return app.views.reset.setKey(key);
       };
 
       MainRouter.prototype.loadView = function(view) {
@@ -1337,20 +1278,19 @@ window.require.define({"views/home_view": function(exports, require, module) {
       /* Functions
       */
 
-      HomeView.prototype.logout = function() {
+      HomeView.prototype.logout = function(event) {
         var user,
           _this = this;
         user = new User();
-        return user.logout({
+        user.logout({
           success: function(data) {
-            _this.content.show();
-            _this.frames.hide();
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
+            return window.location.reload();
           },
           error: function() {
             return alert("Server error occured, logout failed.");
           }
         });
+        return event.preventDefault();
       };
 
       HomeView.prototype.home = function() {
@@ -1454,304 +1394,6 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       return HomeView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/login_view": function(exports, require, module) {
-  (function() {
-    var User, template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require("../templates/login");
-
-    User = require("../models/user").User;
-
-    exports.LoginView = (function(_super) {
-
-      __extends(LoginView, _super);
-
-      function LoginView() {
-        this.onForgotButtonClicked = __bind(this.onForgotButtonClicked, this);
-        this.logUser = __bind(this.logUser, this);
-        this.submitPassword = __bind(this.submitPassword, this);
-        LoginView.__super__.constructor.apply(this, arguments);
-      }
-
-      LoginView.prototype.id = 'login-view';
-
-      LoginView.prototype.className = 'center';
-
-      /* Constructor
-      */
-
-      /* Listeners
-      */
-
-      /* Functions
-      */
-
-      LoginView.prototype.submitPassword = function() {
-        return this.logUser(this.passwordField.val());
-      };
-
-      LoginView.prototype.logUser = function(password) {
-        var user,
-          _this = this;
-        if (!(this.errorAlert != null)) this.errorAlert = $("#login-error");
-        this.errorAlert.hide();
-        user = new User(null, password);
-        return user.login({
-          success: function(data) {
-            app.views.home.buttons.show();
-            return app.routers.main.navigate('home', true);
-          },
-          error: function(data) {
-            var info;
-            if ((data != null ? data.responseText : void 0) != null) {
-              if ((data != null ? data.responseText : void 0) != null) {
-                info = JSON.parse(data.responseText);
-              }
-            } else {
-              info = data.msg;
-            }
-            return _this.displayError(info.msg);
-          }
-        });
-      };
-
-      LoginView.prototype.fetchData = function() {};
-
-      LoginView.prototype.onForgotButtonClicked = function() {
-        var _this = this;
-        return $.ajax({
-          type: "POST",
-          url: "login/forgot/",
-          success: function(data) {
-            if (data.success) {
-              return _this.displayInfo(data.success);
-            } else {
-              return _this.displayError(data.msg);
-            }
-          },
-          error: function() {
-            return _this.displayError("Server error occured.");
-          }
-        });
-      };
-
-      LoginView.prototype.displayError = function(text) {
-        $("#login-form-error-text").html(text);
-        return this.errorAlert.show();
-      };
-
-      LoginView.prototype.displayInfo = function(text) {
-        $("#login-info-text").html(text);
-        return this.infoAlert.show();
-      };
-
-      LoginView.prototype.render = function() {
-        $(this.el).html(template());
-        return this.el;
-      };
-
-      LoginView.prototype.setListeners = function() {
-        var _this = this;
-        this.passwordField = $("#login-password");
-        this.buttons = $("#buttons");
-        this.buttons.hide();
-        this.forgotButton = $("#forgot-password-button");
-        this.forgotButton.click(this.onForgotButtonClicked);
-        this.passwordField = $("#login-password");
-        this.infoAlert = $("#login-info");
-        this.infoAlert.hide();
-        this.errorAlert = $("#login-error");
-        this.errorAlert.hide();
-        return this.passwordField.keyup(function(event) {
-          if (event.which === 13) return _this.submitPassword();
-        });
-      };
-
-      return LoginView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/register_view": function(exports, require, module) {
-  (function() {
-    var User, template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require('../templates/register');
-
-    User = require('../models/user').User;
-
-    exports.RegisterView = (function(_super) {
-
-      __extends(RegisterView, _super);
-
-      function RegisterView() {
-        this.submitData = __bind(this.submitData, this);
-        RegisterView.__super__.constructor.apply(this, arguments);
-      }
-
-      RegisterView.prototype.id = 'register-view';
-
-      RegisterView.prototype.className = 'center';
-
-      RegisterView.prototype.path = 'register';
-
-      /* Constructor
-      */
-
-      /* Listeners
-      */
-
-      /* Functions
-      */
-
-      RegisterView.prototype.submitData = function() {
-        var email, password, user,
-          _this = this;
-        email = this.emailField.val();
-        password = this.passwordField.val();
-        user = new User(email, password);
-        return this.errorAlert.fadeOut(function() {
-          return user.register({
-            success: function() {
-              return app.views.login.logUser(password);
-            },
-            error: function(data) {
-              var error;
-              error = JSON.parse(data.responseText);
-              _this.errorAlert.html(error.msg);
-              return _this.errorAlert.fadeIn();
-            }
-          });
-        });
-      };
-
-      RegisterView.prototype.fetchData = function() {};
-
-      /* Configuration
-      */
-
-      RegisterView.prototype.render = function() {
-        $(this.el).html(template());
-        return this.el;
-      };
-
-      RegisterView.prototype.setListeners = function() {
-        var _this = this;
-        this.emailField = $("#register-email");
-        this.passwordField = $("#register-password");
-        this.errorAlert = $("#register-error");
-        this.errorAlert.hide();
-        this.buttons = $("#buttons");
-        this.buttons.hide();
-        return this.passwordField.keyup(function(event) {
-          if (event.which === 13) return _this.submitData();
-        });
-      };
-
-      return RegisterView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/reset_view": function(exports, require, module) {
-  (function() {
-    var template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require('../templates/reset');
-
-    exports.ResetView = (function(_super) {
-
-      __extends(ResetView, _super);
-
-      ResetView.prototype.id = 'reset-view';
-
-      /* Constructor
-      */
-
-      function ResetView() {
-        this.onDataSubmit = __bind(this.onDataSubmit, this);      ResetView.__super__.constructor.call(this);
-      }
-
-      ResetView.prototype.fetchData = function() {};
-
-      ResetView.prototype.setKey = function(key) {
-        return this.key = key;
-      };
-
-      ResetView.prototype.onDataSubmit = function(event) {
-        var form;
-        if (this.passwordField1.val() !== this.passwordField2.val()) {
-          return alert("Passwords do not match, type them again");
-        } else {
-          form = {
-            key: this.key,
-            password1: this.passwordField1.val(),
-            password2: this.passwordField2.val()
-          };
-          return this.sendForm(form);
-        }
-      };
-
-      ResetView.prototype.sendForm = function(form) {
-        var _this = this;
-        return $.ajax({
-          type: "POST",
-          url: "password/reset/" + this.key,
-          data: form,
-          success: function(data) {
-            if (data.success) {
-              alert("New password is now set.");
-              return app.routers.main.navigate('login', true);
-            } else {
-              return alert("Something went wrong, your password was not updated.");
-            }
-          },
-          error: function() {
-            return alert("Server errer occured, change failed.");
-          }
-        });
-      };
-
-      /* Configuration
-      */
-
-      ResetView.prototype.render = function() {
-        $(this.el).html(template());
-        return this.el;
-      };
-
-      ResetView.prototype.setListeners = function() {
-        this.buttons = $("#buttons");
-        this.buttons.hide();
-        this.passwordField1 = $("#reset-password1-field");
-        this.passwordField2 = $("#reset-password2-field");
-        this.resetDataButton = $("#reset-form-button");
-        return this.resetDataButton.click(this.onDataSubmit);
-      };
-
-      return ResetView;
 
     })(Backbone.View);
 

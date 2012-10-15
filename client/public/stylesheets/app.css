@@ -5622,7 +5622,7 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
-body{background-color:#9999ad;min-width:320px}
+body{background-color:#fff;min-width:320px}
 a{color:#f68c4e;font-weight:bold}
 a:hover{color:#000}
 h2{font-size:30px;margin-bottom:24px;margin-top:24px}

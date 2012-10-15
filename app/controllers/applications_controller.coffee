@@ -14,13 +14,6 @@ send_error = (msg, code=500) ->
         send error: true, msg: "Server error occured", code
 
 
-# Checks if user is authenticated, if not a simple 403 error is sent.
-checkApiAuthenticated = ->
-    if req.isAuthenticated() then next() else send 403
-
-before checkApiAuthenticated, \
-    { except: ["init", "index", "users", "applications"] }
-
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all key: params.slug, (err, apps) =>

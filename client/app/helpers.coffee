@@ -3,7 +3,6 @@ class exports.BrunchApplication
   constructor: ->
     $ =>
       @initialize this
-      Backbone.history.start()
 
   initializeJQueryExtensions: ->
     $.fn.spin = (opts, color) ->
