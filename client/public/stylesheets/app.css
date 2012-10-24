@@ -5690,6 +5690,7 @@ html{height:100%}
 .home-body{background:#fff;width:100%;height:100%}
 .navbar .nav{float:right}
 #buttons{text-align:right;width:83%}
+.application-outer p{margin:0;padding:0}
 @media (max-width: 600px){#buttons span{display:none}
 }@media (max-width: 600px){#buttons{width:100%}
 }

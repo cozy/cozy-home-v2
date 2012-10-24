@@ -429,7 +429,7 @@ window.require.define({"models/application": function(exports, require, module) 
           success: function(data) {
             _this.slug = data.app.slug;
             _this.state = data.app.state;
-            return callbacks.success(data.app);
+            return callbacks.success(data);
           },
           error: callbacks.error
         });
@@ -437,6 +437,10 @@ window.require.define({"models/application": function(exports, require, module) 
 
       Application.prototype.uninstall = function(callbacks) {
         return client.del("/api/applications/" + this.slug + "/uninstall", callbacks);
+      };
+
+      Application.prototype.updateApp = function(callbacks) {
+        return client.put("/api/applications/" + this.slug + "/update", {}, callbacks);
       };
 
       return Application;
@@ -602,13 +606,15 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
   buf.push('/></p><p');
   buf.push(attrs({ "class": ('app-title') }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p><p');
-  buf.push(attrs({ "class": ('info-text') }));
-  buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div><div');
+  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div><div');
   buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
-  buf.push('>uninstall</button></div></a>');
+  buf.push('>remove</button><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
+  buf.push('>update</button></div></div></a>');
   }
   return buf.join("");
   };
@@ -688,8 +694,6 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
   buf.push('><p><label>name</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("8"), "class": ("span3") }));
-  buf.push('/></p><p><label>description</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-description-field"), 'maxlength':("40"), "class": ("span3") }));
   buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
@@ -982,7 +986,8 @@ window.require.define({"views/application": function(exports, require, module) {
       ApplicationRow.prototype.className = "application";
 
       ApplicationRow.prototype.events = {
-        "click .remove-app": "onRemoveClicked"
+        "click .remove-app": "onRemoveClicked",
+        "click .update-app": "onUpdateClicked"
       };
 
       /* Constructor
@@ -990,6 +995,7 @@ window.require.define({"views/application": function(exports, require, module) {
 
       function ApplicationRow(model) {
         this.model = model;
+        this.onUpdateClicked = __bind(this.onUpdateClicked, this);
         this.onRemoveClicked = __bind(this.onRemoveClicked, this);
         ApplicationRow.__super__.constructor.call(this, this.model);
       }
@@ -1000,6 +1006,11 @@ window.require.define({"views/application": function(exports, require, module) {
       ApplicationRow.prototype.onRemoveClicked = function(event) {
         event.preventDefault();
         return this.removeApp();
+      };
+
+      ApplicationRow.prototype.onUpdateClicked = function(event) {
+        event.preventDefault();
+        return this.updateApp();
       };
 
       /* Functions
@@ -1013,7 +1024,20 @@ window.require.define({"views/application": function(exports, require, module) {
             return _this.$(".remove-app").html("Removed!");
           },
           error: function() {
-            return _this.$(".remove-app").html("Remove failed.");
+            return _this.$(".remove-app").html("failed.");
+          }
+        });
+      };
+
+      ApplicationRow.prototype.updateApp = function() {
+        var _this = this;
+        this.$(".update-app").html("Updating...");
+        return this.model.updateApp({
+          success: function() {
+            return _this.$(".update-app").html("Updated!");
+          },
+          error: function() {
+            return _this.$(".update-app").html("failed.");
           }
         });
       };
@@ -1123,6 +1147,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
       ApplicationsView.prototype.onAddClicked = function() {
         this.installAppButton.displayOrange("install");
+        this.$("#app-name-field").val(null);
+        this.$("#app-git-field").val(null);
         this.addApplicationForm.show();
         return this.addApplicationModal.toggle();
       };
@@ -1134,7 +1160,6 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.isInstalling = true;
         data = {
           name: this.$("#app-name-field").val(),
-          description: this.$("#app-description-field").val(),
           git: this.$("#app-git-field").val()
         };
         this.errorAlert.hide();
@@ -1148,7 +1173,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
           return app.install({
             success: function(data) {
               _this.isInstalling = false;
-              if ((data.status != null) === "broken") {
+              if (((data.status != null) === "broken") || !data.success) {
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
                 _this.installAppButton.displayRed("Install failed");
@@ -1197,7 +1222,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.onCloseAddAppClicked = function() {
-        return this.addApplicationModal.hide();
+        this.addApplicationModal.hide();
+        return this.isInstalling = false;
       };
 
       /* Functions
@@ -1292,7 +1318,6 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.errorAlert = this.$("#add-app-form .error");
         this.machineInfos = this.$(".machine-infos");
         this.appNameField = this.$("#app-name-field");
-        this.appDescriptionField = this.$("#app-description-field");
         this.appGitField = this.$("#app-git-field");
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();

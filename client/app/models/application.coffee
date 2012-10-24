@@ -29,10 +29,14 @@ class exports.Application extends BaseModel
             success: (data) =>
                 @slug = data.app.slug
                 @state = data.app.state
-                callbacks.success data.app
+                callbacks.success data
             error: callbacks.error
 
     # Send to server uninstallation request.
     # Will delete the app in the database.
     uninstall: (callbacks) ->
         client.del "/api/applications/#{@slug}/uninstall", callbacks
+
+    # Send to server an update request.
+    updateApp: (callbacks) ->
+        client.put "/api/applications/#{@slug}/update", {}, callbacks

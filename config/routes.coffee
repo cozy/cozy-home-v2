@@ -3,6 +3,7 @@ exports.routes = (map) ->
     map.get '/api/applications', 'applications#applications'
     map.post '/api/applications/install', 'applications#install'
     map.del '/api/applications/:slug/uninstall', 'applications#uninstall'
+    map.put '/api/applications/:slug/update', 'applications#update'
     map.get '/api/sys-data', 'monitor#sysData'
 
     map.get '/api/users', 'users#users'

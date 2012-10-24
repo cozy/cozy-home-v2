@@ -25,7 +25,7 @@ before 'load application', ->
         else
             @app = apps[0]
             next()
-, only: ['uninstall']
+, only: ['update', 'uninstall']
 
 
 ## Actions
@@ -115,3 +115,34 @@ action "uninstall", ->
     manager = new AppManager
     manager.uninstallApp @app, (err, result) =>
         if err then markAppAsBroken() else removeAppFromDb()
+
+
+
+# Update an app :
+# * haibu, application manager
+# * proxy, cozy router
+# * database
+action "update", ->
+
+    markAppAsBroken = =>
+        @app.state = "broken"
+        @app.save (err) ->
+            if err
+                send_error()
+            else
+                send_error "uninstallation failed"
+
+    removeAppFromDb = =>
+        @app.destroy (err) ->
+            if err
+                console.log err
+                send_error 'Cannot destroy app'
+            else
+                send success: true, msg: 'Application succesfuly uninstalled'
+
+    manager = new AppManager
+    manager.updateApp @app, (err, result) =>
+        if err
+            markAppAsBroken()
+        else
+            send success: true, msg: 'Application succesfuly uninstalled'

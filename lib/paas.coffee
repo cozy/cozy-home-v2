@@ -19,7 +19,6 @@ class exports.AppManager
     installApp: (app, callback) ->
 
         console.info "Request haibu for spawning #{app.name}..."
-        console.log JSON.stringify(@client)
         
         @client.start app.getHaibuDescriptor(), (err, result) =>
             if err
@@ -49,6 +48,30 @@ creating a new route"
                 console.info "Proxy successfuly updated with " + \
                             "#{data.route} => #{data.port}"
                 callback null, result
+
+    # Remove and reinstall app inside Haibu.
+    updateApp: (app, callback) ->
+        railway.logger.write "Request haibu for updating #{app.name}..."
+        
+        railway.logger.write "Step 1: remove #{app.name}..."
+        @client.clean app.getHaibuDescriptor(), (err, result) =>
+            if err
+                console.log "Error cleaning app: #{app.name}"
+                console.log err.message
+                console.log err.stack
+                callback(err)
+            else
+                railway.logger.write "Step 2: re install #{app.name}..."
+                @client.start app.getHaibuDescriptor(), (err, result) =>
+                    if err
+                        console.log "Error spawning app: #{app.name}"
+                        console.log err.message
+                        console.log err.stack
+                        callback(err)
+                    else
+                        console.info "Successfully update app: #{app.name}"
+                        callback null, result
+
 
     # Send a uninstall request to haibu server ("clean" request).
     uninstallApp: (app, callback) ->

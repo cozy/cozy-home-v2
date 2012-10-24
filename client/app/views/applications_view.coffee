@@ -52,6 +52,8 @@ class exports.ApplicationsView extends Backbone.View
 
   onAddClicked: =>
     @installAppButton.displayOrange "install"
+    @$("#app-name-field").val null
+    @$("#app-git-field").val null
 
     @addApplicationForm.show()
     @addApplicationModal.toggle()
@@ -61,7 +63,6 @@ class exports.ApplicationsView extends Backbone.View
     @isInstalling = true
     data =
       name: @$("#app-name-field").val()
-      description: @$("#app-description-field").val()
       git: @$("#app-git-field").val()
 
     @errorAlert.hide()
@@ -77,7 +78,7 @@ class exports.ApplicationsView extends Backbone.View
         app.install
             success: (data) =>
                 @isInstalling = false
-                if data.status? == "broken"
+                if (data.status? == "broken") or not data.success
                     @apps.add app
                     window.app.views.home.addApplication app
                     @installAppButton.displayRed "Install failed"
@@ -120,6 +121,7 @@ class exports.ApplicationsView extends Backbone.View
 
   onCloseAddAppClicked: =>
       @addApplicationModal.hide()
+      @isInstalling = false
 
   ### Functions ###
 
@@ -206,7 +208,6 @@ class exports.ApplicationsView extends Backbone.View
     @machineInfos = @$ ".machine-infos"
 
     @appNameField = @$ "#app-name-field"
-    @appDescriptionField = @$ "#app-description-field"
     @appGitField = @$ "#app-git-field"
 
     @installInfo = @$ "#add-app-modal .loading-indicator"
