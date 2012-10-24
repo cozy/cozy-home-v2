@@ -3,9 +3,10 @@ utils = require("../../lib/passport_utils")
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
 action 'updateAccount', ->
-    newEmail = req.body.email
-    newPassword = req.body.password1
-    newPassword2 = req.body.password2
+    newEmail = body.email
+    newTimezone = body.timezone
+    newPassword = body.password1
+    newPassword2 = body.password2
 
     changeUserData = (user) ->
         data = {}
@@ -17,6 +18,9 @@ action 'updateAccount', ->
                 data.email = newEmail
             else
                 errors.push "Given email is not a proper email"
+
+        if newTimezone?
+            data.timezone = newTimezone
 
         if newPassword? and newPassword.length > 0
             if newPassword.length > 5
