@@ -1,5 +1,6 @@
+client = require 'lib/request'
 applicationsTemplate = require('../templates/applications')
-User = require("../models/user").User
+User = require('../models/user').User
 
 AppRow = require('views/application').ApplicationRow
 AppCollection = require('collections/application').ApplicationCollection
@@ -99,7 +100,22 @@ class exports.ApplicationsView extends Backbone.View
         @displayError dataChecking.msg
 
   onManageAppsClicked: =>
-      @$(".application-outer").toggle()
+      @$('.application-outer').toggle()
+
+      if not @machineInfos.is(':visible')
+          @machineInfos.find('.progress').spin()
+          client.get 'api/sys-data',
+              success: (data) =>
+                  @machineInfos.find('.progress').spin()
+                  @displayMemory(data.freeMem, data.totalMem)
+                  @displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace)
+              error: ->
+                  @machineInfos.find('.progress').spin()
+                  alert 'Server error occured, machine infos cannot be displayed.'
+
+      @machineInfos.toggle()
+       
+
       @isManaging = not @isManaging
 
   onCloseAddAppClicked: =>
@@ -152,6 +168,19 @@ class exports.ApplicationsView extends Backbone.View
     @errorAlert.html msg
     @errorAlert.show()
 
+  displayMemory: (freeMem, totalMem)->
+
+      total = Math.floor(totalMem / 1024) + "Mo"
+      @machineInfos.find('.memory .total').html total
+
+      usedMemory = ((totalMem - freeMem) / totalMem) * 100
+      @machineInfos.find('.memory .bar').css('width', usedMemory + '%')
+
+
+  displayDiskSpace: (usedSpace, totalSpace)->
+      @machineInfos.find('.disk .total').html(totalSpace + "Go")
+      @machineInfos.find('.disk .bar').css('width', usedSpace + '%')
+
   ### Init functions ###
 
   fetchData: ->
@@ -174,6 +203,7 @@ class exports.ApplicationsView extends Backbone.View
     @installAppButton.button.click @onInstallClicked
     @infoAlert = @$ "#add-app-form .info"
     @errorAlert = @$ "#add-app-form .error"
+    @machineInfos = @$ ".machine-infos"
 
     @appNameField = @$ "#app-name-field"
     @appDescriptionField = @$ "#app-description-field"
@@ -182,6 +212,7 @@ class exports.ApplicationsView extends Backbone.View
     @installInfo = @$ "#add-app-modal .loading-indicator"
     @errorAlert.hide()
     @infoAlert.hide()
+    @machineInfos.hide()
 
     @addApplicationCloseCross = @$ "#add-app-modal .close"
     @addApplicationCloseCross.click @onCloseAddAppClicked

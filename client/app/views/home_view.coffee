@@ -86,7 +86,6 @@ class exports.HomeView extends Backbone.View
           @selectNavButton @$("##{@selectedApp}") if @selectedApp?
           @selectedApp = null
 
-
   render: ->
     $(@el).html homeTemplate()
     @el
@@ -107,4 +106,3 @@ class exports.HomeView extends Backbone.View
 
     $(window).resize @setFrameSize
     @setFrameSize()
-

@@ -648,6 +648,20 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push('></div><div');
   buf.push(attrs({ "class": ('app-tools') }));
   buf.push('><div');
+  buf.push(attrs({ "class": ('machine-infos') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('memory') }));
+  buf.push('><div>Memory consumption\n(Total: <span class="total"></span>)\n</div><div');
+  buf.push(attrs({ "class": ('progress') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('bar') }));
+  buf.push('></div></div></div><div');
+  buf.push(attrs({ "class": ('disk') }));
+  buf.push('><div>Disk consumption \n(total: <span class="total"></span>)\n</div><div');
+  buf.push(attrs({ "class": ('progress') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('bar') }));
+  buf.push('></div></div></div></div><div');
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
@@ -1007,14 +1021,16 @@ window.require.define({"views/application": function(exports, require, module) {
 
 window.require.define({"views/applications_view": function(exports, require, module) {
   (function() {
-    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate,
+    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate, client,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
+    client = require('lib/request');
+
     applicationsTemplate = require('../templates/applications');
 
-    User = require("../models/user").User;
+    User = require('../models/user').User;
 
     AppRow = require('views/application').ApplicationRow;
 
@@ -1138,7 +1154,23 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.onManageAppsClicked = function() {
-        this.$(".application-outer").toggle();
+        var _this = this;
+        this.$('.application-outer').toggle();
+        if (!this.machineInfos.is(':visible')) {
+          this.machineInfos.find('.progress').spin();
+          client.get('api/sys-data', {
+            success: function(data) {
+              _this.machineInfos.find('.progress').spin();
+              _this.displayMemory(data.freeMem, data.totalMem);
+              return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+            },
+            error: function() {
+              this.machineInfos.find('.progress').spin();
+              return alert('Server error occured, machine infos cannot be displayed.');
+            }
+          });
+        }
+        this.machineInfos.toggle();
         return this.isManaging = !this.isManaging;
       };
 
@@ -1199,6 +1231,19 @@ window.require.define({"views/applications_view": function(exports, require, mod
         return this.errorAlert.show();
       };
 
+      ApplicationsView.prototype.displayMemory = function(freeMem, totalMem) {
+        var total, usedMemory;
+        total = Math.floor(totalMem / 1024) + "Mo";
+        this.machineInfos.find('.memory .total').html(total);
+        usedMemory = ((totalMem - freeMem) / totalMem) * 100;
+        return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
+      };
+
+      ApplicationsView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
+        this.machineInfos.find('.disk .total').html(totalSpace + "Go");
+        return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
+      };
+
       /* Init functions
       */
 
@@ -1223,12 +1268,14 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.installAppButton.button.click(this.onInstallClicked);
         this.infoAlert = this.$("#add-app-form .info");
         this.errorAlert = this.$("#add-app-form .error");
+        this.machineInfos = this.$(".machine-infos");
         this.appNameField = this.$("#app-name-field");
         this.appDescriptionField = this.$("#app-description-field");
         this.appGitField = this.$("#app-git-field");
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
+        this.machineInfos.hide();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
         return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
       };

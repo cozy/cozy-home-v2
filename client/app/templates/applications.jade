@@ -3,6 +3,22 @@
 .clearfix
 
 .app-tools
+  .machine-infos
+    .memory
+      div
+        | Memory consumption
+        | (Total: <span class="total"></span>)
+      .progress
+        .bar
+
+    .disk 
+      div
+        | Disk consumption 
+        | (total: <span class="total"></span>)
+      .progress
+        .bar
+
+         
   .btn-group
       button#add-app-button.btn
         | <i class="icon-plus"></i>
