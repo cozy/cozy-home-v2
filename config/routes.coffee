@@ -5,4 +5,4 @@ exports.routes = (map) ->
     map.del '/api/applications/:slug/uninstall', 'applications#uninstall'
 
     map.get '/api/users', 'users#users'
-    map.post '/api/user', 'passport#changePassword'
+    map.post '/api/user', 'account#updateAccount'
