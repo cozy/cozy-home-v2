@@ -1,5 +1,6 @@
 os = require 'os'
 
+# Return as JSON data about memory and hard disk consumption
 action 'sysData', ->
 
     data =
