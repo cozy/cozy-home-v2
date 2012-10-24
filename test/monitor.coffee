@@ -22,8 +22,6 @@ describe "Get sys data", ->
         @response.statusCode.should.equal 200
         
     it "And body should contain disk and ram infos", ->
-        console.log @body
-        
         should.exist @body.freeMem
         should.exist @body.totalMem
         should.exist @body.freeDiskSpace
