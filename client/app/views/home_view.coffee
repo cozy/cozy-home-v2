@@ -15,15 +15,14 @@ class exports.HomeView extends Backbone.View
 
   ### Functions ###
 
-  logout: =>
+  logout: (event) =>
     user = new User()
     user.logout
         success: (data) =>
-            @content.show()
-            @frames.hide()
-            app?.routers.main.navigate 'login', true
+            window.location.reload()
         error: =>
             alert "Server error occured, logout failed."
+    event.preventDefault()
 
   # Display application manager page, hides app frames, active home button.
   home: =>
@@ -87,7 +86,6 @@ class exports.HomeView extends Backbone.View
           @selectNavButton @$("##{@selectedApp}") if @selectedApp?
           @selectedApp = null
 
-
   render: ->
     $(@el).html homeTemplate()
     @el
@@ -108,4 +106,3 @@ class exports.HomeView extends Backbone.View
 
     $(window).resize @setFrameSize
     @setFrameSize()
-

@@ -155,8 +155,7 @@ window.require.define({"helpers": function(exports, require, module) {
       function BrunchApplication() {
         var _this = this;
         $(function() {
-          _this.initialize(_this);
-          return Backbone.history.start();
+          return _this.initialize(_this);
         });
       }
 
@@ -297,9 +296,18 @@ window.require.define({"helpers/client": function(exports, require, module) {
   
 }});
 
+window.require.define({"helpers/timezone": function(exports, require, module) {
+  (function() {
+
+    exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Maceio", "America/Managua", "America/Manaus", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montreal", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Vostok", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Canada/Atlantic", "Canada/Central", "Canada/Eastern", "Canada/Mountain", "Canada/Newfoundland", "Canada/Pacific", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/Simferopol", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zaporozhye", "Europe/Zurich", "GMT", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Ponape", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Truk", "Pacific/Wake", "Pacific/Wallis", "US/Alaska", "US/Arizona", "US/Central", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific", "UTC"];
+
+  }).call(this);
+  
+}});
+
 window.require.define({"initialize": function(exports, require, module) {
   (function() {
-    var AccountView, ApplicationsView, BrunchApplication, HomeView, LoginView, MainRouter, RegisterView, ResetView, checkAuthentication,
+    var AccountView, ApplicationsView, BrunchApplication, HomeView, MainRouter,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -309,36 +317,9 @@ window.require.define({"initialize": function(exports, require, module) {
 
     HomeView = require('views/home_view').HomeView;
 
-    LoginView = require('views/login_view').LoginView;
-
-    RegisterView = require('views/register_view').RegisterView;
-
     AccountView = require('views/account_view').AccountView;
 
-    ResetView = require('views/reset_view').ResetView;
-
     ApplicationsView = require('views/applications_view').ApplicationsView;
-
-    checkAuthentication = function() {
-      return $.ajax({
-        type: "GET",
-        url: "authenticated/",
-        success: function(data) {
-          if (data.success) {
-            if (Backbone.history.getFragment() === '') {
-              return window.app.routers.main.navigate('home', true);
-            }
-          } else if (data.nouser) {
-            return window.app.routers.main.navigate(app.views.register.path, true);
-          } else {
-            return window.app.routers.main.navigate('login', true);
-          }
-        },
-        error: function(data) {
-          return window.app.routers.main.navigate('login', true);
-        }
-      });
-    };
 
     exports.Application = (function(_super) {
 
@@ -354,17 +335,15 @@ window.require.define({"initialize": function(exports, require, module) {
         this.views = {};
         this.routers.main = new MainRouter();
         this.views.home = new HomeView();
-        this.views.login = new LoginView();
-        this.views.register = new RegisterView();
         this.views.account = new AccountView();
-        this.views.reset = new ResetView();
         this.views.applications = new ApplicationsView();
         $("body").html(this.views.home.render());
         this.views.home.setListeners();
         this.views.home.fetch();
         window.app = this;
-        if (window.location.hash.indexOf("password/reset") < 0) {
-          return checkAuthentication();
+        Backbone.history.start();
+        if (Backbone.history.getFragment() === '') {
+          return window.app.routers.main.navigate('home', true);
         }
       };
 
@@ -450,7 +429,7 @@ window.require.define({"models/application": function(exports, require, module) 
           success: function(data) {
             _this.slug = data.app.slug;
             _this.state = data.app.state;
-            return callbacks.success(data.app);
+            return callbacks.success(data);
           },
           error: callbacks.error
         });
@@ -458,6 +437,10 @@ window.require.define({"models/application": function(exports, require, module) 
 
       Application.prototype.uninstall = function(callbacks) {
         return client.del("/api/applications/" + this.slug + "/uninstall", callbacks);
+      };
+
+      Application.prototype.updateApp = function(callbacks) {
+        return client.put("/api/applications/" + this.slug + "/update", {}, callbacks);
       };
 
       return Application;
@@ -513,19 +496,6 @@ window.require.define({"models/user": function(exports, require, module) {
         User.__super__.constructor.call(this);
       }
 
-      User.prototype.register = function(callbacks) {
-        return client.post("register/", {
-          email: this.email,
-          password: this.password
-        }, callbacks);
-      };
-
-      User.prototype.login = function(callbacks) {
-        return client.post("login/", {
-          password: this.password
-        }, callbacks);
-      };
-
       User.prototype.logout = function(callbacks) {
         return client.get("logout/", callbacks);
       };
@@ -553,11 +523,8 @@ window.require.define({"routers/main_router": function(exports, require, module)
 
       MainRouter.prototype.routes = {
         "home": "home",
-        "login": "login",
         "applications": "applications",
-        "register": "register",
         "account": "account",
-        "password/reset/:key": "resetPassword",
         "apps/:slug": "application"
       };
 
@@ -573,21 +540,8 @@ window.require.define({"routers/main_router": function(exports, require, module)
         return app.views.home.loadApp(slug);
       };
 
-      MainRouter.prototype.login = function() {
-        return this.loadView(app.views.login);
-      };
-
-      MainRouter.prototype.register = function() {
-        return this.loadView(app.views.register);
-      };
-
       MainRouter.prototype.account = function() {
         return this.loadView(app.views.account);
-      };
-
-      MainRouter.prototype.resetPassword = function(key) {
-        this.loadView(app.views.reset);
-        return app.views.reset.setKey(key);
       };
 
       MainRouter.prototype.loadView = function(view) {
@@ -614,7 +568,9 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ 'id':('account-form'), "class": ('well') }));
   buf.push('><p><label>email</label><input');
   buf.push(attrs({ 'id':('account-email-field'), 'type':("text") }));
-  buf.push('/></p><p><label>fill this field to set a new password</label><input');
+  buf.push('/></p><p><label>timezone</label><select');
+  buf.push(attrs({ 'id':('account-timezone-field'), 'type':("text") }));
+  buf.push('></select></p><p><label>fill this field to set a new password</label><input');
   buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
   buf.push('/></p><p><label>confirm new password</label><input');
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
@@ -650,13 +606,15 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
   buf.push('/></p><p');
   buf.push(attrs({ "class": ('app-title') }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p><p');
-  buf.push(attrs({ "class": ('info-text') }));
-  buf.push('>' + escape((interp = app.description) == null ? '' : interp) + '</p></div><div');
+  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div><div');
   buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
-  buf.push('>uninstall</button></div></a>');
+  buf.push('>remove</button><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
+  buf.push('>update</button></div></div></a>');
   }
   return buf.join("");
   };
@@ -707,6 +665,20 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push('></div><div');
   buf.push(attrs({ "class": ('app-tools') }));
   buf.push('><div');
+  buf.push(attrs({ "class": ('machine-infos') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('memory') }));
+  buf.push('><div>Memory consumption\n(Total: <span class="total"></span>)\n</div><div');
+  buf.push(attrs({ "class": ('progress') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('bar') }));
+  buf.push('></div></div></div><div');
+  buf.push(attrs({ "class": ('disk') }));
+  buf.push('><div>Disk consumption \n(total: <span class="total"></span>)\n</div><div');
+  buf.push(attrs({ "class": ('progress') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('bar') }));
+  buf.push('></div></div></div></div><div');
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
@@ -722,8 +694,6 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
   buf.push('><p><label>name</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("8"), "class": ("span3") }));
-  buf.push('/></p><p><label>description</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-description-field"), 'maxlength':("40"), "class": ("span3") }));
   buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
@@ -874,12 +844,14 @@ window.require.define({"templates/reset": function(exports, require, module) {
 
 window.require.define({"views/account_view": function(exports, require, module) {
   (function() {
-    var template,
+    var template, timezones,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
     template = require('../templates/account');
+
+    timezones = require('../helpers/timezone').timezones;
 
     exports.AccountView = (function(_super) {
 
@@ -898,7 +870,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
       AccountView.prototype.fetchData = function() {
         var _this = this;
         return $.get("api/users/", function(data) {
-          return _this.emailField.val(data.rows[0].email);
+          _this.emailField.val(data.rows[0].email);
+          return _this.timezoneField.val(data.rows[0].timezone);
         });
       };
 
@@ -907,7 +880,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
           _this = this;
         this.loadingIndicator.spin();
         form = {
-          email: $("#account-email-field").val(),
+          email: this.emailField.val(),
+          timezone: this.timezoneField.val(),
           password1: $("#account-password1-field").val(),
           password2: $("#account-password2-field").val()
         };
@@ -951,7 +925,14 @@ window.require.define({"views/account_view": function(exports, require, module) 
       */
 
       AccountView.prototype.render = function() {
+        var timezone, timezoneIndex, _i, _len;
         $(this.el).html(template());
+        timezoneIndex = {};
+        this.timezoneField = this.$("#account-timezone-field");
+        for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+          timezone = timezones[_i];
+          this.timezoneField.append("<option>" + timezone + "</option>");
+        }
         return this.el;
       };
 
@@ -1005,7 +986,8 @@ window.require.define({"views/application": function(exports, require, module) {
       ApplicationRow.prototype.className = "application";
 
       ApplicationRow.prototype.events = {
-        "click .remove-app": "onRemoveClicked"
+        "click .remove-app": "onRemoveClicked",
+        "click .update-app": "onUpdateClicked"
       };
 
       /* Constructor
@@ -1013,6 +995,7 @@ window.require.define({"views/application": function(exports, require, module) {
 
       function ApplicationRow(model) {
         this.model = model;
+        this.onUpdateClicked = __bind(this.onUpdateClicked, this);
         this.onRemoveClicked = __bind(this.onRemoveClicked, this);
         ApplicationRow.__super__.constructor.call(this, this.model);
       }
@@ -1023,6 +1006,11 @@ window.require.define({"views/application": function(exports, require, module) {
       ApplicationRow.prototype.onRemoveClicked = function(event) {
         event.preventDefault();
         return this.removeApp();
+      };
+
+      ApplicationRow.prototype.onUpdateClicked = function(event) {
+        event.preventDefault();
+        return this.updateApp();
       };
 
       /* Functions
@@ -1036,7 +1024,20 @@ window.require.define({"views/application": function(exports, require, module) {
             return _this.$(".remove-app").html("Removed!");
           },
           error: function() {
-            return _this.$(".remove-app").html("Remove failed.");
+            return _this.$(".remove-app").html("failed.");
+          }
+        });
+      };
+
+      ApplicationRow.prototype.updateApp = function() {
+        var _this = this;
+        this.$(".update-app").html("Updating...");
+        return this.model.updateApp({
+          success: function() {
+            return _this.$(".update-app").html("Updated!");
+          },
+          error: function() {
+            return _this.$(".update-app").html("failed.");
           }
         });
       };
@@ -1066,14 +1067,16 @@ window.require.define({"views/application": function(exports, require, module) {
 
 window.require.define({"views/applications_view": function(exports, require, module) {
   (function() {
-    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate,
+    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate, client,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
+    client = require('lib/request');
+
     applicationsTemplate = require('../templates/applications');
 
-    User = require("../models/user").User;
+    User = require('../models/user').User;
 
     AppRow = require('views/application').ApplicationRow;
 
@@ -1144,6 +1147,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
       ApplicationsView.prototype.onAddClicked = function() {
         this.installAppButton.displayOrange("install");
+        this.$("#app-name-field").val(null);
+        this.$("#app-git-field").val(null);
         this.addApplicationForm.show();
         return this.addApplicationModal.toggle();
       };
@@ -1155,7 +1160,6 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.isInstalling = true;
         data = {
           name: this.$("#app-name-field").val(),
-          description: this.$("#app-description-field").val(),
           git: this.$("#app-git-field").val()
         };
         this.errorAlert.hide();
@@ -1169,7 +1173,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
           return app.install({
             success: function(data) {
               _this.isInstalling = false;
-              if ((data.status != null) === "broken") {
+              if (((data.status != null) === "broken") || !data.success) {
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
                 _this.installAppButton.displayRed("Install failed");
@@ -1197,12 +1201,29 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.onManageAppsClicked = function() {
-        this.$(".application-outer").toggle();
+        var _this = this;
+        this.$('.application-outer').toggle();
+        if (!this.machineInfos.is(':visible')) {
+          this.machineInfos.find('.progress').spin();
+          client.get('api/sys-data', {
+            success: function(data) {
+              _this.machineInfos.find('.progress').spin();
+              _this.displayMemory(data.freeMem, data.totalMem);
+              return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+            },
+            error: function() {
+              this.machineInfos.find('.progress').spin();
+              return alert('Server error occured, machine infos cannot be displayed.');
+            }
+          });
+        }
+        this.machineInfos.toggle();
         return this.isManaging = !this.isManaging;
       };
 
       ApplicationsView.prototype.onCloseAddAppClicked = function() {
-        return this.addApplicationModal.hide();
+        this.addApplicationModal.hide();
+        return this.isInstalling = false;
       };
 
       /* Functions
@@ -1258,6 +1279,19 @@ window.require.define({"views/applications_view": function(exports, require, mod
         return this.errorAlert.show();
       };
 
+      ApplicationsView.prototype.displayMemory = function(freeMem, totalMem) {
+        var total, usedMemory;
+        total = Math.floor(totalMem / 1024) + "Mo";
+        this.machineInfos.find('.memory .total').html(total);
+        usedMemory = ((totalMem - freeMem) / totalMem) * 100;
+        return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
+      };
+
+      ApplicationsView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
+        this.machineInfos.find('.disk .total').html(totalSpace + "Go");
+        return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
+      };
+
       /* Init functions
       */
 
@@ -1282,12 +1316,13 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.installAppButton.button.click(this.onInstallClicked);
         this.infoAlert = this.$("#add-app-form .info");
         this.errorAlert = this.$("#add-app-form .error");
+        this.machineInfos = this.$(".machine-infos");
         this.appNameField = this.$("#app-name-field");
-        this.appDescriptionField = this.$("#app-description-field");
         this.appGitField = this.$("#app-git-field");
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
+        this.machineInfos.hide();
         this.addApplicationCloseCross = this.$("#add-app-modal .close");
         return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
       };
@@ -1337,20 +1372,19 @@ window.require.define({"views/home_view": function(exports, require, module) {
       /* Functions
       */
 
-      HomeView.prototype.logout = function() {
+      HomeView.prototype.logout = function(event) {
         var user,
           _this = this;
         user = new User();
-        return user.logout({
+        user.logout({
           success: function(data) {
-            _this.content.show();
-            _this.frames.hide();
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('login', true) : void 0;
+            return window.location.reload();
           },
           error: function() {
             return alert("Server error occured, logout failed.");
           }
         });
+        return event.preventDefault();
       };
 
       HomeView.prototype.home = function() {
@@ -1454,304 +1488,6 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       return HomeView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/login_view": function(exports, require, module) {
-  (function() {
-    var User, template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require("../templates/login");
-
-    User = require("../models/user").User;
-
-    exports.LoginView = (function(_super) {
-
-      __extends(LoginView, _super);
-
-      function LoginView() {
-        this.onForgotButtonClicked = __bind(this.onForgotButtonClicked, this);
-        this.logUser = __bind(this.logUser, this);
-        this.submitPassword = __bind(this.submitPassword, this);
-        LoginView.__super__.constructor.apply(this, arguments);
-      }
-
-      LoginView.prototype.id = 'login-view';
-
-      LoginView.prototype.className = 'center';
-
-      /* Constructor
-      */
-
-      /* Listeners
-      */
-
-      /* Functions
-      */
-
-      LoginView.prototype.submitPassword = function() {
-        return this.logUser(this.passwordField.val());
-      };
-
-      LoginView.prototype.logUser = function(password) {
-        var user,
-          _this = this;
-        if (!(this.errorAlert != null)) this.errorAlert = $("#login-error");
-        this.errorAlert.hide();
-        user = new User(null, password);
-        return user.login({
-          success: function(data) {
-            app.views.home.buttons.show();
-            return app.routers.main.navigate('home', true);
-          },
-          error: function(data) {
-            var info;
-            if ((data != null ? data.responseText : void 0) != null) {
-              if ((data != null ? data.responseText : void 0) != null) {
-                info = JSON.parse(data.responseText);
-              }
-            } else {
-              info = data.msg;
-            }
-            return _this.displayError(info.msg);
-          }
-        });
-      };
-
-      LoginView.prototype.fetchData = function() {};
-
-      LoginView.prototype.onForgotButtonClicked = function() {
-        var _this = this;
-        return $.ajax({
-          type: "POST",
-          url: "login/forgot/",
-          success: function(data) {
-            if (data.success) {
-              return _this.displayInfo(data.success);
-            } else {
-              return _this.displayError(data.msg);
-            }
-          },
-          error: function() {
-            return _this.displayError("Server error occured.");
-          }
-        });
-      };
-
-      LoginView.prototype.displayError = function(text) {
-        $("#login-form-error-text").html(text);
-        return this.errorAlert.show();
-      };
-
-      LoginView.prototype.displayInfo = function(text) {
-        $("#login-info-text").html(text);
-        return this.infoAlert.show();
-      };
-
-      LoginView.prototype.render = function() {
-        $(this.el).html(template());
-        return this.el;
-      };
-
-      LoginView.prototype.setListeners = function() {
-        var _this = this;
-        this.passwordField = $("#login-password");
-        this.buttons = $("#buttons");
-        this.buttons.hide();
-        this.forgotButton = $("#forgot-password-button");
-        this.forgotButton.click(this.onForgotButtonClicked);
-        this.passwordField = $("#login-password");
-        this.infoAlert = $("#login-info");
-        this.infoAlert.hide();
-        this.errorAlert = $("#login-error");
-        this.errorAlert.hide();
-        return this.passwordField.keyup(function(event) {
-          if (event.which === 13) return _this.submitPassword();
-        });
-      };
-
-      return LoginView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/register_view": function(exports, require, module) {
-  (function() {
-    var User, template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require('../templates/register');
-
-    User = require('../models/user').User;
-
-    exports.RegisterView = (function(_super) {
-
-      __extends(RegisterView, _super);
-
-      function RegisterView() {
-        this.submitData = __bind(this.submitData, this);
-        RegisterView.__super__.constructor.apply(this, arguments);
-      }
-
-      RegisterView.prototype.id = 'register-view';
-
-      RegisterView.prototype.className = 'center';
-
-      RegisterView.prototype.path = 'register';
-
-      /* Constructor
-      */
-
-      /* Listeners
-      */
-
-      /* Functions
-      */
-
-      RegisterView.prototype.submitData = function() {
-        var email, password, user,
-          _this = this;
-        email = this.emailField.val();
-        password = this.passwordField.val();
-        user = new User(email, password);
-        return this.errorAlert.fadeOut(function() {
-          return user.register({
-            success: function() {
-              return app.views.login.logUser(password);
-            },
-            error: function(data) {
-              var error;
-              error = JSON.parse(data.responseText);
-              _this.errorAlert.html(error.msg);
-              return _this.errorAlert.fadeIn();
-            }
-          });
-        });
-      };
-
-      RegisterView.prototype.fetchData = function() {};
-
-      /* Configuration
-      */
-
-      RegisterView.prototype.render = function() {
-        $(this.el).html(template());
-        return this.el;
-      };
-
-      RegisterView.prototype.setListeners = function() {
-        var _this = this;
-        this.emailField = $("#register-email");
-        this.passwordField = $("#register-password");
-        this.errorAlert = $("#register-error");
-        this.errorAlert.hide();
-        this.buttons = $("#buttons");
-        this.buttons.hide();
-        return this.passwordField.keyup(function(event) {
-          if (event.which === 13) return _this.submitData();
-        });
-      };
-
-      return RegisterView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/reset_view": function(exports, require, module) {
-  (function() {
-    var template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require('../templates/reset');
-
-    exports.ResetView = (function(_super) {
-
-      __extends(ResetView, _super);
-
-      ResetView.prototype.id = 'reset-view';
-
-      /* Constructor
-      */
-
-      function ResetView() {
-        this.onDataSubmit = __bind(this.onDataSubmit, this);      ResetView.__super__.constructor.call(this);
-      }
-
-      ResetView.prototype.fetchData = function() {};
-
-      ResetView.prototype.setKey = function(key) {
-        return this.key = key;
-      };
-
-      ResetView.prototype.onDataSubmit = function(event) {
-        var form;
-        if (this.passwordField1.val() !== this.passwordField2.val()) {
-          return alert("Passwords do not match, type them again");
-        } else {
-          form = {
-            key: this.key,
-            password1: this.passwordField1.val(),
-            password2: this.passwordField2.val()
-          };
-          return this.sendForm(form);
-        }
-      };
-
-      ResetView.prototype.sendForm = function(form) {
-        var _this = this;
-        return $.ajax({
-          type: "POST",
-          url: "password/reset/" + this.key,
-          data: form,
-          success: function(data) {
-            if (data.success) {
-              alert("New password is now set.");
-              return app.routers.main.navigate('login', true);
-            } else {
-              return alert("Something went wrong, your password was not updated.");
-            }
-          },
-          error: function() {
-            return alert("Server errer occured, change failed.");
-          }
-        });
-      };
-
-      /* Configuration
-      */
-
-      ResetView.prototype.render = function() {
-        $(this.el).html(template());
-        return this.el;
-      };
-
-      ResetView.prototype.setListeners = function() {
-        this.buttons = $("#buttons");
-        this.buttons.hide();
-        this.passwordField1 = $("#reset-password1-field");
-        this.passwordField2 = $("#reset-password2-field");
-        this.resetDataButton = $("#reset-form-button");
-        return this.resetDataButton.click(this.onDataSubmit);
-      };
-
-      return ResetView;
 
     })(Backbone.View);
 

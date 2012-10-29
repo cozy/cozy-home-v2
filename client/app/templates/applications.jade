@@ -3,6 +3,22 @@
 .clearfix
 
 .app-tools
+  .machine-infos
+    .memory
+      div
+        | Memory consumption
+        | (Total: <span class="total"></span>)
+      .progress
+        .bar
+
+    .disk 
+      div
+        | Disk consumption 
+        | (total: <span class="total"></span>)
+      .progress
+        .bar
+
+         
   .btn-group
       button#add-app-button.btn
         | <i class="icon-plus"></i>
@@ -20,10 +36,6 @@
     p
       label name
       input(type="text", class="span3", id="app-name-field", maxlength="8")
-    p
-      label description
-      input(type="text", class="span3", id="app-description-field",
-            maxlength="40")
     p
       label Git URL
       input(type="text", class="span3", id="app-git-field")

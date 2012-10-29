@@ -1,7 +1,3 @@
-checkApiAuthenticated = ->
-    if req.isAuthenticated() then next() else send 403
-
-before checkApiAuthenticated
 
 # Return list of available users
 action 'users', ->

@@ -3,6 +3,7 @@ a(href="apps/#{app.slug}/", target="_blank")
     p
       img(src="apps/#{app.slug}/icons/main_icon.png")
     p.app-title #{app.name}
-    p.info-text #{app.description}
   .application-outer.center
-    button.btn.remove-app uninstall
+      .btn-group
+        button.btn.remove-app remove
+        button.btn.update-app update

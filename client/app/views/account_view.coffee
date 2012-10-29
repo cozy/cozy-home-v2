@@ -1,4 +1,5 @@
 template = require('../templates/account')
+timezones = require('../helpers/timezone').timezones
 
 # View describing main screen for user once he is logged
 class exports.AccountView extends Backbone.View
@@ -15,13 +16,15 @@ class exports.AccountView extends Backbone.View
   fetchData: ->
     $.get "api/users/", (data) =>
       @emailField.val data.rows[0].email
+      @timezoneField.val data.rows[0].timezone
 
   # When data are submited, it sends a request to backend to save them.
   # If an error occurs, message is displayed.
   onDataSubmit: (event) =>
     @loadingIndicator.spin()
     form =
-        email: $("#account-email-field").val()
+        email: @emailField.val()
+        timezone: @timezoneField.val()
         password1: $("#account-password1-field").val()
         password2: $("#account-password2-field").val()
 
@@ -58,6 +61,11 @@ class exports.AccountView extends Backbone.View
 
   render: ->
     $(@el).html template()
+    timezoneIndex = {}
+    @timezoneField = @$ "#account-timezone-field"
+    for timezone in timezones
+        @timezoneField.append("<option>#{timezone}</option>")
+
     @el
 
   setListeners: ->

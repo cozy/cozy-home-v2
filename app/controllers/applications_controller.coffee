@@ -14,13 +14,6 @@ send_error = (msg, code=500) ->
         send error: true, msg: "Server error occured", code
 
 
-# Checks if user is authenticated, if not a simple 403 error is sent.
-checkApiAuthenticated = ->
-    if req.isAuthenticated() then next() else send 403
-
-before checkApiAuthenticated, \
-    { except: ["init", "index", "users", "applications"] }
-
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all key: params.slug, (err, apps) =>
@@ -32,7 +25,7 @@ before 'load application', ->
         else
             @app = apps[0]
             next()
-, only: ['uninstall']
+, only: ['update', 'uninstall']
 
 
 ## Actions
@@ -122,3 +115,34 @@ action "uninstall", ->
     manager = new AppManager
     manager.uninstallApp @app, (err, result) =>
         if err then markAppAsBroken() else removeAppFromDb()
+
+
+
+# Update an app :
+# * haibu, application manager
+# * proxy, cozy router
+# * database
+action "update", ->
+
+    markAppAsBroken = =>
+        @app.state = "broken"
+        @app.save (err) ->
+            if err
+                send_error()
+            else
+                send_error "uninstallation failed"
+
+    removeAppFromDb = =>
+        @app.destroy (err) ->
+            if err
+                console.log err
+                send_error 'Cannot destroy app'
+            else
+                send success: true, msg: 'Application succesfuly uninstalled'
+
+    manager = new AppManager
+    manager.updateApp @app, (err, result) =>
+        if err
+            markAppAsBroken()
+        else
+            send success: true, msg: 'Application succesfuly uninstalled'
