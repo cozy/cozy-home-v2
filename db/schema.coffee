@@ -1,6 +1,7 @@
 # User defines user that can interact with the Cozy instance.
 User = define 'User', ->
-    property 'email', String, index: true
+    property 'email', String
+    property 'timezone', String, default: "Europe/Paris"
     property 'password', String
     property 'owner', Boolean, default: false
     property 'activated', Boolean, default: false
@@ -13,12 +14,10 @@ CozyInstance = define 'CozyInstance', ->
 
 # Application descrbies an application installed inside the Cozy instance.
 Application = define 'Application', ->
-    property 'name', String, index: true
+    property 'name', String
     property 'slug', String
     property 'state', String
     property 'date', String, default: Date.now
     property 'icon', String
-    property 'description', String
     property 'git', String
     property 'port', Number
-

@@ -86,10 +86,10 @@ fakeServer = (json, code=200, callback=null) ->
         req.on 'data', (chunk) ->
             body += chunk
         req.on 'end', ->
-            routeInfos = JSON.parse body
             res.writeHead code, 'Content-Type': 'application/json'
             if callback?
-                callback(JSON.parse body)
+                data = JSON.parse body if body? and body.length > 0
+                callback data
             res.end(JSON.stringify json)
 
 
@@ -113,7 +113,7 @@ describe "Application installation", ->
         @proxy = fakeServer msg: "ok", 201, (body) ->
             should.exist body.route
             should.exist body.port
-            body.route.should.equal "/apps/my-app"
+            body.route.should.equal "my-app"
             body.port.should.equal 8001
         @proxy.listen(4000)
 
@@ -167,6 +167,36 @@ describe "Application installation", ->
             @body.rows[0].name.should.equal "My App"
 
 
+describe "Application update", ->
+    
+    before ->
+        @haibu = fakeServer msg: "ok" , 200, (body) ->
+
+        @haibu.listen 9002
+        @proxy = fakeServer msg: "ok", 204, (body) ->
+            should.exist body.route
+            body.route.should.equal "/apps/my-app"
+        @proxy.listen 4000
+
+    after ->
+        @haibu.close()
+        @proxy.close()
+
+    describe "UPDATE /api/applications/:slug/update Update an app", ->
+        
+        it "When I send a request to update an application", (done) ->
+            client.put "api/applications/my-app/update", {}, \
+                          (error, response, body) =>
+                @response = response
+                @body = body
+                done()
+
+        it "Then it sends me a success response", ->
+            @response.statusCode.should.equal 200
+            should.exist @body.success
+            @body.success.should.be.ok
+            
+
 describe "Application uninstallation", ->
     
     before ->
@@ -177,8 +207,6 @@ describe "Application uninstallation", ->
             should.exist body.scripts
         @haibu.listen 9002
         @proxy = fakeServer msg: "ok", 204, (body) ->
-            should.exist body.route
-            body.route.should.equal "/apps/my-app"
         @proxy.listen 4000
 
     after ->
@@ -204,7 +232,7 @@ describe "Application uninstallation", ->
                 @body = body
                 done()
 
-        it "Then I got not see my application in the list", ->
+        it "Then I do not see my application in the list", ->
             @body.rows.length.should.equal 1
             @body.rows[0].name.should.not.equal "My App"
 
@@ -227,4 +255,3 @@ describe "Users", ->
             should.exist bodyTest.rows
             bodyTest.rows.length.should.equal 1
             bodyTest.rows[0].email.should.equal email
-

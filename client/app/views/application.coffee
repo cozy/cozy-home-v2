@@ -7,7 +7,7 @@ class exports.ApplicationRow extends BaseRow
 
     events:
         "click .remove-app": "onRemoveClicked"
-
+        "click .update-app": "onUpdateClicked"
 
     ### Constructor ####
 
@@ -21,6 +21,9 @@ class exports.ApplicationRow extends BaseRow
         event.preventDefault()
         @removeApp()
 
+    onUpdateClicked: (event) =>
+        event.preventDefault()
+        @updateApp()
 
     ### Functions ###
 
@@ -30,7 +33,15 @@ class exports.ApplicationRow extends BaseRow
             success: =>
                 @$(".remove-app").html "Removed!"
             error: =>
-                @$(".remove-app").html "Remove failed."
+                @$(".remove-app").html "failed."
+
+    updateApp: ->
+        @$(".update-app").html "Updating..."
+        @model.updateApp
+            success: =>
+                @$(".update-app").html "Updated!"
+            error: =>
+                @$(".update-app").html "failed."
 
     ### configuration ###
 
