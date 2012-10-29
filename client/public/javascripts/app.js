@@ -630,7 +630,9 @@ window.require.define({"templates/application_button": function(exports, require
   buf.push(attrs({ "class": ('app-button') }));
   buf.push('><a');
   buf.push(attrs({ 'id':("" + (app.slug) + "") }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</a></li>');
+  buf.push('><img');
+  buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }));
+  buf.push('/><span>' + escape((interp = app.name) == null ? '' : interp) + '</span></a></li>');
   }
   return buf.join("");
   };
@@ -725,8 +727,10 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('><h2');
   buf.push(attrs({ 'id':('header-title') }));
   buf.push('><a');
-  buf.push(attrs({ 'href':("http://www.mycozycloud.com/"), 'target':("_blank"), 'title':("home") }));
-  buf.push('>Cozy Cloud\n</a></h2><div');
+  buf.push(attrs({ 'href':("http://cozycloud.cc/"), 'target':("_blank"), 'title':("home") }));
+  buf.push('><img');
+  buf.push(attrs({ 'src':("img/logo.png"), 'alt':("Cozy Cloud Symbol") }));
+  buf.push('/></a></h2><div');
   buf.push(attrs({ 'id':('buttons') }));
   buf.push('><ul');
   buf.push(attrs({ "class": ('nav') }));
