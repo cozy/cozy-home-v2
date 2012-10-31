@@ -8,7 +8,7 @@ class exports.AppManager
 
     # Setup haibu client and proxyClient.
     constructor: ->
-        @proxyClient = new HttpClient "http://localhost:4000/"
+        @proxyClient = new HttpClient "http://localhost:9104/"
         @client = haibu.createClient(
             host: '127.0.0.1'
             port: 9002
