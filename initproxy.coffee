@@ -13,7 +13,7 @@ apps = [
         index: 0
         slug: "notes"
         icon: "notes_icon.png"
-        port: 8001
+        port: 9201
         git: "git://github.com/mycozycloud/cozy-notes.git"
         description: """
         Organize your interests
@@ -24,7 +24,7 @@ apps = [
         index: 1
         slug: "todos"
         icon: "todos_icon.png"
-        port: 8002
+        port: 9202
         git: "git://github.com/mycozycloud/cozy-todo.git"
         description: """
         Get Things Done
