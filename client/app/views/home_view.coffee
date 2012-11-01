@@ -57,11 +57,17 @@ class exports.HomeView extends Backbone.View
   addApplication: (application) =>
     @buttons.find(".nav:last").append appButtonTemplate(app: application)
     @buttons.find("#" + application.slug).click @onAppButtonClicked
+    @buttons.find("#" + application.slug + " img").click @onAppButtonClicked
+    @buttons.find("#" + application.slug + " span").click @onAppButtonClicked
   
   # When an app button is clicked button is activated
   # and corresponding app is loaded in a dedicated iframe.
   onAppButtonClicked: (event) =>
       id = event.target.id
+      console.log $(event.target).parent()
+      
+      id = $(event.target).parent().attr('id') unless id? and id.length > 0
+
       app?.routers.main.navigate "/apps/#{id}", true
       
   loadApp: (slug) ->

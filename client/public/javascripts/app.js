@@ -1429,12 +1429,18 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.buttons.find(".nav:last").append(appButtonTemplate({
           app: application
         }));
-        return this.buttons.find("#" + application.slug).click(this.onAppButtonClicked);
+        this.buttons.find("#" + application.slug).click(this.onAppButtonClicked);
+        this.buttons.find("#" + application.slug + " img").click(this.onAppButtonClicked);
+        return this.buttons.find("#" + application.slug + " span").click(this.onAppButtonClicked);
       };
 
       HomeView.prototype.onAppButtonClicked = function(event) {
         var id;
         id = event.target.id;
+        console.log($(event.target).parent());
+        if (!((id != null) && id.length > 0)) {
+          id = $(event.target).parent().attr('id');
+        }
         return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + id, true) : void 0;
       };
 
