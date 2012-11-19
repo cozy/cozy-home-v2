@@ -23,4 +23,3 @@ CozyInstance.all (err, instances) ->
             else
                 console.log "Domain name set with #{domain}"
                 process.exit(0)
-
