@@ -29,24 +29,21 @@ class exports.AppManager
             else
                 console.info "Successfully spawned app: #{app.name}"
                 console.info "Update proxy..."
-                @_addRouteToProxy app, result, callback
+                @_resetProxy app, result, callback
 
-    # Add a new route that matches given app to proxy.
-    _addRouteToProxy: (app, result, callback) ->
-        data =
-            route: "#{app.slug}"
-            port: result.drone.port
-
-        @proxyClient.post "routes/", data, (error, response, body) ->
+    # Ask to proxy to rebuild his routes.
+    # Because route commands are public, we can't allow that someone add or
+    # remove routes.
+    _resetProxy: (app, result, callback) ->
+        @proxyClient.get "routes/reset", (error, response, body) ->
             if error
                 console.log error.message
                 callback error
-            else if response.statusCode != 201
+            else if response.statusCode != 200
                 callback new Error "Something went wrong on proxy side when \
-creating a new route"
+reseting routes"
             else
-                console.info "Proxy successfuly updated with " + \
-                            "#{data.route} => #{data.port}"
+                console.info "Proxy successfuly updated."
                 callback null, result
 
     # Remove and reinstall app inside Haibu.
@@ -86,17 +83,4 @@ creating a new route"
             else
                 console.info "Successfully cleaning app: #{app.name}"
                 console.info "Update proxy..."
-                @_removeRouteFromProxy app, result, callback
-
-    # Remove from proxy the route that matches given app.
-    _removeRouteFromProxy: (app, result, callback) ->
-        @proxyClient.del "routes/#{app.slug}", (error, response, body) ->
-            if error
-                console.log error.message
-                callback error
-            else if response.statusCode != 204
-                callback new Error "Something went wrong on proxy side when \
-removing a route"
-            else
-                console.info "Proxy successfuly updated"
-                callback null, result
+                @_resetProxy app, result, callback
