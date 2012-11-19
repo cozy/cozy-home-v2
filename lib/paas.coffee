@@ -14,10 +14,26 @@ class exports.AppManager
             port: 9002
         ).drone
 
+    # Ask to proxy to rebuild his routes.
+    # Because route commands are public, we can't allow that someone add or
+    # remove routes.
+    resetProxy: (callback) ->
+        railway.logger.write "Update proxy..."
+        @proxyClient.get "routes/reset", (error, response, body) ->
+            if error
+                console.log error.message
+                callback error
+            else if response.statusCode != 200
+                callback new Error "Something went wrong on proxy side when \
+reseting routes"
+            else
+                railway.logger.write "Proxy successfuly updated."
+                callback null
+
+
     # 1. Send a install request to haibu server ("start" request).
     # 2. Send a request to proxy to add a new route
     installApp: (app, callback) ->
-
         console.info "Request haibu for spawning #{app.name}..."
         
         @client.start app.getHaibuDescriptor(), (err, result) =>
@@ -29,24 +45,6 @@ class exports.AppManager
             else
                 console.info "Successfully spawned app: #{app.name}"
                 console.info "Update proxy..."
-                @_addRouteToProxy app, result, callback
-
-    # Add a new route that matches given app to proxy.
-    _addRouteToProxy: (app, result, callback) ->
-        data =
-            route: "#{app.slug}"
-            port: result.drone.port
-
-        @proxyClient.post "routes/", data, (error, response, body) ->
-            if error
-                console.log error.message
-                callback error
-            else if response.statusCode != 201
-                callback new Error "Something went wrong on proxy side when \
-creating a new route"
-            else
-                console.info "Proxy successfuly updated with " + \
-                            "#{data.route} => #{data.port}"
                 callback null, result
 
     # Remove and reinstall app inside Haibu.
@@ -85,18 +83,4 @@ creating a new route"
                 callback(err)
             else
                 console.info "Successfully cleaning app: #{app.name}"
-                console.info "Update proxy..."
-                @_removeRouteFromProxy app, result, callback
-
-    # Remove from proxy the route that matches given app.
-    _removeRouteFromProxy: (app, result, callback) ->
-        @proxyClient.del "routes/#{app.slug}", (error, response, body) ->
-            if error
-                console.log error.message
-                callback error
-            else if response.statusCode != 204
-                callback new Error "Something went wrong on proxy side when \
-removing a route"
-            else
-                console.info "Proxy successfuly updated"
-                callback null, result
+                callback null
