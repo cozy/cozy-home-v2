@@ -75,7 +75,13 @@ action "install", ->
                 app.save (err) ->
                     if err
                         send_error err.message
-                    else send { success: true, app: app }, 201
+                    else
+                        manager.resetProxy (err) ->
+                            if err
+                                railway.logger.write "Proxy reset failed."
+                                send_error "Server error occured"
+                            else
+                                send { success: true, app: app }, 201
 
     Application.all key: body.slug, (err, apps) ->
         if err
@@ -110,13 +116,18 @@ action "uninstall", ->
                 console.log err
                 send_error 'Cannot destroy app'
             else
-                send success: true, msg: 'Application succesfuly uninstalled'
+                manager.resetProxy (err) ->
+                    if err
+                        send_error 'Reset Proxy failed.'
+                    else
+                        send success: true, msg: 'Application succesfuly uninstalled'
 
     manager = new AppManager
     manager.uninstallApp @app, (err, result) =>
-        if err then markAppAsBroken() else removeAppFromDb()
-
-
+        if err
+            markAppAsBroken()
+        else
+            removeAppFromDb()
 
 # Update an app :
 # * haibu, application manager
@@ -132,17 +143,20 @@ action "update", ->
             else
                 send_error "uninstallation failed"
 
-    removeAppFromDb = =>
-        @app.destroy (err) ->
-            if err
-                console.log err
-                send_error 'Cannot destroy app'
-            else
-                send success: true, msg: 'Application succesfuly uninstalled'
-
     manager = new AppManager
     manager.updateApp @app, (err, result) =>
         if err
             markAppAsBroken()
         else
-            send success: true, msg: 'Application succesfuly uninstalled'
+            @app.state = "installed"
+            @app.save (err) ->
+                if err
+                    send_error()
+                else
+                    manager.resetProxy (err) ->
+                        if err
+                            markAppAsBroken()
+                        else
+                            send
+                                success: true
+                                msg: 'Application succesfuly updated'

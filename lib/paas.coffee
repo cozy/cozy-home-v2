@@ -14,10 +14,26 @@ class exports.AppManager
             port: 9002
         ).drone
 
+    # Ask to proxy to rebuild his routes.
+    # Because route commands are public, we can't allow that someone add or
+    # remove routes.
+    resetProxy: (callback) ->
+        railway.logger.write "Update proxy..."
+        @proxyClient.get "routes/reset", (error, response, body) ->
+            if error
+                console.log error.message
+                callback error
+            else if response.statusCode != 200
+                callback new Error "Something went wrong on proxy side when \
+reseting routes"
+            else
+                railway.logger.write "Proxy successfuly updated."
+                callback null
+
+
     # 1. Send a install request to haibu server ("start" request).
     # 2. Send a request to proxy to add a new route
     installApp: (app, callback) ->
-
         console.info "Request haibu for spawning #{app.name}..."
         
         @client.start app.getHaibuDescriptor(), (err, result) =>
@@ -29,21 +45,6 @@ class exports.AppManager
             else
                 console.info "Successfully spawned app: #{app.name}"
                 console.info "Update proxy..."
-                @_resetProxy app, result, callback
-
-    # Ask to proxy to rebuild his routes.
-    # Because route commands are public, we can't allow that someone add or
-    # remove routes.
-    _resetProxy: (app, result, callback) ->
-        @proxyClient.get "routes/reset", (error, response, body) ->
-            if error
-                console.log error.message
-                callback error
-            else if response.statusCode != 200
-                callback new Error "Something went wrong on proxy side when \
-reseting routes"
-            else
-                console.info "Proxy successfuly updated."
                 callback null, result
 
     # Remove and reinstall app inside Haibu.
@@ -82,5 +83,4 @@ reseting routes"
                 callback(err)
             else
                 console.info "Successfully cleaning app: #{app.name}"
-                console.info "Update proxy..."
-                @_resetProxy app, result, callback
+                callback null
