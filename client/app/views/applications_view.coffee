@@ -57,6 +57,7 @@ class exports.ApplicationsView extends Backbone.View
 
     @addApplicationForm.show()
     @addApplicationModal.toggle()
+    @isInstalling = false
 
   onInstallClicked: =>
     return true if @isInstalling
@@ -65,7 +66,7 @@ class exports.ApplicationsView extends Backbone.View
       name: @$("#app-name-field").val()
       git: @$("#app-git-field").val()
 
-    @errorAlert.hide()
+    @hideError()
     @installAppButton.displayOrange "install"
 
     dataChecking = @checkData data
@@ -77,7 +78,6 @@ class exports.ApplicationsView extends Backbone.View
         app = new Application data
         app.install
             success: (data) =>
-                @isInstalling = false
                 if (data.status? == "broken") or not data.success
                     @apps.add app
                     window.app.views.home.addApplication app
@@ -89,15 +89,18 @@ class exports.ApplicationsView extends Backbone.View
                 else
                     @apps.add app
                     window.app.views.home.addApplication app
-                    @installAppButton.displayGreen "Install succeeds!"
+                    @installAppButton.displayGreen "Install succeeded!"
                     @installInfo.spin()
+                    setTimeout =>
+                        @addApplicationForm.slideToggle()
+                    , 1000
 
             error: (data) =>
                 @isInstalling = false
                 @installAppButton.displayRed "Install failed"
                 @installInfo.spin()
     else
-        isInstalling = false
+        @isInstalling = false
         @displayError dataChecking.msg
 
   onManageAppsClicked: =>
@@ -169,6 +172,10 @@ class exports.ApplicationsView extends Backbone.View
     @infoAlert.hide()
     @errorAlert.html msg
     @errorAlert.show()
+  
+  hideError: =>
+    @errorAlert.hide()
+
 
   displayMemory: (freeMem, totalMem)->
 

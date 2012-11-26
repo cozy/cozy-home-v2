@@ -5627,13 +5627,13 @@ a{color:#f68c4e;font-weight:bold}
 a:hover{color:#000}
 h2{font-size:30px;margin-bottom:24px;margin-top:24px}
 .spacer{clear:both}
-.container{padding:0;background-color:#fff;width:100%;-webkit-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-moz-box-shadow:3px 3px 4px 1px #668;-webkit-box-shadow:3px 3px 4px 1px #668;-webkit-box-shadow:3px 3px 4px 1px #668;-moz-box-shadow:3px 3px 4px 1px #668;box-shadow:3px 3px 4px 1px #668;min-height:260px}
+.container{padding:0;background-color:#fff;width:100%;rounded-border:4px;-webkit-box-shadow:3px 3px 4px 1px #668;-moz-box-shadow:3px 3px 4px 1px #668;box-shadow:3px 3px 4px 1px #668;min-height:260px}
 .close{float:right}
 .hidden{display:none}
 .center{text-align:center}
 #text-container{width:610px}
 #header{position:relative;margin-top:0;margin-bottom:0;background-color:#fff;border-bottom:1px solid #ccc;background-color:#fff;}
-#header .navbar-inner{padding-right:5px;-webkit-border-radius:0 0 0 0;-moz-border-radius:0 0 0 0;-webkit-border-radius:0 0 0 0;-moz-border-radius:0 0 0 0;border-radius:0 0 0 0;background-color:#fff;background-image:none;height:100%}
+#header .navbar-inner{padding-right:5px;rounded-border:0 0 0 0;background-color:#fff;background-image:none;height:100%}
 #header h2{float:left;color:#f68c4e}
 #header a{text-decoration:none}
 #header p{margin:0}
@@ -5646,16 +5646,17 @@ h2{font-size:30px;margin-bottom:24px;margin-top:24px}
 #app-list{margin-bottom:0}
 .application{width:155px;height:250px;margin:6px;margin-bottom:54px;font-size:42px;line-height:48px;float:left}
 .application a:hover{text-decoration:none}
-.application-inner{text-align:center;width:140px;height:200px;border:2px solid #f68c4e;-moz-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px;color:#fff;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6bd8f), color-stop(1, #f69c5e));background:-webkit-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:-moz-linear-gradient(top, #f6bd8f 0%, #f69c5e 100%);background:linear-gradient(top, #f6bd8f 0%, #f69c5e 100%)}
-.application-inner:active{-moz-box-shadow:none;-webkit-box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
-.application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #f6cd9f), color-stop(1, #f6ac7e));background:-webkit-linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%);background:-moz-linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%);background:linear-gradient(top, #f6cd9f 0%, #f6ac7e 100%)}
+.application-inner{text-align:center;width:150px;height:200px;border:1px solid #6b8a80;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px;color:#fff;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #c6d3cf), color-stop(1, #8ca69e));background:-webkit-linear-gradient(top, #c6d3cf 0%, #8ca69e 100%);background:-moz-linear-gradient(top, #c6d3cf 0%, #8ca69e 100%);background:linear-gradient(top, #c6d3cf 0%, #8ca69e 100%);}
 .application-inner img{margin-top:10px}
-.app-title{font-size:30px;line-height:30px;font-weight:bold;margin-top:10px}
+.application-inner p{margin:0}
+.application-inner:active{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
+.application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #dde4e2), color-stop(1, #a3b8b1));background:-webkit-linear-gradient(top, #dde4e2 0%, #a3b8b1 100%);background:-moz-linear-gradient(top, #dde4e2 0%, #a3b8b1 100%);background:linear-gradient(top, #dde4e2 0%, #a3b8b1 100%)}
+.app-title{font-size:20px;line-height:30px;font-weight:bold}
 .info-text{font-size:14px;line-height:20px}
 .app-tools{margin-top:12px}
 .modal{width:340px;margin:auto;top:10%;left:auto}
 #app-description-field,#app-git-field{width:96%}
-#app-name-field{width:70px}
+#app-name-field{width:140px}
 #add-app-submit{font-weight:bold;font-size:20px}
 .install-info{width:40%;text-align:center}
 .broken .application-inner,.broken .application-inner:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #aaa), color-stop(1, #666));background:-webkit-linear-gradient(top, #aaa 0%, #666 100%);background:-moz-linear-gradient(top, #aaa 0%, #666 100%);background:linear-gradient(top, #aaa 0%, #666 100%);border-color:#aaa}
@@ -5688,8 +5689,7 @@ html{height:100%}
 }@media (max-width: 600px){#buttons{width:100%}
 }#app-frames{height:100%;display:none}
 .home-body{background:#fff;width:100%;height:100%}
-.navbar .nav{float:right;}
-.navbar .nav img{margin-right:10px}
+.navbar .nav{float:right}
 #buttons{text-align:right;width:83%}
 .application-outer p{margin:0;padding:0}
 @media (max-width: 600px){#buttons span{display:none}

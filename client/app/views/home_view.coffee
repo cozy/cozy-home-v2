@@ -78,7 +78,7 @@ class exports.HomeView extends Backbone.View
           frame = @$("##{slug}-frame")
 
       @content.hide()
-      @$("#app-frames iframe").hide()
+      @$("#app-frames").find("iframe").hide()
       frame.show()
       @selectNavButton @$("##{slug}")
       @selectedApp = slug

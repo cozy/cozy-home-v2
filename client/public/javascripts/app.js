@@ -8,7 +8,7 @@
   var cache = {};
 
   var has = function(object, name) {
-    return hasOwnProperty.call(object, name);
+    return ({}).hasOwnProperty.call(object, name);
   };
 
   var expand = function(root, name) {
@@ -37,7 +37,7 @@
     return function(name) {
       var dir = dirname(path);
       var absolute = expand(dir, name);
-      return require(absolute);
+      return globals.require(absolute);
     };
   };
 
@@ -614,7 +614,13 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
   buf.push('>remove</button><button');
   buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
-  buf.push('>update</button></div></div></a>');
+  buf.push('>update</button></div><div');
+  buf.push(attrs({ "class": ('btn-group') }));
+  buf.push('><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
+  buf.push('>start</button><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
+  buf.push('>stop</button></div></div></a>');
   }
   return buf.join("");
   };
@@ -632,7 +638,7 @@ window.require.define({"templates/application_button": function(exports, require
   buf.push(attrs({ 'id':("" + (app.slug) + "") }));
   buf.push('><img');
   buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }));
-  buf.push('/><span>' + escape((interp = app.name) == null ? '' : interp) + '</span></a></li>');
+  buf.push('/></a></li>');
   }
   return buf.join("");
   };
@@ -695,7 +701,7 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
   buf.push('><p><label>name</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("8"), "class": ("span3") }));
+  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("18"), "class": ("span3") }));
   buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
@@ -1132,6 +1138,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
       */
 
       function ApplicationsView() {
+        this.hideError = __bind(this.hideError, this);
         this.displayError = __bind(this.displayError, this);
         this.displayInfo = __bind(this.displayInfo, this);
         this.checkData = __bind(this.checkData, this);
@@ -1154,11 +1161,12 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.$("#app-name-field").val(null);
         this.$("#app-git-field").val(null);
         this.addApplicationForm.show();
-        return this.addApplicationModal.toggle();
+        this.addApplicationModal.toggle();
+        return this.isInstalling = false;
       };
 
       ApplicationsView.prototype.onInstallClicked = function() {
-        var app, data, dataChecking, isInstalling,
+        var app, data, dataChecking,
           _this = this;
         if (this.isInstalling) return true;
         this.isInstalling = true;
@@ -1166,7 +1174,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
           name: this.$("#app-name-field").val(),
           git: this.$("#app-git-field").val()
         };
-        this.errorAlert.hide();
+        this.hideError();
         this.installAppButton.displayOrange("install");
         dataChecking = this.checkData(data);
         if (!dataChecking.error) {
@@ -1176,7 +1184,6 @@ window.require.define({"views/applications_view": function(exports, require, mod
           app = new Application(data);
           return app.install({
             success: function(data) {
-              _this.isInstalling = false;
               if (((data.status != null) === "broken") || !data.success) {
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
@@ -1188,8 +1195,11 @@ window.require.define({"views/applications_view": function(exports, require, mod
               } else {
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
-                _this.installAppButton.displayGreen("Install succeeds!");
-                return _this.installInfo.spin();
+                _this.installAppButton.displayGreen("Install succeeded!");
+                _this.installInfo.spin();
+                return setTimeout(function() {
+                  return _this.addApplicationForm.slideToggle();
+                }, 1000);
               }
             },
             error: function(data) {
@@ -1199,7 +1209,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
             }
           });
         } else {
-          isInstalling = false;
+          this.isInstalling = false;
           return this.displayError(dataChecking.msg);
         }
       };
@@ -1281,6 +1291,10 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.infoAlert.hide();
         this.errorAlert.html(msg);
         return this.errorAlert.show();
+      };
+
+      ApplicationsView.prototype.hideError = function() {
+        return this.errorAlert.hide();
       };
 
       ApplicationsView.prototype.displayMemory = function(freeMem, totalMem) {
@@ -1455,7 +1469,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
           frame = this.$("#" + slug + "-frame");
         }
         this.content.hide();
-        this.$("#app-frames iframe").hide();
+        this.$("#app-frames").find("iframe").hide();
         frame.show();
         this.selectNavButton(this.$("#" + slug));
         return this.selectedApp = slug;
