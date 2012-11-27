@@ -149,6 +149,7 @@ action "update", ->
             markAppAsBroken()
         else
             @app.state = "installed"
+            @app.port = result.drone.port
             @app.save (err) ->
                 if err
                     send_error()
