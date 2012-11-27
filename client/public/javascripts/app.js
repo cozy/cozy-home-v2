@@ -566,19 +566,31 @@ window.require.define({"templates/account": function(exports, require, module) {
   var interp;
   buf.push('<form');
   buf.push(attrs({ 'id':('account-form'), "class": ('well') }));
-  buf.push('><p><label>email</label><input');
-  buf.push(attrs({ 'id':('account-email-field'), 'type':("text") }));
-  buf.push('/></p><p><label>timezone</label><select');
-  buf.push(attrs({ 'id':('account-timezone-field'), 'type':("text") }));
-  buf.push('></select></p><p><label>fill this field to set a new password</label><input');
+  buf.push('><p>email</p><p');
+  buf.push(attrs({ "class": ('field') }));
+  buf.push('><a');
+  buf.push(attrs({ 'id':('account-email-field') }));
+  buf.push('></a></p><p>timezone</p><p');
+  buf.push(attrs({ "class": ('field') }));
+  buf.push('><a');
+  buf.push(attrs({ 'id':('account-timezone-field') }));
+  buf.push('></a></p><p>instance</p><p');
+  buf.push(attrs({ "class": ('field') }));
+  buf.push('><a');
+  buf.push(attrs({ 'id':('account-domain-field') }));
+  buf.push('></a></p><p><button');
+  buf.push(attrs({ 'id':('change-password-button'), "class": ('btn') }));
+  buf.push('>Change password</button></p><div');
+  buf.push(attrs({ 'id':('change-password-form') }));
+  buf.push('><p>Change password</p><p><label>fill this field to set a new password</label><input');
   buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
   buf.push('/></p><p><label>confirm new password</label><input');
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
   buf.push('/></p><p><button');
   buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button><span');
+  buf.push('>Send changes</button><p');
   buf.push(attrs({ "class": ('loading-indicator') }));
-  buf.push('></span><div');
+  buf.push('></p><div');
   buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-info-text') }));
@@ -586,7 +598,7 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ 'id':('account-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-form-error-text') }));
-  buf.push('></div></div></p></form>');
+  buf.push('></div></div></p></div></form>');
   }
   return buf.join("");
   };
@@ -614,12 +626,10 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
   buf.push('>remove</button><button');
   buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
-  buf.push('>update</button></div><div');
-  buf.push(attrs({ "class": ('btn-group') }));
-  buf.push('><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
+  buf.push('>update</button></div><div><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('start-app') }));
   buf.push('>start</button><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
+  buf.push(attrs({ "class": ('btn') + ' ' + ('stop-app') }));
   buf.push('>stop</button></div></div></a>');
   }
   return buf.join("");
@@ -665,11 +675,7 @@ window.require.define({"templates/applications": function(exports, require, modu
   with (locals || {}) {
   var interp;
   buf.push('<div');
-  buf.push(attrs({ 'id':('app-list'), "class": ('clearfix') + ' ' + ('well') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('clearfix') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ "class": ('clearfix') }));
+  buf.push(attrs({ 'id':('app-list') }));
   buf.push('></div><div');
   buf.push(attrs({ "class": ('app-tools') }));
   buf.push('><div');
@@ -690,7 +696,7 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
-  buf.push('><i class="icon-plus"></i>\nadd a new application\n</button><button');
+  buf.push('><i class="icon-plus"></i>\nadd application\n</button><button');
   buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
   buf.push('>manage applications\n</button></div></div><div');
   buf.push(attrs({ 'id':('add-app-modal'), "class": ('modal') + ' ' + ('right') + ' ' + ('hide') }));
@@ -701,7 +707,7 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
   buf.push('><p><label>name</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("18"), "class": ("span3") }));
+  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("13"), "class": ("span3") }));
   buf.push('/></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
@@ -880,8 +886,44 @@ window.require.define({"views/account_view": function(exports, require, module) 
       AccountView.prototype.fetchData = function() {
         var _this = this;
         return $.get("api/users/", function(data) {
-          _this.emailField.val(data.rows[0].email);
-          return _this.timezoneField.val(data.rows[0].timezone);
+          var timezone, timezoneData, timezoneIndex, _i, _len;
+          _this.emailField.html(data.rows[0].email);
+          console.log(data);
+          timezoneIndex = {};
+          _this.timezoneField = _this.$("#account-timezone-field");
+          _this.timezoneField.html(data.rows[0].timezone);
+          timezoneData = [];
+          for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+            timezone = timezones[_i];
+            timezoneData.push({
+              value: timezone,
+              text: timezone
+            });
+          }
+          _this.timezoneField.editable({
+            url: function(params) {
+              return _this.submitData({
+                timezone: params.value
+              });
+            },
+            type: 'select',
+            send: 'always',
+            source: timezoneData,
+            value: data.rows[0].timezone
+          });
+          return $.get("api/instances/", function(data) {
+            _this.domainField = $('#account-domain-field');
+            _this.domainField.html(data.rows[0].domain);
+            return _this.domainField.editable({
+              url: function(params) {
+                return _this.submitData({
+                  domain: params.value
+                }, 'api/instance/');
+              },
+              type: 'text',
+              send: 'always'
+            });
+          });
         });
       };
 
@@ -890,8 +932,6 @@ window.require.define({"views/account_view": function(exports, require, module) 
           _this = this;
         this.loadingIndicator.spin();
         form = {
-          email: this.emailField.val(),
-          timezone: this.timezoneField.val(),
           password1: $("#account-password1-field").val(),
           password2: $("#account-password2-field").val()
         };
@@ -917,6 +957,28 @@ window.require.define({"views/account_view": function(exports, require, module) 
         });
       };
 
+      AccountView.prototype.submitData = function(form, url) {
+        var _this = this;
+        if (url == null) url = 'api/user/';
+        return $.ajax({
+          type: 'POST',
+          url: url,
+          data: form,
+          success: function(data) {
+            var d;
+            if (!data.success) {
+              d = new $.Deferred;
+              return d.reject(JSON.parse(data.responseText).msg);
+            }
+          },
+          error: function(data) {
+            var d;
+            d = new $.Deferred;
+            return d.reject(JSON.parse(data.responseText).msg);
+          }
+        });
+      };
+
       /* Functions
       */
 
@@ -935,18 +997,12 @@ window.require.define({"views/account_view": function(exports, require, module) 
       */
 
       AccountView.prototype.render = function() {
-        var timezone, timezoneIndex, _i, _len;
-        $(this.el).html(template());
-        timezoneIndex = {};
-        this.timezoneField = this.$("#account-timezone-field");
-        for (_i = 0, _len = timezones.length; _i < _len; _i++) {
-          timezone = timezones[_i];
-          this.timezoneField.append("<option>" + timezone + "</option>");
-        }
+        this.$el.html(template());
         return this.el;
       };
 
       AccountView.prototype.setListeners = function() {
+        var _this = this;
         if (app.views.home.logoutButton === void 0) {
           app.views.home.logoutButton = $("#logout-button");
           app.views.home.logoutButton.click(app.views.home.logout);
@@ -960,12 +1016,29 @@ window.require.define({"views/account_view": function(exports, require, module) 
           app.views.home.homeButton.click(app.views.home.home);
         }
         app.views.home.selectNavButton(app.views.home.accountButton);
-        this.emailField = $("#account-email-field");
-        this.infoAlert = $("#account-info");
+        this.emailField = this.$("#account-email-field");
+        this.infoAlert = this.$("#account-info");
         this.infoAlert.hide();
-        this.errorAlert = $("#account-error");
+        this.errorAlert = this.$("#account-error");
         this.errorAlert.hide();
-        this.accountDataButton = $("#account-form-button");
+        this.emailField.editable({
+          url: function(params) {
+            return _this.submitData({
+              email: params.value
+            });
+          },
+          type: 'text',
+          send: 'always'
+        });
+        this.changePasswordForm = this.$('#change-password-form');
+        this.changePasswordForm.hide();
+        this.changePasswordButton = this.$('#change-password-button');
+        this.changePasswordButton.click(function() {
+          return _this.changePasswordButton.fadeOut(function() {
+            return _this.changePasswordForm.fadeIn();
+          });
+        });
+        this.accountDataButton = this.$("#account-form-button");
         this.accountDataButton.click(this.onDataSubmit);
         return this.loadingIndicator = this.$(".loading-indicator");
       };
@@ -1056,13 +1129,21 @@ window.require.define({"views/application": function(exports, require, module) {
       */
 
       ApplicationRow.prototype.render = function() {
-        $(this.el).html(template({
+        this.$el.html(template({
           app: this.model
         }));
         this.el.id = this.model.slug;
         if (this.model.state === "broken") {
-          $(this.el).addClass("broken");
-          $(this.el).find(".application-inner").append('<p class="broken-notifier">broken app<p>');
+          this.$el.addClass("broken");
+          this.$el.find(".application-inner").append('<p class="broken-notifier">broken app<p>');
+        }
+        if (this.model.state === "stopped") {
+          this.$el.addClass("stopped");
+          this.$(".stop-app").hide();
+          this.$(".start-app").hide();
+        } else {
+          this.$(".stop-app").hide();
+          this.$(".start-app").hide();
         }
         return this.el;
       };
@@ -1426,7 +1507,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
       HomeView.prototype.setFrameSize = function() {
         var header;
         header = this.$("#header");
-        return this.frames.height($(window).height() - header.height());
+        this.frames.height($(window).height() - header.height());
+        return this.content.height($(window).height() - header.height());
       };
 
       HomeView.prototype.selectNavButton = function(button) {
@@ -1507,6 +1589,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.frames = this.$("#app-frames");
         this.content = this.$("#content");
         this.buttons.fadeIn();
+        this.content = this.$('#content');
         $(window).resize(this.setFrameSize);
         return this.setFrameSize();
       };

@@ -42,6 +42,7 @@ class exports.HomeView extends Backbone.View
   setFrameSize: =>
     header = @$ "#header"
     @frames.height $(window).height() - header.height()
+    @content.height $(window).height() - header.height()
     
   # Desactivate all buttons and activate given button (visual activation).
   selectNavButton: (button) ->
@@ -110,5 +111,6 @@ class exports.HomeView extends Backbone.View
     @content = @$("#content")
     @buttons.fadeIn()
 
+    @content = @$ '#content'
     $(window).resize @setFrameSize
     @setFrameSize()

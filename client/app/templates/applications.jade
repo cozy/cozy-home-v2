@@ -1,6 +1,4 @@
-#app-list.clearfix.well
-  .clearfix
-.clearfix
+#app-list
 
 .app-tools
   .machine-infos
@@ -22,7 +20,7 @@
   .btn-group
       button#add-app-button.btn
         | <i class="icon-plus"></i>
-        | add a new application
+        | add application
       button#manage-app-button.btn
         | manage applications
 
@@ -35,7 +33,7 @@
   div#add-app-form.modal-body
     p
       label name
-      input(type="text", class="span3", id="app-name-field", maxlength="18")
+      input(type="text", class="span3", id="app-name-field", maxlength="13")
     p
       label Git URL
       input(type="text", class="span3", id="app-git-field")

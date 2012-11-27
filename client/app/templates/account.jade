@@ -1,24 +1,32 @@
 form#account-form.well
-  p
-    label email
-    input#account-email-field(type="text")
-  p
-    label timezone
-    select#account-timezone-field(type="text")
-  p
-    label fill this field to set a new password
-    input#account-password1-field(type="password")
-  p
-    label confirm new password
-    input#account-password2-field(type="password")
- 
-  p
-    button#account-form-button(class="btn", type="submit") Send changes
-    span.loading-indicator
+  p email
+  p.field
+    a#account-email-field
+  p timezone
+  p.field
+    a#account-timezone-field
+  p instance
+  p.field
+    a#account-domain-field
 
-    div#account-info.alert.main-alert.hide
-        div#account-info-text 
+  p
+    button#change-password-button.btn Change password
 
-    div#account-error.alert.alert-error.main-alert.hide
-        div#account-form-error-text 
+  #change-password-form
+      p Change password
+      p
+        label fill this field to set a new password
+        input#account-password1-field(type="password")
+      p
+        label confirm new password
+        input#account-password2-field(type="password")
+     
+      p
+        button#account-form-button(class="btn", type="submit") Send changes
+        p.loading-indicator
 
+        div#account-info.alert.main-alert.hide
+            div#account-info-text 
+
+        div#account-error.alert.alert-error.main-alert.hide
+            div#account-form-error-text 

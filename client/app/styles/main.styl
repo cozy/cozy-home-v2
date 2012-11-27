@@ -1,47 +1,50 @@
 @import 'nib'
 
-bgcolor = white
+@font-face 
+  font-family: styled
+  src: url('/fonts/maven-pro-light-300.otf');
+
+@font-face 
+  font-family: main
+  src: url('/fonts/signika-regular.ttf');
+
+
 bgshadowcolor = #666688
-maintitlecolor = #d46a2c
-titlecolor = #d46a2c
-linkcolor = #f68C4E
-menuhovercolor = #ffced8
-menuunselectedcolor = #c9b5a5
 shadowcolor = #444
-bgcolorbuttons = #8CA69E
+bgcolorbuttons = #8CA6AE
 bgclearcolorbuttons = bgcolorbuttons + 50%
 appbordercolor = bgcolorbuttons - 20%
 bgcolorhoverbuttons = bgcolorbuttons + 20%
 bgclearcolorhoverbuttons = bgcolorbuttons + 70%
-textcolorapplication = #FFEFF3
+textcolor = #EAF1F1
+buttoncolor = #CAD1D1 + 60%
+highlightcolor = #E2F8FF
+bgcolor = #545e5f + 20%
+
 
 
 body
-  background-color: bgcolor
   min-width: 320px
+  color: textcolor
+  font-family: styled
+  font-size: 18px
   
 a
   color: linkcolor
   font-weight bold
 
-a:hover
-  color: black
+a
+a:visited
+a.editable-click
+  color: textcolor
+  border-bottom: 1px dashed textcolor
 
-h2
-  font-size 30px
-  margin-bottom 24px
-  margin-top 24px
+a.editable-click:hover
+  color: orange
+  border-bottom: 1px dashed textcolor
 
 .spacer
   clear both
-
-.container
-  padding 0
-  background-color white
-  width 100%
-  rounded-border 4px
-  box-shadow 3px 3px 4px 1px bgshadowcolor
-  min-height 260px
 
 .close 
   float right
@@ -52,8 +55,39 @@ h2
 .center 
   text-align center
 
-#text-container
-  width 610px
+.btn
+    background: buttoncolor
+    border: 1px solid buttoncolor - 20%
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
+    margin: 0
+    font-family: styled
+
+.btn-group
+    .btn
+        font-size: 16px
+
+.btn:hover
+    background: buttoncolor + 60%
+    box-shadow: 0 0 8px highlightcolor
+
+.btn:active
+    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
+    background: buttoncolor - 10%
+
+.progress
+    margin: 20px 0
+    height: 10px
+    background: bgcolor - 30%
+
+.progress .bar
+    background: highlightcolor
+    box-shadow: 0 0 6px highlightcolor
+
+#content
+  padding: 0
+  height: 100%
+  overflow: auto
+
 
 /* Header */
 
@@ -86,14 +120,6 @@ h2
     color: linkcolor 
 
 
-/* Dialogs */
-
-#confirm-dialog
-  display none
-
-
-/* Misc */
-
 
 #buttons
   float right
@@ -108,44 +134,48 @@ h2
   #header-title
     display: none
 
-#content
-  padding 24px
+/* Dialogs */
+
+#confirm-dialog
+  display none
+
+/** Applications */
 
 #app-list
-    margin-bottom 0px
+    text-align: center
+    margin: 40px 0
 
-.application 
-  width 155px
-  height 250px
-  margin 6px
-  margin-bottom 54px
-  font-size 42px
-  line-height 48px
-  float left
+  button 
+      margin-top: 20px
 
-.application a:hover
-  text-decoration: none
-
-.application-inner
-  text-align center
-  width 150px
-  height 200px
+.application
+  width: 170px
+  margin: 6px
+  display: inline-block
+  text-align: center
   border 1px solid appbordercolor
   box-shadow 1px 1px 3px shadowcolor
   border-radius 12px
-  color white
   background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
+  padding-bottom: 20px
 
   img
       margin-top: 10px
 
   p
       margin: 0
+      font-family: main
+      color textcolor
+      text-shadow 1px 1px 1px shadowcolor
 
-.application-inner:active
+  a:hover
+      text-decoration: none
+
+
+.application:active
   box-shadow none
 
-.application-inner:hover  
+.application:hover  
   background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
 
 .app-title
@@ -158,14 +188,67 @@ h2
   line-height: 20px
 
 .app-tools 
+    width: 50%    
+    margin-left: auto
+    margin-right: auto
     margin-top: 12px
+    color: text-color
+    text-align: center
 
 .modal
-    width: 340px
-    margin: auto
+    width: 540px
+    margin: auto - 270px 
     top: 10%
-    left: auto
+    background: bgcolor
 
+.modal-header
+    border: 0
+
+
+.modal-footer
+    background: bgcolor
+    border: 0
+
+.well
+    background: bgcolor + 70%
+    background: transparent
+    border: 0
+    margin: 2%
+    color: bgcolor - 20%
+    color: textcolor
+    text-align: center
+
+.control-group
+#add-app-form
+#account-form
+    border: 0
+
+    select
+    input
+        font-size: 1em
+        height: 1.1em
+        padding: 0.2em
+        border-radius: 0.4em
+        border: 0
+        background-color: textcolor
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.45) inset
+
+    select
+        height: 35px
+
+    input:focus
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.75) inset, 0 0 17px rgba(82, 168, 236, 0.9)
+        background: #e2f8ff
+
+    .btn
+        margin-top: 0.2em 
+
+#account-form
+.control-group
+    select
+    input
+        font-size: 1em
+ 
 
 #app-description-field
 #app-git-field
@@ -177,6 +260,8 @@ h2
 #add-app-submit
   font-weight: bold
   font-size: 20px
+  color: bgcolor - 30%
+  text-shadow: 0 0 0
 
 .install-info
   width: 40%
@@ -194,6 +279,9 @@ h2
 .application-outer
   display:none
 
+  .btn
+      margin-top: 10px
+
 .loading-indicator
   margin-top: 10px
   margin-left: 10px
@@ -204,50 +292,24 @@ h2
 #add-app-submit
   margin-top: 5px
 
-/* Login page */
-
-.main-alert
-  display inline-block
-
-#login-error
-  width 360px
-
-#login-view 
-  text-align center
-
-  h2
-    color: titlecolor
-
-#login-password
-  width 400px
-  font-size 30px
-  padding 6px
-  height 48px
-  
-a
-  cursor pointer
-
-
-/* Register page */
-
-#register-view input
-  width 400px
-  font-size 30px
-  padding 6px
-  height 48px
-
-#register-error
-  width 780px
-
 // Account page
-
-#reset-view h1
-#account-view h1
-  color titlecolor
-  margin-bottom 40px
 
 #account-form
   margin-bottom: 0
+  font-size: 1.3em
+
+  p
+      margin: 20px 0 10px 0
+
+  p.field 
+      margin: 10px 0 20px 0
+
+  .icon-white
+      background-image: url("../img/glyphicons-halflings.png")
+
+  .alert 
+      width: 50%
+      margin: auto
 
 #account-info
 #account-error
@@ -255,13 +317,22 @@ a
   margin-bottom: 0
 
 #home-view 
-    height 100%
     overflow:hidden
+    background: bgcolor
+    width: 100%
+    height: 100%
+    padding: 0
+    margin: 0
 
 #account-view 
   .loading-indicator
     margin-left 40px
 
+#change-password-button
+    margin-top: 50px
+
+#change-password-form
+    margin-top: 50px
 
 // Applications
 
@@ -283,22 +354,20 @@ html
 html
     height 100%
         
-#home-view
-    background: white
-    width:100%
-    height: 100%
-    padding 0
-    margin 0
-
 .home-body
-    background: white
     width:100%
     height: 100%
-    padding 0
-    margin 0
+    padding: 0
+    margin: 0
+    box-shadow: inset 0 0 100px #2b4244 + 20%
+    background: bgcolor 
+    overflow: hidden
 
 .navbar .nav
     float: right
+
+    img
+        box-shadow: 1px 1px 1px shadowcolor 
 
 #buttons
     text-align right
@@ -315,11 +384,7 @@ html
 #app-frames
     height 100%
     display:none
-
-.home-body
-    background: white
-    width:100%
-    height: 100%
+    text-align: center
 
 .navbar .nav
     float: right
