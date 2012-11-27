@@ -1,4 +1,4 @@
-client = require 'lib/request'
+client = require '../helpers/client'
 applicationsTemplate = require('../templates/applications')
 User = require('../models/user').User
 
@@ -36,191 +36,192 @@ class InstallButton
 
 # View describing main screen for user once he is logged
 class exports.ApplicationsView extends Backbone.View
-  id: 'applications-view'
+    id: 'applications-view'
 
-  ### Constructor ###
+    ### Constructor ###
 
-  constructor: ->
-    super()
+    constructor: ->
+        super()
 
-    @isManaging = false
-    @isInstalling = false
-    @apps = new AppCollection @
+        @isManaging = false
+        @isInstalling = false
+        @apps = new AppCollection @
 
- 
-  ### Listeners ###
+    ### Listeners ###
 
-  onAddClicked: =>
-    @installAppButton.displayOrange "install"
-    @$("#app-name-field").val null
-    @$("#app-git-field").val null
+    onAddClicked: =>
+        @installAppButton.displayOrange "install"
+        @$("#app-name-field").val null
+        @$("#app-git-field").val null
 
-    @addApplicationForm.show()
-    @addApplicationModal.toggle()
-    @isInstalling = false
+        @addApplicationForm.show()
+        @addApplicationModal.toggle()
+        @isInstalling = false
 
-  onInstallClicked: =>
-    return true if @isInstalling
-    @isInstalling = true
-    data =
-      name: @$("#app-name-field").val()
-      git: @$("#app-git-field").val()
+    onInstallClicked: =>
+        return true if @isInstalling
+        @isInstalling = true
+        data =
+            name: @$("#app-name-field").val()
+            git: @$("#app-git-field").val()
 
-    @hideError()
-    @installAppButton.displayOrange "install"
+        @hideError()
+        @installAppButton.displayOrange "install"
 
-    dataChecking = @checkData data
-    if not dataChecking.error
-        @errorAlert.hide()
-        @installAppButton.button.html "installing..."
-        @installInfo.spin()
+        dataChecking = @checkData data
+        if not dataChecking.error
+            @errorAlert.hide()
+            @installAppButton.button.html "installing..."
+            @installInfo.spin()
 
-        app = new Application data
-        app.install
-            success: (data) =>
-                if (data.status? == "broken") or not data.success
-                    @apps.add app
-                    window.app.views.home.addApplication app
+            app = new Application data
+            app.install
+                success: (data) =>
+                    if (data.status? == "broken") or not data.success
+                        @apps.add app
+                        # TODO: refactor that with backbone mediator
+                        window.app.views.home.addApplication app
+                        @installAppButton.displayRed "Install failed"
+                        @installInfo.spin()
+                        setTimeout =>
+                            @addApplicationForm.slideToggle()
+                        , 1000
+                    else
+                        @apps.add app
+                        # TODO: refactor that with backbone mediator
+                        window.app.views.home.addApplication app
+                        @installAppButton.displayGreen "Install succeeded!"
+                        @installInfo.spin()
+                        setTimeout =>
+                            @addApplicationForm.slideToggle()
+                        , 1000
+
+                error: (data) =>
+                    @isInstalling = false
                     @installAppButton.displayRed "Install failed"
                     @installInfo.spin()
-                    setTimeout =>
-                        @addApplicationForm.slideToggle()
-                    , 1000
-                else
-                    @apps.add app
-                    window.app.views.home.addApplication app
-                    @installAppButton.displayGreen "Install succeeded!"
-                    @installInfo.spin()
-                    setTimeout =>
-                        @addApplicationForm.slideToggle()
-                    , 1000
+        else
+            @isInstalling = false
+            @displayError dataChecking.msg
 
-            error: (data) =>
-                @isInstalling = false
-                @installAppButton.displayRed "Install failed"
-                @installInfo.spin()
-    else
+    onManageAppsClicked: =>
+        if not @machineInfos.is(':visible')
+            @$('.application-outer').show()
+            @machineInfos.find('.progress').spin()
+            client.get 'api/sys-data',
+                success: (data) =>
+                    @machineInfos.find('.progress').spin()
+                    @displayMemory(data.freeMem, data.totalMem)
+                    @displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace)
+                error: ->
+                    @machineInfos.find('.progress').spin()
+                    alert 'Server error occured, machine infos cannot be displayed.'
+        else
+            @$('.application-outer').show()
+
+        @machineInfos.toggle()
+        @isManaging = not @isManaging
+
+    onCloseAddAppClicked: =>
+        @addApplicationModal.hide()
         @isInstalling = false
-        @displayError dataChecking.msg
 
-  onManageAppsClicked: =>
-      @$('.application-outer').toggle()
+    ### Functions ###
 
-      if not @machineInfos.is(':visible')
-          @machineInfos.find('.progress').spin()
-          client.get 'api/sys-data',
-              success: (data) =>
-                  @machineInfos.find('.progress').spin()
-                  @displayMemory(data.freeMem, data.totalMem)
-                  @displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace)
-              error: ->
-                  @machineInfos.find('.progress').spin()
-                  alert 'Server error occured, machine infos cannot be displayed.'
+    # Clear current application list.
+    clearApps: =>
+        @appList.html null
 
-      @machineInfos.toggle()
-       
+    # Add an application row to the app list.
+    # Add application to home view toolbar
+    addApplication: (application) =>
+        row = new AppRow application
+        el = row.render()
+        @appList.append el
+        @$(el).hide()
+        @$(el).fadeIn()
+        @$(el).find(".application-outer").show() if @isManaging
+        # Call to home view should be more proper.
 
-      @isManaging = not @isManaging
+    # Check that given data are corrects.
+    checkData: (data) =>
+        rightData = true
+        for property of data
+            rightData = data[property]? and data[property].length > 0
+            break if not rightData
 
-  onCloseAddAppClicked: =>
-      @addApplicationModal.hide()
-      @isInstalling = false
+        if not rightData
+            error: true, msg: "All fields are required"
 
-  ### Functions ###
+        else if not data.git?.match /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/
+                {
+                    error: true
+                    msg: "Git url should be of form https://.../my-repo.git"
+                }
+        else
+            error: false
 
-  # Clear current application list.
-  clearApps: =>
-      @appList.html null
+    # Display message inside info box.
+    displayInfo: (msg) =>
+        @errorAlert.hide()
+        @infoAlert.html msg
+        @infoAlert.show()
 
-  # Add an application row to the app list.
-  # Add application to home view toolbar
-  addApplication: (application) =>
-      row = new AppRow application
-      el = row.render()
-      @appList.append el
-      @$(el).hide()
-      @$(el).fadeIn()
-      @$(el).find(".application-outer").show() if @isManaging
-      # Call to home view should be more proper.
+    # Display message inside error box.
+    displayError: (msg) =>
+        @infoAlert.hide()
+        @errorAlert.html msg
+        @errorAlert.show()
+    
+    hideError: =>
+        @errorAlert.hide()
 
-  # Check that given data are corrects.
-  checkData: (data) =>
-    rightData = true
-    for property of data
-      rightData = data[property]? and data[property].length > 0
-      break if not rightData
+    displayMemory: (freeMem, totalMem)->
+        total = Math.floor(totalMem / 1024) + "Mo"
+        @machineInfos.find('.memory .total').html total
 
-    if not rightData
-        error: true, msg: "All fields are required"
+        usedMemory = ((totalMem - freeMem) / totalMem) * 100
+        @machineInfos.find('.memory .bar').css('width', usedMemory + '%')
 
-    else if not data.git?.match /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/
-        {
-            error: true
-            msg: "Git url should be of form https://.../my-repo.git"
-        }
-    else
-        error: false
+    displayDiskSpace: (usedSpace, totalSpace)->
+        @machineInfos.find('.disk .total').html(totalSpace + "Go")
+        @machineInfos.find('.disk .bar').css('width', usedSpace + '%')
 
-  # Display message inside info box.
-  displayInfo: (msg) =>
-    @errorAlert.hide()
-    @infoAlert.html msg
-    @infoAlert.show()
+    displayNoAppMessage: () ->
+        @noAppMessage.show()
 
-  # Display message inside error box.
-  displayError: (msg) =>
-    @infoAlert.hide()
-    @errorAlert.html msg
-    @errorAlert.show()
-  
-  hideError: =>
-    @errorAlert.hide()
+    ### Init functions ###
 
+    fetchData: ->
+        @apps.fetch()
 
-  displayMemory: (freeMem, totalMem)->
+    render: ->
+        $(@el).html applicationsTemplate()
+        @el
 
-      total = Math.floor(totalMem / 1024) + "Mo"
-      @machineInfos.find('.memory .total').html total
+    setListeners: ->
+        @appList = @$ "#app-list"
 
-      usedMemory = ((totalMem - freeMem) / totalMem) * 100
-      @machineInfos.find('.memory .bar').css('width', usedMemory + '%')
+        @addApplicationButton = @$ "#add-app-button"
+        @addApplicationButton.click @onAddClicked
+        @addApplicationForm = @$ "#add-app-form"
+        @addApplicationModal = @$ "#add-app-modal"
+        @manageAppsButton = @$ "#manage-app-button"
+        @manageAppsButton.click @onManageAppsClicked
+        @installAppButton = new InstallButton @$ "#add-app-submit"
+        @installAppButton.button.click @onInstallClicked
+        @infoAlert = @$ "#add-app-form .info"
+        @errorAlert = @$ "#add-app-form .error"
+        @machineInfos = @$ ".machine-infos"
+        @noAppMessage = @$ '#no-app-message'
 
+        @appNameField = @$ "#app-name-field"
+        @appGitField = @$ "#app-git-field"
 
-  displayDiskSpace: (usedSpace, totalSpace)->
-      @machineInfos.find('.disk .total').html(totalSpace + "Go")
-      @machineInfos.find('.disk .bar').css('width', usedSpace + '%')
+        @installInfo = @$ "#add-app-modal .loading-indicator"
+        @errorAlert.hide()
+        @infoAlert.hide()
+        @machineInfos.hide()
 
-  ### Init functions ###
-
-  fetchData: ->
-    @apps.fetch()
-
-  render: ->
-    $(@el).html applicationsTemplate()
-    @el
-
-  setListeners: ->
-    @appList = @$ "#app-list"
-
-    @addApplicationButton = @$ "#add-app-button"
-    @addApplicationButton.click @onAddClicked
-    @addApplicationForm = @$ "#add-app-form"
-    @addApplicationModal = @$ "#add-app-modal"
-    @manageAppsButton = @$ "#manage-app-button"
-    @manageAppsButton.click @onManageAppsClicked
-    @installAppButton = new InstallButton @$ "#add-app-submit"
-    @installAppButton.button.click @onInstallClicked
-    @infoAlert = @$ "#add-app-form .info"
-    @errorAlert = @$ "#add-app-form .error"
-    @machineInfos = @$ ".machine-infos"
-
-    @appNameField = @$ "#app-name-field"
-    @appGitField = @$ "#app-git-field"
-
-    @installInfo = @$ "#add-app-modal .loading-indicator"
-    @errorAlert.hide()
-    @infoAlert.hide()
-    @machineInfos.hide()
-
-    @addApplicationCloseCross = @$ "#add-app-modal .close"
-    @addApplicationCloseCross.click @onCloseAddAppClicked
+        @addApplicationCloseCross = @$ "#add-app-modal .close"
+        @addApplicationCloseCross.click @onCloseAddAppClicked

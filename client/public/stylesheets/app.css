@@ -6033,6 +6033,7 @@ button{margin-top:20px}
 .modal-header{border:0}
 .modal-footer{background:#738182;border:0}
 .well{background:#d5d9da;background:transparent;border:0;margin:2%;color:#5c6768;color:#eaf1f1;text-align:center}
+#no-app-message{margin-top:30px}
 .control-group,#add-app-form,#account-form{border:0;}
 .control-group select,#add-app-form select,#account-form select,.control-group input,#add-app-form input,#account-form input{font-size:1em;height:1.1em;padding:.2em;-webkit-border-radius:.4em;-moz-border-radius:.4em;border-radius:.4em;border:0;background-color:#eaf1f1;-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;-moz-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;box-shadow:0 2px 2px rgba(0,0,0,0.45) inset}
 .control-group select,#add-app-form select,#account-form select{height:35px}

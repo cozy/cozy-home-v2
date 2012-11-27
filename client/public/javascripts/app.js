@@ -105,9 +105,13 @@ window.require.define({"collections/application": function(exports, require, mod
       ApplicationCollection.prototype.onReset = function() {
         var _this = this;
         this.view.clearApps();
-        return this.forEach(function(app) {
-          return _this.view.addApplication(app);
-        });
+        if (this.length > 0) {
+          return this.forEach(function(app) {
+            return _this.view.addApplication(app);
+          });
+        } else {
+          return this.view.displayNoAppMessage();
+        }
       };
 
       ApplicationCollection.prototype.onAdd = function(app) {
@@ -255,41 +259,30 @@ window.require.define({"helpers": function(exports, require, module) {
 window.require.define({"helpers/client": function(exports, require, module) {
   (function() {
 
-    exports.get = function(url, callbacks) {
-      var _this = this;
+    exports.request = function(type, url, data, callbacks) {
       return $.ajax({
-        type: 'GET',
+        type: type,
         url: url,
-        success: function(response) {
-          if (response.success) {
-            return callbacks.success(response);
-          } else {
-            return callbacks.error(response);
-          }
-        },
-        error: function(response) {
-          return callbacks.error(response);
-        }
+        data: data,
+        success: callbacks.success,
+        error: callbacks.error
       });
     };
 
+    exports.get = function(url, callbacks) {
+      return exports.request("GET", url, null, callbacks);
+    };
+
     exports.post = function(url, data, callbacks) {
-      var _this = this;
-      return $.ajax({
-        type: 'POST',
-        url: url,
-        data: data,
-        success: function(response) {
-          if (response.success) {
-            return callbacks.success(response);
-          } else {
-            return callbacks.error(response);
-          }
-        },
-        error: function(response) {
-          return callbacks.error(response);
-        }
-      });
+      return exports.request("POST", url, data, callbacks);
+    };
+
+    exports.put = function(url, data, callbacks) {
+      return exports.request("PUT", url, data, callbacks);
+    };
+
+    exports.del = function(url, callbacks) {
+      return exports.request("DELETE", url, null, callbacks);
     };
 
   }).call(this);
@@ -311,7 +304,7 @@ window.require.define({"initialize": function(exports, require, module) {
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    BrunchApplication = require('helpers').BrunchApplication;
+    BrunchApplication = require('./helpers').BrunchApplication;
 
     MainRouter = require('routers/main_router').MainRouter;
 
@@ -357,39 +350,6 @@ window.require.define({"initialize": function(exports, require, module) {
   
 }});
 
-window.require.define({"lib/request": function(exports, require, module) {
-  (function() {
-
-    exports.request = function(type, url, data, callbacks) {
-      return $.ajax({
-        type: type,
-        url: url,
-        data: data,
-        success: callbacks.success,
-        error: callbacks.error
-      });
-    };
-
-    exports.get = function(url, callbacks) {
-      return exports.request("GET", url, null, callbacks);
-    };
-
-    exports.post = function(url, data, callbacks) {
-      return exports.request("POST", url, data, callbacks);
-    };
-
-    exports.put = function(url, data, callbacks) {
-      return exports.request("PUT", url, data, callbacks);
-    };
-
-    exports.del = function(url, callbacks) {
-      return exports.request("DELETE", url, null, callbacks);
-    };
-
-  }).call(this);
-  
-}});
-
 window.require.define({"models/application": function(exports, require, module) {
   (function() {
     var BaseModel, client,
@@ -398,7 +358,7 @@ window.require.define({"models/application": function(exports, require, module) 
 
     BaseModel = require("models/models").BaseModel;
 
-    client = require("lib/request");
+    client = require("../helpers/client");
 
     exports.Application = (function(_super) {
 
@@ -407,14 +367,11 @@ window.require.define({"models/application": function(exports, require, module) 
       Application.prototype.url = '/api/applications/';
 
       function Application(app) {
+        var property;
         Application.__super__.constructor.call(this);
-        this.slug = app.slug;
-        this.name = app.name;
-        this.description = app.description;
-        this.icon = app.icon;
-        this.git = app.git;
-        this.state = app.state;
-        this;
+        for (property in app) {
+          this[property] = app[property];
+        }
       }
 
       Application.prototype.install = function(callbacks) {
@@ -675,6 +632,8 @@ window.require.define({"templates/applications": function(exports, require, modu
   with (locals || {}) {
   var interp;
   buf.push('<div');
+  buf.push(attrs({ 'id':('no-app-message'), "class": ('center') + ' ' + ('hidden') }));
+  buf.push('><p>You have actually no application installed on your Cozy Cloud</p></div><div');
   buf.push(attrs({ 'id':('app-list') }));
   buf.push('></div><div');
   buf.push(attrs({ "class": ('app-tools') }));
@@ -880,50 +839,14 @@ window.require.define({"views/account_view": function(exports, require, module) 
 
       function AccountView() {
         this.displayErrors = __bind(this.displayErrors, this);
-        this.onDataSubmit = __bind(this.onDataSubmit, this);      AccountView.__super__.constructor.call(this);
+        this.onDataSubmit = __bind(this.onDataSubmit, this);
+        this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);      AccountView.__super__.constructor.call(this);
       }
 
-      AccountView.prototype.fetchData = function() {
+      AccountView.prototype.onChangePasswordClicked = function() {
         var _this = this;
-        return $.get("api/users/", function(data) {
-          var timezone, timezoneData, timezoneIndex, _i, _len;
-          _this.emailField.html(data.rows[0].email);
-          console.log(data);
-          timezoneIndex = {};
-          _this.timezoneField = _this.$("#account-timezone-field");
-          _this.timezoneField.html(data.rows[0].timezone);
-          timezoneData = [];
-          for (_i = 0, _len = timezones.length; _i < _len; _i++) {
-            timezone = timezones[_i];
-            timezoneData.push({
-              value: timezone,
-              text: timezone
-            });
-          }
-          _this.timezoneField.editable({
-            url: function(params) {
-              return _this.submitData({
-                timezone: params.value
-              });
-            },
-            type: 'select',
-            send: 'always',
-            source: timezoneData,
-            value: data.rows[0].timezone
-          });
-          return $.get("api/instances/", function(data) {
-            _this.domainField = $('#account-domain-field');
-            _this.domainField.html(data.rows[0].domain);
-            return _this.domainField.editable({
-              url: function(params) {
-                return _this.submitData({
-                  domain: params.value
-                }, 'api/instance/');
-              },
-              type: 'text',
-              send: 'always'
-            });
-          });
+        return this.changePasswordButton.fadeOut(function() {
+          return _this.changePasswordForm.fadeIn();
         });
       };
 
@@ -993,6 +916,57 @@ window.require.define({"views/account_view": function(exports, require, module) 
         return this.errorAlert.show();
       };
 
+      AccountView.prototype.fetchData = function() {
+        var _this = this;
+        return $.get("api/users/", function(data) {
+          var timezone, timezoneData, timezoneIndex, _i, _len;
+          _this.emailField.html(data.rows[0].email);
+          timezoneIndex = {};
+          _this.timezoneField.html(data.rows[0].timezone);
+          timezoneData = [];
+          for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+            timezone = timezones[_i];
+            timezoneData.push({
+              value: timezone,
+              text: timezone
+            });
+          }
+          _this.emailField.editable({
+            url: function(params) {
+              return _this.submitData({
+                email: params.value
+              });
+            },
+            type: 'text',
+            send: 'always',
+            value: data.rows[0].email
+          });
+          _this.timezoneField.editable({
+            url: function(params) {
+              return _this.submitData({
+                timezone: params.value
+              });
+            },
+            type: 'select',
+            send: 'always',
+            source: timezoneData,
+            value: data.rows[0].timezone
+          });
+          return $.get("api/instances/", function(data) {
+            _this.domainField.html(data.rows[0].domain);
+            return _this.domainField.editable({
+              url: function(params) {
+                return _this.submitData({
+                  domain: params.value
+                }, 'api/instance/');
+              },
+              type: 'text',
+              send: 'always'
+            });
+          });
+        });
+      };
+
       /* Configuration
       */
 
@@ -1002,42 +976,18 @@ window.require.define({"views/account_view": function(exports, require, module) 
       };
 
       AccountView.prototype.setListeners = function() {
-        var _this = this;
-        if (app.views.home.logoutButton === void 0) {
-          app.views.home.logoutButton = $("#logout-button");
-          app.views.home.logoutButton.click(app.views.home.logout);
-        }
-        if (app.views.home.accountButton === void 0) {
-          app.views.home.accountButton = $("#account-button");
-          app.views.home.accountButton.click(app.views.home.account);
-        }
-        if (app.views.home.homeButton === void 0) {
-          app.views.home.homeButton = $("#home-button");
-          app.views.home.homeButton.click(app.views.home.home);
-        }
         app.views.home.selectNavButton(app.views.home.accountButton);
         this.emailField = this.$("#account-email-field");
+        this.timezoneField = this.$("#account-timezone-field");
+        this.domainField = $('#account-domain-field');
         this.infoAlert = this.$("#account-info");
         this.infoAlert.hide();
         this.errorAlert = this.$("#account-error");
         this.errorAlert.hide();
-        this.emailField.editable({
-          url: function(params) {
-            return _this.submitData({
-              email: params.value
-            });
-          },
-          type: 'text',
-          send: 'always'
-        });
         this.changePasswordForm = this.$('#change-password-form');
         this.changePasswordForm.hide();
         this.changePasswordButton = this.$('#change-password-button');
-        this.changePasswordButton.click(function() {
-          return _this.changePasswordButton.fadeOut(function() {
-            return _this.changePasswordForm.fadeIn();
-          });
-        });
+        this.changePasswordButton.click(this.onChangePasswordClicked);
         this.accountDataButton = this.$("#account-form-button");
         this.accountDataButton.click(this.onDataSubmit);
         return this.loadingIndicator = this.$(".loading-indicator");
@@ -1163,7 +1113,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    client = require('lib/request');
+    client = require('../helpers/client');
 
     applicationsTemplate = require('../templates/applications');
 
@@ -1297,8 +1247,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
       ApplicationsView.prototype.onManageAppsClicked = function() {
         var _this = this;
-        this.$('.application-outer').toggle();
         if (!this.machineInfos.is(':visible')) {
+          this.$('.application-outer').show();
           this.machineInfos.find('.progress').spin();
           client.get('api/sys-data', {
             success: function(data) {
@@ -1311,6 +1261,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
               return alert('Server error occured, machine infos cannot be displayed.');
             }
           });
+        } else {
+          this.$('.application-outer').show();
         }
         this.machineInfos.toggle();
         return this.isManaging = !this.isManaging;
@@ -1391,6 +1343,10 @@ window.require.define({"views/applications_view": function(exports, require, mod
         return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
       };
 
+      ApplicationsView.prototype.displayNoAppMessage = function() {
+        return this.noAppMessage.show();
+      };
+
       /* Init functions
       */
 
@@ -1416,6 +1372,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.infoAlert = this.$("#add-app-form .info");
         this.errorAlert = this.$("#add-app-form .error");
         this.machineInfos = this.$(".machine-infos");
+        this.noAppMessage = this.$('#no-app-message');
         this.appNameField = this.$("#app-name-field");
         this.appGitField = this.$("#app-git-field");
         this.installInfo = this.$("#add-app-modal .loading-indicator");
@@ -1447,7 +1404,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
     appIframeTemplate = require("../templates/application_iframe");
 
-    AppCollection = require('collections/application').ApplicationCollection;
+    AppCollection = require('../collections/application').ApplicationCollection;
 
     User = require("../models/user").User;
 
@@ -1461,7 +1418,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.onAppButtonClicked = __bind(this.onAppButtonClicked, this);
         this.addApplication = __bind(this.addApplication, this);
         this.clearApps = __bind(this.clearApps, this);
-        this.setFrameSize = __bind(this.setFrameSize, this);
+        this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
         this.account = __bind(this.account, this);
         this.home = __bind(this.home, this);
         this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
@@ -1504,7 +1461,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         return this.selectNavButton(this.accountButton);
       };
 
-      HomeView.prototype.setFrameSize = function() {
+      HomeView.prototype.resetLayoutSizes = function() {
         var header;
         header = this.$("#header");
         this.frames.height($(window).height() - header.height());
@@ -1533,7 +1490,6 @@ window.require.define({"views/home_view": function(exports, require, module) {
       HomeView.prototype.onAppButtonClicked = function(event) {
         var id;
         id = event.target.id;
-        console.log($(event.target).parent());
         if (!((id != null) && id.length > 0)) {
           id = $(event.target).parent().attr('id');
         }
@@ -1578,20 +1534,20 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       HomeView.prototype.setListeners = function() {
-        this.logoutButton = this.$("#logout-button");
+        this.logoutButton = this.$('#logout-button');
         this.logoutButton.click(this.logout);
-        this.accountButton = this.$("#account-button");
+        this.accountButton = this.$('#account-button');
         this.accountButton.click(this.account);
-        this.homeButton = this.$("#home-button");
+        this.homeButton = this.$('#home-button');
         this.homeButton.click(this.home);
-        this.buttons = this.$("#buttons");
+        this.buttons = this.$('#buttons');
         this.selectNavButton(this.homeButton);
-        this.frames = this.$("#app-frames");
-        this.content = this.$("#content");
+        this.frames = this.$('#app-frames');
+        this.content = this.$('#content');
         this.buttons.fadeIn();
         this.content = this.$('#content');
-        $(window).resize(this.setFrameSize);
-        return this.setFrameSize();
+        $(window).resize(this.resetLayoutSizes);
+        return this.resetLayoutSizes();
       };
 
       return HomeView;
@@ -1621,7 +1577,7 @@ window.require.define({"views/row": function(exports, require, module) {
       }
 
       BaseRow.prototype.remove = function() {
-        return $(this.el).remove();
+        return this.$el.remove();
       };
 
       return BaseRow;

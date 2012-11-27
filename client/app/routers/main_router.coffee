@@ -26,5 +26,3 @@ class exports.MainRouter extends Backbone.Router
         $("#content").html view.render()
         view.fetchData()
         view.setListeners()
-
-
