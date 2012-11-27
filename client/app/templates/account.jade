@@ -5,7 +5,7 @@ form#account-form.well
   p timezone
   p.field
     a#account-timezone-field
-  p instance
+  p domain
   p.field
     a#account-domain-field
 
@@ -23,9 +23,10 @@ form#account-form.well
      
       p
         button#account-form-button(class="btn", type="submit") Send changes
-        p.loading-indicator
 
-        div#account-info.alert.main-alert.hide
+        p.loading-indicator &nbsp;
+
+        div#account-info.alert.main-alert.alert-success.hide
             div#account-info-text 
 
         div#account-error.alert.alert-error.main-alert.hide

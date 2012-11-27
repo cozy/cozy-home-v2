@@ -531,7 +531,7 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ "class": ('field') }));
   buf.push('><a');
   buf.push(attrs({ 'id':('account-timezone-field') }));
-  buf.push('></a></p><p>instance</p><p');
+  buf.push('></a></p><p>domain</p><p');
   buf.push(attrs({ "class": ('field') }));
   buf.push('><a');
   buf.push(attrs({ 'id':('account-domain-field') }));
@@ -547,8 +547,8 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
   buf.push('>Send changes</button><p');
   buf.push(attrs({ "class": ('loading-indicator') }));
-  buf.push('></p><div');
-  buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') + ' ' + ('hide') }));
+  buf.push('>&nbsp;</p><div');
+  buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') + ' ' + ('alert-success') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-info-text') }));
   buf.push('></div></div><div');
@@ -678,7 +678,7 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push('><button');
   buf.push(attrs({ "class": ('pull-left') + ' ' + ('loading-indicator') }));
   buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><button');
-  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-warning') }));
+  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></div></div>');
   }
   return buf.join("");
@@ -700,7 +700,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push('><a');
   buf.push(attrs({ 'href':("http://cozycloud.cc/"), 'target':("_blank"), 'title':("home") }));
   buf.push('><img');
-  buf.push(attrs({ 'src':("img/logo.png"), 'alt':("Cozy Cloud Symbol") }));
+  buf.push(attrs({ 'src':("img/grey-logo.png"), 'alt':("Cozy Cloud Symbol") }));
   buf.push('/></a></h2><div');
   buf.push(attrs({ 'id':('buttons') }));
   buf.push('><ul');
@@ -1133,26 +1133,23 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
       InstallButton.prototype.displayOrange = function(text) {
         this.button.html(text);
-        this.button.removeClass("btn-success");
-        this.button.removeClass("btn-danger");
-        this.button.removeClass("disabled");
-        return this.button.addClass("btn-warning");
+        this.button.removeClass("btn-red");
+        this.button.removeClass("btn-green");
+        return this.button.addClass("btn-orange");
       };
 
       InstallButton.prototype.displayGreen = function(text) {
         this.button.html(text);
-        this.button.addClass("btn-success");
-        this.button.addClass("disabled");
-        this.button.removeClass("btn-danger");
-        return this.button.removeClass("btn-warning");
+        this.button.addClass("btn-green");
+        this.button.removeClass("btn-red");
+        return this.button.removeClass("btn-orange");
       };
 
       InstallButton.prototype.displayRed = function(text) {
         this.button.html(text);
-        this.button.removeClass("btn-success");
-        this.button.addClass("btn-danger");
-        this.button.removeClass("disabled");
-        return this.button.removeClass("btn-warning");
+        this.button.removeClass("btn-green");
+        this.button.addClass("btn-red");
+        return this.button.removeClass("btn-orange");
       };
 
       return InstallButton;
@@ -1189,10 +1186,11 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
       ApplicationsView.prototype.onAddClicked = function() {
         this.installAppButton.displayOrange("install");
-        this.$("#app-name-field").val(null);
-        this.$("#app-git-field").val(null);
+        this.appNameField.val(null);
+        this.appGitField.val(null);
         this.addApplicationForm.show();
         this.addApplicationModal.toggle();
+        this.appNameField.focus();
         return this.isInstalling = false;
       };
 
@@ -1222,7 +1220,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
                 _this.installInfo.spin();
                 return setTimeout(function() {
                   return _this.addApplicationForm.slideToggle();
-                }, 1000);
+                }, 100);
               } else {
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
@@ -1258,11 +1256,11 @@ window.require.define({"views/applications_view": function(exports, require, mod
             },
             error: function() {
               this.machineInfos.find('.progress').spin();
-              return alert('Server error occured, machine infos cannot be displayed.');
+              return alert('Server error occured, infos cannot be displayed.');
             }
           });
         } else {
-          this.$('.application-outer').show();
+          this.$('.application-outer').hide();
         }
         this.machineInfos.toggle();
         return this.isManaging = !this.isManaging;
@@ -1356,10 +1354,12 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
       ApplicationsView.prototype.render = function() {
         $(this.el).html(applicationsTemplate());
+        this.isManaging = false;
         return this.el;
       };
 
       ApplicationsView.prototype.setListeners = function() {
+        var _this = this;
         this.appList = this.$("#app-list");
         this.addApplicationButton = this.$("#add-app-button");
         this.addApplicationButton.click(this.onAddClicked);
@@ -1375,6 +1375,12 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.noAppMessage = this.$('#no-app-message');
         this.appNameField = this.$("#app-name-field");
         this.appGitField = this.$("#app-git-field");
+        this.appNameField.keyup(function(event) {
+          if (event.which === 13) return _this.appGitField.focus();
+        });
+        this.appGitField.keyup(function(event) {
+          if (event.which === 13) return _this.onInstallClicked();
+        });
         this.installInfo = this.$("#add-app-modal .loading-indicator");
         this.errorAlert.hide();
         this.infoAlert.hide();
@@ -1512,6 +1518,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.selectNavButton(this.$("#" + slug));
         return this.selectedApp = slug;
       };
+
+      HomeView.prototype.displayNoAppMessage = function() {};
 
       /* Configuration
       */

@@ -89,6 +89,8 @@ class exports.HomeView extends Backbone.View
         @selectNavButton @$("##{slug}")
         @selectedApp = slug
             
+    displayNoAppMessage: ->
+
     ### Configuration ###
 
     fetch: ->

@@ -14,24 +14,21 @@ class InstallButton
 
     displayOrange: (text) ->
         @button.html text
-        @button.removeClass "btn-success"
-        @button.removeClass "btn-danger"
-        @button.removeClass "disabled"
-        @button.addClass "btn-warning"
+        @button.removeClass "btn-red"
+        @button.removeClass "btn-green"
+        @button.addClass "btn-orange"
 
     displayGreen: (text) ->
         @button.html text
-        @button.addClass "btn-success"
-        @button.addClass "disabled"
-        @button.removeClass "btn-danger"
-        @button.removeClass "btn-warning"
+        @button.addClass "btn-green"
+        @button.removeClass "btn-red"
+        @button.removeClass "btn-orange"
 
     displayRed: (text) ->
         @button.html text
-        @button.removeClass "btn-success"
-        @button.addClass  "btn-danger"
-        @button.removeClass "disabled"
-        @button.removeClass "btn-warning"
+        @button.removeClass "btn-green"
+        @button.addClass  "btn-red"
+        @button.removeClass "btn-orange"
 
 
 # View describing main screen for user once he is logged
@@ -51,11 +48,12 @@ class exports.ApplicationsView extends Backbone.View
 
     onAddClicked: =>
         @installAppButton.displayOrange "install"
-        @$("#app-name-field").val null
-        @$("#app-git-field").val null
+        @appNameField.val null
+        @appGitField.val null
 
         @addApplicationForm.show()
         @addApplicationModal.toggle()
+        @appNameField.focus()
         @isInstalling = false
 
     onInstallClicked: =>
@@ -85,7 +83,7 @@ class exports.ApplicationsView extends Backbone.View
                         @installInfo.spin()
                         setTimeout =>
                             @addApplicationForm.slideToggle()
-                        , 1000
+                        , 100
                     else
                         @apps.add app
                         # TODO: refactor that with backbone mediator
@@ -115,9 +113,9 @@ class exports.ApplicationsView extends Backbone.View
                     @displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace)
                 error: ->
                     @machineInfos.find('.progress').spin()
-                    alert 'Server error occured, machine infos cannot be displayed.'
+                    alert 'Server error occured, infos cannot be displayed.'
         else
-            @$('.application-outer').show()
+            @$('.application-outer').hide()
 
         @machineInfos.toggle()
         @isManaging = not @isManaging
@@ -186,8 +184,8 @@ class exports.ApplicationsView extends Backbone.View
     displayDiskSpace: (usedSpace, totalSpace)->
         @machineInfos.find('.disk .total').html(totalSpace + "Go")
         @machineInfos.find('.disk .bar').css('width', usedSpace + '%')
-
-    displayNoAppMessage: () ->
+        
+    displayNoAppMessage: ->
         @noAppMessage.show()
 
     ### Init functions ###
@@ -197,6 +195,7 @@ class exports.ApplicationsView extends Backbone.View
 
     render: ->
         $(@el).html applicationsTemplate()
+        @isManaging = false
         @el
 
     setListeners: ->
@@ -217,6 +216,10 @@ class exports.ApplicationsView extends Backbone.View
 
         @appNameField = @$ "#app-name-field"
         @appGitField = @$ "#app-git-field"
+        @appNameField.keyup (event) =>
+            @appGitField.focus() if event.which == 13
+        @appGitField.keyup (event) =>
+            @onInstallClicked() if event.which == 13
 
         @installInfo = @$ "#add-app-modal .loading-indicator"
         @errorAlert.hide()
