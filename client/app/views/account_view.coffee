@@ -105,21 +105,21 @@ class exports.AccountView extends Backbone.View
 
     setListeners: ->
         app.views.home.selectNavButton app.views.home.accountButton
-        @emailField = @$ "#account-email-field"
-        @timezoneField = @$ "#account-timezone-field"
+        @emailField = @$ '#account-email-field'
+        @timezoneField = @$ '#account-timezone-field'
         @domainField = $ '#account-domain-field'
-        @infoAlert = @$ "#account-info"
+        @infoAlert = @$ '#account-info'
         @infoAlert.hide()
-        @errorAlert = @$ "#account-error"
+        @errorAlert = @$ '#account-error'
         @errorAlert.hide()
 
         @changePasswordForm = @$ '#change-password-form'
         @changePasswordForm.hide()
         @changePasswordButton = @$ '#change-password-button'
         @changePasswordButton.click @onChangePasswordClicked
-        @accountSubmitButton = @$ "#account-form-button"
-        @password1Field = $("#account-password1-field")
-        @password2Field = $("#account-password2-field")
+        @accountSubmitButton = @$ '#account-form-button'
+        @password1Field = $('#account-password1-field')
+        @password2Field = $('#account-password2-field')
         @password1Field.keyup (event) =>
             @password2Field.focus() if event.which == 13
         @password2Field.keyup (event) =>
@@ -128,11 +128,11 @@ class exports.AccountView extends Backbone.View
             event.preventDefault()
             @onDataSubmit()
 
-        @installInfo = @$ "#add-app-modal .loading-indicator"
+        @installInfo = @$ '#add-app-modal .loading-indicator'
         @errorAlert.hide()
         @infoAlert.hide()
 
-        @addApplicationCloseCross = @$ "#add-app-modal .close"
+        @addApplicationCloseCross = @$ '#add-app-modal .close'
         @addApplicationCloseCross.click @onCloseAddAppClicked
 
-        @loadingIndicator = @$ ".loading-indicator"
+        @loadingIndicator = @$ '.loading-indicator'

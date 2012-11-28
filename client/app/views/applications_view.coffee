@@ -111,7 +111,7 @@ class exports.ApplicationsView extends Backbone.View
                     @machineInfos.find('.progress').spin()
                     @displayMemory(data.freeMem, data.totalMem)
                     @displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace)
-                error: ->
+                error: =>
                     @machineInfos.find('.progress').spin()
                     alert 'Server error occured, infos cannot be displayed.'
         else
@@ -140,7 +140,6 @@ class exports.ApplicationsView extends Backbone.View
         appButton.hide()
         appButton.fadeIn()
         appButton.find(".application-outer").show() if @isManaging
-        # Call to home view should be more proper.
 
     # Check that given data are corrects.
     checkData: (data) =>
