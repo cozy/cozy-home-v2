@@ -46,11 +46,23 @@ class exports.ApplicationRow extends BaseRow
     ### configuration ###
 
     render: ->
-        $(@el).html(template(app: @model))
+        @$el.html(template(app: @model))
         @el.id = @model.slug
         if @model.state == "broken"
-             $(@el).addClass "broken"
-             $(@el).find(".application-inner").append '<p class="broken-notifier">broken app<p>'
+             @$el.addClass "broken"
+             @$el.find(".application-inner").append '<p class="broken-notifier">broken app<p>'
              
-        @el
+        if @model.state == "stopped"
+            @$el.addClass "stopped"
+            @$(".stop-app").hide()
+            @$(".start-app").hide()
+        else
+            @$(".stop-app").hide()
+            @$(".start-app").hide()
 
+        @$el.click (event) =>
+            event.preventDefault()
+            # TODO: refactor that with backbone mediator
+            window.app.views.home.loadApp @model.slug
+            
+        @el

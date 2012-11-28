@@ -17,8 +17,11 @@ class exports.ApplicationCollection extends BaseCollection
     # Clear view app list and add to it each app of the collection.
     onReset: =>
         @view.clearApps()
-        @forEach (app) =>
-            @view.addApplication app
+        if @length > 0
+            @forEach (app) =>
+                @view.addApplication app
+        else
+            @view.displayNoAppMessage()
 
     # Add added app to the view app list.
     onAdd: (app) =>

@@ -1,5 +1,5 @@
 BaseModel = require("models/models").BaseModel
-client = require "lib/request"
+client = require "../helpers/client"
 
 # Describes an application installed in mycloud.
 class exports.Application extends BaseModel
@@ -8,14 +8,9 @@ class exports.Application extends BaseModel
 
     constructor: (app) ->
         super()
-        @slug = app.slug
-        @name = app.name
-        @description = app.description
-        @icon = app.icon
-        @git = app.git
-        @state = app.state
-        @
-        
+
+        for property of app
+            @[property] = app[property]
 
     # Send to server installation request.
     # Will create a new app in the database.

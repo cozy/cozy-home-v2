@@ -1,277 +1,52 @@
 @import 'nib'
 
-shadow()
-  -moz-box-shadow: arguments
-  -webkit-box-shadow: arguments
-  box-shadow: arguments
+@font-face 
+    font-family: styled
+    src: url('/fonts/maven-pro-light-300.otf');
 
-rounded-border()
-  -webkit-border-radius: arguments
-  -moz-border-radius: arguments
-  border-radius: arguments
-  
+@font-face 
+    font-family: main
+    src: url('/fonts/signika-regular.ttf');
 
-bgcolor = white
-bgshadowcolor = #666688
-maintitlecolor = #d46a2c
-titlecolor = #d46a2c
-linkcolor = #f68C4E
-menuhovercolor = #ffced8
-menuunselectedcolor = #c9b5a5
+bgcolor = #545e5f + 20%
 shadowcolor = #444
-bgcolorbuttons = #f69C5E
-bgclearcolorbuttons = #f6BD8F
-bgcolorhoverbuttons = #f6AC7E
-bgclearcolorhoverbuttons = #f6CD9F
-textcolorapplication = #FFEFF3
+bgshadowcolor = #666688
 
+bgcolorbuttons = #8CA6AE
+bgclearcolorbuttons = bgcolorbuttons + 50%
+bggreybuttons = #8C8C8C
+bggreycleanbuttons = bggreybuttons + 50%
+appbordercolor = bgcolorbuttons - 20%
+bgcolorhoverbuttons = bgcolorbuttons + 20%
+bgclearcolorhoverbuttons = bgcolorbuttons + 70%
+
+textcolor = #EAF1F1
+buttoncolor = #CAD1D1 + 60%
+highlightcolor = #E2F8FF
+
+green = #3AA131 + 10%
+orange = #BA6131 + 10%
+red = #AA2121 + 20%
 
 body
-  background-color: bgcolor
-  min-width: 320px
-  
-a
-  color: linkcolor
-  font-weight bold
-
-a:hover
-  color: black
-
-h2
-  font-size 30px
-  margin-bottom 24px
-  margin-top 24px
-
-.spacer
-  clear both
-
-.container
-  padding 0
-  background-color white
-  width 100%
-  rounded-border 4px
-  shadow 3px 3px 4px 1px bgshadowcolor
-  min-height 260px
-
-.close 
-  float right
-
-.hidden
-  display: none
-
-.center 
-  text-align center
-
-#text-container
-  width 610px
-
-/* Header */
-
-#header
-  position relative
-  margin-top 0px
-  margin-bottom 0px
-  background-color white
-  border-bottom 1px solid #CCC
-  background-color: white
-
-  .navbar-inner
-    padding-right 5px
-    rounded-border 0 0 0 0
-    background-color white
-    background-image none
-    height 100%
-
-  h2
-    float left
-    color linkcolor
-
-  a 
-    text-decoration none
-
-  p
-    margin 0
-
-  a:hover
-    color: linkcolor 
-
-
-/* Dialogs */
-
-#confirm-dialog
-  display none
-
-
-/* Misc */
-
-
-#buttons
-  float right
-
-#header-title
-  width: 17%
-  font-size: 20px
-  margin: 0
-
-
-@media (max-width: 700px)
-  #header-title
-    display: none
-
-#content
-  padding 24px
-
-#app-list
-    margin-bottom 0px
-
-.application 
-  width 155px
-  height 250px
-  margin 6px
-  margin-bottom 54px
-  font-size 42px
-  line-height 48px
-  float left
-
-.application a:hover
-  text-decoration: none
-
-.application-inner
-  text-align center
-  width 140px
-  height 200px
-  border 2px solid linkcolor
-  shadow 1px 1px 3px shadowcolor
-  border-radius 12px
-  color white
-  background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
-
-.application-inner:active
-  shadow none
-
-.application-inner:hover  
-  background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
-
-.application-inner img
-  margin-top: 10px
-
-.app-title
-  font-size: 30px
-  line-height: 30px
-  font-weight: bold
-  margin-top: 10px
-
-.info-text
-  font-size: 14px
-  line-height: 20px
-
-.app-tools 
-    margin-top: 12px
-
-.modal
-    width: 340px
-    margin: auto
-    top: 10%
-    left: auto
-
-
-#app-description-field
-#app-git-field
-  width: 96%
-
-#app-name-field
-  width: 70px
-
-#add-app-submit
-  font-weight: bold
-  font-size: 20px
-
-.install-info
-  width: 40%
-  text-align center
-
-.broken
-  .application-inner
-  .application-inner:hover  
-    background: linear-gradient(top, #AAA 0%, #666 100%)
-    border-color: #AAA
-  .broken-notifier
+    min-width: 320px
+    color: textcolor
+    font-family: styled
     font-size: 18px
-    color: red
-
-.application-outer
-  display:none
-
-.loading-indicator
-  margin-top: 10px
-  margin-left: 10px
-  border: 0
-  background: transparent
-
-#add-app-close
-#add-app-submit
-  margin-top: 5px
-
-/* Login page */
-
-.main-alert
-  display inline-block
-
-#login-error
-  width 360px
-
-#login-view 
-  text-align center
-
-  h2
-    color: titlecolor
-
-#login-password
-  width 400px
-  font-size 30px
-  padding 6px
-  height 48px
-  
+    
 a
-  cursor pointer
+    color: linkcolor
+    font-weight bold
 
+a
+a:visited
+a.editable-click
+    color: textcolor
+    border-bottom: 1px dashed textcolor
 
-/* Register page */
-
-#register-view input
-  width 400px
-  font-size 30px
-  padding 6px
-  height 48px
-
-#register-error
-  width 780px
-
-// Account page
-
-#reset-view h1
-#account-view h1
-  color titlecolor
-  margin-bottom 40px
-
-#account-form
-  margin-bottom: 0
-
-#account-info
-#account-error
-  display: none
-  margin-bottom: 0
-
-#home-view 
-    height 100%
-    overflow:hidden
-
-#account-view 
-  .loading-indicator
-    margin-left 40px
-
-
-// Applications
+a.editable-click:hover
+    color: orange
+    border-bottom: 1px dashed textcolor
 
 iframe
     width 100%
@@ -282,72 +57,393 @@ body
     height 100%
     padding 0
     margin 0
-        
+                
 html
     height 100%
     padding 0
     margin 0
-        
+                
 html
     height 100%
-        
-#home-view
-    background: white
-    width:100%
-    height: 100%
-    padding 0
-    margin 0
+
+.spacer
+    clear both
+
+.close 
+    float right
+
+.hidden
+    display: none
+
+.center 
+    text-align center
+
+.btn
+    background: buttoncolor
+    border: 1px solid buttoncolor - 20%
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
+    margin: 0
+    font-family: styled
+
+.btn-group
+    .btn
+        font-size: 16px
+
+.btn:hover
+    background: buttoncolor + 60%
+    box-shadow: 0 0 8px highlightcolor
+
+.btn:active
+    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
+    background: buttoncolor - 10%
+
+.btn-green
+    background: green
+    border: 1px solid green - 20%
+    color: textcolor
+.btn-green:active
+.btn-green:hover
+    background: green + 10%
+    color: textcolor
+
+.btn-orange
+    background: orange
+    border: 1px solid orange
+    color: textcolor
+.btn-green:active
+.btn-orange:hover
+    background: orange + 10%
+    color: textcolor
+
+.btn-red
+    background: red
+    border: 1px solid red
+    color: textcolor
+.btn-green:active
+.btn-red:hover
+    background: red + 20%
+    color: textcolor
+
+.alert-error
+    shadow: 0 0 6px rgba(100, 60, 60, 0.85) inset
+    background: rgba(242, 222, 222, 0.8)
+
+.alert-success
+    shadow: 0 0 6px rgba(60, 100, 60, 0.85) inset
+    background: rgba(223, 240, 216, 0.8)
+
+.progress
+    margin: 20px 0
+    height: 10px
+    background: bgcolor - 30%
+
+.progress .bar
+    background: highlightcolor
+    box-shadow: 0 0 6px highlightcolor
 
 .home-body
-    background: white
     width:100%
     height: 100%
-    padding 0
-    margin 0
+    padding: 0
+    margin: 0
+    box-shadow: inset 0 0 100px #2b4244 + 20%
+    background: bgcolor 
+    overflow: hidden
+
+.well
+    background: transparent
+    border: 0
+    margin: 2%
+    color: textcolor
+    text-align: center
+    box-shadow: 0 0 0 0
+
+
+
+/* content */
+
+#content
+    padding: 0
+    height: 100%
+    overflow: auto
+
+/* Header */
 
 .navbar .nav
     float: right
 
-#buttons
-    text-align right
-    width: 83%
+    .active a
+        box-shadow: 0
+        box-shadow: inset 2px 1px 4px bgcolor - 40% 
+        background: bgcolor + 40%
 
-@media (max-width: 600px)
-  #buttons span
-    display: none
+    .active a:hover
+        cursor: default
+        background: bgcolor + 40%
+        box-shadow: inset 2px 1px 4px bgcolor - 40% 
 
-@media (max-width: 600px)
-  #buttons
-    width: 100%
-        
+    li
+         a:hover
+            background: bgcolor + 100%
+            cursor: pointer
+            background: highlightcolor
+            box-shadow: inset 0 -4px 2px bgcolor - 40% 
+
+.navbar
+    border-radius: 0 
+
+#header
+    position relative
+    margin-top 0px
+    margin-bottom 0px
+    border: 0
+
+    .navbar-inner
+        padding-right 5px
+        background-color bgcolor + 80%
+        box-shadow: inset 0 -4px 2px bgcolor - 20% 
+        background-image none
+        height 100%
+        border: 0
+        border-radius: 0
+
+    h2
+        float left
+        color linkcolor
+
+    a 
+        text-decoration none
+        border-bottom: 0
+
+    p
+        margin 0
+
+    a:hover
+        color: linkcolor 
+
+    #buttons
+        font-size: 1em
+        float right
+
+    #header-title
+        width: 17%
+        margin: 0
+
+               
 #app-frames
     height 100%
     display:none
-
-.home-body
-    background: white
-    width:100%
-    height: 100%
-
-.navbar .nav
-    float: right
-
-    img
-        margin-right: 10px
+    text-align: center
 
 #buttons
     text-align right
     width: 83%
 
+@media (max-width: 600px)
+    #buttons span
+        display: none
+
+@media (max-width: 600px)
+    #buttons
+        width: 100%
+@media (max-width: 700px)
+    #header-title
+        display: none
+
+/* Dialogs */
+
+#confirm-dialog
+    display none
+
+#app-description-field
+#app-git-field
+    width: 99%
+
+#app-name-field
+    width: 140px
+
+#add-app-submit
+    font-weight: bold
+    font-size: 20px
+    text-shadow: 0 0 0
+
+.modal
+    width: 540px
+    margin: auto - 270px 
+    top: 10%
+    background: bgcolor
+    border: 0
+    padding: 1%
+
+.modal-header
+    border: 0
+
+.modal-footer
+    background: bgcolor
+    border: 0
+    box-shadow: 0 0 0 0
+
+
+
+/** Applications */
+
+#app-list
+    text-align: center
+    margin: 40px 0
+
+    button 
+            margin-top: 20px
+
+.application
+    width: 170px
+    margin: 6px
+    display: inline-block
+    text-align: center
+    border 1px solid appbordercolor
+    box-shadow 1px 1px 3px shadowcolor
+    border-radius 12px
+    background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
+    padding-bottom: 20px
+
+    img
+        margin-top: 10px
+
+    p
+        margin: 0
+        font-family: main
+        color textcolor
+        text-shadow 1px 1px 1px shadowcolor
+
+    a:hover
+        text-decoration: none
+
+
+.application:active
+    box-shadow none
+
+.application:hover    
+    background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
+
+.app-title
+    font-size: 20px
+    line-height: 30px
+    font-weight: bold
+
+.app-tools 
+    width: 50%        
+    margin-left: auto
+    margin-right: auto
+    margin-top: 12px
+    color: text-color
+    text-align: center
+
+#no-app-message
+    margin-top: 30px
+
+.install-info
+    width: 40%
+    text-align center
+
+.broken
+    a
+        cursor: default
+
+    .broken-notifier
+        font-size: 18px
+        color: red
+
 .application-outer
+    display:none
+
+    .btn
+        margin-top: 10px
     p
         margin: 0
         padding: 0
 
-@media (max-width: 600px)
-  #buttons span
-    display: none
+#add-app-close
+#add-app-submit
+    margin-top: 5px
 
-@media (max-width: 600px)
-  #buttons
+// Account page
+
+.control-group
+#add-app-form
+#account-form
+    border: 0
+    font-size: 1.3em
+    padding: 0
+    margin: 0
+    margin-top: 50px
+
+    select
+    input
+        font-size: 1em
+        height: 1.1em
+        padding: 0.2em
+        border-radius: 0.4em
+        border: 0
+        background-color: textcolor
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.45) inset
+
+    select
+        height: 35px
+
+    input:focus
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.75) inset, 0 0 17px rgba(82, 168, 236, 0.9)
+        background: #e2f8ff
+
+    .btn
+        margin-top: 0.2em 
+
+    p
+        margin: 20px 0 10px 0
+
+    .field 
+        margin: 10px auto 20px auto
+        width: 40%
+
+    .icon-white
+        background-image: url("../img/glyphicons-halflings.png")
+
+    .alert 
+        width: 50%
+        margin: auto
+        margin-top: 30px
+
+
+#add-app-form
+    padding: 3%
+
+
+#account-form
+.control-group
+    select
+    input
+        font-size: 1em
+ 
+#account-info
+#account-error
+    display: none
+    margin-bottom: 0
+
+#home-view 
+    overflow:hidden
+    background: bgcolor
     width: 100%
+    height: 100%
+    padding: 0
+    margin: 0
+
+#account-view 
+    #change-password-button
+        margin-top: 50px
+
+#change-password-form
+    margin-top: 50px
+
+.loading-indicator
+    border: 0
+    background: transparent
+    box-shadow: 0
+    color: textcolor

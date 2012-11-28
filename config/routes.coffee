@@ -6,5 +6,8 @@ exports.routes = (map) ->
     map.put '/api/applications/:slug/update', 'applications#update'
     map.get '/api/sys-data', 'monitor#sysData'
 
-    map.get '/api/users', 'users#users'
+    map.get '/api/users', 'account#users'
     map.post '/api/user', 'account#updateAccount'
+
+    map.get '/api/instances', 'account#instances'
+    map.post '/api/instance', 'account#updateInstance'

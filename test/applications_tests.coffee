@@ -170,7 +170,7 @@ describe "Application installation", ->
 describe "Application update", ->
     
     before ->
-        @haibu = fakeServer msg: "ok" , 200, (body) ->
+        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
 
         @haibu.listen 9002
         @proxy = fakeServer msg: "ok", 204, (body) ->

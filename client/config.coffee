@@ -1,6 +1,8 @@
 exports.config =
   # Edit the next line to change default build path.
-  buildPath: 'public'
+  config:
+      path:
+          public:'public'
 
   files:
     javascripts:
@@ -42,4 +44,3 @@ exports.config =
 
   # Enable or disable minifying of result js / css files.
   minify: no
-

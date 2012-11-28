@@ -1,6 +1,7 @@
-#app-list.clearfix.well
-  .clearfix
-.clearfix
+#no-app-message.center.hidden
+    p You have actually no application installed on your Cozy Cloud
+
+#app-list
 
 .app-tools
   .machine-infos
@@ -22,7 +23,7 @@
   .btn-group
       button#add-app-button.btn
         | <i class="icon-plus"></i>
-        | add a new application
+        | add application
       button#manage-app-button.btn
         | manage applications
 
@@ -35,7 +36,7 @@
   div#add-app-form.modal-body
     p
       label name
-      input(type="text", class="span3", id="app-name-field", maxlength="8")
+      input(type="text", class="span3", id="app-name-field", maxlength="13")
     p
       label Git URL
       input(type="text", class="span3", id="app-git-field")
@@ -45,5 +46,5 @@
 
   .modal-footer
     button.pull-left.loading-indicator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    button#add-app-submit.btn.btn-warning(type="submit") install
+    button#add-app-submit.btn.btn-orange(type="submit") install
 

@@ -52,3 +52,39 @@ action 'updateAccount', ->
             send error: true, msg: "No user registered.", 400
         else
             changeUserData users[0]
+
+# Return list of available users
+action 'users', ->
+    User.all (errors, users) ->
+        if errors
+            send error: "Retrieve users failed.", 500
+        else
+            send rows: users
+
+# Return list of instances 
+action 'instances', ->
+    CozyInstance.all (errors, instances) ->
+        if errors
+            send error: "Retrieve instances failed.", 500
+        else
+            send rows: instances
+
+# Update Cozy Instance domain, create it if it does not exist.
+action 'updateInstance', ->
+    domain = body.domain
+    if domain?
+        CozyInstance.all (err, instances) ->
+            if err
+                railway.logger.write err
+                send error: true, msg: "Server error occured.", 500
+            else if instances.length == 0
+                CozyInstance.create domain: domain, (err, instance) ->
+                    if err
+                        railway.logger.write err
+                        send error: true, msg: "Server error occured.", 500
+                    send success: "true", msg: "Domain updated.", 200
+            else
+                instances[0].updateAttributes domain: domain, ->
+                    send success: "true", msg: "Domain updated.", 200
+    else
+        send error: true, msg: "No domain given", 400
