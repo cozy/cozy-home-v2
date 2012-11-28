@@ -568,7 +568,7 @@ window.require.define({"templates/application": function(exports, require, modul
   with (locals || {}) {
   var interp;
   buf.push('<a');
-  buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
+  buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }));
   buf.push('><div');
   buf.push(attrs({ "class": ('application-inner') }));
   buf.push('><p><img');
@@ -1115,9 +1115,9 @@ window.require.define({"views/application": function(exports, require, module) {
           this.$(".stop-app").hide();
           this.$(".start-app").hide();
         }
-        this.$el.click(function(event) {
+        this.$el.find('.application-inner').click(function(event) {
           event.preventDefault();
-          return window.app.views.home.loadApp(_this.model.slug);
+          return window.app.routers.main.navigate("apps/" + _this.model.slug, true);
         });
         return this.el;
       };

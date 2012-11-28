@@ -60,9 +60,8 @@ class exports.ApplicationRow extends BaseRow
             @$(".stop-app").hide()
             @$(".start-app").hide()
 
-        @$el.click (event) =>
+        @$el.find('.application-inner').click (event) =>
             event.preventDefault()
-            # TODO: refactor that with backbone mediator
-            window.app.views.home.loadApp @model.slug
-            
+            window.app.routers.main.navigate "apps/#{@model.slug}", true
+
         @el
