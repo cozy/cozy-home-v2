@@ -521,7 +521,7 @@ window.require.define({"templates/account": function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<form');
+  buf.push('<div');
   buf.push(attrs({ 'id':('account-form'), "class": ('well') }));
   buf.push('><p>email</p><p');
   buf.push(attrs({ "class": ('field') }));
@@ -544,7 +544,7 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push('/></p><p><label>confirm new password</label><input');
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
   buf.push('/></p><p><button');
-  buf.push(attrs({ 'id':('account-form-button'), 'type':("submit"), "class": ("btn") }));
+  buf.push(attrs({ 'id':('account-form-button'), "class": ("btn") }));
   buf.push('>Send changes</button><p');
   buf.push(attrs({ "class": ('loading-indicator') }));
   buf.push('>&nbsp;</p><div');
@@ -555,7 +555,7 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push(attrs({ 'id':('account-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('account-form-error-text') }));
-  buf.push('></div></div></p></div></form>');
+  buf.push('></div></div></p></div></div>');
   }
   return buf.join("");
   };
@@ -846,7 +846,9 @@ window.require.define({"views/account_view": function(exports, require, module) 
       AccountView.prototype.onChangePasswordClicked = function() {
         var _this = this;
         return this.changePasswordButton.fadeOut(function() {
-          return _this.changePasswordForm.fadeIn();
+          return _this.changePasswordForm.fadeIn(function() {
+            return _this.password1Field.focus();
+          });
         });
       };
 
@@ -976,6 +978,7 @@ window.require.define({"views/account_view": function(exports, require, module) 
       };
 
       AccountView.prototype.setListeners = function() {
+        var _this = this;
         app.views.home.selectNavButton(app.views.home.accountButton);
         this.emailField = this.$("#account-email-field");
         this.timezoneField = this.$("#account-timezone-field");
@@ -988,8 +991,24 @@ window.require.define({"views/account_view": function(exports, require, module) 
         this.changePasswordForm.hide();
         this.changePasswordButton = this.$('#change-password-button');
         this.changePasswordButton.click(this.onChangePasswordClicked);
-        this.accountDataButton = this.$("#account-form-button");
-        this.accountDataButton.click(this.onDataSubmit);
+        this.accountSubmitButton = this.$("#account-form-button");
+        this.password1Field = $("#account-password1-field");
+        this.password2Field = $("#account-password2-field");
+        this.password1Field.keyup(function(event) {
+          if (event.which === 13) return _this.password2Field.focus();
+        });
+        this.password2Field.keyup(function(event) {
+          if (event.which === 13) return _this.onDataSubmit();
+        });
+        this.accountSubmitButton.click(function(event) {
+          event.preventDefault();
+          return _this.onDataSubmit();
+        });
+        this.installInfo = this.$("#add-app-modal .loading-indicator");
+        this.errorAlert.hide();
+        this.infoAlert.hide();
+        this.addApplicationCloseCross = this.$("#add-app-modal .close");
+        this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
         return this.loadingIndicator = this.$(".loading-indicator");
       };
 
@@ -1079,6 +1098,7 @@ window.require.define({"views/application": function(exports, require, module) {
       */
 
       ApplicationRow.prototype.render = function() {
+        var _this = this;
         this.$el.html(template({
           app: this.model
         }));
@@ -1095,6 +1115,10 @@ window.require.define({"views/application": function(exports, require, module) {
           this.$(".stop-app").hide();
           this.$(".start-app").hide();
         }
+        this.$el.click(function(event) {
+          event.preventDefault();
+          return window.app.views.home.loadApp(_this.model.slug);
+        });
         return this.el;
       };
 
@@ -1220,7 +1244,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
                 _this.installInfo.spin();
                 return setTimeout(function() {
                   return _this.addApplicationForm.slideToggle();
-                }, 100);
+                }, 1000);
               } else {
                 _this.apps.add(app);
                 window.app.views.home.addApplication(app);
@@ -1279,13 +1303,14 @@ window.require.define({"views/applications_view": function(exports, require, mod
       };
 
       ApplicationsView.prototype.addApplication = function(application) {
-        var el, row;
+        var appButton, el, row;
         row = new AppRow(application);
         el = row.render();
         this.appList.append(el);
-        this.$(el).hide();
-        this.$(el).fadeIn();
-        if (this.isManaging) return this.$(el).find(".application-outer").show();
+        appButton = this.$(el);
+        appButton.hide();
+        appButton.fadeIn();
+        if (this.isManaging) return appButton.find(".application-outer").show();
       };
 
       ApplicationsView.prototype.checkData = function(data) {
@@ -1485,12 +1510,22 @@ window.require.define({"views/home_view": function(exports, require, module) {
       };
 
       HomeView.prototype.addApplication = function(application) {
+        var button;
         this.buttons.find(".nav:last").append(appButtonTemplate({
           app: application
         }));
-        this.buttons.find("#" + application.slug).click(this.onAppButtonClicked);
-        this.buttons.find("#" + application.slug + " img").click(this.onAppButtonClicked);
-        return this.buttons.find("#" + application.slug + " span").click(this.onAppButtonClicked);
+        button = this.buttons.find("#" + application.slug);
+        button.click(this.onAppButtonClicked);
+        button.find("img").click(this.onAppButtonClicked);
+        button.find("span").click(this.onAppButtonClicked);
+        return button.tooltip({
+          placement: 'bottom',
+          title: '<a target="' + application.slug + '" href="/apps/' + application.slug + '/">open in a new tab</a>',
+          delay: {
+            show: 500,
+            hide: 1000
+          }
+        });
       };
 
       HomeView.prototype.onAppButtonClicked = function(event) {
@@ -1516,7 +1551,10 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.$("#app-frames").find("iframe").hide();
         frame.show();
         this.selectNavButton(this.$("#" + slug));
-        return this.selectedApp = slug;
+        this.selectedApp = slug;
+        return frame.load(function() {
+          return alert(frame.location.hash);
+        });
       };
 
       HomeView.prototype.displayNoAppMessage = function() {};

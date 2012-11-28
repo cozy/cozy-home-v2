@@ -6020,11 +6020,11 @@ html{height:100%}
 .progress{margin:20px 0;height:10px;background:#505a5b}
 .progress .bar{background:#e2f8ff;-webkit-box-shadow:0 0 6px #e2f8ff;-moz-box-shadow:0 0 6px #e2f8ff;box-shadow:0 0 6px #e2f8ff}
 .home-body{width:100%;height:100%;padding:0;margin:0;-webkit-box-shadow:inset 0 0 100px #4a7175;-moz-box-shadow:inset 0 0 100px #4a7175;box-shadow:inset 0 0 100px #4a7175;background:#738182;overflow:hidden}
-.well{background:#d5d9da;background:transparent;border:0;margin:2%;color:#5c6768;color:#eaf1f1;text-align:center;-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0}
+.well{background:transparent;border:0;margin:2%;color:#eaf1f1;text-align:center;-webkit-box-shadow:0 0 0 0;-moz-box-shadow:0 0 0 0;box-shadow:0 0 0 0}
 #content{padding:0;height:100%;overflow:auto}
 .navbar .nav{float:right;}
-.navbar .nav .active a{-webkit-box-shadow:inset 0 -4px 4px #454d4e;-moz-box-shadow:inset 0 -4px 4px #454d4e;box-shadow:inset 0 -4px 4px #454d4e;background:#abb4b4}
-.navbar .nav .active a:hover{-webkit-box-shadow:inset 0 -4px 4px #454d4e;-moz-box-shadow:inset 0 -4px 4px #454d4e;box-shadow:inset 0 -4px 4px #454d4e}
+.navbar .nav .active a{-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0;-webkit-box-shadow:inset 2px 1px 4px #454d4e;-moz-box-shadow:inset 2px 1px 4px #454d4e;box-shadow:inset 2px 1px 4px #454d4e;background:#abb4b4}
+.navbar .nav .active a:hover{cursor:default;background:#abb4b4;-webkit-box-shadow:inset 2px 1px 4px #454d4e;-moz-box-shadow:inset 2px 1px 4px #454d4e;box-shadow:inset 2px 1px 4px #454d4e}
 .navbar .nav li a:hover{background:#fff;cursor:pointer;background:#e2f8ff;-webkit-box-shadow:inset 0 -4px 2px #454d4e;-moz-box-shadow:inset 0 -4px 2px #454d4e;box-shadow:inset 0 -4px 2px #454d4e}
 .navbar{-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}
 #header{position:relative;margin-top:0;margin-bottom:0;border:0;}
@@ -6044,9 +6044,9 @@ html{height:100%}
 #app-description-field,#app-git-field{width:99%}
 #app-name-field{width:140px}
 #add-app-submit{font-weight:bold;font-size:20px;text-shadow:0 0 0}
-.modal{width:540px;margin:auto -270px;top:10%;background:#738182;border:0}
+.modal{width:540px;margin:auto -270px;top:10%;background:#738182;border:0;padding:1%}
 .modal-header{border:0}
-.modal-footer{background:#738182;border:0}
+.modal-footer{background:#738182;border:0;-webkit-box-shadow:0 0 0 0;-moz-box-shadow:0 0 0 0;box-shadow:0 0 0 0}
 #app-list{text-align:center;margin:40px 0;}
 #app-list button{margin-top:20px}
 .application{width:170px;margin:6px;display:inline-block;text-align:center;border:1px solid #688993;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #c6d3d7), color-stop(1, #8ca6ae));background:-webkit-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);background:-moz-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);background:linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);padding-bottom:20px;}
@@ -6065,17 +6065,17 @@ html{height:100%}
 .application-outer .btn{margin-top:10px}
 .application-outer p{margin:0;padding:0}
 #add-app-close,#add-app-submit{margin-top:5px}
-.control-group,#add-app-form,#account-form{border:0;}
+.control-group,#add-app-form,#account-form{border:0;font-size:1.3em;padding:0;margin:0;margin-top:50px;}
 .control-group select,#add-app-form select,#account-form select,.control-group input,#add-app-form input,#account-form input{font-size:1em;height:1.1em;padding:.2em;-webkit-border-radius:.4em;-moz-border-radius:.4em;border-radius:.4em;border:0;background-color:#eaf1f1;-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;-moz-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;box-shadow:0 2px 2px rgba(0,0,0,0.45) inset}
 .control-group select,#add-app-form select,#account-form select{height:35px}
 .control-group input:focus,#add-app-form input:focus,#account-form input:focus{-webkit-box-shadow:0 1px 1px rgba(0,0,0,0.75) inset,0 0 17px rgba(82,168,236,0.90);-moz-box-shadow:0 1px 1px rgba(0,0,0,0.75) inset,0 0 17px rgba(82,168,236,0.90);box-shadow:0 1px 1px rgba(0,0,0,0.75) inset,0 0 17px rgba(82,168,236,0.90);background:#e2f8ff}
 .control-group .btn,#add-app-form .btn,#account-form .btn{margin-top:.2em}
+.control-group p,#add-app-form p,#account-form p{margin:20px 0 10px 0}
+.control-group .field,#add-app-form .field,#account-form .field{margin:10px auto 20px auto;width:40%}
+.control-group .icon-white,#add-app-form .icon-white,#account-form .icon-white{background-image:url("../img/glyphicons-halflings.png")}
+.control-group .alert,#add-app-form .alert,#account-form .alert{width:50%;margin:auto;margin-top:30px}
+#add-app-form{padding:3%}
 #account-form select,.control-group select,#account-form input,.control-group input{font-size:1em}
-#account-form{margin-bottom:0;font-size:1.3em;}
-#account-form p{margin:20px 0 10px 0}
-#account-form .field{margin:10px auto 20px auto;width:40%}
-#account-form .icon-white{background-image:url("../img/glyphicons-halflings.png")}
-#account-form .alert{width:50%;margin:auto}
 #account-info,#account-error{display:none;margin-bottom:0}
 #home-view{overflow:hidden;background:#738182;width:100%;height:100%;padding:0;margin:0}
 #account-view #change-password-button{margin-top:50px}

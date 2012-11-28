@@ -60,4 +60,9 @@ class exports.ApplicationRow extends BaseRow
             @$(".stop-app").hide()
             @$(".start-app").hide()
 
+        @$el.click (event) =>
+            event.preventDefault()
+            # TODO: refactor that with backbone mediator
+            window.app.views.home.loadApp @model.slug
+            
         @el

@@ -1,4 +1,4 @@
-form#account-form.well
+#account-form.well
   p email
   p.field
     a#account-email-field
@@ -22,12 +22,12 @@ form#account-form.well
         input#account-password2-field(type="password")
      
       p
-        button#account-form-button(class="btn", type="submit") Send changes
+        button#account-form-button(class="btn") Send changes
 
         p.loading-indicator &nbsp;
 
-        div#account-info.alert.main-alert.alert-success.hide
-            div#account-info-text 
+        #account-info.alert.main-alert.alert-success.hide
+            #account-info-text 
 
-        div#account-error.alert.alert-error.main-alert.hide
-            div#account-form-error-text 
+        #account-error.alert.alert-error.main-alert.hide
+            #account-form-error-text 

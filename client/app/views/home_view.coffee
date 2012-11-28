@@ -60,9 +60,15 @@ class exports.HomeView extends Backbone.View
     # Add an app button to cozy apps menu
     addApplication: (application) =>
         @buttons.find(".nav:last").append appButtonTemplate(app: application)
-        @buttons.find("#" + application.slug).click @onAppButtonClicked
-        @buttons.find("#" + application.slug + " img").click @onAppButtonClicked
-        @buttons.find("#" + application.slug + " span").click @onAppButtonClicked
+        button = @buttons.find("#" + application.slug)
+        button.click @onAppButtonClicked
+        button.find("img").click @onAppButtonClicked
+        button.find("span").click @onAppButtonClicked
+        button.tooltip
+             placement: 'bottom'
+             title: '<a target="' + application.slug + '" href="/apps/' + \
+                    application.slug + '/">open in a new tab</a>'
+             delay: show: 500, hide: 1000
     
     # When an app button is clicked button is activated
     # and corresponding app is loaded in a dedicated iframe.
@@ -88,6 +94,9 @@ class exports.HomeView extends Backbone.View
 
         @selectNavButton @$("##{slug}")
         @selectedApp = slug
+
+        frame.load ->
+            alert frame.location.hash
             
     displayNoAppMessage: ->
 

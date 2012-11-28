@@ -12,7 +12,8 @@ class exports.AccountView extends Backbone.View
 
     onChangePasswordClicked: =>
         @changePasswordButton.fadeOut =>
-            @changePasswordForm.fadeIn()
+            @changePasswordForm.fadeIn =>
+                @password1Field.focus()
 
     # When data are submited, it sends a request to backend to save them.
     # If an error occurs, message is displayed.
@@ -82,7 +83,7 @@ class exports.AccountView extends Backbone.View
 
             @timezoneField.editable
                  url: (params) =>
-                            @submitData timezone: params.value
+                    @submitData timezone: params.value
                  type: 'select'
                  send: 'always'
                  source: timezoneData
@@ -116,7 +117,22 @@ class exports.AccountView extends Backbone.View
         @changePasswordForm.hide()
         @changePasswordButton = @$ '#change-password-button'
         @changePasswordButton.click @onChangePasswordClicked
-        @accountDataButton = @$ "#account-form-button"
-        @accountDataButton.click @onDataSubmit
+        @accountSubmitButton = @$ "#account-form-button"
+        @password1Field = $("#account-password1-field")
+        @password2Field = $("#account-password2-field")
+        @password1Field.keyup (event) =>
+            @password2Field.focus() if event.which == 13
+        @password2Field.keyup (event) =>
+            @onDataSubmit() if event.which == 13
+        @accountSubmitButton.click (event) =>
+            event.preventDefault()
+            @onDataSubmit()
+
+        @installInfo = @$ "#add-app-modal .loading-indicator"
+        @errorAlert.hide()
+        @infoAlert.hide()
+
+        @addApplicationCloseCross = @$ "#add-app-modal .close"
+        @addApplicationCloseCross.click @onCloseAddAppClicked
 
         @loadingIndicator = @$ ".loading-indicator"

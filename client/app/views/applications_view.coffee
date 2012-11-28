@@ -83,7 +83,7 @@ class exports.ApplicationsView extends Backbone.View
                         @installInfo.spin()
                         setTimeout =>
                             @addApplicationForm.slideToggle()
-                        , 100
+                        , 1000
                     else
                         @apps.add app
                         # TODO: refactor that with backbone mediator
@@ -136,9 +136,10 @@ class exports.ApplicationsView extends Backbone.View
         row = new AppRow application
         el = row.render()
         @appList.append el
-        @$(el).hide()
-        @$(el).fadeIn()
-        @$(el).find(".application-outer").show() if @isManaging
+        appButton = @$(el)
+        appButton.hide()
+        appButton.fadeIn()
+        appButton.find(".application-outer").show() if @isManaging
         # Call to home view should be more proper.
 
     # Check that given data are corrects.
