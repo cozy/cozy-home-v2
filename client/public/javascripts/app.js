@@ -955,7 +955,13 @@ window.require.define({"views/account_view": function(exports, require, module) 
             value: data.rows[0].timezone
           });
           return $.get("api/instances/", function(data) {
-            _this.domainField.html(data.rows[0].domain);
+            var domain;
+            if ((data.rows != null) && data.rows.length > 0) {
+              domain = data.rows[0].domain;
+            } else {
+              domain = 'no.domain.set';
+            }
+            _this.domainField.html(domain);
             return _this.domainField.editable({
               url: function(params) {
                 return _this.submitData({
@@ -963,7 +969,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
                 }, 'api/instance/');
               },
               type: 'text',
-              send: 'always'
+              send: 'always',
+              value: domain
             });
           });
         });

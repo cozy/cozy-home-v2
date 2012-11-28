@@ -90,12 +90,17 @@ class exports.AccountView extends Backbone.View
                  value: data.rows[0].timezone
 
             $.get "api/instances/", (data) =>
-                @domainField.html data.rows[0].domain
+                if data.rows? and data.rows.length > 0
+                    domain = data.rows[0].domain
+                else
+                    domain = 'no.domain.set'
+                @domainField.html domain
                 @domainField.editable
                     url: (params) =>
                         @submitData domain: params.value, 'api/instance/'
                     type: 'text'
                     send: 'always'
+                    value: domain
 
     ### Configuration ###
 
