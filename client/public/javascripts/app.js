@@ -8,7 +8,7 @@
   var cache = {};
 
   var has = function(object, name) {
-    return hasOwnProperty.call(object, name);
+    return ({}).hasOwnProperty.call(object, name);
   };
 
   var expand = function(root, name) {
@@ -37,7 +37,7 @@
     return function(name) {
       var dir = dirname(path);
       var absolute = expand(dir, name);
-      return require(absolute);
+      return globals.require(absolute);
     };
   };
 
@@ -252,50 +252,6 @@ window.require.define({"helpers": function(exports, require, module) {
   
 }});
 
-window.require.define({"helpers/client": function(exports, require, module) {
-  (function() {
-
-    exports.get = function(url, callbacks) {
-      var _this = this;
-      return $.ajax({
-        type: 'GET',
-        url: url,
-        success: function(response) {
-          if (response.success) {
-            return callbacks.success(response);
-          } else {
-            return callbacks.error(response);
-          }
-        },
-        error: function(response) {
-          return callbacks.error(response);
-        }
-      });
-    };
-
-    exports.post = function(url, data, callbacks) {
-      var _this = this;
-      return $.ajax({
-        type: 'POST',
-        url: url,
-        data: data,
-        success: function(response) {
-          if (response.success) {
-            return callbacks.success(response);
-          } else {
-            return callbacks.error(response);
-          }
-        },
-        error: function(response) {
-          return callbacks.error(response);
-        }
-      });
-    };
-
-  }).call(this);
-  
-}});
-
 window.require.define({"helpers/timezone": function(exports, require, module) {
   (function() {
 
@@ -352,39 +308,6 @@ window.require.define({"initialize": function(exports, require, module) {
     })(BrunchApplication);
 
     new exports.Application;
-
-  }).call(this);
-  
-}});
-
-window.require.define({"lib/request": function(exports, require, module) {
-  (function() {
-
-    exports.request = function(type, url, data, callbacks) {
-      return $.ajax({
-        type: type,
-        url: url,
-        data: data,
-        success: callbacks.success,
-        error: callbacks.error
-      });
-    };
-
-    exports.get = function(url, callbacks) {
-      return exports.request("GET", url, null, callbacks);
-    };
-
-    exports.post = function(url, data, callbacks) {
-      return exports.request("POST", url, data, callbacks);
-    };
-
-    exports.put = function(url, data, callbacks) {
-      return exports.request("PUT", url, data, callbacks);
-    };
-
-    exports.del = function(url, callbacks) {
-      return exports.request("DELETE", url, null, callbacks);
-    };
 
   }).call(this);
   
@@ -587,34 +510,6 @@ window.require.define({"templates/account": function(exports, require, module) {
   buf.push('><div');
   buf.push(attrs({ 'id':('account-form-error-text') }));
   buf.push('></div></div></p></form>');
-  }
-  return buf.join("");
-  };
-}});
-
-window.require.define({"templates/application": function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<a');
-  buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('application-inner') }));
-  buf.push('><p><img');
-  buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
-  buf.push('/></p><p');
-  buf.push(attrs({ "class": ('app-title') }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div><div');
-  buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('btn-group') }));
-  buf.push('><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
-  buf.push('>remove</button><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
-  buf.push('>update</button></div></div></a>');
   }
   return buf.join("");
   };
