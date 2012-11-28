@@ -568,14 +568,14 @@ window.require.define({"templates/application": function(exports, require, modul
   with (locals || {}) {
   var interp;
   buf.push('<a');
-  buf.push(attrs({ 'href':("apps/" + (app.slug) + "/"), 'target':("_blank") }));
+  buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }));
   buf.push('><div');
   buf.push(attrs({ "class": ('application-inner') }));
   buf.push('><p><img');
   buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
   buf.push('/></p><p');
   buf.push(attrs({ "class": ('app-title') }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div><div');
+  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div');
   buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
   buf.push('><div');
   buf.push(attrs({ "class": ('btn-group') }));
@@ -587,7 +587,7 @@ window.require.define({"templates/application": function(exports, require, modul
   buf.push(attrs({ "class": ('btn') + ' ' + ('start-app') }));
   buf.push('>start</button><button');
   buf.push(attrs({ "class": ('btn') + ' ' + ('stop-app') }));
-  buf.push('>stop</button></div></div></a>');
+  buf.push('>stop</button></div></div>');
   }
   return buf.join("");
   };
@@ -955,7 +955,13 @@ window.require.define({"views/account_view": function(exports, require, module) 
             value: data.rows[0].timezone
           });
           return $.get("api/instances/", function(data) {
-            _this.domainField.html(data.rows[0].domain);
+            var domain;
+            if ((data.rows != null) && data.rows.length > 0) {
+              domain = data.rows[0].domain;
+            } else {
+              domain = 'no.domain.set';
+            }
+            _this.domainField.html(domain);
             return _this.domainField.editable({
               url: function(params) {
                 return _this.submitData({
@@ -963,7 +969,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
                 }, 'api/instance/');
               },
               type: 'text',
-              send: 'always'
+              send: 'always',
+              value: domain
             });
           });
         });
@@ -980,20 +987,20 @@ window.require.define({"views/account_view": function(exports, require, module) 
       AccountView.prototype.setListeners = function() {
         var _this = this;
         app.views.home.selectNavButton(app.views.home.accountButton);
-        this.emailField = this.$("#account-email-field");
-        this.timezoneField = this.$("#account-timezone-field");
+        this.emailField = this.$('#account-email-field');
+        this.timezoneField = this.$('#account-timezone-field');
         this.domainField = $('#account-domain-field');
-        this.infoAlert = this.$("#account-info");
+        this.infoAlert = this.$('#account-info');
         this.infoAlert.hide();
-        this.errorAlert = this.$("#account-error");
+        this.errorAlert = this.$('#account-error');
         this.errorAlert.hide();
         this.changePasswordForm = this.$('#change-password-form');
         this.changePasswordForm.hide();
         this.changePasswordButton = this.$('#change-password-button');
         this.changePasswordButton.click(this.onChangePasswordClicked);
-        this.accountSubmitButton = this.$("#account-form-button");
-        this.password1Field = $("#account-password1-field");
-        this.password2Field = $("#account-password2-field");
+        this.accountSubmitButton = this.$('#account-form-button');
+        this.password1Field = $('#account-password1-field');
+        this.password2Field = $('#account-password2-field');
         this.password1Field.keyup(function(event) {
           if (event.which === 13) return _this.password2Field.focus();
         });
@@ -1004,12 +1011,12 @@ window.require.define({"views/account_view": function(exports, require, module) 
           event.preventDefault();
           return _this.onDataSubmit();
         });
-        this.installInfo = this.$("#add-app-modal .loading-indicator");
+        this.installInfo = this.$('#add-app-modal .loading-indicator');
         this.errorAlert.hide();
         this.infoAlert.hide();
-        this.addApplicationCloseCross = this.$("#add-app-modal .close");
+        this.addApplicationCloseCross = this.$('#add-app-modal .close');
         this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-        return this.loadingIndicator = this.$(".loading-indicator");
+        return this.loadingIndicator = this.$('.loading-indicator');
       };
 
       return AccountView;
@@ -1115,9 +1122,9 @@ window.require.define({"views/application": function(exports, require, module) {
           this.$(".stop-app").hide();
           this.$(".start-app").hide();
         }
-        this.$el.click(function(event) {
+        this.$el.find('.application-inner').click(function(event) {
           event.preventDefault();
-          return window.app.views.home.loadApp(_this.model.slug);
+          return window.app.routers.main.navigate("apps/" + _this.model.slug, true);
         });
         return this.el;
       };
@@ -1279,7 +1286,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
               return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
             },
             error: function() {
-              this.machineInfos.find('.progress').spin();
+              _this.machineInfos.find('.progress').spin();
               return alert('Server error occured, infos cannot be displayed.');
             }
           });
@@ -1551,10 +1558,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.$("#app-frames").find("iframe").hide();
         frame.show();
         this.selectNavButton(this.$("#" + slug));
-        this.selectedApp = slug;
-        return frame.load(function() {
-          return alert(frame.location.hash);
-        });
+        return this.selectedApp = slug;
       };
 
       HomeView.prototype.displayNoAppMessage = function() {};

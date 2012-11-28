@@ -1,12 +1,12 @@
-a(href="apps/#{app.slug}/", target="_blank")
+a(href="#apps/#{app.slug}/")
   .application-inner
     p
       img(src="apps/#{app.slug}/icons/main_icon.png")
     p.app-title #{app.name}
-  .application-outer.center
-      .btn-group
-        button.btn.remove-app remove
-        button.btn.update-app update
-      div
-        button.btn.start-app start
-        button.btn.stop-app stop
+.application-outer.center
+  .btn-group
+    button.btn.remove-app remove
+    button.btn.update-app update
+  div
+    button.btn.start-app start
+    button.btn.stop-app stop
