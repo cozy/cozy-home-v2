@@ -18,7 +18,7 @@ class exports.AppManager
     # Because route commands are public, we can't allow that someone add or
     # remove routes.
     resetProxy: (callback) ->
-        railway.logger.write "Update proxy..."
+        console.info "Request for proxy reseting..."
         @proxyClient.get "routes/reset", (error, response, body) ->
             if error
                 console.log error.message
@@ -27,7 +27,7 @@ class exports.AppManager
                 callback new Error "Something went wrong on proxy side when \
 reseting routes"
             else
-                railway.logger.write "Proxy successfuly updated."
+                console.info "Proxy successfully reseted."
                 callback null
 
 
