@@ -110,12 +110,10 @@ describe "Application installation", ->
             should.exist body.start.repository
             should.exist body.start.scripts
         @haibu.listen(9002)
-        @proxy = fakeServer msg: "ok", 201, (body) ->
-            should.exist body.route
-            should.exist body.port
-            body.route.should.equal "my-app"
-            body.port.should.equal 8001
-        @proxy.listen(4000)
+
+        @proxy = fakeServer msg: "ok", 200, (body) ->
+
+        @proxy.listen 9104
 
     after ->
         @haibu.close()
@@ -173,10 +171,9 @@ describe "Application update", ->
         @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
 
         @haibu.listen 9002
-        @proxy = fakeServer msg: "ok", 204, (body) ->
-            should.exist body.route
-            body.route.should.equal "/apps/my-app"
-        @proxy.listen 4000
+        @proxy = fakeServer msg: "ok", 200, (body) ->
+
+        @proxy.listen 9104
 
     after ->
         @haibu.close()
@@ -206,8 +203,8 @@ describe "Application uninstallation", ->
             should.exist body.repository
             should.exist body.scripts
         @haibu.listen 9002
-        @proxy = fakeServer msg: "ok", 204, (body) ->
-        @proxy.listen 4000
+        @proxy = fakeServer msg: "ok", 200, (body) ->
+        @proxy.listen 9104
 
     after ->
         @haibu.close()
