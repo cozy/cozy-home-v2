@@ -2,7 +2,7 @@ haibu = require('haibu-api')
 HttpClient = require("request-json").JsonClient
 
 
-# Class to facilitate communications with Haibu, the application server 
+# Class to facilitate communications with Haibu, the application server
 # and the cozy proxy to manage application installation.
 class exports.AppManager
 

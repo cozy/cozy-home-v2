@@ -120,7 +120,9 @@ action "uninstall", ->
                     if err
                         send_error 'Reset Proxy failed.'
                     else
-                        send success: true, msg: 'Application succesfuly uninstalled'
+                        send
+                            success: true
+                            msg: 'Application succesfuly uninstalled'
 
     manager = new AppManager
     manager.uninstallApp @app, (err, result) =>

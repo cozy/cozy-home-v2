@@ -9,8 +9,6 @@ password = "password"
 
 client = new Client("http://localhost:8888/")
 
-## Helpers
-
 responseTest = null
 bodyTest = null
 
@@ -30,23 +28,21 @@ handleResponse = (error, response, body, done) ->
     done()
 
 
-# Initializers 
-
 clearDb = (callback) ->
 
     destroyApplications = ->
         Application.destroyAll (error) ->
-             if error
-                 callback()
-             else
-                 callback()
+            if error
+                callback()
+            else
+                callback()
 
     destroyUsers = ->
         User.destroyAll (error) ->
             if error
                 callback()
             else
-                 destroyApplications()
+                destroyApplications()
             
     destroyUsers()
 

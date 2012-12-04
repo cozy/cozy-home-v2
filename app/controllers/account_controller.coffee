@@ -61,7 +61,7 @@ action 'users', ->
         else
             send rows: users
 
-# Return list of instances 
+# Return list of instances
 action 'instances', ->
     CozyInstance.all (errors, instances) ->
         if errors

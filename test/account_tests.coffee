@@ -9,8 +9,6 @@ password = 'password'
 
 client = new Client 'http://localhost:8889/'
 
-# Initializers 
-
 
 describe 'Modify account failure', ->
 
