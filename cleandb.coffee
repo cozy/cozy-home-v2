@@ -12,6 +12,15 @@ destroyApplications = ->
              console.log "All applications and users are removed."
              process.exit(0)
 
+destroyInstances = ->
+    CozyInstance.destroyAll (error) ->
+        if error
+             console.log error.stack
+             console.log "Cleaning instances failed."
+             process.exit(0)
+        else
+             destroyApplications()
+ 
 destroyUsers = ->
     User.destroyAll (error) ->
         if error
@@ -19,6 +28,6 @@ destroyUsers = ->
              console.log "Cleaning Users failed."
              process.exit(0)
         else
-             destroyApplications()
+             destroyInstances()
         
 destroyUsers()
