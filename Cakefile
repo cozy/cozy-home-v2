@@ -1,76 +1,68 @@
-fs     = require 'fs'
-{exec} = require 'child_process'
+fs = require 'fs'
 
-option '-f' , '--file [FILE*]' , 'test file to run'
-option ''   , '--dir [DIR*]'   , 'directory where to grab test files'
-option '-d' , '--debug'        , 'run node in debug mode'
-option '-b' , '--debug-brk'    , 'run node in --debug-brk mode (stops on first line)'
-
-options =  # defaults, will be overwritten by command line options
-    file        : no
-    dir         : no
-    debug       : no
-    'debug-brk' : no
-
-
-# Grab test files of a directory
+# Grab test files 
 walk = (dir, fileList) ->
-    list = fs.readdirSync(dir)
-    if list
-        for file in list
-            if file
-                filename = dir + '/' + file
-                stat = fs.statSync(filename)
-                if stat and stat.isDirectory()
-                    walk(filename, fileList)
-                else if filename.substr(-6) == "coffee"
-                    fileList.push(filename)
-    return fileList
+  list = fs.readdirSync(dir)
+  if list
+    for file in list
+      if file
+        filename = dir + '/' + file
+        stat = fs.statSync(filename)
+        if stat and stat.isDirectory()
+          walk(filename, fileList)
+        else if filename.substr(-6) == "coffee"
+          fileList.push(filename)
+  fileList
 
+{exec} = require 'child_process'
+testFiles = walk("test", [])
+uiTestFiles = walk("client/test", [])
 
-task 'tests', 'run server tests, ./test is parsed by default, otherwise use -f or --dir', (opts) ->
-    options   = opts
-    testFiles = []
-    if options.dir
-        dirList   = options.dir
-        testFiles = walk(dir, testFiles) for dir in dirList
-    if options.file
-        testFiles  = testFiles.concat(options.file)
-    if not(options.dir or options.file)
-        testFiles = walk("test", [])
+task 'tests', 'run tests through mocha', ->
     runTests testFiles
     
-task 'tests:client', 'run client tests through mocha', (opts) ->
-    options     = opts
-    uiTestFiles = walk("client/test", [])
+task 'tests:client', 'run tests through mocha', ->
     runTests uiTestFiles
 
-
 runTests = (fileList) ->
-    command = "mocha " + fileList.join(" ") + " "
-    if options['debug-brk']
-        command += "--debug-brk --forward-io --profile "
-    if options.debug
-        command += "--debug --forward-io --profile "
-    command += " --reporter spec --require should --compilers coffee:coffee-script --colors"
-    exec command, (err, stdout, stderr) ->
-        if err
-            console.log "Running mocha caught exception: \n" + err
-        console.log stdout
+  console.log "Run tests with Mocha for " + fileList.join(" ")
+  command = "mocha " + fileList.join(" ") + " --reporter spec "
+  command += "--require should --compilers coffee:coffee-script --colors"
+  exec command, (err, stdout, stderr) ->
+    if err
+      console.log "Running mocha caught exception: \n" + err
+    console.log stdout
 
+option '-f', '--file [FILE]', 'test file to run'
 
-task "xunit", "", ->
-    process.env.TZ = "Europe/Paris"
-    command = "mocha "
-    command += " --require should --compilers coffee:coffee-script -R xunit > xunit.xml"
-    exec command, (err, stdout, stderr) ->
-        console.log stdout
+task 'tests:file', 'run test through mocha for a given file', (options) ->
+  file = options.file
+  console.log "Run tests with Mocha for " + file
+  command = "mocha " + file + " --reporter spec "
+  command += "--require should --compilers coffee:coffee-script --colors"
+  exec command, (err, stdout, stderr) ->
+    if err
+      console.log "Running mocha caught exception: \n" + err
+    console.log stdout
 
+task "xunit", "Run tests and save result in a file called xunit.xml", ->
+  process.env.TZ = "Europe/Paris"
+  command = "mocha "
+  command += " --require should --compilers coffee:coffee-script -R xunit > xunit.xml"
+  exec command, (err, stdout, stderr) ->
+    console.log stdout
 
 task "xunit:client", "", ->
-    process.env.TZ = "Europe/Paris"
-    command = "mocha client/test/*"
-    command += " --require should --compilers coffee:coffee-script -R xunit > xunitclient.xml"
-    exec command, (err, stdout, stderr) ->
-        console.log stdout
+  process.env.TZ = "Europe/Paris"
+  command = "mocha client/test/*"
+  command += " --require should --compilers coffee:coffee-script -R xunit > xunitclient.xml"
+  exec command, (err, stdout, stderr) ->
+    console.log stdout
 
+task "lint", "Run coffeelint on backend files", ->
+    process.env.TZ = "Europe/Paris"
+    command = "coffeelint "
+    command += "  -f coffeelint.json -r app/ lib/ config/ test/"
+    exec command, (err, stdout, stderr) ->
+        console.log err
+        console.log stdout
