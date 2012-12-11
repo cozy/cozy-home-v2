@@ -655,9 +655,9 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
   buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
-  buf.push('><i class="icon-plus"></i>\nadd application\n</button><button');
+  buf.push('><i class="icon-plus"></i>\nadd\n</button><button');
   buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
-  buf.push('>manage applications\n</button></div></div><div');
+  buf.push('>manage\n</button></div></div><div');
   buf.push(attrs({ 'id':('add-app-modal'), "class": ('modal') + ' ' + ('right') + ' ' + ('hide') }));
   buf.push('><div');
   buf.push(attrs({ "class": ('modal-header') }));
@@ -717,7 +717,7 @@ window.require.define({"templates/home": function(exports, require, module) {
   buf.push(attrs({ "class": ('icon-user') }));
   buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
   buf.push(attrs({ 'id':('logout-button') }));
-  buf.push('><span>Sign out&nbsp;</span><i');
+  buf.push('><i');
   buf.push(attrs({ "class": ('icon-arrow-right') }));
   buf.push('></i></a></li></ul><ul');
   buf.push(attrs({ "class": ('nav') }));
@@ -870,6 +870,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
             if (data.success) {
               _this.infoAlert.html(data.msg);
               _this.infoAlert.show();
+              $("#account-password1-field").val(null);
+              $("#account-password2-field").val(null);
             } else {
               _this.displayErrors(JSON.parse(data.responseText).msg);
             }
@@ -1487,7 +1489,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
         if (typeof app !== "undefined" && app !== null) {
           app.routers.main.navigate('home', true);
         }
-        return this.selectNavButton(this.homeButton);
+        this.selectNavButton(this.homeButton);
+        return window.document.title = "Cozy - Home";
       };
 
       HomeView.prototype.account = function() {
@@ -1496,7 +1499,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
         if (typeof app !== "undefined" && app !== null) {
           app.routers.main.navigate('account', true);
         }
-        return this.selectNavButton(this.accountButton);
+        this.selectNavButton(this.accountButton);
+        return window.document.title = "Cozy - Account";
       };
 
       HomeView.prototype.resetLayoutSizes = function() {
@@ -1544,7 +1548,7 @@ window.require.define({"views/home_view": function(exports, require, module) {
         return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + id, true) : void 0;
       };
 
-      HomeView.prototype.loadApp = function(slug) {
+      HomeView.prototype.loadApp = function(slug, name) {
         var frame;
         this.frames.show();
         frame = this.$("#" + slug + "-frame");
@@ -1558,13 +1562,28 @@ window.require.define({"views/home_view": function(exports, require, module) {
         this.$("#app-frames").find("iframe").hide();
         frame.show();
         this.selectNavButton(this.$("#" + slug));
-        return this.selectedApp = slug;
+        this.selectedApp = slug;
+        return this.setAppTitle();
       };
 
       HomeView.prototype.displayNoAppMessage = function() {};
 
       /* Configuration
       */
+
+      HomeView.prototype.setAppTitle = function() {
+        var application, name,
+          _this = this;
+        application = this.apps.filter(function(application) {
+          return application.slug === _this.selectedApp;
+        });
+        if (application.length > 0) {
+          name = application[0].name;
+        } else {
+          name = "";
+        }
+        return window.document.title = "Cozy - " + name;
+      };
 
       HomeView.prototype.fetch = function() {
         var _this = this;
@@ -1573,7 +1592,9 @@ window.require.define({"views/home_view": function(exports, require, module) {
             if (_this.selectedApp != null) {
               _this.selectNavButton(_this.$("#" + _this.selectedApp));
             }
-            return _this.selectedApp = null;
+            if (_this.selectedApp != null) _this.setAppTitle();
+            _this.selectedApp = null;
+            return _this.resetLayoutSizes();
           }
         });
       };
@@ -1586,6 +1607,10 @@ window.require.define({"views/home_view": function(exports, require, module) {
       HomeView.prototype.setListeners = function() {
         this.logoutButton = this.$('#logout-button');
         this.logoutButton.click(this.logout);
+        this.logoutButton.tooltip({
+          placement: 'bottom',
+          title: 'Sign out'
+        });
         this.accountButton = this.$('#account-button');
         this.accountButton.click(this.account);
         this.homeButton = this.$('#home-button');

@@ -34,6 +34,8 @@ class exports.AccountView extends Backbone.View
                 if data.success
                     @infoAlert.html data.msg
                     @infoAlert.show()
+                    $("#account-password1-field").val null
+                    $("#account-password2-field").val null
                 else
                     @displayErrors JSON.parse(data.responseText).msg
                 @loadingIndicator.spin()
@@ -55,7 +57,6 @@ class exports.AccountView extends Backbone.View
                d.reject(JSON.parse(data.responseText).msg)
               
     ### Functions ###
-
     displayErrors: (msgs) =>
         errorString = ""
         for msg in msgs

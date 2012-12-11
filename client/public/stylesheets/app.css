@@ -6056,7 +6056,7 @@ html{height:100%}
 .application:active{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .application:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #dce4e7), color-stop(1, #a3b8be));background:-webkit-linear-gradient(top, #dce4e7 0%, #a3b8be 100%);background:-moz-linear-gradient(top, #dce4e7 0%, #a3b8be 100%);background:linear-gradient(top, #dce4e7 0%, #a3b8be 100%)}
 .app-title{font-size:20px;line-height:30px;font-weight:bold}
-.app-tools{width:50%;margin-left:auto;margin-right:auto;margin-top:12px;color:text-color;text-align:center}
+.app-tools{width:50%;margin-left:auto;margin-right:auto;margin-top:12px;color:text-color;text-align:center;margin-bottom:20px}
 #no-app-message{margin-top:30px}
 .install-info{width:40%;text-align:center}
 .broken a{cursor:default}
@@ -6065,8 +6065,8 @@ html{height:100%}
 .application-outer .btn{margin-top:10px}
 .application-outer p{margin:0;padding:0}
 #add-app-close,#add-app-submit{margin-top:5px}
-.control-group,#add-app-form,#account-form{border:0;font-size:1.3em;padding:0;margin:0;margin-top:50px;}
-.control-group select,#add-app-form select,#account-form select,.control-group input,#add-app-form input,#account-form input{font-size:1em;height:1.1em;padding:.2em;-webkit-border-radius:.4em;-moz-border-radius:.4em;border-radius:.4em;border:0;background-color:#eaf1f1;-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;-moz-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;box-shadow:0 2px 2px rgba(0,0,0,0.45) inset}
+.control-group,#add-app-form,#account-form{border:0;font-size:1.1em;padding:0;margin:0;margin-top:20px;}
+.control-group select,#add-app-form select,#account-form select,.control-group input,#add-app-form input,#account-form input{height:1.1em;padding:.2em;-webkit-border-radius:.4em;-moz-border-radius:.4em;border-radius:.4em;border:0;background-color:#eaf1f1;-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;-moz-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;box-shadow:0 2px 2px rgba(0,0,0,0.45) inset}
 .control-group select,#add-app-form select,#account-form select{height:35px}
 .control-group input:focus,#add-app-form input:focus,#account-form input:focus{-webkit-box-shadow:0 1px 1px rgba(0,0,0,0.75) inset,0 0 17px rgba(82,168,236,0.90);-moz-box-shadow:0 1px 1px rgba(0,0,0,0.75) inset,0 0 17px rgba(82,168,236,0.90);box-shadow:0 1px 1px rgba(0,0,0,0.75) inset,0 0 17px rgba(82,168,236,0.90);background:#e2f8ff}
 .control-group .btn,#add-app-form .btn,#account-form .btn{margin-top:.2em}
@@ -6074,7 +6074,8 @@ html{height:100%}
 .control-group .field,#add-app-form .field,#account-form .field{margin:10px auto 20px auto;width:40%}
 .control-group .icon-white,#add-app-form .icon-white,#account-form .icon-white{background-image:url("../img/glyphicons-halflings.png")}
 .control-group .alert,#add-app-form .alert,#account-form .alert{width:50%;margin:auto;margin-top:30px}
-#add-app-form{padding:3%}
+#add-app-form{padding:3%;}
+#add-app-form input{font-size:1em}
 #account-form select,.control-group select,#account-form input,.control-group input{font-size:1em}
 #account-info,#account-error{display:none;margin-bottom:0}
 #home-view{overflow:hidden;background:#738182;width:100%;height:100%;padding:0;margin:0}

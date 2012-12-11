@@ -33,6 +33,7 @@ class exports.HomeView extends Backbone.View
         @frames.hide()
         app?.routers.main.navigate 'home', true
         @selectNavButton @homeButton
+        window.document.title = "Cozy - Home"
 
     # Display account manager page, hides app frames, active account button.
     account: =>
@@ -40,6 +41,7 @@ class exports.HomeView extends Backbone.View
         @frames.hide()
         app?.routers.main.navigate 'account', true
         @selectNavButton @accountButton
+        window.document.title = "Cozy - Account"
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
@@ -81,7 +83,8 @@ class exports.HomeView extends Backbone.View
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
     # iframes. Then currently selected frame is registered
-    loadApp: (slug) ->
+    loadApp: (slug, name) ->
+
         @frames.show()
         frame = @$("##{slug}-frame")
         if frame.length == 0
@@ -94,17 +97,27 @@ class exports.HomeView extends Backbone.View
 
         @selectNavButton @$("##{slug}")
         @selectedApp = slug
+        @setAppTitle()
 
     displayNoAppMessage: ->
 
     ### Configuration ###
+
+    setAppTitle: ->
+        application = @apps.filter (application) =>
+            application.slug is @selectedApp
+
+        if application.length > 0 then name = application[0].name else name = ""
+        window.document.title = "Cozy - #{name}"
 
     fetch: ->
         @apps.fetch
             success: =>
                 # Weird trick to set current app tab active once apps are loaded.
                 @selectNavButton @$("##{@selectedApp}") if @selectedApp?
+                @setAppTitle() if @selectedApp?
                 @selectedApp = null
+                @resetLayoutSizes()
 
     render: ->
         $(@el).html homeTemplate()
@@ -113,6 +126,10 @@ class exports.HomeView extends Backbone.View
     setListeners: ->
         @logoutButton = @$ '#logout-button'
         @logoutButton.click @logout
+        @logoutButton.tooltip
+             placement: 'bottom'
+             title: 'Sign out'
+            
         @accountButton = @$ '#account-button'
         @accountButton.click @account
         @homeButton = @$ '#home-button'
