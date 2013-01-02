@@ -662,9 +662,7 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
   buf.push('></div><div');
   buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ "class": ('modal-footer') }));
-  buf.push('><button');
+  buf.push('></div><button');
   buf.push(attrs({ "class": ('pull-left') + ' ' + ('loading-indicator') }));
   buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><button');
   buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));

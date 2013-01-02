@@ -243,9 +243,22 @@ html
     #buttons span
         display: none
 
-@media (max-width: 600px)
-    #buttons
+    #buttons img
+        width: 15px
+        height: 15px
+
+    .navbar
+        li.app-button
+            a
+                padding: 10px 5px
+        .nav > li > a
+                padding: 10px 5px
+
+    #add-app-modal
         width: 100%
+        margin: 0
+        left: 0
+
 @media (max-width: 700px)
     #header-title
         display: none
@@ -378,7 +391,6 @@ html
     font-size: 1.1em
     padding: 0
     margin: 0
-    margin-top: 20px
 
     select
     input
@@ -453,3 +465,30 @@ html
     background: transparent
     box-shadow: 0
     color: textcolor
+    
+// Responsive
+
+@media (max-width: 600px)
+    #add-app-modal
+        div
+            padding: 3px
+
+        #app-git-field
+            width: 94%
+
+        #add-app-submit
+            margin-right: 10px
+
+
+    #account-form
+        text-align: left
+
+        p
+            margin: 15px
+
+        .field
+            margin: 15px
+
+            select
+            option
+                width: 75%
