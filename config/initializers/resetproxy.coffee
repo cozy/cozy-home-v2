@@ -13,13 +13,10 @@ haibuClient =  new Client 'http://localhost:9002/'
 resetRoutes = ->
     Application.all (err, installedApps) ->
         appDict = {}
-        console.log "start"
         for installedApp in installedApps
             appDict[installedApp.name] = installedApp
             
         haibuClient.get 'drones/running', (err, res, apps) ->
-            console.log appDict
-            
             updateApps(apps, appDict, resetProxy)
 
 updateApps = (apps, appDict, callback) ->

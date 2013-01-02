@@ -28,20 +28,22 @@ class exports.ApplicationRow extends BaseRow
     ### Functions ###
 
     removeApp: ->
-        @$(".remove-app").html "Removing..."
+        @$(".remove-app").html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @$(".remove-app").spin "small"
         @model.uninstall
             success: =>
-                @$(".remove-app").html "Removed!"
+                @$(".remove-app").html "Removed"
             error: =>
                 @$(".remove-app").html "failed."
 
     updateApp: ->
-        @$(".update-app").html "Updating..."
+        @$(".update-app").html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @$(".update-app").spin "small"
         @model.updateApp
             success: =>
-                @$(".update-app").html "Updated!"
+                @$(".update-app").html "Updated"
             error: =>
-                @$(".update-app").html "failed."
+                @$(".update-app").html "failed"
 
     ### configuration ###
 

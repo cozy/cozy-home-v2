@@ -61,20 +61,25 @@
     throw new Error('Cannot find module "' + name + '"');
   };
 
-  var define = function(bundle) {
-    for (var key in bundle) {
-      if (has(bundle, key)) {
-        modules[key] = bundle[key];
+  var define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has(bundle, key)) {
+          modules[key] = bundle[key];
+        }
       }
+    } else {
+      modules[bundle] = fn;
     }
-  }
+  };
 
   globals.require = require;
   globals.require.define = define;
+  globals.require.register = define;
   globals.require.brunch = true;
 })();
 
-window.require.define({"collections/application": function(exports, require, module) {
+window.require.register("collections/application", function(exports, require, module) {
   (function() {
     var Application, BaseCollection,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -124,9 +129,8 @@ window.require.define({"collections/application": function(exports, require, mod
 
   }).call(this);
   
-}});
-
-window.require.define({"collections/collections": function(exports, require, module) {
+});
+window.require.register("collections/collections", function(exports, require, module) {
   (function() {
     var __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -149,9 +153,8 @@ window.require.define({"collections/collections": function(exports, require, mod
 
   }).call(this);
   
-}});
-
-window.require.define({"helpers": function(exports, require, module) {
+});
+window.require.register("helpers", function(exports, require, module) {
   (function() {
 
     exports.BrunchApplication = (function() {
@@ -254,9 +257,8 @@ window.require.define({"helpers": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"helpers/client": function(exports, require, module) {
+});
+window.require.register("helpers/client", function(exports, require, module) {
   (function() {
 
     exports.request = function(type, url, data, callbacks) {
@@ -287,18 +289,16 @@ window.require.define({"helpers/client": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"helpers/timezone": function(exports, require, module) {
+});
+window.require.register("helpers/timezone", function(exports, require, module) {
   (function() {
 
     exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Maceio", "America/Managua", "America/Manaus", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montreal", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Vostok", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Canada/Atlantic", "Canada/Central", "Canada/Eastern", "Canada/Mountain", "Canada/Newfoundland", "Canada/Pacific", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/Simferopol", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zaporozhye", "Europe/Zurich", "GMT", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Ponape", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Truk", "Pacific/Wake", "Pacific/Wallis", "US/Alaska", "US/Arizona", "US/Central", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific", "UTC"];
 
   }).call(this);
   
-}});
-
-window.require.define({"initialize": function(exports, require, module) {
+});
+window.require.register("initialize", function(exports, require, module) {
   (function() {
     var AccountView, ApplicationsView, BrunchApplication, HomeView, MainRouter,
       __hasProp = Object.prototype.hasOwnProperty,
@@ -348,9 +348,8 @@ window.require.define({"initialize": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"models/application": function(exports, require, module) {
+});
+window.require.register("models/application", function(exports, require, module) {
   (function() {
     var BaseModel, client,
       __hasProp = Object.prototype.hasOwnProperty,
@@ -406,9 +405,8 @@ window.require.define({"models/application": function(exports, require, module) 
 
   }).call(this);
   
-}});
-
-window.require.define({"models/models": function(exports, require, module) {
+});
+window.require.register("models/models", function(exports, require, module) {
   (function() {
     var __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -431,9 +429,8 @@ window.require.define({"models/models": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"models/user": function(exports, require, module) {
+});
+window.require.register("models/user", function(exports, require, module) {
   (function() {
     var BaseModel, client,
       __hasProp = Object.prototype.hasOwnProperty,
@@ -463,9 +460,8 @@ window.require.define({"models/user": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"routers/main_router": function(exports, require, module) {
+});
+window.require.register("routers/main_router", function(exports, require, module) {
   (function() {
     var __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -513,9 +509,8 @@ window.require.define({"routers/main_router": function(exports, require, module)
 
   }).call(this);
   
-}});
-
-window.require.define({"templates/account": function(exports, require, module) {
+});
+window.require.register("templates/account", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -559,9 +554,8 @@ window.require.define({"templates/account": function(exports, require, module) {
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/application": function(exports, require, module) {
+});
+window.require.register("templates/application", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -591,9 +585,8 @@ window.require.define({"templates/application": function(exports, require, modul
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/application_button": function(exports, require, module) {
+});
+window.require.register("templates/application_button", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -609,9 +602,8 @@ window.require.define({"templates/application_button": function(exports, require
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/application_iframe": function(exports, require, module) {
+});
+window.require.register("templates/application_iframe", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -623,9 +615,8 @@ window.require.define({"templates/application_iframe": function(exports, require
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/applications": function(exports, require, module) {
+});
+window.require.register("templates/applications", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -665,9 +656,7 @@ window.require.define({"templates/applications": function(exports, require, modu
   buf.push(attrs({ 'type':("button"), 'data-dismiss':("modal"), 'aria-hidden':("true"), "class": ('close') }));
   buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
-  buf.push('><p><label>name</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-name-field"), 'maxlength':("13"), "class": ("span3") }));
-  buf.push('/></p><p><label>Git URL</label><input');
+  buf.push('><p>Install your app\n</p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
   buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
@@ -683,9 +672,8 @@ window.require.define({"templates/applications": function(exports, require, modu
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/home": function(exports, require, module) {
+});
+window.require.register("templates/home", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -731,9 +719,8 @@ window.require.define({"templates/home": function(exports, require, module) {
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/login": function(exports, require, module) {
+});
+window.require.register("templates/login", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -757,9 +744,8 @@ window.require.define({"templates/login": function(exports, require, module) {
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/market": function(exports, require, module) {
+});
+window.require.register("templates/market", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -771,9 +757,8 @@ window.require.define({"templates/market": function(exports, require, module) {
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/register": function(exports, require, module) {
+});
+window.require.register("templates/register", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -793,9 +778,8 @@ window.require.define({"templates/register": function(exports, require, module) 
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"templates/reset": function(exports, require, module) {
+});
+window.require.register("templates/reset", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -815,9 +799,8 @@ window.require.define({"templates/reset": function(exports, require, module) {
   }
   return buf.join("");
   };
-}});
-
-window.require.define({"views/account_view": function(exports, require, module) {
+});
+window.require.register("views/account_view", function(exports, require, module) {
   (function() {
     var template, timezones,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1027,9 +1010,8 @@ window.require.define({"views/account_view": function(exports, require, module) 
 
   }).call(this);
   
-}});
-
-window.require.define({"views/application": function(exports, require, module) {
+});
+window.require.register("views/application", function(exports, require, module) {
   (function() {
     var BaseRow, template,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1079,10 +1061,11 @@ window.require.define({"views/application": function(exports, require, module) {
 
       ApplicationRow.prototype.removeApp = function() {
         var _this = this;
-        this.$(".remove-app").html("Removing...");
+        this.$(".remove-app").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        this.$(".remove-app").spin("small");
         return this.model.uninstall({
           success: function() {
-            return _this.$(".remove-app").html("Removed!");
+            return _this.$(".remove-app").html("Removed");
           },
           error: function() {
             return _this.$(".remove-app").html("failed.");
@@ -1092,13 +1075,14 @@ window.require.define({"views/application": function(exports, require, module) {
 
       ApplicationRow.prototype.updateApp = function() {
         var _this = this;
-        this.$(".update-app").html("Updating...");
+        this.$(".update-app").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        this.$(".update-app").spin("small");
         return this.model.updateApp({
           success: function() {
-            return _this.$(".update-app").html("Updated!");
+            return _this.$(".update-app").html("Updated");
           },
           error: function() {
-            return _this.$(".update-app").html("failed.");
+            return _this.$(".update-app").html("failed");
           }
         });
       };
@@ -1137,9 +1121,8 @@ window.require.define({"views/application": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"views/applications_view": function(exports, require, module) {
+});
+window.require.register("views/applications_view", function(exports, require, module) {
   (function() {
     var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate, client,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1207,6 +1190,7 @@ window.require.define({"views/applications_view": function(exports, require, mod
         this.clearApps = __bind(this.clearApps, this);
         this.onCloseAddAppClicked = __bind(this.onCloseAddAppClicked, this);
         this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
+        this.extractName = __bind(this.extractName, this);
         this.onInstallClicked = __bind(this.onInstallClicked, this);
         this.onAddClicked = __bind(this.onAddClicked, this);      ApplicationsView.__super__.constructor.call(this);
         this.isManaging = false;
@@ -1233,13 +1217,13 @@ window.require.define({"views/applications_view": function(exports, require, mod
         if (this.isInstalling) return true;
         this.isInstalling = true;
         data = {
-          name: this.$("#app-name-field").val(),
           git: this.$("#app-git-field").val()
         };
         this.hideError();
         this.installAppButton.displayOrange("install");
         dataChecking = this.checkData(data);
         if (!dataChecking.error) {
+          data.name = this.extractName(data.git);
           this.errorAlert.hide();
           this.installAppButton.button.html("installing...");
           this.installInfo.spin();
@@ -1274,6 +1258,16 @@ window.require.define({"views/applications_view": function(exports, require, mod
           this.isInstalling = false;
           return this.displayError(dataChecking.msg);
         }
+      };
+
+      ApplicationsView.prototype.extractName = function(gitUrl) {
+        var name, strings;
+        strings = gitUrl.split("/");
+        name = strings[strings.length - 1];
+        name = name.substring(0, name.length - 4);
+        name = name.replace(/-|_/g, " ");
+        if (name.indexOf("cozy ") === 0) name = name.substring(5);
+        return name;
       };
 
       ApplicationsView.prototype.onManageAppsClicked = function() {
@@ -1429,9 +1423,8 @@ window.require.define({"views/applications_view": function(exports, require, mod
 
   }).call(this);
   
-}});
-
-window.require.define({"views/home_view": function(exports, require, module) {
+});
+window.require.register("views/home_view", function(exports, require, module) {
   (function() {
     var AppCollection, User, appButtonTemplate, appIframeTemplate, homeTemplate,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1631,9 +1624,8 @@ window.require.define({"views/home_view": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require.define({"views/row": function(exports, require, module) {
+});
+window.require.register("views/row", function(exports, require, module) {
   (function() {
     var __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -1661,5 +1653,4 @@ window.require.define({"views/row": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
+});

@@ -6053,6 +6053,7 @@ html{height:100%}
 .application img{margin-top:10px}
 .application p{margin:0;font-family:main;color:#eaf1f1;text-shadow:1px 1px 1px #444}
 .application a:hover{text-decoration:none}
+.application .btn{font-size:12px}
 .application:active{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .application:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #dce4e7), color-stop(1, #a3b8be));background:-webkit-linear-gradient(top, #dce4e7 0%, #a3b8be 100%);background:-moz-linear-gradient(top, #dce4e7 0%, #a3b8be 100%);background:linear-gradient(top, #dce4e7 0%, #a3b8be 100%)}
 .app-title{font-size:20px;line-height:30px;font-weight:bold}

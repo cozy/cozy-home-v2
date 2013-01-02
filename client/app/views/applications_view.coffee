@@ -60,7 +60,6 @@ class exports.ApplicationsView extends Backbone.View
         return true if @isInstalling
         @isInstalling = true
         data =
-            name: @$("#app-name-field").val()
             git: @$("#app-git-field").val()
 
         @hideError()
@@ -68,6 +67,7 @@ class exports.ApplicationsView extends Backbone.View
 
         dataChecking = @checkData data
         if not dataChecking.error
+            data.name = @extractName data.git
             @errorAlert.hide()
             @installAppButton.button.html "installing..."
             @installInfo.spin()
@@ -101,6 +101,17 @@ class exports.ApplicationsView extends Backbone.View
         else
             @isInstalling = false
             @displayError dataChecking.msg
+
+    # TODO: Set extraction on server side too.
+    # Return application name deduce from the github account name.
+    extractName: (gitUrl) =>
+        strings = gitUrl.split("/")
+        name = strings[strings.length - 1]
+        name = name.substring(0, name.length - 4)
+        name = name.replace /-|_/g, " "
+        if name.indexOf("cozy ") is 0
+            name = name.substring(5)
+        name
 
     onManageAppsClicked: =>
         if not @machineInfos.is(':visible')

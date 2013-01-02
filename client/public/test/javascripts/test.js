@@ -61,20 +61,25 @@
     throw new Error('Cannot find module "' + name + '"');
   };
 
-  var define = function(bundle) {
-    for (var key in bundle) {
-      if (has(bundle, key)) {
-        modules[key] = bundle[key];
+  var define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has(bundle, key)) {
+          modules[key] = bundle[key];
+        }
       }
+    } else {
+      modules[bundle] = fn;
     }
-  }
+  };
 
   globals.require = require;
   globals.require.define = define;
+  globals.require.register = define;
   globals.require.brunch = true;
 })();
 
-window.require.define({"test/application_collection_test": function(exports, require, module) {
+window.require.register("test/application_collection_test", function(exports, require, module) {
   (function() {
     var Application, ApplicationCollection, ApplicationsView;
 
@@ -128,9 +133,8 @@ window.require.define({"test/application_collection_test": function(exports, req
 
   }).call(this);
   
-}});
-
-window.require.define({"test/application_view_test": function(exports, require, module) {
+});
+window.require.register("test/application_view_test", function(exports, require, module) {
   (function() {
     var Application, ApplicationsView;
 
@@ -239,9 +243,8 @@ window.require.define({"test/application_view_test": function(exports, require, 
 
   }).call(this);
   
-}});
-
-window.require.define({"test/home_view_test": function(exports, require, module) {
+});
+window.require.register("test/home_view_test", function(exports, require, module) {
   (function() {
     var Application, HomeView;
 
@@ -281,9 +284,8 @@ window.require.define({"test/home_view_test": function(exports, require, module)
 
   }).call(this);
   
-}});
-
-window.require.define({"test/test-helpers": function(exports, require, module) {
+});
+window.require.register("test/test-helpers", function(exports, require, module) {
   (function() {
 
     module.exports = {
@@ -294,8 +296,13 @@ window.require.define({"test/test-helpers": function(exports, require, module) {
 
   }).call(this);
   
-}});
-
-window.require('test/application_collection_test');
-window.require('test/application_view_test');
-window.require('test/home_view_test');
+});
+var hasFilterer = window.brunch && window.brunch.test && window.brunch.test.filterer;
+var valid = hasFilterer ? window.brunch.test.filterer('test/application_collection_test') : true;
+if (valid) window.require('test/application_collection_test');
+var hasFilterer = window.brunch && window.brunch.test && window.brunch.test.filterer;
+var valid = hasFilterer ? window.brunch.test.filterer('test/application_view_test') : true;
+if (valid) window.require('test/application_view_test');
+var hasFilterer = window.brunch && window.brunch.test && window.brunch.test.filterer;
+var valid = hasFilterer ? window.brunch.test.filterer('test/home_view_test') : true;
+if (valid) window.require('test/home_view_test');
