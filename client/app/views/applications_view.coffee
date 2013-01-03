@@ -30,6 +30,9 @@ class InstallButton
         @button.addClass  "btn-red"
         @button.removeClass "btn-orange"
 
+    spin: ->
+        @button.spin "small"
+
 
 # View describing main screen for user once he is logged
 class exports.ApplicationsView extends Backbone.View
@@ -57,20 +60,22 @@ class exports.ApplicationsView extends Backbone.View
         @isInstalling = false
 
     onInstallClicked: =>
-        return true if @isInstalling
-        @isInstalling = true
         data =
             git: @$("#app-git-field").val()
 
-        @hideError()
-        @installAppButton.displayOrange "install"
+        @runInstallation data, @installAppButton
 
+    runInstallation: (data, button) =>
+        return true if @isInstalling
+        @isInstalling = true
+        @hideError()
+        button.displayOrange "install"
         dataChecking = @checkData data
         if not dataChecking.error
             data.name = @extractName data.git
             @errorAlert.hide()
-            @installAppButton.button.html "installing..."
-            @installInfo.spin()
+            button.button.html "&nbsp;&nbsp;&nbsp;&nbsp;"
+            button.spin()
 
             app = new Application data
             app.install
@@ -79,25 +84,21 @@ class exports.ApplicationsView extends Backbone.View
                         @apps.add app
                         # TODO: refactor that with backbone mediator
                         window.app.views.home.addApplication app
-                        @installAppButton.displayRed "Install failed"
-                        @installInfo.spin()
-                        setTimeout =>
-                            @addApplicationForm.slideToggle()
-                        , 1000
+                        button.spin()
+                        button.displayRed "Install failed"
+                        @isInstalling = false
                     else
                         @apps.add app
                         # TODO: refactor that with backbone mediator
                         window.app.views.home.addApplication app
-                        @installAppButton.displayGreen "Install succeeded!"
-                        @installInfo.spin()
-                        setTimeout =>
-                            @addApplicationForm.slideToggle()
-                        , 1000
+                        button.spin()
+                        button.displayGreen "Install succeeded!"
+                        @isInstalling = false
 
                 error: (data) =>
                     @isInstalling = false
-                    @installAppButton.displayRed "Install failed"
-                    @installInfo.spin()
+                    button.displayRed "Install failed"
+                    button.spin()
         else
             @isInstalling = false
             @displayError dataChecking.msg
@@ -220,6 +221,19 @@ class exports.ApplicationsView extends Backbone.View
         @manageAppsButton.click @onManageAppsClicked
         @installAppButton = new InstallButton @$ "#add-app-submit"
         @installAppButton.button.click @onInstallClicked
+        
+        @mailsButton = new InstallButton @$ "#add-mails-submit"
+        @mailsButton.button.click =>
+            data = git: "https://github.com/mycozycloud/cozy-mails.git"
+            @runInstallation data, @mailsButton
+        @bookmarksButton = new InstallButton @$ "#add-bookmarks-submit"
+        @bookmarksButton.button.click =>
+            data = git: "https://github.com/Piour/cozy-bookmarks.git"
+            @runInstallation data, @bookmarksButton
+        @feedsButton = new InstallButton @$ "#add-feeds-submit"
+        @feedsButton.button.click =>
+            data = git: "https://github.com/Piour/cozy-feeds.git"
+            @runInstallation data, @feedsButton
         @infoAlert = @$ "#add-app-form .info"
         @errorAlert = @$ "#add-app-form .error"
         @machineInfos = @$ ".machine-infos"

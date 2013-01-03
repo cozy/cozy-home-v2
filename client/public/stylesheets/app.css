@@ -6086,6 +6086,8 @@ html{height:100%}
 #account-view #change-password-button{margin-top:50px}
 #change-password-form{margin-top:50px}
 .loading-indicator{border:0;background:transparent;-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0;color:#eaf1f1}
+.app-introduction{margin-top:60px;margin-bottom:20px}
+.cozy-app{border-top:1px solid #fff}
 @media (max-width: 600px){#add-app-modal div{padding:3px}
 #add-app-modal #app-git-field{width:94%}
 #add-app-modal #add-app-submit{margin-right:10px}
