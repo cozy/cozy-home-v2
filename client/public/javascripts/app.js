@@ -669,7 +669,7 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push('></div></div><div');
   buf.push(attrs({ 'id':('install-button') }));
   buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push(attrs({ 'id':('add-app-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button><button');
   buf.push(attrs({ "class": ('loading-indicator') }));
   buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></div><div');
@@ -681,7 +681,7 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push('/><h3>mails</h3><span');
   buf.push(attrs({ "class": ('comment') }));
   buf.push('>(alpha version)</span><p>Aggregate all your mails in one place. \n</p><p><button');
-  buf.push(attrs({ 'id':('add-mails-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push(attrs({ 'id':('add-mails-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
   buf.push('><img');
@@ -689,7 +689,7 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push('/><h3>bookmarks </h3><span');
   buf.push(attrs({ "class": ('comment') }));
   buf.push('>(external contribution)</span><p>Manage your bookmark easily\n</p><p><button');
-  buf.push(attrs({ 'id':('add-bookmarks-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push(attrs({ 'id':('add-bookmarks-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
   buf.push('><img');
@@ -697,7 +697,7 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push('/><h3>feeds </h3><span');
   buf.push(attrs({ "class": ('comment') }));
   buf.push('>(external contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-feeds-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push(attrs({ 'id':('add-feeds-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div></div></div>');
   }
   return buf.join("");
