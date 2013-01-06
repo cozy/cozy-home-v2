@@ -658,7 +658,9 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
   buf.push('><div');
   buf.push(attrs({ 'id':('your-app') }));
-  buf.push('><p>Install your app\n</p><p><label>Git URL</label><input');
+  buf.push('><p>Install \n<a');
+  buf.push(attrs({ 'href':("https://cozycloud.cc/make/"), 'target':("_blank") }));
+  buf.push('>your app</a></p><p><label>Git URL</label><input');
   buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
   buf.push('/></p><div');
   buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
@@ -674,17 +676,29 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push(attrs({ "class": ('app-introduction') }));
   buf.push('><p>Or install an existing one:\n</p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><h3>mails (alpha version)</h3><p>Aggregate all your mails in one place. \n</p><p><button');
+  buf.push('><img');
+  buf.push(attrs({ 'src':("img/mails-icon.png"), "class": ('pull-left') }));
+  buf.push('/><h3>mails</h3><span');
+  buf.push(attrs({ "class": ('comment') }));
+  buf.push('>(alpha version)</span><p>Aggregate all your mails in one place. \n</p><p><button');
   buf.push(attrs({ 'id':('add-mails-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><h3>bookmarks (external contribution)</h3><p>Manage your bookmark easily\n</p><p><button');
+  buf.push('><img');
+  buf.push(attrs({ 'src':("img/bookmarks-icon.png"), "class": ('pull-left') }));
+  buf.push('/><h3>bookmarks </h3><span');
+  buf.push(attrs({ "class": ('comment') }));
+  buf.push('>(external contribution)</span><p>Manage your bookmark easily\n</p><p><button');
   buf.push(attrs({ 'id':('add-bookmarks-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><h3>feeds (external contribution)</h3><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p></p><button');
+  buf.push('><img');
+  buf.push(attrs({ 'src':("img/feeds-icon.png"), "class": ('pull-left') }));
+  buf.push('/><h3>feeds </h3><span');
+  buf.push(attrs({ "class": ('comment') }));
+  buf.push('>(external contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
   buf.push(attrs({ 'id':('add-feeds-submit'), 'type':("submit"), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></div></div></div>');
+  buf.push('>install</button></p></div></div></div>');
   }
   return buf.join("");
   };
@@ -1188,6 +1202,18 @@ window.require.register("views/applications_view", function(exports, require, mo
         return this.button.spin("small");
       };
 
+      InstallButton.prototype.hideParent = function() {
+        return this.button.parent().parent().hide();
+      };
+
+      InstallButton.prototype.showParent = function() {
+        return this.button.parent().parent().show();
+      };
+
+      InstallButton.prototype.isHidden = function() {
+        return !this.button.is(":visible");
+      };
+
       return InstallButton;
 
     })();
@@ -1223,21 +1249,39 @@ window.require.register("views/applications_view", function(exports, require, mo
       */
 
       ApplicationsView.prototype.onAddClicked = function() {
+        var app, _i, _len, _ref;
         this.installAppButton.displayOrange("install");
         this.appNameField.val(null);
         this.appGitField.val(null);
         this.addApplicationForm.show();
         this.addApplicationModal.toggle();
         this.appNameField.focus();
-        return this.isInstalling = false;
+        this.isInstalling = false;
+        this.mailsButton.showParent();
+        this.bookmarksButton.showParent();
+        this.feedsButton.showParent();
+        _ref = this.apps.toArray();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          app = _ref[_i];
+          if (app.name === "mails") this.mailsButton.hideParent();
+          if (app.name === "bookmarks") this.bookmarksButton.hideParent();
+          if (app.name === "feeds") this.feedsButton.hideParent();
+        }
+        if (this.mailsButton.isHidden() && this.bookmarksButton.isHidden() && this.feedsButton.isHidden()) {
+          return $(".app-introduction").hide();
+        } else {
+          return $(".app-introduction").show();
+        }
       };
 
-      ApplicationsView.prototype.onInstallClicked = function() {
+      ApplicationsView.prototype.onInstallClicked = function(event) {
         var data;
         data = {
           git: this.$("#app-git-field").val()
         };
-        return this.runInstallation(data, this.installAppButton);
+        this.runInstallation(data, this.installAppButton);
+        event.preventDefault();
+        return false;
       };
 
       ApplicationsView.prototype.runInstallation = function(data, button) {

@@ -33,6 +33,15 @@ class InstallButton
     spin: ->
         @button.spin "small"
 
+    hideParent: ->
+        @button.parent().parent().hide()
+
+    showParent: ->
+        @button.parent().parent().show()
+
+    isHidden: ->
+        return not @button.is(":visible")
+
 
 # View describing main screen for user once he is logged
 class exports.ApplicationsView extends Backbone.View
@@ -59,11 +68,33 @@ class exports.ApplicationsView extends Backbone.View
         @appNameField.focus()
         @isInstalling = false
 
-    onInstallClicked: =>
+        @mailsButton.showParent()
+        @bookmarksButton.showParent()
+        @feedsButton.showParent()
+
+        for app in @apps.toArray()
+            
+            if app.name is "mails"
+                @mailsButton.hideParent()
+
+            if app.name is "bookmarks"
+                @bookmarksButton.hideParent()
+
+            if app.name is "feeds"
+                @feedsButton.hideParent()
+
+        if @mailsButton.isHidden() and @bookmarksButton.isHidden() and @feedsButton.isHidden()
+            $(".app-introduction").hide()
+        else
+            $(".app-introduction").show()
+
+    onInstallClicked: (event) =>
         data =
             git: @$("#app-git-field").val()
 
         @runInstallation data, @installAppButton
+        event.preventDefault()
+        false
 
     runInstallation: (data, button) =>
         return true if @isInstalling

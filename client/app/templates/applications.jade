@@ -36,7 +36,8 @@
   #add-app-form.modal-body
     #your-app
         p
-          | Install your app
+            | Install 
+            a(href="https://cozycloud.cc/make/", target="_blank") your app
         p
           label Git URL
           input(type="text", class="span3", id="app-git-field")
@@ -53,22 +54,28 @@
             | Or install an existing one:
 
     .cozy-app
-        h3 mails (alpha version)
+        img.pull-left(src="img/mails-icon.png")
+        h3 mails
+        span.comment (alpha version)
         p
             | Aggregate all your mails in one place. 
         p
             button#add-mails-submit.btn.btn-orange(type="submit") install
 
     .cozy-app
-        h3 bookmarks (external contribution)
+        img.pull-left(src="img/bookmarks-icon.png")
+        h3 bookmarks 
+        span.comment (external contribution)
         p
             | Manage your bookmark easily
         p
             button#add-bookmarks-submit.btn.btn-orange(type="submit") install
 
     .cozy-app
-        h3 feeds (external contribution)
+        img.pull-left(src="img/feeds-icon.png")
+        h3 feeds 
+        span.comment (external contribution)
         p
             | Aggregate your feeds and save your favorite links in bookmarks.
         p
-        button#add-feeds-submit.btn.btn-orange(type="submit") install
+            button#add-feeds-submit.btn.btn-orange(type="submit") install
