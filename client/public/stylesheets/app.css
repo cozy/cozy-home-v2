@@ -6035,6 +6035,7 @@ html{height:100%}
 #header a:hover{color:linkcolor}
 #header #buttons{font-size:1em;float:right}
 #header #header-title{width:17%;margin:0}
+#buttons img{width:15px;height:15px}
 #app-frames{height:100%;display:none;text-align:center}
 #buttons{text-align:right;width:83%}
 @media (max-width: 600px){#buttons span{display:none}
