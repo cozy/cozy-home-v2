@@ -74,8 +74,8 @@ class exports.ApplicationsView extends Backbone.View
 
         for app in @apps.toArray()
             
-            if app.name is "mails"
-                @mailsButton.hideParent()
+            #if app.name is "mails"
+                #@mailsButton.hideParent()
 
             if app.name is "bookmarks"
                 @bookmarksButton.hideParent()
@@ -83,7 +83,7 @@ class exports.ApplicationsView extends Backbone.View
             if app.name is "feeds"
                 @feedsButton.hideParent()
 
-        if @mailsButton.isHidden() and @bookmarksButton.isHidden() and @feedsButton.isHidden()
+        if @bookmarksButton.isHidden() and @feedsButton.isHidden()
             $(".app-introduction").hide()
         else
             $(".app-introduction").show()

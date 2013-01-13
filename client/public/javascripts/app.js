@@ -677,18 +677,10 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push('><p>Or install an existing one:\n</p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
   buf.push('><img');
-  buf.push(attrs({ 'src':("img/mails-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>mails</h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(alpha version)</span><p>Aggregate all your mails in one place. \n</p><p><button');
-  buf.push(attrs({ 'id':('add-mails-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
   buf.push(attrs({ 'src':("img/bookmarks-icon.png"), "class": ('pull-left') }));
   buf.push('/><h3>bookmarks </h3><span');
   buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(external contribution)</span><p>Manage your bookmark easily\n</p><p><button');
+  buf.push('>(community contribution)</span><p>Manage your bookmark easily\n</p><p><button');
   buf.push(attrs({ 'id':('add-bookmarks-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div><div');
   buf.push(attrs({ "class": ('cozy-app') }));
@@ -696,7 +688,7 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push(attrs({ 'src':("img/feeds-icon.png"), "class": ('pull-left') }));
   buf.push('/><h3>feeds </h3><span');
   buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(external contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
+  buf.push('>(community contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
   buf.push(attrs({ 'id':('add-feeds-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div></div></div>');
   }
@@ -1263,11 +1255,10 @@ window.require.register("views/applications_view", function(exports, require, mo
         _ref = this.apps.toArray();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           app = _ref[_i];
-          if (app.name === "mails") this.mailsButton.hideParent();
           if (app.name === "bookmarks") this.bookmarksButton.hideParent();
           if (app.name === "feeds") this.feedsButton.hideParent();
         }
-        if (this.mailsButton.isHidden() && this.bookmarksButton.isHidden() && this.feedsButton.isHidden()) {
+        if (this.bookmarksButton.isHidden() && this.feedsButton.isHidden()) {
           return $(".app-introduction").hide();
         } else {
           return $(".app-introduction").show();
