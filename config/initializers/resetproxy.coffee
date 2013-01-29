@@ -20,7 +20,7 @@ resetRoutes = ->
             updateApps(apps, appDict, resetProxy)
 
 updateApps = (apps, appDict, callback) ->
-    if apps.length > 0
+    if apps? and apps.length > 0
         app = apps.pop()
         installedApp = appDict[app.name]
         
