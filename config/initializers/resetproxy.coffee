@@ -2,10 +2,9 @@ Client = require('request-json').JsonClient
 
 client = new Client 'http://localhost:9104/'
 haibu = require('haibu-api')
-haibuClient = haibu.createClient(
+haibuClient = haibu.createClient
     host: 'localhost'
     port: 9002
-)
 
 
 haibuClient =  new Client 'http://localhost:9002/'
@@ -13,8 +12,9 @@ haibuClient =  new Client 'http://localhost:9002/'
 resetRoutes = ->
     Application.all (err, installedApps) ->
         appDict = {}
-        for installedApp in installedApps
-            appDict[installedApp.name] = installedApp
+        if installedApps isnt undefined
+            for installedApp in installedApps
+                appDict[installedApp.name] = installedApp
             
         haibuClient.get 'drones/running', (err, res, apps) ->
             updateApps(apps, appDict, resetProxy)
