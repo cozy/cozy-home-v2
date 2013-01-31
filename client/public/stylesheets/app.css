@@ -6021,6 +6021,7 @@ html{height:100%}
 .progress .bar{background:#e2f8ff;-webkit-box-shadow:0 0 6px #e2f8ff;-moz-box-shadow:0 0 6px #e2f8ff;box-shadow:0 0 6px #e2f8ff}
 .home-body{width:100%;height:100%;padding:0;margin:0;-webkit-box-shadow:inset 0 0 100px #4a7175;-moz-box-shadow:inset 0 0 100px #4a7175;box-shadow:inset 0 0 100px #4a7175;background:#738182;overflow:hidden}
 .well{background:transparent;border:0;margin:2%;color:#eaf1f1;text-align:center;-webkit-box-shadow:0 0 0 0;-moz-box-shadow:0 0 0 0;box-shadow:0 0 0 0}
+.icon-help{background-image:url("../img/help.png");background-repeat:no-repeat;background-position:0 0}
 #content{padding:0;height:100%;overflow:auto}
 .navbar .nav{float:right;}
 .navbar .nav .active a{-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0;-webkit-box-shadow:inset 2px 1px 4px #454d4e;-moz-box-shadow:inset 2px 1px 4px #454d4e;box-shadow:inset 2px 1px 4px #454d4e;background:#abb4b4}

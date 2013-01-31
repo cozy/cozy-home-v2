@@ -124,6 +124,10 @@ class exports.HomeView extends Backbone.View
         @el
 
     setListeners: ->
+        @$('#help-button').tooltip
+             placement: 'bottom'
+             title: 'Questions and help forum'
+            
         @logoutButton = @$ '#logout-button'
         @logoutButton.click @logout
         @logoutButton.tooltip

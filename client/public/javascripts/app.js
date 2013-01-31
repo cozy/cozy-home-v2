@@ -726,6 +726,10 @@ window.require.register("templates/home", function(exports, require, module) {
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-user') }));
   buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
+  buf.push(attrs({ 'id':('help-button'), 'target':("_blank"), 'href':("https://questions-beta.cozycloud.cc/") }));
+  buf.push('><i');
+  buf.push(attrs({ "class": ('icon-help') }));
+  buf.push('>&nbsp;</i></a></li><li><a');
   buf.push(attrs({ 'id':('logout-button') }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-arrow-right') }));
@@ -1679,6 +1683,10 @@ window.require.register("views/home_view", function(exports, require, module) {
       };
 
       HomeView.prototype.setListeners = function() {
+        this.$('#help-button').tooltip({
+          placement: 'bottom',
+          title: 'Questions and help forum'
+        });
         this.logoutButton = this.$('#logout-button');
         this.logoutButton.click(this.logout);
         this.logoutButton.tooltip({
