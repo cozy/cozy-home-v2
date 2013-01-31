@@ -33,6 +33,7 @@ class exports.ApplicationRow extends BaseRow
         @model.uninstall
             success: =>
                 @$(".remove-app").html "Removed"
+                Backbone.Mediator.publish "app:removed", @model.slug
             error: =>
                 @$(".remove-app").html "failed."
 

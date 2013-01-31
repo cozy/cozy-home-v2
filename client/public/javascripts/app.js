@@ -1091,7 +1091,8 @@ window.require.register("views/application", function(exports, require, module) 
         this.$(".remove-app").spin("small");
         return this.model.uninstall({
           success: function() {
-            return _this.$(".remove-app").html("Removed");
+            _this.$(".remove-app").html("Removed");
+            return Backbone.Mediator.publish("app:removed", _this.model.slug);
           },
           error: function() {
             return _this.$(".remove-app").html("failed.");
@@ -1498,9 +1499,18 @@ window.require.register("views/home_view", function(exports, require, module) {
         this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
         this.account = __bind(this.account, this);
         this.home = __bind(this.home, this);
-        this.logout = __bind(this.logout, this);      HomeView.__super__.constructor.call(this);
+        this.logout = __bind(this.logout, this);
+        this.onAppRemoved = __bind(this.onAppRemoved, this);      HomeView.__super__.constructor.call(this);
         this.apps = new AppCollection(this);
       }
+
+      HomeView.prototype.subscriptions = {
+        "app:removed": "onAppRemoved"
+      };
+
+      HomeView.prototype.onAppRemoved = function(slug) {
+        return this.buttons.find("#" + slug).remove();
+      };
 
       /* Functions
       */
