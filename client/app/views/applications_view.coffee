@@ -30,6 +30,9 @@ class InstallButton
         @button.addClass  "btn-red"
         @button.removeClass "btn-orange"
 
+    isGreen: ->
+        @button.hasClass "btn-green"
+
     spin: ->
         @button.spin "small"
 
@@ -98,6 +101,7 @@ class exports.ApplicationsView extends Backbone.View
 
     runInstallation: (data, button) =>
         return true if @isInstalling
+        return true if button.isGreen()
         @isInstalling = true
         @hideError()
         button.displayOrange "install"
@@ -256,14 +260,17 @@ class exports.ApplicationsView extends Backbone.View
         @mailsButton = new InstallButton @$ "#add-mails-submit"
         @mailsButton.button.click =>
             data = git: "https://github.com/mycozycloud/cozy-mails.git"
+            return false if @mailsButton.isGreen()
             @runInstallation data, @mailsButton
         @bookmarksButton = new InstallButton @$ "#add-bookmarks-submit"
         @bookmarksButton.button.click =>
             data = git: "https://github.com/Piour/cozy-bookmarks.git"
+            return false if @bookmarksButton.isGreen()
             @runInstallation data, @bookmarksButton
         @feedsButton = new InstallButton @$ "#add-feeds-submit"
         @feedsButton.button.click =>
             data = git: "https://github.com/Piour/cozy-feeds.git"
+            return false if @feedsButton.isGreen()
             @runInstallation data, @feedsButton
         @infoAlert = @$ "#add-app-form .info"
         @errorAlert = @$ "#add-app-form .error"

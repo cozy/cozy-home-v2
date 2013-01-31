@@ -1194,6 +1194,10 @@ window.require.register("views/applications_view", function(exports, require, mo
         return this.button.removeClass("btn-orange");
       };
 
+      InstallButton.prototype.isGreen = function() {
+        return this.button.hasClass("btn-green");
+      };
+
       InstallButton.prototype.spin = function() {
         return this.button.spin("small");
       };
@@ -1283,6 +1287,7 @@ window.require.register("views/applications_view", function(exports, require, mo
         var app, dataChecking,
           _this = this;
         if (this.isInstalling) return true;
+        if (button.isGreen()) return true;
         this.isInstalling = true;
         this.hideError();
         button.displayOrange("install");
@@ -1464,6 +1469,7 @@ window.require.register("views/applications_view", function(exports, require, mo
           data = {
             git: "https://github.com/mycozycloud/cozy-mails.git"
           };
+          if (_this.mailsButton.isGreen()) return false;
           return _this.runInstallation(data, _this.mailsButton);
         });
         this.bookmarksButton = new InstallButton(this.$("#add-bookmarks-submit"));
@@ -1472,6 +1478,7 @@ window.require.register("views/applications_view", function(exports, require, mo
           data = {
             git: "https://github.com/Piour/cozy-bookmarks.git"
           };
+          if (_this.bookmarksButton.isGreen()) return false;
           return _this.runInstallation(data, _this.bookmarksButton);
         });
         this.feedsButton = new InstallButton(this.$("#add-feeds-submit"));
@@ -1480,6 +1487,7 @@ window.require.register("views/applications_view", function(exports, require, mo
           data = {
             git: "https://github.com/Piour/cozy-feeds.git"
           };
+          if (_this.feedsButton.isGreen()) return false;
           return _this.runInstallation(data, _this.feedsButton);
         });
         this.infoAlert = this.$("#add-app-form .info");
