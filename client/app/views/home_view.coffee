@@ -13,6 +13,12 @@ class exports.HomeView extends Backbone.View
         super()
         @apps = new AppCollection @
 
+    subscriptions:
+        "app:removed": "onAppRemoved"
+        
+    onAppRemoved: (slug) =>
+        @buttons.find("##{slug}").remove()
+
     ### Functions ###
 
     # Send a logout request to server then reload current window to redirect
