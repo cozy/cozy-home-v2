@@ -1167,56 +1167,7 @@ window.require.register("views/applications_view", function(exports, require, mo
 
     Application = require("models/application").Application;
 
-    InstallButton = (function() {
-
-      function InstallButton(button) {
-        this.button = button;
-      }
-
-      InstallButton.prototype.displayOrange = function(text) {
-        this.button.html(text);
-        this.button.removeClass("btn-red");
-        this.button.removeClass("btn-green");
-        return this.button.addClass("btn-orange");
-      };
-
-      InstallButton.prototype.displayGreen = function(text) {
-        this.button.html(text);
-        this.button.addClass("btn-green");
-        this.button.removeClass("btn-red");
-        return this.button.removeClass("btn-orange");
-      };
-
-      InstallButton.prototype.displayRed = function(text) {
-        this.button.html(text);
-        this.button.removeClass("btn-green");
-        this.button.addClass("btn-red");
-        return this.button.removeClass("btn-orange");
-      };
-
-      InstallButton.prototype.isGreen = function() {
-        return this.button.hasClass("btn-green");
-      };
-
-      InstallButton.prototype.spin = function() {
-        return this.button.spin("small");
-      };
-
-      InstallButton.prototype.hideParent = function() {
-        return this.button.parent().parent().hide();
-      };
-
-      InstallButton.prototype.showParent = function() {
-        return this.button.parent().parent().show();
-      };
-
-      InstallButton.prototype.isHidden = function() {
-        return !this.button.is(":visible");
-      };
-
-      return InstallButton;
-
-    })();
+    InstallButton = require("views/install_button");
 
     exports.ApplicationsView = (function(_super) {
 
@@ -1718,6 +1669,64 @@ window.require.register("views/home_view", function(exports, require, module) {
       return HomeView;
 
     })(Backbone.View);
+
+  }).call(this);
+  
+});
+window.require.register("views/install_button", function(exports, require, module) {
+  (function() {
+    var InstallButton;
+
+    module.exports = InstallButton = (function() {
+
+      function InstallButton(button) {
+        this.button = button;
+      }
+
+      InstallButton.prototype.displayOrange = function(text) {
+        this.button.html(text);
+        this.button.removeClass("btn-red");
+        this.button.removeClass("btn-green");
+        return this.button.addClass("btn-orange");
+      };
+
+      InstallButton.prototype.displayGreen = function(text) {
+        this.button.html(text);
+        this.button.addClass("btn-green");
+        this.button.removeClass("btn-red");
+        return this.button.removeClass("btn-orange");
+      };
+
+      InstallButton.prototype.displayRed = function(text) {
+        this.button.html(text);
+        this.button.removeClass("btn-green");
+        this.button.addClass("btn-red");
+        return this.button.removeClass("btn-orange");
+      };
+
+      InstallButton.prototype.isGreen = function() {
+        return this.button.hasClass("btn-green");
+      };
+
+      InstallButton.prototype.spin = function() {
+        return this.button.spin("small");
+      };
+
+      InstallButton.prototype.hideParent = function() {
+        return this.button.parent().parent().hide();
+      };
+
+      InstallButton.prototype.showParent = function() {
+        return this.button.parent().parent().show();
+      };
+
+      InstallButton.prototype.isHidden = function() {
+        return !this.button.is(":visible");
+      };
+
+      return InstallButton;
+
+    })();
 
   }).call(this);
   
