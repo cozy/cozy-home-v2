@@ -1087,29 +1087,35 @@ window.require.register("views/application", function(exports, require, module) 
 
       ApplicationRow.prototype.removeApp = function() {
         var _this = this;
-        this.$(".remove-app").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        this.$(".remove-app").spin("small");
+        this.removeButton.html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        this.removeButton.spin("small");
         return this.model.uninstall({
           success: function() {
-            _this.$(".remove-app").html("Removed");
+            _this.removeButton.html("Removed");
+            _this.removeButton.addClass('btn-green');
             return Backbone.Mediator.publish("app:removed", _this.model.slug);
           },
           error: function() {
-            return _this.$(".remove-app").html("failed.");
+            _this.removeButton.html("failed.");
+            return _this.removeButton.addClass('btn-red');
           }
         });
       };
 
       ApplicationRow.prototype.updateApp = function() {
         var _this = this;
-        this.$(".update-app").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        this.$(".update-app").spin("small");
+        this.updateButton.html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        this.updateButton.spin("small");
+        this.updateButton.removeClass('btn-green');
+        this.updateButton.removeClass('btn-red');
         return this.model.updateApp({
           success: function() {
-            return _this.$(".update-app").html("Updated");
+            _this.updateButton.html("Updated");
+            return _this.updateButton.addClass('btn-green');
           },
           error: function() {
-            return _this.$(".update-app").html("failed");
+            _this.updateButton.html("failed");
+            return _this.updateButton.addClass('btn-red');
           }
         });
       };
@@ -1139,6 +1145,8 @@ window.require.register("views/application", function(exports, require, module) 
           event.preventDefault();
           return window.app.routers.main.navigate("apps/" + _this.model.slug, true);
         });
+        this.updateButton = this.$(".update-app");
+        this.removeButton = this.$(".remove-app");
         return this.el;
       };
 
@@ -1293,6 +1301,7 @@ window.require.register("views/applications_view", function(exports, require, mo
         if (!this.machineInfos.is(':visible')) {
           this.$('.application-outer').show();
           this.machineInfos.find('.progress').spin();
+          this.manageAppsButton.addClass('pressed');
           client.get('api/sys-data', {
             success: function(data) {
               _this.machineInfos.find('.progress').spin();
@@ -1306,6 +1315,7 @@ window.require.register("views/applications_view", function(exports, require, mo
           });
         } else {
           this.$('.application-outer').hide();
+          this.manageAppsButton.removeClass('pressed');
         }
         this.machineInfos.toggle();
         return this.isManaging = !this.isManaging;

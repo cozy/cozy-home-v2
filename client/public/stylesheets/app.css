@@ -6008,6 +6008,8 @@ html{height:100%}
 .btn{background:#eaeded;border:1px solid #b7c2c2;-webkit-box-shadow:0 1px 0 rgba(255,255,255,0.40) inset,0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:0 1px 0 rgba(255,255,255,0.40) inset,0 1px 2px rgba(0,0,0,0.05);box-shadow:0 1px 0 rgba(255,255,255,0.40) inset,0 1px 2px rgba(0,0,0,0.05);margin:0;font-family:styled}
 .btn-group .btn{font-size:16px}
 .btn:hover{background:#f7f8f8;-webkit-box-shadow:0 0 8px #e2f8ff;-moz-box-shadow:0 0 8px #e2f8ff;box-shadow:0 0 8px #e2f8ff}
+.pressed{-webkit-box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 0;-moz-box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 0;box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 0;background:#d1d7d7}
+.pressed:hover{-webkit-box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 8px #e2f8ff;-moz-box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 8px #e2f8ff;box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 8px #e2f8ff;background:#d1d7d7}
 .btn:active{-webkit-box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 8px #e2f8ff;-moz-box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 8px #e2f8ff;box-shadow:1px 3px 2px rgba(0,0,0,0.20) inset,0 0 8px #e2f8ff;background:#d1d7d7}
 .btn-green{background:#42b838;border:1px solid #35932d;color:#eaf1f1}
 .btn-green:active,.btn-green:focus,.btn-green:hover{background:#42b838;color:#eaf1f1;-webkit-box-shadow:0 1px 0 rgba(255,255,255,0.40) inset,0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:0 1px 0 rgba(255,255,255,0.40) inset,0 1px 2px rgba(0,0,0,0.05);box-shadow:0 1px 0 rgba(255,255,255,0.40) inset,0 1px 2px rgba(0,0,0,0.05);cursor:default}

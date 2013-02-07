@@ -115,6 +115,7 @@ class exports.ApplicationsView extends Backbone.View
         if not @machineInfos.is(':visible')
             @$('.application-outer').show()
             @machineInfos.find('.progress').spin()
+            @manageAppsButton.addClass 'pressed'
             client.get 'api/sys-data',
                 success: (data) =>
                     @machineInfos.find('.progress').spin()
@@ -125,6 +126,7 @@ class exports.ApplicationsView extends Backbone.View
                     alert 'Server error occured, infos cannot be displayed.'
         else
             @$('.application-outer').hide()
+            @manageAppsButton.removeClass 'pressed'
 
         @machineInfos.toggle()
         @isManaging = not @isManaging

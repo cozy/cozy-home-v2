@@ -28,23 +28,29 @@ class exports.ApplicationRow extends BaseRow
     ### Functions ###
 
     removeApp: ->
-        @$(".remove-app").html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @$(".remove-app").spin "small"
+        @removeButton.html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @removeButton.spin "small"
         @model.uninstall
             success: =>
-                @$(".remove-app").html "Removed"
+                @removeButton.html "Removed"
+                @removeButton.addClass 'btn-green'
                 Backbone.Mediator.publish "app:removed", @model.slug
             error: =>
-                @$(".remove-app").html "failed."
+                @removeButton.html "failed."
+                @removeButton.addClass 'btn-red'
 
     updateApp: ->
-        @$(".update-app").html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @$(".update-app").spin "small"
+        @updateButton.html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @updateButton.spin "small"
+        @updateButton.removeClass 'btn-green'
+        @updateButton.removeClass 'btn-red'
         @model.updateApp
             success: =>
-                @$(".update-app").html "Updated"
+                @updateButton.html "Updated"
+                @updateButton.addClass 'btn-green'
             error: =>
-                @$(".update-app").html "failed"
+                @updateButton.html "failed"
+                @updateButton.addClass 'btn-red'
 
     ### configuration ###
 
@@ -66,5 +72,8 @@ class exports.ApplicationRow extends BaseRow
         @$el.find('.application-inner').click (event) =>
             event.preventDefault()
             window.app.routers.main.navigate "apps/#{@model.slug}", true
+
+        @updateButton = @$(".update-app")
+        @removeButton = @$(".remove-app")
 
         @el
