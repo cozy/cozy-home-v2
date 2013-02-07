@@ -74,14 +74,6 @@ class exports.HomeView extends Backbone.View
              title: '<a target="' + application.slug + '" href="/apps/' + \
                     application.slug + '/">open in a new tab</a>'
              delay: show: 500, hide: 1000
-    
-    # When an app button is clicked button is activated
-    # and corresponding app is loaded in a dedicated iframe.
-    onAppButtonClicked: (event) =>
-        id = event.target.id
-        id = $(event.target).parent().attr('id') unless id? and id.length > 0
-
-        app?.routers.main.navigate "/apps/#{id}", true
             
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app

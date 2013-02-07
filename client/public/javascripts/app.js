@@ -1510,7 +1510,6 @@ window.require.register("views/home_view", function(exports, require, module) {
       HomeView.prototype.id = 'home-view';
 
       function HomeView() {
-        this.onAppButtonClicked = __bind(this.onAppButtonClicked, this);
         this.addApplication = __bind(this.addApplication, this);
         this.clearApps = __bind(this.clearApps, this);
         this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
@@ -1598,15 +1597,6 @@ window.require.register("views/home_view", function(exports, require, module) {
             hide: 1000
           }
         });
-      };
-
-      HomeView.prototype.onAppButtonClicked = function(event) {
-        var id;
-        id = event.target.id;
-        if (!((id != null) && id.length > 0)) {
-          id = $(event.target).parent().attr('id');
-        }
-        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + id, true) : void 0;
       };
 
       HomeView.prototype.loadApp = function(slug, name) {
