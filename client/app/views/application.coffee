@@ -35,6 +35,12 @@ class exports.ApplicationRow extends BaseRow
                 @removeButton.html "Removed"
                 @removeButton.addClass 'btn-green'
                 Backbone.Mediator.publish "app:removed", @model.slug
+                @updateButton.unbind()
+                @removeButton.unbind()
+                setTimeout =>
+                    @$el.fadeOut =>
+                        @remove()
+                , 1000
             error: =>
                 @removeButton.html "failed."
                 @removeButton.addClass 'btn-red'
@@ -59,7 +65,8 @@ class exports.ApplicationRow extends BaseRow
         @el.id = @model.slug
         if @model.state == "broken"
              @$el.addClass "broken"
-             @$el.find(".application-inner").append '<p class="broken-notifier">broken app<p>'
+             @$el.find(".application-inner")
+                 .append '<p class="broken-notifier">broken app<p>'
              
         if @model.state == "stopped"
             @$el.addClass "stopped"

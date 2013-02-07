@@ -1093,7 +1093,14 @@ window.require.register("views/application", function(exports, require, module) 
           success: function() {
             _this.removeButton.html("Removed");
             _this.removeButton.addClass('btn-green');
-            return Backbone.Mediator.publish("app:removed", _this.model.slug);
+            Backbone.Mediator.publish("app:removed", _this.model.slug);
+            _this.updateButton.unbind();
+            _this.removeButton.unbind();
+            return setTimeout(function() {
+              return _this.$el.fadeOut(function() {
+                return _this.remove();
+              });
+            }, 1000);
           },
           error: function() {
             _this.removeButton.html("failed.");
