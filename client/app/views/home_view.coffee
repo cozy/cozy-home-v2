@@ -69,9 +69,6 @@ class exports.HomeView extends Backbone.View
     addApplication: (application) =>
         @buttons.find(".nav:last").append appButtonTemplate(app: application)
         button = @buttons.find("#" + application.slug)
-        button.click @onAppButtonClicked
-        button.find("img").click @onAppButtonClicked
-        button.find("span").click @onAppButtonClicked
         button.tooltip
              placement: 'bottom'
              title: '<a target="' + application.slug + '" href="/apps/' + \

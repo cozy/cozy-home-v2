@@ -595,7 +595,7 @@ window.require.register("templates/application_button", function(exports, requir
   buf.push('<li');
   buf.push(attrs({ "class": ('app-button') }));
   buf.push('><a');
-  buf.push(attrs({ 'id':("" + (app.slug) + "") }));
+  buf.push(attrs({ 'id':("" + (app.slug) + ""), 'href':("#apps/" + (app.slug) + "") }));
   buf.push('><img');
   buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }));
   buf.push('/></a></li>');
@@ -1590,9 +1590,6 @@ window.require.register("views/home_view", function(exports, require, module) {
           app: application
         }));
         button = this.buttons.find("#" + application.slug);
-        button.click(this.onAppButtonClicked);
-        button.find("img").click(this.onAppButtonClicked);
-        button.find("span").click(this.onAppButtonClicked);
         return button.tooltip({
           placement: 'bottom',
           title: '<a target="' + application.slug + '" href="/apps/' + application.slug + '/">open in a new tab</a>',
