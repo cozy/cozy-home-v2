@@ -1253,7 +1253,8 @@ window.require.register("views/applications_view", function(exports, require, mo
         _ref2 = this.apps.toArray();
         for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
           app = _ref2[_i];
-          this.installButtons[app.name].hideParent();
+          button = this.installButtons[app.name];
+          if (button != null) button.hideParent();
         }
         allHidden = true;
         _ref3 = this.installButtons;

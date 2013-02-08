@@ -40,7 +40,8 @@ class exports.ApplicationsView extends Backbone.View
             button.showParent()
 
         for app in @apps.toArray()
-            @installButtons[app.name].hideParent()
+            button = @installButtons[app.name]
+            button.hideParent() if button?
 
         allHidden = true
         for name, button of @installButtons
