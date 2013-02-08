@@ -690,6 +690,22 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push(attrs({ "class": ('comment') }));
   buf.push('>(community contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
   buf.push(attrs({ 'id':('add-feeds-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push('>install</button></p></div><div');
+  buf.push(attrs({ "class": ('cozy-app') }));
+  buf.push('><img');
+  buf.push(attrs({ 'src':("img/notes-icon.png"), "class": ('pull-left') }));
+  buf.push('/><h3>notes </h3><span');
+  buf.push(attrs({ "class": ('comment') }));
+  buf.push('>(official application)</span><p>Store all your notes and files.\n</p><p><button');
+  buf.push(attrs({ 'id':('add-notes-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push('>install</button></p></div><div');
+  buf.push(attrs({ "class": ('cozy-app') }));
+  buf.push('><img');
+  buf.push(attrs({ 'src':("img/todos-icon.png"), "class": ('pull-left') }));
+  buf.push('/><h3>todos </h3><span');
+  buf.push(attrs({ "class": ('comment') }));
+  buf.push('>(official application)</span><p>Write your tasks, order them and execute them efficiently.\n</p><p><button');
+  buf.push(attrs({ 'id':('add-todos-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
   buf.push('>install</button></p></div></div></div>');
   }
   return buf.join("");
@@ -1191,6 +1207,10 @@ window.require.register("views/applications_view", function(exports, require, mo
 
       ApplicationsView.prototype.id = 'applications-view';
 
+      ApplicationsView.prototype.subscriptions = {
+        "app:removed": "onAppRemoved"
+      };
+
       /* Constructor
       */
 
@@ -1206,6 +1226,7 @@ window.require.register("views/applications_view", function(exports, require, mo
         this.extractName = __bind(this.extractName, this);
         this.runInstallation = __bind(this.runInstallation, this);
         this.onInstallClicked = __bind(this.onInstallClicked, this);
+        this.onAppRemoved = __bind(this.onAppRemoved, this);
         this.onAddClicked = __bind(this.onAddClicked, this);      ApplicationsView.__super__.constructor.call(this);
         this.isManaging = false;
         this.isInstalling = false;
@@ -1216,7 +1237,7 @@ window.require.register("views/applications_view", function(exports, require, mo
       */
 
       ApplicationsView.prototype.onAddClicked = function() {
-        var app, _i, _len, _ref;
+        var allHidden, app, button, name, _i, _len, _ref, _ref2, _ref3;
         this.installAppButton.displayOrange("install");
         this.appNameField.val(null);
         this.appGitField.val(null);
@@ -1224,20 +1245,43 @@ window.require.register("views/applications_view", function(exports, require, mo
         this.addApplicationModal.toggle();
         this.appNameField.focus();
         this.isInstalling = false;
-        this.mailsButton.showParent();
-        this.bookmarksButton.showParent();
-        this.feedsButton.showParent();
-        _ref = this.apps.toArray();
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          app = _ref[_i];
-          if (app.name === "bookmarks") this.bookmarksButton.hideParent();
-          if (app.name === "feeds") this.feedsButton.hideParent();
+        _ref = this.installButtons;
+        for (name in _ref) {
+          button = _ref[name];
+          button.showParent();
         }
-        if (this.bookmarksButton.isHidden() && this.feedsButton.isHidden()) {
+        _ref2 = this.apps.toArray();
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          app = _ref2[_i];
+          this.installButtons[app.name].hideParent();
+        }
+        allHidden = true;
+        _ref3 = this.installButtons;
+        for (name in _ref3) {
+          button = _ref3[name];
+          if (!button.isHidden()) allHidden = false;
+        }
+        if (allHidden) {
           return $(".app-introduction").hide();
         } else {
           return $(".app-introduction").show();
         }
+      };
+
+      ApplicationsView.prototype.onAppRemoved = function(slug) {
+        var app, _i, _len, _ref, _results;
+        _ref = this.apps.toArray();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          app = _ref[_i];
+          if (app.slug === slug) {
+            this.apps.remove(app);
+            break;
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       };
 
       ApplicationsView.prototype.onInstallClicked = function(event) {
@@ -1421,6 +1465,22 @@ window.require.register("views/applications_view", function(exports, require, mo
         return this.el;
       };
 
+      ApplicationsView.prototype.addInstallButton = function(name, url) {
+        var button,
+          _this = this;
+        if (this.installButtons == null) this.installButtons = {};
+        button = new InstallButton(this.$("#add-" + name + "-submit"));
+        button.button.click(function() {
+          var data;
+          data = {
+            git: url
+          };
+          if (!button.isGreen()) _this.runInstallation(data, button);
+          return false;
+        });
+        return this.installButtons[name] = button;
+      };
+
       ApplicationsView.prototype.setListeners = function() {
         var _this = this;
         this.appList = this.$("#app-list");
@@ -1432,33 +1492,10 @@ window.require.register("views/applications_view", function(exports, require, mo
         this.manageAppsButton.click(this.onManageAppsClicked);
         this.installAppButton = new InstallButton(this.$("#add-app-submit"));
         this.installAppButton.button.click(this.onInstallClicked);
-        this.mailsButton = new InstallButton(this.$("#add-mails-submit"));
-        this.mailsButton.button.click(function() {
-          var data;
-          data = {
-            git: "https://github.com/mycozycloud/cozy-mails.git"
-          };
-          if (_this.mailsButton.isGreen()) return false;
-          return _this.runInstallation(data, _this.mailsButton);
-        });
-        this.bookmarksButton = new InstallButton(this.$("#add-bookmarks-submit"));
-        this.bookmarksButton.button.click(function() {
-          var data;
-          data = {
-            git: "https://github.com/Piour/cozy-bookmarks.git"
-          };
-          if (_this.bookmarksButton.isGreen()) return false;
-          return _this.runInstallation(data, _this.bookmarksButton);
-        });
-        this.feedsButton = new InstallButton(this.$("#add-feeds-submit"));
-        this.feedsButton.button.click(function() {
-          var data;
-          data = {
-            git: "https://github.com/Piour/cozy-feeds.git"
-          };
-          if (_this.feedsButton.isGreen()) return false;
-          return _this.runInstallation(data, _this.feedsButton);
-        });
+        this.addInstallButton("notes", "https://github.com/mycozycloud/cozy-notes.git");
+        this.addInstallButton("todos", "https://github.com/mycozycloud/cozy-todos.git");
+        this.addInstallButton("bookmarks", "https://github.com/Piour/cozy-bookmarks.git");
+        this.addInstallButton("feeds", "https://github.com/Piour/cozy-feeds.git");
         this.infoAlert = this.$("#add-app-form .info");
         this.errorAlert = this.$("#add-app-form .error");
         this.machineInfos = this.$(".machine-infos");

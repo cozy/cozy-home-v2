@@ -12,6 +12,9 @@ InstallButton = require("views/install_button")
 class exports.ApplicationsView extends Backbone.View
     id: 'applications-view'
 
+    subscriptions:
+        "app:removed": "onAppRemoved"
+
     ### Constructor ###
 
     constructor: ->
@@ -33,25 +36,27 @@ class exports.ApplicationsView extends Backbone.View
         @appNameField.focus()
         @isInstalling = false
 
-        @mailsButton.showParent()
-        @bookmarksButton.showParent()
-        @feedsButton.showParent()
+        for name, button of @installButtons
+            button.showParent()
 
         for app in @apps.toArray()
-            
-            #if app.name is "mails"
-                #@mailsButton.hideParent()
+            @installButtons[app.name].hideParent()
 
-            if app.name is "bookmarks"
-                @bookmarksButton.hideParent()
+        allHidden = true
+        for name, button of @installButtons
+            unless button.isHidden()
+                allHidden = false
 
-            if app.name is "feeds"
-                @feedsButton.hideParent()
-
-        if @bookmarksButton.isHidden() and @feedsButton.isHidden()
+        if allHidden
             $(".app-introduction").hide()
         else
             $(".app-introduction").show()
+
+    onAppRemoved: (slug) =>
+        for app in @apps.toArray()
+            if app.slug is slug
+                @apps.remove app
+                break
 
     onInstallClicked: (event) =>
         data =
@@ -209,6 +214,16 @@ class exports.ApplicationsView extends Backbone.View
         @isManaging = false
         @el
 
+    addInstallButton: (name, url) ->
+        @installButtons = {} unless @installButtons?
+        button = new InstallButton @$("#add-#{name}-submit")
+        button.button.click =>
+            data = git: url
+            unless button.isGreen()
+                @runInstallation data, button
+            false
+        @installButtons[name] = button
+
     setListeners: ->
         @appList = @$ "#app-list"
 
@@ -221,21 +236,15 @@ class exports.ApplicationsView extends Backbone.View
         @installAppButton = new InstallButton @$ "#add-app-submit"
         @installAppButton.button.click @onInstallClicked
         
-        @mailsButton = new InstallButton @$ "#add-mails-submit"
-        @mailsButton.button.click =>
-            data = git: "https://github.com/mycozycloud/cozy-mails.git"
-            return false if @mailsButton.isGreen()
-            @runInstallation data, @mailsButton
-        @bookmarksButton = new InstallButton @$ "#add-bookmarks-submit"
-        @bookmarksButton.button.click =>
-            data = git: "https://github.com/Piour/cozy-bookmarks.git"
-            return false if @bookmarksButton.isGreen()
-            @runInstallation data, @bookmarksButton
-        @feedsButton = new InstallButton @$ "#add-feeds-submit"
-        @feedsButton.button.click =>
-            data = git: "https://github.com/Piour/cozy-feeds.git"
-            return false if @feedsButton.isGreen()
-            @runInstallation data, @feedsButton
+        @addInstallButton "notes", \
+            "https://github.com/mycozycloud/cozy-notes.git"
+        @addInstallButton "todos", \
+            "https://github.com/mycozycloud/cozy-todos.git"
+        @addInstallButton "bookmarks", \
+            "https://github.com/Piour/cozy-bookmarks.git"
+        @addInstallButton "feeds", \
+            "https://github.com/Piour/cozy-feeds.git"
+        
         @infoAlert = @$ "#add-app-form .info"
         @errorAlert = @$ "#add-app-form .error"
         @machineInfos = @$ ".machine-infos"
