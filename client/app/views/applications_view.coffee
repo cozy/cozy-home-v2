@@ -8,6 +8,12 @@ Application = require("models/application").Application
 InstallButton = require("views/install_button")
 
 
+String::startsWith = (prefix) ->
+     @indexOf(prefix, 0) is 0
+
+String::endsWith = (suffix) ->
+     @indexOf(suffix, @length - suffix.length) isnt -1
+
 # View describing main screen for user once he is logged
 class exports.ApplicationsView extends Backbone.View
     id: 'applications-view'
@@ -167,6 +173,11 @@ class exports.ApplicationsView extends Backbone.View
 
         if not rightData
             error: true, msg: "All fields are required"
+
+        if data.git?
+            data.git += ".git" unless data.git.endsWith ".git"
+            data.git.replace "git://", "https://"
+            data.git.replace "git@github.com", "https://github.com/"
 
         else if not data.git?.match /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/
                 {

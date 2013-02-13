@@ -1195,6 +1195,14 @@ window.require.register("views/applications_view", function(exports, require, mo
 
     InstallButton = require("views/install_button");
 
+    String.prototype.startsWith = function(prefix) {
+      return this.indexOf(prefix, 0) === 0;
+    };
+
+    String.prototype.endsWith = function(suffix) {
+      return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+
     exports.ApplicationsView = (function(_super) {
 
       __extends(ApplicationsView, _super);
@@ -1398,10 +1406,15 @@ window.require.register("views/applications_view", function(exports, require, mo
           if (!rightData) break;
         }
         if (!rightData) {
-          return {
+          ({
             error: true,
             msg: "All fields are required"
-          };
+          });
+        }
+        if (data.git != null) {
+          if (!data.git.endsWith(".git")) data.git += ".git";
+          data.git.replace("git://", "https://");
+          return data.git.replace("git@github.com", "https://github.com/");
         } else if (!((_ref = data.git) != null ? _ref.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/) : void 0)) {
           return {
             error: true,
