@@ -35,17 +35,27 @@ class exports.HomeView extends Backbone.View
 
     # Display application manager page, hides app frames, active home button.
     home: =>
+        app?.routers.main.navigate 'home', false
         @content.show()
         @frames.hide()
-        app?.routers.main.navigate 'home', true
+        view = app.views.applications
+        $("#content").html view.render()
+        view.fetchData()
+        view.setListeners()
+
         @selectNavButton @homeButton
         window.document.title = "Cozy - Home"
 
     # Display account manager page, hides app frames, active account button.
     account: =>
+        app?.routers.main.navigate 'account', true
         @content.show()
         @frames.hide()
-        app?.routers.main.navigate 'account', true
+        view = app.views.account
+        $("#content").html view.render()
+        view.fetchData()
+        view.setListeners()
+
         @selectNavButton @accountButton
         window.document.title = "Cozy - Account"
 

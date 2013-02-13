@@ -11,18 +11,10 @@ class exports.MainRouter extends Backbone.Router
         @applications()
 
     applications: ->
-        @loadView app.views.applications
+        app.views.home.home()
 
     application: (slug) ->
         app.views.home.loadApp slug
 
     account: ->
-        @loadView app.views.account
-
-    ## functions
-
-    # Fill main content with given view data.
-    loadView: (view) ->
-        $("#content").html view.render()
-        view.fetchData()
-        view.setListeners()
+        app.views.home.account()

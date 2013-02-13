@@ -486,7 +486,7 @@ window.require.register("routers/main_router", function(exports, require, module
       };
 
       MainRouter.prototype.applications = function() {
-        return this.loadView(app.views.applications);
+        return app.views.home.home();
       };
 
       MainRouter.prototype.application = function(slug) {
@@ -494,13 +494,7 @@ window.require.register("routers/main_router", function(exports, require, module
       };
 
       MainRouter.prototype.account = function() {
-        return this.loadView(app.views.account);
-      };
-
-      MainRouter.prototype.loadView = function(view) {
-        $("#content").html(view.render());
-        view.fetchData();
-        return view.setListeners();
+        return app.views.home.account();
       };
 
       return MainRouter;
@@ -1585,21 +1579,31 @@ window.require.register("views/home_view", function(exports, require, module) {
       };
 
       HomeView.prototype.home = function() {
+        var view;
+        if (typeof app !== "undefined" && app !== null) {
+          app.routers.main.navigate('home', false);
+        }
         this.content.show();
         this.frames.hide();
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate('home', true);
-        }
+        view = app.views.applications;
+        $("#content").html(view.render());
+        view.fetchData();
+        view.setListeners();
         this.selectNavButton(this.homeButton);
         return window.document.title = "Cozy - Home";
       };
 
       HomeView.prototype.account = function() {
-        this.content.show();
-        this.frames.hide();
+        var view;
         if (typeof app !== "undefined" && app !== null) {
           app.routers.main.navigate('account', true);
         }
+        this.content.show();
+        this.frames.hide();
+        view = app.views.account;
+        $("#content").html(view.render());
+        view.fetchData();
+        view.setListeners();
         this.selectNavButton(this.accountButton);
         return window.document.title = "Cozy - Account";
       };
