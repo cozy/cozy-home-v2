@@ -4,8 +4,21 @@ os = require 'os'
 action 'sysData', ->
 
     data =
-        freeMem: os.freemem() / (1024)
         totalMem: os.totalmem() / (1024)
+
+    freeMemCmd = "free | grep cache: | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
+    getFreeMem = (callback) ->
+        require('child_process').exec freeMemCmd, (err, resp) ->
+            if err
+                railway.logger.write(err)
+                console.log err
+                
+                send error: true, msg: "Server error occured.", 500
+            else
+                lines = resp.split('\n')
+                line = lines[0]
+                data.freeMem = line
+                callback()
 
     require('child_process').exec 'df -h', (err, resp) ->
         if err
@@ -26,4 +39,5 @@ action 'sysData', ->
                     data.freeDiskSpace = +freeSpace
                     data.usedDiskSpace = +usedSpace
 
-            send data
+            getFreeMem ->
+                send data
