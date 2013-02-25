@@ -13,3 +13,6 @@ efficiently your data while protecting your privacy without technical skills.
 
 More informations and hosting services on:
 http://cozycloud.cc
+
+# Cozy on IRC
+Feel free to check out our IRC channel (#cozycloud on irc.freenode.org) if you have any technical issues/inquiries or simply to speak about Cozy cloud in general.
