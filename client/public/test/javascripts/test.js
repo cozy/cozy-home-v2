@@ -297,12 +297,6 @@ window.require.register("test/test-helpers", function(exports, require, module) 
   }).call(this);
   
 });
-var hasFilterer = window.brunch && window.brunch.test && window.brunch.test.filterer;
-var valid = hasFilterer ? window.brunch.test.filterer('test/application_collection_test') : true;
-if (valid) window.require('test/application_collection_test');
-var hasFilterer = window.brunch && window.brunch.test && window.brunch.test.filterer;
-var valid = hasFilterer ? window.brunch.test.filterer('test/application_view_test') : true;
-if (valid) window.require('test/application_view_test');
-var hasFilterer = window.brunch && window.brunch.test && window.brunch.test.filterer;
-var valid = hasFilterer ? window.brunch.test.filterer('test/home_view_test') : true;
-if (valid) window.require('test/home_view_test');
+window.require('test/application_collection_test');
+window.require('test/application_view_test');
+window.require('test/home_view_test');
