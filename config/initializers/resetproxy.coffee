@@ -1,14 +1,11 @@
 Client = require('request-json').JsonClient
 
 client = new Client 'http://localhost:9104/'
-haibu = require('haibu-api')
-haibuClient = haibu.createClient
-    host: 'localhost'
-    port: 9002
-
-
 haibuClient =  new Client 'http://localhost:9002/'
 
+# Grab all application informations listed in the database and compare 
+# them to informations stored inside haibu. If port is different
+# application port is updated in data system.
 resetRoutes = ->
     Application.all (err, installedApps) ->
         appDict = {}
@@ -17,8 +14,11 @@ resetRoutes = ->
                 appDict[installedApp.name] = installedApp
             
         haibuClient.get 'drones/running', (err, res, apps) ->
-            updateApps(apps, appDict, resetProxy)
+            updateApps apps, appDict, resetProxy
 
+# Recursive function that compare haibu port to port stored for each
+# application. If port is different, the application port is updated with the
+# one given by haibu.
 updateApps = (apps, appDict, callback) ->
     if apps? and apps.length > 0
         app = apps.pop()
@@ -32,6 +32,7 @@ updateApps = (apps, appDict, callback) ->
     else
         callback()
 
+# Ask to proxy for synchronization between home and proxy.
 resetProxy = ->
     client.get 'routes/reset/', (err, res, body) ->
         if res? and res.statusCode is 200
@@ -41,4 +42,3 @@ resetProxy = ->
 
 if process.env.NODE_ENV != "test"
     resetRoutes()
-
