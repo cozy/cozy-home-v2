@@ -130,5 +130,3 @@ describe 'Modify domain success', ->
             instance = instances.rows[0]
             instance.domain.should.equal 'domain.newnew'
             done()
-
-
