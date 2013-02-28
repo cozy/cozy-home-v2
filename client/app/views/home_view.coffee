@@ -91,13 +91,14 @@ class exports.HomeView extends Backbone.View
     loadApp: (slug, hash) ->
         @frames.show()
         frame = @$("##{slug}-frame")
-        if frame.length == 0
+        if frame.length is 0
             hash = '' if not hash?
             @frames.append appIframeTemplate(id: slug, hash:hash)
             frame = @$("##{slug}-frame")
             $(frame.prop('contentWindow')).on 'hashchange', ->
-                newhash = frame.prop('contentWindow').location.hash.replace '#', ''
-                app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false 
+                location = frame.prop('contentWindow').location
+                newhash = hash.replace '#', ''
+                app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
 
         @content.hide()
         @$("#app-frames").find("iframe").hide()
