@@ -88,13 +88,16 @@ class exports.HomeView extends Backbone.View
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
     # iframes. Then currently selected frame is registered
-    loadApp: (slug, name) ->
-
+    loadApp: (slug, hash) ->
         @frames.show()
         frame = @$("##{slug}-frame")
         if frame.length == 0
-            @frames.append appIframeTemplate(id: slug)
+            hash = '' if not hash?
+            @frames.append appIframeTemplate(id: slug, hash:hash)
             frame = @$("##{slug}-frame")
+            $(frame.prop('contentWindow')).on 'hashchange', ->
+                newhash = frame.prop('contentWindow').location.hash.replace '#', ''
+                app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false 
 
         @content.hide()
         @$("#app-frames").find("iframe").hide()
