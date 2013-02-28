@@ -3,7 +3,8 @@ class exports.MainRouter extends Backbone.Router
         "home": "home"
         "applications": "applications"
         "account": "account"
-        "apps/:slug": "application"
+        "apps/:slug" : "application"
+        "apps/:slug/*hash" : "application"
 
     ## Route behaviors
 
@@ -13,8 +14,8 @@ class exports.MainRouter extends Backbone.Router
     applications: ->
         @loadView app.views.applications
 
-    application: (slug) ->
-        app.views.home.loadApp slug
+    application: (slug, hash) ->
+        app.views.home.loadApp slug, hash
 
     account: ->
         @loadView app.views.account
