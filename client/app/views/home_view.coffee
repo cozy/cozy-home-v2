@@ -97,7 +97,7 @@ class exports.HomeView extends Backbone.View
             frame = @$("##{slug}-frame")
             $(frame.prop('contentWindow')).on 'hashchange', ->
                 location = frame.prop('contentWindow').location
-                newhash = hash.replace '#', ''
+                newhash = location.hash.replace '#', ''
                 app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
 
         @content.hide()

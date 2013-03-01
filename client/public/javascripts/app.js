@@ -478,7 +478,8 @@ window.require.register("routers/main_router", function(exports, require, module
         "home": "home",
         "applications": "applications",
         "account": "account",
-        "apps/:slug": "application"
+        "apps/:slug": "application",
+        "apps/:slug/*hash": "application"
       };
 
       MainRouter.prototype.home = function() {
@@ -489,8 +490,8 @@ window.require.register("routers/main_router", function(exports, require, module
         return app.views.home.home();
       };
 
-      MainRouter.prototype.application = function(slug) {
-        return app.views.home.loadApp(slug);
+      MainRouter.prototype.application = function(slug, hash) {
+        return app.views.home.loadApp(slug, hash);
       };
 
       MainRouter.prototype.account = function() {
@@ -604,7 +605,7 @@ window.require.register("templates/application_iframe", function(exports, requir
   with (locals || {}) {
   var interp;
   buf.push('<iframe');
-  buf.push(attrs({ 'src':("apps/" + (id) + "/"), 'id':("" + (id) + "-frame") }));
+  buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }));
   buf.push('></iframe>');
   }
   return buf.join("");
@@ -1654,15 +1655,23 @@ window.require.register("views/home_view", function(exports, require, module) {
         });
       };
 
-      HomeView.prototype.loadApp = function(slug, name) {
+      HomeView.prototype.loadApp = function(slug, hash) {
         var frame;
         this.frames.show();
         frame = this.$("#" + slug + "-frame");
         if (frame.length === 0) {
+          if (!(hash != null)) hash = '';
           this.frames.append(appIframeTemplate({
-            id: slug
+            id: slug,
+            hash: hash
           }));
           frame = this.$("#" + slug + "-frame");
+          $(frame.prop('contentWindow')).on('hashchange', function() {
+            var location, newhash;
+            location = frame.prop('contentWindow').location;
+            newhash = location.hash.replace('#', '');
+            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
+          });
         }
         this.content.hide();
         this.$("#app-frames").find("iframe").hide();
