@@ -89,7 +89,8 @@ class exports.HomeView extends Backbone.View
             @frames.append appIframeTemplate(id: slug, hash:hash)
             frame = @$("##{slug}-frame")
             $(frame.prop('contentWindow')).on 'hashchange', ->
-                newhash = frame.prop('contentWindow').location.hash.replace '#', ''
+                location = frame.prop('contentWindow').location
+                newhash = location.hash.replace '#', ''
                 app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false 
 
         @content.hide()
