@@ -3,7 +3,7 @@ Client = require("request-json").JsonClient
 client = new Client "http://localhost:9101/"
 
 
-module.exports = class Password_adapter
+module.exports = class Adapter
 
     updateKeys: (pwd, callback) ->
         client.put "accounts/password/", password: pwd, (err, res, body) =>
