@@ -1,4 +1,7 @@
 utils = require("../../lib/passport_utils")
+Adapter = require '../../lib/adapter'
+
+adapter = new Adapter()
 
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
@@ -30,19 +33,24 @@ action 'updateAccount', ->
                     errors.push "Passwords don't match."
             else
                 errors.push "Password is too short."
-        
+
 
         if errors.length
             send error: true, msg: errors, 400
         else
-            user.updateAttributes data, (err) ->
+            adapter.updateKeys newPassword, (err) =>
                 if err
                     console.log err
                     send error: true, msg: 'User cannot be updated', 400
                 else
-                    send
-                        success: true,
-                        msg: 'Account informations updated successfully'
+                    user.updateAttributes data, (err) ->
+                        if err
+                            console.log err
+                            send error: true, msg: 'User cannot be updated', 400
+                        else
+                            send
+                                success: true,
+                                msg: 'Account informations updated successfully'
 
     User.all (err, users) ->
         if err
