@@ -1,5 +1,5 @@
 BaseView = require 'lib/BaseView'
-appIframeTemplate = require 'templates/home_app_iframe'
+appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
