@@ -744,7 +744,7 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="account-form" class="well"><p>email</p><p class="field"><a id="account-email-field"></a></p><p>timezone</p><p class="field"><a id="account-timezone-field"></a></p><p>domain</p><p class="field"><a id="account-domain-field"></a></p><p><button id="change-password-button" class="btn">Change password</button></p><div id="change-password-form"><p>Change password</p><p><label>fill this field to set a new password</label><input id="account-password1-field" type="password"/></p><p><label>confirm new password</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">Send changes</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"> </div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"> </div></div></p></div></div>');
+  buf.push('<div id="account-form" class="well"><p>email</p><p class="field"><a id="account-email-field"></a></p><p>timezone</p><p class="field"><a id="account-timezone-field"></a></p><p>domain</p><p class="field"><a id="account-domain-field"></a></p><p><button id="change-password-button" class="btn">Change password</button></p><div id="change-password-form"><p>Change password</p><p><label>input your current password</label><input id="account-password0-field" type="password"/></p><p><label>fill this field to set a new password</label><input id="account-password1-field" type="password"/></p><p><label>confirm new password</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">Send changes</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"> </div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"> </div></div></p></div></div>');
   }
   return buf.join("");
   };
@@ -876,6 +876,8 @@ window.require.register("views/account", function(exports, require, module) {
 
       this.onDataSubmit = __bind(this.onDataSubmit, this);
 
+      this.closePasswordForm = __bind(this.closePasswordForm, this);
+
       this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);
       AccountView.__super__.constructor.call(this);
     }
@@ -889,11 +891,19 @@ window.require.register("views/account", function(exports, require, module) {
       });
     };
 
+    AccountView.prototype.closePasswordForm = function() {
+      var _this = this;
+      return this.changePasswordForm.fadeOut(function() {
+        return _this.changePasswordButton.fadeIn();
+      });
+    };
+
     AccountView.prototype.onDataSubmit = function(event) {
       var form,
         _this = this;
       this.loadingIndicator.spin();
       form = {
+        password0: $("#account-password0-field").val(),
         password1: $("#account-password1-field").val(),
         password2: $("#account-password2-field").val()
       };
@@ -907,6 +917,7 @@ window.require.register("views/account", function(exports, require, module) {
           if (data.success) {
             _this.infoAlert.html(data.msg);
             _this.infoAlert.show();
+            $("#account-password0-field").val(null);
             $("#account-password1-field").val(null);
             $("#account-password2-field").val(null);
           } else {
@@ -915,6 +926,7 @@ window.require.register("views/account", function(exports, require, module) {
           return _this.loadingIndicator.spin();
         },
         error: function(data) {
+          $("#account-password0-field").val(null);
           _this.displayErrors(JSON.parse(data.responseText).msg);
           return _this.loadingIndicator.spin();
         }
