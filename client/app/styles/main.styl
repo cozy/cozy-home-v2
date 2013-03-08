@@ -155,7 +155,7 @@ html
 
 .home-body
     width:100%
-    height: 100%
+    // height: 100%
     padding: 0
     margin: 0
     box-shadow: inset 0 0 100px #2b4244 + 20%
@@ -175,6 +175,8 @@ html
     background-repeat: no-repeat
     background-position: 0 0 
 
+.btn:focus
+  outline: none
 
 /* content */
 
@@ -185,30 +187,31 @@ html
 
 /* Header */
 
-.navbar .nav
-    float: right
-
-    .active a
-    .active a:active
-    .active a:focus
-        box-shadow: 0
-        box-shadow: inset 2px 1px 4px bgcolor - 40% 
-        background: bgcolor + 40%
-
-    .active a:hover
-        cursor: default
-        background: bgcolor + 40%
-        box-shadow: inset 2px 1px 4px bgcolor - 40% 
-
-    li
-         a:hover
-            background: bgcolor + 100%
-            cursor: pointer
-            background: highlightcolor
-            box-shadow: inset 0 -4px 2px bgcolor - 40% 
-
 .navbar
     border-radius: 0 
+    .nav
+        float: right
+
+        .active a
+        .active a:active
+        .active a:focus
+            box-shadow: 0
+            box-shadow: inset 2px 1px 4px bgcolor - 40% 
+            background: bgcolor + 40%
+
+        .active a:hover
+            cursor: default
+            background: bgcolor + 40%
+            box-shadow: inset 2px 1px 4px bgcolor - 40% 
+
+        li
+             a:hover
+                background: bgcolor + 100%
+                cursor: pointer
+                background: highlightcolor
+                box-shadow: inset 0 -4px 2px bgcolor - 40% 
+
+
 
 #header
     position relative
@@ -285,21 +288,10 @@ html
         display: none
 
 /* Dialogs */
+// @deadcode
 
 #confirm-dialog
     display none
-
-#app-description-field
-#app-git-field
-    width: 99%
-
-#app-name-field
-    width: 140px
-
-#add-app-submit
-    font-weight: bold
-    font-size: 20px
-    text-shadow: 0 0 0
 
 .modal
     width: 540px
@@ -348,11 +340,30 @@ html
         color textcolor
         text-shadow 1px 1px 1px shadowcolor
 
+    .app-title
+        font-size: 20px
+        line-height: 30px
+        font-weight: bold
+
+    .broken-notifier
+        display:none
+        font-size: 18px
+        color: red
+
     a:hover
         text-decoration: none
 
     .btn
         font-size: 12px
+
+    .application-outer
+        display:none
+
+        .btn
+            margin-top: 10px
+        p
+            margin: 0
+            padding: 0
 
 
 .application:active
@@ -361,10 +372,12 @@ html
 .application:hover    
     background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
 
-.app-title
-    font-size: 20px
-    line-height: 30px
-    font-weight: bold
+.application.broken
+    a
+        cursor: default
+    .broken-notifier
+        display: block
+
 
 .app-tools 
     width: 50%        
@@ -382,23 +395,8 @@ html
     width: 40%
     text-align center
 
-.broken
-    a
-        cursor: default
 
-    .broken-notifier
-        font-size: 18px
-        color: red
-
-.application-outer
-    display:none
-
-    .btn
-        margin-top: 10px
-    p
-        margin: 0
-        padding: 0
-
+// @deadcode
 #add-app-close
 #add-app-submit
     margin-top: 5px
@@ -491,9 +489,20 @@ html
     margin-top: 60px
     margin-bottom: 20px
 
+// MARKET PAGE
+
+#your-app
+  
+    #app-git-field
+        width: 80%
+
 .cozy-app
     border-top: 1px solid #BBB
     margin-bottom: 40px
+    width: 30%
+    height: 160px
+    margin: 1%
+    float:left
 
     img
         margin: 10px 10px 0 0 
@@ -508,7 +517,10 @@ html
         font-size: 14px
 
     .btn
-        margin-left: 110px
+        float: right
+        width: 15%
+        height: 70px
+        margin: 10px 0px
 
 // Responsive
 
@@ -536,3 +548,6 @@ html
             select
             option
                 width: 75%
+
+    .cozy-app
+        width: 90%
