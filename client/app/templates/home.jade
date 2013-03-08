@@ -1,0 +1,28 @@
+#no-app-message.center.hidden
+    p You have actually no application installed on your Cozy Cloud
+
+#app-list
+
+.app-tools
+  .machine-infos
+    .memory
+      div
+        | Memory consumption
+        | (Total: <span class="total"></span>)
+      .progress
+        .bar
+
+    .disk 
+      div
+        | Disk consumption 
+        | (total: <span class="total"></span>)
+      .progress
+        .bar
+
+
+  .btn-group
+      button#add-app-button.btn
+        | <i class="icon-plus"></i>
+        | add
+      button#manage-app-button.btn
+        | manage
