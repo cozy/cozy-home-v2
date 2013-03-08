@@ -1,9 +1,10 @@
-template = require('../templates/account')
-timezones = require('../helpers/timezone').timezones
+BaseView = require 'lib/BaseView'
+timezones = require('helpers/timezone').timezones
 
 # View describing main screen for user once he is logged
-class exports.AccountView extends Backbone.View
+module.exports = class exports.AccountView extends BaseView
     id: 'account-view'
+    template: require 'templates/account'
 
     ### Constructor ###
 
@@ -105,15 +106,11 @@ class exports.AccountView extends Backbone.View
 
     ### Configuration ###
 
-    render: ->
-        @$el.html template()
-        @el
-
-    setListeners: ->
-        app.views.home.selectNavButton app.views.home.accountButton
+    afterRender: ->
+        # app.views.home.selectNavButton app.views.home.accountButton
         @emailField = @$ '#account-email-field'
         @timezoneField = @$ '#account-timezone-field'
-        @domainField = $ '#account-domain-field'
+        @domainField = @$ '#account-domain-field'
         @infoAlert = @$ '#account-info'
         @infoAlert.hide()
         @errorAlert = @$ '#account-error'
@@ -142,3 +139,5 @@ class exports.AccountView extends Backbone.View
         @addApplicationCloseCross.click @onCloseAddAppClicked
 
         @loadingIndicator = @$ '.loading-indicator'
+
+        @fetchData()
