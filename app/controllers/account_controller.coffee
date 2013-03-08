@@ -24,15 +24,10 @@ action 'updateAccount', ->
         if newTimezone?
             data.timezone = newTimezone
 
-        console.log user.password
-        console.log oldPassword
-        console.log utils.cryptPassword oldPassword
-
-        unless utils.checkPassword(oldPassword, user.password)
-            errors.push "Old password is incorrect"
-
         if newPassword? and newPassword.length > 0
-            if newPassword.length > 5
+            if not utils.checkPassword(oldPassword, user.password)
+                errors.push "Old password is incorrect"
+            else if newPassword.length > 5
                 if newPassword == newPassword2
                     data.password = utils.cryptPassword newPassword
                 else
