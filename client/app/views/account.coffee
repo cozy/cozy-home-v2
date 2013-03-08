@@ -16,11 +16,16 @@ module.exports = class exports.AccountView extends BaseView
             @changePasswordForm.fadeIn =>
                 @password1Field.focus()
 
+    closePasswordForm: =>
+        @changePasswordForm.fadeOut =>
+            @changePasswordButton.fadeIn()
+
     # When data are submited, it sends a request to backend to save them.
     # If an error occurs, message is displayed.
     onDataSubmit: (event) =>
         @loadingIndicator.spin()
         form =
+            password0: $("#account-password0-field").val()
             password1: $("#account-password1-field").val()
             password2: $("#account-password2-field").val()
 
@@ -35,12 +40,14 @@ module.exports = class exports.AccountView extends BaseView
                 if data.success
                     @infoAlert.html data.msg
                     @infoAlert.show()
+                    $("#account-password0-field").val null
                     $("#account-password1-field").val null
                     $("#account-password2-field").val null
                 else
                     @displayErrors JSON.parse(data.responseText).msg
                 @loadingIndicator.spin()
             error: (data) =>
+                $("#account-password0-field").val null
                 @displayErrors JSON.parse(data.responseText).msg
                 @loadingIndicator.spin()
  

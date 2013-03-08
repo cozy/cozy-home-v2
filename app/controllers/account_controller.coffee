@@ -1,10 +1,12 @@
 utils = require("../../lib/passport_utils")
+bcrypt = require
 
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
 action 'updateAccount', ->
     newEmail = body.email
     newTimezone = body.timezone
+    oldPassword = body.password0
     newPassword = body.password1
     newPassword2 = body.password2
 
@@ -21,6 +23,13 @@ action 'updateAccount', ->
 
         if newTimezone?
             data.timezone = newTimezone
+
+        console.log user.password
+        console.log oldPassword
+        console.log utils.cryptPassword oldPassword
+
+        unless utils.checkPassword(oldPassword, user.password)
+            errors.push "Old password is incorrect"
 
         if newPassword? and newPassword.length > 0
             if newPassword.length > 5
