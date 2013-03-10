@@ -6,6 +6,8 @@ helpers = require './helpers'
 
 email = 'test@test.com'
 password = 'password'
+salt = bcrypt.genSaltSync(10)
+hash = bcrypt.hashSync(password, salt)
 
 client = new Client 'http://localhost:8889/'
 
@@ -17,7 +19,7 @@ describe 'Modify account failure', ->
         helpers.clearDb ->
             User.create
                 email: email
-                password: password
+                password: hash
                 , ->
                     done()
 
@@ -36,8 +38,22 @@ describe 'Modify account failure', ->
         @response.statusCode.should.equal 400
         @body.error.should.equal true
 
+    it 'When I send a register request with wrong old password', (done) ->
+        data = 
+            password0: 'not-password'
+            password1: 'pas'
+        client.post 'api/user', data, (error, response, body) =>
+            @response = response
+            @body = body
+            done()
+
+    it 'Then an error response is returned.', ->
+        @response.statusCode.should.equal 400
+
     it 'When I send a register request with a too short password', (done) ->
-        data = password1: 'pas'
+        data = 
+            password0: password
+            password1: 'pas'
         client.post 'api/user', data, (error, response, body) =>
             @response = response
             @body = body
@@ -47,7 +63,10 @@ describe 'Modify account failure', ->
         @response.statusCode.should.equal 400
 
     it 'When I send a register request with two different passwords', (done) ->
-        data = password1: 'password', password2: 'blabla'
+        data = 
+            password0: password
+            password1: 'tatata', 
+            password2: 'tototo'
         client.post 'api/user', data, (error, response, body) =>
             @response = response
             @body = body
@@ -64,7 +83,7 @@ describe 'Modify account success', ->
         helpers.clearDb ->
             User.create
                 email: email
-                password: password
+                password: hash
                 , ->
                     done()
 
@@ -76,6 +95,7 @@ describe 'Modify account success', ->
     it 'When I change my account with right data', (done) ->
         data =
             email: 'test@test.fr'
+            password0: password
             password1: 'password2'
             password2: 'password2'
         client.post 'api/user', data, (error, response, body) =>

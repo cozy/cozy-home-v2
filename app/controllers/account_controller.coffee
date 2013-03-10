@@ -1,5 +1,4 @@
 utils = require("../../lib/passport_utils")
-bcrypt = require
 
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
