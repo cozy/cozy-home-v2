@@ -91,6 +91,8 @@ fakeServer = (json, code=200, callback=null) ->
 
 describe "Application installation", ->
 
+    fakeHaibuLastBody = {}
+
     before (done) ->
         server.listen(8888)
         clearDb ->
@@ -100,7 +102,8 @@ describe "Application installation", ->
                     done()
 
     before ->
-        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
+        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) =>
+            fakeHaibuLastBody = body
             should.exist body.start.user
             should.exist body.start.name
             should.exist body.start.repository
@@ -159,6 +162,37 @@ describe "Application installation", ->
         it "Then I got expected application in a list", ->
             @body.rows.length.should.equal 2
             @body.rows[0].name.should.equal "My App"
+
+    describe "Install a new application with specific branch", ->
+        it "When I send a request to install an application on branch mybranch", \
+                     (done) ->
+            data =
+                name: "My App 2",
+                description: "description",
+                git: "git@github.com:mycozycloud/my-app2.git"
+                branch:"mybranch"
+            client.post "api/applications/install", \
+                        data, (error, response, body) =>
+                @response = response
+                @body = body
+                done()
+
+        it "Then it sends me back my app with correct branch", ->
+            @response.statusCode.should.equal 201
+            should.exist @body.success
+            should.exist @body.app.branch
+            @body.app.branch.should.equal "mybranch"
+            fakeHaibuLastBody.start.repository.branch.should.equal "mybranch"
+            @body.app.port.should.equal 8001
+
+        it "When I send a request to retrieve all applications", (done) ->
+            client.get "api/applications", (error, response, body) =>
+                @body = body
+                done()
+
+        it "The branch is still there", ->
+            @body.rows.length.should.equal 3
+            @body.rows[1].branch.should.equal "mybranch"
 
 
 describe "Application update", ->
@@ -290,7 +324,7 @@ describe "Application uninstallation", ->
                 done()
 
         it "Then I do not see my application in the list", ->
-            @body.rows.length.should.equal 1
+            @body.rows.length.should.equal 2
             @body.rows[0].name.should.not.equal "My App"
 
 
