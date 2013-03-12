@@ -8,7 +8,9 @@ module.exports = class ApplicationCollection extends BaseCollection
     model: Application
     url: 'api/applications/'
 
-    fetchFromMarket: (cb) =>
+    # fetch application list from the market 
+    # callback(err, apps)
+    fetchFromMarket: (callback) =>
         apps = [
             {
                 icon:"img/bookmarks-icon.png"
@@ -40,5 +42,5 @@ module.exports = class ApplicationCollection extends BaseCollection
                 description:"Write your tasks, order them and execute them efficiently."
             }]
         @reset apps
-        if cb? 
-            cb(apps)
+        if callback? 
+            callback(null, apps)
