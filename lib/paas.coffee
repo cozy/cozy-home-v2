@@ -35,8 +35,7 @@ reseting routes"
     # 2. Send a request to proxy to add a new route
     installApp: (app, callback) ->
         console.info "Request haibu for spawning #{app.name}..."
-
-        console.log "haibu descriptor : "+JSON.stringify(app.getHaibuDescriptor())
+        console.info "haibu descriptor : #{JSON.stringify(app.getHaibuDescriptor())}"
         
         @client.start app.getHaibuDescriptor(), (err, result) =>
             if err
