@@ -188,6 +188,70 @@ describe "Application update", ->
             @response.statusCode.should.equal 200
             should.exist @body.success
             @body.success.should.be.ok
+
+describe "Application stop", ->
+    
+    before ->
+        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
+
+        @haibu.listen 9002
+        @proxy = fakeServer msg: "ok", 200, (body) ->
+
+        @proxy.listen 9104
+
+    after ->
+        @haibu.close()
+        @proxy.close()
+
+    describe "POST /api/applications/:slug/stop Stop an app", ->
+        
+        it "When I send a request to stop an application", (done) ->
+            client.post "api/applications/my-app/stop", {}, \
+                          (error, response, body) =>
+                @response = response
+                @body = body
+                done()
+
+        it "Then it sends me a success response", ->
+            @response.statusCode.should.equal 200
+            should.exist @body.success
+            @body.success.should.be.ok
+
+        it "which contains the updated app", ->
+            should.exist @body.app
+            @body.app.state.should.equal 'stopped'
+
+describe "Application start", ->
+    
+    before ->
+        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
+
+        @haibu.listen 9002
+        @proxy = fakeServer msg: "ok", 200, (body) ->
+
+        @proxy.listen 9104
+
+    after ->
+        @haibu.close()
+        @proxy.close()
+
+    describe "POST /api/applications/:slug/start Start an app", ->
+        
+        it "When I send a request to start an application", (done) ->
+            client.post "api/applications/my-app/start", {}, \
+                          (error, response, body) =>
+                @response = response
+                @body = body
+                done()
+
+        it "Then it sends me a success response", ->
+            @response.statusCode.should.equal 200
+            should.exist @body.success
+            @body.success.should.be.ok
+
+        it "which contains the updated app", ->
+            should.exist @body.app
+            @body.app.state.should.equal 'installed'
             
 
 describe "Application uninstallation", ->
