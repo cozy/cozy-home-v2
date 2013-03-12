@@ -80,1761 +80,1810 @@
 })();
 
 window.require.register("collections/application", function(exports, require, module) {
-  (function() {
-    var Application, BaseCollection,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var Application, ApplicationCollection, BaseCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    BaseCollection = require("collections/collections").BaseCollection;
+  BaseCollection = require('lib/BaseCollection');
 
-    Application = require("models/application").Application;
+  Application = require('models/application');
 
-    exports.ApplicationCollection = (function(_super) {
+  module.exports = ApplicationCollection = (function(_super) {
 
-      __extends(ApplicationCollection, _super);
+    __extends(ApplicationCollection, _super);
 
-      ApplicationCollection.prototype.model = Application;
+    function ApplicationCollection() {
+      this.fetchFromMarket = __bind(this.fetchFromMarket, this);
+      return ApplicationCollection.__super__.constructor.apply(this, arguments);
+    }
 
-      ApplicationCollection.prototype.url = 'api/applications/';
+    ApplicationCollection.prototype.model = Application;
 
-      function ApplicationCollection(view) {
-        this.view = view;
-        this.onAdd = __bind(this.onAdd, this);
-        this.onReset = __bind(this.onReset, this);
-        ApplicationCollection.__super__.constructor.call(this);
-        this.bind('reset', this.onReset);
-        this.bind('add', this.onAdd);
-      }
+    ApplicationCollection.prototype.url = 'api/applications/';
 
-      ApplicationCollection.prototype.onReset = function() {
-        var _this = this;
-        this.view.clearApps();
-        if (this.length > 0) {
-          return this.forEach(function(app) {
-            return _this.view.addApplication(app);
-          });
-        } else {
-          return this.view.displayNoAppMessage();
+    ApplicationCollection.prototype.fetchFromMarket = function(callback) {
+      var apps;
+      apps = [
+        {
+          icon: "img/bookmarks-icon.png",
+          name: "bookmarks",
+          slug: "bookmarks",
+          git: "https://github.com/Piour/cozy-bookmarks.git",
+          comment: "community contribution",
+          description: "Manage your bookmark easily"
+        }, {
+          icon: "img/feeds-icon.png",
+          name: "feeds",
+          slug: "feeds",
+          git: "https://github.com/Piour/cozy-feeds.git",
+          comment: "community contribution",
+          description: "Aggregate your feeds and save your favorite links in bookmarks."
+        }, {
+          icon: "img/notes-icon.png",
+          name: "notes",
+          slug: "notes",
+          git: "https://github.com/mycozycloud/cozy-notes.git",
+          comment: "official application",
+          description: "Store all your notes and files."
+        }, {
+          icon: "img/todos-icon.png",
+          name: "todos",
+          slug: "todos",
+          git: "https://github.com/mycozycloud/cozy-todos.git",
+          comment: "official application",
+          description: "Write your tasks, order them and execute them efficiently."
         }
-      };
-
-      ApplicationCollection.prototype.onAdd = function(app) {
-        return this.view.addApplication(app);
-      };
-
-      return ApplicationCollection;
-
-    })(BaseCollection);
-
-  }).call(this);
-  
-});
-window.require.register("collections/collections", function(exports, require, module) {
-  (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    exports.BaseCollection = (function(_super) {
-
-      __extends(BaseCollection, _super);
-
-      function BaseCollection() {
-        BaseCollection.__super__.constructor.apply(this, arguments);
+      ];
+      this.reset(apps);
+      if (callback != null) {
+        return callback(null, apps);
       }
+    };
 
-      BaseCollection.prototype.parse = function(response) {
-        return response.rows;
-      };
+    return ApplicationCollection;
 
-      return BaseCollection;
-
-    })(Backbone.Collection);
-
-  }).call(this);
+  })(BaseCollection);
   
 });
 window.require.register("helpers", function(exports, require, module) {
-  (function() {
+  
+  exports.BrunchApplication = (function() {
 
-    exports.BrunchApplication = (function() {
+    function BrunchApplication() {
+      var _this = this;
+      $(function() {
+        return _this.initialize(_this);
+      });
+    }
 
-      function BrunchApplication() {
-        var _this = this;
-        $(function() {
-          return _this.initialize(_this);
-        });
-      }
-
-      BrunchApplication.prototype.initializeJQueryExtensions = function() {
-        return $.fn.spin = function(opts, color) {
-          var presets;
-          presets = {
-            tiny: {
-              lines: 8,
-              length: 2,
-              width: 2,
-              radius: 3
-            },
-            small: {
-              lines: 8,
-              length: 4,
-              width: 3,
-              radius: 5
-            },
-            large: {
-              lines: 10,
-              length: 8,
-              width: 4,
-              radius: 8
-            },
-            extralarge: {
-              lines: 10,
-              length: 30,
-              width: 12,
-              radius: 30,
-              top: 30,
-              left: 60
-            }
-          };
-          if (Spinner) {
-            return this.each(function() {
-              var $this, spinner;
-              $this = $(this);
-              spinner = $this.data("spinner");
-              console.log($this.data());
-              console.log(spinner);
-              if (spinner != null) {
-                spinner.stop();
-                return $this.data("spinner", null);
-              } else if (opts !== false) {
-                if (typeof opts === "string") {
-                  if (opts in presets) {
-                    opts = presets[opts];
-                  } else {
-                    opts = {};
-                  }
-                  if (color) opts.color = color;
-                }
-                spinner = new Spinner($.extend({
-                  color: $this.css("color")
-                }, opts));
-                spinner.spin(this);
-                return $this.data("spinner", spinner);
-              }
-            });
-          } else {
-            throw "Spinner class not available.";
-            return null;
+    BrunchApplication.prototype.initializeJQueryExtensions = function() {
+      return $.fn.spin = function(opts, color) {
+        var presets;
+        presets = {
+          tiny: {
+            lines: 8,
+            length: 2,
+            width: 2,
+            radius: 3
+          },
+          small: {
+            lines: 8,
+            length: 4,
+            width: 3,
+            radius: 5
+          },
+          large: {
+            lines: 10,
+            length: 8,
+            width: 4,
+            radius: 8
+          },
+          extralarge: {
+            lines: 10,
+            length: 30,
+            width: 12,
+            radius: 30,
+            top: 30,
+            left: 60
           }
         };
+        if (Spinner) {
+          return this.each(function() {
+            var $this, spinner;
+            $this = $(this);
+            spinner = $this.data("spinner");
+            console.log($this.data());
+            console.log(spinner);
+            if (spinner != null) {
+              spinner.stop();
+              return $this.data("spinner", null);
+            } else if (opts !== false) {
+              if (typeof opts === "string") {
+                if (opts in presets) {
+                  opts = presets[opts];
+                } else {
+                  opts = {};
+                }
+                if (color) {
+                  opts.color = color;
+                }
+              }
+              spinner = new Spinner($.extend({
+                color: $this.css("color")
+              }, opts));
+              spinner.spin(this);
+              return $this.data("spinner", spinner);
+            }
+          });
+        } else {
+          throw "Spinner class not available.";
+          return null;
+        }
       };
-
-      BrunchApplication.prototype.initialize = function() {};
-
-      return BrunchApplication;
-
-    })();
-
-    exports.selectAll = function(input) {
-      return input.setSelection(0, input.val().length);
     };
 
-    exports.slugify = function(string) {
-      var _slugify_hyphenate_re, _slugify_strip_re;
-      _slugify_strip_re = /[^\w\s-]/g;
-      _slugify_hyphenate_re = /[-\s]+/g;
-      string = string.replace(_slugify_strip_re, '').trim().toLowerCase();
-      string = string.replace(_slugify_hyphenate_re, '-');
-      return string;
-    };
+    BrunchApplication.prototype.initialize = function() {};
 
-    exports.getPathRegExp = function(path) {
-      var slashReg;
-      slashReg = new RegExp("/", "g");
-      return "^" + (path.replace(slashReg, "\/"));
-    };
+    return BrunchApplication;
 
-  }).call(this);
+  })();
+
+  exports.selectAll = function(input) {
+    return input.setSelection(0, input.val().length);
+  };
+
+  exports.slugify = function(string) {
+    var _slugify_hyphenate_re, _slugify_strip_re;
+    _slugify_strip_re = /[^\w\s-]/g;
+    _slugify_hyphenate_re = /[-\s]+/g;
+    string = string.replace(_slugify_strip_re, '').trim().toLowerCase();
+    string = string.replace(_slugify_hyphenate_re, '-');
+    return string;
+  };
+
+  exports.getPathRegExp = function(path) {
+    var slashReg;
+    slashReg = new RegExp("/", "g");
+    return "^" + (path.replace(slashReg, "\/"));
+  };
   
 });
 window.require.register("helpers/client", function(exports, require, module) {
-  (function() {
+  
+  exports.request = function(type, url, data, callbacks) {
+    return $.ajax({
+      type: type,
+      url: url,
+      data: data,
+      success: callbacks.success,
+      error: callbacks.error
+    });
+  };
 
-    exports.request = function(type, url, data, callbacks) {
-      return $.ajax({
-        type: type,
-        url: url,
-        data: data,
-        success: callbacks.success,
+  exports.get = function(url, callbacks) {
+    return exports.request("GET", url, null, callbacks);
+  };
+
+  exports.post = function(url, data, callbacks) {
+    return exports.request("POST", url, data, callbacks);
+  };
+
+  exports.put = function(url, data, callbacks) {
+    return exports.request("PUT", url, data, callbacks);
+  };
+
+  exports.del = function(url, callbacks) {
+    return exports.request("DELETE", url, null, callbacks);
+  };
+  
+});
+window.require.register("helpers/timezone", function(exports, require, module) {
+  
+  exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Maceio", "America/Managua", "America/Manaus", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montreal", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Vostok", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Canada/Atlantic", "Canada/Central", "Canada/Eastern", "Canada/Mountain", "Canada/Newfoundland", "Canada/Pacific", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/Simferopol", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zaporozhye", "Europe/Zurich", "GMT", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Ponape", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Truk", "Pacific/Wake", "Pacific/Wallis", "US/Alaska", "US/Arizona", "US/Central", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific", "UTC"];
+  
+});
+window.require.register("initialize", function(exports, require, module) {
+  var BrunchApplication, HomeView, MainRouter,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BrunchApplication = require('./helpers').BrunchApplication;
+
+  MainRouter = require('routers/main_router');
+
+  HomeView = require('views/main');
+
+  exports.Application = (function(_super) {
+
+    __extends(Application, _super);
+
+    function Application() {
+      return Application.__super__.constructor.apply(this, arguments);
+    }
+
+    Application.prototype.initialize = function() {
+      this.initializeJQueryExtensions();
+      this.routers = {};
+      this.mainView = new HomeView();
+      this.routers.main = new MainRouter();
+      window.app = this;
+      Backbone.history.start();
+      if (Backbone.history.getFragment() === '') {
+        return this.routers.main.navigate('home', true);
+      }
+    };
+
+    return Application;
+
+  })(BrunchApplication);
+
+  new exports.Application;
+  
+});
+window.require.register("lib/base_collection", function(exports, require, module) {
+  var BaseCollection,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  module.exports = BaseCollection = (function(_super) {
+
+    __extends(BaseCollection, _super);
+
+    function BaseCollection() {
+      return BaseCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    BaseCollection.prototype.parse = function(response) {
+      return response.rows;
+    };
+
+    return BaseCollection;
+
+  })(Backbone.Collection);
+  
+});
+window.require.register("lib/base_model", function(exports, require, module) {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  exports.BaseModel = (function(_super) {
+
+    __extends(BaseModel, _super);
+
+    function BaseModel() {
+      return BaseModel.__super__.constructor.apply(this, arguments);
+    }
+
+    BaseModel.prototype.isNew = function() {
+      return this.id === void 0;
+    };
+
+    return BaseModel;
+
+  })(Backbone.Model);
+  
+});
+window.require.register("lib/base_view", function(exports, require, module) {
+  var BaseView,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  module.exports = BaseView = (function(_super) {
+
+    __extends(BaseView, _super);
+
+    function BaseView() {
+      return BaseView.__super__.constructor.apply(this, arguments);
+    }
+
+    BaseView.prototype.tagName = 'section';
+
+    BaseView.prototype.template = function() {};
+
+    BaseView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    BaseView.prototype.getRenderData = function() {
+      var _ref;
+      return {
+        model: (_ref = this.model) != null ? _ref.toJSON() : void 0
+      };
+    };
+
+    BaseView.prototype.render = function() {
+      this.beforeRender();
+      this.$el.html(this.template({}));
+      this.afterRender();
+      return this;
+    };
+
+    BaseView.prototype.beforeRender = function() {};
+
+    BaseView.prototype.afterRender = function() {};
+
+    BaseView.prototype.destroy = function() {
+      this.undelegateEvents();
+      this.$el.removeData().unbind();
+      this.remove();
+      return Backbone.View.prototype.remove.call(this);
+    };
+
+    return BaseView;
+
+  })(Backbone.View);
+  
+});
+window.require.register("models/application", function(exports, require, module) {
+  var Application, client,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  client = require("../helpers/client");
+
+  module.exports = Application = (function(_super) {
+
+    __extends(Application, _super);
+
+    function Application() {
+      this.uninstall = __bind(this.uninstall, this);
+      return Application.__super__.constructor.apply(this, arguments);
+    }
+
+    Application.prototype.url = '/api/applications/';
+
+    Application.prototype.idAttribute = 'slug';
+
+    Application.prototype.isRunning = function() {
+      return this.get('state') === 'installed';
+    };
+
+    Application.prototype.isBroken = function() {
+      return this.get('state') === 'broken';
+    };
+
+    Application.prototype.install = function(callbacks) {
+      var _this = this;
+      return client.post('/api/applications/install', this.attributes, {
+        success: function(data) {
+          _this.set(data.app);
+          return callbacks.success(data);
+        },
         error: callbacks.error
       });
     };
 
-    exports.get = function(url, callbacks) {
-      return exports.request("GET", url, null, callbacks);
+    Application.prototype.uninstall = function(callbacks) {
+      var _this = this;
+      return client.del("/api/applications/" + this.id + "/uninstall", {
+        success: function(data) {
+          _this.trigger('destroy', _this, _this.collection);
+          return callbacks.success(data);
+        },
+        error: callbacks.error
+      });
     };
 
-    exports.post = function(url, data, callbacks) {
-      return exports.request("POST", url, data, callbacks);
+    Application.prototype.updateApp = function(callbacks) {
+      var _this = this;
+      return client.put("/api/applications/" + this.id + "/update", {}, {
+        success: function(data) {
+          _this.set(data.app);
+          return callbacks.success(data);
+        },
+        error: callbacks.error
+      });
     };
 
-    exports.put = function(url, data, callbacks) {
-      return exports.request("PUT", url, data, callbacks);
-    };
-
-    exports.del = function(url, callbacks) {
-      return exports.request("DELETE", url, null, callbacks);
-    };
-
-  }).call(this);
-  
-});
-window.require.register("helpers/timezone", function(exports, require, module) {
-  (function() {
-
-    exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Maceio", "America/Managua", "America/Manaus", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montreal", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Vostok", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Canada/Atlantic", "Canada/Central", "Canada/Eastern", "Canada/Mountain", "Canada/Newfoundland", "Canada/Pacific", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/Simferopol", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zaporozhye", "Europe/Zurich", "GMT", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Ponape", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Truk", "Pacific/Wake", "Pacific/Wallis", "US/Alaska", "US/Arizona", "US/Central", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific", "UTC"];
-
-  }).call(this);
-  
-});
-window.require.register("initialize", function(exports, require, module) {
-  (function() {
-    var AccountView, ApplicationsView, BrunchApplication, HomeView, MainRouter,
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    BrunchApplication = require('./helpers').BrunchApplication;
-
-    MainRouter = require('routers/main_router').MainRouter;
-
-    HomeView = require('views/home_view').HomeView;
-
-    AccountView = require('views/account_view').AccountView;
-
-    ApplicationsView = require('views/applications_view').ApplicationsView;
-
-    exports.Application = (function(_super) {
-
-      __extends(Application, _super);
-
-      function Application() {
-        Application.__super__.constructor.apply(this, arguments);
+    Application.prototype.start = function(callbacks) {
+      var _this = this;
+      if (this.isRunning()) {
+        return null;
       }
-
-      Application.prototype.initialize = function() {
-        this.initializeJQueryExtensions();
-        this.routers = {};
-        this.views = {};
-        this.routers.main = new MainRouter();
-        this.views.home = new HomeView();
-        this.views.account = new AccountView();
-        this.views.applications = new ApplicationsView();
-        $("body").html(this.views.home.render());
-        this.views.home.setListeners();
-        this.views.home.fetch();
-        window.app = this;
-        Backbone.history.start();
-        if (Backbone.history.getFragment() === '') {
-          return window.app.routers.main.navigate('home', true);
-        }
-      };
-
-      return Application;
-
-    })(BrunchApplication);
-
-    new exports.Application;
-
-  }).call(this);
-  
-});
-window.require.register("models/application", function(exports, require, module) {
-  (function() {
-    var BaseModel, client,
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    BaseModel = require("models/models").BaseModel;
-
-    client = require("../helpers/client");
-
-    exports.Application = (function(_super) {
-
-      __extends(Application, _super);
-
-      Application.prototype.url = '/api/applications/';
-
-      function Application(app) {
-        var property;
-        Application.__super__.constructor.call(this);
-        for (property in app) {
-          this[property] = app[property];
-        }
-      }
-
-      Application.prototype.install = function(callbacks) {
-        var data,
-          _this = this;
-        data = {
-          name: this.name,
-          description: this.description,
-          git: this.git
+      if (!(callbacks != null)) {
+        callbacks = {
+          success: function() {},
+          error: function() {}
         };
-        return client.post('/api/applications/install', data, {
-          success: function(data) {
-            _this.slug = data.app.slug;
-            _this.state = data.app.state;
-            return callbacks.success(data);
-          },
-          error: callbacks.error
-        });
-      };
-
-      Application.prototype.uninstall = function(callbacks) {
-        return client.del("/api/applications/" + this.slug + "/uninstall", callbacks);
-      };
-
-      Application.prototype.updateApp = function(callbacks) {
-        return client.put("/api/applications/" + this.slug + "/update", {}, callbacks);
-      };
-
-      return Application;
-
-    })(BaseModel);
-
-  }).call(this);
-  
-});
-window.require.register("models/models", function(exports, require, module) {
-  (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    exports.BaseModel = (function(_super) {
-
-      __extends(BaseModel, _super);
-
-      function BaseModel() {
-        BaseModel.__super__.constructor.apply(this, arguments);
       }
+      return client.post("/api/applications/" + this.id + "/start", {}, {
+        success: function(data) {
+          _this.set(data.app);
+          return callbacks.success(data);
+        },
+        error: callbacks.error
+      });
+    };
 
-      BaseModel.prototype.isNew = function() {
-        return this.id === void 0;
-      };
+    Application.prototype.stop = function(callbacks) {
+      var _this = this;
+      if (!this.isRunning()) {
+        return null;
+      }
+      if (!(callbacks != null)) {
+        callbacks = {
+          success: function() {},
+          error: function() {}
+        };
+      }
+      return client.post("/api/applications/" + this.id + "/stop", {}, {
+        success: function(data) {
+          _this.set(data.app);
+          return callbacks.success(data);
+        },
+        error: callbacks.error
+      });
+    };
 
-      return BaseModel;
+    return Application;
 
-    })(Backbone.Model);
-
-  }).call(this);
+  })(Backbone.Model);
   
 });
 window.require.register("models/user", function(exports, require, module) {
-  (function() {
-    var BaseModel, client,
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var BaseModel, User, client,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    BaseModel = require("models/models").BaseModel;
+  BaseModel = require('lib/BaseModel').BaseModel;
 
-    client = require('../helpers/client');
+  client = require('helpers/client');
 
-    exports.User = (function(_super) {
+  module.exports = User = (function(_super) {
 
-      __extends(User, _super);
+    __extends(User, _super);
 
-      function User(email, password) {
-        this.email = email;
-        this.password = password;
-        User.__super__.constructor.call(this);
-      }
+    function User(email, password) {
+      this.email = email;
+      this.password = password;
+      User.__super__.constructor.call(this);
+    }
 
-      User.prototype.logout = function(callbacks) {
-        return client.get("logout/", callbacks);
-      };
+    User.prototype.logout = function(callbacks) {
+      return client.get("logout/", callbacks);
+    };
 
-      return User;
+    return User;
 
-    })(BaseModel);
-
-  }).call(this);
+  })(BaseModel);
   
 });
 window.require.register("routers/main_router", function(exports, require, module) {
-  (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var MainRouter,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    exports.MainRouter = (function(_super) {
+  module.exports = MainRouter = (function(_super) {
 
-      __extends(MainRouter, _super);
+    __extends(MainRouter, _super);
 
-      function MainRouter() {
-        MainRouter.__super__.constructor.apply(this, arguments);
-      }
+    function MainRouter() {
+      return MainRouter.__super__.constructor.apply(this, arguments);
+    }
 
-      MainRouter.prototype.routes = {
-        "home": "home",
-        "applications": "applications",
-        "account": "account",
-        "apps/:slug": "application",
-        "apps/:slug/*hash": "application"
-      };
+    MainRouter.prototype.routes = {
+      "home": "applicationList",
+      "applications": "applicationList",
+      "market": "market",
+      "account": "account",
+      "logout": "logout",
+      "apps/:slug": "application",
+      "apps/:slug/*hash": "application"
+    };
 
-      MainRouter.prototype.home = function() {
-        return this.applications();
-      };
+    MainRouter.prototype.market = function() {
+      return app.mainView.displayMarket();
+    };
 
-      MainRouter.prototype.applications = function() {
-        return app.views.home.home();
-      };
+    MainRouter.prototype.account = function() {
+      return app.mainView.displayAccount();
+    };
 
-      MainRouter.prototype.application = function(slug, hash) {
-        return app.views.home.loadApp(slug, hash);
-      };
+    MainRouter.prototype.applicationList = function() {
+      return app.mainView.displayApplicationsList();
+    };
 
-      MainRouter.prototype.account = function() {
-        return app.views.home.account();
-      };
+    MainRouter.prototype.application = function(slug, hash) {
+      return app.mainView.displayApplication(slug, hash);
+    };
 
-      return MainRouter;
+    MainRouter.prototype.logout = function() {
+      return app.mainView.logout();
+    };
 
-    })(Backbone.Router);
+    return MainRouter;
 
-  }).call(this);
+  })(Backbone.Router);
   
 });
 window.require.register("templates/account", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div');
-  buf.push(attrs({ 'id':('account-form'), "class": ('well') }));
-  buf.push('><p>email</p><p');
-  buf.push(attrs({ "class": ('field') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':('account-email-field') }));
-  buf.push('></a></p><p>timezone</p><p');
-  buf.push(attrs({ "class": ('field') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':('account-timezone-field') }));
-  buf.push('></a></p><p>domain</p><p');
-  buf.push(attrs({ "class": ('field') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':('account-domain-field') }));
-  buf.push('></a></p><p><button');
-  buf.push(attrs({ 'id':('change-password-button'), "class": ('btn') }));
-  buf.push('>Change password</button></p><div');
-  buf.push(attrs({ 'id':('change-password-form') }));
-  buf.push('><p>Change password</p><p><label>fill this field to set a new password</label><input');
-  buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
-  buf.push('/></p><p><label>confirm new password</label><input');
-  buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
-  buf.push('/></p><p><button');
-  buf.push(attrs({ 'id':('account-form-button'), "class": ("btn") }));
-  buf.push('>Send changes</button><p');
-  buf.push(attrs({ "class": ('loading-indicator') }));
-  buf.push('>&nbsp;</p><div');
-  buf.push(attrs({ 'id':('account-info'), "class": ('alert') + ' ' + ('main-alert') + ' ' + ('alert-success') + ' ' + ('hide') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('account-info-text') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ 'id':('account-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') + ' ' + ('hide') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('account-form-error-text') }));
-  buf.push('></div></div></p></div></div>');
-  }
-  return buf.join("");
-  };
-});
-window.require.register("templates/application", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<a');
-  buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('application-inner') }));
-  buf.push('><p><img');
-  buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
-  buf.push('/></p><p');
-  buf.push(attrs({ "class": ('app-title') }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div');
-  buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('btn-group') }));
-  buf.push('><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
-  buf.push('>remove</button><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
-  buf.push('>update</button></div><div><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('start-app') }));
-  buf.push('>start</button><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('stop-app') }));
-  buf.push('>stop</button></div></div>');
-  }
-  return buf.join("");
-  };
-});
-window.require.register("templates/application_button", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<li');
-  buf.push(attrs({ "class": ('app-button') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':("" + (app.slug) + ""), 'href':("#apps/" + (app.slug) + "") }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }));
-  buf.push('/></a></li>');
+  buf.push('<div id="account-form" class="well"><p>email</p><p class="field"><a id="account-email-field"></a></p><p>timezone</p><p class="field"><a id="account-timezone-field"></a></p><p>domain</p><p class="field"><a id="account-domain-field"></a></p><p><button id="change-password-button" class="btn">Change password</button></p><div id="change-password-form"><p>Change password</p><p><label>input your current password</label><input id="account-password0-field" type="password"/></p><p><label>fill this field to set a new password</label><input id="account-password1-field" type="password"/></p><p><label>confirm new password</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">Send changes</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"> </div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"> </div></div></p></div></div>');
   }
   return buf.join("");
   };
 });
 window.require.register("templates/application_iframe", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
   buf.push('<iframe');
-  buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }));
+  buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
   buf.push('></iframe>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/applications", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<div');
-  buf.push(attrs({ 'id':('no-app-message'), "class": ('center') + ' ' + ('hidden') }));
-  buf.push('><p>You have actually no application installed on your Cozy Cloud</p></div><div');
-  buf.push(attrs({ 'id':('app-list') }));
-  buf.push('></div><div');
-  buf.push(attrs({ "class": ('app-tools') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('machine-infos') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('memory') }));
-  buf.push('><div>Memory consumption\n(Total: <span class="total"></span>)\n</div><div');
-  buf.push(attrs({ "class": ('progress') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('bar') }));
-  buf.push('></div></div></div><div');
-  buf.push(attrs({ "class": ('disk') }));
-  buf.push('><div>Disk consumption \n(total: <span class="total"></span>)\n</div><div');
-  buf.push(attrs({ "class": ('progress') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('bar') }));
-  buf.push('></div></div></div></div><div');
-  buf.push(attrs({ "class": ('btn-group') }));
-  buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
-  buf.push('><i class="icon-plus"></i>\nadd\n</button><button');
-  buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
-  buf.push('>manage\n</button></div></div><div');
-  buf.push(attrs({ 'id':('add-app-modal'), "class": ('modal') + ' ' + ('right') + ' ' + ('hide') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('modal-header') }));
-  buf.push('><button');
-  buf.push(attrs({ 'type':("button"), 'data-dismiss':("modal"), 'aria-hidden':("true"), "class": ('close') }));
-  buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
-  buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('your-app') }));
-  buf.push('><p>Install \n<a');
-  buf.push(attrs({ 'href':("https://cozycloud.cc/make/"), 'target':("_blank") }));
-  buf.push('>your app</a></p><p><label>Git URL</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
-  buf.push('/></p><div');
-  buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('></div><div');
-  buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ 'id':('install-button') }));
-  buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button><button');
-  buf.push(attrs({ "class": ('loading-indicator') }));
-  buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></div><div');
-  buf.push(attrs({ "class": ('app-introduction') }));
-  buf.push('><p>Or install an existing one:\n</p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/bookmarks-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>bookmarks </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(community contribution)</span><p>Manage your bookmark easily\n</p><p><button');
-  buf.push(attrs({ 'id':('add-bookmarks-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/feeds-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>feeds </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(community contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-feeds-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/notes-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>notes </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(official application)</span><p>Store all your notes and files.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-notes-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/todos-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>todos </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(official application)</span><p>Write your tasks, order them and execute them efficiently.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-todos-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div></div></div>');
-  }
-  return buf.join("");
-  };
-});
 window.require.register("templates/home", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header');
-  buf.push(attrs({ 'id':('header'), "class": ('navbar') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('navbar-inner') + ' ' + ('clearfix') }));
-  buf.push('><h2');
-  buf.push(attrs({ 'id':('header-title') }));
-  buf.push('><a');
-  buf.push(attrs({ 'href':("http://cozycloud.cc/"), 'target':("_blank"), 'title':("home") }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/grey-logo.png"), 'alt':("Cozy Cloud Symbol") }));
-  buf.push('/></a></h2><div');
-  buf.push(attrs({ 'id':('buttons') }));
-  buf.push('><ul');
-  buf.push(attrs({ "class": ('nav') }));
-  buf.push('><li');
-  buf.push(attrs({ "class": ('active') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':('home-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-home') }));
-  buf.push('></i><span>&nbsp;Home</span></a></li><li><a');
-  buf.push(attrs({ 'id':('account-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-user') }));
-  buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
-  buf.push(attrs({ 'id':('help-button'), 'target':("_blank"), 'href':("https://questions-beta.cozycloud.cc/") }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-help') }));
-  buf.push('>&nbsp;</i></a></li><li><a');
-  buf.push(attrs({ 'id':('logout-button') }));
-  buf.push('><i');
-  buf.push(attrs({ "class": ('icon-arrow-right') }));
-  buf.push('></i></a></li></ul><ul');
-  buf.push(attrs({ "class": ('nav') }));
-  buf.push('></ul></div></div></header><div');
-  buf.push(attrs({ "class": ('home-body') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('app-frames') }));
-  buf.push('></div><div');
-  buf.push(attrs({ 'id':('content') }));
-  buf.push('></div></div>');
+  buf.push('<div id="no-app-message" class="center hidden"><p>You have actually no application installed on your Cozy Cloud</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>Memory consumption\n(Total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"> <div>Disk consumption \n(total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="add-app-button" class="btn"><i class="icon-plus"></i>\nadd</button><button id="manage-app-button" class="btn">manage</button></div></div>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/login", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+window.require.register("templates/home_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h2>Sign in</h2><div');
-  buf.push(attrs({ 'id':('login-form') }));
-  buf.push('><p><input');
-  buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
-  buf.push('/></p><p><a');
-  buf.push(attrs({ 'id':('forgot-password-button') }));
-  buf.push('>forgot password ?</a></p><div');
-  buf.push(attrs({ 'id':('login-info'), "class": ('alert') + ' ' + ('main-alert') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('login-info-text') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('login-form-error-text') }));
-  buf.push('></div></div></div>');
+  buf.push('<a');
+  buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p><p class="broken-notifier">broken app</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">remove</button><button class="btn update-app">update</button></div><div><button class="btn btn-large startStop-app">start</button></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/layout", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"></div></div>');
   }
   return buf.join("");
   };
 });
 window.require.register("templates/market", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h1>Market Place</h1><h2>Select application you want in your browser.</h2><div');
-  buf.push(attrs({ 'id':('app-list') }));
-  buf.push('></div>');
+  buf.push('<h1>Market Place</h1><div id="your-app" class="cozy-app"><button id="add-app-submit" class="btn btn-orange">install</button><p>Install <a href="https://cozycloud.cc/make/" target="_blank">your app</a></p><p><label>Git URL</label><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div><div id="app-market-list"><div id="no-app-message" class="cozy-app"> \nYou have already installed everything !</div></div>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/register", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+window.require.register("templates/market_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h2>Register to your Cozy</h2><div');
-  buf.push(attrs({ 'id':('login-form') }));
-  buf.push('><p><input');
-  buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
-  buf.push('/><input');
-  buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
-  buf.push('/><div');
-  buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('register-error-text') }));
-  buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
+  buf.push('<img');
+  buf.push(attrs({ 'src':("" + (app.icon) + ""), "class": ('pull-left') }, {"src":true}));
+  buf.push('/><button');
+  buf.push(attrs({ 'id':("add-" + (app.slug) + "-install"), "class": ('btn') + ' ' + ('btn-orange') }, {"id":true}));
+  buf.push('>install</button><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">' + escape((interp = app.comment) == null ? '' : interp) + '</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/reset", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+window.require.register("templates/navbar", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h1>Reset Password</h1><div');
-  buf.push(attrs({ "class": ('well') }));
-  buf.push('><form');
-  buf.push(attrs({ 'id':('reset-form') }));
-  buf.push('><p><label>fill this field to set a new password:</label><input');
-  buf.push(attrs({ 'id':('reset-password1-field'), 'type':("password") }));
-  buf.push('/></p><p><label>confirm new password:</label><input');
-  buf.push(attrs({ 'id':('reset-password2-field'), 'type':("password") }));
-  buf.push('/></p><p><button');
-  buf.push(attrs({ 'id':('reset-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button></p></form></div>');
+  buf.push('<div class="navbar-inner clearfix"><h2 id="header-title"><a href="http://cozycloud.cc/" target="_blank" title="home"> <img src="img/grey-logo.png" alt="Cozy Cloud Symbol"/></a></h2><div id="buttons"><ul class="nav"><li class="active"><a id="home-button" href="#home"><i class="icon-home"></i><span>&nbsp;Home</span></a></li><li><a id="market-button" href="#market"><i class="icon-plus"></i><span>&nbsp;Market</span></a></li><li><a id="account-button" href="#account"><i class="icon-user"></i><span>&nbsp;Account</span></a></li><li><a id="help-button" href="https://questions-beta.cozycloud.cc/" target="_blank"><i class="icon-help">&nbsp;</i></a></li><li><a id="logout-button" href="#logout"><i class="icon-arrow-right"></i></a></li></ul></div></div>');
   }
   return buf.join("");
   };
 });
-window.require.register("views/account_view", function(exports, require, module) {
-  (function() {
-    var template, timezones,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+window.require.register("templates/navbar_app_btn", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<li class="app-button"><a');
+  buf.push(attrs({ 'id':("" + (app.slug) + ""), 'href':("#apps/" + (app.slug) + "") }, {"id":true,"href":true}));
+  buf.push('><img');
+  buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }, {"src":true}));
+  buf.push('/></a></li>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("views/account", function(exports, require, module) {
+  var BaseView, timezones,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    template = require('../templates/account');
+  BaseView = require('lib/BaseView');
 
-    timezones = require('../helpers/timezone').timezones;
+  timezones = require('helpers/timezone').timezones;
 
-    exports.AccountView = (function(_super) {
+  module.exports = exports.AccountView = (function(_super) {
 
-      __extends(AccountView, _super);
+    __extends(AccountView, _super);
 
-      AccountView.prototype.id = 'account-view';
+    AccountView.prototype.id = 'account-view';
 
-      /* Constructor
-      */
+    AccountView.prototype.template = require('templates/account');
 
-      function AccountView() {
-        this.displayErrors = __bind(this.displayErrors, this);
-        this.onDataSubmit = __bind(this.onDataSubmit, this);
-        this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);      AccountView.__super__.constructor.call(this);
-      }
+    /* Constructor
+    */
 
-      AccountView.prototype.onChangePasswordClicked = function() {
-        var _this = this;
-        return this.changePasswordButton.fadeOut(function() {
-          return _this.changePasswordForm.fadeIn(function() {
-            return _this.password1Field.focus();
-          });
+
+    function AccountView() {
+      this.displayErrors = __bind(this.displayErrors, this);
+
+      this.onDataSubmit = __bind(this.onDataSubmit, this);
+
+      this.closePasswordForm = __bind(this.closePasswordForm, this);
+
+      this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);
+      AccountView.__super__.constructor.call(this);
+    }
+
+    AccountView.prototype.onChangePasswordClicked = function() {
+      var _this = this;
+      return this.changePasswordButton.fadeOut(function() {
+        return _this.changePasswordForm.fadeIn(function() {
+          return _this.password1Field.focus();
         });
-      };
+      });
+    };
 
-      AccountView.prototype.onDataSubmit = function(event) {
-        var form,
-          _this = this;
-        this.loadingIndicator.spin();
-        form = {
-          password1: $("#account-password1-field").val(),
-          password2: $("#account-password2-field").val()
-        };
-        this.infoAlert.hide();
-        this.errorAlert.hide();
-        return $.ajax({
-          type: 'POST',
-          url: "api/user/",
-          data: form,
-          success: function(data) {
-            if (data.success) {
-              _this.infoAlert.html(data.msg);
-              _this.infoAlert.show();
-              $("#account-password1-field").val(null);
-              $("#account-password2-field").val(null);
-            } else {
-              _this.displayErrors(JSON.parse(data.responseText).msg);
-            }
-            return _this.loadingIndicator.spin();
-          },
-          error: function(data) {
+    AccountView.prototype.closePasswordForm = function() {
+      var _this = this;
+      return this.changePasswordForm.fadeOut(function() {
+        return _this.changePasswordButton.fadeIn();
+      });
+    };
+
+    AccountView.prototype.onDataSubmit = function(event) {
+      var form,
+        _this = this;
+      this.loadingIndicator.spin();
+      form = {
+        password0: $("#account-password0-field").val(),
+        password1: $("#account-password1-field").val(),
+        password2: $("#account-password2-field").val()
+      };
+      this.infoAlert.hide();
+      this.errorAlert.hide();
+      return $.ajax({
+        type: 'POST',
+        url: "api/user/",
+        data: form,
+        success: function(data) {
+          if (data.success) {
+            _this.infoAlert.html(data.msg);
+            _this.infoAlert.show();
+            $("#account-password0-field").val(null);
+            $("#account-password1-field").val(null);
+            $("#account-password2-field").val(null);
+          } else {
             _this.displayErrors(JSON.parse(data.responseText).msg);
-            return _this.loadingIndicator.spin();
           }
-        });
-      };
+          return _this.loadingIndicator.spin();
+        },
+        error: function(data) {
+          $("#account-password0-field").val(null);
+          _this.displayErrors(JSON.parse(data.responseText).msg);
+          return _this.loadingIndicator.spin();
+        }
+      });
+    };
 
-      AccountView.prototype.submitData = function(form, url) {
-        var _this = this;
-        if (url == null) url = 'api/user/';
-        return $.ajax({
-          type: 'POST',
-          url: url,
-          data: form,
-          success: function(data) {
-            var d;
-            if (!data.success) {
-              d = new $.Deferred;
-              return d.reject(JSON.parse(data.responseText).msg);
-            }
-          },
-          error: function(data) {
-            var d;
+    AccountView.prototype.submitData = function(form, url) {
+      var _this = this;
+      if (url == null) {
+        url = 'api/user/';
+      }
+      return $.ajax({
+        type: 'POST',
+        url: url,
+        data: form,
+        success: function(data) {
+          var d;
+          if (!data.success) {
             d = new $.Deferred;
             return d.reject(JSON.parse(data.responseText).msg);
           }
-        });
-      };
-
-      /* Functions
-      */
-
-      AccountView.prototype.displayErrors = function(msgs) {
-        var errorString, msg, _i, _len;
-        errorString = "";
-        for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-          msg = msgs[_i];
-          errorString += msg + "<br />";
+        },
+        error: function(data) {
+          var d;
+          d = new $.Deferred;
+          return d.reject(JSON.parse(data.responseText).msg);
         }
-        this.errorAlert.html(errorString);
-        return this.errorAlert.show();
-      };
+      });
+    };
 
-      AccountView.prototype.fetchData = function() {
-        var _this = this;
-        return $.get("api/users/", function(data) {
-          var timezone, timezoneData, timezoneIndex, _i, _len;
-          _this.emailField.html(data.rows[0].email);
-          timezoneIndex = {};
-          _this.timezoneField.html(data.rows[0].timezone);
-          timezoneData = [];
-          for (_i = 0, _len = timezones.length; _i < _len; _i++) {
-            timezone = timezones[_i];
-            timezoneData.push({
-              value: timezone,
-              text: timezone
+    /* Functions
+    */
+
+
+    AccountView.prototype.displayErrors = function(msgs) {
+      var errorString, msg, _i, _len;
+      errorString = "";
+      for (_i = 0, _len = msgs.length; _i < _len; _i++) {
+        msg = msgs[_i];
+        errorString += msg + "<br />";
+      }
+      this.errorAlert.html(errorString);
+      return this.errorAlert.show();
+    };
+
+    AccountView.prototype.fetchData = function() {
+      var _this = this;
+      return $.get("api/users/", function(data) {
+        var timezone, timezoneData, timezoneIndex, _i, _len;
+        _this.emailField.html(data.rows[0].email);
+        timezoneIndex = {};
+        _this.timezoneField.html(data.rows[0].timezone);
+        timezoneData = [];
+        for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+          timezone = timezones[_i];
+          timezoneData.push({
+            value: timezone,
+            text: timezone
+          });
+        }
+        _this.emailField.editable({
+          url: function(params) {
+            return _this.submitData({
+              email: params.value
             });
+          },
+          type: 'text',
+          send: 'always',
+          value: data.rows[0].email
+        });
+        _this.timezoneField.editable({
+          url: function(params) {
+            return _this.submitData({
+              timezone: params.value
+            });
+          },
+          type: 'select',
+          send: 'always',
+          source: timezoneData,
+          value: data.rows[0].timezone
+        });
+        return $.get("api/instances/", function(data) {
+          var domain;
+          if ((data.rows != null) && data.rows.length > 0) {
+            domain = data.rows[0].domain;
+          } else {
+            domain = 'no.domain.set';
           }
-          _this.emailField.editable({
+          _this.domainField.html(domain);
+          return _this.domainField.editable({
             url: function(params) {
               return _this.submitData({
-                email: params.value
-              });
+                domain: params.value
+              }, 'api/instance/');
             },
             type: 'text',
             send: 'always',
-            value: data.rows[0].email
-          });
-          _this.timezoneField.editable({
-            url: function(params) {
-              return _this.submitData({
-                timezone: params.value
-              });
-            },
-            type: 'select',
-            send: 'always',
-            source: timezoneData,
-            value: data.rows[0].timezone
-          });
-          return $.get("api/instances/", function(data) {
-            var domain;
-            if ((data.rows != null) && data.rows.length > 0) {
-              domain = data.rows[0].domain;
-            } else {
-              domain = 'no.domain.set';
-            }
-            _this.domainField.html(domain);
-            return _this.domainField.editable({
-              url: function(params) {
-                return _this.submitData({
-                  domain: params.value
-                }, 'api/instance/');
-              },
-              type: 'text',
-              send: 'always',
-              value: domain
-            });
+            value: domain
           });
         });
-      };
+      });
+    };
 
-      /* Configuration
-      */
+    /* Configuration
+    */
 
-      AccountView.prototype.render = function() {
-        this.$el.html(template());
-        return this.el;
-      };
 
-      AccountView.prototype.setListeners = function() {
-        var _this = this;
-        app.views.home.selectNavButton(app.views.home.accountButton);
-        this.emailField = this.$('#account-email-field');
-        this.timezoneField = this.$('#account-timezone-field');
-        this.domainField = $('#account-domain-field');
-        this.infoAlert = this.$('#account-info');
-        this.infoAlert.hide();
-        this.errorAlert = this.$('#account-error');
-        this.errorAlert.hide();
-        this.changePasswordForm = this.$('#change-password-form');
-        this.changePasswordForm.hide();
-        this.changePasswordButton = this.$('#change-password-button');
-        this.changePasswordButton.click(this.onChangePasswordClicked);
-        this.accountSubmitButton = this.$('#account-form-button');
-        this.password1Field = $('#account-password1-field');
-        this.password2Field = $('#account-password2-field');
-        this.password1Field.keyup(function(event) {
-          if (event.which === 13) return _this.password2Field.focus();
-        });
-        this.password2Field.keyup(function(event) {
-          if (event.which === 13) return _this.onDataSubmit();
-        });
-        this.accountSubmitButton.click(function(event) {
-          event.preventDefault();
+    AccountView.prototype.afterRender = function() {
+      var _this = this;
+      this.emailField = this.$('#account-email-field');
+      this.timezoneField = this.$('#account-timezone-field');
+      this.domainField = this.$('#account-domain-field');
+      this.infoAlert = this.$('#account-info');
+      this.infoAlert.hide();
+      this.errorAlert = this.$('#account-error');
+      this.errorAlert.hide();
+      this.changePasswordForm = this.$('#change-password-form');
+      this.changePasswordForm.hide();
+      this.changePasswordButton = this.$('#change-password-button');
+      this.changePasswordButton.click(this.onChangePasswordClicked);
+      this.accountSubmitButton = this.$('#account-form-button');
+      this.password1Field = $('#account-password1-field');
+      this.password2Field = $('#account-password2-field');
+      this.password1Field.keyup(function(event) {
+        if (event.which === 13) {
+          return _this.password2Field.focus();
+        }
+      });
+      this.password2Field.keyup(function(event) {
+        if (event.which === 13) {
           return _this.onDataSubmit();
-        });
-        this.installInfo = this.$('#add-app-modal .loading-indicator');
-        this.errorAlert.hide();
-        this.infoAlert.hide();
-        this.addApplicationCloseCross = this.$('#add-app-modal .close');
-        this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-        return this.loadingIndicator = this.$('.loading-indicator');
-      };
-
-      return AccountView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-});
-window.require.register("views/application", function(exports, require, module) {
-  (function() {
-    var BaseRow, template,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    template = require('../templates/application');
-
-    BaseRow = require('views/row').BaseRow;
-
-    exports.ApplicationRow = (function(_super) {
-
-      __extends(ApplicationRow, _super);
-
-      ApplicationRow.prototype.className = "application";
-
-      ApplicationRow.prototype.events = {
-        "click .remove-app": "onRemoveClicked",
-        "click .update-app": "onUpdateClicked"
-      };
-
-      /* Constructor
-      */
-
-      function ApplicationRow(model) {
-        this.model = model;
-        this.onUpdateClicked = __bind(this.onUpdateClicked, this);
-        this.onRemoveClicked = __bind(this.onRemoveClicked, this);
-        ApplicationRow.__super__.constructor.call(this, this.model);
-      }
-
-      /* Listener
-      */
-
-      ApplicationRow.prototype.onRemoveClicked = function(event) {
-        event.preventDefault();
-        return this.removeApp();
-      };
-
-      ApplicationRow.prototype.onUpdateClicked = function(event) {
-        event.preventDefault();
-        return this.updateApp();
-      };
-
-      /* Functions
-      */
-
-      ApplicationRow.prototype.removeApp = function() {
-        var _this = this;
-        this.removeButton.html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        this.removeButton.spin("small");
-        return this.model.uninstall({
-          success: function() {
-            _this.removeButton.html("Removed");
-            _this.removeButton.addClass('btn-green');
-            Backbone.Mediator.publish("app:removed", _this.model.slug);
-            _this.updateButton.unbind();
-            _this.removeButton.unbind();
-            return setTimeout(function() {
-              return _this.$el.fadeOut(function() {
-                return _this.remove();
-              });
-            }, 1000);
-          },
-          error: function() {
-            _this.removeButton.html("failed.");
-            return _this.removeButton.addClass('btn-red');
-          }
-        });
-      };
-
-      ApplicationRow.prototype.updateApp = function() {
-        var _this = this;
-        this.updateButton.html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        this.updateButton.spin("small");
-        this.updateButton.removeClass('btn-green');
-        this.updateButton.removeClass('btn-red');
-        return this.model.updateApp({
-          success: function() {
-            _this.updateButton.html("Updated");
-            return _this.updateButton.addClass('btn-green');
-          },
-          error: function() {
-            _this.updateButton.html("failed");
-            return _this.updateButton.addClass('btn-red');
-          }
-        });
-      };
-
-      /* configuration
-      */
-
-      ApplicationRow.prototype.render = function() {
-        var _this = this;
-        this.$el.html(template({
-          app: this.model
-        }));
-        this.el.id = this.model.slug;
-        if (this.model.state === "broken") {
-          this.$el.addClass("broken");
-          this.$el.find(".application-inner").append('<p class="broken-notifier">broken app<p>');
         }
-        if (this.model.state === "stopped") {
-          this.$el.addClass("stopped");
-          this.$(".stop-app").hide();
-          this.$(".start-app").hide();
-        } else {
-          this.$(".stop-app").hide();
-          this.$(".start-app").hide();
-        }
-        this.$el.find('.application-inner').click(function(event) {
-          event.preventDefault();
-          return window.app.routers.main.navigate("apps/" + _this.model.slug, true);
-        });
-        this.updateButton = this.$(".update-app");
-        this.removeButton = this.$(".remove-app");
-        return this.el;
-      };
-
-      return ApplicationRow;
-
-    })(BaseRow);
-
-  }).call(this);
-  
-});
-window.require.register("views/applications_view", function(exports, require, module) {
-  (function() {
-    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate, client,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    client = require('../helpers/client');
-
-    applicationsTemplate = require('../templates/applications');
-
-    User = require('../models/user').User;
-
-    AppRow = require('views/application').ApplicationRow;
-
-    AppCollection = require('collections/application').ApplicationCollection;
-
-    Application = require("models/application").Application;
-
-    InstallButton = require("views/install_button");
-
-    String.prototype.startsWith = function(prefix) {
-      return this.indexOf(prefix, 0) === 0;
+      });
+      this.accountSubmitButton.click(function(event) {
+        event.preventDefault();
+        return _this.onDataSubmit();
+      });
+      this.installInfo = this.$('#add-app-modal .loading-indicator');
+      this.errorAlert.hide();
+      this.infoAlert.hide();
+      this.addApplicationCloseCross = this.$('#add-app-modal .close');
+      this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
+      this.loadingIndicator = this.$('.loading-indicator');
+      return this.fetchData();
     };
 
-    String.prototype.endsWith = function(suffix) {
-      return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    return AccountView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/home", function(exports, require, module) {
+  var ApplicationRow, ApplicationsListView, BaseView, client,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/BaseView');
+
+  client = require('helpers/client');
+
+  ApplicationRow = require('views/home_application');
+
+  String.prototype.startsWith = function(prefix) {
+    return this.indexOf(prefix, 0) === 0;
+  };
+
+  String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+  };
+
+  module.exports = ApplicationsListView = (function(_super) {
+
+    __extends(ApplicationsListView, _super);
+
+    ApplicationsListView.prototype.id = 'applications-view';
+
+    ApplicationsListView.prototype.template = require('templates/home');
+
+    ApplicationsListView.prototype.events = {
+      'click #add-app-button': 'onAddClicked',
+      'click #manage-app-button': 'onManageAppsClicked'
     };
 
-    exports.ApplicationsView = (function(_super) {
+    /* Constructor
+    */
 
-      __extends(ApplicationsView, _super);
 
-      ApplicationsView.prototype.id = 'applications-view';
+    function ApplicationsListView(apps) {
+      this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
 
-      ApplicationsView.prototype.subscriptions = {
-        "app:removed": "onAppRemoved"
-      };
+      this.onAddClicked = __bind(this.onAddClicked, this);
 
-      /* Constructor
-      */
+      this.onAppRemoved = __bind(this.onAppRemoved, this);
 
-      function ApplicationsView() {
-        this.hideError = __bind(this.hideError, this);
-        this.displayError = __bind(this.displayError, this);
-        this.displayInfo = __bind(this.displayInfo, this);
-        this.checkData = __bind(this.checkData, this);
-        this.addApplication = __bind(this.addApplication, this);
-        this.clearApps = __bind(this.clearApps, this);
-        this.onCloseAddAppClicked = __bind(this.onCloseAddAppClicked, this);
-        this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
-        this.extractName = __bind(this.extractName, this);
-        this.runInstallation = __bind(this.runInstallation, this);
-        this.onInstallClicked = __bind(this.onInstallClicked, this);
-        this.onAppRemoved = __bind(this.onAppRemoved, this);
-        this.onAddClicked = __bind(this.onAddClicked, this);      ApplicationsView.__super__.constructor.call(this);
-        this.isManaging = false;
-        this.isInstalling = false;
-        this.apps = new AppCollection(this);
+      this.addApplication = __bind(this.addApplication, this);
+
+      this.onApplicationListReady = __bind(this.onApplicationListReady, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.apps = apps;
+      this.isManaging = false;
+      ApplicationsListView.__super__.constructor.call(this);
+    }
+
+    ApplicationsListView.prototype.afterRender = function() {
+      this.appList = this.$("#app-list");
+      this.manageAppsButton = this.$("#manage-app-button");
+      this.addApplicationButton = this.$("#add-app-button");
+      this.infoAlert = this.$("#add-app-form .info");
+      this.errorAlert = this.$("#add-app-form .error");
+      this.machineInfos = this.$(".machine-infos");
+      this.machineInfos.hide();
+      this.noAppMessage = this.$('#no-app-message');
+      if (this.apps.length > 0) {
+        onApplicationListReady(this.apps);
       }
+      this.apps.bind('reset', this.onApplicationListReady);
+      this.apps.bind('add', this.addApplication);
+      return this.apps.bind('remove', this.onAppRemoved);
+    };
 
-      /* Listeners
-      */
+    /* Collection Listeners
+    */
 
-      ApplicationsView.prototype.onAddClicked = function() {
-        var allHidden, app, button, name, _i, _len, _ref, _ref2, _ref3;
-        this.installAppButton.displayOrange("install");
-        this.appNameField.val(null);
-        this.appGitField.val(null);
-        this.addApplicationForm.show();
-        this.addApplicationModal.toggle();
-        this.appNameField.focus();
-        this.isInstalling = false;
-        _ref = this.installButtons;
-        for (name in _ref) {
-          button = _ref[name];
-          button.showParent();
-        }
-        _ref2 = this.apps.toArray();
-        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-          app = _ref2[_i];
-          button = this.installButtons[app.name];
-          if (button != null) button.hideParent();
-        }
-        allHidden = true;
-        _ref3 = this.installButtons;
-        for (name in _ref3) {
-          button = _ref3[name];
-          if (!button.isHidden()) allHidden = false;
-        }
-        if (allHidden) {
-          return $(".app-introduction").hide();
-        } else {
-          return $(".app-introduction").show();
-        }
-      };
 
-      ApplicationsView.prototype.onAppRemoved = function(slug) {
-        var app, _i, _len, _ref, _results;
-        _ref = this.apps.toArray();
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          app = _ref[_i];
-          if (app.slug === slug) {
-            this.apps.remove(app);
-            break;
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
-      };
-
-      ApplicationsView.prototype.onInstallClicked = function(event) {
-        var data;
-        data = {
-          git: this.$("#app-git-field").val()
-        };
-        this.runInstallation(data, this.installAppButton);
-        event.preventDefault();
-        return false;
-      };
-
-      ApplicationsView.prototype.runInstallation = function(data, button) {
-        var app, dataChecking,
-          _this = this;
-        if (this.isInstalling) return true;
-        if (button.isGreen()) return true;
-        this.isInstalling = true;
-        this.hideError();
-        button.displayOrange("install");
-        dataChecking = this.checkData(data);
-        if (!dataChecking.error) {
-          data.name = this.extractName(data.git);
-          this.errorAlert.hide();
-          button.button.html("&nbsp;&nbsp;&nbsp;&nbsp;");
-          button.spin();
-          app = new Application(data);
-          return app.install({
-            success: function(data) {
-              if (((data.status != null) === "broken") || !data.success) {
-                _this.apps.add(app);
-                window.app.views.home.addApplication(app);
-                button.spin();
-                button.displayRed("Install failed");
-                return _this.isInstalling = false;
-              } else {
-                _this.apps.add(app);
-                window.app.views.home.addApplication(app);
-                button.spin();
-                button.displayGreen("Install succeeded!");
-                return _this.isInstalling = false;
-              }
-            },
-            error: function(data) {
-              _this.isInstalling = false;
-              button.displayRed("Install failed");
-              return button.spin();
-            }
-          });
-        } else {
-          this.isInstalling = false;
-          return this.displayError(dataChecking.msg);
-        }
-      };
-
-      ApplicationsView.prototype.extractName = function(gitUrl) {
-        var name, strings;
-        strings = gitUrl.split("/");
-        name = strings[strings.length - 1];
-        name = name.substring(0, name.length - 4);
-        name = name.replace(/-|_/g, " ");
-        if (name.indexOf("cozy ") === 0) name = name.substring(5);
-        return name;
-      };
-
-      ApplicationsView.prototype.onManageAppsClicked = function() {
-        var _this = this;
-        if (!this.machineInfos.is(':visible')) {
-          this.$('.application-outer').show();
-          this.machineInfos.find('.progress').spin();
-          this.manageAppsButton.addClass('pressed');
-          client.get('api/sys-data', {
-            success: function(data) {
-              _this.machineInfos.find('.progress').spin();
-              _this.displayMemory(data.freeMem, data.totalMem);
-              return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
-            },
-            error: function() {
-              _this.machineInfos.find('.progress').spin();
-              return alert('Server error occured, infos cannot be displayed.');
-            }
-          });
-        } else {
-          this.$('.application-outer').hide();
-          this.manageAppsButton.removeClass('pressed');
-        }
-        this.machineInfos.toggle();
-        return this.isManaging = !this.isManaging;
-      };
-
-      ApplicationsView.prototype.onCloseAddAppClicked = function() {
-        this.addApplicationModal.hide();
-        return this.isInstalling = false;
-      };
-
-      /* Functions
-      */
-
-      ApplicationsView.prototype.clearApps = function() {
-        return this.appList.html(null);
-      };
-
-      ApplicationsView.prototype.addApplication = function(application) {
-        var appButton, el, row;
-        row = new AppRow(application);
-        el = row.render();
-        this.appList.append(el);
-        appButton = this.$(el);
-        appButton.hide();
-        appButton.fadeIn();
-        if (this.isManaging) return appButton.find(".application-outer").show();
-      };
-
-      ApplicationsView.prototype.checkData = function(data) {
-        var property, rightData, _ref;
-        rightData = true;
-        for (property in data) {
-          rightData = (data[property] != null) && data[property].length > 0;
-          if (!rightData) break;
-        }
-        if (!rightData) {
-          ({
-            error: true,
-            msg: "All fields are required"
-          });
-        }
-        if (data.git != null) {
-          if (!data.git.endsWith(".git")) data.git += ".git";
-          data.git.replace("git://", "https://");
-          return data.git.replace("git@github.com", "https://github.com/");
-        } else if (!((_ref = data.git) != null ? _ref.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/) : void 0)) {
-          return {
-            error: true,
-            msg: "Git url should be of form https://.../my-repo.git"
-          };
-        } else {
-          return {
-            error: false
-          };
-        }
-      };
-
-      ApplicationsView.prototype.displayInfo = function(msg) {
-        this.errorAlert.hide();
-        this.infoAlert.html(msg);
-        return this.infoAlert.show();
-      };
-
-      ApplicationsView.prototype.displayError = function(msg) {
-        this.infoAlert.hide();
-        this.errorAlert.html(msg);
-        return this.errorAlert.show();
-      };
-
-      ApplicationsView.prototype.hideError = function() {
-        return this.errorAlert.hide();
-      };
-
-      ApplicationsView.prototype.displayMemory = function(freeMem, totalMem) {
-        var total, usedMemory;
-        total = Math.floor(totalMem / 1024) + "Mo";
-        this.machineInfos.find('.memory .total').html(total);
-        usedMemory = ((totalMem - freeMem) / totalMem) * 100;
-        return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
-      };
-
-      ApplicationsView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
-        this.machineInfos.find('.disk .total').html(totalSpace + "Go");
-        return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
-      };
-
-      ApplicationsView.prototype.displayNoAppMessage = function() {
+    ApplicationsListView.prototype.onApplicationListReady = function(apps) {
+      this.appList.html(null);
+      if (apps.length === 0) {
         return this.noAppMessage.show();
-      };
-
-      /* Init functions
-      */
-
-      ApplicationsView.prototype.fetchData = function() {
-        return this.apps.fetch();
-      };
-
-      ApplicationsView.prototype.render = function() {
-        $(this.el).html(applicationsTemplate());
-        this.isManaging = false;
-        return this.el;
-      };
-
-      ApplicationsView.prototype.addInstallButton = function(name, url) {
-        var button,
-          _this = this;
-        if (this.installButtons == null) this.installButtons = {};
-        button = new InstallButton(this.$("#add-" + name + "-submit"));
-        button.button.click(function() {
-          var data;
-          data = {
-            git: url
-          };
-          if (!button.isGreen()) _this.runInstallation(data, button);
-          return false;
-        });
-        return this.installButtons[name] = button;
-      };
-
-      ApplicationsView.prototype.setListeners = function() {
-        var _this = this;
-        this.appList = this.$("#app-list");
-        this.addApplicationButton = this.$("#add-app-button");
-        this.addApplicationButton.click(this.onAddClicked);
-        this.addApplicationForm = this.$("#add-app-form");
-        this.addApplicationModal = this.$("#add-app-modal");
-        this.manageAppsButton = this.$("#manage-app-button");
-        this.manageAppsButton.click(this.onManageAppsClicked);
-        this.installAppButton = new InstallButton(this.$("#add-app-submit"));
-        this.installAppButton.button.click(this.onInstallClicked);
-        this.addInstallButton("notes", "https://github.com/mycozycloud/cozy-notes.git");
-        this.addInstallButton("todos", "https://github.com/mycozycloud/cozy-todos.git");
-        this.addInstallButton("bookmarks", "https://github.com/Piour/cozy-bookmarks.git");
-        this.addInstallButton("feeds", "https://github.com/Piour/cozy-feeds.git");
-        this.infoAlert = this.$("#add-app-form .info");
-        this.errorAlert = this.$("#add-app-form .error");
-        this.machineInfos = this.$(".machine-infos");
-        this.noAppMessage = this.$('#no-app-message');
-        this.appNameField = this.$("#app-name-field");
-        this.appGitField = this.$("#app-git-field");
-        this.appNameField.keyup(function(event) {
-          if (event.which === 13) return _this.appGitField.focus();
-        });
-        this.appGitField.keyup(function(event) {
-          if (event.which === 13) return _this.onInstallClicked();
-        });
-        this.installInfo = this.$("#add-app-modal .loading-indicator");
-        this.errorAlert.hide();
-        this.infoAlert.hide();
-        this.machineInfos.hide();
-        this.addApplicationCloseCross = this.$("#add-app-modal .close");
-        return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-      };
-
-      return ApplicationsView;
-
-    })(Backbone.View);
-
-  }).call(this);
-  
-});
-window.require.register("views/home_view", function(exports, require, module) {
-  (function() {
-    var AppCollection, User, appButtonTemplate, appIframeTemplate, homeTemplate,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    homeTemplate = require('../templates/home');
-
-    appButtonTemplate = require("../templates/application_button");
-
-    appIframeTemplate = require("../templates/application_iframe");
-
-    AppCollection = require('../collections/application').ApplicationCollection;
-
-    User = require("../models/user").User;
-
-    exports.HomeView = (function(_super) {
-
-      __extends(HomeView, _super);
-
-      HomeView.prototype.id = 'home-view';
-
-      function HomeView() {
-        this.addApplication = __bind(this.addApplication, this);
-        this.clearApps = __bind(this.clearApps, this);
-        this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
-        this.account = __bind(this.account, this);
-        this.home = __bind(this.home, this);
-        this.logout = __bind(this.logout, this);
-        this.onAppRemoved = __bind(this.onAppRemoved, this);      HomeView.__super__.constructor.call(this);
-        this.apps = new AppCollection(this);
+      } else {
+        return apps.forEach(this.addApplication);
       }
+    };
 
-      HomeView.prototype.subscriptions = {
-        "app:removed": "onAppRemoved"
-      };
+    ApplicationsListView.prototype.addApplication = function(application) {
+      var appButton, row;
+      row = new ApplicationRow(application);
+      this.appList.append(row.el);
+      appButton = this.$(row.el);
+      appButton.hide().fadeIn();
+      if (this.isManaging) {
+        appButton.find(".application-outer").css('display', 'block');
+      }
+      return this.noAppMessage.hide();
+    };
 
-      HomeView.prototype.onAppRemoved = function(slug) {
-        return this.buttons.find("#" + slug).remove();
-      };
+    ApplicationsListView.prototype.onAppRemoved = function(slug) {
+      if (this.apps.length === 0) {
+        return this.noAppMessage.show();
+      }
+    };
 
-      /* Functions
-      */
+    /* Listeners
+    */
 
-      HomeView.prototype.logout = function(event) {
-        var user,
-          _this = this;
-        user = new User();
-        user.logout({
+
+    ApplicationsListView.prototype.onAddClicked = function(event) {
+      event.preventDefault();
+      return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('market', true) : void 0;
+    };
+
+    ApplicationsListView.prototype.onManageAppsClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      if (!this.machineInfos.is(':visible')) {
+        this.$('.application-outer').show();
+        this.machineInfos.find('.progress').spin();
+        this.manageAppsButton.addClass('pressed');
+        client.get('api/sys-data', {
           success: function(data) {
-            return window.location.reload();
+            _this.machineInfos.find('.progress').spin();
+            _this.displayMemory(data.freeMem, data.totalMem);
+            return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
           },
           error: function() {
-            return alert("Server error occured, logout failed.");
+            _this.machineInfos.find('.progress').spin();
+            return alert('Server error occured, infos cannot be displayed.');
           }
         });
-        return event.preventDefault();
-      };
+      } else {
+        this.$('.application-outer').hide();
+        this.manageAppsButton.removeClass('pressed');
+      }
+      this.machineInfos.toggle();
+      return this.isManaging = !this.isManaging;
+    };
 
-      HomeView.prototype.home = function() {
-        var view;
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate('home', false);
-        }
-        this.content.show();
-        this.frames.hide();
-        view = app.views.applications;
-        $("#content").html(view.render());
-        view.fetchData();
-        view.setListeners();
-        this.selectNavButton(this.homeButton);
-        return window.document.title = "Cozy - Home";
-      };
+    ApplicationsListView.prototype.displayMemory = function(freeMem, totalMem) {
+      var total, usedMemory;
+      total = Math.floor(totalMem / 1024) + "Mo";
+      this.machineInfos.find('.memory .total').html(total);
+      usedMemory = ((totalMem - freeMem) / totalMem) * 100;
+      return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
+    };
 
-      HomeView.prototype.account = function() {
-        var view;
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate('account', true);
-        }
-        this.content.show();
-        this.frames.hide();
-        view = app.views.account;
-        $("#content").html(view.render());
-        view.fetchData();
-        view.setListeners();
-        this.selectNavButton(this.accountButton);
-        return window.document.title = "Cozy - Account";
-      };
+    ApplicationsListView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
+      this.machineInfos.find('.disk .total').html(totalSpace + "Go");
+      return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
+    };
 
-      HomeView.prototype.resetLayoutSizes = function() {
-        var header;
-        header = this.$("#header");
-        this.frames.height($(window).height() - header.height());
-        return this.content.height($(window).height() - header.height());
-      };
+    return ApplicationsListView;
 
-      HomeView.prototype.selectNavButton = function(button) {
-        this.buttons.find("li").removeClass("active");
-        return button.parent().addClass("active");
-      };
+  })(BaseView);
+  
+});
+window.require.register("views/home_application", function(exports, require, module) {
+  var ApplicationRow, BaseView, ColorButton,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-      HomeView.prototype.clearApps = function() {
-        this.$(".app-button a").unbind();
-        return this.$(".app-button").remove();
-      };
+  BaseView = require('lib/BaseView');
 
-      HomeView.prototype.addApplication = function(application) {
-        var button;
-        this.buttons.find(".nav:last").append(appButtonTemplate({
-          app: application
-        }));
-        button = this.buttons.find("#" + application.slug);
-        return button.tooltip({
-          placement: 'bottom',
-          title: '<a target="' + application.slug + '" href="/apps/' + application.slug + '/">open in a new tab</a>',
-          delay: {
-            show: 500,
-            hide: 1000
-          }
+  ColorButton = require('widgets/install_button');
+
+  module.exports = ApplicationRow = (function(_super) {
+
+    __extends(ApplicationRow, _super);
+
+    ApplicationRow.prototype.className = "application";
+
+    ApplicationRow.prototype.tagName = "div";
+
+    ApplicationRow.prototype.template = function() {
+      return require('templates/home_application')({
+        'app': this.app.attributes
+      });
+    };
+
+    ApplicationRow.prototype.events = {
+      "click .application-inner": "onAppClicked",
+      "click .remove-app": "onRemoveClicked",
+      "click .update-app": "onUpdateClicked",
+      "click .startStop-app": "onStartStopClicked"
+    };
+
+    /* Constructor
+    */
+
+
+    function ApplicationRow(app) {
+      this.app = app;
+      this.launchApp = __bind(this.launchApp, this);
+
+      this.onStartStopClicked = __bind(this.onStartStopClicked, this);
+
+      this.onUpdateClicked = __bind(this.onUpdateClicked, this);
+
+      this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
+      this.onAppClicked = __bind(this.onAppClicked, this);
+
+      this.onAppChanged = __bind(this.onAppChanged, this);
+
+      this.remove = __bind(this.remove, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+
+      this.id = "app-btn-" + this.app.id;
+      ApplicationRow.__super__.constructor.call(this);
+    }
+
+    ApplicationRow.prototype.afterRender = function() {
+      this.el.id = this.app.id;
+      this.updateButton = new ColorButton(this.$(".update-app"));
+      this.removeButton = new ColorButton(this.$(".remove-app"));
+      this.startStopBtn = new ColorButton(this.$(".startStop-app"));
+      this.app.on('change', this.onAppChanged);
+      return this.onAppChanged(this.app);
+    };
+
+    ApplicationRow.prototype.remove = function() {
+      this.app.unbind('change');
+      return ApplicationRow.__super__.remove.call(this);
+    };
+
+    /* Listener
+    */
+
+
+    ApplicationRow.prototype.onAppChanged = function(app) {
+      if (app.isBroken()) {
+        this.$el.addClass("broken");
+        return this.startStopBtn.hide();
+      } else if (app.isRunning()) {
+        this.$('img').attr('src', "apps/" + app.id + "/icons/main_icon.png");
+        return this.startStopBtn.displayRed('Stop this app');
+      } else {
+        this.$('img').attr('src', "http://placehold.it/128/&text=stopped");
+        return this.startStopBtn.displayGreen('Start this app');
+      }
+    };
+
+    ApplicationRow.prototype.onAppClicked = function(event) {
+      event.preventDefault();
+      if (this.app.isRunning()) {
+        return this.launchApp();
+      } else {
+        return this.app.start({
+          success: this.launchApp
         });
-      };
+      }
+    };
 
-      HomeView.prototype.loadApp = function(slug, hash) {
-        var frame;
-        this.frames.show();
-        frame = this.$("#" + slug + "-frame");
-        if (frame.length === 0) {
-          if (!(hash != null)) hash = '';
-          this.frames.append(appIframeTemplate({
-            id: slug,
-            hash: hash
-          }));
-          frame = this.$("#" + slug + "-frame");
-          $(frame.prop('contentWindow')).on('hashchange', function() {
-            var location, newhash;
-            location = frame.prop('contentWindow').location;
-            newhash = location.hash.replace('#', '');
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
-          });
-        }
-        this.content.hide();
-        this.$("#app-frames").find("iframe").hide();
-        frame.show();
-        this.selectNavButton(this.$("#" + slug));
-        this.selectedApp = slug;
-        return this.setAppTitle();
-      };
+    ApplicationRow.prototype.onRemoveClicked = function(event) {
+      event.preventDefault();
+      return this.removeApp();
+    };
 
-      HomeView.prototype.displayNoAppMessage = function() {};
+    ApplicationRow.prototype.onUpdateClicked = function(event) {
+      event.preventDefault();
+      return this.updateApp();
+    };
 
-      /* Configuration
-      */
-
-      HomeView.prototype.setAppTitle = function() {
-        var application, name,
-          _this = this;
-        application = this.apps.filter(function(application) {
-          return application.slug === _this.selectedApp;
-        });
-        if (application.length > 0) {
-          name = application[0].name;
-        } else {
-          name = "";
-        }
-        return window.document.title = "Cozy - " + name;
-      };
-
-      HomeView.prototype.fetch = function() {
-        var _this = this;
-        return this.apps.fetch({
+    ApplicationRow.prototype.onStartStopClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.startStopBtn.spin();
+      if (this.app.isRunning()) {
+        return this.app.stop({
           success: function() {
-            if (_this.selectedApp != null) {
-              _this.selectNavButton(_this.$("#" + _this.selectedApp));
-            }
-            if (_this.selectedApp != null) _this.setAppTitle();
-            _this.selectedApp = null;
-            return _this.resetLayoutSizes();
+            return _this.startStopBtn.spin();
+          },
+          error: function() {
+            return _this.startStopBtn.spin();
           }
         });
-      };
-
-      HomeView.prototype.render = function() {
-        $(this.el).html(homeTemplate());
-        return this.el;
-      };
-
-      HomeView.prototype.setListeners = function() {
-        this.$('#help-button').tooltip({
-          placement: 'bottom',
-          title: 'Questions and help forum'
+      } else {
+        return this.app.start({
+          success: function() {
+            return _this.startStopBtn.spin();
+          },
+          error: function() {
+            return _this.startStopBtn.spin();
+          }
         });
-        this.logoutButton = this.$('#logout-button');
-        this.logoutButton.click(this.logout);
-        this.logoutButton.tooltip({
-          placement: 'bottom',
-          title: 'Sign out'
-        });
-        this.accountButton = this.$('#account-button');
-        this.accountButton.click(this.account);
-        this.homeButton = this.$('#home-button');
-        this.homeButton.click(this.home);
-        this.buttons = this.$('#buttons');
-        this.selectNavButton(this.homeButton);
-        this.frames = this.$('#app-frames');
-        this.content = this.$('#content');
-        this.buttons.fadeIn();
-        this.content = this.$('#content');
-        $(window).resize(this.resetLayoutSizes);
-        return this.resetLayoutSizes();
-      };
+      }
+    };
 
-      return HomeView;
+    /* Functions
+    */
 
-    })(Backbone.View);
 
-  }).call(this);
+    ApplicationRow.prototype.launchApp = function() {
+      return window.app.routers.main.navigate("apps/" + this.app.id, true);
+    };
+
+    ApplicationRow.prototype.removeApp = function() {
+      var _this = this;
+      this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.removeButton.spin("small");
+      return this.app.uninstall({
+        success: function() {
+          _this.removeButton.displayGreen("Removed");
+          return setTimeout(function() {
+            return _this.$el.fadeOut(function() {
+              return _this.remove();
+            });
+          }, 1000);
+        },
+        error: function() {
+          return _this.removeButton.displayRed("failed");
+        }
+      });
+    };
+
+    ApplicationRow.prototype.updateApp = function() {
+      var _this = this;
+      this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.updateButton.spin();
+      return this.app.updateApp({
+        success: function() {
+          return _this.updateButton.displayGreen("Updated");
+        },
+        error: function() {
+          return _this.updateButton.displayRed("failed");
+        }
+      });
+    };
+
+    return ApplicationRow;
+
+  })(BaseView);
   
 });
-window.require.register("views/install_button", function(exports, require, module) {
-  (function() {
-    var InstallButton;
+window.require.register("views/main", function(exports, require, module) {
+  var AccountView, AppCollection, ApplicationsListView, BaseView, HomeView, MarketView, NavbarView, User, appIframeTemplate,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    module.exports = InstallButton = (function() {
+  BaseView = require('lib/BaseView');
 
-      function InstallButton(button) {
-        this.button = button;
+  appIframeTemplate = require('templates/application_iframe');
+
+  AppCollection = require('collections/application');
+
+  NavbarView = require('views/navbar');
+
+  AccountView = require('views/account');
+
+  MarketView = require('views/market');
+
+  ApplicationsListView = require('views/home');
+
+  User = require('models/user');
+
+  module.exports = HomeView = (function(_super) {
+
+    __extends(HomeView, _super);
+
+    HomeView.prototype.el = 'body';
+
+    HomeView.prototype.template = require('templates/layout');
+
+    function HomeView() {
+      this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
+
+      this.onAppHashChanged = __bind(this.onAppHashChanged, this);
+
+      this.displayAccount = __bind(this.displayAccount, this);
+
+      this.displayMarket = __bind(this.displayMarket, this);
+
+      this.displayApplicationsList = __bind(this.displayApplicationsList, this);
+
+      this.displayView = __bind(this.displayView, this);
+
+      this.logout = __bind(this.logout, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.apps = new AppCollection();
+      HomeView.__super__.constructor.call(this);
+    }
+
+    HomeView.prototype.afterRender = function() {
+      this.navbar = new NavbarView(this.apps);
+      this.applicationListView = new ApplicationsListView(this.apps);
+      this.accountView = new AccountView();
+      this.marketView = new MarketView(this.apps);
+      this.frames = this.$('#app-frames');
+      this.content = this.$('#content');
+      this.resetLayoutSizes();
+      $(window).resize(this.resetLayoutSizes);
+      return this.apps.fetch();
+    };
+
+    /* Functions
+    */
+
+
+    HomeView.prototype.logout = function(event) {
+      var user,
+        _this = this;
+      user = new User();
+      user.logout({
+        success: function(data) {
+          return window.location.reload();
+        },
+        error: function() {
+          return alert("Server error occured, logout failed.");
+        }
+      });
+      return event.preventDefault();
+    };
+
+    HomeView.prototype.displayView = function(view) {
+      if (this.currentView != null) {
+        this.currentView.$el.detach();
       }
+      this.content.show();
+      this.frames.hide();
+      this.content.append(view.$el);
+      this.currentView = view;
+      return $('#favicon').attr('href', "favicon.ico");
+    };
 
-      InstallButton.prototype.displayOrange = function(text) {
-        this.button.html(text);
-        this.button.removeClass("btn-red");
-        this.button.removeClass("btn-green");
-        return this.button.addClass("btn-orange");
-      };
+    HomeView.prototype.displayApplicationsList = function() {
+      this.displayView(this.applicationListView);
+      this.navbar.selectButton("home-button");
+      return window.document.title = "Cozy - Home";
+    };
 
-      InstallButton.prototype.displayGreen = function(text) {
-        this.button.html(text);
-        this.button.addClass("btn-green");
-        this.button.removeClass("btn-red");
-        return this.button.removeClass("btn-orange");
-      };
+    HomeView.prototype.displayMarket = function() {
+      this.displayView(this.marketView);
+      this.navbar.selectButton("market-button");
+      return window.document.title = "Cozy - Market";
+    };
 
-      InstallButton.prototype.displayRed = function(text) {
-        this.button.html(text);
-        this.button.removeClass("btn-green");
-        this.button.addClass("btn-red");
-        return this.button.removeClass("btn-orange");
-      };
+    HomeView.prototype.displayAccount = function() {
+      this.displayView(this.accountView);
+      this.navbar.selectButton("account-button");
+      return window.document.title = "Cozy - Account";
+    };
 
-      InstallButton.prototype.isGreen = function() {
-        return this.button.hasClass("btn-green");
-      };
+    HomeView.prototype.displayApplication = function(slug, hash) {
+      var frame, name, once,
+        _this = this;
+      if (this.apps.length === 0) {
+        once = function() {
+          _this.apps.off('reset', once);
+          return _this.displayApplication(slug, hash);
+        };
+        this.apps.on('reset', once);
+        return null;
+      }
+      this.frames.show();
+      this.content.hide();
+      frame = this.$("#" + slug + "-frame");
+      if (frame.length === 0) {
+        frame = this.createApplicationIframe(slug, hash);
+      }
+      this.$("#app-frames").find("iframe").hide();
+      frame.show();
+      this.navbar.selectButton(slug);
+      this.selectedApp = slug;
+      name = this.apps.get(slug).get('name');
+      if (!(name != null)) {
+        name = '';
+      }
+      window.document.title = "Cozy - " + name;
+      return $('#favicon').attr('href', "/apps/" + slug + "/favicon.ico");
+    };
 
-      InstallButton.prototype.spin = function() {
-        return this.button.spin("small");
-      };
+    HomeView.prototype.createApplicationIframe = function(slug, hash) {
+      var frame,
+        _this = this;
+      if (hash == null) {
+        hash = "";
+      }
+      this.frames.append(appIframeTemplate({
+        id: slug,
+        hash: hash
+      }));
+      frame = this.$("#" + slug + "-frame");
+      $(frame.prop('contentWindow')).on('hashchange', function() {
+        var location, newhash;
+        location = frame.prop('contentWindow').location;
+        newhash = location.hash.replace('#', '');
+        return _this.onAppHashChanged(slug, newhash);
+      });
+      return frame;
+    };
 
-      InstallButton.prototype.hideParent = function() {
-        return this.button.parent().parent().hide();
-      };
+    HomeView.prototype.onAppHashChanged = function(slug, newhash) {
+      if (slug === this.selectedApp) {
+        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
+      }
+    };
 
-      InstallButton.prototype.showParent = function() {
-        return this.button.parent().parent().show();
-      };
+    /* Configuration
+    */
 
-      InstallButton.prototype.isHidden = function() {
-        return !this.button.is(":visible");
-      };
 
-      return InstallButton;
+    HomeView.prototype.resetLayoutSizes = function() {
+      var header;
+      header = this.$("#header");
+      this.frames.height($(window).height() - header.height());
+      return this.content.height($(window).height() - header.height());
+    };
 
-    })();
+    return HomeView;
 
-  }).call(this);
+  })(BaseView);
   
 });
-window.require.register("views/row", function(exports, require, module) {
-  (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+window.require.register("views/market", function(exports, require, module) {
+  var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, REPOREGEX, slugify,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    exports.BaseRow = (function(_super) {
+  BaseView = require('lib/BaseView');
 
-      __extends(BaseRow, _super);
+  ApplicationRow = require('views/market_application');
 
-      BaseRow.prototype.tagName = "div";
+  ColorButton = require('widgets/install_button');
 
-      function BaseRow(model) {
-        this.model = model;
-        BaseRow.__super__.constructor.call(this);
-        this.id = this.model.slug;
-        this.model.view = this;
+  AppCollection = require('collections/application');
+
+  Application = require('models/application');
+
+  slugify = require('helpers').slugify;
+
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+
+  module.exports = MarketView = (function(_super) {
+
+    __extends(MarketView, _super);
+
+    MarketView.prototype.id = 'market-view';
+
+    MarketView.prototype.template = require('templates/market');
+
+    MarketView.prototype.events = {
+      'keyup #app-git-field': 'onEnterPressed',
+      'click #add-app-submit': 'onInstallClicked'
+    };
+
+    /* Constructor
+    */
+
+
+    function MarketView(installedApps) {
+      this.resetForm = __bind(this.resetForm, this);
+
+      this.hideError = __bind(this.hideError, this);
+
+      this.displayError = __bind(this.displayError, this);
+
+      this.displayInfo = __bind(this.displayInfo, this);
+
+      this.runInstallation = __bind(this.runInstallation, this);
+
+      this.onInstallClicked = __bind(this.onInstallClicked, this);
+
+      this.onEnterPressed = __bind(this.onEnterPressed, this);
+
+      this.addApplication = __bind(this.addApplication, this);
+
+      this.onAppListsChanged = __bind(this.onAppListsChanged, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.isInstalling = false;
+      this.marketApps = new AppCollection();
+      this.displayApps = new AppCollection();
+      this.installedApps = installedApps;
+      MarketView.__super__.constructor.call(this);
+    }
+
+    MarketView.prototype.afterRender = function() {
+      this.appList = this.$('#app-market-list');
+      this.appGitField = this.$("#app-git-field");
+      this.installInfo = this.$("#add-app-modal .loading-indicator");
+      this.infoAlert = this.$("#your-app .info");
+      this.infoAlert.hide();
+      this.errorAlert = this.$("#your-app .error");
+      this.errorAlert.hide();
+      this.noAppMessage = this.$('#no-app-message');
+      this.installAppButton = new ColorButton(this.$("#add-app-submit"));
+      this.installedApps.bind('reset', this.onAppListsChanged);
+      this.installedApps.bind('add', this.onAppListsChanged);
+      this.installedApps.bind('remove', this.onAppListsChanged);
+      this.marketApps.bind('reset', this.onAppListsChanged);
+      return this.marketApps.fetchFromMarket();
+    };
+
+    MarketView.prototype.onAppListsChanged = function() {
+      var noApp,
+        _this = this;
+      this.appList.html(null);
+      noApp = true;
+      this.marketApps.each(function(marketApp) {
+        if (_this.installedApps.pluck('slug').indexOf(marketApp.get('slug')) === -1) {
+          noApp = false;
+          return _this.addApplication(marketApp);
+        }
+      });
+      return this.noAppMessage.toggle(!noApp);
+    };
+
+    MarketView.prototype.addApplication = function(application) {
+      var appButton, row;
+      row = new ApplicationRow(application, this);
+      this.noAppMessage.hide();
+      this.appList.append(row.el);
+      appButton = this.$(row.el);
+      return appButton.hide().fadeIn();
+    };
+
+    MarketView.prototype.onEnterPressed = function(event) {
+      if (event.which === 13) {
+        return this.onInstallClicked();
       }
+    };
 
-      BaseRow.prototype.remove = function() {
-        return this.$el.remove();
+    MarketView.prototype.onInstallClicked = function(event) {
+      var data;
+      data = {
+        git: this.$("#app-git-field").val()
       };
+      this.runInstallation(data, this.installAppButton);
+      event.preventDefault();
+      return false;
+    };
 
-      return BaseRow;
+    MarketView.prototype.runInstallation = function(appDescriptor, button) {
+      var parsed, toInstall,
+        _this = this;
+      if (this.isInstalling) {
+        return true;
+      }
+      if (button.isGreen()) {
+        return true;
+      }
+      this.isInstalling = true;
+      this.hideError();
+      button.displayOrange("install");
+      parsed = this.parseGitUrl(appDescriptor.git);
+      if (!parsed.error) {
+        this.errorAlert.hide();
+        button.button.html("&nbsp;&nbsp;&nbsp;&nbsp;");
+        button.spin();
+        toInstall = new Application(parsed);
+        return toInstall.install({
+          success: function(data) {
+            if (((data.state != null) === "broken") || !data.success) {
+              _this.installedApps.add(toInstall);
+              button.spin();
+              button.displayRed("Install failed");
+              return _this.isInstalling = false;
+            } else {
+              _this.installedApps.add(toInstall);
+              button.spin();
+              button.displayGreen("Install succeeded!");
+              _this.isInstalling = false;
+              _this.resetForm();
+              return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+            }
+          },
+          error: function(data) {
+            _this.isInstalling = false;
+            button.displayRed("Install failed");
+            return button.spin();
+          }
+        });
+      } else {
+        this.isInstalling = false;
+        return this.displayError(parsed.msg);
+      }
+    };
 
-    })(Backbone.View);
+    MarketView.prototype.parseGitUrl = function(url) {
+      var branch, domain, git, name, out, parsed, parts, path, proto, slug;
+      url = url.replace('git@github.com:', 'https://github.com/');
+      url = url.replace('git://', 'https://');
+      parsed = REPOREGEX.exec(url);
+      if (parsed == null) {
+        return {
+          error: true,
+          msg: "Git url should be of form https://.../my-repo.git"
+        };
+      }
+      git = parsed[0], proto = parsed[1], domain = parsed[2], path = parsed[3], branch = parsed[4];
+      path = path.replace('.git', '');
+      parts = path.split("/");
+      name = parts[parts.length - 1];
+      name = name.replace(/-|_/g, " ");
+      name = name.replace('cozy ', '');
+      slug = slugify(name);
+      git = proto + domain + path + '.git';
+      if (branch != null) {
+        branch = branch.substring(1);
+      }
+      out = {
+        git: git,
+        name: name,
+        slug: slug
+      };
+      if (branch != null) {
+        out.branch = branch;
+      }
+      return out;
+    };
 
-  }).call(this);
+    MarketView.prototype.displayInfo = function(msg) {
+      this.errorAlert.hide();
+      this.infoAlert.html(msg);
+      return this.infoAlert.show();
+    };
+
+    MarketView.prototype.displayError = function(msg) {
+      this.infoAlert.hide();
+      this.errorAlert.html(msg);
+      return this.errorAlert.show();
+    };
+
+    MarketView.prototype.hideError = function() {
+      return this.errorAlert.hide();
+    };
+
+    MarketView.prototype.resetForm = function() {
+      this.installAppButton.displayOrange("install");
+      return this.appGitField.val('');
+    };
+
+    return MarketView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/market_application", function(exports, require, module) {
+  var ApplicationRow, BaseView, ColorButton,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/BaseView');
+
+  ColorButton = require('widgets/install_button');
+
+  module.exports = ApplicationRow = (function(_super) {
+
+    __extends(ApplicationRow, _super);
+
+    ApplicationRow.prototype.tagName = "div";
+
+    ApplicationRow.prototype.className = "cozy-app";
+
+    ApplicationRow.prototype.template = function() {
+      return require('templates/market_application')({
+        app: this.app.attributes
+      });
+    };
+
+    function ApplicationRow(app, marketView) {
+      this.app = app;
+      this.marketView = marketView;
+      this.onInstallClicked = __bind(this.onInstallClicked, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+
+      this.events = {};
+      this.events["click #add-" + this.app.id + "-install"] = 'onInstallClicked';
+      ApplicationRow.__super__.constructor.call(this);
+    }
+
+    ApplicationRow.prototype.afterRender = function() {
+      return this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
+    };
+
+    ApplicationRow.prototype.onInstallClicked = function() {
+      return this.marketView.runInstallation(this.app.attributes, this.installButton);
+    };
+
+    return ApplicationRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/navbar", function(exports, require, module) {
+  var BaseView, NavbarView, appButtonTemplate,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/BaseView');
+
+  appButtonTemplate = require("templates/navbar_app_btn");
+
+  module.exports = NavbarView = (function(_super) {
+
+    __extends(NavbarView, _super);
+
+    NavbarView.prototype.el = '#header';
+
+    NavbarView.prototype.template = require('templates/navbar');
+
+    function NavbarView(apps) {
+      this.onAppRemoved = __bind(this.onAppRemoved, this);
+
+      this.addApplication = __bind(this.addApplication, this);
+
+      this.onApplicationChanged = __bind(this.onApplicationChanged, this);
+
+      this.onApplicationListReady = __bind(this.onApplicationListReady, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.apps = apps;
+      NavbarView.__super__.constructor.call(this);
+    }
+
+    NavbarView.prototype.afterRender = function() {
+      this.buttons = this.$('#buttons');
+      this.$('#help-button').tooltip({
+        placement: 'bottom',
+        title: 'Questions and help forum'
+      });
+      this.$('#logout-button').tooltip({
+        placement: 'bottom',
+        title: 'Sign out'
+      });
+      if (this.apps.length > 0) {
+        onApplicationListReady(this.apps);
+      }
+      this.apps.bind('reset', this.onApplicationListReady);
+      this.apps.bind('change', this.onApplicationChanged);
+      this.apps.bind('add', this.addApplication);
+      return this.apps.bind('remove', this.onAppRemoved);
+    };
+
+    NavbarView.prototype.onApplicationListReady = function(apps) {
+      this.$(".app-button").remove();
+      return apps.forEach(this.onApplicationChanged);
+    };
+
+    NavbarView.prototype.onApplicationChanged = function(app) {
+      if (app.isRunning()) {
+        if (!this.buttons.find("#" + app.id).length) {
+          return this.addApplication(app);
+        }
+      } else {
+        return this.onAppRemoved(app);
+      }
+    };
+
+    NavbarView.prototype.addApplication = function(app) {
+      var button;
+      this.buttons.find(".nav:last").prepend(appButtonTemplate({
+        app: app.attributes
+      }));
+      button = this.buttons.find("#" + app.id);
+      return button.tooltip({
+        placement: 'bottom',
+        title: '<a target="' + app.id + '" href="/apps/' + app.id + '/">open in a new tab</a>',
+        delay: {
+          show: 500,
+          hide: 1000
+        }
+      });
+    };
+
+    NavbarView.prototype.onAppRemoved = function(app) {
+      return this.buttons.find("#" + app.id).remove();
+    };
+
+    NavbarView.prototype.selectButton = function(button) {
+      button = this.$("#" + button);
+      this.buttons.find("li").removeClass("active");
+      return button.parent().addClass("active");
+    };
+
+    return NavbarView;
+
+  })(BaseView);
+  
+});
+window.require.register("widgets/install_button", function(exports, require, module) {
+  var ColorButton;
+
+  module.exports = ColorButton = (function() {
+
+    function ColorButton(button) {
+      this.button = button;
+    }
+
+    ColorButton.prototype.displayGrey = function(text) {
+      this.button.show();
+      this.button.html(text);
+      this.button.removeClass("btn-red");
+      this.button.removeClass("btn-green");
+      return this.button.removeClass("btn-orange");
+    };
+
+    ColorButton.prototype.displayOrange = function(text) {
+      this.button.show();
+      this.button.html(text);
+      this.button.removeClass("btn-red");
+      this.button.removeClass("btn-green");
+      return this.button.addClass("btn-orange");
+    };
+
+    ColorButton.prototype.displayGreen = function(text) {
+      this.button.show();
+      this.button.html(text);
+      this.button.addClass("btn-green");
+      this.button.removeClass("btn-red");
+      return this.button.removeClass("btn-orange");
+    };
+
+    ColorButton.prototype.displayRed = function(text) {
+      this.button.show();
+      this.button.html(text);
+      this.button.removeClass("btn-green");
+      this.button.addClass("btn-red");
+      return this.button.removeClass("btn-orange");
+    };
+
+    ColorButton.prototype.hide = function() {
+      return this.button.hide();
+    };
+
+    ColorButton.prototype.isGreen = function() {
+      return this.button.hasClass("btn-green");
+    };
+
+    ColorButton.prototype.spin = function() {
+      return this.button.spin("small");
+    };
+
+    ColorButton.prototype.isHidden = function() {
+      return !this.button.is(":visible");
+    };
+
+    return ColorButton;
+
+  })();
   
 });
