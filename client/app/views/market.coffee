@@ -132,8 +132,11 @@ module.exports = class MarketView extends BaseView
 
         slug = slugify(name)
 
-        out = git:(proto+domain+path+'.git'), name:name, slug:slug
-        out.branch = branch.substring(1) if branch?
+        git = proto + domain + path + '.git'
+        branch = branch.substring(1) if branch?
+
+        out = git:git, name:name, slug:slug
+        out.branch = branch if branch?
         return out
 
     # Display message inside info box.
