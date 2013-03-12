@@ -5,6 +5,7 @@ utils = require("../../lib/passport_utils")
 action 'updateAccount', ->
     newEmail = body.email
     newTimezone = body.timezone
+    oldPassword = body.password0
     newPassword = body.password1
     newPassword2 = body.password2
 
@@ -23,7 +24,9 @@ action 'updateAccount', ->
             data.timezone = newTimezone
 
         if newPassword? and newPassword.length > 0
-            if newPassword.length > 5
+            if not utils.checkPassword(oldPassword, user.password)
+                errors.push "Old password is incorrect"
+            else if newPassword.length > 5
                 if newPassword == newPassword2
                     data.password = utils.cryptPassword newPassword
                 else

@@ -1,28 +1,46 @@
-BaseCollection = require("collections/collections").BaseCollection
-Application = require("models/application").Application
+BaseCollection = require 'lib/BaseCollection'
+Application = require 'models/application'
 
 
 # List of installed applications.
-class exports.ApplicationCollection extends BaseCollection
+module.exports = class ApplicationCollection extends BaseCollection
         
     model: Application
     url: 'api/applications/'
 
-    constructor: (@view) ->
-        super()
-
-        @bind 'reset', @onReset
-        @bind 'add', @onAdd
-
-    # Clear view app list and add to it each app of the collection.
-    onReset: =>
-        @view.clearApps()
-        if @length > 0
-            @forEach (app) =>
-                @view.addApplication app
-        else
-            @view.displayNoAppMessage()
-
-    # Add added app to the view app list.
-    onAdd: (app) =>
-        @view.addApplication app
+    # fetch application list from the market 
+    # callback(err, apps)
+    fetchFromMarket: (callback) =>
+        apps = [
+            {
+                icon:"img/bookmarks-icon.png"
+                name:"bookmarks"
+                slug:"bookmarks"
+                git:"https://github.com/Piour/cozy-bookmarks.git"
+                comment: "community contribution"
+                description:"Manage your bookmark easily"
+            },{
+                icon:"img/feeds-icon.png"
+                name:"feeds"
+                slug:"feeds"
+                git:"https://github.com/Piour/cozy-feeds.git"
+                comment:"community contribution"
+                description:"Aggregate your feeds and save your favorite links in bookmarks."
+            },{
+                icon:"img/notes-icon.png"
+                name:"notes"
+                slug:"notes"
+                git:"https://github.com/mycozycloud/cozy-notes.git"
+                comment:"official application"
+                description:"Store all your notes and files."
+            },{
+                icon:"img/todos-icon.png"
+                name:"todos"
+                slug:"todos"
+                git:"https://github.com/mycozycloud/cozy-todos.git"
+                comment:"official application"
+                description:"Write your tasks, order them and execute them efficiently."
+            }]
+        @reset apps
+        if callback? 
+            callback(null, apps)
