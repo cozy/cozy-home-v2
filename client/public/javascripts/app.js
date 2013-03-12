@@ -102,7 +102,7 @@ window.require.register("collections/application", function(exports, require, mo
 
     ApplicationCollection.prototype.url = 'api/applications/';
 
-    ApplicationCollection.prototype.fetchFromMarket = function(cb) {
+    ApplicationCollection.prototype.fetchFromMarket = function(callback) {
       var apps;
       apps = [
         {
@@ -136,8 +136,8 @@ window.require.register("collections/application", function(exports, require, mo
         }
       ];
       this.reset(apps);
-      if (cb != null) {
-        return cb(apps);
+      if (callback != null) {
+        return callback(null, apps);
       }
     };
 
@@ -321,7 +321,7 @@ window.require.register("initialize", function(exports, require, module) {
   new exports.Application;
   
 });
-window.require.register("lib/BaseCollection", function(exports, require, module) {
+window.require.register("lib/base_collection", function(exports, require, module) {
   var BaseCollection,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -343,7 +343,7 @@ window.require.register("lib/BaseCollection", function(exports, require, module)
   })(Backbone.Collection);
   
 });
-window.require.register("lib/BaseModel", function(exports, require, module) {
+window.require.register("lib/base_model", function(exports, require, module) {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -364,7 +364,7 @@ window.require.register("lib/BaseModel", function(exports, require, module) {
   })(Backbone.Model);
   
 });
-window.require.register("lib/BaseView", function(exports, require, module) {
+window.require.register("lib/base_view", function(exports, require, module) {
   var BaseView,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -413,146 +413,6 @@ window.require.register("lib/BaseView", function(exports, require, module) {
     return BaseView;
 
   })(Backbone.View);
-  
-});
-window.require.register("lib/ViewCollection", function(exports, require, module) {
-  var View, ViewCollection, methods,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  View = require('./view');
-
-  module.exports = ViewCollection = (function(_super) {
-
-    __extends(ViewCollection, _super);
-
-    function ViewCollection() {
-      this.renderAll = __bind(this.renderAll, this);
-
-      this.renderOne = __bind(this.renderOne, this);
-      return ViewCollection.__super__.constructor.apply(this, arguments);
-    }
-
-    ViewCollection.prototype.collection = new Backbone.Collection();
-
-    ViewCollection.prototype.view = new View();
-
-    ViewCollection.prototype.views = [];
-
-    ViewCollection.prototype.length = function() {
-      return this.views.length;
-    };
-
-    ViewCollection.prototype.add = function(views, options) {
-      var view, _i, _len;
-      if (options == null) {
-        options = {};
-      }
-      views = _.isArray(views) ? views.slice() : [views];
-      for (_i = 0, _len = views.length; _i < _len; _i++) {
-        view = views[_i];
-        if (!this.get(view.cid)) {
-          this.views.push(view);
-          if (!options.silent) {
-            this.trigger('add', view, this);
-          }
-        }
-      }
-      return this;
-    };
-
-    ViewCollection.prototype.get = function(cid) {
-      return this.find(function(view) {
-        return view.cid === cid;
-      }) || null;
-    };
-
-    ViewCollection.prototype.remove = function(views, options) {
-      var view, _i, _len;
-      if (options == null) {
-        options = {};
-      }
-      views = _.isArray(views) ? views.slice() : [views];
-      for (_i = 0, _len = views.length; _i < _len; _i++) {
-        view = views[_i];
-        this.destroy(view);
-        if (!options.silent) {
-          this.trigger('remove', view, this);
-        }
-      }
-      return this;
-    };
-
-    ViewCollection.prototype.destroy = function(view, options) {
-      var _views;
-      if (view == null) {
-        view = this;
-      }
-      if (options == null) {
-        options = {};
-      }
-      _views = this.filter(_view)(function() {
-        return view.cid !== _view.cid;
-      });
-      this.views = _views;
-      view.undelegateEvents();
-      view.$el.removeData().unbind();
-      view.remove();
-      Backbone.View.prototype.remove.call(view);
-      if (!options.silent) {
-        this.trigger('remove', view, this);
-      }
-      return this;
-    };
-
-    ViewCollection.prototype.reset = function(views, options) {
-      var view, _i, _j, _len, _len1, _ref;
-      if (options == null) {
-        options = {};
-      }
-      views = _.isArray(views) ? views.slice() : [views];
-      _ref = this.views;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        view = _ref[_i];
-        this.destroy(view, options);
-      }
-      if (views.length !== 0) {
-        for (_j = 0, _len1 = views.length; _j < _len1; _j++) {
-          view = views[_j];
-          this.add(view, options);
-        }
-        if (!options.silent) {
-          this.trigger('reset', view, this);
-        }
-      }
-      return this;
-    };
-
-    ViewCollection.prototype.renderOne = function(model) {
-      var view;
-      view = new this.view(model);
-      this.$el.append(view.render().el);
-      this.add(view);
-      return this;
-    };
-
-    ViewCollection.prototype.renderAll = function() {
-      this.collection.each(this.renderOne);
-      return this;
-    };
-
-    return ViewCollection;
-
-  })(View);
-
-  methods = ['forEach', 'each', 'map', 'reduce', 'reduceRight', 'find', 'detect', 'filter', 'select', 'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke', 'max', 'min', 'sortBy', 'sortedIndex', 'toArray', 'size', 'first', 'initial', 'rest', 'last', 'without', 'indexOf', 'shuffle', 'lastIndexOf', 'isEmpty', 'groupBy'];
-
-  _.each(methods, function(method) {
-    return ViewCollection.prototype[method] = function() {
-      return _[method].apply(_, [this.views].concat(_.toArray(arguments)));
-    };
-  });
   
 });
 window.require.register("models/application", function(exports, require, module) {
@@ -1778,13 +1638,17 @@ window.require.register("views/market", function(exports, require, module) {
       name = name.replace(/-|_/g, " ");
       name = name.replace('cozy ', '');
       slug = slugify(name);
+      git = proto + domain + path + '.git';
+      if (branch != null) {
+        branch = branch.substring(1);
+      }
       out = {
-        git: proto + domain + path + '.git',
+        git: git,
         name: name,
         slug: slug
       };
       if (branch != null) {
-        out.branch = branch.substring(1);
+        out.branch = branch;
       }
       return out;
     };
