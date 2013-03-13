@@ -25,7 +25,7 @@ before 'load application', ->
         else
             @app = apps[0]
             next()
-, only: ['update', 'uninstall']
+, only: ['update', 'start','stop','uninstall']
 
 
 ## Actions
@@ -57,6 +57,7 @@ action "install", ->
 
     setupApp = (app) ->
         manager = new AppManager
+        console.log 'attempt to install app ' + JSON.stringify(app)
         manager.installApp app, (err, result) ->
             if err
                 app.state = "broken"
@@ -87,6 +88,9 @@ action "install", ->
         if err
             send_error err.message
         else if apps.length
+            # TODO take care of request retry 
+            # (happens when install is taking too long)
+            # may be send a 100 - Continue
             send_error "There is already an app with similar name", 400
         else
             Application.create body, (err, app) ->
@@ -163,3 +167,68 @@ action "update", ->
                             send
                                 success: true
                                 msg: 'Application succesfuly updated'
+
+action "start", ->
+
+    markAppAsBroken = =>
+        @app.state = "broken"
+        @app.save (err) ->
+            if err
+                send_error()
+            else
+                send_error "starting failed"
+
+
+    manager = new AppManager
+    manager.start @app, (err, result) =>
+        if err
+            markAppAsBroken()
+        else
+            @app.state = "installed"
+            @app.port = result.drone.port
+            @app.save (err) =>
+                if err
+                    markAppAsBroken()
+                else
+                    manager.resetProxy (err) =>
+                        if err
+                            markAppAsBroken()
+                        else
+                            console.log @app
+                            send
+                                success:true
+                                msg: 'Application running'
+                                app: @app
+
+
+
+action "stop", ->
+
+    markAppAsBroken = =>
+        @app.state = "broken"
+        @app.save (err) ->
+            if err
+                send_error()
+            else
+                send_error "stopping failed"
+
+    manager = new AppManager
+    manager.stop @app, (err, result) =>
+        if err
+            markAppAsBroken()
+        else
+            @app.state = "stopped"
+            @app.port = 0
+            @app.save (err) =>
+                if err
+                    send_error()
+                else
+                    manager.resetProxy (err) =>
+                        if err
+                            markAppAsBroken()
+                        else
+                            console.log @app
+                            send
+                                success:true
+                                msg: 'Application stopped'
+                                app: @app

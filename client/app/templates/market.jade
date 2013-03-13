@@ -1,5 +1,14 @@
-h1 Market Place
-h2 Select application you want in your browser.
+#your-app
+    p
+        | Install 
+        a(href="https://cozycloud.cc/make/", target="_blank") your app
+    p
+      label Git URL
+      input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
+    .error.alert.alert-error.main-alert
+    .info.alert.main-alert
+    button#add-app-submit.btn.btn-orange install
 
-#app-list
-  
+#app-market-list
+    #no-app-message.cozy-app 
+        | You have already installed everything !

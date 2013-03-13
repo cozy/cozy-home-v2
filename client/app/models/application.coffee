@@ -1,37 +1,64 @@
-BaseModel = require("models/models").BaseModel
 client = require "../helpers/client"
 
 # Describes an application installed in mycloud.
-class exports.Application extends BaseModel
+module.exports = class Application extends Backbone.Model
 
     url: '/api/applications/'
+    idAttribute: 'slug'
 
-    constructor: (app) ->
-        super()
-
-        for property of app
-            @[property] = app[property]
+    isRunning: () -> @get('state') is 'installed'
+    isBroken: () -> @get('state') is 'broken'
 
     # Send to server installation request.
     # Will create a new app in the database.
     install: (callbacks) ->
-        data =
-            name: @name
-            description: @description
-            git: @git
-
-        client.post '/api/applications/install', data,
+        client.post '/api/applications/install', @attributes,
             success: (data) =>
-                @slug = data.app.slug
-                @state = data.app.state
+                @set(data.app)
                 callbacks.success data
             error: callbacks.error
 
     # Send to server uninstallation request.
     # Will delete the app in the database.
-    uninstall: (callbacks) ->
-        client.del "/api/applications/#{@slug}/uninstall", callbacks
+    uninstall: (callbacks) =>
+        client.del "/api/applications/#{@id}/uninstall", 
+            success: (data) =>
+                @trigger 'destroy', @, @collection
+                callbacks.success data
+            error: callbacks.error
 
     # Send to server an update request.
     updateApp: (callbacks) ->
-        client.put "/api/applications/#{@slug}/update", {}, callbacks
+        client.put "/api/applications/#{@id}/update", {}, 
+            success: (data) =>
+                @set(data.app)
+                callbacks.success data
+            error: callbacks.error
+
+    # Send to server a start request
+    start: (callbacks) ->
+        return null if @isRunning() 
+        if not callbacks?
+            callbacks = 
+                success: ->
+                error: ->
+        client.post "/api/applications/#{@id}/start", {}, 
+            success: (data) =>
+                @set(data.app)
+                callbacks.success data
+            error: callbacks.error
+
+    # Send to server a stop request.
+    stop: (callbacks) ->
+        return null if not @isRunning() 
+        if not callbacks?
+            callbacks = 
+                success: ->
+                error: ->
+        client.post "/api/applications/#{@id}/stop", {}, 
+            success: (data) =>
+                @set(data.app)
+                callbacks.success data
+            error: callbacks.error
+
+

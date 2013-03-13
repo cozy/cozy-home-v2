@@ -1,9 +1,7 @@
 {BrunchApplication} = require './helpers'
 
-MainRouter = require('routers/main_router').MainRouter
-HomeView = require('views/home_view').HomeView
-AccountView = require('views/account_view').AccountView
-ApplicationsView = require('views/applications_view').ApplicationsView
+MainRouter = require 'routers/main_router'
+HomeView = require 'views/main'
 
 
 class exports.Application extends BrunchApplication
@@ -14,22 +12,15 @@ class exports.Application extends BrunchApplication
         @initializeJQueryExtensions()
 
         @routers = {}
-        @views = {}
-
+        @mainView =  new HomeView()
         @routers.main = new MainRouter()
-        @views.home = new HomeView()
-        @views.account = new AccountView()
-        @views.applications = new ApplicationsView()
-        
         
         # render layout
-        $("body").html @views.home.render()
-        @views.home.setListeners()
-        @views.home.fetch()
+        #$("body").html @mainView.el
 
         window.app = @
         Backbone.history.start()
         if Backbone.history.getFragment() is ''
-            window.app.routers.main.navigate 'home', true
+            @routers.main.navigate 'home', true
 
 new exports.Application

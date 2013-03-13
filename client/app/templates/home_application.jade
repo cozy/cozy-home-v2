@@ -1,12 +1,12 @@
 a(href="#apps/#{app.slug}/")
   .application-inner
     p
-      img(src="apps/#{app.slug}/icons/main_icon.png")
+      img(src="")
     p.app-title #{app.name}
+    p.broken-notifier broken app
 .application-outer.center
   .btn-group
     button.btn.remove-app remove
     button.btn.update-app update
   div
-    button.btn.start-app start
-    button.btn.stop-app stop
+    button.btn.btn-large.start-stop-btn started

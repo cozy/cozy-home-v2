@@ -35,6 +35,7 @@ reseting routes"
     # 2. Send a request to proxy to add a new route
     installApp: (app, callback) ->
         console.info "Request haibu for spawning #{app.name}..."
+        console.info "haibu descriptor : #{JSON.stringify(app.getHaibuDescriptor())}"
         
         @client.start app.getHaibuDescriptor(), (err, result) =>
             if err
@@ -83,4 +84,30 @@ reseting routes"
                 callback(err)
             else
                 console.info "Successfully cleaning app: #{app.name}"
+                callback null
+
+    # Send a start request to haibu server
+    start: (app, callback) ->
+
+        @client.start app.getHaibuDescriptor(), (err, result) =>
+            if err
+                console.log "Error starting app: #{app.name}"
+                console.log err.message
+                console.log err.stack
+                callback(err)
+            else
+                railway.logger.write "Successfully starting app: #{app.name}"
+                callback null, result
+
+    # Send a stop request to haibu server
+    stop: (app, callback) ->
+
+        @client.stop app.slug, (err, result) =>
+            if err
+                console.log "Error stopping app: #{app.name}"
+                console.log err.message
+                console.log err.stack
+                callback(err)
+            else
+                console.log "Successfully stoppingg app: #{app.name}"
                 callback null

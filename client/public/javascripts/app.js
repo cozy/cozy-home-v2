@@ -81,75 +81,68 @@
 
 window.require.register("collections/application", function(exports, require, module) {
   (function() {
-    var Application, BaseCollection,
+    var Application, ApplicationCollection, BaseCollection,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    BaseCollection = require("collections/collections").BaseCollection;
+    BaseCollection = require('lib/base_collection');
 
-    Application = require("models/application").Application;
+    Application = require('models/application');
 
-    exports.ApplicationCollection = (function(_super) {
+    module.exports = ApplicationCollection = (function(_super) {
 
       __extends(ApplicationCollection, _super);
+
+      function ApplicationCollection() {
+        this.fetchFromMarket = __bind(this.fetchFromMarket, this);
+        ApplicationCollection.__super__.constructor.apply(this, arguments);
+      }
 
       ApplicationCollection.prototype.model = Application;
 
       ApplicationCollection.prototype.url = 'api/applications/';
 
-      function ApplicationCollection(view) {
-        this.view = view;
-        this.onAdd = __bind(this.onAdd, this);
-        this.onReset = __bind(this.onReset, this);
-        ApplicationCollection.__super__.constructor.call(this);
-        this.bind('reset', this.onReset);
-        this.bind('add', this.onAdd);
-      }
-
-      ApplicationCollection.prototype.onReset = function() {
-        var _this = this;
-        this.view.clearApps();
-        if (this.length > 0) {
-          return this.forEach(function(app) {
-            return _this.view.addApplication(app);
-          });
-        } else {
-          return this.view.displayNoAppMessage();
-        }
-      };
-
-      ApplicationCollection.prototype.onAdd = function(app) {
-        return this.view.addApplication(app);
+      ApplicationCollection.prototype.fetchFromMarket = function(callback) {
+        var apps;
+        apps = [
+          {
+            icon: "img/bookmarks-icon.png",
+            name: "bookmarks",
+            slug: "bookmarks",
+            git: "https://github.com/Piour/cozy-bookmarks.git",
+            comment: "community contribution",
+            description: "Manage your bookmark easily"
+          }, {
+            icon: "img/feeds-icon.png",
+            name: "feeds",
+            slug: "feeds",
+            git: "https://github.com/Piour/cozy-feeds.git",
+            comment: "community contribution",
+            description: "Aggregate your feeds and save your favorite links in bookmarks."
+          }, {
+            icon: "img/notes-icon.png",
+            name: "notes",
+            slug: "notes",
+            git: "https://github.com/mycozycloud/cozy-notes.git",
+            comment: "official application",
+            description: "Store all your notes and files."
+          }, {
+            icon: "img/todos-icon.png",
+            name: "todos",
+            slug: "todos",
+            git: "https://github.com/mycozycloud/cozy-todos.git",
+            comment: "official application",
+            description: "Write your tasks, order them and execute them efficiently."
+          }
+        ];
+        this.reset(apps);
+        if (callback != null) return callback(null, apps);
       };
 
       return ApplicationCollection;
 
     })(BaseCollection);
-
-  }).call(this);
-  
-});
-window.require.register("collections/collections", function(exports, require, module) {
-  (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    exports.BaseCollection = (function(_super) {
-
-      __extends(BaseCollection, _super);
-
-      function BaseCollection() {
-        BaseCollection.__super__.constructor.apply(this, arguments);
-      }
-
-      BaseCollection.prototype.parse = function(response) {
-        return response.rows;
-      };
-
-      return BaseCollection;
-
-    })(Backbone.Collection);
 
   }).call(this);
   
@@ -300,19 +293,15 @@ window.require.register("helpers/timezone", function(exports, require, module) {
 });
 window.require.register("initialize", function(exports, require, module) {
   (function() {
-    var AccountView, ApplicationsView, BrunchApplication, HomeView, MainRouter,
+    var BrunchApplication, HomeView, MainRouter,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
     BrunchApplication = require('./helpers').BrunchApplication;
 
-    MainRouter = require('routers/main_router').MainRouter;
+    MainRouter = require('routers/main_router');
 
-    HomeView = require('views/home_view').HomeView;
-
-    AccountView = require('views/account_view').AccountView;
-
-    ApplicationsView = require('views/applications_view').ApplicationsView;
+    HomeView = require('views/main');
 
     exports.Application = (function(_super) {
 
@@ -325,18 +314,12 @@ window.require.register("initialize", function(exports, require, module) {
       Application.prototype.initialize = function() {
         this.initializeJQueryExtensions();
         this.routers = {};
-        this.views = {};
+        this.mainView = new HomeView();
         this.routers.main = new MainRouter();
-        this.views.home = new HomeView();
-        this.views.account = new AccountView();
-        this.views.applications = new ApplicationsView();
-        $("body").html(this.views.home.render());
-        this.views.home.setListeners();
-        this.views.home.fetch();
         window.app = this;
         Backbone.history.start();
         if (Backbone.history.getFragment() === '') {
-          return window.app.routers.main.navigate('home', true);
+          return this.routers.main.navigate('home', true);
         }
       };
 
@@ -349,64 +332,32 @@ window.require.register("initialize", function(exports, require, module) {
   }).call(this);
   
 });
-window.require.register("models/application", function(exports, require, module) {
+window.require.register("lib/base_collection", function(exports, require, module) {
   (function() {
-    var BaseModel, client,
+    var BaseCollection,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    BaseModel = require("models/models").BaseModel;
+    module.exports = BaseCollection = (function(_super) {
 
-    client = require("../helpers/client");
+      __extends(BaseCollection, _super);
 
-    exports.Application = (function(_super) {
-
-      __extends(Application, _super);
-
-      Application.prototype.url = '/api/applications/';
-
-      function Application(app) {
-        var property;
-        Application.__super__.constructor.call(this);
-        for (property in app) {
-          this[property] = app[property];
-        }
+      function BaseCollection() {
+        BaseCollection.__super__.constructor.apply(this, arguments);
       }
 
-      Application.prototype.install = function(callbacks) {
-        var data,
-          _this = this;
-        data = {
-          name: this.name,
-          description: this.description,
-          git: this.git
-        };
-        return client.post('/api/applications/install', data, {
-          success: function(data) {
-            _this.slug = data.app.slug;
-            _this.state = data.app.state;
-            return callbacks.success(data);
-          },
-          error: callbacks.error
-        });
+      BaseCollection.prototype.parse = function(response) {
+        return response.rows;
       };
 
-      Application.prototype.uninstall = function(callbacks) {
-        return client.del("/api/applications/" + this.slug + "/uninstall", callbacks);
-      };
+      return BaseCollection;
 
-      Application.prototype.updateApp = function(callbacks) {
-        return client.put("/api/applications/" + this.slug + "/update", {}, callbacks);
-      };
-
-      return Application;
-
-    })(BaseModel);
+    })(Backbone.Collection);
 
   }).call(this);
   
 });
-window.require.register("models/models", function(exports, require, module) {
+window.require.register("lib/base_model", function(exports, require, module) {
   (function() {
     var __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -430,17 +381,177 @@ window.require.register("models/models", function(exports, require, module) {
   }).call(this);
   
 });
-window.require.register("models/user", function(exports, require, module) {
+window.require.register("lib/base_view", function(exports, require, module) {
   (function() {
-    var BaseModel, client,
+    var BaseView,
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    BaseModel = require("models/models").BaseModel;
+    module.exports = BaseView = (function(_super) {
 
-    client = require('../helpers/client');
+      __extends(BaseView, _super);
 
-    exports.User = (function(_super) {
+      function BaseView() {
+        BaseView.__super__.constructor.apply(this, arguments);
+      }
+
+      BaseView.prototype.tagName = 'section';
+
+      BaseView.prototype.template = function() {};
+
+      BaseView.prototype.initialize = function() {
+        return this.render();
+      };
+
+      BaseView.prototype.getRenderData = function() {
+        var _ref;
+        return {
+          model: (_ref = this.model) != null ? _ref.toJSON() : void 0
+        };
+      };
+
+      BaseView.prototype.render = function() {
+        this.beforeRender();
+        this.$el.html(this.template({}));
+        this.afterRender();
+        return this;
+      };
+
+      BaseView.prototype.beforeRender = function() {};
+
+      BaseView.prototype.afterRender = function() {};
+
+      BaseView.prototype.destroy = function() {
+        this.undelegateEvents();
+        this.$el.removeData().unbind();
+        this.remove();
+        return Backbone.View.prototype.remove.call(this);
+      };
+
+      return BaseView;
+
+    })(Backbone.View);
+
+  }).call(this);
+  
+});
+window.require.register("models/application", function(exports, require, module) {
+  (function() {
+    var Application, client,
+      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    client = require("../helpers/client");
+
+    module.exports = Application = (function(_super) {
+
+      __extends(Application, _super);
+
+      function Application() {
+        this.uninstall = __bind(this.uninstall, this);
+        Application.__super__.constructor.apply(this, arguments);
+      }
+
+      Application.prototype.url = '/api/applications/';
+
+      Application.prototype.idAttribute = 'slug';
+
+      Application.prototype.isRunning = function() {
+        return this.get('state') === 'installed';
+      };
+
+      Application.prototype.isBroken = function() {
+        return this.get('state') === 'broken';
+      };
+
+      Application.prototype.install = function(callbacks) {
+        var _this = this;
+        return client.post('/api/applications/install', this.attributes, {
+          success: function(data) {
+            _this.set(data.app);
+            return callbacks.success(data);
+          },
+          error: callbacks.error
+        });
+      };
+
+      Application.prototype.uninstall = function(callbacks) {
+        var _this = this;
+        return client.del("/api/applications/" + this.id + "/uninstall", {
+          success: function(data) {
+            _this.trigger('destroy', _this, _this.collection);
+            return callbacks.success(data);
+          },
+          error: callbacks.error
+        });
+      };
+
+      Application.prototype.updateApp = function(callbacks) {
+        var _this = this;
+        return client.put("/api/applications/" + this.id + "/update", {}, {
+          success: function(data) {
+            _this.set(data.app);
+            return callbacks.success(data);
+          },
+          error: callbacks.error
+        });
+      };
+
+      Application.prototype.start = function(callbacks) {
+        var _this = this;
+        if (this.isRunning()) return null;
+        if (!(callbacks != null)) {
+          callbacks = {
+            success: function() {},
+            error: function() {}
+          };
+        }
+        return client.post("/api/applications/" + this.id + "/start", {}, {
+          success: function(data) {
+            _this.set(data.app);
+            return callbacks.success(data);
+          },
+          error: callbacks.error
+        });
+      };
+
+      Application.prototype.stop = function(callbacks) {
+        var _this = this;
+        if (!this.isRunning()) return null;
+        if (!(callbacks != null)) {
+          callbacks = {
+            success: function() {},
+            error: function() {}
+          };
+        }
+        return client.post("/api/applications/" + this.id + "/stop", {}, {
+          success: function(data) {
+            _this.set(data.app);
+            return callbacks.success(data);
+          },
+          error: callbacks.error
+        });
+      };
+
+      return Application;
+
+    })(Backbone.Model);
+
+  }).call(this);
+  
+});
+window.require.register("models/user", function(exports, require, module) {
+  (function() {
+    var BaseModel, User, client,
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    BaseModel = require('lib/base_model').BaseModel;
+
+    client = require('helpers/client');
+
+    module.exports = User = (function(_super) {
 
       __extends(User, _super);
 
@@ -463,10 +574,11 @@ window.require.register("models/user", function(exports, require, module) {
 });
 window.require.register("routers/main_router", function(exports, require, module) {
   (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
+    var MainRouter,
+      __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    exports.MainRouter = (function(_super) {
+    module.exports = MainRouter = (function(_super) {
 
       __extends(MainRouter, _super);
 
@@ -475,27 +587,33 @@ window.require.register("routers/main_router", function(exports, require, module
       }
 
       MainRouter.prototype.routes = {
-        "home": "home",
-        "applications": "applications",
+        "home": "applicationList",
+        "applications": "applicationList",
+        "market": "market",
         "account": "account",
+        "logout": "logout",
         "apps/:slug": "application",
         "apps/:slug/*hash": "application"
       };
 
-      MainRouter.prototype.home = function() {
-        return this.applications();
-      };
-
-      MainRouter.prototype.applications = function() {
-        return app.views.home.home();
-      };
-
-      MainRouter.prototype.application = function(slug, hash) {
-        return app.views.home.loadApp(slug, hash);
+      MainRouter.prototype.market = function() {
+        return app.mainView.displayMarket();
       };
 
       MainRouter.prototype.account = function() {
-        return app.views.home.account();
+        return app.mainView.displayAccount();
+      };
+
+      MainRouter.prototype.applicationList = function() {
+        return app.mainView.displayApplicationsList();
+      };
+
+      MainRouter.prototype.application = function(slug, hash) {
+        return app.mainView.displayApplication(slug, hash);
+      };
+
+      MainRouter.prototype.logout = function() {
+        return app.mainView.logout();
       };
 
       return MainRouter;
@@ -529,7 +647,9 @@ window.require.register("templates/account", function(exports, require, module) 
   buf.push(attrs({ 'id':('change-password-button'), "class": ('btn') }));
   buf.push('>Change password</button></p><div');
   buf.push(attrs({ 'id':('change-password-form') }));
-  buf.push('><p>Change password</p><p><label>fill this field to set a new password</label><input');
+  buf.push('><p>Change password</p><p><label>input your current password</label><input');
+  buf.push(attrs({ 'id':('account-password0-field'), 'type':("password") }));
+  buf.push('/></p><p><label>fill this field to set a new password</label><input');
   buf.push(attrs({ 'id':('account-password1-field'), 'type':("password") }));
   buf.push('/></p><p><label>confirm new password</label><input');
   buf.push(attrs({ 'id':('account-password2-field'), 'type':("password") }));
@@ -550,54 +670,6 @@ window.require.register("templates/account", function(exports, require, module) 
   return buf.join("");
   };
 });
-window.require.register("templates/application", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<a');
-  buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('application-inner') }));
-  buf.push('><p><img');
-  buf.push(attrs({ 'src':("apps/" + (app.slug) + "/icons/main_icon.png") }));
-  buf.push('/></p><p');
-  buf.push(attrs({ "class": ('app-title') }));
-  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div');
-  buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('btn-group') }));
-  buf.push('><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
-  buf.push('>remove</button><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
-  buf.push('>update</button></div><div><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('start-app') }));
-  buf.push('>start</button><button');
-  buf.push(attrs({ "class": ('btn') + ' ' + ('stop-app') }));
-  buf.push('>stop</button></div></div>');
-  }
-  return buf.join("");
-  };
-});
-window.require.register("templates/application_button", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<li');
-  buf.push(attrs({ "class": ('app-button') }));
-  buf.push('><a');
-  buf.push(attrs({ 'id':("" + (app.slug) + ""), 'href':("#apps/" + (app.slug) + "") }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }));
-  buf.push('/></a></li>');
-  }
-  return buf.join("");
-  };
-});
 window.require.register("templates/application_iframe", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
@@ -611,7 +683,7 @@ window.require.register("templates/application_iframe", function(exports, requir
   return buf.join("");
   };
 });
-window.require.register("templates/applications", function(exports, require, module) {
+window.require.register("templates/home", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -640,73 +712,44 @@ window.require.register("templates/applications", function(exports, require, mod
   buf.push('></div></div></div></div><div');
   buf.push(attrs({ "class": ('btn-group') }));
   buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-button'), "class": ('btn') }));
-  buf.push('><i class="icon-plus"></i>\nadd\n</button><button');
   buf.push(attrs({ 'id':('manage-app-button'), "class": ('btn') }));
-  buf.push('>manage\n</button></div></div><div');
-  buf.push(attrs({ 'id':('add-app-modal'), "class": ('modal') + ' ' + ('right') + ' ' + ('hide') }));
-  buf.push('><div');
-  buf.push(attrs({ "class": ('modal-header') }));
-  buf.push('><button');
-  buf.push(attrs({ 'type':("button"), 'data-dismiss':("modal"), 'aria-hidden':("true"), "class": ('close') }));
-  buf.push('>&times;\n</button><h3>Application installer</h3></div><div');
-  buf.push(attrs({ 'id':('add-app-form'), "class": ('modal-body') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('your-app') }));
-  buf.push('><p>Install \n<a');
-  buf.push(attrs({ 'href':("https://cozycloud.cc/make/"), 'target':("_blank") }));
-  buf.push('>your app</a></p><p><label>Git URL</label><input');
-  buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), "class": ("span3") }));
-  buf.push('/></p><div');
-  buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('></div><div');
-  buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ 'id':('install-button') }));
-  buf.push('><button');
-  buf.push(attrs({ 'id':('add-app-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button><button');
-  buf.push(attrs({ "class": ('loading-indicator') }));
-  buf.push('>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></div><div');
-  buf.push(attrs({ "class": ('app-introduction') }));
-  buf.push('><p>Or install an existing one:\n</p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/bookmarks-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>bookmarks </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(community contribution)</span><p>Manage your bookmark easily\n</p><p><button');
-  buf.push(attrs({ 'id':('add-bookmarks-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/feeds-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>feeds </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(community contribution)</span><p>Aggregate your feeds and save your favorite links in bookmarks.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-feeds-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/notes-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>notes </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(official application)</span><p>Store all your notes and files.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-notes-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div><div');
-  buf.push(attrs({ "class": ('cozy-app') }));
-  buf.push('><img');
-  buf.push(attrs({ 'src':("img/todos-icon.png"), "class": ('pull-left') }));
-  buf.push('/><h3>todos </h3><span');
-  buf.push(attrs({ "class": ('comment') }));
-  buf.push('>(official application)</span><p>Write your tasks, order them and execute them efficiently.\n</p><p><button');
-  buf.push(attrs({ 'id':('add-todos-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
-  buf.push('>install</button></p></div></div></div>');
+  buf.push('>manage\n</button></div></div>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/home", function(exports, require, module) {
+window.require.register("templates/home_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a');
+  buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('application-inner') }));
+  buf.push('><p><img');
+  buf.push(attrs({ 'src':("") }));
+  buf.push('/></p><p');
+  buf.push(attrs({ "class": ('app-title') }));
+  buf.push('>' + escape((interp = app.name) == null ? '' : interp) + '</p><p');
+  buf.push(attrs({ "class": ('broken-notifier') }));
+  buf.push('>broken app</p></div></a><div');
+  buf.push(attrs({ "class": ('application-outer') + ' ' + ('center') }));
+  buf.push('><div');
+  buf.push(attrs({ "class": ('btn-group') }));
+  buf.push('><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('remove-app') }));
+  buf.push('>remove</button><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('update-app') }));
+  buf.push('>update</button></div><div><button');
+  buf.push(attrs({ "class": ('btn') + ' ' + ('btn-large') + ' ' + ('start-stop-btn') }));
+  buf.push('>started</button></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/layout", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
@@ -714,7 +757,68 @@ window.require.register("templates/home", function(exports, require, module) {
   var interp;
   buf.push('<header');
   buf.push(attrs({ 'id':('header'), "class": ('navbar') }));
+  buf.push('></header><div');
+  buf.push(attrs({ "class": ('home-body') }));
   buf.push('><div');
+  buf.push(attrs({ 'id':('app-frames') }));
+  buf.push('></div><div');
+  buf.push(attrs({ 'id':('content') }));
+  buf.push('></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/market", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div');
+  buf.push(attrs({ 'id':('your-app') }));
+  buf.push('><p>Install \n<a');
+  buf.push(attrs({ 'href':("https://cozycloud.cc/make/"), 'target':("_blank") }));
+  buf.push('>your app</a></p><p><label>Git URL</label><input');
+  buf.push(attrs({ 'type':("text"), 'id':("app-git-field"), 'placeholder':("https://github.com/username/repository.git@branch"), "class": ("span3") }));
+  buf.push('/></p><div');
+  buf.push(attrs({ "class": ('error') + ' ' + ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
+  buf.push('></div><div');
+  buf.push(attrs({ "class": ('info') + ' ' + ('alert') + ' ' + ('main-alert') }));
+  buf.push('></div><button');
+  buf.push(attrs({ 'id':('add-app-submit'), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push('>install</button></div><div');
+  buf.push(attrs({ 'id':('app-market-list') }));
+  buf.push('><div');
+  buf.push(attrs({ 'id':('no-app-message'), "class": ('cozy-app') }));
+  buf.push('>You have already installed everything !\n</div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/market_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<img');
+  buf.push(attrs({ 'src':("" + (app.icon) + ""), "class": ('pull-left') }));
+  buf.push('/><button');
+  buf.push(attrs({ 'id':("add-" + (app.slug) + "-install"), "class": ('btn') + ' ' + ('btn-orange') }));
+  buf.push('>install</button><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span');
+  buf.push(attrs({ "class": ('comment') }));
+  buf.push('>' + escape((interp = app.comment) == null ? '' : interp) + '</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/navbar", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow) {
+  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div');
   buf.push(attrs({ "class": ('navbar-inner') + ' ' + ('clearfix') }));
   buf.push('><h2');
   buf.push(attrs({ 'id':('header-title') }));
@@ -729,130 +833,65 @@ window.require.register("templates/home", function(exports, require, module) {
   buf.push('><li');
   buf.push(attrs({ "class": ('active') }));
   buf.push('><a');
-  buf.push(attrs({ 'id':('home-button') }));
+  buf.push(attrs({ 'id':('home-button'), 'href':("#home") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-home') }));
   buf.push('></i><span>&nbsp;Home</span></a></li><li><a');
-  buf.push(attrs({ 'id':('account-button') }));
+  buf.push(attrs({ 'id':('market-button'), 'href':("#market") }));
+  buf.push('><i');
+  buf.push(attrs({ "class": ('icon-plus') }));
+  buf.push('></i><span>&nbsp;Market</span></a></li><li><a');
+  buf.push(attrs({ 'id':('account-button'), 'href':("#account") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-user') }));
   buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
-  buf.push(attrs({ 'id':('help-button'), 'target':("_blank"), 'href':("https://questions-beta.cozycloud.cc/") }));
+  buf.push(attrs({ 'id':('help-button'), 'href':("https://questions-beta.cozycloud.cc/"), 'target':("_blank") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-help') }));
   buf.push('>&nbsp;</i></a></li><li><a');
-  buf.push(attrs({ 'id':('logout-button') }));
+  buf.push(attrs({ 'id':('logout-button'), 'href':("#logout") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-arrow-right') }));
-  buf.push('></i></a></li></ul><ul');
-  buf.push(attrs({ "class": ('nav') }));
-  buf.push('></ul></div></div></header><div');
-  buf.push(attrs({ "class": ('home-body') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('app-frames') }));
-  buf.push('></div><div');
-  buf.push(attrs({ 'id':('content') }));
-  buf.push('></div></div>');
+  buf.push('></i></a></li></ul></div></div>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/login", function(exports, require, module) {
+window.require.register("templates/navbar_app_btn", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow) {
   var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<h2>Sign in</h2><div');
-  buf.push(attrs({ 'id':('login-form') }));
-  buf.push('><p><input');
-  buf.push(attrs({ 'id':('login-password'), 'type':("password"), 'placeholder':("enter your password...") }));
-  buf.push('/></p><p><a');
-  buf.push(attrs({ 'id':('forgot-password-button') }));
-  buf.push('>forgot password ?</a></p><div');
-  buf.push(attrs({ 'id':('login-info'), "class": ('alert') + ' ' + ('main-alert') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('login-info-text') }));
-  buf.push('></div></div><div');
-  buf.push(attrs({ 'id':('login-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('login-form-error-text') }));
-  buf.push('></div></div></div>');
+  buf.push('<li');
+  buf.push(attrs({ "class": ('app-button') }));
+  buf.push('><a');
+  buf.push(attrs({ 'id':("" + (app.slug) + ""), 'href':("#apps/" + (app.slug) + "") }));
+  buf.push('><img');
+  buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }));
+  buf.push('/></a></li>');
   }
   return buf.join("");
   };
 });
-window.require.register("templates/market", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<h1>Market Place</h1><h2>Select application you want in your browser.</h2><div');
-  buf.push(attrs({ 'id':('app-list') }));
-  buf.push('></div>');
-  }
-  return buf.join("");
-  };
-});
-window.require.register("templates/register", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<h2>Register to your Cozy</h2><div');
-  buf.push(attrs({ 'id':('login-form') }));
-  buf.push('><p><input');
-  buf.push(attrs({ 'id':('register-email'), 'type':("text"), 'placeholder':("email") }));
-  buf.push('/><input');
-  buf.push(attrs({ 'id':('register-password'), 'type':("password"), 'placeholder':("password") }));
-  buf.push('/><div');
-  buf.push(attrs({ 'id':('register-error'), "class": ('alert') + ' ' + ('alert-error') + ' ' + ('main-alert') }));
-  buf.push('><div');
-  buf.push(attrs({ 'id':('register-error-text') }));
-  buf.push('><wrong>data (wrong email or too short password).</wrong></div></div></p></div>');
-  }
-  return buf.join("");
-  };
-});
-window.require.register("templates/reset", function(exports, require, module) {
-  module.exports = function anonymous(locals, attrs, escape, rethrow) {
-  var attrs = jade.attrs, escape = jade.escape, rethrow = jade.rethrow;
-  var buf = [];
-  with (locals || {}) {
-  var interp;
-  buf.push('<h1>Reset Password</h1><div');
-  buf.push(attrs({ "class": ('well') }));
-  buf.push('><form');
-  buf.push(attrs({ 'id':('reset-form') }));
-  buf.push('><p><label>fill this field to set a new password:</label><input');
-  buf.push(attrs({ 'id':('reset-password1-field'), 'type':("password") }));
-  buf.push('/></p><p><label>confirm new password:</label><input');
-  buf.push(attrs({ 'id':('reset-password2-field'), 'type':("password") }));
-  buf.push('/></p><p><button');
-  buf.push(attrs({ 'id':('reset-form-button'), 'type':("submit"), "class": ("btn") }));
-  buf.push('>Send changes</button></p></form></div>');
-  }
-  return buf.join("");
-  };
-});
-window.require.register("views/account_view", function(exports, require, module) {
+window.require.register("views/account", function(exports, require, module) {
   (function() {
-    var template, timezones,
+    var BaseView, timezones,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    template = require('../templates/account');
+    BaseView = require('lib/base_view');
 
-    timezones = require('../helpers/timezone').timezones;
+    timezones = require('helpers/timezone').timezones;
 
-    exports.AccountView = (function(_super) {
+    module.exports = exports.AccountView = (function(_super) {
 
       __extends(AccountView, _super);
 
       AccountView.prototype.id = 'account-view';
+
+      AccountView.prototype.template = require('templates/account');
 
       /* Constructor
       */
@@ -860,6 +899,7 @@ window.require.register("views/account_view", function(exports, require, module)
       function AccountView() {
         this.displayErrors = __bind(this.displayErrors, this);
         this.onDataSubmit = __bind(this.onDataSubmit, this);
+        this.closePasswordForm = __bind(this.closePasswordForm, this);
         this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);      AccountView.__super__.constructor.call(this);
       }
 
@@ -872,11 +912,19 @@ window.require.register("views/account_view", function(exports, require, module)
         });
       };
 
+      AccountView.prototype.closePasswordForm = function() {
+        var _this = this;
+        return this.changePasswordForm.fadeOut(function() {
+          return _this.changePasswordButton.fadeIn();
+        });
+      };
+
       AccountView.prototype.onDataSubmit = function(event) {
         var form,
           _this = this;
         this.loadingIndicator.spin();
         form = {
+          password0: $("#account-password0-field").val(),
           password1: $("#account-password1-field").val(),
           password2: $("#account-password2-field").val()
         };
@@ -890,6 +938,7 @@ window.require.register("views/account_view", function(exports, require, module)
             if (data.success) {
               _this.infoAlert.html(data.msg);
               _this.infoAlert.show();
+              $("#account-password0-field").val(null);
               $("#account-password1-field").val(null);
               $("#account-password2-field").val(null);
             } else {
@@ -898,6 +947,7 @@ window.require.register("views/account_view", function(exports, require, module)
             return _this.loadingIndicator.spin();
           },
           error: function(data) {
+            $("#account-password0-field").val(null);
             _this.displayErrors(JSON.parse(data.responseText).msg);
             return _this.loadingIndicator.spin();
           }
@@ -1001,17 +1051,11 @@ window.require.register("views/account_view", function(exports, require, module)
       /* Configuration
       */
 
-      AccountView.prototype.render = function() {
-        this.$el.html(template());
-        return this.el;
-      };
-
-      AccountView.prototype.setListeners = function() {
+      AccountView.prototype.afterRender = function() {
         var _this = this;
-        app.views.home.selectNavButton(app.views.home.accountButton);
         this.emailField = this.$('#account-email-field');
         this.timezoneField = this.$('#account-timezone-field');
-        this.domainField = $('#account-domain-field');
+        this.domainField = this.$('#account-domain-field');
         this.infoAlert = this.$('#account-info');
         this.infoAlert.hide();
         this.errorAlert = this.$('#account-error');
@@ -1038,163 +1082,29 @@ window.require.register("views/account_view", function(exports, require, module)
         this.infoAlert.hide();
         this.addApplicationCloseCross = this.$('#add-app-modal .close');
         this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-        return this.loadingIndicator = this.$('.loading-indicator');
+        this.loadingIndicator = this.$('.loading-indicator');
+        return this.fetchData();
       };
 
       return AccountView;
 
-    })(Backbone.View);
+    })(BaseView);
 
   }).call(this);
   
 });
-window.require.register("views/application", function(exports, require, module) {
+window.require.register("views/home", function(exports, require, module) {
   (function() {
-    var BaseRow, template,
+    var ApplicationRow, ApplicationsListView, BaseView, client,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    template = require('../templates/application');
+    BaseView = require('lib/base_view');
 
-    BaseRow = require('views/row').BaseRow;
+    client = require('helpers/client');
 
-    exports.ApplicationRow = (function(_super) {
-
-      __extends(ApplicationRow, _super);
-
-      ApplicationRow.prototype.className = "application";
-
-      ApplicationRow.prototype.events = {
-        "click .remove-app": "onRemoveClicked",
-        "click .update-app": "onUpdateClicked"
-      };
-
-      /* Constructor
-      */
-
-      function ApplicationRow(model) {
-        this.model = model;
-        this.onUpdateClicked = __bind(this.onUpdateClicked, this);
-        this.onRemoveClicked = __bind(this.onRemoveClicked, this);
-        ApplicationRow.__super__.constructor.call(this, this.model);
-      }
-
-      /* Listener
-      */
-
-      ApplicationRow.prototype.onRemoveClicked = function(event) {
-        event.preventDefault();
-        return this.removeApp();
-      };
-
-      ApplicationRow.prototype.onUpdateClicked = function(event) {
-        event.preventDefault();
-        return this.updateApp();
-      };
-
-      /* Functions
-      */
-
-      ApplicationRow.prototype.removeApp = function() {
-        var _this = this;
-        this.removeButton.html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        this.removeButton.spin("small");
-        return this.model.uninstall({
-          success: function() {
-            _this.removeButton.html("Removed");
-            _this.removeButton.addClass('btn-green');
-            Backbone.Mediator.publish("app:removed", _this.model.slug);
-            _this.updateButton.unbind();
-            _this.removeButton.unbind();
-            return setTimeout(function() {
-              return _this.$el.fadeOut(function() {
-                return _this.remove();
-              });
-            }, 1000);
-          },
-          error: function() {
-            _this.removeButton.html("failed.");
-            return _this.removeButton.addClass('btn-red');
-          }
-        });
-      };
-
-      ApplicationRow.prototype.updateApp = function() {
-        var _this = this;
-        this.updateButton.html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        this.updateButton.spin("small");
-        this.updateButton.removeClass('btn-green');
-        this.updateButton.removeClass('btn-red');
-        return this.model.updateApp({
-          success: function() {
-            _this.updateButton.html("Updated");
-            return _this.updateButton.addClass('btn-green');
-          },
-          error: function() {
-            _this.updateButton.html("failed");
-            return _this.updateButton.addClass('btn-red');
-          }
-        });
-      };
-
-      /* configuration
-      */
-
-      ApplicationRow.prototype.render = function() {
-        var _this = this;
-        this.$el.html(template({
-          app: this.model
-        }));
-        this.el.id = this.model.slug;
-        if (this.model.state === "broken") {
-          this.$el.addClass("broken");
-          this.$el.find(".application-inner").append('<p class="broken-notifier">broken app<p>');
-        }
-        if (this.model.state === "stopped") {
-          this.$el.addClass("stopped");
-          this.$(".stop-app").hide();
-          this.$(".start-app").hide();
-        } else {
-          this.$(".stop-app").hide();
-          this.$(".start-app").hide();
-        }
-        this.$el.find('.application-inner').click(function(event) {
-          event.preventDefault();
-          return window.app.routers.main.navigate("apps/" + _this.model.slug, true);
-        });
-        this.updateButton = this.$(".update-app");
-        this.removeButton = this.$(".remove-app");
-        return this.el;
-      };
-
-      return ApplicationRow;
-
-    })(BaseRow);
-
-  }).call(this);
-  
-});
-window.require.register("views/applications_view", function(exports, require, module) {
-  (function() {
-    var AppCollection, AppRow, Application, InstallButton, User, applicationsTemplate, client,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    client = require('../helpers/client');
-
-    applicationsTemplate = require('../templates/applications');
-
-    User = require('../models/user').User;
-
-    AppRow = require('views/application').ApplicationRow;
-
-    AppCollection = require('collections/application').ApplicationCollection;
-
-    Application = require("models/application").Application;
-
-    InstallButton = require("views/install_button");
+    ApplicationRow = require('views/home_application');
 
     String.prototype.startsWith = function(prefix) {
       return this.indexOf(prefix, 0) === 0;
@@ -1204,155 +1114,87 @@ window.require.register("views/applications_view", function(exports, require, mo
       return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 
-    exports.ApplicationsView = (function(_super) {
+    module.exports = ApplicationsListView = (function(_super) {
 
-      __extends(ApplicationsView, _super);
+      __extends(ApplicationsListView, _super);
 
-      ApplicationsView.prototype.id = 'applications-view';
+      ApplicationsListView.prototype.id = 'applications-view';
 
-      ApplicationsView.prototype.subscriptions = {
-        "app:removed": "onAppRemoved"
+      ApplicationsListView.prototype.template = require('templates/home');
+
+      ApplicationsListView.prototype.events = {
+        'click #add-app-button': 'onAddClicked',
+        'click #manage-app-button': 'onManageAppsClicked'
       };
 
       /* Constructor
       */
 
-      function ApplicationsView() {
-        this.hideError = __bind(this.hideError, this);
-        this.displayError = __bind(this.displayError, this);
-        this.displayInfo = __bind(this.displayInfo, this);
-        this.checkData = __bind(this.checkData, this);
-        this.addApplication = __bind(this.addApplication, this);
-        this.clearApps = __bind(this.clearApps, this);
-        this.onCloseAddAppClicked = __bind(this.onCloseAddAppClicked, this);
+      function ApplicationsListView(apps) {
         this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
-        this.extractName = __bind(this.extractName, this);
-        this.runInstallation = __bind(this.runInstallation, this);
-        this.onInstallClicked = __bind(this.onInstallClicked, this);
+        this.onAddClicked = __bind(this.onAddClicked, this);
         this.onAppRemoved = __bind(this.onAppRemoved, this);
-        this.onAddClicked = __bind(this.onAddClicked, this);      ApplicationsView.__super__.constructor.call(this);
+        this.addApplication = __bind(this.addApplication, this);
+        this.onApplicationListReady = __bind(this.onApplicationListReady, this);
+        this.afterRender = __bind(this.afterRender, this);      this.apps = apps;
         this.isManaging = false;
-        this.isInstalling = false;
-        this.apps = new AppCollection(this);
+        ApplicationsListView.__super__.constructor.call(this);
       }
+
+      ApplicationsListView.prototype.afterRender = function() {
+        this.appList = this.$("#app-list");
+        this.manageAppsButton = this.$("#manage-app-button");
+        this.addApplicationButton = this.$("#add-app-button");
+        this.infoAlert = this.$("#add-app-form .info");
+        this.errorAlert = this.$("#add-app-form .error");
+        this.machineInfos = this.$(".machine-infos");
+        this.machineInfos.hide();
+        this.noAppMessage = this.$('#no-app-message');
+        if (this.apps.length > 0) onApplicationListReady(this.apps);
+        this.apps.bind('reset', this.onApplicationListReady);
+        this.apps.bind('add', this.addApplication);
+        return this.apps.bind('remove', this.onAppRemoved);
+      };
+
+      /* Collection Listeners
+      */
+
+      ApplicationsListView.prototype.onApplicationListReady = function(apps) {
+        this.appList.html(null);
+        if (apps.length === 0) {
+          return this.noAppMessage.show();
+        } else {
+          return apps.forEach(this.addApplication);
+        }
+      };
+
+      ApplicationsListView.prototype.addApplication = function(application) {
+        var appButton, row;
+        row = new ApplicationRow(application);
+        this.appList.append(row.el);
+        appButton = this.$(row.el);
+        appButton.hide().fadeIn();
+        if (this.isManaging) {
+          appButton.find(".application-outer").css('display', 'block');
+        }
+        return this.noAppMessage.hide();
+      };
+
+      ApplicationsListView.prototype.onAppRemoved = function(slug) {
+        if (this.apps.length === 0) return this.noAppMessage.show();
+      };
 
       /* Listeners
       */
 
-      ApplicationsView.prototype.onAddClicked = function() {
-        var allHidden, app, button, name, _i, _len, _ref, _ref2, _ref3;
-        this.installAppButton.displayOrange("install");
-        this.appNameField.val(null);
-        this.appGitField.val(null);
-        this.addApplicationForm.show();
-        this.addApplicationModal.toggle();
-        this.appNameField.focus();
-        this.isInstalling = false;
-        _ref = this.installButtons;
-        for (name in _ref) {
-          button = _ref[name];
-          button.showParent();
-        }
-        _ref2 = this.apps.toArray();
-        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-          app = _ref2[_i];
-          button = this.installButtons[app.name];
-          if (button != null) button.hideParent();
-        }
-        allHidden = true;
-        _ref3 = this.installButtons;
-        for (name in _ref3) {
-          button = _ref3[name];
-          if (!button.isHidden()) allHidden = false;
-        }
-        if (allHidden) {
-          return $(".app-introduction").hide();
-        } else {
-          return $(".app-introduction").show();
-        }
-      };
-
-      ApplicationsView.prototype.onAppRemoved = function(slug) {
-        var app, _i, _len, _ref, _results;
-        _ref = this.apps.toArray();
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          app = _ref[_i];
-          if (app.slug === slug) {
-            this.apps.remove(app);
-            break;
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
-      };
-
-      ApplicationsView.prototype.onInstallClicked = function(event) {
-        var data;
-        data = {
-          git: this.$("#app-git-field").val()
-        };
-        this.runInstallation(data, this.installAppButton);
+      ApplicationsListView.prototype.onAddClicked = function(event) {
         event.preventDefault();
-        return false;
+        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('market', true) : void 0;
       };
 
-      ApplicationsView.prototype.runInstallation = function(data, button) {
-        var app, dataChecking,
-          _this = this;
-        if (this.isInstalling) return true;
-        if (button.isGreen()) return true;
-        this.isInstalling = true;
-        this.hideError();
-        button.displayOrange("install");
-        dataChecking = this.checkData(data);
-        if (!dataChecking.error) {
-          data.name = this.extractName(data.git);
-          this.errorAlert.hide();
-          button.button.html("&nbsp;&nbsp;&nbsp;&nbsp;");
-          button.spin();
-          app = new Application(data);
-          return app.install({
-            success: function(data) {
-              if (((data.status != null) === "broken") || !data.success) {
-                _this.apps.add(app);
-                window.app.views.home.addApplication(app);
-                button.spin();
-                button.displayRed("Install failed");
-                return _this.isInstalling = false;
-              } else {
-                _this.apps.add(app);
-                window.app.views.home.addApplication(app);
-                button.spin();
-                button.displayGreen("Install succeeded!");
-                return _this.isInstalling = false;
-              }
-            },
-            error: function(data) {
-              _this.isInstalling = false;
-              button.displayRed("Install failed");
-              return button.spin();
-            }
-          });
-        } else {
-          this.isInstalling = false;
-          return this.displayError(dataChecking.msg);
-        }
-      };
-
-      ApplicationsView.prototype.extractName = function(gitUrl) {
-        var name, strings;
-        strings = gitUrl.split("/");
-        name = strings[strings.length - 1];
-        name = name.substring(0, name.length - 4);
-        name = name.replace(/-|_/g, " ");
-        if (name.indexOf("cozy ") === 0) name = name.substring(5);
-        return name;
-      };
-
-      ApplicationsView.prototype.onManageAppsClicked = function() {
+      ApplicationsListView.prototype.onManageAppsClicked = function(event) {
         var _this = this;
+        event.preventDefault();
         if (!this.machineInfos.is(':visible')) {
           this.$('.application-outer').show();
           this.machineInfos.find('.progress').spin();
@@ -1376,75 +1218,7 @@ window.require.register("views/applications_view", function(exports, require, mo
         return this.isManaging = !this.isManaging;
       };
 
-      ApplicationsView.prototype.onCloseAddAppClicked = function() {
-        this.addApplicationModal.hide();
-        return this.isInstalling = false;
-      };
-
-      /* Functions
-      */
-
-      ApplicationsView.prototype.clearApps = function() {
-        return this.appList.html(null);
-      };
-
-      ApplicationsView.prototype.addApplication = function(application) {
-        var appButton, el, row;
-        row = new AppRow(application);
-        el = row.render();
-        this.appList.append(el);
-        appButton = this.$(el);
-        appButton.hide();
-        appButton.fadeIn();
-        if (this.isManaging) return appButton.find(".application-outer").show();
-      };
-
-      ApplicationsView.prototype.checkData = function(data) {
-        var property, rightData, _ref;
-        rightData = true;
-        for (property in data) {
-          rightData = (data[property] != null) && data[property].length > 0;
-          if (!rightData) break;
-        }
-        if (!rightData) {
-          ({
-            error: true,
-            msg: "All fields are required"
-          });
-        }
-        if (data.git != null) {
-          if (!data.git.endsWith(".git")) data.git += ".git";
-          data.git.replace("git://", "https://");
-          return data.git.replace("git@github.com", "https://github.com/");
-        } else if (!((_ref = data.git) != null ? _ref.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?.git$/) : void 0)) {
-          return {
-            error: true,
-            msg: "Git url should be of form https://.../my-repo.git"
-          };
-        } else {
-          return {
-            error: false
-          };
-        }
-      };
-
-      ApplicationsView.prototype.displayInfo = function(msg) {
-        this.errorAlert.hide();
-        this.infoAlert.html(msg);
-        return this.infoAlert.show();
-      };
-
-      ApplicationsView.prototype.displayError = function(msg) {
-        this.infoAlert.hide();
-        this.errorAlert.html(msg);
-        return this.errorAlert.show();
-      };
-
-      ApplicationsView.prototype.hideError = function() {
-        return this.errorAlert.hide();
-      };
-
-      ApplicationsView.prototype.displayMemory = function(freeMem, totalMem) {
+      ApplicationsListView.prototype.displayMemory = function(freeMem, totalMem) {
         var total, usedMemory;
         total = Math.floor(totalMem / 1024) + "Mo";
         this.machineInfos.find('.memory .total').html(total);
@@ -1452,126 +1226,243 @@ window.require.register("views/applications_view", function(exports, require, mo
         return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
       };
 
-      ApplicationsView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
+      ApplicationsListView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
         this.machineInfos.find('.disk .total').html(totalSpace + "Go");
         return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
       };
 
-      ApplicationsView.prototype.displayNoAppMessage = function() {
-        return this.noAppMessage.show();
-      };
+      return ApplicationsListView;
 
-      /* Init functions
-      */
-
-      ApplicationsView.prototype.fetchData = function() {
-        return this.apps.fetch();
-      };
-
-      ApplicationsView.prototype.render = function() {
-        $(this.el).html(applicationsTemplate());
-        this.isManaging = false;
-        return this.el;
-      };
-
-      ApplicationsView.prototype.addInstallButton = function(name, url) {
-        var button,
-          _this = this;
-        if (this.installButtons == null) this.installButtons = {};
-        button = new InstallButton(this.$("#add-" + name + "-submit"));
-        button.button.click(function() {
-          var data;
-          data = {
-            git: url
-          };
-          if (!button.isGreen()) _this.runInstallation(data, button);
-          return false;
-        });
-        return this.installButtons[name] = button;
-      };
-
-      ApplicationsView.prototype.setListeners = function() {
-        var _this = this;
-        this.appList = this.$("#app-list");
-        this.addApplicationButton = this.$("#add-app-button");
-        this.addApplicationButton.click(this.onAddClicked);
-        this.addApplicationForm = this.$("#add-app-form");
-        this.addApplicationModal = this.$("#add-app-modal");
-        this.manageAppsButton = this.$("#manage-app-button");
-        this.manageAppsButton.click(this.onManageAppsClicked);
-        this.installAppButton = new InstallButton(this.$("#add-app-submit"));
-        this.installAppButton.button.click(this.onInstallClicked);
-        this.addInstallButton("notes", "https://github.com/mycozycloud/cozy-notes.git");
-        this.addInstallButton("todos", "https://github.com/mycozycloud/cozy-todos.git");
-        this.addInstallButton("bookmarks", "https://github.com/Piour/cozy-bookmarks.git");
-        this.addInstallButton("feeds", "https://github.com/Piour/cozy-feeds.git");
-        this.infoAlert = this.$("#add-app-form .info");
-        this.errorAlert = this.$("#add-app-form .error");
-        this.machineInfos = this.$(".machine-infos");
-        this.noAppMessage = this.$('#no-app-message');
-        this.appNameField = this.$("#app-name-field");
-        this.appGitField = this.$("#app-git-field");
-        this.appNameField.keyup(function(event) {
-          if (event.which === 13) return _this.appGitField.focus();
-        });
-        this.appGitField.keyup(function(event) {
-          if (event.which === 13) return _this.onInstallClicked();
-        });
-        this.installInfo = this.$("#add-app-modal .loading-indicator");
-        this.errorAlert.hide();
-        this.infoAlert.hide();
-        this.machineInfos.hide();
-        this.addApplicationCloseCross = this.$("#add-app-modal .close");
-        return this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-      };
-
-      return ApplicationsView;
-
-    })(Backbone.View);
+    })(BaseView);
 
   }).call(this);
   
 });
-window.require.register("views/home_view", function(exports, require, module) {
+window.require.register("views/home_application", function(exports, require, module) {
   (function() {
-    var AppCollection, User, appButtonTemplate, appIframeTemplate, homeTemplate,
+    var ApplicationRow, BaseView, ColorButton,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
       __hasProp = Object.prototype.hasOwnProperty,
       __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-    homeTemplate = require('../templates/home');
+    BaseView = require('lib/base_view');
 
-    appButtonTemplate = require("../templates/application_button");
+    ColorButton = require('widgets/install_button');
 
-    appIframeTemplate = require("../templates/application_iframe");
+    module.exports = ApplicationRow = (function(_super) {
 
-    AppCollection = require('../collections/application').ApplicationCollection;
+      __extends(ApplicationRow, _super);
 
-    User = require("../models/user").User;
+      ApplicationRow.prototype.className = "application";
 
-    exports.HomeView = (function(_super) {
+      ApplicationRow.prototype.tagName = "div";
+
+      ApplicationRow.prototype.template = function() {
+        return require('templates/home_application')({
+          'app': this.app.attributes
+        });
+      };
+
+      ApplicationRow.prototype.events = {
+        "click .application-inner": "onAppClicked",
+        "click .remove-app": "onRemoveClicked",
+        "click .update-app": "onUpdateClicked",
+        "click .start-stop-btn": "onStartStopClicked"
+      };
+
+      /* Constructor
+      */
+
+      function ApplicationRow(app) {
+        this.app = app;
+        this.launchApp = __bind(this.launchApp, this);
+        this.onStartStopClicked = __bind(this.onStartStopClicked, this);
+        this.onUpdateClicked = __bind(this.onUpdateClicked, this);
+        this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+        this.onAppClicked = __bind(this.onAppClicked, this);
+        this.onAppChanged = __bind(this.onAppChanged, this);
+        this.remove = __bind(this.remove, this);
+        this.afterRender = __bind(this.afterRender, this);
+        this.id = "app-btn-" + this.app.id;
+        ApplicationRow.__super__.constructor.call(this);
+      }
+
+      ApplicationRow.prototype.afterRender = function() {
+        this.el.id = this.app.id;
+        this.updateButton = new ColorButton(this.$(".update-app"));
+        this.removeButton = new ColorButton(this.$(".remove-app"));
+        this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
+        this.app.on('change', this.onAppChanged);
+        return this.onAppChanged(this.app);
+      };
+
+      ApplicationRow.prototype.remove = function() {
+        this.app.unbind('change');
+        return ApplicationRow.__super__.remove.call(this);
+      };
+
+      /* Listener
+      */
+
+      ApplicationRow.prototype.onAppChanged = function(app) {
+        if (app.isBroken()) {
+          this.$el.addClass("broken");
+          return this.startStopBtn.hide();
+        } else if (app.isRunning()) {
+          this.$('img').attr('src', "apps/" + app.id + "/icons/main_icon.png");
+          return this.startStopBtn.displayGrey('stop this app');
+        } else {
+          this.$('img').attr('src', "img/stopped.png");
+          return this.startStopBtn.displayGrey('start this app');
+        }
+      };
+
+      ApplicationRow.prototype.onAppClicked = function(event) {
+        event.preventDefault();
+        if (this.app.isRunning()) {
+          return this.launchApp();
+        } else {
+          return this.app.start({
+            success: this.launchApp
+          });
+        }
+      };
+
+      ApplicationRow.prototype.onRemoveClicked = function(event) {
+        event.preventDefault();
+        return this.removeApp();
+      };
+
+      ApplicationRow.prototype.onUpdateClicked = function(event) {
+        event.preventDefault();
+        return this.updateApp();
+      };
+
+      ApplicationRow.prototype.onStartStopClicked = function(event) {
+        var _this = this;
+        event.preventDefault();
+        this.startStopBtn.spin();
+        if (this.app.isRunning()) {
+          return this.app.stop({
+            success: function() {
+              return _this.startStopBtn.spin();
+            },
+            error: function() {
+              return _this.startStopBtn.spin();
+            }
+          });
+        } else {
+          return this.app.start({
+            success: function() {
+              return _this.startStopBtn.spin();
+            },
+            error: function() {
+              return _this.startStopBtn.spin();
+            }
+          });
+        }
+      };
+
+      /* Functions
+      */
+
+      ApplicationRow.prototype.launchApp = function() {
+        return window.app.routers.main.navigate("apps/" + this.app.id, true);
+      };
+
+      ApplicationRow.prototype.removeApp = function() {
+        var _this = this;
+        this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        this.removeButton.spin("small");
+        return this.app.uninstall({
+          success: function() {
+            _this.removeButton.displayGreen("Removed");
+            return setTimeout(function() {
+              return _this.$el.fadeOut(function() {
+                return _this.remove();
+              });
+            }, 1000);
+          },
+          error: function() {
+            return _this.removeButton.displayRed("failed");
+          }
+        });
+      };
+
+      ApplicationRow.prototype.updateApp = function() {
+        var _this = this;
+        this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        this.updateButton.spin();
+        return this.app.updateApp({
+          success: function() {
+            return _this.updateButton.displayGreen("Updated");
+          },
+          error: function() {
+            return _this.updateButton.displayRed("failed");
+          }
+        });
+      };
+
+      return ApplicationRow;
+
+    })(BaseView);
+
+  }).call(this);
+  
+});
+window.require.register("views/main", function(exports, require, module) {
+  (function() {
+    var AccountView, AppCollection, ApplicationsListView, BaseView, HomeView, MarketView, NavbarView, User, appIframeTemplate,
+      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    BaseView = require('lib/base_view');
+
+    appIframeTemplate = require('templates/application_iframe');
+
+    AppCollection = require('collections/application');
+
+    NavbarView = require('views/navbar');
+
+    AccountView = require('views/account');
+
+    MarketView = require('views/market');
+
+    ApplicationsListView = require('views/home');
+
+    User = require('models/user');
+
+    module.exports = HomeView = (function(_super) {
 
       __extends(HomeView, _super);
 
-      HomeView.prototype.id = 'home-view';
+      HomeView.prototype.el = 'body';
+
+      HomeView.prototype.template = require('templates/layout');
 
       function HomeView() {
-        this.addApplication = __bind(this.addApplication, this);
-        this.clearApps = __bind(this.clearApps, this);
         this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
-        this.account = __bind(this.account, this);
-        this.home = __bind(this.home, this);
+        this.onAppHashChanged = __bind(this.onAppHashChanged, this);
+        this.displayAccount = __bind(this.displayAccount, this);
+        this.displayMarket = __bind(this.displayMarket, this);
+        this.displayApplicationsList = __bind(this.displayApplicationsList, this);
+        this.displayView = __bind(this.displayView, this);
         this.logout = __bind(this.logout, this);
-        this.onAppRemoved = __bind(this.onAppRemoved, this);      HomeView.__super__.constructor.call(this);
-        this.apps = new AppCollection(this);
+        this.afterRender = __bind(this.afterRender, this);      this.apps = new AppCollection();
+        HomeView.__super__.constructor.call(this);
       }
 
-      HomeView.prototype.subscriptions = {
-        "app:removed": "onAppRemoved"
-      };
-
-      HomeView.prototype.onAppRemoved = function(slug) {
-        return this.buttons.find("#" + slug).remove();
+      HomeView.prototype.afterRender = function() {
+        this.navbar = new NavbarView(this.apps);
+        this.applicationListView = new ApplicationsListView(this.apps);
+        this.accountView = new AccountView();
+        this.marketView = new MarketView(this.apps);
+        this.frames = this.$('#app-frames');
+        this.content = this.$('#content');
+        this.resetLayoutSizes();
+        $(window).resize(this.resetLayoutSizes);
+        return this.apps.fetch();
       };
 
       /* Functions
@@ -1592,35 +1483,84 @@ window.require.register("views/home_view", function(exports, require, module) {
         return event.preventDefault();
       };
 
-      HomeView.prototype.home = function() {
-        var view;
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate('home', false);
-        }
+      HomeView.prototype.displayView = function(view) {
+        if (this.currentView != null) this.currentView.$el.detach();
         this.content.show();
         this.frames.hide();
-        view = app.views.applications;
-        $("#content").html(view.render());
-        view.fetchData();
-        view.setListeners();
-        this.selectNavButton(this.homeButton);
+        this.content.append(view.$el);
+        this.currentView = view;
+        return $('#favicon').attr('href', "favicon.ico");
+      };
+
+      HomeView.prototype.displayApplicationsList = function() {
+        this.displayView(this.applicationListView);
+        this.navbar.selectButton("home-button");
         return window.document.title = "Cozy - Home";
       };
 
-      HomeView.prototype.account = function() {
-        var view;
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate('account', true);
-        }
-        this.content.show();
-        this.frames.hide();
-        view = app.views.account;
-        $("#content").html(view.render());
-        view.fetchData();
-        view.setListeners();
-        this.selectNavButton(this.accountButton);
+      HomeView.prototype.displayMarket = function() {
+        this.displayView(this.marketView);
+        this.navbar.selectButton("market-button");
+        return window.document.title = "Cozy - Market";
+      };
+
+      HomeView.prototype.displayAccount = function() {
+        this.displayView(this.accountView);
+        this.navbar.selectButton("account-button");
         return window.document.title = "Cozy - Account";
       };
+
+      HomeView.prototype.displayApplication = function(slug, hash) {
+        var frame, name, once,
+          _this = this;
+        if (this.apps.length === 0) {
+          once = function() {
+            _this.apps.off('reset', once);
+            return _this.displayApplication(slug, hash);
+          };
+          this.apps.on('reset', once);
+          return null;
+        }
+        this.frames.show();
+        this.content.hide();
+        frame = this.$("#" + slug + "-frame");
+        if (frame.length === 0) frame = this.createApplicationIframe(slug, hash);
+        this.$("#app-frames").find("iframe").hide();
+        frame.show();
+        this.navbar.selectButton(slug);
+        this.selectedApp = slug;
+        name = this.apps.get(slug).get('name');
+        if (!(name != null)) name = '';
+        window.document.title = "Cozy - " + name;
+        return $('#favicon').attr('href', "/apps/" + slug + "/favicon.ico");
+      };
+
+      HomeView.prototype.createApplicationIframe = function(slug, hash) {
+        var frame,
+          _this = this;
+        if (hash == null) hash = "";
+        this.frames.append(appIframeTemplate({
+          id: slug,
+          hash: hash
+        }));
+        frame = this.$("#" + slug + "-frame");
+        $(frame.prop('contentWindow')).on('hashchange', function() {
+          var location, newhash;
+          location = frame.prop('contentWindow').location;
+          newhash = location.hash.replace('#', '');
+          return _this.onAppHashChanged(slug, newhash);
+        });
+        return frame;
+      };
+
+      HomeView.prototype.onAppHashChanged = function(slug, newhash) {
+        if (slug === this.selectedApp) {
+          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
+        }
+      };
+
+      /* Configuration
+      */
 
       HomeView.prototype.resetLayoutSizes = function() {
         var header;
@@ -1629,25 +1569,339 @@ window.require.register("views/home_view", function(exports, require, module) {
         return this.content.height($(window).height() - header.height());
       };
 
-      HomeView.prototype.selectNavButton = function(button) {
-        this.buttons.find("li").removeClass("active");
-        return button.parent().addClass("active");
+      return HomeView;
+
+    })(BaseView);
+
+  }).call(this);
+  
+});
+window.require.register("views/market", function(exports, require, module) {
+  (function() {
+    var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, REPOREGEX, slugify,
+      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    BaseView = require('lib/base_view');
+
+    ApplicationRow = require('views/market_application');
+
+    ColorButton = require('widgets/install_button');
+
+    AppCollection = require('collections/application');
+
+    Application = require('models/application');
+
+    slugify = require('helpers').slugify;
+
+    REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+
+    module.exports = MarketView = (function(_super) {
+
+      __extends(MarketView, _super);
+
+      MarketView.prototype.id = 'market-view';
+
+      MarketView.prototype.template = require('templates/market');
+
+      MarketView.prototype.events = {
+        'keyup #app-git-field': 'onEnterPressed',
+        'click #add-app-submit': 'onInstallClicked'
       };
 
-      HomeView.prototype.clearApps = function() {
-        this.$(".app-button a").unbind();
-        return this.$(".app-button").remove();
+      /* Constructor
+      */
+
+      function MarketView(installedApps) {
+        this.resetForm = __bind(this.resetForm, this);
+        this.hideError = __bind(this.hideError, this);
+        this.displayError = __bind(this.displayError, this);
+        this.displayInfo = __bind(this.displayInfo, this);
+        this.runInstallation = __bind(this.runInstallation, this);
+        this.onInstallClicked = __bind(this.onInstallClicked, this);
+        this.onEnterPressed = __bind(this.onEnterPressed, this);
+        this.addApplication = __bind(this.addApplication, this);
+        this.onAppListsChanged = __bind(this.onAppListsChanged, this);
+        this.afterRender = __bind(this.afterRender, this);      this.isInstalling = false;
+        this.marketApps = new AppCollection();
+        this.displayApps = new AppCollection();
+        this.installedApps = installedApps;
+        MarketView.__super__.constructor.call(this);
+      }
+
+      MarketView.prototype.afterRender = function() {
+        this.appList = this.$('#app-market-list');
+        this.appGitField = this.$("#app-git-field");
+        this.installInfo = this.$("#add-app-modal .loading-indicator");
+        this.infoAlert = this.$("#your-app .info");
+        this.infoAlert.hide();
+        this.errorAlert = this.$("#your-app .error");
+        this.errorAlert.hide();
+        this.noAppMessage = this.$('#no-app-message');
+        this.installAppButton = new ColorButton(this.$("#add-app-submit"));
+        this.installedApps.bind('reset', this.onAppListsChanged);
+        this.installedApps.bind('add', this.onAppListsChanged);
+        this.installedApps.bind('remove', this.onAppListsChanged);
+        this.marketApps.bind('reset', this.onAppListsChanged);
+        return this.marketApps.fetchFromMarket();
       };
 
-      HomeView.prototype.addApplication = function(application) {
+      MarketView.prototype.onAppListsChanged = function() {
+        var noApp,
+          _this = this;
+        this.appList.html(null);
+        noApp = true;
+        this.marketApps.each(function(marketApp) {
+          if (_this.installedApps.pluck('slug').indexOf(marketApp.get('slug')) === -1) {
+            noApp = false;
+            return _this.addApplication(marketApp);
+          }
+        });
+        return this.noAppMessage.toggle(!noApp);
+      };
+
+      MarketView.prototype.addApplication = function(application) {
+        var appButton, row;
+        row = new ApplicationRow(application, this);
+        this.noAppMessage.hide();
+        this.appList.append(row.el);
+        appButton = this.$(row.el);
+        return appButton.hide().fadeIn();
+      };
+
+      MarketView.prototype.onEnterPressed = function(event) {
+        if (event.which === 13) return this.onInstallClicked();
+      };
+
+      MarketView.prototype.onInstallClicked = function(event) {
+        var data;
+        data = {
+          git: this.$("#app-git-field").val()
+        };
+        this.runInstallation(data, this.installAppButton);
+        event.preventDefault();
+        return false;
+      };
+
+      MarketView.prototype.runInstallation = function(appDescriptor, button) {
+        var parsed, toInstall,
+          _this = this;
+        if (this.isInstalling) return true;
+        if (button.isGreen()) return true;
+        this.isInstalling = true;
+        this.hideError();
+        button.displayOrange("install");
+        parsed = this.parseGitUrl(appDescriptor.git);
+        if (!parsed.error) {
+          this.errorAlert.hide();
+          button.button.html("&nbsp;&nbsp;&nbsp;&nbsp;");
+          button.spin();
+          toInstall = new Application(parsed);
+          return toInstall.install({
+            success: function(data) {
+              if (((data.state != null) === "broken") || !data.success) {
+                _this.installedApps.add(toInstall);
+                button.spin();
+                button.displayRed("Install failed");
+                return _this.isInstalling = false;
+              } else {
+                _this.installedApps.add(toInstall);
+                button.spin();
+                button.displayGreen("Install succeeded!");
+                _this.isInstalling = false;
+                _this.resetForm();
+                return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+              }
+            },
+            error: function(data) {
+              _this.isInstalling = false;
+              button.displayRed("Install failed");
+              return button.spin();
+            }
+          });
+        } else {
+          this.isInstalling = false;
+          return this.displayError(parsed.msg);
+        }
+      };
+
+      MarketView.prototype.parseGitUrl = function(url) {
+        var branch, domain, git, name, out, parsed, parts, path, proto, slug;
+        url = url.replace('git@github.com:', 'https://github.com/');
+        url = url.replace('git://', 'https://');
+        parsed = REPOREGEX.exec(url);
+        if (parsed == null) {
+          return {
+            error: true,
+            msg: "Git url should be of form https://.../my-repo.git"
+          };
+        }
+        git = parsed[0], proto = parsed[1], domain = parsed[2], path = parsed[3], branch = parsed[4];
+        path = path.replace('.git', '');
+        parts = path.split("/");
+        name = parts[parts.length - 1];
+        name = name.replace(/-|_/g, " ");
+        name = name.replace('cozy ', '');
+        slug = slugify(name);
+        git = proto + domain + path + '.git';
+        if (branch != null) branch = branch.substring(1);
+        out = {
+          git: git,
+          name: name,
+          slug: slug
+        };
+        if (branch != null) out.branch = branch;
+        return out;
+      };
+
+      MarketView.prototype.displayInfo = function(msg) {
+        this.errorAlert.hide();
+        this.infoAlert.html(msg);
+        return this.infoAlert.show();
+      };
+
+      MarketView.prototype.displayError = function(msg) {
+        this.infoAlert.hide();
+        this.errorAlert.html(msg);
+        return this.errorAlert.show();
+      };
+
+      MarketView.prototype.hideError = function() {
+        return this.errorAlert.hide();
+      };
+
+      MarketView.prototype.resetForm = function() {
+        this.installAppButton.displayOrange("install");
+        return this.appGitField.val('');
+      };
+
+      return MarketView;
+
+    })(BaseView);
+
+  }).call(this);
+  
+});
+window.require.register("views/market_application", function(exports, require, module) {
+  (function() {
+    var ApplicationRow, BaseView, ColorButton,
+      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    BaseView = require('lib/base_view');
+
+    ColorButton = require('widgets/install_button');
+
+    module.exports = ApplicationRow = (function(_super) {
+
+      __extends(ApplicationRow, _super);
+
+      ApplicationRow.prototype.tagName = "div";
+
+      ApplicationRow.prototype.className = "cozy-app";
+
+      ApplicationRow.prototype.template = function() {
+        return require('templates/market_application')({
+          app: this.app.attributes
+        });
+      };
+
+      function ApplicationRow(app, marketView) {
+        this.app = app;
+        this.marketView = marketView;
+        this.onInstallClicked = __bind(this.onInstallClicked, this);
+        this.afterRender = __bind(this.afterRender, this);
+        this.events = {};
+        this.events["click #add-" + this.app.id + "-install"] = 'onInstallClicked';
+        ApplicationRow.__super__.constructor.call(this);
+      }
+
+      ApplicationRow.prototype.afterRender = function() {
+        return this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
+      };
+
+      ApplicationRow.prototype.onInstallClicked = function() {
+        return this.marketView.runInstallation(this.app.attributes, this.installButton);
+      };
+
+      return ApplicationRow;
+
+    })(BaseView);
+
+  }).call(this);
+  
+});
+window.require.register("views/navbar", function(exports, require, module) {
+  (function() {
+    var BaseView, NavbarView, appButtonTemplate,
+      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+      __hasProp = Object.prototype.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+    BaseView = require('lib/base_view');
+
+    appButtonTemplate = require("templates/navbar_app_btn");
+
+    module.exports = NavbarView = (function(_super) {
+
+      __extends(NavbarView, _super);
+
+      NavbarView.prototype.el = '#header';
+
+      NavbarView.prototype.template = require('templates/navbar');
+
+      function NavbarView(apps) {
+        this.onAppRemoved = __bind(this.onAppRemoved, this);
+        this.addApplication = __bind(this.addApplication, this);
+        this.onApplicationChanged = __bind(this.onApplicationChanged, this);
+        this.onApplicationListReady = __bind(this.onApplicationListReady, this);
+        this.afterRender = __bind(this.afterRender, this);      this.apps = apps;
+        NavbarView.__super__.constructor.call(this);
+      }
+
+      NavbarView.prototype.afterRender = function() {
+        this.buttons = this.$('#buttons');
+        this.$('#help-button').tooltip({
+          placement: 'bottom',
+          title: 'Questions and help forum'
+        });
+        this.$('#logout-button').tooltip({
+          placement: 'bottom',
+          title: 'Sign out'
+        });
+        if (this.apps.length > 0) onApplicationListReady(this.apps);
+        this.apps.bind('reset', this.onApplicationListReady);
+        this.apps.bind('change', this.onApplicationChanged);
+        this.apps.bind('add', this.addApplication);
+        return this.apps.bind('remove', this.onAppRemoved);
+      };
+
+      NavbarView.prototype.onApplicationListReady = function(apps) {
+        this.$(".app-button").remove();
+        return apps.forEach(this.onApplicationChanged);
+      };
+
+      NavbarView.prototype.onApplicationChanged = function(app) {
+        if (app.isRunning()) {
+          if (!this.buttons.find("#" + app.id).length) {
+            return this.addApplication(app);
+          }
+        } else {
+          return this.onAppRemoved(app);
+        }
+      };
+
+      NavbarView.prototype.addApplication = function(app) {
         var button;
-        this.buttons.find(".nav:last").append(appButtonTemplate({
-          app: application
+        this.buttons.find(".nav:last").prepend(appButtonTemplate({
+          app: app.attributes
         }));
-        button = this.buttons.find("#" + application.slug);
+        button = this.buttons.find("#" + app.id);
         return button.tooltip({
           placement: 'bottom',
-          title: '<a target="' + application.slug + '" href="/apps/' + application.slug + '/">open in a new tab</a>',
+          title: '<a target="' + app.id + '" href="/apps/' + app.id + '/">open in a new tab</a>',
           delay: {
             show: 500,
             hide: 1000
@@ -1655,185 +1909,84 @@ window.require.register("views/home_view", function(exports, require, module) {
         });
       };
 
-      HomeView.prototype.loadApp = function(slug, hash) {
-        var frame;
-        this.frames.show();
-        frame = this.$("#" + slug + "-frame");
-        if (frame.length === 0) {
-          if (!(hash != null)) hash = '';
-          this.frames.append(appIframeTemplate({
-            id: slug,
-            hash: hash
-          }));
-          frame = this.$("#" + slug + "-frame");
-          $(frame.prop('contentWindow')).on('hashchange', function() {
-            var location, newhash;
-            location = frame.prop('contentWindow').location;
-            newhash = location.hash.replace('#', '');
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
-          });
-        }
-        this.content.hide();
-        this.$("#app-frames").find("iframe").hide();
-        frame.show();
-        this.selectNavButton(this.$("#" + slug));
-        this.selectedApp = slug;
-        return this.setAppTitle();
+      NavbarView.prototype.onAppRemoved = function(app) {
+        return this.buttons.find("#" + app.id).remove();
       };
 
-      HomeView.prototype.displayNoAppMessage = function() {};
-
-      /* Configuration
-      */
-
-      HomeView.prototype.setAppTitle = function() {
-        var application, name,
-          _this = this;
-        application = this.apps.filter(function(application) {
-          return application.slug === _this.selectedApp;
-        });
-        if (application.length > 0) {
-          name = application[0].name;
-        } else {
-          name = "";
-        }
-        return window.document.title = "Cozy - " + name;
+      NavbarView.prototype.selectButton = function(button) {
+        button = this.$("#" + button);
+        this.buttons.find("li").removeClass("active");
+        return button.parent().addClass("active");
       };
 
-      HomeView.prototype.fetch = function() {
-        var _this = this;
-        return this.apps.fetch({
-          success: function() {
-            if (_this.selectedApp != null) {
-              _this.selectNavButton(_this.$("#" + _this.selectedApp));
-            }
-            if (_this.selectedApp != null) _this.setAppTitle();
-            _this.selectedApp = null;
-            return _this.resetLayoutSizes();
-          }
-        });
-      };
+      return NavbarView;
 
-      HomeView.prototype.render = function() {
-        $(this.el).html(homeTemplate());
-        return this.el;
-      };
-
-      HomeView.prototype.setListeners = function() {
-        this.$('#help-button').tooltip({
-          placement: 'bottom',
-          title: 'Questions and help forum'
-        });
-        this.logoutButton = this.$('#logout-button');
-        this.logoutButton.click(this.logout);
-        this.logoutButton.tooltip({
-          placement: 'bottom',
-          title: 'Sign out'
-        });
-        this.accountButton = this.$('#account-button');
-        this.accountButton.click(this.account);
-        this.homeButton = this.$('#home-button');
-        this.homeButton.click(this.home);
-        this.buttons = this.$('#buttons');
-        this.selectNavButton(this.homeButton);
-        this.frames = this.$('#app-frames');
-        this.content = this.$('#content');
-        this.buttons.fadeIn();
-        this.content = this.$('#content');
-        $(window).resize(this.resetLayoutSizes);
-        return this.resetLayoutSizes();
-      };
-
-      return HomeView;
-
-    })(Backbone.View);
+    })(BaseView);
 
   }).call(this);
   
 });
-window.require.register("views/install_button", function(exports, require, module) {
+window.require.register("widgets/install_button", function(exports, require, module) {
   (function() {
-    var InstallButton;
+    var ColorButton;
 
-    module.exports = InstallButton = (function() {
+    module.exports = ColorButton = (function() {
 
-      function InstallButton(button) {
+      function ColorButton(button) {
         this.button = button;
       }
 
-      InstallButton.prototype.displayOrange = function(text) {
+      ColorButton.prototype.displayGrey = function(text) {
+        this.button.show();
+        this.button.html(text);
+        this.button.removeClass("btn-red");
+        this.button.removeClass("btn-green");
+        return this.button.removeClass("btn-orange");
+      };
+
+      ColorButton.prototype.displayOrange = function(text) {
+        this.button.show();
         this.button.html(text);
         this.button.removeClass("btn-red");
         this.button.removeClass("btn-green");
         return this.button.addClass("btn-orange");
       };
 
-      InstallButton.prototype.displayGreen = function(text) {
+      ColorButton.prototype.displayGreen = function(text) {
+        this.button.show();
         this.button.html(text);
         this.button.addClass("btn-green");
         this.button.removeClass("btn-red");
         return this.button.removeClass("btn-orange");
       };
 
-      InstallButton.prototype.displayRed = function(text) {
+      ColorButton.prototype.displayRed = function(text) {
+        this.button.show();
         this.button.html(text);
         this.button.removeClass("btn-green");
         this.button.addClass("btn-red");
         return this.button.removeClass("btn-orange");
       };
 
-      InstallButton.prototype.isGreen = function() {
+      ColorButton.prototype.hide = function() {
+        return this.button.hide();
+      };
+
+      ColorButton.prototype.isGreen = function() {
         return this.button.hasClass("btn-green");
       };
 
-      InstallButton.prototype.spin = function() {
+      ColorButton.prototype.spin = function() {
         return this.button.spin("small");
       };
 
-      InstallButton.prototype.hideParent = function() {
-        return this.button.parent().parent().hide();
-      };
-
-      InstallButton.prototype.showParent = function() {
-        return this.button.parent().parent().show();
-      };
-
-      InstallButton.prototype.isHidden = function() {
+      ColorButton.prototype.isHidden = function() {
         return !this.button.is(":visible");
       };
 
-      return InstallButton;
+      return ColorButton;
 
     })();
-
-  }).call(this);
-  
-});
-window.require.register("views/row", function(exports, require, module) {
-  (function() {
-    var __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    exports.BaseRow = (function(_super) {
-
-      __extends(BaseRow, _super);
-
-      BaseRow.prototype.tagName = "div";
-
-      function BaseRow(model) {
-        this.model = model;
-        BaseRow.__super__.constructor.call(this);
-        this.id = this.model.slug;
-        this.model.view = this;
-      }
-
-      BaseRow.prototype.remove = function() {
-        return this.$el.remove();
-      };
-
-      return BaseRow;
-
-    })(Backbone.View);
 
   }).call(this);
   

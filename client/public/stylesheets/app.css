@@ -5993,7 +5993,7 @@ a.editable-click.editable-disabled:hover {
 }
 @font-face{font-family:styled;src:url("/fonts/maven-pro-light-300.otf")}
 @font-face{font-family:main;src:url("/fonts/signika-regular.ttf")}
-body{min-width:320px;color:#eaf1f1;font-family:styled;font-size:18px}
+body{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;min-width:320px;color:#eaf1f1;font-family:styled;font-size:18px}
 a{color:linkcolor;font-weight:bold}
 a,a:visited,a.editable-click{color:#eaf1f1;border-bottom:1px dashed #eaf1f1}
 a.editable-click:hover{color:#cb6e3b;border-bottom:1px dashed #eaf1f1}
@@ -6021,15 +6021,16 @@ html{height:100%}
 .alert-success{shadow:0 0 6px rgba(60,100,60,0.85) inset;background:rgba(223,240,216,0.80)}
 .progress{margin:20px 0;height:10px;background:#505a5b}
 .progress .bar{background:#e2f8ff;-webkit-box-shadow:0 0 6px #e2f8ff;-moz-box-shadow:0 0 6px #e2f8ff;box-shadow:0 0 6px #e2f8ff}
-.home-body{width:100%;height:100%;padding:0;margin:0;-webkit-box-shadow:inset 0 0 100px #4a7175;-moz-box-shadow:inset 0 0 100px #4a7175;box-shadow:inset 0 0 100px #4a7175;background:#738182;overflow:hidden}
+.home-body{width:100%;padding:0;margin:0;-webkit-box-shadow:inset 0 0 100px #4a7175;-moz-box-shadow:inset 0 0 100px #4a7175;box-shadow:inset 0 0 100px #4a7175;background:#738182;overflow:hidden}
 .well{background:transparent;border:0;margin:2%;color:#eaf1f1;text-align:center;-webkit-box-shadow:0 0 0 0;-moz-box-shadow:0 0 0 0;box-shadow:0 0 0 0}
 .icon-help{background-image:url("../img/help.png");background-repeat:no-repeat;background-position:0 0}
+.btn:focus{outline:none}
 #content{padding:0;height:100%;overflow:auto}
+.navbar{-webkit-border-radius:0;-moz-border-radius:0;border-radius:0;}
 .navbar .nav{float:right;}
 .navbar .nav .active a,.navbar .nav .active a:active,.navbar .nav .active a:focus{-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0;-webkit-box-shadow:inset 2px 1px 4px #454d4e;-moz-box-shadow:inset 2px 1px 4px #454d4e;box-shadow:inset 2px 1px 4px #454d4e;background:#abb4b4}
 .navbar .nav .active a:hover{cursor:default;background:#abb4b4;-webkit-box-shadow:inset 2px 1px 4px #454d4e;-moz-box-shadow:inset 2px 1px 4px #454d4e;box-shadow:inset 2px 1px 4px #454d4e}
 .navbar .nav li a:hover{background:#fff;cursor:pointer;background:#e2f8ff;-webkit-box-shadow:inset 0 -4px 2px #454d4e;-moz-box-shadow:inset 0 -4px 2px #454d4e;box-shadow:inset 0 -4px 2px #454d4e}
-.navbar{-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}
 #header{position:relative;margin-top:0;margin-bottom:0;border:0;}
 #header .navbar-inner{padding-right:5px;background-color:#e3e6e6;-webkit-box-shadow:inset 0 -4px 2px #5c6768;-moz-box-shadow:inset 0 -4px 2px #5c6768;box-shadow:inset 0 -4px 2px #5c6768;background-image:none;height:100%;border:0;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}
 #header h2{float:left;color:linkcolor}
@@ -6048,9 +6049,6 @@ html{height:100%}
 #add-app-modal{width:100%;margin:0;left:0}
 }@media (max-width: 700px){#header-title{display:none}
 }#confirm-dialog{display:none}
-#app-description-field,#app-git-field{width:99%}
-#app-name-field{width:140px}
-#add-app-submit{font-weight:bold;font-size:20px;text-shadow:0 0 0}
 .modal{width:540px;margin:auto -270px;top:10%;background:#738182;border:0;padding:1%}
 .modal-header{border:0}
 .modal-footer{background:#738182;border:0;-webkit-box-shadow:0 0 0 0;-moz-box-shadow:0 0 0 0;box-shadow:0 0 0 0}
@@ -6059,19 +6057,20 @@ html{height:100%}
 .application{width:170px;margin:6px;display:inline-block;text-align:center;border:1px solid #688993;-webkit-box-shadow:1px 1px 3px #444;-moz-box-shadow:1px 1px 3px #444;box-shadow:1px 1px 3px #444;-webkit-border-radius:12px;-moz-border-radius:12px;border-radius:12px;background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #c6d3d7), color-stop(1, #8ca6ae));background:-webkit-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);background:-moz-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);background:linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);padding-bottom:20px;}
 .application img{margin-top:10px}
 .application p{margin:0;font-family:main;color:#eaf1f1;text-shadow:1px 1px 1px #444}
+.application .app-title{font-size:20px;line-height:30px;font-weight:bold}
+.application .broken-notifier{display:none;font-size:18px;color:#d73131}
 .application a:hover{text-decoration:none}
 .application .btn{font-size:12px}
+.application .application-outer{display:none;}
+.application .application-outer .btn{margin-top:10px}
+.application .application-outer p{margin:0;padding:0}
 .application:active{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .application:hover{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #dce4e7), color-stop(1, #a3b8be));background:-webkit-linear-gradient(top, #dce4e7 0%, #a3b8be 100%);background:-moz-linear-gradient(top, #dce4e7 0%, #a3b8be 100%);background:linear-gradient(top, #dce4e7 0%, #a3b8be 100%)}
-.app-title{font-size:20px;line-height:30px;font-weight:bold}
+.application.broken a{cursor:default}
+.application.broken .broken-notifier{display:block}
 .app-tools{width:50%;margin-left:auto;margin-right:auto;margin-top:12px;color:text-color;text-align:center;margin-bottom:20px}
 #no-app-message{margin-top:30px}
 .install-info{width:40%;text-align:center}
-.broken a{cursor:default}
-.broken .broken-notifier{font-size:18px;color:#d73131}
-.application-outer{display:none;}
-.application-outer .btn{margin-top:10px}
-.application-outer p{margin:0;padding:0}
 #add-app-close,#add-app-submit{margin-top:5px}
 .control-group,#add-app-form,#account-form{border:0;font-size:1.1em;padding:0;margin:0;}
 .control-group select,#add-app-form select,#account-form select,.control-group input,#add-app-form input,#account-form input{height:1.1em;padding:.2em;-webkit-border-radius:.4em;-moz-border-radius:.4em;border-radius:.4em;border:0;background-color:#eaf1f1;-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;-moz-box-shadow:0 2px 2px rgba(0,0,0,0.45) inset;box-shadow:0 2px 2px rgba(0,0,0,0.45) inset}
@@ -6091,11 +6090,15 @@ html{height:100%}
 #change-password-form{margin-top:50px}
 .loading-indicator{border:0;background:transparent;-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0;color:#eaf1f1}
 .app-introduction{margin-top:60px;margin-bottom:20px}
-.cozy-app{border-top:1px solid #bbb;margin-bottom:40px;}
+#market-view{padding:20px}
+#your-app{background:#8f9b9b;-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,0.05);box-shadow:0 1px 2px rgba(0,0,0,0.05);padding:20px;width:auto;}
+#your-app #app-git-field{width:100%;max-width:500px}
+#app-market-list{margin-top:20px}
+.cozy-app{float:left;width:30%;height:120px;margin-right:1%;background:#8f9b9b;-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.10);-moz-box-shadow:0 1px 2px rgba(0,0,0,0.10);box-shadow:0 1px 2px rgba(0,0,0,0.10);padding:1%;margin-top:1%;}
 .cozy-app img{margin:10px 10px 0 0}
 .cozy-app h3{margin-top:20px;margin-bottom:0;padding-bottom:0;line-height:16px}
 .cozy-app .comment{font-size:14px}
-.cozy-app .btn{margin-left:110px}
+.cozy-app .btn{float:right;width:15%;height:70px;margin:10px 0}
 @media (max-width: 600px){#add-app-modal div{padding:3px}
 #add-app-modal #app-git-field{width:94%}
 #add-app-modal #add-app-submit{margin-right:10px}
@@ -6103,4 +6106,17 @@ html{height:100%}
 #account-form p{margin:15px}
 #account-form .field{margin:15px;}
 #account-form .field select,#account-form .field option{width:75%}
+.cozy-app{width:90%}
+img{margin:10px 10px 0 0}
+h3{margin-top:20px;margin-bottom:0;padding-bottom:0;line-height:16px}
+.comment{font-size:14px}
+.btn{float:right;width:15%;height:70px;margin:10px 0}
+}@media (max-width: 600px){#add-app-modal div{padding:3px}
+#add-app-modal #app-git-field{width:94%}
+#add-app-modal #add-app-submit{margin-right:10px}
+#account-form{text-align:left;}
+#account-form p{margin:15px}
+#account-form .field{margin:15px;}
+#account-form .field select,#account-form .field option{width:75%}
+.cozy-app{width:90%}
 }
