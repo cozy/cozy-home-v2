@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 
 module.exports = class ApplicationRow extends BaseView

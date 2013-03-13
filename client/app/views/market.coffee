@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'
 AppCollection = require 'collections/application'

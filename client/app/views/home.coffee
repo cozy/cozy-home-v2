@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 client = require 'helpers/client'
 ApplicationRow = require 'views/home_application'
 

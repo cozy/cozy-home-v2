@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
 NavbarView = require 'views/navbar'

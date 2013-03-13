@@ -1,4 +1,4 @@
-{BaseModel} = require 'lib/BaseModel'
+{BaseModel} = require 'lib/base_model'
 client = require 'helpers/client'
 
 # Describes an application installed in mycloud.

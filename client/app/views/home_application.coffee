@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 
 # Row displaying application name and attributes
@@ -13,7 +13,7 @@ module.exports = class ApplicationRow extends BaseView
         "click .application-inner" : "onAppClicked"
         "click .remove-app": "onRemoveClicked"
         "click .update-app": "onUpdateClicked"
-        "click .startStop-app": "onStartStopClicked"
+        "click .start-stop-btn": "onStartStopClicked"
 
     ### Constructor ####
 
@@ -27,7 +27,7 @@ module.exports = class ApplicationRow extends BaseView
 
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
-        @startStopBtn = new ColorButton @$ ".startStop-app"
+        @startStopBtn = new ColorButton @$ ".start-stop-btn"
         
         @app.on('change', @onAppChanged)
         @onAppChanged(@app)
@@ -44,11 +44,11 @@ module.exports = class ApplicationRow extends BaseView
             @startStopBtn.hide()
         else if app.isRunning()
             @$('img').attr 'src', "apps/#{app.id}/icons/main_icon.png"
-            @startStopBtn.displayRed 'Stop this app'
+            @startStopBtn.displayGrey 'stop this app'
         else
             # todo do better
-            @$('img').attr 'src', "http://placehold.it/128/&text=stopped"
-            @startStopBtn.displayGreen 'Start this app'
+            @$('img').attr 'src', "img/stopped.png"
+            @startStopBtn.displayGrey 'start this app'
 
     onAppClicked: (event) =>
         event.preventDefault()

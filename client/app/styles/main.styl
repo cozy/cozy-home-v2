@@ -29,6 +29,7 @@ orange = #BA6131 + 10%
 red = #AA2121 + 20%
 
 body
+    box-sizing: border-box
     min-width: 320px
     color: textcolor
     font-family: styled
@@ -491,18 +492,33 @@ html
 
 // MARKET PAGE
 
+#market-view
+    padding: 20px
+
 #your-app
+    background: bgcolor + 20%
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)
+    padding: 20px
+    width: auto
   
     #app-git-field
-        width: 80%
+        width: 100%
+        max-width: 500px
+
+
+#app-market-list
+    margin-top: 20px
 
 .cozy-app
-    border-top: 1px solid #BBB
-    margin-bottom: 40px
-    width: 30%
-    height: 160px
-    margin: 1%
     float:left
+    width: 30%
+    height: 120px
+    margin-right: 1%
+
+    background: bgcolor + 20%
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+    padding: 1%
+    margin-top: 1%
 
     img
         margin: 10px 10px 0 0 
@@ -521,6 +537,56 @@ html
         width: 15%
         height: 70px
         margin: 10px 0px
+
+
+// Responsive
+
+@media (max-width: 600px)
+    #add-app-modal
+        div
+            padding: 3px
+
+        #app-git-field
+            width: 94%
+
+        #add-app-submit
+            margin-right: 10px
+
+
+    #account-form
+        text-align: left
+
+        p
+            margin: 15px
+
+        .field
+            margin: 15px
+
+            select
+            option
+                width: 75%
+
+    .cozy-app
+        width: 90%
+
+    img
+        margin: 10px 10px 0 0 
+
+    h3
+        margin-top: 20px
+        margin-bottom: 0
+        padding-bottom: 0
+        line-height: 16px
+
+    .comment
+        font-size: 14px
+
+    .btn
+        float: right
+        width: 15%
+        height: 70px
+        margin: 10px 0px
+
 
 // Responsive
 

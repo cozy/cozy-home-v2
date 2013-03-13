@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 timezones = require('helpers/timezone').timezones
 
 # View describing main screen for user once he is logged

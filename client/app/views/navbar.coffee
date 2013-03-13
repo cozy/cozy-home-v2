@@ -1,4 +1,4 @@
-BaseView = require 'lib/BaseView'
+BaseView = require 'lib/base_view'
 appButtonTemplate = require "templates/navbar_app_btn"
 
 module.exports = class NavbarView extends BaseView

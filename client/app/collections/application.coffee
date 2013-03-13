@@ -1,4 +1,4 @@
-BaseCollection = require 'lib/BaseCollection'
+BaseCollection = require 'lib/base_collection'
 Application = require 'models/application'
 
 
