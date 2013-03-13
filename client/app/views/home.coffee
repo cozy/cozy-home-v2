@@ -102,18 +102,3 @@ module.exports = class ApplicationsListView extends BaseView
     displayDiskSpace: (usedSpace, totalSpace)->
         @machineInfos.find('.disk .total').html(totalSpace + "Go")
         @machineInfos.find('.disk .bar').css('width', usedSpace + '%')
-
-    # Display message inside info box.
-    #displayInfo: (msg) =>
-    #    @errorAlert.hide()
-    #    @infoAlert.html msg
-    #    @infoAlert.show()
-
-    # Display message inside error box.
-    #displayError: (msg) =>
-    #    @infoAlert.hide()
-    #    @errorAlert.html msg
-    #    @errorAlert.show()
-    
-    #hideError: =>
-    #    @errorAlert.hide()

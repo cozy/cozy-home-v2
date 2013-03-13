@@ -264,54 +264,6 @@ html
     text-align right
     width: 83%
 
-@media (max-width: 600px)
-    #buttons span
-        display: none
-
-    #buttons img
-        width: 15px
-        height: 15px
-
-    .navbar
-        li.app-button
-            a
-                padding: 10px 5px
-        .nav > li > a
-                padding: 10px 5px
-
-    #add-app-modal
-        width: 100%
-        margin: 0
-        left: 0
-
-@media (max-width: 700px)
-    #header-title
-        display: none
-
-/* Dialogs */
-// @deadcode
-
-#confirm-dialog
-    display none
-
-.modal
-    width: 540px
-    margin: auto - 270px 
-    top: 10%
-    background: bgcolor
-    border: 0
-    padding: 1%
-
-.modal-header
-    border: 0
-
-.modal-footer
-    background: bgcolor
-    border: 0
-    box-shadow: 0 0 0 0
-
-
-
 /** Applications */
 
 #app-list
@@ -496,23 +448,34 @@ html
     padding: 20px
 
 #your-app
+    padding: 20px
+    margin-right: 1% 
+    width: auto
     background: bgcolor + 20%
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)
-    padding: 20px
-    width: auto
   
     #app-git-field
+        box-sizing: border-box
+        width: 100%
+        height: 30px
+        max-width: 500px
+        margin-right: 20px
+
+    .error
+        box-sizing: border-box
         width: 100%
         max-width: 500px
-
+        margin-right: 20px
 
 #app-market-list
+    box-sizing: border-box
     margin-top: 20px
 
 .cozy-app
-    float:left
-    width: 30%
-    height: 120px
+    box-sizing: border-box
+    float: left
+    width: 32.33%
+    height: 140px
     margin-right: 1%
 
     background: bgcolor + 20%
@@ -536,22 +499,27 @@ html
         float: right
         width: 15%
         height: 70px
-        margin: 10px 0px
+        margin: 10px 0px 10px 10px
 
 
 // Responsive
 
-@media (max-width: 600px)
-    #add-app-modal
-        div
-            padding: 3px
+@media (max-width: 1200px)
+    .cozy-app
+        width: 49%
 
-        #app-git-field
-            width: 94%
+@media (max-width: 850px)
+    #header-title
+        display: none
 
-        #add-app-submit
-            margin-right: 10px
+    span
+        display:none
 
+@media (max-width: 800px)
+    #header-title
+        a
+            padding-left: 0
+            padding-right: 0
 
     #account-form
         text-align: left
@@ -565,9 +533,6 @@ html
             select
             option
                 width: 75%
-
-    .cozy-app
-        width: 90%
 
     img
         margin: 10px 10px 0 0 
@@ -581,39 +546,24 @@ html
     .comment
         font-size: 14px
 
-    .btn
-        float: right
-        width: 15%
-        height: 70px
-        margin: 10px 0px
-
-
-// Responsive
-
-@media (max-width: 600px)
-    #add-app-modal
-        div
-            padding: 3px
-
-        #app-git-field
-            width: 94%
-
-        #add-app-submit
-            margin-right: 10px
-
-
-    #account-form
-        text-align: left
-
-        p
-            margin: 15px
-
-        .field
-            margin: 15px
-
-            select
-            option
-                width: 75%
+    #your-app
+        margin-right: 0
 
     .cozy-app
-        width: 90%
+        width: 100%
+
+    #buttons
+        width: 100%
+
+        a
+            padding: 10px 5px
+
+        li
+            line-height: 30px
+            
+        li.app-button
+            a
+                padding: 4px 0 16px 10px
+
+        .nav
+            margin: 0
