@@ -47,7 +47,7 @@ module.exports = class MarketView extends BaseView
         @installedApps.bind 'add', @onAppListsChanged
         @installedApps.bind 'remove', @onAppListsChanged
         @marketApps.bind 'reset', @onAppListsChanged
-        @marketApps.fetchFromMarket()        
+        @marketApps.fetchFromMarket()
 
     onAppListsChanged: () =>
         @appList.html null
@@ -66,7 +66,6 @@ module.exports = class MarketView extends BaseView
         appButton = @$(row.el)
         appButton.hide().fadeIn()
 
-    ############
 
     onEnterPressed: (event) =>
         @onInstallClicked() if event.which == 13
@@ -121,7 +120,10 @@ module.exports = class MarketView extends BaseView
         url = url.replace 'git://', 'https://'
         parsed = REPOREGEX.exec url
         unless parsed?
-            return error: true, msg:"Git url should be of form https://.../my-repo.git" 
+            error =
+                error: true
+                msg:"Git url should be of form https://.../my-repo.git"
+            return error
 
         [git, proto, domain, path, branch] = parsed
         path = path.replace('.git', '')

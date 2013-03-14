@@ -28,10 +28,11 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
 
-        @resetLayoutSizes()
         $(window).resize @resetLayoutSizes
 
         @apps.fetch()
+        @resetLayoutSizes()
+
 
     ### Functions ###
 
@@ -56,6 +57,7 @@ module.exports = class HomeView extends BaseView
         @content.append(view.$el)
         @currentView = view
         $('#favicon').attr 'href', "favicon.ico"
+        @resetLayoutSizes()
 
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>

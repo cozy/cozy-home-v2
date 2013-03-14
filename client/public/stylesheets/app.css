@@ -6083,7 +6083,7 @@ html{height:100%}
 #market-view{padding:20px}
 #your-app{padding:20px;margin-right:1%;width:auto;background:#8f9b9b;-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.05);-moz-box-shadow:0 1px 2px rgba(0,0,0,0.05);box-shadow:0 1px 2px rgba(0,0,0,0.05);}
 #your-app #app-git-field{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100%;height:30px;max-width:500px;margin-right:20px}
-#your-app .error{max-width:500px;margin-right:20px}
+#your-app .error{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100%;max-width:500px;margin-right:20px}
 #app-market-list{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-top:20px}
 .cozy-app{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;float:left;width:32.33%;height:140px;margin-right:1%;background:#8f9b9b;-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.10);-moz-box-shadow:0 1px 2px rgba(0,0,0,0.10);box-shadow:0 1px 2px rgba(0,0,0,0.10);padding:1%;margin-top:1%;}
 .cozy-app img{margin:10px 10px 0 0}

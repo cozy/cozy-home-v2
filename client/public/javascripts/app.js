@@ -134,6 +134,20 @@ window.require.register("collections/application", function(exports, require, mo
             git: "https://github.com/mycozycloud/cozy-todos.git",
             comment: "official application",
             description: "Write your tasks, order them and execute them efficiently."
+          }, {
+            icon: "img/mails-icon.png",
+            name: "mails",
+            slug: "mails",
+            git: "https://github.com/mycozycloud/cozy-mails.git",
+            comment: "official application",
+            description: "Backup your inbox and browse them from your cozy."
+          }, {
+            icon: "img/boonk-icon.png",
+            name: "boonk",
+            slug: "boonk",
+            git: "https://github.com/frankrousseau/boonk.git",
+            comment: "community contribution",
+            description: "Aggregate your bank account data (for French citizen only)."
           }
         ];
         this.reset(apps);
@@ -1460,9 +1474,9 @@ window.require.register("views/main", function(exports, require, module) {
         this.marketView = new MarketView(this.apps);
         this.frames = this.$('#app-frames');
         this.content = this.$('#content');
-        this.resetLayoutSizes();
         $(window).resize(this.resetLayoutSizes);
-        return this.apps.fetch();
+        this.apps.fetch();
+        return this.resetLayoutSizes();
       };
 
       /* Functions
@@ -1489,7 +1503,8 @@ window.require.register("views/main", function(exports, require, module) {
         this.frames.hide();
         this.content.append(view.$el);
         this.currentView = view;
-        return $('#favicon').attr('href', "favicon.ico");
+        $('#favicon').attr('href', "favicon.ico");
+        return this.resetLayoutSizes();
       };
 
       HomeView.prototype.displayApplicationsList = function() {
@@ -1727,15 +1742,16 @@ window.require.register("views/market", function(exports, require, module) {
       };
 
       MarketView.prototype.parseGitUrl = function(url) {
-        var branch, domain, git, name, out, parsed, parts, path, proto, slug;
+        var branch, domain, error, git, name, out, parsed, parts, path, proto, slug;
         url = url.replace('git@github.com:', 'https://github.com/');
         url = url.replace('git://', 'https://');
         parsed = REPOREGEX.exec(url);
         if (parsed == null) {
-          return {
+          error = {
             error: true,
             msg: "Git url should be of form https://.../my-repo.git"
           };
+          return error;
         }
         git = parsed[0], proto = parsed[1], domain = parsed[2], path = parsed[3], branch = parsed[4];
         path = path.replace('.git', '');
