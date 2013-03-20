@@ -1475,7 +1475,6 @@ window.require.register("views/main", function(exports, require, module) {
         this.content = this.$('#content');
         this.favicon = this.$('fav1');
         this.favicon2 = this.$('fav2');
-        this.resetLayoutSizes();
         $(window).resize(this.resetLayoutSizes);
         this.apps.fetch();
         return this.resetLayoutSizes();
@@ -1505,7 +1504,8 @@ window.require.register("views/main", function(exports, require, module) {
         this.frames.hide();
         this.content.append(view.$el);
         this.currentView = view;
-        return this.changeFavicon("favicon.ico");
+        this.changeFavicon("favicon.ico");
+        return this.resetLayoutSizes();
       };
 
       HomeView.prototype.displayApplicationsList = function() {
@@ -1548,7 +1548,8 @@ window.require.register("views/main", function(exports, require, module) {
         name = this.apps.get(slug).get('name');
         if (!(name != null)) name = '';
         window.document.title = "Cozy - " + name;
-        return this.changeFavicon("/apps/" + slug + "/favicon.ico");
+        this.changeFavicon("/apps/" + slug + "/favicon.ico");
+        return this.resetLayoutSizes();
       };
 
       HomeView.prototype.createApplicationIframe = function(slug, hash) {
@@ -1566,13 +1567,17 @@ window.require.register("views/main", function(exports, require, module) {
           newhash = location.hash.replace('#', '');
           return _this.onAppHashChanged(slug, newhash);
         });
+        this.resetLayoutSizes();
         return frame;
       };
 
       HomeView.prototype.onAppHashChanged = function(slug, newhash) {
         if (slug === this.selectedApp) {
-          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
+          if (typeof app !== "undefined" && app !== null) {
+            app.routers.main.navigate("/apps/" + slug + "/" + newhash, false);
+          }
         }
+        return this.resetLayoutSizes();
       };
 
       HomeView.prototype.changeFavicon = function(url) {
@@ -1589,10 +1594,10 @@ window.require.register("views/main", function(exports, require, module) {
       */
 
       HomeView.prototype.resetLayoutSizes = function() {
-        var header;
-        header = this.$("#header");
-        this.frames.height($(window).height() - header.height());
-        return this.content.height($(window).height() - header.height());
+        var height;
+        height = this.$("#header").height();
+        this.frames.height($(window).height() - height);
+        return this.content.height($(window).height() - height);
       };
 
       return HomeView;

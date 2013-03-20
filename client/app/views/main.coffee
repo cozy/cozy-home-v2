@@ -31,9 +31,7 @@ module.exports = class HomeView extends BaseView
         @favicon = @$ 'fav1'
         @favicon2 = @$ 'fav2'
 
-        @resetLayoutSizes()
         $(window).resize @resetLayoutSizes
-
         @apps.fetch()
         @resetLayoutSizes()
 
@@ -61,6 +59,7 @@ module.exports = class HomeView extends BaseView
         @content.append(view.$el)
         @currentView = view
         @changeFavicon "favicon.ico"
+        @resetLayoutSizes()
 
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
@@ -85,7 +84,6 @@ module.exports = class HomeView extends BaseView
     # iframes. Then currently selected frame is registered
     displayApplication: (slug, hash) ->
 
-        # @dirtyhack
         if @apps.length is 0
             once = =>
                 @apps.off 'reset', once
@@ -109,6 +107,7 @@ module.exports = class HomeView extends BaseView
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
         @changeFavicon "/apps/#{slug}/favicon.ico"
+        @resetLayoutSizes()
 
     createApplicationIframe: (slug, hash="")->
         @frames.append appIframeTemplate(id: slug, hash:hash)
@@ -117,11 +116,13 @@ module.exports = class HomeView extends BaseView
             location = frame.prop('contentWindow').location
             newhash = location.hash.replace '#', ''
             @onAppHashChanged(slug, newhash)
+        @resetLayoutSizes()
         return frame
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
+        @resetLayoutSizes()
 
     changeFavicon: (url) ->
         @favicon?.remove()
@@ -135,6 +136,6 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        header = @$ "#header"
-        @frames.height $(window).height() - header.height()
-        @content.height $(window).height() - header.height()
+        height = @$("#header").height()
+        @frames.height $(window).height() - height
+        @content.height $(window).height() - height
