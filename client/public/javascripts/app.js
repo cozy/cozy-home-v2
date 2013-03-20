@@ -1942,7 +1942,7 @@ window.require.register("views/navbar", function(exports, require, module) {
       };
 
       NavbarView.prototype.onAppRemoved = function(app) {
-        return this.buttons.find("#" + app.id).remove();
+        if (app.id != null) return this.buttons.find("#" + app.id).remove();
       };
 
       NavbarView.prototype.selectButton = function(button) {
