@@ -602,8 +602,7 @@ window.require.register("routers/main_router", function(exports, require, module
 
       MainRouter.prototype.routes = {
         "home": "applicationList",
-        "applications": "applicationList",
-        "market": "market",
+        "applications": "market",
         "account": "account",
         "logout": "logout",
         "apps/:slug": "application",
@@ -851,15 +850,15 @@ window.require.register("templates/navbar", function(exports, require, module) {
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-home') }));
   buf.push('></i><span>&nbsp;Home</span></a></li><li><a');
-  buf.push(attrs({ 'id':('market-button'), 'href':("#market") }));
+  buf.push(attrs({ 'id':('market-button'), 'href':("#applications") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-plus') }));
-  buf.push('></i><span>&nbsp;Market</span></a></li><li><a');
+  buf.push('></i><span>&nbsp;Apps</span></a></li><li><a');
   buf.push(attrs({ 'id':('account-button'), 'href':("#account") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-user') }));
   buf.push('></i><span>&nbsp;Account</span></a></li><li><a');
-  buf.push(attrs({ 'id':('help-button'), 'href':("https://questions-beta.cozycloud.cc/"), 'target':("_blank") }));
+  buf.push(attrs({ 'id':('help-button'), 'href':("https://forum.cozycloud.cc/"), 'target':("_blank") }));
   buf.push('><i');
   buf.push(attrs({ "class": ('icon-help') }));
   buf.push('>&nbsp;</i></a></li><li><a');
@@ -1474,6 +1473,9 @@ window.require.register("views/main", function(exports, require, module) {
         this.marketView = new MarketView(this.apps);
         this.frames = this.$('#app-frames');
         this.content = this.$('#content');
+        this.favicon = this.$('fav1');
+        this.favicon2 = this.$('fav2');
+        this.resetLayoutSizes();
         $(window).resize(this.resetLayoutSizes);
         this.apps.fetch();
         return this.resetLayoutSizes();
@@ -1503,8 +1505,7 @@ window.require.register("views/main", function(exports, require, module) {
         this.frames.hide();
         this.content.append(view.$el);
         this.currentView = view;
-        $('#favicon').attr('href', "favicon.ico");
-        return this.resetLayoutSizes();
+        return this.changeFavicon("favicon.ico");
       };
 
       HomeView.prototype.displayApplicationsList = function() {
@@ -1547,7 +1548,7 @@ window.require.register("views/main", function(exports, require, module) {
         name = this.apps.get(slug).get('name');
         if (!(name != null)) name = '';
         window.document.title = "Cozy - " + name;
-        return $('#favicon').attr('href', "/apps/" + slug + "/favicon.ico");
+        return this.changeFavicon("/apps/" + slug + "/favicon.ico");
       };
 
       HomeView.prototype.createApplicationIframe = function(slug, hash) {
@@ -1572,6 +1573,16 @@ window.require.register("views/main", function(exports, require, module) {
         if (slug === this.selectedApp) {
           return typeof app !== "undefined" && app !== null ? app.routers.main.navigate("/apps/" + slug + "/" + newhash, false) : void 0;
         }
+      };
+
+      HomeView.prototype.changeFavicon = function(url) {
+        var newfav, _ref, _ref2;
+        if ((_ref = this.favicon) != null) _ref.remove();
+        if ((_ref2 = this.favicon2) != null) _ref2.remove();
+        newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"';
+        this.favicon = $(newfav);
+        this.favicon2 = this.favicon.clone().attr('rel', 'shortcut icon');
+        return $('head').append(this.favicon, this.favicon2);
       };
 
       /* Configuration
