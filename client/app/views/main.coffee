@@ -28,6 +28,9 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
 
+        @favicon = @$ 'fav1'
+        @favicon2 = @$ 'fav2'
+
         @resetLayoutSizes()
         $(window).resize @resetLayoutSizes
 
@@ -55,7 +58,7 @@ module.exports = class HomeView extends BaseView
         @frames.hide()
         @content.append(view.$el)
         @currentView = view
-        $('#favicon').attr 'href', "favicon.ico"
+        @changeFavicon "favicon.ico"
 
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
@@ -103,7 +106,7 @@ module.exports = class HomeView extends BaseView
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
-        $('#favicon').attr 'href', "/apps/#{slug}/favicon.ico"
+        @changeFavicon "/apps/#{slug}/favicon.ico"
 
     createApplicationIframe: (slug, hash="")->
         @frames.append appIframeTemplate(id: slug, hash:hash)
@@ -117,6 +120,14 @@ module.exports = class HomeView extends BaseView
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
+
+    changeFavicon: (url) ->
+        @favicon?.remove()
+        @favicon2?.remove()
+        newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"'
+        @favicon = $ newfav
+        @favicon2 = @favicon.clone().attr 'rel', 'shortcut icon'
+        $('head').append @favicon, @favicon2
 
     ### Configuration ###
 
