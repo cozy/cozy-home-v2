@@ -61,6 +61,3 @@ module.exports = class NavbarView extends BaseView
         button = @$("##{button}")
         @buttons.find("li").removeClass "active"
         button.parent().addClass "active"
-
-    
-
