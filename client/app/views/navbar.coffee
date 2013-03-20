@@ -53,7 +53,8 @@ module.exports = class NavbarView extends BaseView
 
     # Remove an app button from the navbar
     onAppRemoved: (app) =>
-        @buttons.find("##{app.id}").remove()
+        if app.id?
+            @buttons.find("##{app.id}").remove()
 
     # Desactivate all buttons and activate given button (visual activation).
     selectButton: (button) ->
