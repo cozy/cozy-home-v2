@@ -124,7 +124,8 @@ module.exports = class HomeView extends BaseView
     changeFavicon: (url) ->
         @favicon?.remove()
         @favicon2?.remove()
-        @favicon = $ '<link rel="icon" type="image/x-icon" href="'+url+'" />"'
+        newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"'
+        @favicon = $ newfav
         @favicon2 = @favicon.clone().attr 'rel', 'shortcut icon'
         $('head').append @favicon, @favicon2
 
