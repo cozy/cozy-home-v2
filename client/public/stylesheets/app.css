@@ -6032,7 +6032,7 @@ html{height:100%}
 .navbar .nav .active{text-shadow:none}
 .navbar .nav .active a:hover{cursor:default;background:#abb4b4;-webkit-box-shadow:inset 2px 1px 4px #454d4e;-moz-box-shadow:inset 2px 1px 4px #454d4e;box-shadow:inset 2px 1px 4px #454d4e;text-shadow:none}
 .navbar .nav li a{text-shadow:none}
-.navbar .nav li a:hover{background:#d99772;cursor:pointer}
+.navbar .nav li a:hover{background:#d99772;text-shadow:none;cursor:pointer}
 #header{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:relative;margin-top:0;margin-bottom:0;border:0;border-bottom:1px solid #738182;}
 #header .navbar-inner{padding-right:5px;background-color:#e3e6e6;background-image:none;height:100%;border:0;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}
 #header h2{float:left;color:linkcolor;font-size:12px}
