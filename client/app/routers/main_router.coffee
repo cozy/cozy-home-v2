@@ -1,8 +1,7 @@
 module.exports = class MainRouter extends Backbone.Router
     routes :
         "home": "applicationList"
-        "applications": "applicationList"
-        "market": "market"
+        "applications": "market"
         "account": "account"
         "logout": "logout"
         "apps/:slug" : "application"
