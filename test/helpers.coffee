@@ -72,13 +72,12 @@ helpers.getClient = (port, context) ->
     store = if context? then context else {}
 
     callbackFactory = (done) -> (error, response, body) =>
-        store.error = error
+        throw error if(error)
         store.response = response
         store.body = body
         done()
 
     clean = ->
-        store.error = null
         store.response = null
         store.body = null
 
