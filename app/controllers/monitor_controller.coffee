@@ -1,18 +1,19 @@
 os = require 'os'
 
+freeMemCmd = "free | grep cache: | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
+
 # Return as JSON data about memory and hard disk consumption
 action 'sysData', ->
 
     data =
         totalMem: os.totalmem() / (1024)
 
-    freeMemCmd = "free | grep cache: | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
     getFreeMem = (callback) ->
         require('child_process').exec freeMemCmd, (err, resp) ->
             if err
                 railway.logger.write(err)
                 console.log err
-                
+
                 send error: true, msg: "Server error occured.", 500
             else
                 lines = resp.split('\n')

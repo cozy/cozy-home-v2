@@ -1,8 +1,8 @@
 # Actions to manage applications : home page + API.
 
 
-slugify = require "../../common/slug"
-{AppManager} = require "../../lib/paas"
+slugify = require "./common/slug"
+{AppManager} = require "./lib/paas"
 
 
 # Helpers
@@ -88,7 +88,7 @@ action "install", ->
         if err
             send_error err.message
         else if apps.length
-            # TODO take care of request retry 
+            # TODO take care of request retry
             # (happens when install is taking too long)
             # may be send a 100 - Continue
             send_error "There is already an app with similar name", 400
