@@ -1,26 +1,25 @@
 should = require('chai').Should()
-Client = require('request-json').JsonClient
-app = require('../server')
+compoundInitiator = require('../server')
+helpers = require('./helpers')
 
-client = new Client("http://localhost:8888/")
+TESTPORT = 8889
 
 describe "Get sys data", ->
 
+    before helpers.init(compoundInitiator)
     before ->
-        app.listen(8888)
+        @app.listen(TESTPORT)
+        @client = helpers.getClient TESTPORT, @
 
     after ->
-        app.close()
+        @app.compound.server.close()
 
     it "When I load sys data", (done) ->
-        client.get "api/sys-data", (error, response, body) =>
-            @response = response
-            @body = body
-            done()
+        @client.get "api/sys-data", done
 
     it "Then I have no error", ->
         @response.statusCode.should.equal 200
-        
+
     it "And body should contain disk and ram infos", ->
         should.exist @body.freeMem
         should.exist @body.totalMem
