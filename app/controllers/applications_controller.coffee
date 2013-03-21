@@ -57,7 +57,7 @@ action "install", ->
 
     setupApp = (app) ->
         manager = new AppManager
-        console.log 'attempt to install app ' + JSON.stringify(app)
+        console.info 'attempt to install app ' + JSON.stringify(app)
         manager.installApp app, (err, result) ->
             if err
                 app.state = "broken"
@@ -194,7 +194,6 @@ action "start", ->
                         if err
                             markAppAsBroken()
                         else
-                            console.log @app
                             send
                                 success:true
                                 msg: 'Application running'
@@ -227,7 +226,6 @@ action "stop", ->
                         if err
                             markAppAsBroken()
                         else
-                            console.log @app
                             send
                                 success:true
                                 msg: 'Application stopped'
