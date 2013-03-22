@@ -1,4 +1,8 @@
-utils = require("../../lib/passport_utils")
+utils = require("./lib/passport_utils")
+
+EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
+    (\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|
+    (([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$///
 
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
@@ -14,8 +18,7 @@ action 'updateAccount', ->
         errors = []
 
         if newEmail? and newEmail.length > 0
-            re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            if re.test newEmail
+            if EMAILREGEX.test newEmail
                 data.email = newEmail
             else
                 errors.push "Given email is not a proper email"
@@ -33,7 +36,7 @@ action 'updateAccount', ->
                     errors.push "Passwords don't match."
             else
                 errors.push "Password is too short."
-        
+
 
         if errors.length
             send error: true, msg: errors, 400

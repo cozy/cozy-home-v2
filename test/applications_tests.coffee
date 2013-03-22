@@ -1,348 +1,223 @@
-http = require('http')
 should = require('chai').Should()
-Client = require('request-json').JsonClient
-server = require('../server')
+expect = require('chai').expect
+compoundInstantiator = require('../server')
+helpers = require('./helpers')
+
+TESTMAIL = "test@test.com"
+TESTPASS = "password"
+TESTPORT = 8888
+TESTAPP =
+    name: "My App",
+    description: "description",
+    git: "git@github.com:mycozycloud/my-app.git"
+
+TESTAPPBRANCH =
+    name: "My App 2",
+    description: "description",
+    git: "git@github.com:mycozycloud/my-app2.git"
+    branch:"mybranch"
+
+# reset the last calls for servers
+resetTestServers = ->
+    @haibu.reset()
+    @proxy.reset()
+
+#initiate fake servers
+startTestServers = ->
+    @haibu = helpers.fakeServer { drone: { port: 8001 } }, 200
+    @haibu.listen 9002
+
+    @proxy = helpers.fakeServer msg: "ok", 200
+    @proxy.listen 9104
+
+stopTestServers = ->
+    @haibu.close()
+    @proxy.close()
+    @app.compound.server.close()
 
 
-email = "test@test.com"
-password = "password"
 
-client = new Client("http://localhost:8888/")
+describe "Applications install", ->
 
-responseTest = null
-bodyTest = null
-
-storeResponse = (error, response, body, done) ->
-    responseTest = null
-    bodyTest = null
-    if error
-        false.should.be.ok()
-    else
-        responseTest = response
-        bodyTest = body
-    done()
-
-handleResponse = (error, response, body, done) ->
-    if error
-        false.should.be.ok()
-    done()
-
-
-clearDb = (callback) ->
-
-    destroyApplications = ->
-        Application.destroyAll (error) ->
-            if error
-                callback()
-            else
-                callback()
-
-    destroyUsers = ->
-        User.destroyAll (error) ->
-            if error
-                callback()
-            else
-                destroyApplications()
-            
-    destroyUsers()
-
-
-initDb = (callback) ->
-
-    createUser = ->
-        bcrypt = require('bcrypt')
-        salt = bcrypt.genSaltSync(10)
-        hash = bcrypt.hashSync(password, salt)
-
-        user = new User
-            email: email
-            owner: true
-            password: hash
-            activated: true
-
-        user.save (error) ->
-            callback(error)
-
-    createApp = ->
-        app = new Application
-            name: "Noty plus"
-            state: "installed"
-            index: 0
-            slug: "noty-plus"
-
-        app.save (error) ->
-            createUser()
-            
-    createApp()
-
-
-fakeServer = (json, code=200, callback=null) ->
-    http.createServer (req, res) ->
-        body = ""
-        req.on 'data', (chunk) ->
-            body += chunk
-        req.on 'end', ->
-            res.writeHead code, 'Content-Type': 'application/json'
-            if callback?
-                data = JSON.parse body if body? and body.length > 0
-                callback data
-            res.end(JSON.stringify json)
-
-
-describe "Application installation", ->
-
-    fakeHaibuLastBody = {}
-
-    before (done) ->
-        server.listen(8888)
-        clearDb ->
-            initDb ->
-                client.post "login", password: password, \
-                            (error, response, body) ->
-                    done()
-
+    before helpers.init compoundInstantiator # create @app in test scope
+    before helpers.clearDb
+    before helpers.createUser TESTMAIL, TESTPASS
+    before helpers.createApp "Noty plus", "noty-plus", 0, "installed"
+    before startTestServers
     before ->
-        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) =>
-            fakeHaibuLastBody = body
+        @app.listen(TESTPORT)
+        @client = helpers.getClient TESTPORT, @
+
+
+    describe "GET /api/applications Get all applications", ->
+
+        it "When I send a request to retrieve all applications", (done) ->
+            @client.get "api/applications", done
+
+        it "Then I got expected application in a list", ->
+            @response.statusCode.should.equal 200
+            expect(@body).to.have.property('rows').with.length 1
+            expect(@body.rows[0].name).to.equal "Noty plus"
+
+    describe "POST /api/applications/install Install a new application", ->
+
+        before resetTestServers
+
+        it "When I send a request to install an application", (done) ->
+            @client.post "api/applications/install", TESTAPP,  done
+
+        it "Then it sends me back my app with an id and a state", ->
+            @response.statusCode.should.equal 201
+            expect(@body.success)   .to.be.ok
+            expect(@body).to.have.property 'app'
+            expect(@body.app.state).to.equal "installed"
+            expect(@body.app.slug).to.equal "my-app"
+            expect(@body.app.port).to.equal 8001
+
+        it "And haibu have been requested to install this app", ->
+            request = @haibu.lastCall().request
+            request.url.should.equal "/drones/my-app/start"
+            request.method.should.equal "POST"
+            
+            body = @haibu.lastCall().body
             should.exist body.start.user
             should.exist body.start.name
             should.exist body.start.repository
             should.exist body.start.scripts
-        @haibu.listen(9002)
 
-        @proxy = fakeServer msg: "ok", 200, (body) ->
-
-        @proxy.listen 9104
-
-    after ->
-        @haibu.close()
-        @proxy.close()
-
-
-    describe "GET /api/applications Get all applications", ->
-        it "When I send a request to retrieve all applications", (done) ->
-            client.get "api/applications", (error, response, body) ->
-                storeResponse error, response, body, done
-
-        it "Then I got expected application in a list", ->
-            responseTest.statusCode.should.equal 200
-            should.exist bodyTest
-            bodyTest = bodyTest
-            should.exist bodyTest.rows
-            bodyTest.rows.length.should.equal 1
-            bodyTest.rows[0].name.should.equal "Noty plus"
-
-    describe "POST /api/applications/install Install a new application", ->
-        it "When I send a request to install an application", (done) ->
-            data =
-                name: "My App",
-                description: "description",
-                git: "git@github.com:mycozycloud/my-app.git"
-            client.post "api/applications/install", \
-                        data, (error, response, body) =>
-                @response = response
-                @body = body
-                done()
-
-        it "Then it sends me back my app with an id and a state", ->
-            @response.statusCode.should.equal 201
-            should.exist @body.success
-            should.exist @body.app
-            should.exist @body.app.slug
-            should.exist @body.app.port
-            @body.success.should.ok
-            @body.app.slug.should.equal "my-app"
-            @body.app.port.should.equal 8001
+        it "And the proxy have been requested to update its routes", ->
+            @proxy.lastCall().request.url.should.equal "/routes/reset"
 
         it "When I send a request to retrieve all applications", (done) ->
-            client.get "api/applications", (error, response, body) =>
-                @body = body
-                done()
+            @client.get "api/applications", done
 
-        it "Then I got expected application in a list", ->
-            @body.rows.length.should.equal 2
-            @body.rows[0].name.should.equal "My App"
+        it "Then I get my new application in the list", ->
+            expect(@body).to.have.property('rows').with.length 2
+            expect(@body.rows[0].name).to.equal "My App"
 
     describe "Install a new application with specific branch", ->
-        it "When I send a request to install an application on branch mybranch", \
-                     (done) ->
-            data =
-                name: "My App 2",
-                description: "description",
-                git: "git@github.com:mycozycloud/my-app2.git"
-                branch:"mybranch"
-            client.post "api/applications/install", \
-                        data, (error, response, body) =>
-                @response = response
-                @body = body
-                done()
+
+        before resetTestServers
+
+        it "When I install an application on branch mybranch", (done) ->
+            @client.post "api/applications/install", TESTAPPBRANCH, done
 
         it "Then it sends me back my app with correct branch", ->
             @response.statusCode.should.equal 201
-            should.exist @body.success
-            should.exist @body.app.branch
-            @body.app.branch.should.equal "mybranch"
-            fakeHaibuLastBody.start.repository.branch.should.equal "mybranch"
-            @body.app.port.should.equal 8001
+            expect(@body?.app?.branch).to.equal "mybranch"
+
+        it "And haibu have been requested with correct branch", ->
+            body = @haibu.lastCall().body
+            body.start.repository.branch.should.equal "mybranch"
 
         it "When I send a request to retrieve all applications", (done) ->
-            client.get "api/applications", (error, response, body) =>
-                @body = body
-                done()
+            @client.get "api/applications", done
 
         it "The branch is still there", ->
-            @body.rows.length.should.equal 3
-            @body.rows[1].branch.should.equal "mybranch"
+            expect(@body).to.have.property('rows').with.length 3
+            expect(@body.rows[1].branch).to.equal "mybranch"
 
 
 describe "Application update", ->
-    
-    before ->
-        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
 
-        @haibu.listen 9002
-        @proxy = fakeServer msg: "ok", 200, (body) ->
-
-        @proxy.listen 9104
-
-    after ->
-        @haibu.close()
-        @proxy.close()
+    before resetTestServers
 
     describe "UPDATE /api/applications/:slug/update Update an app", ->
-        
+
         it "When I send a request to update an application", (done) ->
-            client.put "api/applications/my-app/update", {}, \
-                          (error, response, body) =>
-                @response = response
-                @body = body
-                done()
+            @client.put "api/applications/my-app/update", {}, done
 
         it "Then it sends me a success response", ->
             @response.statusCode.should.equal 200
-            should.exist @body.success
-            @body.success.should.be.ok
+            expect(@body.success).to.be.ok
 
 describe "Application stop", ->
-    
-    before ->
-        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
 
-        @haibu.listen 9002
-        @proxy = fakeServer msg: "ok", 200, (body) ->
-
-        @proxy.listen 9104
-
-    after ->
-        @haibu.close()
-        @proxy.close()
+    before resetTestServers
 
     describe "POST /api/applications/:slug/stop Stop an app", ->
-        
+
         it "When I send a request to stop an application", (done) ->
-            client.post "api/applications/my-app/stop", {}, \
-                          (error, response, body) =>
-                @response = response
-                @body = body
-                done()
+            @client.post "api/applications/my-app/stop", {}, done
 
-        it "Then it sends me a success response", ->
+        it "Then it sends me a success response with the updated app", ->
             @response.statusCode.should.equal 200
-            should.exist @body.success
-            @body.success.should.be.ok
+            expect(@body.success).to.be.ok
+            expect(@body.app.state).to.equal 'stopped'
 
-        it "which contains the updated app", ->
-            should.exist @body.app
-            @body.app.state.should.equal 'stopped'
+        it "And haibu have been requested to stop this app", ->
+            request = @haibu.lastCall().request
+            request.url.should.equal "/drones/my-app/stop"
+            request.method.should.equal "POST"
+
+        it "And the proxy have been requested to update its routes", ->
+            @proxy.lastCall().request.url.should.equal "/routes/reset"
 
 describe "Application start", ->
-    
-    before ->
-        @haibu = fakeServer { drone: { port: 8001 } }, 200, (body) ->
 
-        @haibu.listen 9002
-        @proxy = fakeServer msg: "ok", 200, (body) ->
-
-        @proxy.listen 9104
-
-    after ->
-        @haibu.close()
-        @proxy.close()
+    before resetTestServers
 
     describe "POST /api/applications/:slug/start Start an app", ->
-        
-        it "When I send a request to start an application", (done) ->
-            client.post "api/applications/my-app/start", {}, \
-                          (error, response, body) =>
-                @response = response
-                @body = body
-                done()
 
-        it "Then it sends me a success response", ->
+        it "When I send a request to stop an application", (done) ->
+            @client.post "api/applications/my-app/start", {}, done
+
+        it "Then it sends me a success response with the updated app", ->
             @response.statusCode.should.equal 200
-            should.exist @body.success
-            @body.success.should.be.ok
+            expect(@body.success).to.be.ok
+            expect(@body.app.state).to.equal 'installed'
 
-        it "which contains the updated app", ->
-            should.exist @body.app
-            @body.app.state.should.equal 'installed'
-            
+        it "And haibu have been requested to start this app", ->
+            request = @haibu.lastCall().request
+            request.url.should.equal "/drones/my-app/start"
+            request.method.should.equal "POST"
+
+        it "And the proxy have been requested to update its routes", ->
+            @proxy.lastCall().request.url.should.equal "/routes/reset"
 
 describe "Application uninstallation", ->
-    
-    before ->
-        @haibu = fakeServer msg: "ok" , 200, (body) ->
-            should.exist body.user
-            should.exist body.name
-            should.exist body.repository
-            should.exist body.scripts
-        @haibu.listen 9002
-        @proxy = fakeServer msg: "ok", 200, (body) ->
-        @proxy.listen 9104
 
-    after ->
-        @haibu.close()
-        @proxy.close()
+    before resetTestServers
 
     describe "DELETE /api/applications/:slug/uninstall Remove an app", ->
-        
+
         it "When I send a request to uninstall an application", (done) ->
-            client.del "api/applications/my-app/uninstall", \
-                          (error, response, body) =>
-                @response = response
-                @body = body
-                done()
+            @client.del "api/applications/my-app/uninstall", done
 
         it "Then it sends me a success response", ->
             @response.statusCode.should.equal 200
-            should.exist @body.success
-            @body.success.should.be.ok
-            
+            expect(@body.success).to.be.ok
+
+        it "And haibu have been requested to clean this app", ->
+            request = @haibu.lastCall().request
+            request.url.should.equal "/drones/my-app/clean"
+            request.method.should.equal "POST"
+
+        it "And the proxy have been requested to update its routes", ->
+            @proxy.lastCall().request.url.should.equal "/routes/reset"
+
+    describe "GET /api/applications Check if app removed", ->
+
+        before resetTestServers
+
         it "When I send a request to retrieve all applications", (done) ->
-            client.get "api/applications", (error, response, body) =>
-                @body = body
-                done()
+            @client.get "api/applications", done
 
         it "Then I do not see my application in the list", ->
-            @body.rows.length.should.equal 2
-            @body.rows[0].name.should.not.equal "My App"
+            expect(@body).to.have.property('rows').with.length 2
+            expect(@body.rows[0].branch).to.not.equal "My App"
 
 
 describe "Users", ->
 
-    after (done) ->
-        server.close()
-        done()
+    before resetTestServers
+    after stopTestServers
 
     describe "GET /api/users Get all users", ->
         it "When I send a request to retrieve all users", (done) ->
-            client.get "api/users", (error, response, body) ->
-                storeResponse error, response, body, done
+            @client.get "api/users", done
 
         it "Then I got expected users in a list", ->
-            responseTest.statusCode.should.equal 200
-            should.exist bodyTest
-            bodyTest = bodyTest
-            should.exist bodyTest.rows
-            bodyTest.rows.length.should.equal 1
-            bodyTest.rows[0].email.should.equal email
+            @response.statusCode.should.equal 200
+            expect(@body).to.have.property('rows').with.length 1
+            expect(@body.rows[0].email).to.equal TESTMAIL
