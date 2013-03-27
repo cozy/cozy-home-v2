@@ -35,8 +35,9 @@ reseting routes"
     # 2. Send a request to proxy to add a new route
     installApp: (app, callback) ->
         console.info "Request haibu for spawning #{app.name}..."
-        console.info "haibu descriptor : #{JSON.stringify(app.getHaibuDescriptor())}"
-        
+        console.info "haibu descriptor : "
+        console.info JSON.stringify(app.getHaibuDescriptor())
+
         @client.start app.getHaibuDescriptor(), (err, result) =>
             if err
                 console.log "Error spawning app: #{app.name}"
@@ -50,9 +51,9 @@ reseting routes"
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, callback) ->
-        railway.logger.write "Request haibu for updating #{app.name}..."
+        console.info "Request haibu for updating #{app.name}..."
         
-        railway.logger.write "Step 1: remove #{app.name}..."
+        console.info "Step 1: remove #{app.name}..."
         @client.clean app.getHaibuDescriptor(), (err, result) =>
             if err
                 console.log "Error cleaning app: #{app.name}"
@@ -60,7 +61,7 @@ reseting routes"
                 console.log err.stack
                 callback(err)
             else
-                railway.logger.write "Step 2: re install #{app.name}..."
+                console.info "Step 2: re install #{app.name}..."
                 @client.start app.getHaibuDescriptor(), (err, result) =>
                     if err
                         console.log "Error spawning app: #{app.name}"
@@ -96,7 +97,7 @@ reseting routes"
                 console.log err.stack
                 callback(err)
             else
-                railway.logger.write "Successfully starting app: #{app.name}"
+                console.info "Successfully starting app: #{app.name}"
                 callback null, result
 
     # Send a stop request to haibu server
@@ -109,5 +110,5 @@ reseting routes"
                 console.log err.stack
                 callback(err)
             else
-                console.log "Successfully stoppingg app: #{app.name}"
+                console.info "Successfully stoppingg app: #{app.name}"
                 callback null

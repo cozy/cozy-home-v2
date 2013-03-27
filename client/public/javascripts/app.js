@@ -1595,7 +1595,7 @@ window.require.register("views/main", function(exports, require, module) {
 
       HomeView.prototype.resetLayoutSizes = function() {
         var height;
-        height = this.$("#header").height();
+        height = this.$("#header").height() + 1;
         this.frames.height($(window).height() - height);
         return this.content.height($(window).height() - height);
       };

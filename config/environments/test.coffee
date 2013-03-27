@@ -1,8 +1,10 @@
-app.configure 'test', ->
-    app.settings.quiet = true
+module.exports = (compound) ->
+    express = require('express')
+    app = compound.app
+    app.enable 'quiet'
     app.enable 'view cache'
     app.enable 'model cache'
     app.enable 'eval cache'
-    app.use require('express').errorHandler
+    app.use express.errorHandler
         dumpExceptions: true
         showStack: true
