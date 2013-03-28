@@ -1,5 +1,6 @@
 haibu = require('haibu-api')
 HttpClient = require("request-json").JsonClient
+MemoryManager = require("./memory").MemoryManager
 
 
 # Class to facilitate communications with Haibu, the application server
@@ -9,6 +10,7 @@ class exports.AppManager
     # Setup haibu client and proxyClient.
     constructor: ->
         @proxyClient = new HttpClient "http://localhost:9104/"
+        @memoryManager = new MemoryManager()
         @client = haibu.createClient(
             host: '127.0.0.1'
             port: 9002
@@ -38,16 +40,21 @@ reseting routes"
         console.info "haibu descriptor : "
         console.info JSON.stringify(app.getHaibuDescriptor())
 
-        @client.start app.getHaibuDescriptor(), (err, result) =>
+        @memoryManager.isEnoughMemory (err, enoughMemory) =>
+            err ?= new Error 'Not enough Memory' unless enoughMemory
             if err
-                console.log "Error spawning app: #{app.name}"
-                console.log err.message
-                console.log err.stack
-                callback(err)
+                callback err
             else
-                console.info "Successfully spawned app: #{app.name}"
-                console.info "Update proxy..."
-                callback null, result
+                @client.start app.getHaibuDescriptor(), (err, result) =>
+                    if err
+                        console.log "Error spawning app: #{app.name}"
+                        console.log err.message
+                        console.log err.stack
+                        callback(err)
+                    else
+                        console.info "Successfully spawned app: #{app.name}"
+                        console.info "Update proxy..."
+                        callback null, result
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, callback) ->
@@ -62,15 +69,16 @@ reseting routes"
                 callback(err)
             else
                 console.info "Step 2: re install #{app.name}..."
-                @client.start app.getHaibuDescriptor(), (err, result) =>
-                    if err
-                        console.log "Error spawning app: #{app.name}"
-                        console.log err.message
-                        console.log err.stack
-                        callback(err)
-                    else
-                        console.info "Successfully update app: #{app.name}"
-                        callback null, result
+                @memoryManager.isEnoughMemory (err, enoughMemory) =>
+                    @client.start app.getHaibuDescriptor(), (err, result) =>
+                        if err
+                            console.log "Error spawning app: #{app.name}"
+                            console.log err.message
+                            console.log err.stack
+                            callback(err)
+                        else
+                            console.info "Successfully update app: #{app.name}"
+                            callback null, result
 
 
     # Send a uninstall request to haibu server ("clean" request).
@@ -90,15 +98,16 @@ reseting routes"
     # Send a start request to haibu server
     start: (app, callback) ->
 
-        @client.start app.getHaibuDescriptor(), (err, result) =>
-            if err
-                console.log "Error starting app: #{app.name}"
-                console.log err.message
-                console.log err.stack
-                callback(err)
-            else
-                console.info "Successfully starting app: #{app.name}"
-                callback null, result
+        @memoryManager.isEnoughMemory (err, enoughMemory) =>
+            @client.start app.getHaibuDescriptor(), (err, result) =>
+                if err
+                    console.log "Error starting app: #{app.name}"
+                    console.log err.message
+                    console.log err.stack
+                    callback(err)
+                else
+                    console.info "Successfully starting app: #{app.name}"
+                    callback null, result
 
     # Send a stop request to haibu server
     stop: (app, callback) ->

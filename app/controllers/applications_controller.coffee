@@ -61,13 +61,14 @@ action "install", ->
         manager.installApp app, (err, result) ->
             if err
                 app.state = "broken"
-                app.save (err) ->
-                    if err
-                        send_error err.message
+                app.save (saveErr) ->
+                    if saveErr
+                        send_error saveErr.message
                     else
                         send
                             error: true
                             success: false
+                            message: err.message
                             app:app
                             , 201
             else
@@ -174,7 +175,7 @@ action "start", ->
         @app.state = "broken"
         @app.save (err) ->
             if err
-                send_error()
+                send_error err.message
             else
                 send_error "starting failed"
 
@@ -198,8 +199,6 @@ action "start", ->
                                 success:true
                                 msg: 'Application running'
                                 app: @app
-
-
 
 action "stop", ->
 

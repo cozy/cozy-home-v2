@@ -1733,6 +1733,7 @@ window.require.register("views/market", function(exports, require, module) {
             success: function(data) {
               if (((data.state != null) === "broken") || !data.success) {
                 _this.installedApps.add(toInstall);
+                alert(data.message);
                 button.spin();
                 button.displayRed("Install failed");
                 return _this.isInstalling = false;
