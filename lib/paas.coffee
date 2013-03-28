@@ -70,15 +70,21 @@ reseting routes"
             else
                 console.info "Step 2: re install #{app.name}..."
                 @memoryManager.isEnoughMemory (err, enoughMemory) =>
-                    @client.start app.getHaibuDescriptor(), (err, result) =>
-                        if err
-                            console.log "Error spawning app: #{app.name}"
-                            console.log err.message
-                            console.log err.stack
-                            callback(err)
-                        else
-                            console.info "Successfully update app: #{app.name}"
-                            callback null, result
+                    err ?= new Error 'Not enough Memory' unless enoughMemory
+                    if err
+                        console.log "Error spawning app: #{app.name}"
+                        console.log err.message
+                        callback err
+                    else
+                        @client.start app.getHaibuDescriptor(), (err, result) =>
+                            if err
+                                console.log "Error spawning app: #{app.name}"
+                                console.log err.message
+                                console.log err.stack
+                                callback(err)
+                            else
+                                console.info "Successfully update app: #{app.name}"
+                                callback null, result
 
 
     # Send a uninstall request to haibu server ("clean" request).
@@ -99,15 +105,21 @@ reseting routes"
     start: (app, callback) ->
 
         @memoryManager.isEnoughMemory (err, enoughMemory) =>
-            @client.start app.getHaibuDescriptor(), (err, result) =>
-                if err
-                    console.log "Error starting app: #{app.name}"
-                    console.log err.message
-                    console.log err.stack
-                    callback(err)
-                else
-                    console.info "Successfully starting app: #{app.name}"
-                    callback null, result
+            err ?= new Error 'Not enough Memory' unless enoughMemory
+            if err
+                console.log "Error spawning app: #{app.name}"
+                console.log err.message
+                callback err
+            else
+                @client.start app.getHaibuDescriptor(), (err, result) =>
+                    if err
+                        console.log "Error starting app: #{app.name}"
+                        console.log err.message
+                        console.log err.stack
+                        callback(err)
+                    else
+                        console.info "Successfully starting app: #{app.name}"
+                        callback null, result
 
     # Send a stop request to haibu server
     stop: (app, callback) ->
