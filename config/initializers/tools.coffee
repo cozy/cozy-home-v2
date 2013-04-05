@@ -1,6 +1,6 @@
 module.exports = (compound) ->
     app = compound.app
-    
+
     compound.tools.database = ->
         {User, CozyInstance, Application} = compound.models
 
@@ -37,7 +37,7 @@ module.exports = (compound) ->
                              console.log "Cleaning instances failed."
                         else
                              destroyApplications()
-                 
+
                 destroyUsers = ->
                     User.destroyAll (error) ->
                         if error
@@ -45,8 +45,26 @@ module.exports = (compound) ->
                              console.log "Cleaning Users failed."
                         else
                              destroyInstances()
-                        
+
                 destroyUsers()
                 break
+            when 'setdomain'
+                domain = process.argv[4]
+                CozyInstance.all (err, instances) ->
+                    if err
+                        console.log err
+                        process.exit(0)
+                    else if instances.length is 0
+                        CozyInstance.create domain: domain, (err) ->
+                            if err then console.log err
+                            else console.log "Domain name set with #{domain}"
+                            process.exit(0)
+                    else
+                        instance = instances[0]
+                        instance.domain = domain
+                        instance.save (err) ->
+                            if err then console.log err
+                            else console.log "Domain name set with #{domain}"
+                            process.exit(0)
             else
                 console.log 'Usage: compound database [cleanuser|cleanapps]'
