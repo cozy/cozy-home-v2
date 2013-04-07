@@ -17,7 +17,7 @@ module.exports = (compound, Application) ->
     # Build descriptor required by haibu from application data.
     Application::getHaibuDescriptor = (app, callback) ->
         descriptor =
-            user: "cozy"
+            user: @slug
             name: @slug
             domain: "127.0.0.1"
             repository:
