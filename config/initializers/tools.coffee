@@ -1,6 +1,4 @@
 module.exports = (compound) ->
-    app = compound.app
-
     compound.tools.database = ->
         {User, CozyInstance, Application} = compound.models
 
@@ -65,4 +63,4 @@ module.exports = (compound) ->
                             else console.log "Domain name set with #{domain}"
                 break
             else
-                console.log 'Usage: compound database [cleanuser|cleanapps]'
+                console.log 'Usage: compound database [cleanuser|cleanapps|cleandb|setdomain]'
