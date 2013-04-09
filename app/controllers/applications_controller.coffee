@@ -36,6 +36,9 @@ action 'index', ->
     layout false
     render title: "Cozy Home"
 
+action "reset_token", ->
+    app.token = body.token
+
 
 # Return list of applications available on this cozy instance.
 action 'applications', ->
@@ -55,13 +58,13 @@ action "install", ->
     body.slug = slugify body.name
     body.state = "installing"
 
-    setupApp = (app) ->
+    setupApp = (appli) ->
         manager = new AppManager
-        console.info 'attempt to install app ' + JSON.stringify(app)
-        manager.installApp app, (err, result) ->
+        console.info 'attempt to install app ' + JSON.stringify(appli)
+        manager.installApp appli, app.token, (err, result) ->
             if err
-                app.state = "broken"
-                app.save (saveErr) ->
+                appli.state = "broken"
+                appli.save (saveErr) ->
                     if saveErr
                         send_error saveErr.message
                     else
@@ -72,9 +75,9 @@ action "install", ->
                             app:app
                             , 201
             else
-                app.state = "installed"
-                app.port = result.drone.port
-                app.save (err) ->
+                appli.state = "installed"
+                appli.port = result.drone.port
+                appli.save (err) ->
                     if err
                         send_error err.message
                     else
@@ -83,7 +86,7 @@ action "install", ->
                                 railway.logger.write "Proxy reset failed."
                                 send_error "Server error occured"
                             else
-                                send { success: true, app: app }, 201
+                                send { success: true, app: appli }, 201
 
     Application.all key: body.slug, (err, apps) ->
         if err
@@ -130,7 +133,7 @@ action "uninstall", ->
                             msg: 'Application succesfuly uninstalled'
 
     manager = new AppManager
-    manager.uninstallApp @app, (err, result) =>
+    manager.uninstallApp @app, app.token, (err, result) =>
         if err
             markAppAsBroken()
         else
@@ -151,7 +154,7 @@ action "update", ->
                 send_error "uninstallation failed"
 
     manager = new AppManager
-    manager.updateApp @app, (err, result) =>
+    manager.updateApp @app, app.token, (err, result) =>
         if err
             markAppAsBroken()
         else
@@ -181,7 +184,7 @@ action "start", ->
 
 
     manager = new AppManager
-    manager.start @app, (err, result) =>
+    manager.start @app, app.token, (err, result) =>
         if err
             markAppAsBroken()
         else
@@ -211,7 +214,7 @@ action "stop", ->
                 send_error "stopping failed"
 
     manager = new AppManager
-    manager.stop @app, (err, result) =>
+    manager.stop @app, app.token, (err, result) =>
         if err
             markAppAsBroken()
         else

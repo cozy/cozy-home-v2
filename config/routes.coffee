@@ -1,6 +1,7 @@
 exports.routes = (map) ->
     map.get '/', 'applications#index'
     map.get '/api/applications', 'applications#applications'
+    map.post '/haibu/token', 'applications#reset_token'
     map.post '/api/applications/install', 'applications#install'
     map.post '/api/applications/:slug/start', 'applications#start'
     map.post '/api/applications/:slug/stop', 'applications#stop'
