@@ -1,5 +1,5 @@
 haibu = require('haibu-api')
-HttpClient = require("request-json/main").JsonClient
+HttpClient = require("request-json").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
