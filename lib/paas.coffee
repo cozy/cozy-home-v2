@@ -1,5 +1,5 @@
 haibu = require('haibu-api')
-HttpClient = require("request-json").JsonClient
+HttpClient = require("../../request-json/main").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
@@ -66,28 +66,36 @@ reseting routes"
             if err
                 callback err
             else
-                @client.startApp app.getHaibuDescriptor(), token, (err, result) =>
-                    if err
+                @client.startApp app.getHaibuDescriptor(), token, (err, res, body) =>
+                    if err or res.statusCode isnt 200
                         console.log "Error spawning app: #{app.name}"
-                        console.log err.message
-                        console.log err.stack
-                        callback(err)
+                        if err
+                            console.log err.message
+                            console.log err.stack
+                            callback(err)
+                        else
+                            console.log res.body
+                            callback(res.body)
                     else
                         console.info "Successfully spawned app: #{app.name}"
                         console.info "Update proxy..."
-                        callback null, result.body
+                        callback null, res.body
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, token, callback) ->
         console.info "Request haibu for updating #{app.name}..."
 
         console.info "Step 1: remove #{app.name}..."
-        @client.uninstallApp app.getHaibuDescriptor(), token, (err, result) =>
-            if err
+        @client.uninstallApp app.getHaibuDescriptor(), token, (err, res, body) =>
+            if err or res.statusCode isnt 200
                 console.log "Error cleaning app: #{app.name}"
-                console.log err.message
-                console.log err.stack
-                callback(err)
+                if err
+                    console.log err.message
+                    console.log err.stack
+                    callback(err)
+                else
+                    console.log res.body
+                    callback(res.body)
             else
                 console.info "Step 2: re install #{app.name}..."
                 @memoryManager.isEnoughMemory (err, enoughMemory) =>
@@ -97,27 +105,35 @@ reseting routes"
                         console.log err.message
                         callback err
                     else
-                        @client.startApp app.getHaibuDescriptor(), token, (err, result) =>
-                            if err
+                        @client.startApp app.getHaibuDescriptor(), token, (err, res, body) =>
+                            if err or res.statusCode isnt 200
                                 console.log "Error spawning app: #{app.name}"
-                                console.log err.message
-                                console.log err.stack
-                                callback(err)
+                                if err
+                                    console.log err.message
+                                    console.log err.stack
+                                    callback(err)
+                                else
+                                    console.log res.body
+                                    callback(res.body)
                             else
                                 console.info "Successfully update app: #{app.name}"
-                                callback null, result.body
+                                callback null, res.body
 
 
     # Send a uninstall request to haibu server ("clean" request).
     uninstallApp: (app, token, callback) ->
 
         console.info "Request haibu for cleaning #{app.name}..."
-        @client.uninstallApp app.getHaibuDescriptor(), token, (err, result) =>
-            if err
+        @client.uninstallApp app.getHaibuDescriptor(), token, (err, res, body) =>
+            if err or res.statusCode isnt 200
                 console.log "Error cleaning app: #{app.name}"
-                console.log err.message
-                console.log err.stack
-                callback(err)
+                if err
+                    console.log err.message
+                    console.log err.stack
+                    callback(err)
+                else
+                    console.log res.body
+                    callback(res.body)
             else
                 console.info "Successfully cleaning app: #{app.name}"
                 callback null
@@ -132,25 +148,33 @@ reseting routes"
                 console.log err.message
                 callback err
             else
-                @client.startApp app.getHaibuDescriptor(), token, (err, result) =>
-                    if err
+                @client.startApp app.getHaibuDescriptor(), token, (err, res, body) =>
+                    if err or res.statusCode isnt 200
                         console.log "Error starting app: #{app.name}"
-                        console.log err.message
-                        console.log err.stack
-                        callback(err)
+                        if err
+                            console.log err.message
+                            console.log err.stack
+                            callback(err)
+                        else
+                            console.log res.body
+                            callback(res.body)
                     else
                         console.info "Successfully starting app: #{app.name}"
-                        callback null, result.body
+                        callback null, res.body
 
     # Send a stop request to haibu server
     stop: (app, token, callback) ->
 
-        @client.stopApp app.slug, token, (err, result) =>
-            if err
+        @client.stopApp app.slug, token, (err,res, body) =>
+            if err or res.statusCode isnt 200
                 console.log "Error stopping app: #{app.name}"
-                console.log err.message
-                console.log err.stack
-                callback(err)
+                if err
+                    console.log err.message
+                    console.log err.stack
+                    callback(err)
+                else
+                    console.log res.body
+                    callback(res.body)
             else
                 console.info "Successfully stoppingg app: #{app.name}"
                 callback null
