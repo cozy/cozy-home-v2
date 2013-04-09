@@ -105,7 +105,7 @@ reseting routes"
                                 callback(err)
                             else
                                 console.info "Successfully update app: #{app.name}"
-                                callback null, result
+                                callback null, result.body
 
 
     # Send a uninstall request to haibu server ("clean" request).
