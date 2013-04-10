@@ -31,9 +31,7 @@ class exports.AppManager
 
         # Send a stop request to haibu server
         @client.stopApp = (manifest, token, callback) ->
-            data =
-                stop:
-                    name: manifest
+            data = stop: manifest
             controllerClient.setToken token
             controllerClient.post "drones/#{manifest.name}/stop", data, callback
 
