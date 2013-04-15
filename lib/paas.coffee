@@ -10,11 +10,15 @@ class exports.AppManager
     # Setup haibu client and proxyClient.
     constructor: ->
         @proxyClient = new HttpClient "http://localhost:9104/"
+        @controllerClient = new HttpClient "http://localhost:9002/"
         @memoryManager = new MemoryManager()
         @client = haibu.createClient(
             host: '127.0.0.1'
             port: 9002
         ).drone
+        @client.brunch = (manifest, callback) =>
+            data = brunch: manifest
+            @controllerClient.post "drones/#{manifest.name}/brunch", data, callback
 
     # Ask to proxy to rebuild his routes.
     # Because route commands are public, we can't allow that someone add or
@@ -52,9 +56,16 @@ reseting routes"
                         console.log err.stack
                         callback(err)
                     else
-                        console.info "Successfully spawned app: #{app.name}"
-                        console.info "Update proxy..."
-                        callback null, result
+                        @client.brunch app.getHaibuDescriptor(), (err, res) =>
+                            if err
+                                console.log "Error spawning app: #{app.name}"
+                                console.log err.message
+                                console.log err.stack
+                                callback(err)
+                            else
+                                console.info "Successfully spawned app: #{app.name}"
+                                console.info "Update proxy..."
+                                callback null, result
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, callback) ->
@@ -83,8 +94,15 @@ reseting routes"
                                 console.log err.stack
                                 callback(err)
                             else
-                                console.info "Successfully update app: #{app.name}"
-                                callback null, result
+                                @client.brunch app.getHaibuDescriptor(), (err, res) =>
+                                    if err
+                                        console.log "Error spawning app: #{app.name}"
+                                        console.log err.message
+                                        console.log err.stack
+                                        callback(err)
+                                    else
+                                        console.info "Successfully update app: #{app.name}"
+                                        callback null, result
 
 
     # Send a uninstall request to haibu server ("clean" request).
