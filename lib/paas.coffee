@@ -1,5 +1,5 @@
 haibu = require('haibu-api')
-HttpClient = require("request-json").JsonClient
+HttpClient = require("../../request-json/main").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
@@ -18,9 +18,10 @@ class exports.AppManager
             host: '127.0.0.1'
             port: 9002
         ).drone
-        @client.brunch = (manifest, callback) =>
+        @client.brunch = (manifest, token, callback) =>
             data = brunch: manifest
-            @controllerClient.post "drones/#{manifest.name}/brunch", data, callback
+            controllerClient.setToken token
+            controllerClient.post "drones/#{manifest.name}/brunch", data, callback
 
         @client.startApp = (manifest, token, callback) ->
             data = start: manifest
@@ -74,15 +75,12 @@ reseting routes"
                         if err
                             console.log err.message
                             console.log err.stack
-                            callback(err)
-                        else
-                            console.log res.body
-                            callback(res.body)
+                            callback err
                     else
-                        @client.brunch app.getHaibuDescriptor(), (err, result) =>
+                        @client.brunch app.getHaibuDescriptor(), token, (err, result) =>
                             console.info "Successfully spawned app: #{app.name}"
                             console.info "Update proxy..."
-                            callback null, res
+                            callback null, body
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, token, callback) ->
@@ -114,14 +112,11 @@ reseting routes"
                                 if err
                                     console.log err.message
                                     console.log err.stack
-                                    callback(err)
-                                else
-                                    console.log res.body
-                                    callback(res.body)
+                                    callback err
                             else
-                                @client.brunch app.getHaibuDescriptor(), (err, result) =>
+                                @client.brunch app.getHaibuDescriptor(), token, (err, result) =>
                                     console.info "Successfully update app: #{app.name}"
-                                    callback null, res
+                                    callback null, body
 
 
     # Send a uninstall request to haibu server ("clean" request).
