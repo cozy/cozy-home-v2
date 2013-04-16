@@ -14,6 +14,8 @@ send_error = (msg, code=500) ->
         send error: true, msg: "Server error occured", code
 
 
+
+
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all key: params.slug, (err, apps) =>
@@ -37,7 +39,7 @@ action 'index', ->
     render title: "Cozy Home"
 
 action "reset_token", ->
-    app.token = body.token
+    app.token = body.password
 
 
 # Return list of applications available on this cozy instance.
