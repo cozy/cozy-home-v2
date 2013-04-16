@@ -12,11 +12,15 @@ class exports.AppManager
     # Setup haibu client and proxyClient.
     constructor: ->
         @proxyClient = new HttpClient "http://localhost:9104/"
+        @controllerClient = new HttpClient "http://localhost:9002/"
         @memoryManager = new MemoryManager()
         @client = haibu.createClient(
             host: '127.0.0.1'
             port: 9002
         ).drone
+        @client.brunch = (manifest, callback) =>
+            data = brunch: manifest
+            @controllerClient.post "drones/#{manifest.name}/brunch", data, callback
 
         @client.startApp = (manifest, token, callback) ->
             data = start: manifest
@@ -75,9 +79,10 @@ reseting routes"
                             console.log res.body
                             callback(res.body)
                     else
-                        console.info "Successfully spawned app: #{app.name}"
-                        console.info "Update proxy..."
-                        callback null, res.body
+                        @client.brunch app.getHaibuDescriptor(), (err, result) =>
+                            console.info "Successfully spawned app: #{app.name}"
+                            console.info "Update proxy..."
+                            callback null, res
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, token, callback) ->
@@ -114,8 +119,9 @@ reseting routes"
                                     console.log res.body
                                     callback(res.body)
                             else
-                                console.info "Successfully update app: #{app.name}"
-                                callback null, res.body
+                                @client.brunch app.getHaibuDescriptor(), (err, result) =>
+                                    console.info "Successfully update app: #{app.name}"
+                                    callback null, res
 
 
     # Send a uninstall request to haibu server ("clean" request).
