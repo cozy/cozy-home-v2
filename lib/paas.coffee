@@ -1,5 +1,5 @@
 haibu = require('haibu-api')
-HttpClient = require("../../request-json/main").JsonClient
+HttpClient = require("request-json").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
@@ -10,7 +10,7 @@ controllerClient = new HttpClient haibuUrl
 class exports.AppManager
 
     # Setup haibu client and proxyClient.
-    constructor: ->
+    constructor: (token) ->
         @proxyClient = new HttpClient "http://localhost:9104/"
         @controllerClient = new HttpClient "http://localhost:9002/"
         @memoryManager = new MemoryManager()
@@ -18,24 +18,24 @@ class exports.AppManager
             host: '127.0.0.1'
             port: 9002
         ).drone
-        @client.brunch = (manifest, token, callback) =>
+        @client.brunch = (manifest, callback) =>
             data = brunch: manifest
             controllerClient.setToken token
             controllerClient.post "drones/#{manifest.name}/brunch", data, callback
 
-        @client.startApp = (manifest, token, callback) ->
+        @client.startApp = (manifest, callback) ->
             data = start: manifest
             controllerClient.setToken token
             controllerClient.post "drones/#{manifest.name}/start", data, callback
 
         # Send a uninstall request to haibu server ("clean" request).
-        @client.uninstallApp = (manifest, token, callback) ->
+        @client.uninstallApp = (manifest, callback) ->
             data = manifest
             controllerClient.setToken token
             controllerClient.post "drones/#{manifest.name}/clean", data, callback
 
         # Send a stop request to haibu server
-        @client.stopApp = (manifest, token, callback) ->
+        @client.stopApp = (manifest, callback) ->
             data = stop: manifest
             controllerClient.setToken token
             controllerClient.post "drones/#{manifest.name}/stop", data, callback
@@ -59,7 +59,7 @@ reseting routes"
 
     # 1. Send a install request to haibu server ("start" request).
     # 2. Send a request to proxy to add a new route
-    installApp: (app, token, callback) ->
+    installApp: (app, callback) ->
         console.info "Request haibu for spawning #{app.name}..."
         console.info "haibu descriptor : "
         console.info JSON.stringify(app.getHaibuDescriptor())
@@ -69,7 +69,7 @@ reseting routes"
             if err
                 callback err
             else
-                @client.startApp app.getHaibuDescriptor(), token, (err, res, body) =>
+                @client.startApp app.getHaibuDescriptor(), (err, res, body) =>
                     if err or res.statusCode isnt 200
                         console.log "Error spawning app: #{app.name}"
                         if err
@@ -77,17 +77,17 @@ reseting routes"
                             console.log err.stack
                             callback err
                     else
-                        @client.brunch app.getHaibuDescriptor(), token, (err, result) =>
+                        @client.brunch app.getHaibuDescriptor(), (err, result) =>
                             console.info "Successfully spawned app: #{app.name}"
                             console.info "Update proxy..."
                             callback null, body
 
     # Remove and reinstall app inside Haibu.
-    updateApp: (app, token, callback) ->
+    updateApp: (app, callback) ->
         console.info "Request haibu for updating #{app.name}..."
 
         console.info "Step 1: remove #{app.name}..."
-        @client.uninstallApp app.getHaibuDescriptor(), token, (err, res, body) =>
+        @client.uninstallApp app.getHaibuDescriptor(), (err, res, body) =>
             if err or res.statusCode isnt 200
                 console.log "Error cleaning app: #{app.name}"
                 if err
@@ -106,7 +106,7 @@ reseting routes"
                         console.log err.message
                         callback err
                     else
-                        @client.startApp app.getHaibuDescriptor(), token, (err, res, body) =>
+                        @client.startApp app.getHaibuDescriptor(), (err, res, body) =>
                             if err or res.statusCode isnt 200
                                 console.log "Error spawning app: #{app.name}"
                                 if err
@@ -114,16 +114,16 @@ reseting routes"
                                     console.log err.stack
                                     callback err
                             else
-                                @client.brunch app.getHaibuDescriptor(), token, (err, result) =>
+                                @client.brunch app.getHaibuDescriptor(), (err, result) =>
                                     console.info "Successfully update app: #{app.name}"
                                     callback null, body
 
 
     # Send a uninstall request to haibu server ("clean" request).
-    uninstallApp: (app, token, callback) ->
+    uninstallApp: (app, callback) ->
 
         console.info "Request haibu for cleaning #{app.name}..."
-        @client.uninstallApp app.getHaibuDescriptor(), token, (err, res, body) =>
+        @client.uninstallApp app.getHaibuDescriptor(), (err, res, body) =>
             if err or res.statusCode isnt 200
                 console.log "Error cleaning app: #{app.name}"
                 if err
@@ -138,7 +138,7 @@ reseting routes"
                 callback null
 
     # Send a start request to haibu server
-    start: (app, token, callback) ->
+    start: (app, callback) ->
 
         @memoryManager.isEnoughMemory (err, enoughMemory) =>
             err ?= new Error 'Not enough Memory' unless enoughMemory
@@ -147,7 +147,7 @@ reseting routes"
                 console.log err.message
                 callback err
             else
-                @client.startApp app.getHaibuDescriptor(), token, (err, res, body) =>
+                @client.startApp app.getHaibuDescriptor(), (err, res, body) =>
                     if err or res.statusCode isnt 200
                         console.log "Error starting app: #{app.name}"
                         if err
@@ -162,9 +162,9 @@ reseting routes"
                         callback null, res.body
 
     # Send a stop request to haibu server
-    stop: (app, token, callback) ->
+    stop: (app, callback) ->
 
-        @client.stopApp app.slug, token, (err,res, body) =>
+        @client.stopApp app.slug, (err,res, body) =>
             if err or res.statusCode isnt 200
                 console.log "Error stopping app: #{app.name}"
                 if err

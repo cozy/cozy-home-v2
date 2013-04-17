@@ -14,8 +14,6 @@ send_error = (msg, code=500) ->
         send error: true, msg: "Server error occured", code
 
 
-
-
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all key: params.slug, (err, apps) =>
@@ -38,6 +36,9 @@ action 'index', ->
     layout false
     render title: "Cozy Home"
 
+
+# Reset token to communicate with cozy-controller :
+# token is transmitted in password field to hide it in logger
 action "reset_token", ->
     app.token = body.password
 
@@ -61,9 +62,9 @@ action "install", ->
     body.state = "installing"
 
     setupApp = (appli) ->
-        manager = new AppManager
+        manager = new AppManager(app.token)
         console.info 'attempt to install app ' + JSON.stringify(appli)
-        manager.installApp appli, app.token, (err, result) ->
+        manager.installApp appli, (err, result) ->
             if err
                 appli.state = "broken"
                 appli.save (saveErr) ->
@@ -134,8 +135,8 @@ action "uninstall", ->
                             success: true
                             msg: 'Application succesfuly uninstalled'
 
-    manager = new AppManager
-    manager.uninstallApp @app, app.token, (err, result) =>
+    manager = new AppManager(app.token)
+    manager.uninstallApp @app, (err, result) =>
         if err
             markAppAsBroken()
         else
@@ -155,8 +156,8 @@ action "update", ->
             else
                 send_error "uninstallation failed"
 
-    manager = new AppManager
-    manager.updateApp @app, app.token, (err, result) =>
+    manager = new AppManager(app.token)
+    manager.updateApp @app, (err, result) =>
         if err
             markAppAsBroken()
         else
@@ -185,8 +186,8 @@ action "start", ->
                 send_error "starting failed"
 
 
-    manager = new AppManager
-    manager.start @app, app.token, (err, result) =>
+    manager = new AppManager(app.token)
+    manager.start @app, (err, result) =>
         if err
             markAppAsBroken()
         else
@@ -215,8 +216,8 @@ action "stop", ->
             else
                 send_error "stopping failed"
 
-    manager = new AppManager
-    manager.stop @app, app.token, (err, result) =>
+    manager = new AppManager(app.token)
+    manager.stop @app, (err, result) =>
         if err
             markAppAsBroken()
         else
