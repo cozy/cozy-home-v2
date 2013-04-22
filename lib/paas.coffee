@@ -1,5 +1,6 @@
 haibu = require('haibu-api')
-HttpClient = require("request-json").JsonClient
+fs = require 'fs'
+HttpClient = require("../../request-json/main").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
@@ -10,7 +11,7 @@ controllerClient = new HttpClient haibuUrl
 class exports.AppManager
 
     # Setup haibu client and proxyClient.
-    constructor: (token) ->
+    constructor: () ->
         @proxyClient = new HttpClient "http://localhost:9104/"
         @controllerClient = new HttpClient "http://localhost:9002/"
         @memoryManager = new MemoryManager()
@@ -18,27 +19,41 @@ class exports.AppManager
             host: '127.0.0.1'
             port: 9002
         ).drone
+
+        getAuthController = (callback) ->
+            fs.readFile '/etc/cozy/controller.token', 'utf8', (err, data) =>
+                if err isnt null
+                    console.log "Cannot read token"
+                    callback err
+                else
+                    token = data.split('\n')[0]
+                    callback null, token
+
         @client.brunch = (manifest, callback) =>
             data = brunch: manifest
-            controllerClient.setToken token
-            controllerClient.post "drones/#{manifest.name}/brunch", data, callback
+            getAuthController (err, token) =>
+                controllerClient.setToken token
+                controllerClient.post "drones/#{manifest.name}/brunch", data, callback
 
         @client.startApp = (manifest, callback) ->
             data = start: manifest
-            controllerClient.setToken token
-            controllerClient.post "drones/#{manifest.name}/start", data, callback
+            getAuthController (err, token) =>
+                controllerClient.setToken token
+                controllerClient.post "drones/#{manifest.name}/start", data, callback
 
         # Send a uninstall request to haibu server ("clean" request).
         @client.uninstallApp = (manifest, callback) ->
             data = manifest
-            controllerClient.setToken token
-            controllerClient.post "drones/#{manifest.name}/clean", data, callback
+            getAuthController (err, token) =>
+                controllerClient.setToken token
+                controllerClient.post "drones/#{manifest.name}/clean", data, callback
 
         # Send a stop request to haibu server
         @client.stopApp = (manifest, callback) ->
             data = stop: manifest
-            controllerClient.setToken token
-            controllerClient.post "drones/#{manifest.name}/stop", data, callback
+            getAuthController (err, token) =>
+                controllerClient.setToken token
+                controllerClient.post "drones/#{manifest.name}/stop", data, callback
 
     # Ask to proxy to rebuild his routes.
     # Because route commands are public, we can't allow that someone add or

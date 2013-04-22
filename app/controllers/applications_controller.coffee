@@ -36,13 +36,6 @@ action 'index', ->
     layout false
     render title: "Cozy Home"
 
-
-# Reset token to communicate with cozy-controller :
-# token is transmitted in password field to hide it in logger
-action "reset_token", ->
-    app.token = body.password
-
-
 # Return list of applications available on this cozy instance.
 action 'applications', ->
     Application.all (errors, apps) ->
