@@ -1,6 +1,6 @@
 haibu = require('haibu-api')
 fs = require 'fs'
-HttpClient = require("request-json").JsonClient
+HttpClient = require("../../request-json/main").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
@@ -91,6 +91,9 @@ reseting routes"
                             console.log err.message
                             console.log err.stack
                             callback err
+                        else
+                            console.log res.body
+                            callback(res.body)
                     else
                         @client.brunch app.getHaibuDescriptor(), (err, result) =>
                             console.info "Successfully spawned app: #{app.name}"
