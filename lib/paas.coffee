@@ -11,7 +11,7 @@ controllerClient = new HttpClient haibuUrl
 class exports.AppManager
 
     # Setup haibu client and proxyClient.
-    constructor: () ->
+    constructor: ->
         @proxyClient = new HttpClient "http://localhost:9104/"
         @controllerClient = new HttpClient "http://localhost:9002/"
         @memoryManager = new MemoryManager()
