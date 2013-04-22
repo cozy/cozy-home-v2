@@ -55,7 +55,7 @@ action "install", ->
     body.state = "installing"
 
     setupApp = (appli) ->
-        manager = new AppManager(app.token)
+        manager = new AppManager()
         console.info 'attempt to install app ' + JSON.stringify(appli)
         manager.installApp appli, (err, result) ->
             if err
@@ -128,7 +128,7 @@ action "uninstall", ->
                             success: true
                             msg: 'Application succesfuly uninstalled'
 
-    manager = new AppManager(app.token)
+    manager = new AppManager()
     manager.uninstallApp @app, (err, result) =>
         if err
             markAppAsBroken()
@@ -149,7 +149,7 @@ action "update", ->
             else
                 send_error "uninstallation failed"
 
-    manager = new AppManager(app.token)
+    manager = new AppManager()
     manager.updateApp @app, (err, result) =>
         if err
             markAppAsBroken()
@@ -179,7 +179,7 @@ action "start", ->
                 send_error "starting failed"
 
 
-    manager = new AppManager(app.token)
+    manager = new AppManager()
     manager.start @app, (err, result) =>
         if err
             markAppAsBroken()
@@ -209,7 +209,7 @@ action "stop", ->
             else
                 send_error "stopping failed"
 
-    manager = new AppManager(app.token)
+    manager = new AppManager()
     manager.stop @app, (err, result) =>
         if err
             markAppAsBroken()
