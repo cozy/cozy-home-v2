@@ -1,7 +1,7 @@
 haibu = require('haibu-api')
 fs = require 'fs'
 compound = require 'compound'
-HttpClient = require("request-json").JsonClient
+HttpClient = require("../../request-json/main").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
 controllerClient = new HttpClient haibuUrl
@@ -169,19 +169,20 @@ reseting routes"
                 console.log err.message
                 callback err
             else
-                @client.startApp app.getHaibuDescriptor(), (err, res, body) =>
-                    if err or res.statusCode isnt 200
-                        console.log "Error starting app: #{app.name}"
-                        if err
-                            console.log err.message
-                            console.log err.stack
-                            callback(err)
+                @client.stop app.getHaibuDescriptor, (err, res, body) =>
+                    @client.startApp app.getHaibuDescriptor(), (err, res, body) =>
+                        if err or res.statusCode isnt 200
+                            console.log "Error starting app: #{app.name}"
+                            if err
+                                console.log err.message
+                                console.log err.stack
+                                callback(err)
+                            else
+                                console.log res.body
+                                callback(res.body)
                         else
-                            console.log res.body
-                            callback(res.body)
-                    else
-                        console.info "Successfully starting app: #{app.name}"
-                        callback null, res.body
+                            console.info "Successfully starting app: #{app.name}"
+                            callback null, res.body
 
     # Send a stop request to haibu server
     stop: (app, callback) ->
