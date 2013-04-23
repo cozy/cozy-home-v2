@@ -1,5 +1,6 @@
 BaseView = require 'lib/base_view'
 appButtonTemplate = require "templates/navbar_app_btn"
+NotificationsView = require './notifications'
 
 module.exports = class NavbarView extends BaseView
 
@@ -11,11 +12,14 @@ module.exports = class NavbarView extends BaseView
         super()
 
     afterRender: =>
+
+        @notifications = new NotificationsView()
+
         @buttons = @$('#buttons')
         @$('#help-button').tooltip
              placement: 'bottom'
              title: 'Questions and help forum'
-            
+
         @$('#logout-button').tooltip
              placement: 'bottom'
              title: 'Sign out'
