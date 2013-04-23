@@ -1,5 +1,6 @@
 haibu = require('haibu-api')
 fs = require 'fs'
+compound = require 'compound'
 HttpClient = require("request-json").JsonClient
 MemoryManager = require("./memory").MemoryManager
 haibuUrl = "http://localhost:9002/"
@@ -21,13 +22,16 @@ class exports.AppManager
         ).drone
 
         getAuthController = (callback) ->
-            fs.readFile '/etc/cozy/controller.token', 'utf8', (err, data) =>
-                if err isnt null
-                    console.log "Cannot read token"
-                    callback err
-                else
-                    token = data.split('\n')[0]
-                    callback null, token
+            if process.env.ENV_VARIABLE == 'production' 
+                fs.readFile '/etc/cozy/controller.token', 'utf8', (err, data) =>
+                    if err isnt null
+                        console.log "Cannot read token"
+                        callback err
+                    else
+                        token = data.split('\n')[0]
+                        callback null, token
+            else
+                callback null, ""
 
         @client.brunch = (manifest, callback) =>
             data = brunch: manifest

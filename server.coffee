@@ -11,6 +11,7 @@ if not module.parent
     server = app()
 
     server.listen port, host, -> 
+        process.env.ENV_VARIABLE = server.set 'env'
         console.log(
             "Railway server listening on %s:%d within %s environment", 
             host, port, 
