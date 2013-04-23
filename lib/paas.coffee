@@ -21,7 +21,7 @@ class exports.AppManager
         ).drone
 
         getAuthController = (callback) ->
-            if process.env.ENV_VARIABLE == 'production' 
+            if process.env.ENV_VARIABLE is 'production' 
                 fs.readFile '/etc/cozy/controller.token', 'utf8', (err, data) =>
                     if err isnt null
                         console.log "Cannot read token"
