@@ -186,7 +186,7 @@ reseting routes"
     # Send a stop request to haibu server
     stop: (app, callback) ->
 
-        @client.stopApp app.slug, (err,res, body) =>
+        @client.stopApp app.getHaibuDescriptor(), (err,res, body) =>
             if err or res.statusCode isnt 200
                 console.log "Error stopping app: #{app.name}"
                 if err
