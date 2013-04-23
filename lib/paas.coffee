@@ -117,15 +117,16 @@ reseting routes"
                 console.log err.message
                 callback err
             else
-                @client.start app.getHaibuDescriptor(), (err, result) =>
-                    if err
-                        console.log "Error starting app: #{app.name}"
-                        console.log err.message
-                        console.log err.stack
-                        callback(err)
-                    else
-                        console.info "Successfully starting app: #{app.name}"
-                        callback null, result
+                @client.stop app.slug, (err, result) =>
+                    @client.start app.getHaibuDescriptor(), (err, result) =>
+                        if err
+                            console.log "Error starting app: #{app.name}"
+                            console.log err.message
+                            console.log err.stack
+                            callback(err)
+                        else
+                            console.info "Successfully starting app: #{app.name}"
+                            callback null, result
 
     # Send a stop request to haibu server
     stop: (app, callback) ->
