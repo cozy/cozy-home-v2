@@ -1920,7 +1920,7 @@ window.require.register("views/navbar", function(exports, require, module) {
     };
 
     NavbarView.prototype.onAppRemoved = function(app) {
-      if ((app.id != null) && app.length > 0) {
+      if (app.id != null) {
         return this.buttons.find("#" + app.id).remove();
       }
     };
