@@ -4,11 +4,11 @@ Application = require 'models/application'
 
 # List of installed applications.
 module.exports = class ApplicationCollection extends BaseCollection
-        
+
     model: Application
     url: 'api/applications/'
 
-    # fetch application list from the market 
+    # fetch application list from the market
     # callback(err, apps)
     fetchFromMarket: (callback) =>
         apps = [
@@ -17,7 +17,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"bookmarks"
                 git:"https://github.com/Piour/cozy-bookmarks.git"
                 comment: "community contribution"
-                description:"Manage your bookmark easily"
+                description:"Manage your bookmarks easily"
             ,
                 icon:"img/feeds-icon.png"
                 name:"feeds"

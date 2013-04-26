@@ -112,7 +112,7 @@ window.require.register("collections/application", function(exports, require, mo
             slug: "bookmarks",
             git: "https://github.com/Piour/cozy-bookmarks.git",
             comment: "community contribution",
-            description: "Manage your bookmark easily"
+            description: "Manage your bookmarks easily"
           }, {
             icon: "img/feeds-icon.png",
             name: "feeds",
