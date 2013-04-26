@@ -1,27 +1,15 @@
-class SocketListener
+class SocketListener extends CozySocketListener
 
-    events: ['notification']
+    models:
+        'notification': require 'models/notification'
 
-    constructor: (@notifView) ->
+    events: ['notification.create','notification.update', 'notification.delete']
 
-        try
-            @connect()
-        catch err
-            console.log "Error while connecting to socket.io"
-            console.log err.stack
+    onRemoteCreate: (notification) ->
+        @collection.add notification
 
-    connect: ->
-        url = window.location.origin
-        pathToSocketIO = "#{window.location.pathname.substring(1)}socket.io"
-        socket = io.connect url,
-                resource: pathToSocketIO
-
-        for event in @events
-            socket.on event, @process
+    onRemoteDelete: (notification) ->
+        @collection.remove notification
 
 
-    process: (data) =>
-        @notifView.addNotification(data)
-
-
-module.exports = SocketListener
+module.exports = new SocketListener()

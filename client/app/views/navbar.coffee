@@ -1,6 +1,6 @@
 BaseView = require 'lib/base_view'
 appButtonTemplate = require "templates/navbar_app_btn"
-NotificationsView = require './notifications'
+NotificationsView = require './notifications_view'
 
 module.exports = class NavbarView extends BaseView
 

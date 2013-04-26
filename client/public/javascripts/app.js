@@ -160,6 +160,32 @@ window.require.register("collections/application", function(exports, require, mo
   })(BaseCollection);
   
 });
+window.require.register("collections/notifications", function(exports, require, module) {
+  var BaseCollection, Notification, NotificationCollection,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseCollection = require('lib/base_collection');
+
+  Notification = require('models/notification');
+
+  module.exports = NotificationCollection = (function(_super) {
+
+    __extends(NotificationCollection, _super);
+
+    function NotificationCollection() {
+      return NotificationCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    NotificationCollection.prototype.model = Notification;
+
+    NotificationCollection.prototype.url = 'notifications';
+
+    return NotificationCollection;
+
+  })(BaseCollection);
+  
+});
 window.require.register("helpers", function(exports, require, module) {
   
   exports.BrunchApplication = (function() {
@@ -396,7 +422,8 @@ window.require.register("lib/base_view", function(exports, require, module) {
     BaseView.prototype.template = function() {};
 
     BaseView.prototype.initialize = function() {
-      return this.render();
+      this.render();
+      return BaseView.__super__.initialize.call(this);
     };
 
     BaseView.prototype.getRenderData = function() {
@@ -408,7 +435,7 @@ window.require.register("lib/base_view", function(exports, require, module) {
 
     BaseView.prototype.render = function() {
       this.beforeRender();
-      this.$el.html(this.template({}));
+      this.$el.html(this.template(this.getRenderData()));
       this.afterRender();
       return this;
     };
@@ -431,49 +458,36 @@ window.require.register("lib/base_view", function(exports, require, module) {
 });
 window.require.register("lib/socket_listener", function(exports, require, module) {
   var SocketListener,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  SocketListener = (function() {
+  SocketListener = (function(_super) {
 
-    SocketListener.prototype.events = ['notification'];
+    __extends(SocketListener, _super);
 
-    function SocketListener(notifView) {
-      this.notifView = notifView;
-      this.process = __bind(this.process, this);
-
-      try {
-        this.connect();
-      } catch (err) {
-        console.log("Error while connecting to socket.io");
-        console.log(err.stack);
-      }
+    function SocketListener() {
+      return SocketListener.__super__.constructor.apply(this, arguments);
     }
 
-    SocketListener.prototype.connect = function() {
-      var event, pathToSocketIO, socket, url, _i, _len, _ref, _results;
-      url = window.location.origin;
-      pathToSocketIO = "" + (window.location.pathname.substring(1)) + "socket.io";
-      socket = io.connect(url, {
-        resource: pathToSocketIO
-      });
-      _ref = this.events;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        event = _ref[_i];
-        _results.push(socket.on(event, this.process));
-      }
-      return _results;
+    SocketListener.prototype.models = {
+      'notification': require('models/notification')
     };
 
-    SocketListener.prototype.process = function(data) {
-      return this.notifView.addNotification(data);
+    SocketListener.prototype.events = ['notification.create', 'notification.update', 'notification.delete'];
+
+    SocketListener.prototype.onRemoteCreate = function(notification) {
+      return this.collection.add(notification);
+    };
+
+    SocketListener.prototype.onRemoteDelete = function(notification) {
+      return this.collection.remove(notification);
     };
 
     return SocketListener;
 
-  })();
+  })(CozySocketListener);
 
-  module.exports = SocketListener;
+  module.exports = new SocketListener();
   
 });
 window.require.register("models/application", function(exports, require, module) {
@@ -581,6 +595,28 @@ window.require.register("models/application", function(exports, require, module)
     return Application;
 
   })(Backbone.Model);
+  
+});
+window.require.register("models/notification", function(exports, require, module) {
+  var BaseModel, Notification,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require('lib/base_model').BaseModel;
+
+  module.exports = Notification = (function(_super) {
+
+    __extends(Notification, _super);
+
+    function Notification() {
+      return Notification.__super__.constructor.apply(this, arguments);
+    }
+
+    Notification.prototype.urlRoot = 'notifications';
+
+    return Notification;
+
+  })(BaseModel);
   
 });
 window.require.register("models/user", function(exports, require, module) {
@@ -775,7 +811,7 @@ window.require.register("templates/notification_item", function(exports, require
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<li>' + escape((interp = content) == null ? '' : interp) + '</li>');
+  buf.push('<li>' + escape((interp = model.text) == null ? '' : interp) + '</li>');
   }
   return buf.join("");
   };
@@ -786,7 +822,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a><i class="icon-exclamation-sign">&nbsp;</i><span class="badge badge-important"></span></a><ul id="notifications"></ul>');
+  buf.push('<a><i class="icon-exclamation-sign">&nbsp;</i><span class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><ul id="notifications"></ul>');
   }
   return buf.join("");
   };
@@ -1844,7 +1880,7 @@ window.require.register("views/navbar", function(exports, require, module) {
 
   appButtonTemplate = require("templates/navbar_app_btn");
 
-  NotificationsView = require('./notifications');
+  NotificationsView = require('./notifications_view');
 
   module.exports = NavbarView = (function(_super) {
 
@@ -1936,8 +1972,32 @@ window.require.register("views/navbar", function(exports, require, module) {
   })(BaseView);
   
 });
-window.require.register("views/notifications", function(exports, require, module) {
-  var BaseView, NotificationsView, SocketListener, notifTemplate,
+window.require.register("views/notification_view", function(exports, require, module) {
+  var BaseView, NotificationView,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = NotificationView = (function(_super) {
+
+    __extends(NotificationView, _super);
+
+    function NotificationView() {
+      return NotificationView.__super__.constructor.apply(this, arguments);
+    }
+
+    NotificationView.prototype.className = 'notification';
+
+    NotificationView.prototype.template = require('templates/notification_item');
+
+    return NotificationView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/notifications_view", function(exports, require, module) {
+  var BaseView, Notification, NotificationCollection, NotificationView, NotificationsView, SocketListener, notifTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1946,16 +2006,19 @@ window.require.register("views/notifications", function(exports, require, module
 
   SocketListener = require('lib/socket_listener');
 
+  NotificationCollection = require('collections/notifications');
+
+  Notification = require('models/notification');
+
+  NotificationView = require('views/notification_view');
+
   notifTemplate = require("templates/notification_item");
+
+  SocketListener = require('../lib/socket_listener');
 
   module.exports = NotificationsView = (function(_super) {
 
     __extends(NotificationsView, _super);
-
-    function NotificationsView() {
-      this.afterRender = __bind(this.afterRender, this);
-      return NotificationsView.__super__.constructor.apply(this, arguments);
-    }
 
     NotificationsView.prototype.el = '#notifications-container';
 
@@ -1965,21 +2028,61 @@ window.require.register("views/notifications", function(exports, require, module
       "hover": "onMouseOver"
     };
 
+    NotificationsView.prototype.views = {};
+
+    function NotificationsView(options) {
+      this.afterRender = __bind(this.afterRender, this);
+      if (!options) {
+        options = {};
+      }
+      options.model = new NotificationCollection();
+      NotificationsView.__super__.constructor.call(this, options);
+    }
+
     NotificationsView.prototype.initialize = function() {
-      this.socketListener = new SocketListener(this);
+      SocketListener.watch(this.model);
+      this.listenTo(this.model, 'add', this.onAddNotification);
+      this.listenTo(this.model, 'update', this.onUpdateNotification);
+      this.listenTo(this.model, 'remove', this.onRemoveNotification);
       return NotificationsView.__super__.initialize.call(this);
     };
 
     NotificationsView.prototype.afterRender = function() {
+      var _this = this;
       this.counter = this.$('a span');
+      this.sound = this.$('#notification-sound');
       this.notifList = this.$('#notifications');
+      this.notifList.show();
+      this.$('a').click(function() {
+        return _this.model.create({
+          text: "This is another notification",
+          channel: "DISPLAY",
+          status: 'PENDING',
+          resource: null
+        }, {
+          wait: true
+        });
+      });
       return this.$('a').tooltip({
         placement: 'right',
         title: 'Notifications'
       });
     };
 
+    NotificationsView.prototype.onAddNotification = function(notification, collection, options) {
+      var notifView;
+      notifView = new NotificationView({
+        id: notification.cid,
+        model: notification
+      });
+      this.views[notification.cid] = notifView;
+      this.notifList.prepend(notifView.render().$el);
+      this.sound[0].play();
+      return this.manageCounter();
+    };
+
     NotificationsView.prototype.onMouseOver = function(event) {
+      return;
       if (event.type === "mouseenter") {
         return this.notifList.show();
       } else {
@@ -1987,24 +2090,13 @@ window.require.register("views/notifications", function(exports, require, module
       }
     };
 
-    NotificationsView.prototype.addNotification = function(data) {
-      this.manageCounter(1);
-      return this.notifList.prepend(notifTemplate({
-        content: data.value
-      }));
-    };
-
-    NotificationsView.prototype.manageCounter = function(delta) {
+    NotificationsView.prototype.manageCounter = function() {
       var newCount;
-      if (this.counter.html() === "") {
-        return this.counter.html(delta);
+      newCount = this.model.length;
+      if (newCount > 0) {
+        return this.counter.html(newCount);
       } else {
-        newCount = parseInt(this.counter.html()) + delta;
-        if (newCount > 0) {
-          return this.counter.html(newCount);
-        } else {
-          return this.counter.html("");
-        }
+        return this.counter.html("");
       }
     };
 
