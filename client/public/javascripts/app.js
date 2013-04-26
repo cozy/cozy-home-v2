@@ -183,7 +183,7 @@ window.require.register("collections/notifications", function(exports, require, 
 
     return NotificationCollection;
 
-  })(BaseCollection);
+  })(Backbone.Collection);
   
 });
 window.require.register("helpers", function(exports, require, module) {
@@ -811,7 +811,7 @@ window.require.register("templates/notification_item", function(exports, require
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<li>' + escape((interp = model.text) == null ? '' : interp) + '</li>');
+  buf.push('' + escape((interp = model.text) == null ? '' : interp) + '');
   }
   return buf.join("");
   };
@@ -1974,6 +1974,7 @@ window.require.register("views/navbar", function(exports, require, module) {
 });
 window.require.register("views/notification_view", function(exports, require, module) {
   var BaseView, NotificationView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1984,10 +1985,21 @@ window.require.register("views/notification_view", function(exports, require, mo
     __extends(NotificationView, _super);
 
     function NotificationView() {
+      this.className = __bind(this.className, this);
       return NotificationView.__super__.constructor.apply(this, arguments);
     }
 
-    NotificationView.prototype.className = 'notification';
+    NotificationView.prototype.className = function() {
+      var subClass;
+      if (this.model.get('status') === 'PENDING') {
+        subClass = 'new';
+      } else {
+        subClass = 'old';
+      }
+      return "notification " + subClass;
+    };
+
+    NotificationView.prototype.tagName = 'li';
 
     NotificationView.prototype.template = require('templates/notification_item');
 
@@ -2025,7 +2037,7 @@ window.require.register("views/notifications_view", function(exports, require, m
     NotificationsView.prototype.template = require('templates/notifications');
 
     NotificationsView.prototype.events = {
-      "hover": "onMouseOver"
+      "click": "showNotifList"
     };
 
     NotificationsView.prototype.views = {};
@@ -2052,16 +2064,17 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.counter = this.$('a span');
       this.sound = this.$('#notification-sound');
       this.notifList = this.$('#notifications');
-      this.notifList.show();
-      this.$('a').click(function() {
-        return _this.model.create({
-          text: "This is another notification",
-          channel: "DISPLAY",
-          status: 'PENDING',
-          resource: null
-        }, {
-          wait: true
-        });
+      this.model.fetch({
+        initialization: true,
+        success: function() {
+          return console.log("Fetch notifications: success");
+        },
+        error: function() {
+          return console.log("Fetch notifications: error");
+        }
+      });
+      $(window).click(function(event) {
+        return _this.hideNotifList(event);
       });
       return this.$('a').tooltip({
         placement: 'right',
@@ -2077,27 +2090,61 @@ window.require.register("views/notifications_view", function(exports, require, m
       });
       this.views[notification.cid] = notifView;
       this.notifList.prepend(notifView.render().$el);
-      this.sound[0].play();
-      return this.manageCounter();
-    };
-
-    NotificationsView.prototype.onMouseOver = function(event) {
-      return;
-      if (event.type === "mouseenter") {
-        return this.notifList.show();
-      } else {
-        return this.notifList.hide();
+      if (!(options.initialization != null)) {
+        this.sound[0].play();
+      }
+      this.manageCounter();
+      if (this.notifList.is(':visible')) {
+        return this.markPendingAsRead();
       }
     };
 
     NotificationsView.prototype.manageCounter = function() {
       var newCount;
-      newCount = this.model.length;
+      newCount = this.model.where({
+        status: 'PENDING'
+      }).length;
       if (newCount > 0) {
         return this.counter.html(newCount);
       } else {
         return this.counter.html("");
       }
+    };
+
+    NotificationsView.prototype.showNotifList = function() {
+      if (this.notifList.is(':visible')) {
+        return this.notifList.hide();
+      } else {
+        this.notifList.show();
+        this.manageCounter();
+        return this.markPendingAsRead();
+      }
+    };
+
+    NotificationsView.prototype.hideNotifList = function(event) {
+      if (this.$el.has($(event.target)).length === 0) {
+        return this.notifList.hide();
+      }
+    };
+
+    NotificationsView.prototype.markPendingAsRead = function() {
+      var pendings, timeBeforeMarkAsOld,
+        _this = this;
+      timeBeforeMarkAsOld = 3 * 1000;
+      pendings = this.model.where({
+        status: 'PENDING'
+      });
+      return pendings.forEach(function(item) {
+        var view;
+        view = _this.views[item.cid];
+        item.set('status', 'READ');
+        item.save(null, {
+          wait: true
+        });
+        return setTimeout((function() {
+          return view.$el.addClass('transition');
+        }), timeBeforeMarkAsOld);
+      });
     };
 
     return NotificationsView;

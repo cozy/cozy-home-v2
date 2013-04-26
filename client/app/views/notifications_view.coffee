@@ -14,7 +14,7 @@ module.exports = class NotificationsView extends BaseView
     template: require 'templates/notifications'
 
     events:
-        "hover": "onMouseOver"
+        "click": "showNotifList"
 
     views: {}
 
@@ -38,16 +38,16 @@ module.exports = class NotificationsView extends BaseView
         @counter = @$('a span')
         @sound = @$('#notification-sound')
         @notifList = @$('#notifications')
-        @notifList.show()
 
-        @$('a').click () =>
+        @model.fetch
+            initialization: true
+            success: ->
+                console.log "Fetch notifications: success"
+            error: ->
+                console.log "Fetch notifications: error"
 
-            @model.create
-                text: "This is another notification"
-                channel: "DISPLAY"
-                status: 'PENDING'
-                resource: null,
-                    wait: true
+        $(window).click (event) =>
+            @hideNotifList(event)
 
         @$('a').tooltip
              placement: 'right'
@@ -62,21 +62,47 @@ module.exports = class NotificationsView extends BaseView
         @views[notification.cid] = notifView
 
         @notifList.prepend notifView.render().$el
-        #@sound.play()
-        @sound[0].play()
-        #document.getElementById('notification-sound').play();
+        @sound[0].play() if not options.initialization?
         @manageCounter()
 
-    onMouseOver: (event) ->
-        return;
-        if event.type is "mouseenter"
-            @notifList.show()
-        else
-            @notifList.hide()
+        @markPendingAsRead() if @notifList.is ':visible'
 
     manageCounter: () ->
-        newCount = @model.length
+        newCount = @model.where({status: 'PENDING'}).length
         if newCount > 0
             @counter.html newCount
         else
             @counter.html ""
+
+    showNotifList: () ->
+
+        if @notifList.is ':visible'
+            @notifList.hide()
+        else
+            @notifList.show()
+            @manageCounter()
+            @markPendingAsRead()
+
+    hideNotifList: (event) ->
+        # A click can be done anywhere to hide notification
+        # except on the notification button itself
+        if @$el.has($(event.target)).length is 0
+            @notifList.hide()
+
+    markPendingAsRead: () ->
+
+        timeBeforeMarkAsOld = 3 * 1000 # milliseconds
+
+        pendings = @model.where({ status: 'PENDING'})
+        pendings.forEach (item) =>
+            view = @views[item.cid]
+            item.set 'status', 'READ'
+            item.save null,
+                        wait: true
+
+            # change the color after a short time
+            setTimeout((
+                () ->
+                   view.$el.addClass 'transition'
+
+            ), timeBeforeMarkAsOld)

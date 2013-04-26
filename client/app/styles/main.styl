@@ -276,6 +276,15 @@ html
 #notifications-container
     position: relative
 
+    a
+        width: 20px
+
+    .badge
+        padding: 1px 2px 1px 3px
+        position: absolute
+        top: 2px
+        right: 2px
+
     .badge:empty
         display: none
 
@@ -284,15 +293,20 @@ html
         position: absolute
         list-style-type: none
         margin: 0
-        width: 250px
+        width: 470px
 
         text-align: left
         background: #8f9b9b
         box-shadow 1px 1px 3px shadowcolor
 
-        li
-            padding: 2px
-            margin: 1px
+        .notification
+            padding: 10px 5px
+
+            &.new
+                background: #8f9b9b + 20%
+            &.transition
+                background-color: #8f9b9b
+                transition: background-color 3s
 
 
 /** Applications */

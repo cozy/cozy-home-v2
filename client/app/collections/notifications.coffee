@@ -3,7 +3,7 @@ Notification = require 'models/notification'
 
 
 # List of installed applications.
-module.exports = class NotificationCollection extends BaseCollection
+module.exports = class NotificationCollection extends Backbone.Collection
 
     model: Notification
     url: 'notifications'

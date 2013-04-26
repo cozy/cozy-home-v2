@@ -6263,6 +6263,15 @@ html {
 #notifications-container {
   position: relative;
 }
+#notifications-container a {
+  width: 20px;
+}
+#notifications-container .badge {
+  padding: 1px 2px 1px 3px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
 #notifications-container .badge:empty {
   display: none;
 }
@@ -6271,15 +6280,25 @@ html {
   position: absolute;
   list-style-type: none;
   margin: 0;
-  width: 250px;
+  width: 470px;
   text-align: left;
   background: #8f9b9b;
   -webkit-box-shadow: 1px 1px 3px #444;
   box-shadow: 1px 1px 3px #444;
 }
-#notifications-container #notifications li {
-  padding: 2px;
-  margin: 1px;
+#notifications-container #notifications .notification {
+  padding: 10px 5px;
+}
+#notifications-container #notifications .notification.new {
+  background: #a5afaf;
+}
+#notifications-container #notifications .notification.transition {
+  background-color: #8f9b9b;
+  -webkit-transition: background-color 3s;
+  -moz-transition: background-color 3s;
+  -o-transition: background-color 3s;
+  -ms-transition: background-color 3s;
+  transition: background-color 3s;
 }
 /** Applications */
 #app-list {
