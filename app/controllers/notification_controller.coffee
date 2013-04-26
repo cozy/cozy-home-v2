@@ -34,4 +34,4 @@ action 'update', ->
         if err?
             send error: true, msg: "Server error while saving notification", 500
         else
-            send notification, 200
+            send notif, 200
