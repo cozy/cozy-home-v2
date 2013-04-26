@@ -80,7 +80,6 @@ module.exports = class NotificationsView extends BaseView
             @notifList.hide()
         else
             @notifList.show()
-            @manageCounter()
             @markPendingAsRead()
 
     hideNotifList: (event) ->
@@ -98,7 +97,8 @@ module.exports = class NotificationsView extends BaseView
             view = @views[item.cid]
             item.set 'status', 'READ'
             item.save null,
-                        wait: true
+                        success: =>
+                            @manageCounter()
 
             # change the color after a short time
             setTimeout((

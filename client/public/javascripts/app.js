@@ -2116,7 +2116,6 @@ window.require.register("views/notifications_view", function(exports, require, m
         return this.notifList.hide();
       } else {
         this.notifList.show();
-        this.manageCounter();
         return this.markPendingAsRead();
       }
     };
@@ -2139,7 +2138,9 @@ window.require.register("views/notifications_view", function(exports, require, m
         view = _this.views[item.cid];
         item.set('status', 'READ');
         item.save(null, {
-          wait: true
+          success: function() {
+            return _this.manageCounter();
+          }
         });
         return setTimeout((function() {
           return view.$el.addClass('transition');
