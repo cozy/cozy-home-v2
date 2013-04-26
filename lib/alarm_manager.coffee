@@ -8,7 +8,7 @@ module.exports = class AlarmManager
 
     constructor: (@timezone, @Alarm) ->
 
-        @client = new Client "http://192.168.33.10:9103/"
+        @client = new Client "http://localhost:9103/"
 
         # We load the existing alarms
         @Alarm.all (err, alarms) =>
