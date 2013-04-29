@@ -95,13 +95,13 @@ reseting routes"
                             console.log err.stack
                             callback err
                         else
-                            console.log res.body
-                            callback(res.body)
+                            console.log body
+                            callback(body)
                     else
                         #@client.brunch app.getHaibuDescriptor(), (err, res) =>
                         console.info "Successfully spawned app: #{app.name}"
                         console.info "Update proxy..."
-                        callback null, result
+                        callback null, body
 
     # Remove and reinstall app inside Haibu.
     updateApp: (app, callback) ->
@@ -137,7 +137,7 @@ reseting routes"
                             else
                                 #@client.brunch app.getHaibuDescriptor(), (err, res) =>
                                 console.info "Successfully update app: #{app.name}"
-                                callback null, result
+                                callback null, body
 
 
     # Send a uninstall request to controller server ("clean" request).
