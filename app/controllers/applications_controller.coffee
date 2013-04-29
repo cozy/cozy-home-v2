@@ -36,7 +36,6 @@ action 'index', ->
     layout false
     render title: "Cozy Home"
 
-
 # Return list of applications available on this cozy instance.
 action 'applications', ->
     Application.all (errors, apps) ->
@@ -55,13 +54,13 @@ action "install", ->
     body.slug = slugify body.name
     body.state = "installing"
 
-    setupApp = (app) ->
+    setupApp = (appli) ->
         manager = new AppManager
-        console.info 'attempt to install app ' + JSON.stringify(app)
-        manager.installApp app, (err, result) ->
+        console.info 'attempt to install app ' + JSON.stringify(appli)
+        manager.installApp appli, (err, result) ->
             if err
-                app.state = "broken"
-                app.save (saveErr) ->
+                appli.state = "broken"
+                appli.save (saveErr) ->
                     if saveErr
                         send_error saveErr.message
                     else
@@ -72,9 +71,9 @@ action "install", ->
                             app:app
                             , 201
             else
-                app.state = "installed"
-                app.port = result.drone.port
-                app.save (err) ->
+                appli.state = "installed"
+                appli.port = result.drone.port
+                appli.save (err) ->
                     if err
                         send_error err.message
                     else
@@ -83,7 +82,7 @@ action "install", ->
                                 railway.logger.write "Proxy reset failed."
                                 send_error "Server error occured"
                             else
-                                send { success: true, app: app }, 201
+                                send { success: true, app: appli }, 201
 
     Application.all key: body.slug, (err, apps) ->
         if err
