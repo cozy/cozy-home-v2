@@ -7,6 +7,8 @@ module.exports = (compound) ->
     AlarmManager = require '../../lib/alarm_manager'
     {User, Alarm} = compound.models
 
+    realtime = initializer compound, ['notification.*', 'application.*']
+
     User.all (err, users) ->
         if err? or users.length is 0
             console.info "Internal server error. Can't retrieve users or no user exists."
@@ -14,7 +16,4 @@ module.exports = (compound) ->
             timezone = users[0].timezone
             alarmManager = new AlarmManager(timezone, Alarm)
             compound.alarmManager = alarmManager
-
-            initializer(compound, ['notification.*', 'alarm.*'])
-                .on 'alarm.*', (event, message) ->
-                    alarmManager.handleAlarm(event, message)
+            realtime.on 'alarm.*', alarmManager.handleAlarm

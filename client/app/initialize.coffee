@@ -1,7 +1,7 @@
 {BrunchApplication} = require './helpers'
 
 MainRouter = require 'routers/main_router'
-HomeView = require 'views/main'
+MainView = require 'views/main'
 
 
 class exports.Application extends BrunchApplication
@@ -12,9 +12,9 @@ class exports.Application extends BrunchApplication
         @initializeJQueryExtensions()
 
         @routers = {}
-        @mainView =  new HomeView()
+        @mainView =  new MainView()
         @routers.main = new MainRouter()
-        
+
         # render layout
         #$("body").html @mainView.el
 
