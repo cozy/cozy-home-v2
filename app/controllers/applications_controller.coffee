@@ -56,6 +56,7 @@ action "install", ->
 
     setupApp = (appli) ->
         manager = new AppManager
+
         console.info 'attempt to install app ' + JSON.stringify(appli)
         manager.installApp appli, (err, result) ->
             if err
@@ -73,14 +74,14 @@ action "install", ->
             else
                 appli.state = "installed"
                 appli.port = result.drone.port
-                appli.save (err) ->
-                    if err
-                        send_error err.message
+                appli.save (saveErr) ->
+                    if saveErr
+                        send_error saveErr.message
                     else
-                        manager.resetProxy (err) ->
-                            if err
+                        manager.resetProxy (proxyErr) ->
+                            if proxyErr
                                 railway.logger.write "Proxy reset failed."
-                                send_error "Server error occured"
+                                send_error proxyErr.message
                             else
                                 send { success: true, app: appli }, 201
 
