@@ -15,7 +15,7 @@ module.exports = (compound, Application) ->
         Application.requestDestroy "all", params, callback
 
     # Build descriptor required by haibu from application data.
-    Application::getHaibuDescriptor = (app, callback) ->
+    Application::getHaibuDescriptor = () ->
         descriptor =
             user: @slug
             name: @slug
