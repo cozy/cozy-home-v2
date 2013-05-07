@@ -1,7 +1,9 @@
-module.exports = (compound) ->
-    express = require('express')
-    app = compound.app
+express = require 'express'
+logging = require '../../lib/logging'
 
-    app.configure 'production', ->
-        app.use express.errorHandler()
-        app.enable 'quiet'
+module.exports = (compound) ->
+    app = compound.app
+    logging.init compound, (stream) ->
+        app.configure 'production', ->
+            app.set 'quiet', true
+            app.use express.errorHandler
