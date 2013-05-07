@@ -94,8 +94,9 @@ module.exports = class MarketView extends BaseView
             toInstall = new Application parsed
             toInstall.install
                 success: (data) =>
-                    if (data.state? == "broken") or not data.success
+                    if (data.state? is "broken") or not data.success
                         @installedApps.add toInstall
+                        alert data.message
                         button.spin()
                         button.displayRed "Install failed"
                         @isInstalling = false

@@ -1,5 +1,5 @@
-utils = require("../../lib/passport_utils")
-Adapter = require '../../lib/adapter'
+utils = require("./lib/passport_utils")
+Adapter = require './lib/adapter'
 
 adapter = new Adapter()
 utils = require("./lib/passport_utils")
