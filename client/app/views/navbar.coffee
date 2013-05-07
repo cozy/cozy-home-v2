@@ -47,6 +47,7 @@ module.exports = class NavbarView extends BaseView
 
     # Add an app button to cozy apps menu
     addApplication: (app) =>
+        return unless app.isRunning()
         @buttons.find(".nav:last").prepend appButtonTemplate(app: app.attributes)
         button = @buttons.find("#" + app.id)
         button.tooltip
@@ -57,7 +58,6 @@ module.exports = class NavbarView extends BaseView
 
     # Remove an app button from the navbar
     onAppRemoved: (app) =>
-
         if app.id?
             @buttons.find("##{app.id}").remove()
 

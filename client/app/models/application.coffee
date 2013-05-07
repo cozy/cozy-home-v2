@@ -21,15 +21,15 @@ module.exports = class Application extends Backbone.Model
     # Send to server uninstallation request.
     # Will delete the app in the database.
     uninstall: (callbacks) =>
-        client.del "/api/applications/#{@id}/uninstall", 
+        client.del "/api/applications/#{@id}/uninstall",
             success: (data) =>
-                @trigger 'destroy', @, @collection
+                @trigger 'destroy', @, @collection, {}
                 callbacks.success data
             error: callbacks.error
 
     # Send to server an update request.
     updateApp: (callbacks) ->
-        client.put "/api/applications/#{@id}/update", {}, 
+        client.put "/api/applications/#{@id}/update", {},
             success: (data) =>
                 @set(data.app)
                 callbacks.success data
@@ -37,12 +37,12 @@ module.exports = class Application extends Backbone.Model
 
     # Send to server a start request
     start: (callbacks) ->
-        return null if @isRunning() 
+        return null if @isRunning()
         if not callbacks?
-            callbacks = 
+            callbacks =
                 success: ->
                 error: ->
-        client.post "/api/applications/#{@id}/start", {}, 
+        client.post "/api/applications/#{@id}/start", {},
             success: (data) =>
                 @set(data.app)
                 callbacks.success data
@@ -50,12 +50,12 @@ module.exports = class Application extends Backbone.Model
 
     # Send to server a stop request.
     stop: (callbacks) ->
-        return null if not @isRunning() 
+        return null if not @isRunning()
         if not callbacks?
-            callbacks = 
+            callbacks =
                 success: ->
                 error: ->
-        client.post "/api/applications/#{@id}/stop", {}, 
+        client.post "/api/applications/#{@id}/stop", {},
             success: (data) =>
                 @set(data.app)
                 callbacks.success data

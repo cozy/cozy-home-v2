@@ -28,7 +28,7 @@ module.exports = class ApplicationRow extends BaseView
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
         @startStopBtn = new ColorButton @$ ".start-stop-btn"
-        
+
         @app.on('change', @onAppChanged)
         @onAppChanged(@app)
 
@@ -52,11 +52,13 @@ module.exports = class ApplicationRow extends BaseView
 
     onAppClicked: (event) =>
         event.preventDefault()
-        if @app.isRunning()
+        if @app.isBroken()
+            alert 'this app is broken. Try install again.'
+        else if @app.isRunning()
             @launchApp()
-        else
+        else # stoppped
             @app.start
-                success:@launchApp
+                success: @launchApp
 
     onRemoveClicked: (event) =>
         event.preventDefault()
@@ -108,5 +110,6 @@ module.exports = class ApplicationRow extends BaseView
         @app.updateApp
             success: =>
                 @updateButton.displayGreen "Updated"
-            error: =>
+            error: (jqXHR) =>
+                alert JSON.parse(jqXHR.responseText).message
                 @updateButton.displayRed "failed"
