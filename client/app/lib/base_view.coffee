@@ -5,6 +5,7 @@ module.exports = class BaseView extends Backbone.View
 
     initialize: ->
         @render()
+        super()
 
     getRenderData: ->
         model: @model?.toJSON()
@@ -12,7 +13,7 @@ module.exports = class BaseView extends Backbone.View
     render: ->
         # console.debug "Rendering #{@constructor.name}", @
         @beforeRender()
-        @$el.html @template({})
+        @$el.html @template(@getRenderData())
         @afterRender()
         @
 

@@ -13,3 +13,8 @@ exports.routes = (map) ->
 
     map.get '/api/instances', 'account#instances'
     map.post '/api/instance', 'account#updateInstance'
+
+    map.get '/notifications', 'notification#all'
+    map.get '/notifications/:id', 'notification#getOne'
+    map.post '/notifications', 'notification#create'
+    map.put '/notifications/:id', 'notification#update'
