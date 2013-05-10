@@ -15,8 +15,28 @@ describe 'Modify account failure', ->
     before ->
         @app.listen TESTPORT
         @client = helpers.getClient TESTPORT, @
+        @dataClient = helpers.getClient 9101, @
 
-    it 'When I change my account with a wrong string as email', (done) ->
+    it "When I disconnected user", (done) ->
+        @dataClient.del 'accounts/', done 
+
+    it 'And I try to change my password with user disconnected', (done) ->
+        data =
+            email: 'test@test.fr'
+            password0: TESTPASS
+            password1: 'password2'
+            password2: 'password2'
+        @client.post 'api/user', data, done
+
+    it 'Then error response is returned.', ->
+        @response.statusCode.should.equal 400
+
+    it "When I send a request to log in", (done) ->
+        data =
+            password: TESTPASS
+        @dataClient.post 'accounts/password/', password: TESTPASS , done
+
+    it 'And I change my account with a wrong string as email', (done) ->
         data = email: 'wrongemail'
         @client.post 'api/user', data, done
 
@@ -55,7 +75,8 @@ describe 'Modify account failure', ->
 
 describe 'Modify account success', ->
 
-    it 'When I change my account with right data', (done) ->
+
+    it 'And I change my account with right data', (done) ->
         data =
             email: 'test@test.fr'
             password0: TESTPASS
