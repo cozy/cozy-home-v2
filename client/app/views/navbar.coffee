@@ -1,5 +1,6 @@
 BaseView = require 'lib/base_view'
 appButtonTemplate = require "templates/navbar_app_btn"
+NotificationsView = require './notifications_view'
 
 module.exports = class NavbarView extends BaseView
 
@@ -11,11 +12,14 @@ module.exports = class NavbarView extends BaseView
         super()
 
     afterRender: =>
+
+        @notifications = new NotificationsView()
+
         @buttons = @$('#buttons')
         @$('#help-button').tooltip
              placement: 'bottom'
              title: 'Questions and help forum'
-            
+
         @$('#logout-button').tooltip
              placement: 'bottom'
              title: 'Sign out'
@@ -53,7 +57,8 @@ module.exports = class NavbarView extends BaseView
 
     # Remove an app button from the navbar
     onAppRemoved: (app) =>
-        if app.id? and app.length > 0
+
+        if app.id?
             @buttons.find("##{app.id}").remove()
 
     # Desactivate all buttons and activate given button (visual activation).

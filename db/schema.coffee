@@ -22,3 +22,22 @@ Application = define 'Application', ->
     property 'git', String
     property 'branch', String
     property 'port', Number
+
+# Notifications are messages sent to the user
+Notification = define 'Notification', ->
+    property 'text', String
+    property 'publishDate', String
+    property 'status', String
+    property 'channel', String
+    property 'resource', String
+
+
+# Alarms are one end-user notification type
+Alarm = define 'Alarm', ->
+    property 'action', String, default: 'DISPLAY'
+    property 'trigg', String
+    property 'description', String
+
+    property 'related', String, default: null
+
+
