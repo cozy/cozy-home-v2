@@ -24,6 +24,9 @@ send_error = (err, code=500) ->
         stack: err.stack
     , code
 
+send_error_socket = (err) ->
+    compound.io.sockets.emit 'installerror', err
+
 mark_broken = (app, err) ->
     console.log "Marking app as broken because"
     console.log err.stack
@@ -66,6 +69,16 @@ action 'applications', ->
             send rows: apps
 
 
+#display one application
+action 'read', ->
+    Application.find params.id, (err, app) ->
+        if err
+            send_error err
+        else if app is null
+            send_error new Error('Application not found'), 404
+        else
+            send app
+
 # Set up app into 3 places :
 # * haibu, application manager
 # * proxy, cozy router
@@ -89,23 +102,34 @@ action "install", ->
 
             return send_error err if err
 
+            send success: true, app: appli, 201
+
             console.info 'attempt to install app ' + JSON.stringify(appli)
             manager = new AppManager()
             manager.installApp appli, (err, result) ->
 
-                return mark_broken appli, err if err
+                if err
+                    mark_broken appli, err
+                    send_error_socket err
+                    return
 
                 appli.state = "installed"
                 appli.port  = result.drone.port
+
+                console.info 'install succeeded on port ', appli.port
+
                 appli.save (err) ->
 
-                    return send_error err if err
+                    return send_error_socket err if err
+
+                    console.info 'saved port in db', appli.port
 
                     manager.resetProxy (err) ->
 
-                        return send_error err if err
+                        return send_error_socket err if err
 
-                        send success: true, app: appli, 201
+                        console.info 'proxy reset', appli.port
+
 
 # Remove app from 3 places :
 # * haibu, application manager
@@ -136,18 +160,17 @@ action "uninstall", ->
 # * database
 action "update", ->
 
-    manager = new AppManager
+    manager = new AppManager()
     manager.updateApp @app, (err, result) =>
 
         return mark_broken @app, err if err
 
         @app.state = "installed"
-        @app.port = result.drone.port
-        @app.save (err) ->
+        @app.save (err) =>
 
             return send_error err if err
 
-            manager.resetProxy (err) ->
+            manager.resetProxy (err) =>
 
                 return mark_broken @app, err if err
 

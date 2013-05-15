@@ -18,15 +18,16 @@ class SocketListener extends CozySocketListener
 
     onRemoteCreate: (model) ->
         if model instanceof Application
-            @collection[application_idx].add model
+            @collections[application_idx].add model
         else if model instanceof Notification
-            @collection[notification_idx].add model
+            @collections[notification_idx].add model
 
-    onRemoteDelete: (notification) ->
+    onRemoteDelete: (model) ->
+        console.log 'delete', model
         if model instanceof Application
-            @collection[application_idx].add model
+            @collections[application_idx].remove model
         else if model instanceof Notification
-            @collection[notification_idx].add model
+            @collections[notification_idx].remove model
 
 
 module.exports = new SocketListener()

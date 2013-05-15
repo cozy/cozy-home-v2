@@ -8,6 +8,13 @@ module.exports = class ApplicationCollection extends BaseCollection
     model: Application
     url: 'api/applications/'
 
+    get: (idorslug) ->
+        out = super idorslug
+        return out if out
+
+        for app in @models
+            return app if idorslug is app.get 'id'
+
     # fetch application list from the market
     # callback(err, apps)
     fetchFromMarket: (callback) =>
