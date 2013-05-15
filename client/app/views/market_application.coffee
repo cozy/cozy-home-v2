@@ -4,8 +4,10 @@ ColorButton = require 'widgets/install_button'
 module.exports = class ApplicationRow extends BaseView
     tagName: "div"
     className: "cozy-app"
-    template: ->
-        require('templates/market_application')({app:@app.attributes})
+    template: require 'templates/market_application'
+
+    getRenderData: ->
+        app: @app.attributes
 
     constructor: (@app, @marketView) ->
 

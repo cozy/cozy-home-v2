@@ -93,8 +93,9 @@ module.exports = class MarketView extends BaseView
 
             toInstall = new Application parsed
             toInstall.install
+                ignoreMySocketNotification: true
                 success: (data) =>
-                    if (data.state? is "broken") or not data.success
+                    if (data?.state is "broken") or not data.success
                         button.displayRed "Install failed"
                         alert data.message
                     else
@@ -106,9 +107,10 @@ module.exports = class MarketView extends BaseView
                     @installedApps.add toInstall
                     app?.routers.main.navigate 'home', true
 
-                error: (data) =>
+                error: (jqXHR) =>
                     @isInstalling = false
-                    alert data.message
+                    console.log JSON.stringify(jqXHR.responseText)
+                    alert JSON.stringify(jqXHR.responseText).message
                     button.displayRed "Install failed"
                     button.spin()
 
