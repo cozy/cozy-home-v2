@@ -1,4 +1,4 @@
-BaseView = require 'lib/base_view'
+ViewCollection = require 'lib/view_collection'
 client = require 'helpers/client'
 ApplicationRow = require 'views/home_application'
 
@@ -10,13 +10,14 @@ String::endsWith = (suffix) ->
      @indexOf(suffix, @length - suffix.length) isnt -1
 
 # View describing main screen for user once he is logged
-module.exports = class ApplicationsListView extends BaseView
+module.exports = class ApplicationsListView extends ViewCollection
     id: 'applications-view'
     template: require 'templates/home'
+    itemView: require 'views/home_application'
 
     events:
-        'click #add-app-button':'onAddClicked'
-        'click #manage-app-button':'onManageAppsClicked'
+        'click #add-app-button':    'onAddClicked'
+        'click #manage-app-button': 'onManageAppsClicked'
 
     ### Constructor ###
 
@@ -24,53 +25,26 @@ module.exports = class ApplicationsListView extends BaseView
         @apps = apps
         @isManaging = false
 
-        super()
+        super collection: apps
 
     afterRender: =>
         @appList = @$ "#app-list"
         @manageAppsButton = @$ "#manage-app-button"
         @addApplicationButton = @$ "#add-app-button"
-        @infoAlert = @$ "#add-app-form .info"
-        @errorAlert = @$ "#add-app-form .error"
-        @machineInfos = @$ ".machine-infos"
-        @machineInfos.hide()
-        @noAppMessage = @$ '#no-app-message'
+        @machineInfos = @$(".machine-infos").hide()
 
-        if @apps.length > 0
-            onApplicationListReady(@apps)
-
-        @apps.bind 'reset', @onApplicationListReady
-        @apps.bind 'add', @addApplication
-        @apps.bind 'remove', @onAppRemoved
-
-
-    ### Collection Listeners ###
-    onApplicationListReady: (apps) =>
-        @appList.html null
-        if apps.length is 0
-            @noAppMessage.show()
-        else
-            apps.forEach @addApplication
-
-    # Add an application row to the app list.
-    addApplication: (application) =>
-        row = new ApplicationRow(application)
-        @appList.append row.el
-        appButton = @$(row.el)
-        appButton.hide().fadeIn()
-        appButton.find(".application-outer").css 'display', 'block' if @isManaging
-        @noAppMessage.hide()
-
-    onAppRemoved: (slug) =>
-        if @apps.length is 0
-            @noAppMessage.show()
+    appendView: (view) =>
+        @appList.append view.el
+        view.$el.hide().fadeIn()
+        if @isManaging
+            view.$el.find(".application-outer").css 'display', 'block'
 
     ### Listeners ###
 
     onAddClicked: (event) =>
         event.preventDefault()
         app?.routers.main.navigate 'market', true
- 
+
     onManageAppsClicked: (event) =>
         event.preventDefault()
         if not @machineInfos.is(':visible')

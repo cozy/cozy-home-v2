@@ -8,6 +8,13 @@ module.exports = class ApplicationCollection extends BaseCollection
     model: Application
     url: 'api/applications/'
 
+    get: (idorslug) ->
+        out = super idorslug
+        return out if out
+
+        for app in @models
+            return app if idorslug is app.get 'id'
+
     # fetch application list from the market
     # callback(err, apps)
     fetchFromMarket: (callback) =>
@@ -47,12 +54,19 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"official application"
                 description:"Backup your inbox and browse them from your cozy."
             ,
-                icon:"img/boonk-icon.png"
-                name:"boonk"
-                slug:"boonk"
-                git:"https://github.com/frankrousseau/boonk.git"
-                comment:"community contribution"
-                description:"Aggregate your bank account data (for French citizen only)."
+                icon:"img/photos-icon.png"
+                name:"photos"
+                slug:"photos"
+                git:"https://github.com/mycozycloud/cozy-photos.git"
+                comment:"official application"
+                description:"Share photo with your friends."
+            ,
+                icon:"img/agenda-icon.png"
+                name:"agenda"
+                slug:"agenda"
+                git:"https://github.com/mycozycloud/cozy-agenda.git"
+                comment:"official application"
+                description:"Set up reminders and let cozy be your assistant"
         ]
         @reset apps
         callback null, apps  if callback?

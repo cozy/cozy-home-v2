@@ -3,14 +3,14 @@ logging = require '../../lib/logging'
 module.exports = (compound) ->
 
 	if process.env.NODE_ENV isnt "test"
-	    console.log = (text) =>	
-		    logging.write text
+      console.log = =>
+          logging.write Array::join.call arguments, ' '
 
-	    console.info = (text) =>
-	    	logging.write text	
+      console.info = =>
+         logging.write Array::join.call arguments, ' '
 
-	    console.error = (text) =>
-		    logging.write text
+      console.error = =>
+          logging.write Array::join.call arguments, ' '
 
-	    console.warm = (text) =>
-		    logging.write text
+      console.warm = =>
+          logging.write Array::join.call arguments, ' '

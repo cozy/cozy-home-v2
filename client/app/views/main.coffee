@@ -5,6 +5,7 @@ NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
+socketListener = require('lib/socket_listener')
 
 User = require 'models/user'
 
@@ -17,7 +18,8 @@ module.exports = class HomeView extends BaseView
 
     constructor: ->
         @apps = new AppCollection()
-        super()
+        socketListener.watch @apps
+        super
 
     afterRender: =>
         @navbar = new NavbarView(@apps)
@@ -96,7 +98,7 @@ module.exports = class HomeView extends BaseView
 
         frame = @$("##{slug}-frame")
         frame = @createApplicationIframe(slug, hash) if frame.length is 0
-            
+
         @$("#app-frames").find("iframe").hide()
         frame.show()
 

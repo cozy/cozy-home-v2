@@ -20,6 +20,7 @@ Application = define 'Application', ->
     property 'date', String, default: Date.now
     property 'icon', String
     property 'git', String
+    property 'errormsg', String
     property 'branch', String
     property 'port', Number
 

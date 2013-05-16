@@ -1,7 +1,7 @@
 {BrunchApplication} = require './helpers'
 
 MainRouter = require 'routers/main_router'
-HomeView = require 'views/main'
+MainView = require 'views/main'
 
 
 class exports.Application extends BrunchApplication
@@ -12,9 +12,9 @@ class exports.Application extends BrunchApplication
         @initializeJQueryExtensions()
 
         @routers = {}
-        @mainView =  new HomeView()
+        @mainView =  new MainView()
         @routers.main = new MainRouter()
-        
+
         # render layout
         #$("body").html @mainView.el
 
@@ -22,5 +22,12 @@ class exports.Application extends BrunchApplication
         Backbone.history.start()
         if Backbone.history.getFragment() is ''
             @routers.main.navigate 'home', true
+
+        url = window.location.origin
+        pathToSocketIO = "#{window.location.pathname.substring(1)}socket.io"
+        socket = io.connect url, resource: pathToSocketIO
+        socket.on 'installerror', (err) ->
+            console.log "An error occured while attempting to install app"
+            console.log err
 
 new exports.Application
