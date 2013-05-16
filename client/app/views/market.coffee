@@ -27,7 +27,6 @@ module.exports = class MarketView extends BaseView
     constructor: (installedApps) ->
         @isInstalling = false
         @marketApps = new AppCollection()
-        @displayApps = new AppCollection()
         @installedApps = installedApps
         super()
 
@@ -43,20 +42,20 @@ module.exports = class MarketView extends BaseView
         @noAppMessage = @$ '#no-app-message'
         @installAppButton = new ColorButton @$ "#add-app-submit"
 
-        @installedApps.bind 'reset', @onAppListsChanged
-        @installedApps.bind 'add', @onAppListsChanged
-        @installedApps.bind 'remove', @onAppListsChanged
-        @marketApps.bind 'reset', @onAppListsChanged
+        @listenTo @installedApps, 'reset',  @onAppListsChanged
+        @listenTo @installedApps, 'add',    @onAppListsChanged
+        @listenTo @installedApps, 'remove', @onAppListsChanged
+        @listenTo @marketApps,    'reset',  @onAppListsChanged
         @marketApps.fetchFromMarket()
 
     onAppListsChanged: () =>
-        @appList.html null
-        noApp = true
-        @marketApps.each (marketApp) =>
-            if @installedApps.pluck('slug').indexOf(marketApp.get('slug')) is -1
-                noApp = false
-                @addApplication(marketApp)
-        @noAppMessage.toggle(not noApp)
+        @$(".cozy-app").remove()
+        @noAppMessage.show()
+        installeds = @installedApps.pluck('slug')
+        @marketApps.each (app) =>
+            slug = app.get 'slug'
+            if installeds.indexOf(slug) is -1
+                @addApplication app
 
     # Add an application row to the app list.
     addApplication: (application) =>
@@ -71,8 +70,7 @@ module.exports = class MarketView extends BaseView
         @onInstallClicked() if event.which == 13
 
     onInstallClicked: (event) =>
-        data =
-            git: @$("#app-git-field").val()
+        data = git: @$("#app-git-field").val()
 
         @runInstallation data, @installAppButton
         event.preventDefault()
@@ -85,36 +83,37 @@ module.exports = class MarketView extends BaseView
         @hideError()
         button.displayOrange "install"
         parsed = @parseGitUrl appDescriptor.git
-        if not parsed.error
-            
-            @errorAlert.hide()
+        if parsed.error
+            @displayError parsed.msg
+            @isInstalling = false
+        else
+            @hideError()
             button.button.html "&nbsp;&nbsp;&nbsp;&nbsp;"
             button.spin()
 
             toInstall = new Application parsed
             toInstall.install
+                ignoreMySocketNotification: true
                 success: (data) =>
-                    if (data.state? is "broken") or not data.success
-                        @installedApps.add toInstall
-                        alert data.message
-                        button.spin()
+                    if (data?.state is "broken") or not data.success
                         button.displayRed "Install failed"
-                        @isInstalling = false
+                        alert data.message
                     else
-                        @installedApps.add toInstall
-                        button.spin()
                         button.displayGreen "Install succeeded!"
-                        @isInstalling = false
                         @resetForm()
-                        app?.routers.main.navigate 'home', true
 
-                error: (data) =>
+                    button.spin()
                     @isInstalling = false
+                    @installedApps.add toInstall
+                    app?.routers.main.navigate 'home', true
+
+                error: (jqXHR) =>
+                    @isInstalling = false
+                    console.log JSON.stringify(jqXHR.responseText)
+                    alert JSON.stringify(jqXHR.responseText).message
                     button.displayRed "Install failed"
                     button.spin()
-        else
-            @isInstalling = false
-            @displayError parsed.msg
+
 
     parseGitUrl: (url) ->
         url = url.replace 'git@github.com:', 'https://github.com/'
@@ -153,7 +152,7 @@ module.exports = class MarketView extends BaseView
         @infoAlert.hide()
         @errorAlert.html msg
         @errorAlert.show()
-    
+
     hideError: =>
         @errorAlert.hide()
 

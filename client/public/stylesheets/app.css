@@ -6000,6 +6000,7 @@ a.editable-click.editable-disabled:hover {
   src: url("/fonts/signika-regular.ttf");
 }
 body {
+  background-color: #738182;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -6275,8 +6276,10 @@ html {
   display: none;
 }
 #notifications-container #notifications {
+  right: 0px;
   display: none;
   position: absolute;
+  z-index: 50;
   list-style-type: none;
   margin: 0;
   width: 470px;
@@ -6537,6 +6540,7 @@ html {
   box-sizing: border-box;
   margin-top: 20px;
 }
+#market-view #no-app-message,
 .cozy-app {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -6551,18 +6555,22 @@ html {
   padding: 1%;
   margin-top: 1%;
 }
+#market-view #no-app-message img,
 .cozy-app img {
   margin: 10px 10px 0 0;
 }
+#market-view #no-app-message h3,
 .cozy-app h3 {
   margin-top: 20px;
   margin-bottom: 0;
   padding-bottom: 0;
   line-height: 16px;
 }
+#market-view #no-app-message .comment,
 .cozy-app .comment {
   font-size: 14px;
 }
+#market-view #no-app-message .btn,
 .cozy-app .btn {
   float: right;
   width: 15%;
@@ -6570,6 +6578,7 @@ html {
   margin: 10px 0px 10px 10px;
 }
 @media (max-width: 1200px) {
+  #market-view #no-app-message,
   .cozy-app {
     width: 49%;
   }
@@ -6615,6 +6624,7 @@ html {
   #your-app {
     margin-right: 0;
   }
+  #market-view #no-app-message,
   .cozy-app {
     width: 100%;
   }
