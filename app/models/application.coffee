@@ -25,5 +25,6 @@ module.exports = (compound, Application) ->
                 url: @git
             scripts:
                 start: "server.coffee"
-        descriptor.repository.branch = @branch if @branch?
+        if @branch? and @branch isnt "null"
+            descriptor.repository.branch = @branch
         return descriptor

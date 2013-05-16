@@ -23,7 +23,6 @@ class SocketListener extends CozySocketListener
             @collections[notification_idx].add model
 
     onRemoteDelete: (model) ->
-        console.log 'delete', model
         if model instanceof Application
             @collections[application_idx].remove model
         else if model instanceof Notification

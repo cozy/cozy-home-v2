@@ -37,23 +37,34 @@ module.exports = class ApplicationRow extends BaseView
         switch @model.get 'state'
             when 'broken'
                 @$('img').spin(false).attr 'src', "img/broken.png"
+                @removeButton.displayGrey 'abort'
+                @updateButton.displayGrey 'retry'
                 @startStopBtn.hide()
             when 'installed'
                 icon = "apps/#{app.id}/icons/main_icon.png"
                 @$('img').spin(false).attr 'src', icon
+                @removeButton.displayGrey 'remove'
+                @updateButton.displayGrey 'update'
                 @startStopBtn.displayGrey 'stop this app'
             when 'installing'
-                @$('img').spin(true).attr 'src', "img/installing.png"
+                @$('img').spin('large').attr 'src', "img/installing.png"
+                @removeButton.displayGrey 'abort'
+                @updateButton.hide()
                 @startStopBtn.hide()
             when 'stopped'
                 @$('img').spin(false).attr 'src', "img/stopped.png"
+                @removeButton.displayGrey 'remove'
+                @updateButton.hide()
                 @startStopBtn.displayGrey 'start this app'
 
     onAppClicked: (event) =>
         event.preventDefault()
         switch @model.get 'state'
             when 'broken'
-                alert 'this app is broken. Try install again.'
+                msg = 'This app is broken. Try install again.'
+                errormsg = @model.get 'errormsg'
+                msg += " Error was : #{errormsg}" if errormsg
+                alert msg
             when 'installed'
                 @launchApp()
             when 'installing'
@@ -66,7 +77,7 @@ module.exports = class ApplicationRow extends BaseView
         @removeButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @removeButton.spin "small"
         @model.uninstall
-            success: => @removeView()
+            success: => @remove()
             error: => @removeButton.displayRed "failed"
 
     onUpdateClicked: (event) =>
@@ -75,36 +86,38 @@ module.exports = class ApplicationRow extends BaseView
 
     onStartStopClicked: (event) =>
         event.preventDefault()
-        @startStopBtn.spin()
+        @startStopBtn.spin true
         if(@model.isRunning())
             @model.stop
                 success: =>
-                    @startStopBtn.spin()
+                    @startStopBtn.spin false
                 error: =>
-                    @startStopBtn.spin()
+                    @startStopBtn.spin false
 
         else
             @model.start
                 success: =>
-                    @startStopBtn.spin()
+                    @startStopBtn.spin false
                 error: =>
-                    @startStopBtn.spin()
+                    @startStopBtn.spin false
 
     ### Functions ###
 
     launchApp: =>
-        window.app.routers.main.navigate "apps/#{@model.id}", true
+        window.app.routers.main.navigate "apps/#{@model.id}/", true
 
-    removeView: ->
+    remove: =>
+        return super unless @model.get('state') is 'installed'
+        @removeButton.spin false
         @removeButton.displayGreen "Removed"
         setTimeout =>
             @$el.fadeOut =>
-                @remove()
+                super
         , 1000
 
     updateApp: ->
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @updateButton.spin()
+        @updateButton.spin(true)
         @model.updateApp
             success: =>
                 @updateButton.displayGreen "Updated"

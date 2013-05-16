@@ -78,7 +78,9 @@ module.exports = class NotificationsView extends BaseView
 
         if @notifList.is ':visible'
             @notifList.hide()
+            @$el.removeClass 'active'
         else
+            @$el.addClass 'active'
             @notifList.show()
             @markPendingAsRead()
 
@@ -87,6 +89,7 @@ module.exports = class NotificationsView extends BaseView
         # except on the notification button itself
         if @$el.has($(event.target)).length is 0
             @notifList.hide()
+            @$el.removeClass 'active'
 
     markPendingAsRead: () ->
 

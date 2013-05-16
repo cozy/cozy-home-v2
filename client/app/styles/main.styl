@@ -30,6 +30,7 @@ orange = #BA6131 + 10%
 red = #AA2121 + 20%
 
 body
+    background-color: bgcolor
     box-sizing: border-box
     min-width: 320px
     color: textcolor
@@ -249,7 +250,7 @@ html
         margin 0
 
     a:hover
-        color: linkcolor 
+        color: linkcolor
 
     #buttons
         font-size: 1em
@@ -289,8 +290,10 @@ html
         display: none
 
     #notifications
+        right: 0px
         display: none
         position: absolute
+        z-index: 50
         list-style-type: none
         margin: 0
         width: 470px
