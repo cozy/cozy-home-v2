@@ -1610,7 +1610,9 @@ window.require.register("views/main", function(exports, require, module) {
       this.favicon = this.$('fav1');
       this.favicon2 = this.$('fav2');
       $(window).resize(this.resetLayoutSizes);
-      this.apps.fetch();
+      this.apps.fetch({
+        reset: true
+      });
       return this.resetLayoutSizes();
     };
 
@@ -1664,14 +1666,12 @@ window.require.register("views/main", function(exports, require, module) {
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
-      var frame, name, once,
+      var frame, name,
         _this = this;
       if (this.apps.length === 0) {
-        once = function() {
-          _this.apps.off('reset', once);
+        this.apps.once('reset', function() {
           return _this.displayApplication(slug, hash);
-        };
-        this.apps.on('reset', once);
+        });
         return null;
       }
       this.frames.show();
