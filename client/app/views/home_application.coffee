@@ -24,9 +24,11 @@ module.exports = class ApplicationRow extends BaseView
         super
 
     afterRender: =>
+        @icon = @$ 'img'
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
         @startStopBtn = new ColorButton @$ ".start-stop-btn"
+        @stateLabel = @$ '.state-label'
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
@@ -36,23 +38,26 @@ module.exports = class ApplicationRow extends BaseView
     onAppChanged: (app) =>
         switch @model.get 'state'
             when 'broken'
-                @$('img').spin(false).attr 'src', "img/broken.png"
+                @icon.attr 'src', "img/broken.png"
+                @stateLabel.show().text 'broken'
                 @removeButton.displayGrey 'abort'
                 @updateButton.displayGrey 'retry'
                 @startStopBtn.hide()
             when 'installed'
-                icon = "apps/#{app.id}/icons/main_icon.png"
-                @$('img').spin(false).attr 'src', icon
+                @icon.attr 'src', "apps/#{app.id}/icons/main_icon.png"
+                @stateLabel.hide()
                 @removeButton.displayGrey 'remove'
                 @updateButton.displayGrey 'update'
                 @startStopBtn.displayGrey 'stop this app'
             when 'installing'
-                @$('img').spin('large').attr 'src', "img/installing.png"
+                @icon.attr 'src', "img/installing.gif"
+                @stateLabel.show().text 'installing'
                 @removeButton.displayGrey 'abort'
                 @updateButton.hide()
                 @startStopBtn.hide()
             when 'stopped'
-                @$('img').spin(false).attr 'src', "img/stopped.png"
+                @icon.attr 'src', "img/stopped.png"
+                @stateLabel.show().text 'stopped'
                 @removeButton.displayGrey 'remove'
                 @updateButton.hide()
                 @startStopBtn.displayGrey 'start this app'
