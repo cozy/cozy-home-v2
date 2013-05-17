@@ -12,6 +12,8 @@ bgcolor = #545e5f + 20%
 shadowcolor = #444
 bgshadowcolor = #666688
 orange = #FE8800
+lightorange = #EFD6B8
+
 
 bgcolorbuttons = #8CA6AE
 bgclearcolorbuttons = bgcolorbuttons + 50%
@@ -93,19 +95,22 @@ html
         font-size: 16px
 
 .btn:hover
-    background: buttoncolor + 60%
-    box-shadow: 0 0 8px highlightcolor
+    background: #EFD6B8
+    border-color: 1px solid #EFD6B8
+    //box-shadow: 0 0 8px highlightcolor
 
 .pressed
     box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
     background: buttoncolor - 10%
 
 .pressed:hover
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
-    background: buttoncolor - 10%
+    //box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
+    background: lightorange
+    border: 1px solid lightorange
+
 
 .btn:active
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
+    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
     background: buttoncolor - 10%
 
 .btn-green
@@ -199,8 +204,8 @@ html
         .active a:active
         .active a:focus
             box-shadow: 0
-            box-shadow: inset 2px 1px 4px bgcolor - 40%
-            background: bgcolor + 40%
+            box-shadow: inset 1px 1px 2px bgcolor - 20%
+            background: #E1E1E1 - 10%
             outline: none
             text-shadow: none
 
@@ -210,7 +215,8 @@ html
         .active a:hover
             cursor: default
             background: bgcolor + 40%
-            box-shadow: inset 2px 1px 4px bgcolor - 40%
+            box-shadow: inset 1px 1px 2px bgcolor - 20%
+            background: #E1E1E1 - 10%
             text-shadow: none
 
         li
@@ -220,6 +226,7 @@ html
             a:hover
                 text-shadow: none
                 cursor: pointer
+                background-color: lightorange
 
 #header
     box-sizing: border-box

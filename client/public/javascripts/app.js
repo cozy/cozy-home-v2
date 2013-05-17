@@ -916,7 +916,7 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="your-app"><p>Install<a href="https://cozycloud.cc/make/" target="_blank">your app</a></p><p><label>Git URL</label><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div><button id="add-app-submit" class="btn btn-orange">install</button></div><div id="app-market-list"><div id="no-app-message">You have already installed everything !</div></div>');
+  buf.push('<div id="your-app"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app</a></p><p><label>Git URL</label><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div><button id="add-app-submit" class="btn btn-orange">install</button></div><div id="app-market-list"><div id="no-app-message">You have already installed everything !</div></div>');
   }
   return buf.join("");
   };
