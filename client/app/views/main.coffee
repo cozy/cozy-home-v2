@@ -34,7 +34,7 @@ module.exports = class HomeView extends BaseView
         @favicon2 = @$ 'fav2'
 
         $(window).resize @resetLayoutSizes
-        @apps.fetch()
+        @apps.fetch reset: true
         @resetLayoutSizes()
 
 
@@ -87,10 +87,8 @@ module.exports = class HomeView extends BaseView
     displayApplication: (slug, hash) ->
 
         if @apps.length is 0
-            once = =>
-                @apps.off 'reset', once
-                @displayApplication(slug, hash)
-            @apps.on 'reset', once
+            @apps.once 'reset', =>
+                @displayApplication slug, hash
             return null
 
         @frames.show()
