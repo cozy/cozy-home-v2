@@ -55,12 +55,14 @@ module.exports = (compound) ->
                         CozyInstance.create domain: domain, (err) ->
                             if err then console.log err
                             else console.log "Domain name set with #{domain}"
+                            process.exit 0
                     else
                         instance = instances[0]
                         instance.domain = domain
                         instance.save (err) ->
                             if err then console.log err
                             else console.log "Domain name set with #{domain}"
+                            process.exit 0
                 break
             else
                 console.log 'Usage: compound database [cleanuser|cleanapps|cleandb|setdomain]'
