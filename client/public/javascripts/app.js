@@ -231,9 +231,9 @@ window.require.register("helpers", function(exports, require, module) {
           },
           small: {
             lines: 8,
-            length: 4,
-            width: 3,
-            radius: 5
+            length: 1,
+            width: 2,
+            radius: 4
           },
           large: {
             lines: 10,
@@ -1461,7 +1461,7 @@ window.require.register("views/home_application", function(exports, require, mod
       var _this = this;
       event.preventDefault();
       this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.removeButton.spin("small");
+      this.removeButton.spin(true);
       return this.model.uninstall({
         success: function() {
           return _this.remove();
@@ -1480,6 +1480,7 @@ window.require.register("views/home_application", function(exports, require, mod
     ApplicationRow.prototype.onStartStopClicked = function(event) {
       var _this = this;
       event.preventDefault();
+      this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
       this.startStopBtn.spin(true);
       if (this.model.isRunning()) {
         return this.model.stop({
@@ -1526,7 +1527,9 @@ window.require.register("views/home_application", function(exports, require, mod
 
     ApplicationRow.prototype.updateApp = function() {
       var _this = this;
+      alert("ok");
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.updateButton.spin(false);
       this.updateButton.spin(true);
       return this.model.updateApp({
         success: function() {

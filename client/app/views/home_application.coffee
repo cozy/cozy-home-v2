@@ -80,7 +80,7 @@ module.exports = class ApplicationRow extends BaseView
     onRemoveClicked: (event) =>
         event.preventDefault()
         @removeButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @removeButton.spin "small"
+        @removeButton.spin true
         @model.uninstall
             success: => @remove()
             error: => @removeButton.displayRed "failed"
@@ -91,6 +91,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onStartStopClicked: (event) =>
         event.preventDefault()
+        @startStopBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @startStopBtn.spin true
         if(@model.isRunning())
             @model.stop
@@ -121,8 +122,10 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
+        alert "ok"
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @updateButton.spin(true)
+        @updateButton.spin false
+        @updateButton.spin true
         @model.updateApp
             success: =>
                 @updateButton.displayGreen "Updated"

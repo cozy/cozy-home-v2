@@ -15,9 +15,9 @@ class exports.BrunchApplication
 
                 small:
                     lines: 8
-                    length: 4
-                    width: 3
-                    radius: 5
+                    length: 1
+                    width: 2
+                    radius: 4
 
                 large:
                     lines: 10
@@ -37,8 +37,6 @@ class exports.BrunchApplication
                 @each ->
                     $this = $(this)
                     spinner = $this.data("spinner")
-                    # console.log $this.data()
-                    # console.log spinner
                     if spinner?
                         spinner.stop()
                         $this.data "spinner", null

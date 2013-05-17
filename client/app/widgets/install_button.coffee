@@ -34,6 +34,7 @@ module.exports = class ColorButton
 
     hide: ->
         @button.hide()
+
     show: ->
         @button.show()
 
@@ -43,12 +44,6 @@ module.exports = class ColorButton
     spin: (toggle) ->
         if toggle then @button.spin "small"
         else @button.spin false
-
-#    hideParent: ->
-#        @button.parent().parent().hide()
-
-#    showParent: ->
-#        @button.parent().parent().show()
 
     isHidden: ->
         return not @button.is(":visible")
