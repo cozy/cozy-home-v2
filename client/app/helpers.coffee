@@ -26,12 +26,12 @@ class exports.BrunchApplication
                     radius: 8
 
                 extralarge:
-                    lines: 10
-                    length: 30
-                    width: 12
-                    radius: 30
+                    lines: 8
+                    length: 3
+                    width: 10
+                    radius: 20
                     top: 30
-                    left: 60
+                    left: 50
 
             if Spinner
                 @each ->

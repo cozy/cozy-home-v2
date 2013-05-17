@@ -51,7 +51,8 @@ module.exports = class ApplicationRow extends BaseView
                 @startStopBtn.displayGrey 'stop this app'
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"
-                @stateLabel.show().text 'installing'
+                @stateLabel.hide()
+                #@stateLabel.show().text 'installing'
                 @removeButton.displayGrey 'abort'
                 @updateButton.hide()
                 @startStopBtn.hide()

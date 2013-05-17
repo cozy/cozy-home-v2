@@ -242,12 +242,12 @@ window.require.register("helpers", function(exports, require, module) {
             radius: 8
           },
           extralarge: {
-            lines: 10,
-            length: 30,
-            width: 12,
-            radius: 30,
+            lines: 8,
+            length: 3,
+            width: 10,
+            radius: 20,
             top: 30,
-            left: 60
+            left: 50
           }
         };
         if (Spinner) {
@@ -1422,7 +1422,7 @@ window.require.register("views/home_application", function(exports, require, mod
           return this.startStopBtn.displayGrey('stop this app');
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
-          this.stateLabel.show().text('installing');
+          this.stateLabel.hide();
           this.removeButton.displayGrey('abort');
           this.updateButton.hide();
           return this.startStopBtn.hide();

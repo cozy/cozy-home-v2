@@ -6041,6 +6041,13 @@ html {
 html {
   height: 100%;
 }
+.ma2 {
+  margin: 20px;
+}
+.ma2 {
+  padding: 20px;
+}
+.spacer,
 .spacer {
   clear: both;
 }
