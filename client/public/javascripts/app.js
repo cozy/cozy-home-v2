@@ -894,7 +894,7 @@ window.require.register("templates/home_application", function(exports, require,
   var interp;
   buf.push('<a');
   buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">remove</button><button class="btn update-app">update</button></div><div><button class="btn btn-large start-stop-btn">started</button></div></div>');
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">Installing</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">remove</button><button class="btn update-app">update</button></div><div><button class="btn btn-large start-stop-btn">started</button></div></div>');
   }
   return buf.join("");
   };
@@ -1393,9 +1393,11 @@ window.require.register("views/home_application", function(exports, require, mod
     }
 
     ApplicationRow.prototype.afterRender = function() {
+      this.icon = this.$('img');
       this.updateButton = new ColorButton(this.$(".update-app"));
       this.removeButton = new ColorButton(this.$(".remove-app"));
       this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
+      this.stateLabel = this.$('.state-label');
       this.listenTo(this.model, 'change', this.onAppChanged);
       return this.onAppChanged(this.model);
     };
@@ -1405,26 +1407,28 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     ApplicationRow.prototype.onAppChanged = function(app) {
-      var icon;
       switch (this.model.get('state')) {
         case 'broken':
-          this.$('img').spin(false).attr('src', "img/broken.png");
+          this.icon.attr('src', "img/broken.png");
+          this.stateLabel.show().text('broken');
           this.removeButton.displayGrey('abort');
           this.updateButton.displayGrey('retry');
           return this.startStopBtn.hide();
         case 'installed':
-          icon = "apps/" + app.id + "/icons/main_icon.png";
-          this.$('img').spin(false).attr('src', icon);
+          this.icon.attr('src', "apps/" + app.id + "/icons/main_icon.png");
+          this.stateLabel.hide();
           this.removeButton.displayGrey('remove');
           this.updateButton.displayGrey('update');
           return this.startStopBtn.displayGrey('stop this app');
         case 'installing':
-          this.$('img').spin('large').attr('src', "img/installing.png");
+          this.icon.attr('src', "img/installing.gif");
+          this.stateLabel.show().text('installing');
           this.removeButton.displayGrey('abort');
           this.updateButton.hide();
           return this.startStopBtn.hide();
         case 'stopped':
-          this.$('img').spin(false).attr('src', "img/stopped.png");
+          this.icon.attr('src', "img/stopped.png");
+          this.stateLabel.show().text('stopped');
           this.removeButton.displayGrey('remove');
           this.updateButton.hide();
           return this.startStopBtn.displayGrey('start this app');
