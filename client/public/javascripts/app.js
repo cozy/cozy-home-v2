@@ -1527,7 +1527,6 @@ window.require.register("views/home_application", function(exports, require, mod
 
     ApplicationRow.prototype.updateApp = function() {
       var _this = this;
-      alert("ok");
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
       this.updateButton.spin(false);
       this.updateButton.spin(true);

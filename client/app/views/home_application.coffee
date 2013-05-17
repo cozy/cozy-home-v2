@@ -123,7 +123,6 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
-        alert "ok"
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateButton.spin false
         @updateButton.spin true
