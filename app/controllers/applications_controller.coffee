@@ -116,6 +116,7 @@ action "install", ->
 
                 appli.state = "installed"
                 appli.port  = result.drone.port
+                appli.password = result.drone.token
 
                 console.info 'install succeeded on port ', appli.port
 
