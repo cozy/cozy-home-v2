@@ -16,7 +16,7 @@ module.exports = (compound) ->
             appDict = {}
             if installedApps isnt undefined
                 for installedApp in installedApps
-                    if installeApp.name isnt ""
+                    if installedApp.name isnt ""
                         appDict[installedApp.name] = installedApp
                     else
                         installedApp.destroy()
