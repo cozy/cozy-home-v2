@@ -15,7 +15,8 @@ module.exports = class AlarmManager
             for alarm in alarms
                 @addAlarmCounter alarm
 
-    handleAlarm: (event, msg) ->
+    handleAlarm: (event, msg) =>
+
         if event is "alarm.create"
             @Alarm.find msg, (err, alarm) =>
                 @addAlarmCounter alarm
