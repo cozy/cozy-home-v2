@@ -16,7 +16,10 @@ module.exports = (compound) ->
             appDict = {}
             if installedApps isnt undefined
                 for installedApp in installedApps
-                    appDict[installedApp.name] = installedApp
+                    if installeApp.name isnt ""
+                        appDict[installedApp.name] = installedApp
+                    else
+                        installedApp.destroy()
 
             haibuClient.get 'drones/running', (err, res, apps) ->
                 updateApps apps, appDict, resetProxy
