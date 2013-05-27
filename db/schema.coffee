@@ -27,10 +27,10 @@ Application = define 'Application', ->
 # Notifications are messages sent to the user
 Notification = define 'Notification', ->
     property 'text', String
-    property 'publishDate', String
+    property 'publishDate', String, default: Date.now
     property 'status', String
     property 'channel', String
-    property 'resource', String
+    property 'related', Object, default: null
 
 
 # Alarms are one end-user notification type
@@ -38,7 +38,6 @@ Alarm = define 'Alarm', ->
     property 'action', String, default: 'DISPLAY'
     property 'trigg', String
     property 'description', String
-
     property 'related', String, default: null
 
 

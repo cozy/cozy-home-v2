@@ -33,7 +33,6 @@ module.exports = class NavbarView extends BaseView
         @apps.bind 'remove', @onAppRemoved
 
     onApplicationListReady: (apps) =>
-        # @$(".app-button a").unbind()
         @$(".app-button").remove()
 
         apps.forEach @onApplicationChanged
