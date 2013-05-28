@@ -207,9 +207,9 @@ html
     .nav
         float: right
 
-        .active a
-        .active a:active
-        .active a:focus
+        .active > a
+        .active > a:active
+        .active > a:focus
             box-shadow: 0
             box-shadow: inset 1px 1px 2px bgcolor - 20%
             background: #E1E1E1 - 10%
@@ -219,7 +219,7 @@ html
         .active
             text-shadow: none
 
-        .active a:hover
+        .active > a:hover
             cursor: default
             background: bgcolor + 40%
             box-shadow: inset 1px 1px 2px bgcolor - 20%
@@ -303,6 +303,16 @@ html
     .badge:empty
         display: none
 
+    #clickcatcher
+        position fixed
+        width 100%
+        height 100%
+        background-color red
+        opacity 0.001
+        top 40px
+        left 0px
+        z-index 40
+
     #notifications
         right: 0px
         display: none
@@ -311,13 +321,24 @@ html
         list-style-type: none
         margin: 0
         width: 470px
+        z-index 41
 
         text-align: left
         background: #8f9b9b
         box-shadow 1px 1px 3px shadowcolor
 
         .notification
-            padding: 10px 5px
+            a.dismiss
+                float right
+                width 20px
+                line-height 20px
+                padding 5px
+
+            a.doaction
+                width 430px
+                float left
+                line-height 20px
+                padding 5px
 
             &.new
                 background: #8f9b9b + 20%

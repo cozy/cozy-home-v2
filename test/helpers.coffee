@@ -5,6 +5,7 @@ http = require('http')
 # Bring models in context
 Application = null
 CozyInstance = null
+Notification = null
 User = null
 
 helpers = {}
@@ -15,15 +16,19 @@ helpers = {}
 helpers.init = (instantiator) -> (done) ->
     @app = instantiator()
     @app.compound.on 'models', (models) ->
-        {Application, CozyInstance, User} = models
+        {Application, CozyInstance, User, Notification} = models
         done()
 
 # This function remove everythin from the db
 helpers.clearDb = (callback) ->
-    User.destroyAll ->
-        Application.destroyAll ->
-            CozyInstance.destroyAll ->
-                callback()
+    User.destroyAll (err) ->
+        return callback err if err
+        Application.destroyAll (err) ->
+            return callback err if err
+            CozyInstance.destroyAll (err) ->
+                return callback err if err
+                Notification.destroyAll (err) ->
+                    callback err
 
 # function factory for creating user
 helpers.createUser = (email, password) -> (callback) ->
@@ -72,7 +77,7 @@ helpers.getClient = (port, context) ->
     store = if context? then context else {}
 
     callbackFactory = (done) -> (error, response, body) =>
-        throw error if(error)
+        throw error if error? and not body
         store.response = response
         store.body = body
         done()

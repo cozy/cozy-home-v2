@@ -3,4 +3,4 @@
 # Describes a notification
 module.exports = class Notification extends BaseModel
 
-    urlRoot: 'notifications'
+    urlRoot: 'api/notifications'
