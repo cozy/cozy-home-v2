@@ -6181,9 +6181,9 @@ html {
 .navbar .nav {
   float: right;
 }
-.navbar .nav .active a,
-.navbar .nav .active a:active,
-.navbar .nav .active a:focus {
+.navbar .nav .active > a,
+.navbar .nav .active > a:active,
+.navbar .nav .active > a:focus {
   -webkit-box-shadow: 0;
   box-shadow: 0;
   -webkit-box-shadow: inset 1px 1px 2px #5c6768;
@@ -6195,7 +6195,7 @@ html {
 .navbar .nav .active {
   text-shadow: none;
 }
-.navbar .nav .active a:hover {
+.navbar .nav .active > a:hover {
   cursor: default;
   background: #abb4b4;
   -webkit-box-shadow: inset 1px 1px 2px #5c6768;
@@ -6282,6 +6282,18 @@ html {
 #notifications-container .badge:empty {
   display: none;
 }
+#notifications-container #clickcatcher {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #d73131;
+  opacity: 0.001;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  filter: alpha(opacity=0);
+  top: 40px;
+  left: 0px;
+  z-index: 40;
+}
 #notifications-container #notifications {
   right: 0px;
   display: none;
@@ -6290,13 +6302,23 @@ html {
   list-style-type: none;
   margin: 0;
   width: 470px;
+  z-index: 41;
   text-align: left;
   background: #8f9b9b;
   -webkit-box-shadow: 1px 1px 3px #444;
   box-shadow: 1px 1px 3px #444;
 }
-#notifications-container #notifications .notification {
-  padding: 10px 5px;
+#notifications-container #notifications .notification a.dismiss {
+  float: right;
+  width: 20px;
+  line-height: 20px;
+  padding: 5px;
+}
+#notifications-container #notifications .notification a.doaction {
+  width: 430px;
+  float: left;
+  line-height: 20px;
+  padding: 5px;
 }
 #notifications-container #notifications .notification.new {
   background: #a5afaf;

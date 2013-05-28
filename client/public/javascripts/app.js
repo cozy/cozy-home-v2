@@ -201,7 +201,7 @@ window.require.register("collections/notifications", function(exports, require, 
 
     NotificationCollection.prototype.model = Notification;
 
-    NotificationCollection.prototype.url = 'notifications';
+    NotificationCollection.prototype.url = 'api/notifications';
 
     return NotificationCollection;
 
@@ -769,7 +769,7 @@ window.require.register("models/notification", function(exports, require, module
       return Notification.__super__.constructor.apply(this, arguments);
     }
 
-    Notification.prototype.urlRoot = 'notifications';
+    Notification.prototype.urlRoot = 'api/notifications';
 
     return Notification;
 
@@ -968,7 +968,7 @@ window.require.register("templates/notification_item", function(exports, require
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('' + escape((interp = model.text) == null ? '' : interp) + '');
+  buf.push('<a class="doaction">' + escape((interp = model.text) == null ? '' : interp) + '</a><a class="dismiss">&times;</a>');
   }
   return buf.join("");
   };
@@ -979,7 +979,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a><i class="icon-exclamation-sign">&nbsp;</i><span class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><ul id="notifications"></ul>');
+  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li></ul>');
   }
   return buf.join("");
   };
@@ -2140,7 +2140,6 @@ window.require.register("views/navbar", function(exports, require, module) {
 });
 window.require.register("views/notification_view", function(exports, require, module) {
   var BaseView, NotificationView,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -2151,23 +2150,43 @@ window.require.register("views/notification_view", function(exports, require, mo
     __extends(NotificationView, _super);
 
     function NotificationView() {
-      this.className = __bind(this.className, this);
       return NotificationView.__super__.constructor.apply(this, arguments);
     }
 
-    NotificationView.prototype.className = function() {
-      var subClass;
-      if (this.model.get('status') === 'PENDING') {
-        subClass = 'new';
-      } else {
-        subClass = 'old';
-      }
-      return "notification " + subClass;
-    };
-
     NotificationView.prototype.tagName = 'li';
 
+    NotificationView.prototype.className = 'notification';
+
     NotificationView.prototype.template = require('templates/notification_item');
+
+    NotificationView.prototype.events = {
+      "click .doaction": "doaction",
+      "click .dismiss": "dismiss"
+    };
+
+    NotificationView.prototype.doaction = function() {
+      var action, url;
+      action = this.model.get('resource');
+      if (typeof action === 'string') {
+        url = action;
+      } else if (action.app) {
+        url = action.app === 'home' ? "/" : "/apps/" + action.app + "/";
+        url += action.url || '';
+        url = url.replace('//', '/');
+      } else {
+        url = null;
+      }
+      if (url) {
+        window.app.routers.main.navigate(url, true);
+      }
+      if (this.model.get('type') === 'temporary') {
+        return this.dismiss();
+      }
+    };
+
+    NotificationView.prototype.dismiss = function() {
+      return this.model.destroy();
+    };
 
     return NotificationView;
 
@@ -2175,12 +2194,12 @@ window.require.register("views/notification_view", function(exports, require, mo
   
 });
 window.require.register("views/notifications_view", function(exports, require, module) {
-  var BaseView, Notification, NotificationCollection, NotificationView, NotificationsView, SocketListener, notifTemplate,
+  var Notification, NotificationCollection, NotificationsView, SocketListener, ViewCollection,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  BaseView = require('lib/base_view');
+  ViewCollection = require('lib/view_collection');
 
   SocketListener = require('lib/socket_listener');
 
@@ -2188,138 +2207,113 @@ window.require.register("views/notifications_view", function(exports, require, m
 
   Notification = require('models/notification');
 
-  NotificationView = require('views/notification_view');
-
-  notifTemplate = require("templates/notification_item");
-
   SocketListener = require('../lib/socket_listener');
 
   module.exports = NotificationsView = (function(_super) {
 
     __extends(NotificationsView, _super);
 
+    function NotificationsView() {
+      this.hideNotifList = __bind(this.hideNotifList, this);
+
+      this.windowClicked = __bind(this.windowClicked, this);
+
+      this.checkIfEmpty = __bind(this.checkIfEmpty, this);
+
+      this.remove = __bind(this.remove, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      return NotificationsView.__super__.constructor.apply(this, arguments);
+    }
+
     NotificationsView.prototype.el = '#notifications-container';
+
+    NotificationsView.prototype.itemView = require('views/notification_view');
 
     NotificationsView.prototype.template = require('templates/notifications');
 
     NotificationsView.prototype.events = {
-      "click": "showNotifList"
+      "click #notifications-toggle": "showNotifList",
+      "click #clickcatcher": "hideNotifList"
     };
 
-    NotificationsView.prototype.views = {};
-
-    function NotificationsView(options) {
-      this.afterRender = __bind(this.afterRender, this);
-      if (!options) {
-        options = {};
-      }
-      options.model = new NotificationCollection();
-      NotificationsView.__super__.constructor.call(this, options);
-    }
-
     NotificationsView.prototype.initialize = function() {
-      SocketListener.watch(this.model);
-      this.listenTo(this.model, 'add', this.onAddNotification);
-      this.listenTo(this.model, 'update', this.onUpdateNotification);
-      this.listenTo(this.model, 'remove', this.onRemoveNotification);
-      return NotificationsView.__super__.initialize.call(this);
+      var _ref;
+      if ((_ref = this.collection) == null) {
+        this.collection = new NotificationCollection();
+      }
+      SocketListener.watch(this.collection);
+      return NotificationsView.__super__.initialize.apply(this, arguments);
+    };
+
+    NotificationsView.prototype.appendView = function(view) {
+      this.notifList.prepend(view.el);
+      if (!this.initializing) {
+        return this.sound.play();
+      }
     };
 
     NotificationsView.prototype.afterRender = function() {
-      var _this = this;
-      this.counter = this.$('a span');
-      this.sound = this.$('#notification-sound');
+      this.counter = this.$('#notifications-counter');
+      this.clickcatcher = this.$('#clickcatcher');
+      this.clickcatcher.hide();
+      this.noNotifMsg = this.$('#no-notif-msg');
       this.notifList = this.$('#notifications');
-      this.model.fetch({
-        initialization: true,
-        success: function() {
-          return console.log("Fetch notifications: success");
-        },
-        error: function() {
-          return console.log("Fetch notifications: error");
-        }
+      this.sound = this.$('#notification-sound')[0];
+      NotificationsView.__super__.afterRender.apply(this, arguments);
+      this.initializing = true;
+      this.collection.fetch().always(function() {
+        return this.initializing = false;
       });
-      $(window).click(function(event) {
-        return _this.hideNotifList(event);
-      });
+      $(window).on('click', this.windowClicked);
       return this.$('a').tooltip({
         placement: 'right',
         title: 'Notifications'
       });
     };
 
-    NotificationsView.prototype.onAddNotification = function(notification, collection, options) {
-      var notifView;
-      notifView = new NotificationView({
-        id: notification.cid,
-        model: notification
-      });
-      this.views[notification.cid] = notifView;
-      this.notifList.prepend(notifView.render().$el);
-      if (!(options.initialization != null)) {
-        this.sound[0].play();
-      }
-      this.manageCounter();
-      if (this.notifList.is(':visible')) {
-        return this.markPendingAsRead();
-      }
+    NotificationsView.prototype.remove = function() {
+      $(window).off('click', this.hideNotifList);
+      return NotificationsView.__super__.remove.apply(this, arguments);
     };
 
-    NotificationsView.prototype.manageCounter = function() {
+    NotificationsView.prototype.checkIfEmpty = function() {
       var newCount;
-      newCount = this.model.where({
-        status: 'PENDING'
-      }).length;
-      if (newCount > 0) {
-        return this.counter.html(newCount);
-      } else {
-        return this.counter.html("");
+      newCount = this.collection.length;
+      this.$('#no-notif-msg').toggle(newCount === 0);
+      if (newCount === 0) {
+        newCount = "";
+      }
+      return this.counter.html(newCount);
+    };
+
+    NotificationsView.prototype.windowClicked = function() {
+      if (this.$el.has($(event.target)).length === 0) {
+        return this.hideNotifList();
       }
     };
 
     NotificationsView.prototype.showNotifList = function() {
       if (this.notifList.is(':visible')) {
         this.notifList.hide();
+        this.clickcatcher.hide();
         return this.$el.removeClass('active');
       } else {
         this.$el.addClass('active');
         this.notifList.show();
-        return this.markPendingAsRead();
+        return this.clickcatcher.show();
       }
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
-      if (this.$el.has($(event.target)).length === 0) {
-        this.notifList.hide();
-        return this.$el.removeClass('active');
-      }
-    };
-
-    NotificationsView.prototype.markPendingAsRead = function() {
-      var pendings, timeBeforeMarkAsOld,
-        _this = this;
-      timeBeforeMarkAsOld = 3 * 1000;
-      pendings = this.model.where({
-        status: 'PENDING'
-      });
-      return pendings.forEach(function(item) {
-        var view;
-        view = _this.views[item.cid];
-        item.set('status', 'READ');
-        item.save(null, {
-          success: function() {
-            return _this.manageCounter();
-          }
-        });
-        return setTimeout((function() {
-          return view.$el.addClass('transition');
-        }), timeBeforeMarkAsOld);
-      });
+      this.notifList.hide();
+      this.clickcatcher.hide();
+      return this.$el.removeClass('active');
     };
 
     return NotificationsView;
 
-  })(BaseView);
+  })(ViewCollection);
   
 });
 window.require.register("widgets/install_button", function(exports, require, module) {

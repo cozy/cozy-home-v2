@@ -73,3 +73,20 @@ action 'updateOrCreate', ->
                     send 'Server error while saving notification', 500
                 else
                     send notif, 200
+
+action 'destroy', ->
+
+    params = key: [req.params.app, req.params.ref]
+
+    Notification.request 'byApps', params, (err, notifs) =>
+        if err
+            send 'Server error', 500
+        else if not notifs or notifs.length is 0
+            send success: 'Does not exists', 204
+        else
+            notifs[0].destroy (err) ->
+                if err
+                    send 'Server error while deleting notification', 500
+                else
+                    send success: 'Deleted', 204
+

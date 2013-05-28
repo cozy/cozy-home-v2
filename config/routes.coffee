@@ -26,3 +26,4 @@ exports.routes = (map) ->
     # (to be used by other apps)
     map.post '/notifications'                   , 'notifications#create'
     map.put  '/notifications/:app/:ref'         , 'notifications#updateOrCreate'
+    map.del  '/notifications/:app/:ref'         , 'notifications#destroy'

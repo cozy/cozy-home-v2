@@ -10,20 +10,19 @@ module.exports = class NotificationView extends BaseView
         "click .dismiss" : "dismiss"
 
     doaction: ->
-        action = @model.get 'related'
+        action = @model.get 'resource'
         if typeof action is 'string'
             url = action
-        else if action.app? and action.url
-            url = "/apps/#{action.app}/#{action.url}"
+        else if action.app
+            # .replace is a quickfix
+            url = if action.app is 'home' then "/" else "/apps/#{action.app}/"
+            url += action.url or ''
+            url = url.replace '//', '/'
         else
             url = null
 
-        window.app.router.navigateInApp url if url
+        window.app.routers.main.navigate url, true if url
         @dismiss() if @model.get('type') is 'temporary'
 
     dismiss: ->
-        switch @model.get 'type'
-            when 'temporary'
-                @model.destroy()
-            when 'persistent'
-                @model.save status: 'READ'
+        @model.destroy()

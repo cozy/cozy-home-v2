@@ -1,4 +1,4 @@
-BaseView = require 'lib/base_view'
+ViewCollection = require 'lib/view_collection'
 SocketListener = require 'lib/socket_listener'
 NotificationCollection = require 'collections/notifications'
 Notification = require 'models/notification'
@@ -13,28 +13,33 @@ module.exports = class NotificationsView extends ViewCollection
 
     events:
         "click #notifications-toggle": "showNotifList"
+        "click #clickcatcher": "hideNotifList"
 
-    initialize: () ->
+    initialize: ->
         @collection ?= new NotificationCollection()
         SocketListener.watch @collection
         super
 
     appendView: (view) ->
         @notifList.prepend view.el
-        # TODO use visibility.js to only play sound when not visible
+        # TODO use visibility.js to only play sound
+        # when window is not visible
         @sound.play() unless @initializing
 
     afterRender: =>
+        @counter    = @$ '#notifications-counter'
+        @clickcatcher = @$ '#clickcatcher'
+        @clickcatcher.hide()
+        @noNotifMsg = @$ '#no-notif-msg'
+        @notifList  = @$ '#notifications'
+        @sound      = @$('#notification-sound')[0]
+
         super
-        @counter = @$('#notifications-counter')
-        @sound = @$('#notification-sound')[0]
-        @notifList = @$('#notifications')
 
         @initializing = true
-        @collection.fetch().always ->
-            @initializing = false
+        @collection.fetch().always -> @initializing = false
 
-        $(window).on 'click', @hideNotifList
+        $(window).on 'click', @windowClicked
 
         @$('a').tooltip
             placement: 'right'
@@ -44,22 +49,28 @@ module.exports = class NotificationsView extends ViewCollection
         $(window).off 'click', @hideNotifList
         super
 
-    checkIfEmpty: () ->
-        newCount = @model.where(status: 'PENDING').length
+    checkIfEmpty: =>
+        newCount = @collection.length
+        @$('#no-notif-msg').toggle(newCount is 0)
         newCount = "" if newCount is 0 #hide 0 counter
         @counter.html newCount
+
+
+    windowClicked: =>
+        if @$el.has($(event.target)).length is 0
+            @hideNotifList()
 
     showNotifList: () ->
         if @notifList.is ':visible'
             @notifList.hide()
+            @clickcatcher.hide()
             @$el.removeClass 'active'
         else
             @$el.addClass 'active'
             @notifList.show()
+            @clickcatcher.show()
 
-    hideNotifList: (event) ->
-        # A click can be done anywhere to hide notification
-        # except on the notification button itself
-        if @$el.has($(event.target)).length is 0
-            @notifList.hide()
-            @$el.removeClass 'active'
+    hideNotifList: (event) =>
+        @notifList.hide()
+        @clickcatcher.hide()
+        @$el.removeClass 'active'
