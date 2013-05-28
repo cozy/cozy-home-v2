@@ -1,14 +1,10 @@
 time = require 'time'
 
-Client = require('request-json').JsonClient
-
 module.exports = class AlarmManager
 
     timeouts: {}
 
-    constructor: (@timezone, @Alarm) ->
-
-        @client = new Client "http://localhost:9103/"
+    constructor: (@timezone, @Alarm, @notificationhelper) ->
 
         # We load the existing alarms
         @Alarm.all (err, alarms) =>
@@ -43,16 +39,11 @@ module.exports = class AlarmManager
             console.info "Notification in #{delta/1000} seconds."
             @timeouts[alarm._id] = setTimeout((
                 () =>
-                    notif =
+                    @notificationhelper.createTemporary
                         text: "Reminder: #{alarm.description}"
-                        channel: 'DISPLAY'
-                        status: 'PENDING'
                         resource:
                             app: 'agenda'
                             url: "alarms/#{alarm._id}"
-
-                    @client.post 'notifications', notif, (err, notif) =>
-                        console.info "NOTIFICATION: #{alarm.description}"
                 ), delta)
 
     removeAlarmCounter: (id) ->

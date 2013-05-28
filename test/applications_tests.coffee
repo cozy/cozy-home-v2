@@ -70,23 +70,26 @@ describe "Applications install", ->
             @response.statusCode.should.equal 201
             expect(@body.success)   .to.be.ok
             expect(@body).to.have.property 'app'
-            expect(@body.app.state).to.equal "installed"
-            expect(@body.app.slug).to.equal "my-app"
-            expect(@body.app.port).to.equal 8001
+            expect(@body.app.state).to.equal 'installing'
+            expect(@body.app.slug).to.equal 'my-app'
+
+        it "After some time, ...", (done) ->
+            setTimeout done, 1000
 
         it "And haibu have been requested to install this app", ->
             request = @haibu.lastCall().request
+
             request.url.should.equal "/drones/my-app/start"
             request.method.should.equal "POST"
-            
+
             body = @haibu.lastCall().body
             should.exist body.start.user
             should.exist body.start.name
             should.exist body.start.repository
             should.exist body.start.scripts
 
-        it "And the proxy have been requested to update its routes", ->
-            @proxy.lastCall().request.url.should.equal "/routes/reset"
+        # it "And the proxy have been requested to update its routes", ->
+        #     @proxy.lastCall().request.url.should.equal "/routes/reset"
 
         it "When I send a request to retrieve all applications", (done) ->
             @client.get "api/applications", done
@@ -105,6 +108,9 @@ describe "Applications install", ->
         it "Then it sends me back my app with correct branch", ->
             @response.statusCode.should.equal 201
             expect(@body?.app?.branch).to.equal "mybranch"
+
+        it "After some time, ...", (done) ->
+            setTimeout done, 1000
 
         it "And haibu have been requested with correct branch", ->
             body = @haibu.lastCall().body

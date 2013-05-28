@@ -7,10 +7,12 @@ module.exports = (compound) ->
           logging.write Array::join.call arguments, ' '
 
       console.info = =>
-         logging.write Array::join.call arguments, ' '
+          logging.write Array::join.call arguments, ' '
 
       console.error = =>
           logging.write Array::join.call arguments, ' '
 
       console.warm = =>
           logging.write Array::join.call arguments, ' '
+  else
+      console.info = =>

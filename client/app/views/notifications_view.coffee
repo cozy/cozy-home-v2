@@ -1,111 +1,76 @@
-BaseView = require 'lib/base_view'
+ViewCollection = require 'lib/view_collection'
 SocketListener = require 'lib/socket_listener'
 NotificationCollection = require 'collections/notifications'
 Notification = require 'models/notification'
-NotificationView = require 'views/notification_view'
-
-notifTemplate = require "templates/notification_item"
 
 SocketListener = require '../lib/socket_listener'
 
-module.exports = class NotificationsView extends BaseView
+module.exports = class NotificationsView extends ViewCollection
 
     el:'#notifications-container'
+    itemView: require 'views/notification_view'
     template: require 'templates/notifications'
 
     events:
-        "click": "showNotifList"
+        "click #notifications-toggle": "showNotifList"
+        "click #clickcatcher": "hideNotifList"
 
-    views: {}
+    initialize: ->
+        @collection ?= new NotificationCollection()
+        SocketListener.watch @collection
+        super
 
-    constructor: (options) ->
-
-        options = {} if not options
-
-        options.model = new NotificationCollection()
-
-        super(options)
-
-    initialize: () ->
-        SocketListener.watch @model
-        @listenTo @model, 'add', @onAddNotification
-        @listenTo @model, 'update', @onUpdateNotification
-        @listenTo @model, 'remove', @onRemoveNotification
-        super()
+    appendView: (view) ->
+        @notifList.prepend view.el
+        # TODO use visibility.js to only play sound
+        # when window is not visible
+        @sound.play() unless @initializing
 
     afterRender: =>
+        @counter    = @$ '#notifications-counter'
+        @clickcatcher = @$ '#clickcatcher'
+        @clickcatcher.hide()
+        @noNotifMsg = @$ '#no-notif-msg'
+        @notifList  = @$ '#notifications'
+        @sound      = @$('#notification-sound')[0]
 
-        @counter = @$('a span')
-        @sound = @$('#notification-sound')
-        @notifList = @$('#notifications')
+        super
 
-        @model.fetch
-            initialization: true
-            success: ->
-                console.log "Fetch notifications: success"
-            error: ->
-                console.log "Fetch notifications: error"
+        @initializing = true
+        @collection.fetch().always -> @initializing = false
 
-        $(window).click (event) =>
-            @hideNotifList(event)
+        $(window).on 'click', @windowClicked
 
         @$('a').tooltip
-             placement: 'right'
-             title: 'Notifications'
+            placement: 'right'
+            title: 'Notifications'
 
-    onAddNotification: (notification, collection, options) ->
+    remove: =>
+        $(window).off 'click', @hideNotifList
+        super
 
-        notifView = new NotificationView
-                            id: notification.cid
-                            model: notification
+    checkIfEmpty: =>
+        newCount = @collection.length
+        @$('#no-notif-msg').toggle(newCount is 0)
+        newCount = "" if newCount is 0 #hide 0 counter
+        @counter.html newCount
 
-        @views[notification.cid] = notifView
 
-        @notifList.prepend notifView.render().$el
-        @sound[0].play() if not options.initialization?
-        @manageCounter()
-
-        @markPendingAsRead() if @notifList.is ':visible'
-
-    manageCounter: () ->
-        newCount = @model.where({status: 'PENDING'}).length
-        if newCount > 0
-            @counter.html newCount
-        else
-            @counter.html ""
+    windowClicked: =>
+        if @$el.has($(event.target)).length is 0
+            @hideNotifList()
 
     showNotifList: () ->
-
         if @notifList.is ':visible'
             @notifList.hide()
+            @clickcatcher.hide()
             @$el.removeClass 'active'
         else
             @$el.addClass 'active'
             @notifList.show()
-            @markPendingAsRead()
+            @clickcatcher.show()
 
-    hideNotifList: (event) ->
-        # A click can be done anywhere to hide notification
-        # except on the notification button itself
-        if @$el.has($(event.target)).length is 0
-            @notifList.hide()
-            @$el.removeClass 'active'
-
-    markPendingAsRead: () ->
-
-        timeBeforeMarkAsOld = 3 * 1000 # milliseconds
-
-        pendings = @model.where({ status: 'PENDING'})
-        pendings.forEach (item) =>
-            view = @views[item.cid]
-            item.set 'status', 'READ'
-            item.save null,
-                        success: =>
-                            @manageCounter()
-
-            # change the color after a short time
-            setTimeout((
-                () ->
-                   view.$el.addClass 'transition'
-
-            ), timeBeforeMarkAsOld)
+    hideNotifList: (event) =>
+        @notifList.hide()
+        @clickcatcher.hide()
+        @$el.removeClass 'active'
