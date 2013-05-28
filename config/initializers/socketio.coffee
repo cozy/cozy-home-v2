@@ -1,8 +1,5 @@
 module.exports = (compound) ->
 
-    compound.models.Notification.destroyAll () ->
-        console.log "All notifications have been deleted."
-
     initializer = require('cozy-realtime-adapter')
     AlarmManager = require '../../lib/alarm_manager'
     {User, Alarm, Application, Notification} = compound.models
