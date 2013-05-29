@@ -39,11 +39,15 @@ module.exports = class AlarmManager
             console.info "Notification in #{delta/1000} seconds."
             @timeouts[alarm._id] = setTimeout((
                 () =>
+                    resource = if alarm.related? then alarm.related
+                    else
+                        app: 'agenda'
+                        url: "/" #TODO go to the alarm itself
+
                     @notificationhelper.createTemporary
                         text: "Reminder: #{alarm.description}"
-                        resource:
-                            app: 'agenda'
-                            url: "alarms/#{alarm._id}"
+                        resource: resource
+
                 ), delta)
 
     removeAlarmCounter: (id) ->
