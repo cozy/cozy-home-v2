@@ -32,6 +32,7 @@ mark_broken = (app, err) ->
     console.log err.stack
 
     app.state = "broken"
+    app.password = null
     app.errormsg = err.message
     app.save (saveErr) ->
 
@@ -94,7 +95,8 @@ action "install", ->
 
         return send_error err, 500 if err
 
-        if apps.length > 0
+        if apps.length > 0 or body.slug is "proxy" or 
+                body.slug is "home" or body.slug is "data-system"
             err = new Error "There is already an app with similar name"
             return send_error err, 400
 
@@ -168,6 +170,7 @@ action "update", ->
         return mark_broken @app, err if err
 
         @app.state = "installed"
+        @app.password = result.drone.token
         @app.save (err) =>
 
             return send_error err if err
@@ -190,6 +193,7 @@ action "start", ->
 
         @app.state = "installed"
         @app.port = result.drone.port
+        @app.password = result.drone.token
         @app.save (err) =>
 
             return send_error err if err
@@ -211,6 +215,7 @@ action "stop", ->
 
         @app.state = "stopped"
         @app.port = 0
+        @app.password = null
         @app.save (err) =>
 
             return send_error err if err
