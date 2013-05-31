@@ -3,6 +3,7 @@
 
 slugify = require "./common/slug"
 {AppManager} = require "./lib/paas"
+{PermissionsManager} = require "./lib/permissions"
 
 
 # Helpers
@@ -70,6 +71,11 @@ action 'applications', ->
         else
             send rows: apps
 
+action 'getPermissions', ->
+    permissions = new PermissionsManager()
+    permissions.get body, (err, docTypes) => 
+        send succes: true, permissions: docTypes, 201
+
 
 #display one application
 action 'read', ->
@@ -81,6 +87,7 @@ action 'read', ->
         else
             send app
 
+
 # Set up app into 3 places :
 # * haibu, application manager
 # * proxy, cozy router
@@ -89,7 +96,7 @@ action 'read', ->
 action "install", ->
 
     body.slug = slugify body.name
-    body.state = "installing"
+    body.state = "installing"       
 
     Application.all key: body.slug, (err, apps) ->
 
@@ -120,19 +127,23 @@ action "install", ->
                 appli.port  = result.drone.port
                 appli.password = result.drone.token
 
-                console.info 'install succeeded on port ', appli.port
+                permissions = new PermissionsManager()
+                permissions.get appli, (err, docTypes) =>
+                    appli.permissions = docTypes
 
-                appli.save (err) ->
+                    console.info 'install succeeded on port ', appli.port
 
-                    return send_error_socket err if err
-
-                    console.info 'saved port in db', appli.port
-
-                    manager.resetProxy (err) ->
+                    appli.save (err) ->
 
                         return send_error_socket err if err
 
-                        console.info 'proxy reset', appli.port
+                        console.info 'saved port in db', appli.port
+
+                        manager.resetProxy (err) ->
+
+                            return send_error_socket err if err
+
+                            console.info 'proxy reset', appli.port
 
 
 # Remove app from 3 places :
@@ -170,18 +181,21 @@ action "update", ->
         return mark_broken @app, err if err
 
         @app.state = "installed"
-        @app.password = result.drone.token
-        @app.save (err) =>
+        @app.password = result.drone.token 
+        permissions = new PermissionsManager()
+        permissions.get @app, (err, docTypes) =>
+            @app.permissions = docTypes
+            @app.save (err) =>
 
-            return send_error err if err
+                return send_error err if err
 
-            manager.resetProxy (err) =>
+                manager.resetProxy (err) =>
 
-                return mark_broken @app, err if err
+                    return mark_broken @app, err if err
 
-                send
-                    success: true
-                    msg: 'Application succesfuly updated'
+                    send
+                        success: true
+                        msg: 'Application succesfuly updated'
 
 action "start", ->
     manager = new AppManager
@@ -194,6 +208,7 @@ action "start", ->
         @app.state = "installed"
         @app.port = result.drone.port
         @app.password = result.drone.token
+        console.log @app
         @app.save (err) =>
 
             return send_error err if err
