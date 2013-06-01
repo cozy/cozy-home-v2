@@ -57,7 +57,7 @@ module.exports = class NotificationsView extends ViewCollection
 
 
     windowClicked: =>
-        if @$el.has($(event.target)).length is 0
+        if event? and @$el.has($(event.target)).length is 0
             @hideNotifList()
 
     showNotifList: () ->

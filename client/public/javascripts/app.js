@@ -154,7 +154,7 @@ window.require.register("collections/application", function(exports, require, mo
           slug: "mails",
           git: "https://github.com/mycozycloud/cozy-mails.git",
           comment: "official application",
-          description: "Backup your inbox and browse them from your cozy."
+          description: "Backup your inboxes and browse them from your cozy."
         }, {
           icon: "img/photos-icon.png",
           name: "photos",
@@ -169,6 +169,20 @@ window.require.register("collections/application", function(exports, require, mo
           git: "https://github.com/mycozycloud/cozy-agenda.git",
           comment: "official application",
           description: "Set up reminders and let cozy be your assistant"
+        }, {
+          icon: "img/contacts-icon.png",
+          name: "contacts",
+          slug: "contacts",
+          git: "https://github.com/mycozycloud/cozy-contacts.git",
+          comment: "official application",
+          description: "Manage your contacts with custom informations"
+        }, {
+          icon: "img/nirc-icon.png",
+          name: "nirc",
+          slug: "nirc",
+          git: "https://github.com/frankrousseau/cozy-nirc.git",
+          comment: "community contribution",
+          description: "Access to your favorite IRC channel from your Cozy"
         }
       ];
       this.reset(apps);
@@ -881,7 +895,7 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center hidden"><p>You have actually no application installed on your Cozy Cloud</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>Memory consumption\n(Total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"> <div>Disk consumption \n(total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">manage</button></div></div>');
+  buf.push('<div id="no-app-message" class="center"><p> \nYou have actually no application installed on your Cozy. \nGo to the <a href="#applications">app store</a> to install a new one!</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>Memory consumption\n(Total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"> <div>Disk consumption \n(total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">manage</button></div></div>');
   }
   return buf.join("");
   };
@@ -916,7 +930,7 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="your-app"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app</a></p><p><label>Git URL</label><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div><button id="add-app-submit" class="btn btn-orange">install</button></div><div id="app-market-list"><div id="no-app-message">You have already installed everything !</div></div>');
+  buf.push('<div id="app-market-list"><div id="your-app"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><label>Git URL</label><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
   }
   return buf.join("");
   };
@@ -927,11 +941,9 @@ window.require.register("templates/market_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<img');
-  buf.push(attrs({ 'src':("" + (app.icon) + ""), "class": ('pull-left') }, {"src":true}));
-  buf.push('/><button');
-  buf.push(attrs({ 'id':("add-" + (app.slug) + "-install"), "class": ('btn') + ' ' + ('btn-orange') }, {"id":true}));
-  buf.push('>install</button><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">' + escape((interp = app.comment) == null ? '' : interp) + '</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p>');
+  buf.push('<div class="app-img pull-left"><img');
+  buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
+  buf.push('/></div><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">' + escape((interp = app.comment) == null ? '' : interp) + '</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
   }
   return buf.join("");
   };
@@ -1271,7 +1283,16 @@ window.require.register("views/home", function(exports, require, module) {
       this.appList = this.$("#app-list");
       this.manageAppsButton = this.$("#manage-app-button");
       this.addApplicationButton = this.$("#add-app-button");
-      return this.machineInfos = this.$(".machine-infos").hide();
+      this.machineInfos = this.$(".machine-infos").hide();
+      return this.$("#no-app-message").hide();
+    };
+
+    ApplicationsListView.prototype.displayNoAppMessage = function() {
+      if (this.apps.size() === 0) {
+        return this.$("#no-app-message").show();
+      } else {
+        return this.$("#no-app-message").hide();
+      }
     };
 
     ApplicationsListView.prototype.appendView = function(view) {
@@ -1603,6 +1624,7 @@ window.require.register("views/main", function(exports, require, module) {
     }
 
     HomeView.prototype.afterRender = function() {
+      var _this = this;
       this.navbar = new NavbarView(this.apps);
       this.applicationListView = new ApplicationsListView(this.apps);
       this.accountView = new AccountView();
@@ -1613,7 +1635,10 @@ window.require.register("views/main", function(exports, require, module) {
       this.favicon2 = this.$('fav2');
       $(window).resize(this.resetLayoutSizes);
       this.apps.fetch({
-        reset: true
+        reset: true,
+        success: function() {
+          return _this.applicationListView.displayNoAppMessage();
+        }
       });
       return this.resetLayoutSizes();
     };
@@ -1631,7 +1656,7 @@ window.require.register("views/main", function(exports, require, module) {
           return window.location.reload();
         },
         error: function() {
-          return alert("Server error occured, logout failed.");
+          return alert('Server error occured, logout failed.');
         }
       });
       return event.preventDefault();
@@ -1651,20 +1676,20 @@ window.require.register("views/main", function(exports, require, module) {
 
     HomeView.prototype.displayApplicationsList = function() {
       this.displayView(this.applicationListView);
-      this.navbar.selectButton("home-button");
+      this.navbar.selectButton('home-button');
       return window.document.title = "Cozy - Home";
     };
 
     HomeView.prototype.displayMarket = function() {
       this.displayView(this.marketView);
-      this.navbar.selectButton("market-button");
+      this.navbar.selectButton('market-button');
       return window.document.title = "Cozy - Market";
     };
 
     HomeView.prototype.displayAccount = function() {
       this.displayView(this.accountView);
-      this.navbar.selectButton("account-button");
-      return window.document.title = "Cozy - Account";
+      this.navbar.selectButton('account-button');
+      return window.document.title = 'Cozy - Account';
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
@@ -1682,7 +1707,7 @@ window.require.register("views/main", function(exports, require, module) {
       if (frame.length === 0) {
         frame = this.createApplicationIframe(slug, hash);
       }
-      this.$("#app-frames").find("iframe").hide();
+      this.$('#app-frames').find('iframe').hide();
       frame.show();
       this.navbar.selectButton(slug);
       this.selectedApp = slug;
@@ -2002,6 +2027,12 @@ window.require.register("views/market_application", function(exports, require, m
 
     ApplicationRow.prototype.template = require('templates/market_application');
 
+    ApplicationRow.prototype.events = {
+      "mouseover .app-install-button": "onMouseoverInstallButton",
+      "mouseout .app-install-button": "onMouseoutInstallButton",
+      "click .app-install-button": "onInstallClicked"
+    };
+
     ApplicationRow.prototype.getRenderData = function() {
       return {
         app: this.app.attributes
@@ -2013,10 +2044,12 @@ window.require.register("views/market_application", function(exports, require, m
       this.marketView = marketView;
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
+      this.onMouseoutInstallButton = __bind(this.onMouseoutInstallButton, this);
+
+      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
+
       this.afterRender = __bind(this.afterRender, this);
 
-      this.events = {};
-      this.events["click #add-" + this.app.id + "-install"] = 'onInstallClicked';
       ApplicationRow.__super__.constructor.call(this);
     }
 
@@ -2024,8 +2057,25 @@ window.require.register("views/market_application", function(exports, require, m
       return this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
     };
 
+    ApplicationRow.prototype.onMouseoverInstallButton = function() {
+      var _this = this;
+      this.isSliding = true;
+      return this.$(".app-install-text").show('slide', {
+        direction: 'right'
+      }, 300, function() {
+        return _this.isSliding = false;
+      });
+    };
+
+    ApplicationRow.prototype.onMouseoutInstallButton = function() {};
+
     ApplicationRow.prototype.onInstallClicked = function() {
-      return this.marketView.runInstallation(this.app.attributes, this.installButton);
+      var _this = this;
+      return this.$el.fadeOut(function() {
+        return setTimeout(function() {
+          return _this.marketView.runInstallation(_this.app.attributes, _this.installButton);
+        }, 200);
+      });
     };
 
     return ApplicationRow;
@@ -2288,7 +2338,7 @@ window.require.register("views/notifications_view", function(exports, require, m
     };
 
     NotificationsView.prototype.windowClicked = function() {
-      if (this.$el.has($(event.target)).length === 0) {
+      if ((typeof event !== "undefined" && event !== null) && this.$el.has($(event.target)).length === 0) {
         return this.hideNotifList();
       }
     };

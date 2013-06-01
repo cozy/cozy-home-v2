@@ -11,7 +11,6 @@
 bgcolor = #545e5f + 20%
 shadowcolor = #444
 bgshadowcolor = #666688
-orange = #FE8800
 lightorange = #EFD6B8
 
 
@@ -25,11 +24,12 @@ bgclearcolorhoverbuttons = bgcolorbuttons + 70%
 
 textcolor = #EAF1F1
 buttoncolor = #CAD1D1 + 60%
-highlightcolor = #E2F8FF
+highlightcolor = #EFD6B8
 
 green = #3AA131 + 10%
 orange = #BA6131 + 10%
 red = #AA2121 + 20%
+orange = #FE8800
 
 body
     background-color: bgcolor
@@ -361,10 +361,12 @@ html
     margin: 6px
     display: inline-block
     text-align: center
-    border 1px solid appbordercolor
-    box-shadow 1px 1px 3px shadowcolor
-    border-radius 12px
+    //border 1px solid appbordercolor
+    border: 0
+    box-shadow 1px 1px 2px shadowcolor
+    border-radius 4px
     background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
+    background: linear-gradient(top,bgcolor + 60%, bgcolor + 20%)
     padding-bottom: 20px
 
     img
@@ -425,6 +427,10 @@ html
 
 #no-app-message
     margin-top: 30px
+    padding: 1em
+
+    a
+        border-bottom: 0
 
 .install-info
     width: 40%
@@ -530,11 +536,16 @@ html
     padding: 20px
 
 #your-app
-    padding: 20px
+    box-sizing: border-box
+    float: left
+    width: 32.33%
+    height: 140px
     margin-right: 1%
-    width: auto
+
     background: bgcolor + 20%
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+    padding: 1%
+    margin-top: 1%
 
     #app-git-field
         box-sizing: border-box
@@ -553,6 +564,50 @@ html
     box-sizing: border-box
     margin-top: 20px
 
+    .app-img
+        box-sizing: border-box
+        height: 140px
+        background: bgcolor + 40%
+        padding: 20px 20px 10px 20px
+        margin-right: 10px
+
+    .app-install-button:hover
+        button
+        div
+            background: highlightcolor + 20%
+
+    .app-install-button
+        button
+        div
+            display: inline
+
+        .app-text
+            padding: 10px
+
+        .app-install
+            border: 0
+            outline: 0
+            font-weight: bold
+            color: orange - 10%
+            background: bgcolor + 70%
+            box-shadow: none
+            font-size: 0.8em
+            padding: 4px 8px
+            float: right
+
+        .app-install-text
+            display: none
+            float: right
+            font-size: 0.8em
+            padding: 4px
+            padding-left: 8px
+            cursor: pointer
+            font-weight: bold
+            color: orange - 10%
+            background: bgcolor + 70%
+            box-shadow: none
+            height: 20px
+
 #market-view #no-app-message,
 .cozy-app
     box-sizing: border-box
@@ -563,11 +618,7 @@ html
 
     background: bgcolor + 20%
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
-    padding: 1%
     margin-top: 1%
-
-    img
-        margin: 10px 10px 0 0
 
     h3
         margin-top: 20px
@@ -599,8 +650,10 @@ html
         width: 49%
 
 @media (max-width: 850px)
-    span
-        display:none
+    #header
+    #market-view
+        span
+            display:none
 
 @media (max-width: 800px)
     .home-body
@@ -662,10 +715,31 @@ html
                 margin 0
                 min-height: 20px
                 height: 20px
-    //#market-view #no-app-message,
-    //.cozy-app
-    //width: 100%
 
+    #market-view 
+        #no-app-message
+        .cozy-app
+            padding: 1em
+            height: 150px
+            width: 100%
+
+            img
+                width: 70px
+                margin-left: 1em
+
+            img.pull-left
+                float: right
+
+            .btn
+                display: none
+                width: 70px
+                height: 70px
+                margin: 20px 10px 0 0
+                float: left
+
+            h3
+                margin-top: 5px
+                margin-bottom: 10px
     //a
     //padding: 10px 5px
 

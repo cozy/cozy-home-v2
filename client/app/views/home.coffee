@@ -16,7 +16,7 @@ module.exports = class ApplicationsListView extends ViewCollection
     itemView: require 'views/home_application'
 
     events:
-        'click #add-app-button':    'onAddClicked'
+        'click #add-app-button': 'onAddClicked'
         'click #manage-app-button': 'onManageAppsClicked'
 
     ### Constructor ###
@@ -32,6 +32,13 @@ module.exports = class ApplicationsListView extends ViewCollection
         @manageAppsButton = @$ "#manage-app-button"
         @addApplicationButton = @$ "#add-app-button"
         @machineInfos = @$(".machine-infos").hide()
+        @$("#no-app-message").hide()
+
+    displayNoAppMessage: ->
+        if @apps.size() is 0
+            @$("#no-app-message").show()
+        else
+            @$("#no-app-message").hide()
 
     appendView: (view) =>
         @appList.append view.el
