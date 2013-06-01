@@ -6606,20 +6606,27 @@ html {
   margin: 10px 0px 10px 10px;
 }
 @media (max-width: 1200px) {
+  #header-title {
+    display: none;
+  }
+  #buttons {
+    width: 100%;
+  }
   #market-view #no-app-message,
   .cozy-app {
     width: 49%;
   }
 }
 @media (max-width: 850px) {
-  #header-title {
-    display: none;
-  }
   span {
     display: none;
   }
 }
 @media (max-width: 800px) {
+  .home-body {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
   #header-title a {
     padding-left: 0;
     padding-right: 0;
@@ -6652,23 +6659,27 @@ html {
   #your-app {
     margin-right: 0;
   }
-  #market-view #no-app-message,
-  .cozy-app {
-    width: 100%;
+  #header .navbar-inner {
+    height: 20px;
   }
   #buttons {
     width: 100%;
-  }
-  #buttons a {
-    padding: 10px 5px;
-  }
-  #buttons li {
-    line-height: 30px;
-  }
-  #buttons li.app-button a {
-    padding: 4px 0 16px 10px;
+    height: 100%;
   }
   #buttons .nav {
     margin: 0;
+    height: 20px;
+  }
+  #buttons .app-button {
+    display: none;
+    height: 60px;
+  }
+  #buttons li {
+    margin: 0;
+  }
+  #buttons li a {
+    margin: 0;
+    min-height: 20px;
+    height: 20px;
   }
 }
