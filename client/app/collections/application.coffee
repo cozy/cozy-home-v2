@@ -52,7 +52,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"mails"
                 git:"https://github.com/mycozycloud/cozy-mails.git"
                 comment:"official application"
-                description:"Backup your inbox and browse them from your cozy."
+                description:"Backup your inboxes and browse them from your cozy."
             ,
                 icon:"img/photos-icon.png"
                 name:"photos"
@@ -67,6 +67,20 @@ module.exports = class ApplicationCollection extends BaseCollection
                 git:"https://github.com/mycozycloud/cozy-agenda.git"
                 comment:"official application"
                 description:"Set up reminders and let cozy be your assistant"
+             ,
+                icon:"img/contacts-icon.png"
+                name:"contacts"
+                slug:"contacts"
+                git:"https://github.com/mycozycloud/cozy-contacts.git"
+                comment:"official application"
+                description:"Manage your contacts with custom informations"
+            ,
+                icon:"img/nirc-icon.png"
+                name:"nirc"
+                slug:"nirc"
+                git:"https://github.com/frankrousseau/cozy-nirc.git"
+                comment:"community contribution"
+                description:"Access to your favorite IRC channel from your Cozy"
         ]
         @reset apps
         callback null, apps  if callback?
