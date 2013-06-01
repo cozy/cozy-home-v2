@@ -6295,14 +6295,14 @@ html {
   z-index: 40;
 }
 #notifications-container #notifications {
-  right: 0px;
   display: none;
   position: absolute;
+  left: 0px;
+  width: 420px;
   z-index: 50;
-  list-style-type: none;
   margin: 0;
-  width: 470px;
-  z-index: 41;
+  list-style-type: none;
+  padding: 5px;
   text-align: left;
   background: #8f9b9b;
   -webkit-box-shadow: 1px 1px 3px #444;
@@ -6681,5 +6681,11 @@ html {
     margin: 0;
     min-height: 20px;
     height: 20px;
+  }
+}
+@media (max-width: 500px) {
+  #notifications-container #notifications {
+    left: -40px;
+    width: 310px;
   }
 }

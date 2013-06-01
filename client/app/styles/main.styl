@@ -314,14 +314,14 @@ html
         z-index 40
 
     #notifications
-        right: 0px
         display: none
         position: absolute
+        left: 0px
+        width: 420px
         z-index: 50
-        list-style-type: none
         margin: 0
-        width: 470px
-        z-index 41
+        list-style-type: none
+        padding: 5px
 
         text-align: left
         background: #8f9b9b
@@ -675,3 +675,10 @@ html
     //li.app-button
     //a
     //padding: 4px 0 16px 10px
+
+@media (max-width: 500px)
+    #notifications-container
+        #notifications
+            left: -40px
+            width: 310px
+
