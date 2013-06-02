@@ -19,7 +19,9 @@ module.exports = class MarketView extends BaseView
 
     events:
         'keyup #app-git-field':'onEnterPressed'
-        'click #add-app-submit':'onInstallClicked'
+        "mouseover #your-app .app-install-button": "onMouseoverInstallButton"
+        "mouseout #your-app .app-install-button": "onMouseoutInstallButton"
+        "click #your-app .app-install-button": "onInstallClicked"
 
 
     ### Constructor ###
@@ -47,6 +49,11 @@ module.exports = class MarketView extends BaseView
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps,    'reset',  @onAppListsChanged
         @marketApps.fetchFromMarket()
+
+    onMouseoverInstallButton: =>
+        @isSliding = true
+        @$("#your-app .app-install-text").show 'slide', {direction: 'right'}, 300, =>
+            @isSliding = false
 
     onAppListsChanged: () =>
         @$(".cozy-app").remove()

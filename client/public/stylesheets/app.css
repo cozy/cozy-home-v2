@@ -6558,8 +6558,16 @@ html {
   background: #8f9b9b;
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  padding: 1%;
   margin-top: 1%;
+}
+#your-app p {
+  margin-bottom: 0;
+}
+#your-app input {
+  margin-top: 10px;
+}
+#your-app .text {
+  padding: 20px;
 }
 #your-app #app-git-field {
   -webkit-box-sizing: border-box;
@@ -6577,6 +6585,7 @@ html {
   width: 100%;
   max-width: 500px;
   margin-right: 20px;
+  font-size: 0.8em;
 }
 #app-market-list {
   -webkit-box-sizing: border-box;
@@ -6603,6 +6612,8 @@ html {
 }
 #app-market-list .app-install-button .app-text {
   padding: 10px;
+  word-wrap: normal;
+  overflow-x: hidden;
 }
 #app-market-list .app-install-button .app-install {
   border: 0;
@@ -6670,7 +6681,8 @@ html {
     width: 100%;
   }
   #market-view #no-app-message,
-  .cozy-app {
+  #market-view .cozy-app,
+  #market-view #your-app {
     width: 49%;
   }
 }
@@ -6714,9 +6726,6 @@ html {
   .comment {
     font-size: 14px;
   }
-  #your-app {
-    margin-right: 0;
-  }
   #header .navbar-inner {
     height: 20px;
   }
@@ -6740,33 +6749,19 @@ html {
     min-height: 20px;
     height: 20px;
   }
-  #market-view #no-app-message,
-  #market-view .cozy-app {
-    padding: 1em;
-    height: 150px;
+  #market-view img {
+    margin: 0;
+  }
+  #market-view h3 {
+    margin-bottom: 10px;
+  }
+  #market-view #your-app {
+    margin-right: 0;
     width: 100%;
   }
-  #market-view #no-app-message img,
-  #market-view .cozy-app img {
-    width: 70px;
-    margin-left: 1em;
-  }
-  #market-view #no-app-message img.pull-left,
-  #market-view .cozy-app img.pull-left {
-    float: right;
-  }
-  #market-view #no-app-message .btn,
-  #market-view .cozy-app .btn {
-    display: none;
-    width: 70px;
-    height: 70px;
-    margin: 20px 10px 0 0;
-    float: left;
-  }
-  #market-view #no-app-message h3,
-  #market-view .cozy-app h3 {
-    margin-top: 5px;
-    margin-bottom: 10px;
+  #market-view #no-app-message,
+  #market-view .cozy-app {
+    width: 100%;
   }
 }
 @media (max-width: 500px) {

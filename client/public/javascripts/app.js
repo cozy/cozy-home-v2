@@ -930,7 +930,7 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="app-market-list"><div id="your-app"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><label>Git URL</label><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
+  buf.push('<div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="text"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
   }
   return buf.join("");
   };
@@ -1810,7 +1810,9 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.events = {
       'keyup #app-git-field': 'onEnterPressed',
-      'click #add-app-submit': 'onInstallClicked'
+      "mouseover #your-app .app-install-button": "onMouseoverInstallButton",
+      "mouseout #your-app .app-install-button": "onMouseoutInstallButton",
+      "click #your-app .app-install-button": "onInstallClicked"
     };
 
     /* Constructor
@@ -1836,6 +1838,8 @@ window.require.register("views/market", function(exports, require, module) {
 
       this.onAppListsChanged = __bind(this.onAppListsChanged, this);
 
+      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
+
       this.afterRender = __bind(this.afterRender, this);
       this.isInstalling = false;
       this.marketApps = new AppCollection();
@@ -1858,6 +1862,16 @@ window.require.register("views/market", function(exports, require, module) {
       this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
       this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
       return this.marketApps.fetchFromMarket();
+    };
+
+    MarketView.prototype.onMouseoverInstallButton = function() {
+      var _this = this;
+      this.isSliding = true;
+      return this.$("#your-app .app-install-text").show('slide', {
+        direction: 'right'
+      }, 300, function() {
+        return _this.isSliding = false;
+      });
     };
 
     MarketView.prototype.onAppListsChanged = function() {

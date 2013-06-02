@@ -15,10 +15,6 @@ module.exports = class ApplicationRow extends BaseView
         app: @app.attributes
 
     constructor: (@app, @marketView) ->
-
-        #@events = {}
-        #@events["click #add-#{@app.id}-install"] = 'onInstallClicked'
-
         super()
 
     afterRender: =>
@@ -33,7 +29,7 @@ module.exports = class ApplicationRow extends BaseView
         #if not @isSliding
             #setTimetout @onMouseoutInstallButton, 200
         #else
-        #    @$(".app-install-text").hide 'slide', {direction: 'right'}, 300
+            #@$(".app-install-text").hide 'slide', {direction: 'right'}, 300
 
     onInstallClicked: =>
         @$el.fadeOut =>
