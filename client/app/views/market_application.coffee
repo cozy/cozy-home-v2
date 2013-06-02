@@ -21,9 +21,10 @@ module.exports = class ApplicationRow extends BaseView
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
 
     onMouseoverInstallButton: =>
-        @isSliding = true
-        @$(".app-install-text").show 'slide', {direction: 'right'}, 300, =>
-            @isSliding = false
+        if $(window).width() > 800
+            @isSliding = true
+            @$(".app-install-text").show 'slide', {direction: 'right'}, 300, =>
+                @isSliding = false
 
     onMouseoutInstallButton: =>
         #if not @isSliding

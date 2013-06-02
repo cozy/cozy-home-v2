@@ -2073,12 +2073,14 @@ window.require.register("views/market_application", function(exports, require, m
 
     ApplicationRow.prototype.onMouseoverInstallButton = function() {
       var _this = this;
-      this.isSliding = true;
-      return this.$(".app-install-text").show('slide', {
-        direction: 'right'
-      }, 300, function() {
-        return _this.isSliding = false;
-      });
+      if ($(window).width() > 800) {
+        this.isSliding = true;
+        return this.$(".app-install-text").show('slide', {
+          direction: 'right'
+        }, 300, function() {
+          return _this.isSliding = false;
+        });
+      }
     };
 
     ApplicationRow.prototype.onMouseoutInstallButton = function() {};

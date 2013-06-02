@@ -6315,7 +6315,7 @@ html {
   padding: 5px;
 }
 #notifications-container #notifications .notification a.doaction {
-  width: 430px;
+  width: 360px;
   float: left;
   line-height: 20px;
   padding: 5px;
@@ -6691,6 +6691,10 @@ html {
   #market-view span {
     display: none;
   }
+  #header #notificaction-counter,
+  #market-view #notificaction-counter {
+    display: inline;
+  }
 }
 @media (max-width: 800px) {
   .home-body {
@@ -6751,6 +6755,7 @@ html {
   }
   #market-view img {
     margin: 0;
+    width: 75px;
   }
   #market-view h3 {
     margin-bottom: 10px;
@@ -6763,10 +6768,16 @@ html {
   #market-view .cozy-app {
     width: 100%;
   }
+  #notifications .notification a.doaction {
+    width: 300px;
+  }
 }
 @media (max-width: 500px) {
   #notifications-container #notifications {
-    left: -40px;
+    left: -50px;
     width: 310px;
+  }
+  #notifications-container #notifications .notification a.doaction {
+    width: 260px;
   }
 }
