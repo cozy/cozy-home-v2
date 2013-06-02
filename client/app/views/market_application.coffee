@@ -33,7 +33,12 @@ module.exports = class ApplicationRow extends BaseView
             #@$(".app-install-text").hide 'slide', {direction: 'right'}, 300
 
     onInstallClicked: =>
-        @$el.fadeOut =>
-            setTimeout =>
-                @marketView.runInstallation @app.attributes, @installButton
-            , 200
+        if @marketView.isInstalling()
+            msg = 'An application is already installing. Wait it '
+            msg += 'finishes, then run your installation again'
+            alert msg
+        else
+            @$el.fadeOut =>
+                setTimeout =>
+                    @marketView.runInstallation @app.attributes, @installButton
+                , 200

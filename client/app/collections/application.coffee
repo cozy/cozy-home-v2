@@ -59,7 +59,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"photos"
                 git:"https://github.com/mycozycloud/cozy-photos.git"
                 comment:"official application"
-                description:"Share photo with your friends."
+                description:"Share photos with your friends."
             ,
                 icon:"img/agenda-icon.png"
                 name:"agenda"

@@ -161,7 +161,7 @@ window.require.register("collections/application", function(exports, require, mo
           slug: "photos",
           git: "https://github.com/mycozycloud/cozy-photos.git",
           comment: "official application",
-          description: "Share photo with your friends."
+          description: "Share photos with your friends."
         }, {
           icon: "img/agenda-icon.png",
           name: "agenda",
@@ -930,7 +930,7 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="text"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
+  buf.push('<p>Welcome to your cozy app store, install your own application from there\nor select an existing one in the list.</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="text"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
   }
   return buf.join("");
   };
@@ -1841,7 +1841,6 @@ window.require.register("views/market", function(exports, require, module) {
       this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
 
       this.afterRender = __bind(this.afterRender, this);
-      this.isInstalling = false;
       this.marketApps = new AppCollection();
       this.installedApps = installedApps;
       MarketView.__super__.constructor.call(this);
@@ -1905,54 +1904,57 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.onInstallClicked = function(event) {
-      var data;
-      data = {
-        git: this.$("#app-git-field").val()
-      };
-      this.runInstallation(data, this.installAppButton);
-      event.preventDefault();
+      var data, msg;
+      if (this.isInstalling()) {
+        msg = 'An application is already installing. Wait it ';
+        msg += 'finishes, then run your installation again';
+        return alert(msg);
+      } else {
+        data = {
+          git: this.$("#app-git-field").val()
+        };
+        this.runInstallation(data, this.installAppButton);
+        event.preventDefault();
+        return false;
+      }
+    };
+
+    MarketView.prototype.isInstalling = function() {
+      var app, _i, _len, _ref;
+      _ref = this.installedApps.toArray();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        app = _ref[_i];
+        console.log(app);
+        console.log(app.get('state'));
+        if ('installing' === app.get('state')) {
+          return true;
+        }
+      }
       return false;
     };
 
     MarketView.prototype.runInstallation = function(appDescriptor, button) {
       var parsed, toInstall,
         _this = this;
-      if (this.isInstalling) {
-        return true;
-      }
-      if (button.isGreen()) {
-        return true;
-      }
-      this.isInstalling = true;
       this.hideError();
-      button.displayOrange("install");
       parsed = this.parseGitUrl(appDescriptor.git);
       if (parsed.error) {
-        this.displayError(parsed.msg);
-        return this.isInstalling = false;
+        return this.displayError(parsed.msg);
       } else {
         this.hideError();
-        button.button.html("&nbsp;&nbsp;&nbsp;&nbsp;");
-        button.spin();
         toInstall = new Application(parsed);
         return toInstall.install({
           ignoreMySocketNotification: true,
           success: function(data) {
             if (((data != null ? data.state : void 0) === "broken") || !data.success) {
-              button.displayRed("Install failed");
               alert(data.message);
             } else {
-              button.displayGreen("Install succeeded!");
               _this.resetForm();
             }
-            button.spin();
-            _this.isInstalling = false;
             _this.installedApps.add(toInstall);
             return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
           },
           error: function(jqXHR) {
-            _this.isInstalling = false;
-            console.log(JSON.stringify(jqXHR.responseText));
             alert(JSON.stringify(jqXHR.responseText).message);
             button.displayRed("Install failed");
             return button.spin();
@@ -2012,7 +2014,7 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.resetForm = function() {
-      this.installAppButton.displayOrange("install");
+      this.installAppButton.displayOrange('install');
       return this.appGitField.val('');
     };
 
@@ -2086,12 +2088,19 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.onMouseoutInstallButton = function() {};
 
     ApplicationRow.prototype.onInstallClicked = function() {
-      var _this = this;
-      return this.$el.fadeOut(function() {
-        return setTimeout(function() {
-          return _this.marketView.runInstallation(_this.app.attributes, _this.installButton);
-        }, 200);
-      });
+      var msg,
+        _this = this;
+      if (this.marketView.isInstalling()) {
+        msg = 'An application is already installing. Wait it ';
+        msg += 'finishes, then run your installation again';
+        return alert(msg);
+      } else {
+        return this.$el.fadeOut(function() {
+          return setTimeout(function() {
+            return _this.marketView.runInstallation(_this.app.attributes, _this.installButton);
+          }, 200);
+        });
+      }
     };
 
     return ApplicationRow;

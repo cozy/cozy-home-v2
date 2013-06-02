@@ -27,7 +27,6 @@ module.exports = class MarketView extends BaseView
     ### Constructor ###
 
     constructor: (installedApps) ->
-        @isInstalling = false
         @marketApps = new AppCollection()
         @installedApps = installedApps
         super()
@@ -77,46 +76,47 @@ module.exports = class MarketView extends BaseView
         @onInstallClicked() if event.which == 13
 
     onInstallClicked: (event) =>
-        data = git: @$("#app-git-field").val()
+        if @isInstalling()
+            msg = 'An application is already installing. Wait it '
+            msg += 'finishes, then run your installation again'
+            alert msg
+        else
+            data = git: @$("#app-git-field").val()
 
-        @runInstallation data, @installAppButton
-        event.preventDefault()
-        false
+            @runInstallation data, @installAppButton
+            event.preventDefault()
+            false
+
+    isInstalling: ->
+        for app in @installedApps.toArray()
+            console.log app
+
+            console.log app.get 'state'
+
+            if 'installing' is app.get 'state'
+                return true
+        return false
 
     runInstallation: (appDescriptor, button) =>
-        return true if @isInstalling
-        return true if button.isGreen()
-        @isInstalling = true
         @hideError()
-        button.displayOrange "install"
         parsed = @parseGitUrl appDescriptor.git
         if parsed.error
             @displayError parsed.msg
-            @isInstalling = false
         else
             @hideError()
-            button.button.html "&nbsp;&nbsp;&nbsp;&nbsp;"
-            button.spin()
-
             toInstall = new Application parsed
             toInstall.install
                 ignoreMySocketNotification: true
                 success: (data) =>
                     if (data?.state is "broken") or not data.success
-                        button.displayRed "Install failed"
                         alert data.message
                     else
-                        button.displayGreen "Install succeeded!"
                         @resetForm()
 
-                    button.spin()
-                    @isInstalling = false
                     @installedApps.add toInstall
                     app?.routers.main.navigate 'home', true
 
                 error: (jqXHR) =>
-                    @isInstalling = false
-                    console.log JSON.stringify(jqXHR.responseText)
                     alert JSON.stringify(jqXHR.responseText).message
                     button.displayRed "Install failed"
                     button.spin()
@@ -164,5 +164,5 @@ module.exports = class MarketView extends BaseView
         @errorAlert.hide()
 
     resetForm: =>
-        @installAppButton.displayOrange "install"
+        @installAppButton.displayOrange 'install'
         @appGitField.val ''
