@@ -6772,6 +6772,15 @@ html {
     width: 300px;
   }
 }
+@media (max-width: 640px) {
+  .application {
+    width: 80px;
+    height: 120px;
+  }
+  .application .app-title {
+    font-size: 0.8em;
+  }
+}
 @media (max-width: 500px) {
   #notifications-container #notifications {
     left: -50px;
