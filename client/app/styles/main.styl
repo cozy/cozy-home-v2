@@ -165,8 +165,8 @@ html
     background: bgcolor - 30%
 
 .progress .bar
-    background: highlightcolor
-    box-shadow: 0 0 6px highlightcolor
+    background: #E3E6E6
+    box-shadow: 0 0 6px #E3E6E6
 
 .home-body
     width:100%
@@ -753,10 +753,23 @@ html
 @media (max-width: 640px)
     .application
         width: 80px
-        height: 120px
 
         .app-title
             font-size: 0.8em
+
+        .btn
+            margin-left: 5px
+            margin-right: 5px
+
+        .btn-group
+            .btn
+                display: block
+                position: static
+                margin-left: 5px
+                margin-right: 5px
+                border-radius: 3px
+
+
 
 @media (max-width: 500px)
     #notifications-container

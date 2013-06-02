@@ -6137,9 +6137,9 @@ html {
   background: #505a5b;
 }
 .progress .bar {
-  background: #efd6b8;
-  -webkit-box-shadow: 0 0 6px #efd6b8;
-  box-shadow: 0 0 6px #efd6b8;
+  background: #e3e6e6;
+  -webkit-box-shadow: 0 0 6px #e3e6e6;
+  box-shadow: 0 0 6px #e3e6e6;
 }
 .home-body {
   width: 100%;
@@ -6775,10 +6775,21 @@ html {
 @media (max-width: 640px) {
   .application {
     width: 80px;
-    height: 120px;
   }
   .application .app-title {
     font-size: 0.8em;
+  }
+  .application .btn {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .application .btn-group .btn {
+    display: block;
+    position: static;
+    margin-left: 5px;
+    margin-right: 5px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
   }
 }
 @media (max-width: 500px) {
