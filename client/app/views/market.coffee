@@ -44,7 +44,7 @@ module.exports = class MarketView extends BaseView
         @installAppButton = new ColorButton @$ "#add-app-submit"
 
         @listenTo @installedApps, 'reset',  @onAppListsChanged
-        @listenTo @installedApps, 'add',    @onAppListsChanged
+        #@listenTo @installedApps, 'add',    @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps,    'reset',  @onAppListsChanged
         @marketApps.fetchFromMarket()
@@ -89,10 +89,6 @@ module.exports = class MarketView extends BaseView
 
     isInstalling: ->
         for app in @installedApps.toArray()
-            console.log app
-
-            console.log app.get 'state'
-
             if 'installing' is app.get 'state'
                 return true
         return false

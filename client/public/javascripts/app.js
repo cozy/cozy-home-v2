@@ -930,7 +930,7 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>Welcome to your cozy app store, install your own application from there\nor select an existing one in the list.</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="text"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
+  buf.push('<p>Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="text"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message"><You>have already installed everything !</You></div></div><div class="clearfix"></div>');
   }
   return buf.join("");
   };
@@ -1663,15 +1663,26 @@ window.require.register("views/main", function(exports, require, module) {
     };
 
     HomeView.prototype.displayView = function(view) {
+      var displayView,
+        _this = this;
+      displayView = function() {
+        _this.content.show();
+        _this.frames.hide();
+        view.$el.hide();
+        _this.content.append(view.$el);
+        view.$el.fadeIn();
+        _this.currentView = view;
+        _this.changeFavicon("favicon.ico");
+        return _this.resetLayoutSizes();
+      };
       if (this.currentView != null) {
-        this.currentView.$el.detach();
+        return this.currentView.$el.fadeOut(function() {
+          _this.currentView.$el.detach();
+          return displayView();
+        });
+      } else {
+        return displayView();
       }
-      this.content.show();
-      this.frames.hide();
-      this.content.append(view.$el);
-      this.currentView = view;
-      this.changeFavicon("favicon.ico");
-      return this.resetLayoutSizes();
     };
 
     HomeView.prototype.displayApplicationsList = function() {
@@ -1857,7 +1868,6 @@ window.require.register("views/market", function(exports, require, module) {
       this.noAppMessage = this.$('#no-app-message');
       this.installAppButton = new ColorButton(this.$("#add-app-submit"));
       this.listenTo(this.installedApps, 'reset', this.onAppListsChanged);
-      this.listenTo(this.installedApps, 'add', this.onAppListsChanged);
       this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
       this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
       return this.marketApps.fetchFromMarket();
@@ -1924,8 +1934,6 @@ window.require.register("views/market", function(exports, require, module) {
       _ref = this.installedApps.toArray();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         app = _ref[_i];
-        console.log(app);
-        console.log(app.get('state'));
         if ('installing' === app.get('state')) {
           return true;
         }
@@ -2098,7 +2106,7 @@ window.require.register("views/market_application", function(exports, require, m
         return this.$el.fadeOut(function() {
           return setTimeout(function() {
             return _this.marketView.runInstallation(_this.app.attributes, _this.installButton);
-          }, 200);
+          }, 600);
         });
       }
     };

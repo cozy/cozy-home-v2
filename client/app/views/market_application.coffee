@@ -41,4 +41,4 @@ module.exports = class ApplicationRow extends BaseView
             @$el.fadeOut =>
                 setTimeout =>
                     @marketView.runInstallation @app.attributes, @installButton
-                , 200
+                , 600

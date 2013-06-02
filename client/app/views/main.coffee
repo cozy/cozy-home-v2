@@ -55,15 +55,22 @@ module.exports = class HomeView extends BaseView
         event.preventDefault()
 
     displayView: (view) =>
-        if @currentView?
-            @currentView.$el.detach()
+        displayView = =>
+            @content.show()
+            @frames.hide()
+            view.$el.hide()
+            @content.append view.$el
+            view.$el.fadeIn()
+            @currentView = view
+            @changeFavicon "favicon.ico"
+            @resetLayoutSizes()
 
-        @content.show()
-        @frames.hide()
-        @content.append view.$el
-        @currentView = view
-        @changeFavicon "favicon.ico"
-        @resetLayoutSizes()
+        if @currentView?
+            @currentView.$el.fadeOut =>
+                @currentView.$el.detach()
+                displayView()
+        else
+            displayView()
 
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
