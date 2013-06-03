@@ -47,6 +47,12 @@ mark_broken = (app, err) ->
             stack: err.stack
         , 500
 
+# Define random function for application's token
+randomString = (length) ->
+    string = ""
+    while (string.length < length) 
+      string = string + Math.random().toString(36).substr(2)
+    return string.substr 0, length
 
 # Load application corresponding to slug given in params
 before 'load application', ->
@@ -95,8 +101,9 @@ action 'read', ->
 # Send an error if an application already has same slug.
 action "install", ->
 
-    body.slug = slugify body.name
-    body.state = "installing"       
+    body.slug = slugify body.name  
+    body.state = "installing"
+    body.password = randomString 32
 
     Application.all key: body.slug, (err, apps) ->
 
@@ -125,7 +132,6 @@ action "install", ->
 
                 appli.state = "installed"
                 appli.port  = result.drone.port
-                appli.password = result.drone.token
 
                 permissions = new PermissionsManager()
                 permissions.get appli, (err, docTypes) =>
@@ -181,7 +187,6 @@ action "update", ->
         return mark_broken @app, err if err
 
         @app.state = "installed"
-        @app.password = result.drone.token 
         permissions = new PermissionsManager()
         permissions.get @app, (err, docTypes) =>
             @app.permissions = docTypes
@@ -207,8 +212,6 @@ action "start", ->
 
         @app.state = "installed"
         @app.port = result.drone.port
-        @app.password = result.drone.token
-        console.log @app
         @app.save (err) =>
 
             return send_error err if err
@@ -230,7 +233,6 @@ action "stop", ->
 
         @app.state = "stopped"
         @app.port = 0
-        @app.password = null
         @app.save (err) =>
 
             return send_error err if err
