@@ -114,28 +114,27 @@ action "install", ->
             err = new Error "There is already an app with similar name"
             return send_error err, 400
 
+        permissions = new PermissionsManager()
+        permissions.get body, (err, docTypes) =>
+            body.permissions = docTypes
 
-        Application.create body, (err, appli) ->
+            Application.create body, (err, appli) ->
 
-            return send_error err if err
+                return send_error err if err
 
-            send success: true, app: appli, 201
+                send success: true, app: appli, 201
 
-            console.info 'attempt to install app ' + JSON.stringify(appli)
-            manager = new AppManager()
-            manager.installApp appli, (err, result) ->
+                console.info 'attempt to install app ' + JSON.stringify(appli)
+                manager = new AppManager()
+                manager.installApp appli, (err, result) ->
 
-                if err
-                    mark_broken appli, err
-                    send_error_socket err
-                    return
+                    if err
+                        mark_broken appli, err
+                        send_error_socket err
+                        return
 
-                appli.state = "installed"
-                appli.port  = result.drone.port
-
-                permissions = new PermissionsManager()
-                permissions.get appli, (err, docTypes) =>
-                    appli.permissions = docTypes
+                    appli.state = "installed"
+                    appli.port  = result.drone.port
 
                     console.info 'install succeeded on port ', appli.port
 
