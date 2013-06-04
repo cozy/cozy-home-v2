@@ -20,4 +20,4 @@ module.exports = class ApplicationRow extends BaseView
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
 
     onInstallClicked: =>
-        @marketView.runInstallation(@app.attributes, @installButton)
+        @marketView.showPopover(@app.attributes, @installButton)

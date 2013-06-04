@@ -1,4 +1,5 @@
 BaseView = require 'lib/base_view'
+MarketPopoverView = require 'views/market_popover'
 ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'
 AppCollection = require 'collections/application'
@@ -71,48 +72,55 @@ module.exports = class MarketView extends BaseView
 
     onInstallClicked: (event) =>
         data = git: @$("#app-git-field").val()
-
-        @runInstallation data, @installAppButton
+        showPopover data, @installAppButton
         event.preventDefault()
         false
 
-    runInstallation: (appDescriptor, button) =>
-        return true if @isInstalling
-        return true if button.isGreen()
-        @isInstalling = true
-        @hideError()
-        button.displayOrange "install"
-        parsed = @parseGitUrl appDescriptor.git
+    showPopover: (data, button) ->
+        parsed = @parseGitUrl data.git
         if parsed.error
             @displayError parsed.msg
             @isInstalling = false
         else
             @hideError()
-            button.button.html "&nbsp;&nbsp;&nbsp;&nbsp;"
-            button.spin()
+            @popover = new MarketPopoverView 
+                model: new Application(parsed)
+                confirm: (application) =>
+                    @popover.remove()
+                    console.log application
+                    @runInstallation application, button
+                cancel: (application) =>
+                    @popover.remove()
+            @$el.append @popover.render().$el
 
-            toInstall = new Application parsed
-            toInstall.install
-                ignoreMySocketNotification: true
-                success: (data) =>
-                    if (data?.state is "broken") or not data.success
-                        button.displayRed "Install failed"
-                        alert data.message
-                    else
-                        button.displayGreen "Install succeeded!"
-                        @resetForm()
+    runInstallation: (appli, button) =>
+        return true if @isInstalling
+        return true if button.isGreen()
+        @isInstalling = true
+        @hideError()
+        button.displayOrange "install"
 
-                    button.spin()
-                    @isInstalling = false
-                    @installedApps.add toInstall
-                    app?.routers.main.navigate 'home', true
-
-                error: (jqXHR) =>
-                    @isInstalling = false
-                    console.log JSON.stringify(jqXHR.responseText)
-                    alert JSON.stringify(jqXHR.responseText).message
+        appli.install
+            ignoreMySocketNotification: true
+            success: (data) =>
+                if (data?.state is "broken") or not data.success
                     button.displayRed "Install failed"
-                    button.spin()
+                    alert data.message
+                else
+                    button.displayGreen "Install succeeded!"
+                    @resetForm()
+
+                button.spin()
+                @isInstalling = false
+                @installedApps.add appli
+                app?.routers.main.navigate 'home', true
+
+            error: (jqXHR) =>
+                @isInstalling = false
+                console.log JSON.stringify(jqXHR.responseText)
+                alert JSON.stringify(jqXHR.responseText).message
+                button.displayRed "Install failed"
+                button.spin()
 
 
     parseGitUrl: (url) ->

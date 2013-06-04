@@ -673,9 +673,9 @@ window.require.register("models/application", function(exports, require, module)
     };
 
     Application.prototype.prepareCallbacks = function(callbacks, presuccess, preerror) {
-      var error, success,
+      var error, success, _ref,
         _this = this;
-      success = callbacks.success, error = callbacks.error;
+      _ref = callbacks || {}, success = _ref.success, error = _ref.error;
       if (presuccess == null) {
         presuccess = function(data) {
           return _this.set(data.app);
@@ -747,6 +747,12 @@ window.require.register("models/application", function(exports, require, module)
       }
       this.prepareCallbacks(callbacks);
       return client.post("/api/applications/" + this.id + "/stop", {}, callbacks);
+    };
+
+    Application.prototype.getPermissions = function(callbacks) {
+      this.prepareCallbacks(callbacks);
+      console.log(this.toJSON());
+      return client.post("/api/applications/getPermissions", this.toJSON(), callbacks);
     };
 
     return Application;
@@ -932,6 +938,17 @@ window.require.register("templates/market_application", function(exports, requir
   buf.push('/><button');
   buf.push(attrs({ 'id':("add-" + (app.slug) + "-install"), "class": ('btn') + ' ' + ('btn-orange') }, {"id":true}));
   buf.push('>install</button><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">' + escape((interp = app.comment) == null ? '' : interp) + '</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/market_popover", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="modal-header">Applications Permissions</div><div class="modal-body"> </div><div class="modal-footer"><a id="cancelbtn" class="btn">Cancel</a><a id="confirmbtn" class="btn btn-primary">Confirm</a></div>');
   }
   return buf.join("");
   };
@@ -1756,12 +1773,14 @@ window.require.register("views/main", function(exports, require, module) {
   
 });
 window.require.register("views/market", function(exports, require, module) {
-  var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, REPOREGEX, slugify,
+  var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketPopoverView, MarketView, REPOREGEX, slugify,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseView = require('lib/base_view');
+
+  MarketPopoverView = require('views/market_popover');
 
   ApplicationRow = require('views/market_application');
 
@@ -1870,14 +1889,37 @@ window.require.register("views/market", function(exports, require, module) {
       data = {
         git: this.$("#app-git-field").val()
       };
-      this.runInstallation(data, this.installAppButton);
+      showPopover(data, this.installAppButton);
       event.preventDefault();
       return false;
     };
 
-    MarketView.prototype.runInstallation = function(appDescriptor, button) {
-      var parsed, toInstall,
+    MarketView.prototype.showPopover = function(data, button) {
+      var parsed,
         _this = this;
+      parsed = this.parseGitUrl(data.git);
+      if (parsed.error) {
+        this.displayError(parsed.msg);
+        return this.isInstalling = false;
+      } else {
+        this.hideError();
+        this.popover = new MarketPopoverView({
+          model: new Application(parsed),
+          confirm: function(application) {
+            _this.popover.remove();
+            console.log(application);
+            return _this.runInstallation(application, button);
+          },
+          cancel: function(application) {
+            return _this.popover.remove();
+          }
+        });
+        return this.$el.append(this.popover.render().$el);
+      }
+    };
+
+    MarketView.prototype.runInstallation = function(appli, button) {
+      var _this = this;
       if (this.isInstalling) {
         return true;
       }
@@ -1887,39 +1929,29 @@ window.require.register("views/market", function(exports, require, module) {
       this.isInstalling = true;
       this.hideError();
       button.displayOrange("install");
-      parsed = this.parseGitUrl(appDescriptor.git);
-      if (parsed.error) {
-        this.displayError(parsed.msg);
-        return this.isInstalling = false;
-      } else {
-        this.hideError();
-        button.button.html("&nbsp;&nbsp;&nbsp;&nbsp;");
-        button.spin();
-        toInstall = new Application(parsed);
-        return toInstall.install({
-          ignoreMySocketNotification: true,
-          success: function(data) {
-            if (((data != null ? data.state : void 0) === "broken") || !data.success) {
-              button.displayRed("Install failed");
-              alert(data.message);
-            } else {
-              button.displayGreen("Install succeeded!");
-              _this.resetForm();
-            }
-            button.spin();
-            _this.isInstalling = false;
-            _this.installedApps.add(toInstall);
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
-          },
-          error: function(jqXHR) {
-            _this.isInstalling = false;
-            console.log(JSON.stringify(jqXHR.responseText));
-            alert(JSON.stringify(jqXHR.responseText).message);
+      return appli.install({
+        ignoreMySocketNotification: true,
+        success: function(data) {
+          if (((data != null ? data.state : void 0) === "broken") || !data.success) {
             button.displayRed("Install failed");
-            return button.spin();
+            alert(data.message);
+          } else {
+            button.displayGreen("Install succeeded!");
+            _this.resetForm();
           }
-        });
-      }
+          button.spin();
+          _this.isInstalling = false;
+          _this.installedApps.add(appli);
+          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+        },
+        error: function(jqXHR) {
+          _this.isInstalling = false;
+          console.log(JSON.stringify(jqXHR.responseText));
+          alert(JSON.stringify(jqXHR.responseText).message);
+          button.displayRed("Install failed");
+          return button.spin();
+        }
+      });
     };
 
     MarketView.prototype.parseGitUrl = function(url) {
@@ -2025,10 +2057,93 @@ window.require.register("views/market_application", function(exports, require, m
     };
 
     ApplicationRow.prototype.onInstallClicked = function() {
-      return this.marketView.runInstallation(this.app.attributes, this.installButton);
+      return this.marketView.showPopover(this.app.attributes, this.installButton);
     };
 
     return ApplicationRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/market_popover", function(exports, require, module) {
+  var BaseView, MarketPopoverView, REPOREGEX,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+
+  module.exports = MarketPopoverView = (function(_super) {
+
+    __extends(MarketPopoverView, _super);
+
+    function MarketPopoverView() {
+      this.onConfirmClicked = __bind(this.onConfirmClicked, this);
+
+      this.onCancelClicked = __bind(this.onCancelClicked, this);
+
+      this.renderPermissions = __bind(this.renderPermissions, this);
+      return MarketPopoverView.__super__.constructor.apply(this, arguments);
+    }
+
+    MarketPopoverView.prototype.id = 'market-popover-view';
+
+    MarketPopoverView.prototype.className = 'modal';
+
+    MarketPopoverView.prototype.tagName = 'div';
+
+    MarketPopoverView.prototype.template = require('templates/market_popover');
+
+    MarketPopoverView.prototype.events = {
+      'click #cancelbtn': 'onCancelClicked',
+      'click #confirmbtn': 'onConfirmClicked'
+    };
+
+    MarketPopoverView.prototype.initialize = function(options) {
+      MarketPopoverView.__super__.initialize.apply(this, arguments);
+      this.confirmCallback = options.confirm;
+      return this.cancelCallback = options.cancel;
+    };
+
+    MarketPopoverView.prototype.afterRender = function() {
+      var _this = this;
+      this.body = this.$(".modal-body");
+      this.model.getPermissions({
+        success: function(data) {
+          console.log("success : ", data);
+          return console.log(_this.model.attributes);
+        },
+        error: function() {
+          return console.log("error have been called");
+        }
+      });
+      return this.listenTo(this.model, "change:permissions", this.renderPermissions);
+    };
+
+    MarketPopoverView.prototype.renderPermissions = function() {
+      var docType, permission, permissionsDiv, _ref, _results;
+      this.body.html("");
+      _ref = this.model.get("permissions");
+      _results = [];
+      for (docType in _ref) {
+        permission = _ref[docType];
+        permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
+        _results.push(this.body.append(permissionsDiv));
+      }
+      return _results;
+    };
+
+    MarketPopoverView.prototype.onCancelClicked = function() {
+      return this.cancelCallback(this.model);
+    };
+
+    MarketPopoverView.prototype.onConfirmClicked = function() {
+      return this.confirmCallback(this.model);
+    };
+
+    return MarketPopoverView;
 
   })(BaseView);
   

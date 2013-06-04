@@ -29,3 +29,5 @@ module.exports = (compound, Application) ->
         if @branch? and @branch isnt "null"
             descriptor.repository.branch = @branch
         return descriptor
+
+    

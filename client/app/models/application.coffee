@@ -17,7 +17,7 @@ module.exports = class Application extends Backbone.Model
 
     # use same events as backbone to enable socket-listener
     prepareCallbacks: (callbacks, presuccess, preerror) ->
-        {success, error} = callbacks
+        {success, error} = callbacks or {}
         presuccess ?= (data) => @set data.app
         @trigger 'request', @, null, callbacks
         callbacks.success = (data) =>
@@ -65,3 +65,12 @@ module.exports = class Application extends Backbone.Model
         return null unless @isRunning()
         @prepareCallbacks callbacks
         client.post "/api/applications/#{@id}/stop", {}, callbacks
+
+    # Get application permission
+    getPermissions: (callbacks) ->
+        @prepareCallbacks callbacks
+        console.log @toJSON()
+        client.post "/api/applications/getPermissions", @toJSON(), callbacks
+
+
+

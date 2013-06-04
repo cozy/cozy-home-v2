@@ -80,7 +80,9 @@ action 'applications', ->
 action 'getPermissions', ->
     permissions = new PermissionsManager()
     permissions.get body, (err, docTypes) => 
-        send succes: true, permissions: docTypes, 201
+        app =
+            permissions: docTypes
+        send succes: true, app: app, 201
 
 
 #display one application
