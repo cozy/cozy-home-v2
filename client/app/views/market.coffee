@@ -1,5 +1,6 @@
 BaseView = require 'lib/base_view'
-MarketPopoverView = require 'views/market_popover'
+PopoverPermissionsView = require 'views/popover_permissions'
+PopoverDescriptionView = require 'views/popover_description'
 ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'
 AppCollection = require 'collections/application'
@@ -72,26 +73,35 @@ module.exports = class MarketView extends BaseView
 
     onInstallClicked: (event) =>
         data = git: @$("#app-git-field").val()
-        showPopover data, @installAppButton
+        @showDescription data, @installAppButton
         event.preventDefault()
         false
 
-    showPopover: (data, button) ->
+    showDescription: (data, button) ->
         parsed = @parseGitUrl data.git
         if parsed.error
             @displayError parsed.msg
             @isInstalling = false
         else
             @hideError()
-            @popover = new MarketPopoverView 
+            @popover = new PopoverDescriptionView 
                 model: new Application(parsed)
                 confirm: (application) =>
                     @popover.remove()
-                    console.log application
-                    @runInstallation application, button
+                    @showPermissions application, button
                 cancel: (application) =>
                     @popover.remove()
-            @$el.append @popover.render().$el
+            @$el.append @popover.$el
+
+    showPermissions: (application, button) ->
+        @popover = new PopoverPermissionsView 
+            model: application
+            confirm: (application) =>
+                @popover.remove()
+                @runInstallation application, button
+            cancel: (application) =>
+                @popover.remove()
+        @$el.append @popover.$el
 
     runInstallation: (appli, button) =>
         return true if @isInstalling

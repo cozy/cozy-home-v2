@@ -69,8 +69,12 @@ module.exports = class Application extends Backbone.Model
     # Get application permission
     getPermissions: (callbacks) ->
         @prepareCallbacks callbacks
-        console.log @toJSON()
         client.post "/api/applications/getPermissions", @toJSON(), callbacks
+
+    # Get application description
+    getDescription: (callbacks) ->
+        @prepareCallbacks callbacks
+        client.post "/api/applications/getDescription", @toJSON(), callbacks
 
 
 

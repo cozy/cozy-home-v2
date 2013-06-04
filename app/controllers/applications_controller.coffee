@@ -4,6 +4,7 @@
 slugify = require "./common/slug"
 {AppManager} = require "./lib/paas"
 {PermissionsManager} = require "./lib/permissions"
+{DescriptionManager} = require "./lib/description"
 
 
 # Helpers
@@ -82,6 +83,13 @@ action 'getPermissions', ->
     permissions.get body, (err, docTypes) => 
         app =
             permissions: docTypes
+        send succes: true, app: app, 201
+
+action 'getDescription', ->
+    description = new DescriptionManager()
+    description.get body, (err, docTypes) => 
+        app =
+            description: docTypes
         send succes: true, app: app, 201
 
 
