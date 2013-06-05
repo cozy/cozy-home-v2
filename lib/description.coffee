@@ -6,11 +6,10 @@ url = require 'url'
 class exports.DescriptionManager
 
     constructor: () ->
-        @docTypes = ""
+        @description = " "
 
     get: (app, callback) ->
         # Download file with application's permissions
-        console.log app
         path = (app.git).substring(19, (app.git.length - 4))
         path = "https://raw.github.com/" + path + '/master/package.json'
         options = 
@@ -27,6 +26,6 @@ class exports.DescriptionManager
                         @description = config.description
                     callback null, @description
             else
-                callback null, {}
+                callback null, " "
         request.on 'error', (error) =>
-            callback null, {}
+            callback null, " "

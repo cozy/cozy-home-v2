@@ -10,7 +10,6 @@ class exports.PermissionsManager
 
     get: (app, callback) ->
         # Download file with application's permissions
-        console.log app
         path = (app.git).substring(19, (app.git.length - 4))
         path = "https://raw.github.com/" + path + '/master/package.json'
         options = 

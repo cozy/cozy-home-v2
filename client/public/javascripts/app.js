@@ -2460,7 +2460,11 @@ window.require.register("views/popover_description", function(exports, require, 
       var description, descriptionDiv;
       this.body.html("");
       description = this.model.get("description");
-      descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");
+      if (description === " ") {
+        descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
+      } else {
+        descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");
+      }
       return this.body.append(descriptionDiv);
     };
 
@@ -2538,14 +2542,19 @@ window.require.register("views/popover_permissions", function(exports, require, 
     PopoverPermissionsView.prototype.renderPermissions = function() {
       var docType, permission, permissionsDiv, _ref, _results;
       this.body.html("");
-      _ref = this.model.get("permissions");
-      _results = [];
-      for (docType in _ref) {
-        permission = _ref[docType];
-        permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
-        _results.push(this.body.append(permissionsDiv));
+      if (Object.keys(this.model.get("permissions")).length === 0) {
+        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
+        return this.body.append(permissionsDiv);
+      } else {
+        _ref = this.model.get("permissions");
+        _results = [];
+        for (docType in _ref) {
+          permission = _ref[docType];
+          permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
+          _results.push(this.body.append(permissionsDiv));
+        }
+        return _results;
       }
-      return _results;
     };
 
     PopoverPermissionsView.prototype.onCancelClicked = function() {

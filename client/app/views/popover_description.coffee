@@ -34,7 +34,10 @@ module.exports = class PopoverDescriptionView extends BaseView
     renderDescription: () =>
         @body.html ""
         description = @model.get("description")
-        descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>" 
+        if description is " "
+            descriptionDiv = $ "<div class='descriptionLine'> <h4> This application has no description </h4> </div>" 
+        else
+            descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>" 
         @body.append descriptionDiv
 
     onCancelClicked: () =>

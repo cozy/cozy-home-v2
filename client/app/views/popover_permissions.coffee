@@ -35,9 +35,13 @@ module.exports = class PopoverPermissionsView extends BaseView
 
     renderPermissions: () =>
         @body.html ""
-        for docType, permission of @model.get("permissions")
-            permissionsDiv = $ "<div class='permissionsLine'> <h4> #{docType} </h4> <p> #{permission.description} </p> </div>" 
-            @body.append permissionsDiv
+        if Object.keys(@model.get("permissions")).length is 0
+            permissionsDiv = $ "<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>" 
+            @body.append permissionsDiv 
+        else
+            for docType, permission of @model.get("permissions")
+                permissionsDiv = $ "<div class='permissionsLine'> <h4> #{docType} </h4> <p> #{permission.description} </p> </div>" 
+                @body.append permissionsDiv
 
     onCancelClicked: () =>
         @cancelCallback(@model)

@@ -6595,6 +6595,7 @@ html {
 .modal-body {
   color: #808080;
   font-family: main;
+  text-align: left;
 }
 .modal-footer {
   background-color: #fff;

@@ -87,9 +87,10 @@ action 'getPermissions', ->
 
 action 'getDescription', ->
     description = new DescriptionManager()
-    description.get body, (err, docTypes) => 
+    description.get body, (err, description) => 
         app =
-            description: docTypes
+            description: description
+        console.log description
         send succes: true, app: app, 201
 
 
