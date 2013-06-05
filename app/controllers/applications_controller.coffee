@@ -90,7 +90,6 @@ action 'getDescription', ->
     description.get body, (err, description) => 
         app =
             description: description
-        console.log description
         send succes: true, app: app, 201
 
 
