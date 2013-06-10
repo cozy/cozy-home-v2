@@ -191,6 +191,8 @@ action "uninstall", ->
 action "update", ->
 
     manager = new AppManager()
+    if not @app.password?
+        @app.password = randomString 32
     manager.updateApp @app, (err, result) =>
 
         return mark_broken @app, err if err
