@@ -107,7 +107,9 @@ module.exports = class MarketView extends BaseView
             else
                 @hideError()
                 application = new Application(parsed)
-                @showDescription app: application
+                data =
+                    app: application
+                @showDescription data
 
     showDescription: (appWidget) ->
         @popover = new PopoverDescriptionView

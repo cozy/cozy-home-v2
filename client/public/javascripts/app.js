@@ -1997,7 +1997,7 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.parsedGit = function(app) {
-      var application, msg, parsed;
+      var application, data, msg, parsed;
       if (this.isInstalling()) {
         msg = 'An application is already installing. Wait it ';
         msg += 'finishes, then run your installation again';
@@ -2009,9 +2009,10 @@ window.require.register("views/market", function(exports, require, module) {
         } else {
           this.hideError();
           application = new Application(parsed);
-          return this.showDescription({
+          data = {
             app: application
-          });
+          };
+          return this.showDescription(data);
         }
       }
     };
@@ -2205,7 +2206,7 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.onMouseoutInstallButton = function() {};
 
     ApplicationRow.prototype.onInstallClicked = function() {
-      return this.marketView.showDescription(this.app.attributes, this.installButton);
+      return this.marketView.showDescription(this, this.installButton);
     };
 
     return ApplicationRow;
