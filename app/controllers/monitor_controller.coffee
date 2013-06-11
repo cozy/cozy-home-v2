@@ -4,7 +4,6 @@ MemoryManager = require('./lib/memory').MemoryManager
 action 'sysData', ->
     memoryManager = new MemoryManager()
     memoryManager.getDiskInfos (err, diskInfos) ->
-        console.log err
         if err then send error: true, msg: "Server error occured.", 500
         else memoryManager.getMemoryInfos (err, memoryInfos) ->
             if err
