@@ -85,7 +85,7 @@ module.exports = class MarketView extends BaseView
         else
             data = git: @$("#app-git-field").val()
 
-            @runInstallation data, @installAppButton
+            @parsedGit data
             event.preventDefault()
             false
 
@@ -95,25 +95,29 @@ module.exports = class MarketView extends BaseView
                 return true
         return false
 
-    showDescription: (appWidget) ->
+    parsedGit: (app) ->
         if @isInstalling()
             msg = 'An application is already installing. Wait it '
             msg += 'finishes, then run your installation again'
             alert msg
         else
-            parsed = @parseGitUrl appWidget.app.get 'git'
+            parsed = @parseGitUrl app.git
             if parsed.error
                 @displayError parsed.msg
             else
                 @hideError()
-                @popover = new PopoverDescriptionView
-                    model: appWidget.app
-                    confirm: (application) =>
-                        @popover.remove()
-                        @showPermissions appWidget
-                    cancel: (application) =>
-                        @popover.remove()
-                @$el.append @popover.$el
+                application = new Application(parsed)
+                @showDescription app: application
+
+    showDescription: (appWidget) ->
+        @popover = new PopoverDescriptionView
+            model: appWidget.app
+            confirm: (application) =>
+                @popover.remove()
+                @showPermissions appWidget
+            cancel: (application) =>
+                @popover.remove()
+        @$el.append @popover.$el
 
     showPermissions: (appWidget) ->
         @popover = new PopoverPermissionsView
@@ -127,7 +131,7 @@ module.exports = class MarketView extends BaseView
         @$el.append @popover.$el
 
     hideApplication: (appWidget, callback) =>
-        appWidget.$el.fadeOut =>
+        @$el.fadeOut =>
             setTimeout =>
                 callback()
             , 600

@@ -1978,7 +1978,7 @@ window.require.register("views/market", function(exports, require, module) {
         data = {
           git: this.$("#app-git-field").val()
         };
-        this.runInstallation(data, this.installAppButton);
+        this.parsedGit(data);
         event.preventDefault();
         return false;
       }
@@ -1996,32 +1996,39 @@ window.require.register("views/market", function(exports, require, module) {
       return false;
     };
 
-    MarketView.prototype.showDescription = function(appWidget) {
-      var msg, parsed,
-        _this = this;
+    MarketView.prototype.parsedGit = function(app) {
+      var application, msg, parsed;
       if (this.isInstalling()) {
         msg = 'An application is already installing. Wait it ';
         msg += 'finishes, then run your installation again';
         return alert(msg);
       } else {
-        parsed = this.parseGitUrl(appWidget.app.get('git'));
+        parsed = this.parseGitUrl(app.git);
         if (parsed.error) {
           return this.displayError(parsed.msg);
         } else {
           this.hideError();
-          this.popover = new PopoverDescriptionView({
-            model: appWidget.app,
-            confirm: function(application) {
-              _this.popover.remove();
-              return _this.showPermissions(appWidget);
-            },
-            cancel: function(application) {
-              return _this.popover.remove();
-            }
+          application = new Application(parsed);
+          return this.showDescription({
+            app: application
           });
-          return this.$el.append(this.popover.$el);
         }
       }
+    };
+
+    MarketView.prototype.showDescription = function(appWidget) {
+      var _this = this;
+      this.popover = new PopoverDescriptionView({
+        model: appWidget.app,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.showPermissions(appWidget);
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
     };
 
     MarketView.prototype.showPermissions = function(appWidget) {
@@ -2043,7 +2050,7 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
       var _this = this;
-      return appWidget.$el.fadeOut(function() {
+      return this.$el.fadeOut(function() {
         return setTimeout(function() {
           return callback();
         }, 600);
@@ -2198,7 +2205,7 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.onMouseoutInstallButton = function() {};
 
     ApplicationRow.prototype.onInstallClicked = function() {
-      return this.marketView.showDescription(this, this.installButton);
+      return this.marketView.showDescription(this.app.attributes, this.installButton);
     };
 
     return ApplicationRow;

@@ -33,5 +33,5 @@ module.exports = class ApplicationRow extends BaseView
             #@$(".app-install-text").hide 'slide', {direction: 'right'}, 300
 
     onInstallClicked: =>
-        @marketView.showDescription this, @installButton
+        @marketView.showDescription @app.attributes, @installButton
 
