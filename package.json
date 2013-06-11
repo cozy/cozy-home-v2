@@ -1,5 +1,5 @@
 { "name": "cozy-home"
-, "version": "0.8.0"
+, "version": "0.8.1"
 , "engine": { "node": "*" }
 , "main": "server.coffee"
 , "dependencies":
