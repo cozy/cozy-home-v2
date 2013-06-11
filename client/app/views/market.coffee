@@ -85,7 +85,7 @@ module.exports = class MarketView extends BaseView
         else
             data = git: @$("#app-git-field").val()
 
-            @runInstallation data, @installAppButton
+            @parsedGit data
             event.preventDefault()
             false
 
@@ -95,26 +95,35 @@ module.exports = class MarketView extends BaseView
                 return true
         return false
 
-    showDescription: (appWidget) ->
+    # parse git url before install application
+    parsedGit: (app) ->
         if @isInstalling()
             msg = 'An application is already installing. Wait it '
             msg += 'finishes, then run your installation again'
             alert msg
         else
-            parsed = @parseGitUrl appWidget.app.get 'git'
+            parsed = @parseGitUrl app.git
             if parsed.error
                 @displayError parsed.msg
             else
                 @hideError()
-                @popover = new PopoverDescriptionView
-                    model: appWidget.app
-                    confirm: (application) =>
-                        @popover.remove()
-                        @showPermissions appWidget
-                    cancel: (application) =>
-                        @popover.remove()
-                @$el.append @popover.$el
+                application = new Application(parsed)
+                data =
+                    app: application
+                @showDescription data
 
+    # pop up with application description
+    showDescription: (appWidget) ->
+        @popover = new PopoverDescriptionView
+            model: appWidget.app
+            confirm: (application) =>
+                @popover.remove()
+                @showPermissions appWidget
+            cancel: (application) =>
+                @popover.remove()
+        @$el.append @popover.$el
+
+    # pop up with application permissions
     showPermissions: (appWidget) ->
         @popover = new PopoverPermissionsView
             model: appWidget.app
@@ -127,10 +136,15 @@ module.exports = class MarketView extends BaseView
         @$el.append @popover.$el
 
     hideApplication: (appWidget, callback) =>
-        appWidget.$el.fadeOut =>
-            setTimeout =>
-                callback()
-            , 600
+        # Test if application is installed by the market
+        # or directly with a repo github
+        if appWidget.$el?
+            appWidget.$el.fadeOut =>
+                setTimeout =>
+                    callback()
+                , 600
+        else
+            callback()
 
     runInstallation: (application) =>
         return true if @isInstalling()
