@@ -11,7 +11,6 @@
 bgcolor = #545e5f + 20%
 shadowcolor = #444
 bgshadowcolor = #666688
-orange = #FE8800
 lightorange = #EFD6B8
 
 
@@ -25,11 +24,12 @@ bgclearcolorhoverbuttons = bgcolorbuttons + 70%
 
 textcolor = #EAF1F1
 buttoncolor = #CAD1D1 + 60%
-highlightcolor = #E2F8FF
+highlightcolor = #EFD6B8
 
 green = #3AA131 + 10%
 orange = #BA6131 + 10%
 red = #AA2121 + 20%
+orange = #FE8800
 
 body
     background-color: bgcolor
@@ -165,8 +165,8 @@ html
     background: bgcolor - 30%
 
 .progress .bar
-    background: highlightcolor
-    box-shadow: 0 0 6px highlightcolor
+    background: #E3E6E6
+    box-shadow: 0 0 6px #E3E6E6
 
 .home-body
     width:100%
@@ -207,9 +207,9 @@ html
     .nav
         float: right
 
-        .active a
-        .active a:active
-        .active a:focus
+        .active > a
+        .active > a:active
+        .active > a:focus
             box-shadow: 0
             box-shadow: inset 1px 1px 2px bgcolor - 20%
             background: #E1E1E1 - 10%
@@ -219,7 +219,7 @@ html
         .active
             text-shadow: none
 
-        .active a:hover
+        .active > a:hover
             cursor: default
             background: bgcolor + 40%
             box-shadow: inset 1px 1px 2px bgcolor - 20%
@@ -303,21 +303,42 @@ html
     .badge:empty
         display: none
 
+    #clickcatcher
+        position fixed
+        width 100%
+        height 100%
+        background-color red
+        opacity 0.001
+        top 40px
+        left 0px
+        z-index 40
+
     #notifications
-        right: 0px
         display: none
         position: absolute
+        left: 0px
+        width: 420px
         z-index: 50
-        list-style-type: none
         margin: 0
-        width: 470px
+        list-style-type: none
+        padding: 5px
 
         text-align: left
         background: #8f9b9b
         box-shadow 1px 1px 3px shadowcolor
 
         .notification
-            padding: 10px 5px
+            a.dismiss
+                float right
+                width 20px
+                line-height 20px
+                padding 5px
+
+            a.doaction
+                width 360px
+                float left
+                line-height 20px
+                padding 5px
 
             &.new
                 background: #8f9b9b + 20%
@@ -340,10 +361,12 @@ html
     margin: 6px
     display: inline-block
     text-align: center
-    border 1px solid appbordercolor
-    box-shadow 1px 1px 3px shadowcolor
-    border-radius 12px
+    //border 1px solid appbordercolor
+    border: 0
+    box-shadow 1px 1px 2px shadowcolor
+    border-radius 4px
     background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
+    background: linear-gradient(top,bgcolor + 60%, bgcolor + 20%)
     padding-bottom: 20px
 
     img
@@ -404,6 +427,10 @@ html
 
 #no-app-message
     margin-top: 30px
+    padding: 1em
+
+    a
+        border-bottom: 0
 
 .install-info
     width: 40%
@@ -509,11 +536,24 @@ html
     padding: 20px
 
 #your-app
-    padding: 20px
+    box-sizing: border-box
+    float: left
+    width: 32.33%
+    height: 140px
     margin-right: 1%
-    width: auto
+
     background: bgcolor + 20%
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+    margin-top: 1%
+
+    p
+        margin-bottom: 0
+
+    input
+        margin-top: 10px
+
+    .text
+        padding: 20px
 
     #app-git-field
         box-sizing: border-box
@@ -527,10 +567,57 @@ html
         width: 100%
         max-width: 500px
         margin-right: 20px
+        font-size: 0.8em
 
 #app-market-list
     box-sizing: border-box
     margin-top: 20px
+
+    .app-img
+        box-sizing: border-box
+        height: 140px
+        background: bgcolor + 40%
+        padding: 20px 20px 10px 20px
+        margin-right: 10px
+
+    .app-install-button:hover
+        button
+        div
+            background: highlightcolor + 20%
+
+    .app-install-button
+        button
+        div
+            display: inline
+
+        .app-text
+            padding: 10px
+            word-wrap: normal
+            overflow-x: hidden
+
+        .app-install
+            border: 0
+            outline: 0
+            font-weight: bold
+            color: orange - 10%
+            background: bgcolor + 70%
+            box-shadow: none
+            font-size: 0.8em
+            padding: 4px 8px
+            float: right
+
+        .app-install-text
+            display: none
+            float: right
+            font-size: 0.8em
+            padding: 4px
+            padding-left: 8px
+            cursor: pointer
+            font-weight: bold
+            color: orange - 10%
+            background: bgcolor + 70%
+            box-shadow: none
+            height: 20px
 
 #market-view #no-app-message,
 .cozy-app
@@ -542,11 +629,7 @@ html
 
     background: bgcolor + 20%
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
-    padding: 1%
     margin-top: 1%
-
-    img
-        margin: 10px 10px 0 0
 
     h3
         margin-top: 20px
@@ -563,22 +646,38 @@ html
         height: 70px
         margin: 10px 0px 10px 10px
 
+.navbar .nav > li > a > img
+    box-shadow: 1px 1px 3px #555
+    text-shadow: 1px 1px 3px #555
 
 // Responsive
 
 @media (max-width: 1200px)
-    #market-view #no-app-message,
-    .cozy-app
-        width: 49%
-
-@media (max-width: 850px)
     #header-title
         display: none
 
-    span
-        display:none
+    #buttons
+        width: 100%
+
+    #market-view
+        #no-app-message,
+        .cozy-app
+        #your-app
+            width: 49%
+
+@media (max-width: 850px)
+    #header
+    #market-view
+        span
+            display: none
+
+        #notificaction-counter
+            display: inline
 
 @media (max-width: 800px)
+    .home-body
+        box-shadow: none
+
     #header-title
         a
             padding-left: 0
@@ -609,25 +708,79 @@ html
     .comment
         font-size: 14px
 
-    #your-app
-        margin-right: 0
-
-    #market-view #no-app-message,
-    .cozy-app
-        width: 100%
+    #header
+        .navbar-inner
+            height: 20px
 
     #buttons
         width: 100%
-
-        a
-            padding: 10px 5px
-
-        li
-            line-height: 30px
-
-        li.app-button
-            a
-                padding: 4px 0 16px 10px
+        height: 100%
 
         .nav
             margin: 0
+            height: 20px
+
+        .app-button
+            display: none
+            height: 60px
+
+        li
+            margin 0
+
+            a
+                margin 0
+                min-height: 20px
+                height: 20px
+
+    #market-view 
+        img
+            margin: 0 
+            width: 75px
+
+        h3
+            margin-bottom: 10px
+
+        #your-app
+            margin-right: 0
+            width: 100%
+
+        #no-app-message
+        .cozy-app
+            width: 100%
+
+    #notifications
+        .notification
+            a.doaction
+                width 300px
+
+@media (max-width: 640px)
+    .application
+        width: 80px
+
+        .app-title
+            font-size: 0.8em
+
+        .btn
+            margin-left: 5px
+            margin-right: 5px
+
+        .btn-group
+            .btn
+                display: block
+                position: static
+                margin-left: 5px
+                margin-right: 5px
+                border-radius: 3px
+
+
+
+@media (max-width: 500px)
+    #notifications-container
+        #notifications
+            left: -50px
+            width: 310px
+
+            .notification
+                a.doaction
+                    width 260px
+

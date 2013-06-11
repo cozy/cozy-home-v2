@@ -6020,7 +6020,7 @@ a.editable-click {
   border-bottom: 1px dashed #eaf1f1;
 }
 a.editable-click:hover {
-  color: #cb6e3b;
+  color: #fe8800;
   border-bottom: 1px dashed #eaf1f1;
 }
 iframe {
@@ -6104,13 +6104,13 @@ html {
   cursor: default;
 }
 .btn-orange {
-  background: #cb6e3b;
-  border: 1px solid #cb6e3b;
+  background: #fe8800;
+  border: 1px solid #fe8800;
   color: #eaf1f1;
 }
 .btn-green:active,
 .btn-orange:hover {
-  background: #d07d4f;
+  background: #ff9419;
   color: #eaf1f1;
 }
 .btn-red {
@@ -6137,9 +6137,9 @@ html {
   background: #505a5b;
 }
 .progress .bar {
-  background: #e2f8ff;
-  -webkit-box-shadow: 0 0 6px #e2f8ff;
-  box-shadow: 0 0 6px #e2f8ff;
+  background: #e3e6e6;
+  -webkit-box-shadow: 0 0 6px #e3e6e6;
+  box-shadow: 0 0 6px #e3e6e6;
 }
 .home-body {
   width: 100%;
@@ -6181,9 +6181,9 @@ html {
 .navbar .nav {
   float: right;
 }
-.navbar .nav .active a,
-.navbar .nav .active a:active,
-.navbar .nav .active a:focus {
+.navbar .nav .active > a,
+.navbar .nav .active > a:active,
+.navbar .nav .active > a:focus {
   -webkit-box-shadow: 0;
   box-shadow: 0;
   -webkit-box-shadow: inset 1px 1px 2px #5c6768;
@@ -6195,7 +6195,7 @@ html {
 .navbar .nav .active {
   text-shadow: none;
 }
-.navbar .nav .active a:hover {
+.navbar .nav .active > a:hover {
   cursor: default;
   background: #abb4b4;
   -webkit-box-shadow: inset 1px 1px 2px #5c6768;
@@ -6282,21 +6282,43 @@ html {
 #notifications-container .badge:empty {
   display: none;
 }
+#notifications-container #clickcatcher {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #d73131;
+  opacity: 0.001;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  filter: alpha(opacity=0);
+  top: 40px;
+  left: 0px;
+  z-index: 40;
+}
 #notifications-container #notifications {
-  right: 0px;
   display: none;
   position: absolute;
+  left: 0px;
+  width: 420px;
   z-index: 50;
-  list-style-type: none;
   margin: 0;
-  width: 470px;
+  list-style-type: none;
+  padding: 5px;
   text-align: left;
   background: #8f9b9b;
   -webkit-box-shadow: 1px 1px 3px #444;
   box-shadow: 1px 1px 3px #444;
 }
-#notifications-container #notifications .notification {
-  padding: 10px 5px;
+#notifications-container #notifications .notification a.dismiss {
+  float: right;
+  width: 20px;
+  line-height: 20px;
+  padding: 5px;
+}
+#notifications-container #notifications .notification a.doaction {
+  width: 360px;
+  float: left;
+  line-height: 20px;
+  padding: 5px;
 }
 #notifications-container #notifications .notification.new {
   background: #a5afaf;
@@ -6322,17 +6344,23 @@ html {
   margin: 6px;
   display: inline-block;
   text-align: center;
-  border: 1px solid #688993;
-  -webkit-box-shadow: 1px 1px 3px #444;
-  box-shadow: 1px 1px 3px #444;
-  -webkit-border-radius: 12px;
-  border-radius: 12px;
+  border: 0;
+  -webkit-box-shadow: 1px 1px 2px #444;
+  box-shadow: 1px 1px 2px #444;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c6d3d7), color-stop(1, #8ca6ae));
   background: -webkit-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);
   background: -moz-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);
   background: -o-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);
   background: -ms-linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);
   background: linear-gradient(top, #c6d3d7 0%, #8ca6ae 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c7cdcd), color-stop(1, #8f9b9b));
+  background: -webkit-linear-gradient(top, #c7cdcd 0%, #8f9b9b 100%);
+  background: -moz-linear-gradient(top, #c7cdcd 0%, #8f9b9b 100%);
+  background: -o-linear-gradient(top, #c7cdcd 0%, #8f9b9b 100%);
+  background: -ms-linear-gradient(top, #c7cdcd 0%, #8f9b9b 100%);
+  background: linear-gradient(top, #c7cdcd 0%, #8f9b9b 100%);
   padding-bottom: 20px;
 }
 .application img {
@@ -6398,6 +6426,10 @@ html {
 }
 #no-app-message {
   margin-top: 30px;
+  padding: 1em;
+}
+#no-app-message a {
+  border-bottom: 0;
 }
 .install-info {
   width: 40%;
@@ -6516,12 +6548,26 @@ html {
   padding: 20px;
 }
 #your-app {
-  padding: 20px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  float: left;
+  width: 32.33%;
+  height: 140px;
   margin-right: 1%;
-  width: auto;
   background: #8f9b9b;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  margin-top: 1%;
+}
+#your-app p {
+  margin-bottom: 0;
+}
+#your-app input {
+  margin-top: 10px;
+}
+#your-app .text {
+  padding: 20px;
 }
 #your-app #app-git-field {
   -webkit-box-sizing: border-box;
@@ -6539,12 +6585,61 @@ html {
   width: 100%;
   max-width: 500px;
   margin-right: 20px;
+  font-size: 0.8em;
 }
 #app-market-list {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin-top: 20px;
+}
+#app-market-list .app-img {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 140px;
+  background: #abb4b4;
+  padding: 20px 20px 10px 20px;
+  margin-right: 10px;
+}
+#app-market-list .app-install-button:hover button,
+#app-market-list .app-install-button:hover div {
+  background: #f2dec6;
+}
+#app-market-list .app-install-button button,
+#app-market-list .app-install-button div {
+  display: inline;
+}
+#app-market-list .app-install-button .app-text {
+  padding: 10px;
+  word-wrap: normal;
+  overflow-x: hidden;
+}
+#app-market-list .app-install-button .app-install {
+  border: 0;
+  outline: 0;
+  font-weight: bold;
+  color: #e57a00;
+  background: #d5d9da;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  font-size: 0.8em;
+  padding: 4px 8px;
+  float: right;
+}
+#app-market-list .app-install-button .app-install-text {
+  display: none;
+  float: right;
+  font-size: 0.8em;
+  padding: 4px;
+  padding-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #e57a00;
+  background: #d5d9da;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  height: 20px;
 }
 #market-view #no-app-message,
 .cozy-app {
@@ -6558,12 +6653,7 @@ html {
   background: #8f9b9b;
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  padding: 1%;
   margin-top: 1%;
-}
-#market-view #no-app-message img,
-.cozy-app img {
-  margin: 10px 10px 0 0;
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {
@@ -6583,21 +6673,39 @@ html {
   height: 70px;
   margin: 10px 0px 10px 10px;
 }
+.navbar .nav > li > a > img {
+  -webkit-box-shadow: 1px 1px 3px #555;
+  box-shadow: 1px 1px 3px #555;
+  text-shadow: 1px 1px 3px #555;
+}
 @media (max-width: 1200px) {
+  #header-title {
+    display: none;
+  }
+  #buttons {
+    width: 100%;
+  }
   #market-view #no-app-message,
-  .cozy-app {
+  #market-view .cozy-app,
+  #market-view #your-app {
     width: 49%;
   }
 }
 @media (max-width: 850px) {
-  #header-title {
+  #header span,
+  #market-view span {
     display: none;
   }
-  span {
-    display: none;
+  #header #notificaction-counter,
+  #market-view #notificaction-counter {
+    display: inline;
   }
 }
 @media (max-width: 800px) {
+  .home-body {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
   #header-title a {
     padding-left: 0;
     padding-right: 0;
@@ -6627,26 +6735,74 @@ html {
   .comment {
     font-size: 14px;
   }
-  #your-app {
-    margin-right: 0;
-  }
-  #market-view #no-app-message,
-  .cozy-app {
-    width: 100%;
+  #header .navbar-inner {
+    height: 20px;
   }
   #buttons {
     width: 100%;
-  }
-  #buttons a {
-    padding: 10px 5px;
-  }
-  #buttons li {
-    line-height: 30px;
-  }
-  #buttons li.app-button a {
-    padding: 4px 0 16px 10px;
+    height: 100%;
   }
   #buttons .nav {
     margin: 0;
+    height: 20px;
+  }
+  #buttons .app-button {
+    display: none;
+    height: 60px;
+  }
+  #buttons li {
+    margin: 0;
+  }
+  #buttons li a {
+    margin: 0;
+    min-height: 20px;
+    height: 20px;
+  }
+  #market-view img {
+    margin: 0;
+    width: 75px;
+  }
+  #market-view h3 {
+    margin-bottom: 10px;
+  }
+  #market-view #your-app {
+    margin-right: 0;
+    width: 100%;
+  }
+  #market-view #no-app-message,
+  #market-view .cozy-app {
+    width: 100%;
+  }
+  #notifications .notification a.doaction {
+    width: 300px;
+  }
+}
+@media (max-width: 640px) {
+  .application {
+    width: 80px;
+  }
+  .application .app-title {
+    font-size: 0.8em;
+  }
+  .application .btn {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .application .btn-group .btn {
+    display: block;
+    position: static;
+    margin-left: 5px;
+    margin-right: 5px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+  }
+}
+@media (max-width: 500px) {
+  #notifications-container #notifications {
+    left: -50px;
+    width: 310px;
+  }
+  #notifications-container #notifications .notification a.doaction {
+    width: 260px;
   }
 }

@@ -6,4 +6,4 @@ Notification = require 'models/notification'
 module.exports = class NotificationCollection extends Backbone.Collection
 
     model: Notification
-    url: 'notifications'
+    url: 'api/notifications'

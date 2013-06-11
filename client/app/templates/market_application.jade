@@ -1,5 +1,10 @@
-img.pull-left(src="#{app.icon}")
-button(id="add-#{app.slug}-install").btn.btn-orange install
-h3 #{app.name}
-span.comment #{app.comment}
-p #{app.description}
+.app-img.pull-left
+    img(src="#{app.icon}")
+
+.app-install-button.pull-right
+    button.app-install +
+    .app-install-text add application? 
+.app-text
+    h3 #{app.name}
+    span.comment #{app.comment}
+    p #{app.description}

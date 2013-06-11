@@ -1,14 +1,20 @@
-#your-app
-    p
-        | Install&nbsp;
-        a(href="https://cozycloud.cc/make/", target="_blank") your app
-    p
-      label Git URL
-      input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
-    .error.alert.alert-error.main-alert
-    .info.alert.main-alert
-    button#add-app-submit.btn.btn-orange install
-
+p
+    | Welcome to your cozy app store, install your own application from there
+    | or add an existing one from the list.
 #app-market-list
+    #your-app
+        .app-install-button.pull-right
+            button.app-install +
+            .app-install-text add application?
+        .text
+            p
+                | Install&nbsp;
+                a(href="https://cozycloud.cc/make/", target="_blank") your app!
+            p
+              input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
+            .error.alert.alert-error.main-alert
+            .info.alert.main-alert
+
     #no-app-message
         | You have already installed everything !
+.clearfix

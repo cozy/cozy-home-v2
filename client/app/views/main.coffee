@@ -22,10 +22,10 @@ module.exports = class HomeView extends BaseView
         super
 
     afterRender: =>
-        @navbar = new NavbarView(@apps)
-        @applicationListView = new ApplicationsListView(@apps)
+        @navbar = new NavbarView @apps
+        @applicationListView = new ApplicationsListView @apps
         @accountView = new AccountView()
-        @marketView = new MarketView(@apps)
+        @marketView = new MarketView @apps
 
         @frames = @$ '#app-frames'
         @content = @$ '#content'
@@ -34,7 +34,9 @@ module.exports = class HomeView extends BaseView
         @favicon2 = @$ 'fav2'
 
         $(window).resize @resetLayoutSizes
-        @apps.fetch reset: true
+        @apps.fetch
+            reset: true
+            success: => @applicationListView.displayNoAppMessage()
         @resetLayoutSizes()
 
 
@@ -49,37 +51,44 @@ module.exports = class HomeView extends BaseView
             success: (data) =>
                 window.location.reload()
             error: =>
-                alert "Server error occured, logout failed."
+                alert 'Server error occured, logout failed.'
         event.preventDefault()
 
     displayView: (view) =>
-        if @currentView?
-            @currentView.$el.detach()
+        displayView = =>
+            @content.show()
+            @frames.hide()
+            view.$el.hide()
+            @content.append view.$el
+            view.$el.fadeIn()
+            @currentView = view
+            @changeFavicon "favicon.ico"
+            @resetLayoutSizes()
 
-        @content.show()
-        @frames.hide()
-        @content.append(view.$el)
-        @currentView = view
-        @changeFavicon "favicon.ico"
-        @resetLayoutSizes()
+        if @currentView?
+            @currentView.$el.fadeOut =>
+                @currentView.$el.detach()
+                displayView()
+        else
+            displayView()
 
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
-        @navbar.selectButton "home-button"
+        @navbar.selectButton 'home-button'
         window.document.title = "Cozy - Home"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView
-        @navbar.selectButton "market-button"
+        @navbar.selectButton 'market-button'
         window.document.title = "Cozy - Market"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView
-        @navbar.selectButton "account-button"
-        window.document.title = "Cozy - Account"
+        @navbar.selectButton 'account-button'
+        window.document.title = 'Cozy - Account'
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
@@ -97,7 +106,7 @@ module.exports = class HomeView extends BaseView
         frame = @$("##{slug}-frame")
         frame = @createApplicationIframe(slug, hash) if frame.length is 0
 
-        @$("#app-frames").find("iframe").hide()
+        @$('#app-frames').find('iframe').hide()
         frame.show()
 
         @navbar.selectButton slug
