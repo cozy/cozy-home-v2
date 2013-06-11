@@ -32,6 +32,7 @@ mark_broken = (app, err) ->
     console.log err.stack
 
     app.state = "broken"
+    app.password = null
     app.errormsg = err.message
     app.save (saveErr) ->
 
@@ -45,6 +46,12 @@ mark_broken = (app, err) ->
             stack: err.stack
         , 500
 
+# Define random function for application's token
+randomString = (length) ->
+    string = ""
+    while (string.length < length) 
+      string = string + Math.random().toString(36).substr(2)
+    return string.substr 0, length
 
 # Load application corresponding to slug given in params
 before 'load application', ->
@@ -89,12 +96,14 @@ action "install", ->
 
     body.slug = slugify body.name
     body.state = "installing"
+    body.password = randomString 32
 
     Application.all key: body.slug, (err, apps) ->
 
         return send_error err, 500 if err
 
-        if apps.length > 0
+        if apps.length > 0 or body.slug is "proxy" or 
+                body.slug is "home" or body.slug is "data-system"
             err = new Error "There is already an app with similar name"
             return send_error err, 400
 
@@ -162,6 +171,8 @@ action "uninstall", ->
 action "update", ->
 
     manager = new AppManager()
+    if not @app.password?
+        @app.password = randomString 32
     manager.updateApp @app, (err, result) =>
 
         return mark_broken @app, err if err

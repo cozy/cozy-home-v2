@@ -23,6 +23,7 @@ Application = define 'Application', ->
     property 'errormsg', String
     property 'branch', String
     property 'port', Number
+    property 'password', String
 
 # Notifications are messages sent to the user
 Notification = define 'Notification', ->
