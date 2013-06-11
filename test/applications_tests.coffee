@@ -1,5 +1,6 @@
 should = require('chai').Should()
 expect = require('chai').expect
+redis = require 'redis'
 compoundInstantiator = require('../server')
 helpers = require('./helpers')
 
@@ -9,12 +10,12 @@ TESTPORT = 8888
 TESTAPP =
     name: "My App",
     description: "description",
-    git: "git@github.com:mycozycloud/my-app.git"
+    git: "https://github.com/mycozycloud/my-app.git"
 
 TESTAPPBRANCH =
     name: "My App 2",
     description: "description",
-    git: "git@github.com:mycozycloud/my-app2.git"
+    git: "https://github.com/mycozycloud/my-app2.git"
     branch:"mybranch"
 
 # reset the last calls for servers
@@ -64,12 +65,14 @@ describe "Applications install", ->
         before resetTestServers
 
         it "When I send a request to install an application", (done) ->
+            this.timeout 10000
             @client.post "api/applications/install", TESTAPP,  done
 
         it "Then it sends me back my app with an id and a state", ->
             @response.statusCode.should.equal 201
             expect(@body.success)   .to.be.ok
             expect(@body).to.have.property 'app'
+<<<<<<< HEAD
             expect(@body.app.state).to.equal 'installing'
             expect(@body.app.slug).to.equal 'my-app'
 
@@ -87,6 +90,28 @@ describe "Applications install", ->
             should.exist body.start.name
             should.exist body.start.repository
             should.exist body.start.scripts
+=======
+            expect(@body.app.state).to.equal "installing"
+            expect(@body.app.slug).to.equal "my-app"
+            #expect(@body.app.port).to.equal 8001
+
+        it "And haibu have been requested to install this app", (done)->
+            this.timeout 10000
+            clientRedis = redis.createClient()
+            clientRedis.psubscribe 'application.update'
+            clientRedis.on 'pmessage', (pat, ch, msg) =>
+                clientRedis.quit()
+                request = @haibu.lastCall().request
+                request.url.should.equal "/drones/my-app/start"
+                request.method.should.equal "POST"
+                
+                body = @haibu.lastCall().body
+                should.exist body.start.user
+                should.exist body.start.name
+                should.exist body.start.repository
+                should.exist body.start.scripts
+                done()
+>>>>>>> 6e276f365aba45eb4dd7381c382f5df79e04a528
 
         # it "And the proxy have been requested to update its routes", ->
         #     @proxy.lastCall().request.url.should.equal "/routes/reset"
@@ -109,12 +134,24 @@ describe "Applications install", ->
             @response.statusCode.should.equal 201
             expect(@body?.app?.branch).to.equal "mybranch"
 
+<<<<<<< HEAD
         it "After some time, ...", (done) ->
             setTimeout done, 1000
 
         it "And haibu have been requested with correct branch", ->
             body = @haibu.lastCall().body
             body.start.repository.branch.should.equal "mybranch"
+=======
+        it "And haibu have been requested with correct branch", (done) ->
+            this.timeout 10000
+            clientRedis = redis.createClient()
+            clientRedis.psubscribe 'application.update'
+            clientRedis.on 'pmessage', (pat, ch, msg) =>
+                clientRedis.quit()
+                body = @haibu.lastCall().body
+                body.start.repository.branch.should.equal "mybranch"
+                done()
+>>>>>>> 6e276f365aba45eb4dd7381c382f5df79e04a528
 
         it "When I send a request to retrieve all applications", (done) ->
             @client.get "api/applications", done

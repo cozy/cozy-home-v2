@@ -1,5 +1,8 @@
 exports.routes = (map) ->
-    map.get  '/'                                , 'applications#index'
+    map.get '/', 'applications#index'
+
+    map.post '/api/applications/getPermissions', 'applications#getPermissions'
+    map.post '/api/applications/getDescription', 'applications#getDescription'
 
     map.get  '/api/applications'                , 'applications#applications'
     map.get  '/api/applications/byid/:id'       , 'applications#read'

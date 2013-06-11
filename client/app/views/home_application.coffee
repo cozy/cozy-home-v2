@@ -1,5 +1,6 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
+PopoverPermissionsView = require 'views/popover_permissions'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
@@ -88,7 +89,17 @@ module.exports = class ApplicationRow extends BaseView
 
     onUpdateClicked: (event) =>
         event.preventDefault()
-        @updateApp()
+        @showPopover()
+
+    showPopover: () ->
+        @popover = new PopoverPermissionsView 
+            model: @model
+            confirm: (application) =>
+                @popover.remove()
+                @updateApp()
+            cancel: (application) =>
+                @popover.remove()
+        @$el.append @popover.$el
 
     onStartStopClicked: (event) =>
         event.preventDefault()

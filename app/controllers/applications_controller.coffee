@@ -3,6 +3,8 @@
 
 slugify = require "./common/slug"
 {AppManager} = require "./lib/paas"
+{PermissionsManager} = require "./lib/permissions"
+{DescriptionManager} = require "./lib/description"
 
 
 # Helpers
@@ -74,6 +76,20 @@ action 'applications', ->
         else
             send rows: apps
 
+action 'getPermissions', ->
+    permissions = new PermissionsManager()
+    permissions.get body, (err, docTypes) => 
+        app =
+            permissions: docTypes
+        send succes: true, app: app, 201
+
+action 'getDescription', ->
+    description = new DescriptionManager()
+    description.get body, (err, description) => 
+        app =
+            description: description
+        send succes: true, app: app, 201
+
 
 #display one application
 action 'read', ->
@@ -85,6 +101,7 @@ action 'read', ->
         else
             send app
 
+
 # Set up app into 3 places :
 # * haibu, application manager
 # * proxy, cozy router
@@ -92,7 +109,7 @@ action 'read', ->
 # Send an error if an application already has same slug.
 action "install", ->
 
-    body.slug = slugify body.name
+    body.slug = slugify body.name  
     body.state = "installing"
     body.password = randomString 32
 
@@ -105,38 +122,41 @@ action "install", ->
             err = new Error "There is already an app with similar name"
             return send_error err, 400
 
+        permissions = new PermissionsManager()
+        permissions.get body, (err, docTypes) =>
+            body.permissions = docTypes
 
-        Application.create body, (err, appli) ->
+            Application.create body, (err, appli) ->
 
-            return send_error err if err
+                return send_error err if err
 
-            send success: true, app: appli, 201
+                send success: true, app: appli, 201
 
-            console.info 'attempt to install app ' + JSON.stringify(appli)
-            manager = new AppManager()
-            manager.installApp appli, (err, result) ->
+                console.info 'attempt to install app ' + JSON.stringify(appli)
+                manager = new AppManager()
+                manager.installApp appli, (err, result) ->
 
-                if err
-                    mark_broken appli, err
-                    send_error_socket err
-                    return
+                    if err
+                        mark_broken appli, err
+                        send_error_socket err
+                        return
 
-                appli.state = "installed"
-                appli.port  = result.drone.port
+                    appli.state = "installed"
+                    appli.port  = result.drone.port
 
-                console.info 'install succeeded on port ', appli.port
+                    console.info 'install succeeded on port ', appli.port
 
-                appli.save (err) ->
-
-                    return send_error_socket err if err
-
-                    console.info 'saved port in db', appli.port
-
-                    manager.resetProxy (err) ->
+                    appli.save (err) ->
 
                         return send_error_socket err if err
 
-                        console.info 'proxy reset', appli.port
+                        console.info 'saved port in db', appli.port
+
+                        manager.resetProxy (err) ->
+
+                            return send_error_socket err if err
+
+                            console.info 'proxy reset', appli.port
 
 
 # Remove app from 3 places :
@@ -176,17 +196,20 @@ action "update", ->
         return mark_broken @app, err if err
 
         @app.state = "installed"
-        @app.save (err) =>
+        permissions = new PermissionsManager()
+        permissions.get @app, (err, docTypes) =>
+            @app.permissions = docTypes
+            @app.save (err) =>
 
-            return send_error err if err
+                return send_error err if err
 
-            manager.resetProxy (err) =>
+                manager.resetProxy (err) =>
 
-                return mark_broken @app, err if err
+                    return mark_broken @app, err if err
 
-                send
-                    success: true
-                    msg: 'Application succesfuly updated'
+                    send
+                        success: true
+                        msg: 'Application succesfuly updated'
 
 action "start", ->
     manager = new AppManager

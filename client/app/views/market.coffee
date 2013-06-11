@@ -1,4 +1,6 @@
 BaseView = require 'lib/base_view'
+PopoverPermissionsView = require 'views/popover_permissions'
+PopoverDescriptionView = require 'views/popover_description'
 ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'
 AppCollection = require 'collections/application'
@@ -93,30 +95,59 @@ module.exports = class MarketView extends BaseView
                 return true
         return false
 
-    runInstallation: (appDescriptor, button) =>
-        @hideError()
-        parsed = @parseGitUrl appDescriptor.git
-        if parsed.error
-            @displayError parsed.msg
+    showDescription: (appWidget) ->
+        if @isInstalling()
+            msg = 'An application is already installing. Wait it '
+            msg += 'finishes, then run your installation again'
+            alert msg
         else
-            @hideError()
-            toInstall = new Application parsed
-            toInstall.install
-                ignoreMySocketNotification: true
-                success: (data) =>
-                    if (data?.state is "broken") or not data.success
-                        alert data.message
-                    else
-                        @resetForm()
+            parsed = @parseGitUrl appWidget.app.get 'git'
+            if parsed.error
+                @displayError parsed.msg
+            else
+                @hideError()
+                @popover = new PopoverDescriptionView
+                    model: appWidget.app
+                    confirm: (application) =>
+                        @popover.remove()
+                        @showPermissions appWidget
+                    cancel: (application) =>
+                        @popover.remove()
+                @$el.append @popover.$el
 
-                    @installedApps.add toInstall
-                    app?.routers.main.navigate 'home', true
+    showPermissions: (appWidget) ->
+        @popover = new PopoverPermissionsView
+            model: appWidget.app
+            confirm: (application) =>
+                @popover.remove()
+                @hideApplication appWidget, =>
+                    @runInstallation appWidget.app
+            cancel: (application) =>
+                @popover.remove()
+        @$el.append @popover.$el
 
-                error: (jqXHR) =>
-                    alert JSON.stringify(jqXHR.responseText).message
-                    button.displayRed "Install failed"
-                    button.spin()
+    hideApplication: (appWidget, callback) =>
+        appWidget.$el.fadeOut =>
+            setTimeout =>
+                callback()
+            , 600
 
+    runInstallation: (application) =>
+        return true if @isInstalling()
+        @hideError()
+
+        application.install
+            ignoreMySocketNotification: true
+            success: (data) =>
+                if (data?.state is "broken") or not data.success
+                    alert data.message
+                else
+                    @resetForm()
+                @installedApps.add application
+                app?.routers.main.navigate 'home', true
+
+            error: (jqXHR) =>
+                alert JSON.stringify(jqXHR.responseText).message
 
     parseGitUrl: (url) ->
         url = url.replace 'git@github.com:', 'https://github.com/'

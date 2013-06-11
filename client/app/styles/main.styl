@@ -30,6 +30,7 @@ green = #3AA131 + 10%
 orange = #BA6131 + 10%
 red = #AA2121 + 20%
 orange = #FE8800
+grey = #333
 
 body
     background-color: bgcolor
@@ -437,11 +438,6 @@ html
     text-align center
 
 
-// @deadcode
-#add-app-close
-#add-app-submit
-    margin-top: 5px
-
 // Account page
 
 .control-group
@@ -649,6 +645,47 @@ html
 .navbar .nav > li > a > img
     box-shadow: 1px 1px 3px #555
     text-shadow: 1px 1px 3px #555
+
+.modal
+    margin-top: -200px
+
+.modal-header
+    color: grey
+    font-weight: bold
+    background-color: lightgrey
+
+.modal-body
+    color: grey
+    font-family: main 
+    text-align: left;
+
+.modal-footer
+    background-color: white
+    border-radius: 0
+
+    .btn
+        text-shadow: none
+        border: 0
+        color: grey
+        background: buttoncolor
+        border: 1px solid buttoncolor - 20%
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
+        margin: 0
+        font-family: styled
+
+    .btn:hover
+        background: #EFD6B8
+        border-color: 1px solid #EFD6B8
+        //box-shadow: 0 0 8px highlightcolor
+
+    .btn:active
+        box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
+        background: buttoncolor - 10%
+
+
+    .btn-primary
+        color: grey
+        background: #EFD6B8 + 40%
 
 // Responsive
 

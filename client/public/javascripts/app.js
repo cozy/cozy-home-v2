@@ -687,9 +687,9 @@ window.require.register("models/application", function(exports, require, module)
     };
 
     Application.prototype.prepareCallbacks = function(callbacks, presuccess, preerror) {
-      var error, success,
+      var error, success, _ref,
         _this = this;
-      success = callbacks.success, error = callbacks.error;
+      _ref = callbacks || {}, success = _ref.success, error = _ref.error;
       if (presuccess == null) {
         presuccess = function(data) {
           return _this.set(data.app);
@@ -761,6 +761,16 @@ window.require.register("models/application", function(exports, require, module)
       }
       this.prepareCallbacks(callbacks);
       return client.post("/api/applications/" + this.id + "/stop", {}, callbacks);
+    };
+
+    Application.prototype.getPermissions = function(callbacks) {
+      this.prepareCallbacks(callbacks);
+      return client.post("/api/applications/getPermissions", this.toJSON(), callbacks);
+    };
+
+    Application.prototype.getDescription = function(callbacks) {
+      this.prepareCallbacks(callbacks);
+      return client.post("/api/applications/getDescription", this.toJSON(), callbacks);
     };
 
     return Application;
@@ -992,6 +1002,28 @@ window.require.register("templates/notifications", function(exports, require, mo
   with (locals || {}) {
   var interp;
   buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li></ul>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/popover_description", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="modal-header">Application Description</div><div class="modal-body"> \n<div>  <h4> Download description ... </h4> </div></div><div class="modal-footer">  <a id="cancelbtn" class="btn">Cancel</a><a id="confirmbtn" class="btn btn-primary">Ok</a></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/popover_permissions", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="modal-header">Applications Permissions</div><div class="modal-body"> \n<div> <h4> Download permissions ... </h4> </div></div><div class="modal-footer"><a id="cancelbtn" class="btn">Cancel</a><a id="confirmbtn" class="btn btn-primary">Confirm</a></div>');
   }
   return buf.join("");
   };
@@ -1357,7 +1389,7 @@ window.require.register("views/home", function(exports, require, module) {
   
 });
 window.require.register("views/home_application", function(exports, require, module) {
-  var ApplicationRow, BaseView, ColorButton,
+  var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1365,6 +1397,8 @@ window.require.register("views/home_application", function(exports, require, mod
   BaseView = require('lib/base_view');
 
   ColorButton = require('widgets/install_button');
+
+  PopoverPermissionsView = require('views/popover_permissions');
 
   module.exports = ApplicationRow = (function(_super) {
 
@@ -1495,7 +1529,22 @@ window.require.register("views/home_application", function(exports, require, mod
 
     ApplicationRow.prototype.onUpdateClicked = function(event) {
       event.preventDefault();
-      return this.updateApp();
+      return this.showPopover();
+    };
+
+    ApplicationRow.prototype.showPopover = function() {
+      var _this = this;
+      this.popover = new PopoverPermissionsView({
+        model: this.model,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.updateApp();
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
     };
 
     ApplicationRow.prototype.onStartStopClicked = function(event) {
@@ -1792,12 +1841,16 @@ window.require.register("views/main", function(exports, require, module) {
   
 });
 window.require.register("views/market", function(exports, require, module) {
-  var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, REPOREGEX, slugify,
+  var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, PopoverDescriptionView, PopoverPermissionsView, REPOREGEX, slugify,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseView = require('lib/base_view');
+
+  PopoverPermissionsView = require('views/popover_permissions');
+
+  PopoverDescriptionView = require('views/popover_description');
 
   ApplicationRow = require('views/market_application');
 
@@ -1840,6 +1893,8 @@ window.require.register("views/market", function(exports, require, module) {
       this.displayInfo = __bind(this.displayInfo, this);
 
       this.runInstallation = __bind(this.runInstallation, this);
+
+      this.hideApplication = __bind(this.hideApplication, this);
 
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
@@ -1941,34 +1996,81 @@ window.require.register("views/market", function(exports, require, module) {
       return false;
     };
 
-    MarketView.prototype.runInstallation = function(appDescriptor, button) {
-      var parsed, toInstall,
+    MarketView.prototype.showDescription = function(appWidget) {
+      var msg, parsed,
         _this = this;
-      this.hideError();
-      parsed = this.parseGitUrl(appDescriptor.git);
-      if (parsed.error) {
-        return this.displayError(parsed.msg);
+      if (this.isInstalling()) {
+        msg = 'An application is already installing. Wait it ';
+        msg += 'finishes, then run your installation again';
+        return alert(msg);
       } else {
-        this.hideError();
-        toInstall = new Application(parsed);
-        return toInstall.install({
-          ignoreMySocketNotification: true,
-          success: function(data) {
-            if (((data != null ? data.state : void 0) === "broken") || !data.success) {
-              alert(data.message);
-            } else {
-              _this.resetForm();
+        parsed = this.parseGitUrl(appWidget.app.get('git'));
+        if (parsed.error) {
+          return this.displayError(parsed.msg);
+        } else {
+          this.hideError();
+          this.popover = new PopoverDescriptionView({
+            model: appWidget.app,
+            confirm: function(application) {
+              _this.popover.remove();
+              return _this.showPermissions(appWidget);
+            },
+            cancel: function(application) {
+              return _this.popover.remove();
             }
-            _this.installedApps.add(toInstall);
-            return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
-          },
-          error: function(jqXHR) {
-            alert(JSON.stringify(jqXHR.responseText).message);
-            button.displayRed("Install failed");
-            return button.spin();
-          }
-        });
+          });
+          return this.$el.append(this.popover.$el);
+        }
       }
+    };
+
+    MarketView.prototype.showPermissions = function(appWidget) {
+      var _this = this;
+      this.popover = new PopoverPermissionsView({
+        model: appWidget.app,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.hideApplication(appWidget, function() {
+            return _this.runInstallation(appWidget.app);
+          });
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
+    };
+
+    MarketView.prototype.hideApplication = function(appWidget, callback) {
+      var _this = this;
+      return appWidget.$el.fadeOut(function() {
+        return setTimeout(function() {
+          return callback();
+        }, 600);
+      });
+    };
+
+    MarketView.prototype.runInstallation = function(application) {
+      var _this = this;
+      if (this.isInstalling()) {
+        return true;
+      }
+      this.hideError();
+      return application.install({
+        ignoreMySocketNotification: true,
+        success: function(data) {
+          if (((data != null ? data.state : void 0) === "broken") || !data.success) {
+            alert(data.message);
+          } else {
+            _this.resetForm();
+          }
+          _this.installedApps.add(application);
+          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+        },
+        error: function(jqXHR) {
+          return alert(JSON.stringify(jqXHR.responseText).message);
+        }
+      });
     };
 
     MarketView.prototype.parseGitUrl = function(url) {
@@ -2096,19 +2198,7 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.onMouseoutInstallButton = function() {};
 
     ApplicationRow.prototype.onInstallClicked = function() {
-      var msg,
-        _this = this;
-      if (this.marketView.isInstalling()) {
-        msg = 'An application is already installing. Wait it ';
-        msg += 'finishes, then run your installation again';
-        return alert(msg);
-      } else {
-        return this.$el.fadeOut(function() {
-          return setTimeout(function() {
-            return _this.marketView.runInstallation(_this.app.attributes, _this.installButton);
-          }, 600);
-        });
-      }
+      return this.marketView.showDescription(this, this.installButton);
     };
 
     return ApplicationRow;
@@ -2397,6 +2487,174 @@ window.require.register("views/notifications_view", function(exports, require, m
     return NotificationsView;
 
   })(ViewCollection);
+  
+});
+window.require.register("views/popover_description", function(exports, require, module) {
+  var BaseView, PopoverDescriptionView, REPOREGEX,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+
+  module.exports = PopoverDescriptionView = (function(_super) {
+
+    __extends(PopoverDescriptionView, _super);
+
+    function PopoverDescriptionView() {
+      this.onConfirmClicked = __bind(this.onConfirmClicked, this);
+
+      this.onCancelClicked = __bind(this.onCancelClicked, this);
+
+      this.renderDescription = __bind(this.renderDescription, this);
+      return PopoverDescriptionView.__super__.constructor.apply(this, arguments);
+    }
+
+    PopoverDescriptionView.prototype.id = 'market-popover-description-view';
+
+    PopoverDescriptionView.prototype.className = 'modal';
+
+    PopoverDescriptionView.prototype.tagName = 'div';
+
+    PopoverDescriptionView.prototype.template = require('templates/popover_description');
+
+    PopoverDescriptionView.prototype.events = {
+      'click #cancelbtn': 'onCancelClicked',
+      'click #confirmbtn': 'onConfirmClicked'
+    };
+
+    PopoverDescriptionView.prototype.initialize = function(options) {
+      PopoverDescriptionView.__super__.initialize.apply(this, arguments);
+      this.confirmCallback = options.confirm;
+      return this.cancelCallback = options.cancel;
+    };
+
+    PopoverDescriptionView.prototype.afterRender = function() {
+      var _this = this;
+      this.body = this.$(".modal-body");
+      this.model.getDescription({
+        success: function(data) {},
+        error: function() {
+          return console.log("error have been called");
+        }
+      });
+      return this.listenTo(this.model, "change:description", this.renderDescription);
+    };
+
+    PopoverDescriptionView.prototype.renderDescription = function() {
+      var description, descriptionDiv;
+      this.body.html("");
+      description = this.model.get("description");
+      if (description === " ") {
+        descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
+      } else {
+        descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");
+      }
+      return this.body.append(descriptionDiv);
+    };
+
+    PopoverDescriptionView.prototype.onCancelClicked = function() {
+      return this.cancelCallback(this.model);
+    };
+
+    PopoverDescriptionView.prototype.onConfirmClicked = function() {
+      return this.confirmCallback(this.model);
+    };
+
+    return PopoverDescriptionView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/popover_permissions", function(exports, require, module) {
+  var BaseView, PopoverPermissionsView, REPOREGEX,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+
+  module.exports = PopoverPermissionsView = (function(_super) {
+
+    __extends(PopoverPermissionsView, _super);
+
+    function PopoverPermissionsView() {
+      this.onConfirmClicked = __bind(this.onConfirmClicked, this);
+
+      this.onCancelClicked = __bind(this.onCancelClicked, this);
+
+      this.renderPermissions = __bind(this.renderPermissions, this);
+      return PopoverPermissionsView.__super__.constructor.apply(this, arguments);
+    }
+
+    PopoverPermissionsView.prototype.id = 'market-popover-view';
+
+    PopoverPermissionsView.prototype.className = 'modal';
+
+    PopoverPermissionsView.prototype.tagName = 'div';
+
+    PopoverPermissionsView.prototype.template = require('templates/popover_permissions');
+
+    PopoverPermissionsView.prototype.events = {
+      'click #cancelbtn': 'onCancelClicked',
+      'click #confirmbtn': 'onConfirmClicked'
+    };
+
+    PopoverPermissionsView.prototype.initialize = function(options) {
+      PopoverPermissionsView.__super__.initialize.apply(this, arguments);
+      this.confirmCallback = options.confirm;
+      return this.cancelCallback = options.cancel;
+    };
+
+    PopoverPermissionsView.prototype.afterRender = function() {
+      var _this = this;
+      this.body = this.$(".modal-body");
+      this.model.getPermissions({
+        success: function(data) {
+          if (!_this.model.hasChanged("permissions")) {
+            return _this.confirmCallback(_this.model);
+          }
+        },
+        error: function() {
+          return console.log("error have been called");
+        }
+      });
+      return this.listenTo(this.model, "change:permissions", this.renderPermissions);
+    };
+
+    PopoverPermissionsView.prototype.renderPermissions = function() {
+      var docType, permission, permissionsDiv, _ref, _results;
+      this.body.html("");
+      if (Object.keys(this.model.get("permissions")).length === 0) {
+        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
+        return this.body.append(permissionsDiv);
+      } else {
+        _ref = this.model.get("permissions");
+        _results = [];
+        for (docType in _ref) {
+          permission = _ref[docType];
+          permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
+          _results.push(this.body.append(permissionsDiv));
+        }
+        return _results;
+      }
+    };
+
+    PopoverPermissionsView.prototype.onCancelClicked = function() {
+      return this.cancelCallback(this.model);
+    };
+
+    PopoverPermissionsView.prototype.onConfirmClicked = function() {
+      return this.confirmCallback(this.model);
+    };
+
+    return PopoverPermissionsView;
+
+  })(BaseView);
   
 });
 window.require.register("widgets/install_button", function(exports, require, module) {
