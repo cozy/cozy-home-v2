@@ -8,8 +8,6 @@ slugify = require "./common/slug"
 # Helpers
 
 send_error = (err, code=500) ->
-
-
     err ?=
         stack:   null
         message: "Server error occured"
@@ -49,8 +47,8 @@ mark_broken = (app, err) ->
 # Define random function for application's token
 randomString = (length) ->
     string = ""
-    while (string.length < length) 
-      string = string + Math.random().toString(36).substr(2)
+    while (string.length < length)
+        string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
 # Load application corresponding to slug given in params
@@ -102,7 +100,7 @@ action "install", ->
 
         return send_error err, 500 if err
 
-        if apps.length > 0 or body.slug is "proxy" or 
+        if apps.length > 0 or body.slug is "proxy" or
                 body.slug is "home" or body.slug is "data-system"
             err = new Error "There is already an app with similar name"
             return send_error err, 400
