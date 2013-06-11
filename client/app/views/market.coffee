@@ -95,6 +95,7 @@ module.exports = class MarketView extends BaseView
                 return true
         return false
 
+    # parse git url before install application
     parsedGit: (app) ->
         if @isInstalling()
             msg = 'An application is already installing. Wait it '
@@ -111,6 +112,7 @@ module.exports = class MarketView extends BaseView
                     app: application
                 @showDescription data
 
+    # pop up with application description
     showDescription: (appWidget) ->
         @popover = new PopoverDescriptionView
             model: appWidget.app
@@ -121,6 +123,7 @@ module.exports = class MarketView extends BaseView
                 @popover.remove()
         @$el.append @popover.$el
 
+    # pop up with application permissions
     showPermissions: (appWidget) ->
         @popover = new PopoverPermissionsView
             model: appWidget.app
@@ -133,10 +136,15 @@ module.exports = class MarketView extends BaseView
         @$el.append @popover.$el
 
     hideApplication: (appWidget, callback) =>
-        @$el.fadeOut =>
-            setTimeout =>
-                callback()
-            , 600
+        # Test if application is installed by the market
+        # or directly with a repo github
+        if appWidget.$el?
+            appWidget.$el.fadeOut =>
+                setTimeout =>
+                    callback()
+                , 600
+        else
+            callback()
 
     runInstallation: (application) =>
         return true if @isInstalling()

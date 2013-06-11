@@ -2051,11 +2051,15 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
       var _this = this;
-      return this.$el.fadeOut(function() {
-        return setTimeout(function() {
-          return callback();
-        }, 600);
-      });
+      if (appWidget.$el != null) {
+        return appWidget.$el.fadeOut(function() {
+          return setTimeout(function() {
+            return callback();
+          }, 600);
+        });
+      } else {
+        return callback();
+      }
     };
 
     MarketView.prototype.runInstallation = function(application) {
