@@ -1,9 +1,7 @@
-haibu = require('haibu-api')
 fs = require 'fs'
 HttpClient = require("request-json").JsonClient
 MemoryManager = require("./memory").MemoryManager
-controllerUrl = "http://localhost:9002/"
-controllerClient = new HttpClient controllerUrl
+ControllerClient = require("cozy-clients").ControllerClient
 
 
 # Class to facilitate communications with Haibu, the application server
@@ -18,59 +16,23 @@ class exports.AppManager
     # Setup controller client and proxyClient.
     constructor: ->
         @proxyClient = new HttpClient "http://localhost:9104/"
-        @controllerClient = new HttpClient "http://localhost:9002/"
+        @client = new ControllerClient
+            token: @getAuthController()
         @memoryManager = new MemoryManager()
-        @client = {}
 
-        getAuthController = (callback) ->
-            if process.env.NODE_ENV is 'production'
-                fs.readFile '/etc/cozy/controller.token', 'utf8', (err, data) =>
-                    if err isnt null
-                        console.log "Cannot read token"
-                        callback err
-                    else
-                        token = data.split('\n')[0]
-                        callback null, token
-            else
-                callback null, ""
-
-        @client.brunch = (manifest, callback) =>
-            data = brunch: manifest
-            getAuthController (err, token) =>
-                controllerClient.setToken token
-                controllerClient.post "drones/#{manifest.name}/brunch", data, callback
-
-        @client.startApp = (manifest, callback) ->
-            data = start: manifest
-            getAuthController (err, token) =>
-                controllerClient.setToken token
-                controllerClient.post "drones/#{manifest.name}/start", data, callback
-
-        # Send a uninstall request to controller server ("clean" request).
-        @client.uninstallApp = (manifest, callback) ->
-            data = manifest
-            getAuthController (err, token) =>
-                controllerClient.setToken token
-                controllerClient.post "drones/#{manifest.name}/clean", data, callback
-
-        # Send a stop request to controller server
-        @client.stopApp = (manifest, callback) ->
-            data = stop: manifest
-            getAuthController (err, token) =>
-                controllerClient.setToken token
-                controllerClient.post "drones/#{manifest.name}/stop", data, callback
-
-        @client.lightUpdate = (manifest, callback) ->
-            data = update: manifest
-            getAuthController (err, token) =>
-                controllerClient.setToken token
-                controllerClient.post "drones/#{manifest.name}/light-update", data, callback
-
-        @client.updateApp = (manifest, callback) ->
-            data = update: manifest
-            getAuthController (err, token) =>
-                controllerClient.setToken token
-                controllerClient.post "drones/#{manifest.name}/update", data, callback
+    # Get token from token file if in production mode.
+    getAuthController: ->
+        if process.env.NODE_ENV is 'production'
+            try
+                token = fs.readFileSync '/etc/cozy/controller.token', 'utf8'
+                token = token.split('\n')[0]
+                return token
+            catch err
+                console.log err.message
+                console.log err.stack
+                return null
+        else
+            return ""
 
     checkMemory: (callback) ->
         @memoryManager.isEnoughMemory (err, enoughMemory) =>
@@ -107,10 +69,10 @@ reseting routes"
         console.info "with manifest : "
         console.info JSON.stringify manifest
 
-        @checkMemory (err) ->
+        @checkMemory (err) =>
             return callback err if err
 
-            @client.startApp manifest, (err, res, body) =>
+            @client.start manifest, (err, res, body) =>
 
                 err ?= new Error body.error.message unless status2XX res
 
@@ -143,7 +105,9 @@ reseting routes"
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for cleaning #{app.name}..."
 
-        @client.uninstallApp manifest, (err, res, body) =>
+        console.log @client
+
+        @client.clean manifest, (err, res, body) =>
 
             err ?= new Error body.error.message unless status2XX res
 
@@ -161,15 +125,11 @@ reseting routes"
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for starting #{app.name}..."
 
-        @client.stopApp manifest, (err, res, body) =>
-            # ignore stop errors
-
+        @client.stop app.slug, (err, res, body) =>
             @checkMemory (err) ->
-
                 return callback err if err
 
-                @client.startApp manifest, (err, res, body) =>
-
+                @client.start manifest, (err, res, body) =>
                     err ?= new Error body.error.message unless status2XX res
 
                     if err
@@ -186,8 +146,7 @@ reseting routes"
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for stopping #{app.name}..."
 
-        @client.stopApp manifest, (err,res, body) =>
-
+        @client.stop app.slug, (err,res, body) =>
             err ?= new Error body.error.message unless status2XX res
 
             if err
