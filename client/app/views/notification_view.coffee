@@ -9,6 +9,9 @@ module.exports = class NotificationView extends BaseView
         "click .doaction": "doaction"
         "click .dismiss" : "dismiss"
 
+    initialize: ->
+        @listenTo @model, 'change', @render
+
     doaction: ->
         action = @model.get 'resource'
         if typeof action is 'string'
