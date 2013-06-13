@@ -28,6 +28,6 @@ module.exports = class NotificationView extends BaseView
         @dismiss() if @model.get('type') is 'temporary'
 
     dismiss: (event) ->
-        event.preventDefault()
-        event.stopPropagation()
+        event?.preventDefault()
+        event?.stopPropagation()
         @model.destroy()

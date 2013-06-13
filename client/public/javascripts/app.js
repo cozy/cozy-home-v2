@@ -2389,8 +2389,12 @@ window.require.register("views/notification_view", function(exports, require, mo
     };
 
     NotificationView.prototype.dismiss = function(event) {
-      event.preventDefault();
-      event.stopPropagation();
+      if (event != null) {
+        event.preventDefault();
+      }
+      if (event != null) {
+        event.stopPropagation();
+      }
       return this.model.destroy();
     };
 
