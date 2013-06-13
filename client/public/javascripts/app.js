@@ -2349,6 +2349,10 @@ window.require.register("views/notification_view", function(exports, require, mo
       "click .dismiss": "dismiss"
     };
 
+    NotificationView.prototype.initialize = function() {
+      return this.listenTo(this.model, 'change', this.render);
+    };
+
     NotificationView.prototype.doaction = function() {
       var action, url;
       action = this.model.get('resource');
