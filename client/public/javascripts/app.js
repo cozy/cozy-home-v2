@@ -217,6 +217,20 @@ window.require.register("collections/notifications", function(exports, require, 
 
     NotificationCollection.prototype.url = 'api/notifications';
 
+    NotificationCollection.prototype.removeAll = function(options) {
+      var success,
+        _this = this;
+      if (options == null) {
+        options = {};
+      }
+      success = options.success;
+      options.success = function() {
+        _this.reset([]);
+        return success != null ? success.apply(_this, arguments) : void 0;
+      };
+      return this.sync('delete', this, options);
+    };
+
     return NotificationCollection;
 
   })(Backbone.Collection);
@@ -625,6 +639,7 @@ window.require.register("lib/view_collection", function(exports, require, module
         view = _ref[id];
         view.remove();
       }
+      this.checkIfEmpty(this.views);
       return newcollection.forEach(this.addItem);
     };
 
@@ -1001,7 +1016,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li></ul>');
+  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li><li id="dismiss-all">Dismiss All</li></ul>');
   }
   return buf.join("");
   };
@@ -2373,7 +2388,9 @@ window.require.register("views/notification_view", function(exports, require, mo
       }
     };
 
-    NotificationView.prototype.dismiss = function() {
+    NotificationView.prototype.dismiss = function(event) {
+      event.preventDefault();
+      event.stopPropagation();
       return this.model.destroy();
     };
 
@@ -2423,7 +2440,8 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.events = {
       "click #notifications-toggle": "showNotifList",
-      "click #clickcatcher": "hideNotifList"
+      "click #clickcatcher": "hideNotifList",
+      "click #dismiss-all": "dismissAll"
     };
 
     NotificationsView.prototype.initialize = function() {
@@ -2470,6 +2488,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       var newCount;
       newCount = this.collection.length;
       this.$('#no-notif-msg').toggle(newCount === 0);
+      this.$('#dismiss-all').toggle(newCount !== 0);
       if (newCount === 0) {
         newCount = "";
       }
@@ -2492,6 +2511,10 @@ window.require.register("views/notifications_view", function(exports, require, m
         this.notifList.show();
         return this.clickcatcher.show();
       }
+    };
+
+    NotificationsView.prototype.dismissAll = function() {
+      return this.collection.removeAll();
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
