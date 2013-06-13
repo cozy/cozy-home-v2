@@ -54,6 +54,7 @@ module.exports = class ViewCollection extends BaseView
     # event listener for reset
     onReset: (newcollection) ->
         view.remove() for id, view of @views
+        @checkIfEmpty @views
         newcollection.forEach @addItem
 
     # event listeners for add

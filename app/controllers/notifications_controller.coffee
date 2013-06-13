@@ -5,6 +5,13 @@ action 'all', ->
         else
             send notifs
 
+action 'deleteAll', ->
+    Notification.destroyAll (err) ->
+        if err
+            send 'Server error', 500
+        else
+            send '', 204
+
 action 'show', ->
     Notification.find req.params.id, (err, notif) =>
         if err

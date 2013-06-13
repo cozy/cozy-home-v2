@@ -24,6 +24,7 @@ exports.routes = (map) ->
     map.get  '/api/notifications'               , 'notifications#all'
     map.get  '/api/notifications/:id'           , 'notifications#show'
     map.del  '/api/notifications/:id'           , 'notifications#delete'
+    map.del  '/api/notifications'               , 'notifications#deleteAll'
 
     # exernal notification API
     # (to be used by other apps)
