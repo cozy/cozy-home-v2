@@ -12,7 +12,7 @@ class exports.PermissionsManager
         # Download file with application's permissions
         path = (app.git).substring(19, (app.git.length - 4))
         path = "https://raw.github.com/" + path + '/master/package.json'
-        options = 
+        options =
             host: url.parse(path).host
             path: url.parse(path).path
         config = ""
@@ -22,8 +22,8 @@ class exports.PermissionsManager
                     config = JSON.parse(data)
                 ).on 'end', () =>
                     # Read application's permissions
-                    if config.permissions?
-                        @docTypes = config.permissions
+                    if config["cozy-permissions"]?
+                        @docTypes = config["cozy-permissions"]
                     callback null, @docTypes
             else
                 callback null, {}
