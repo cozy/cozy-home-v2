@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+    - "0.8"
+services:
+    - couchdb
+env:
+    global:
+        - NODE_ENV=test
+before_install:
+    - git clone git://github.com/mycozycloud/cozy-data-system.git
+    - cd cozy-data-system 
+    - npm install
+    - pwd
+    - start-stop-daemon --start --chdir /home/travis/build/mycozycloud/cozy-contacts/cozy-data-system/ --exec /home/travis/build/mycozycloud/cozy-contacts/cozy-data-system/server.coffee -b
+    - ps aux | grep coffee
+    - sleep 3
+    - curl http://localhost:9101/
+    - cd ..

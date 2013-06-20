@@ -29,9 +29,12 @@ runTests = (fileList) ->
   command = "mocha " + fileList.join(" ") + " --reporter spec "
   command += "--compilers coffee:coffee-script --colors"
   exec command, (err, stdout, stderr) ->
+    console.log stdout
     if err
       console.log "Running mocha caught exception: \n" + err
-    console.log stdout
+      process.exit 1
+    else
+      process.exit 0
 
 option '-f', '--file [FILE]', 'test file to run'
 
