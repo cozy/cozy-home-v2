@@ -11,7 +11,7 @@ before_install:
     - cd cozy-data-system 
     - npm install
     - pwd
-    - start-stop-daemon --start --chdir /home/travis/build/mycozycloud/cozy-home/cozy-data-system/ --exec /home/travis/build/mycozycloud/cozy-contacts/cozy-data-system/server.coffee -b
+    - start-stop-daemon --start --chdir /home/travis/build/mycozycloud/cozy-home/cozy-data-system/ --exec /home/travis/build/mycozycloud/cozy-home/cozy-data-system/server.coffee -b
     - ps aux | grep coffee
     - sleep 3
     - curl http://localhost:9101/
