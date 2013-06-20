@@ -8,6 +8,9 @@ CozyInstance = null
 Notification = null
 User = null
 
+process.env.NAME = "home"
+process.env.TOKEN = "token"
+
 helpers = {}
 
 # init the compound application
@@ -73,11 +76,12 @@ helpers.fakeServer = (json, code=200) ->
 
 helpers.getClient = (port, context) ->
     old = new Client "http://localhost:#{port}/"
+    old.setBasicAuth "proxy", "token"
 
     store = if context? then context else {}
 
     callbackFactory = (done) -> (error, response, body) =>
-        throw error if error? and not body
+        #throw error if error? and not body
         store.response = response
         store.body = body
         done()

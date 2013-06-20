@@ -17,8 +17,11 @@ describe 'Modify account failure', ->
         @client = helpers.getClient TESTPORT, @
         @dataClient = helpers.getClient 9101, @
 
-    it "When I disconnected user", (done) ->
-        @dataClient.del 'accounts/', done 
+    it "When I send a request to log in", (done) ->
+        @dataClient.post 'accounts/password/', password: TESTPASS , done
+
+    it "And I disconnected user", (done) ->
+        @dataClient.del "accounts/", done
 
     it 'And I try to change my password with user disconnected', (done) ->
         data =
