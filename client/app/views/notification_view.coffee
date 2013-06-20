@@ -9,6 +9,9 @@ module.exports = class NotificationView extends BaseView
         "click .doaction": "doaction"
         "click .dismiss" : "dismiss"
 
+    initialize: ->
+        @listenTo @model, 'change', @render
+
     doaction: ->
         action = @model.get 'resource'
         if typeof action is 'string'
@@ -24,5 +27,7 @@ module.exports = class NotificationView extends BaseView
         window.app.routers.main.navigate url, true if url
         @dismiss() if @model.get('type') is 'temporary'
 
-    dismiss: ->
+    dismiss: (event) ->
+        event?.preventDefault()
+        event?.stopPropagation()
         @model.destroy()

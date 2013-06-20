@@ -5,6 +5,13 @@ action 'all', ->
         else
             send notifs
 
+action 'deleteAll', ->
+    Notification.destroyAll (err) ->
+        if err
+            send 'Server error', 500
+        else
+            send '', 204
+
 action 'show', ->
     Notification.find req.params.id, (err, notif) =>
         if err
@@ -25,7 +32,7 @@ action 'delete', ->
                 if err
                     send 'Server error', 500
                 else
-                    send 'USELESS TEXT', 204
+                    send 'Notification deleted', 204
 
 action 'create', ->
 
@@ -40,7 +47,7 @@ action 'create', ->
         if err
             send 'Server error while creating notification.', 500
         else
-            send success:'Notification created', 201
+            send success: 'Notification created', 201
 
 action 'updateOrCreate', ->
 

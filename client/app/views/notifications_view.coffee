@@ -13,7 +13,8 @@ module.exports = class NotificationsView extends ViewCollection
 
     events:
         "click #notifications-toggle": "showNotifList"
-        "click #clickcatcher": "hideNotifList"
+        "click #clickcatcher"        : "hideNotifList"
+        "click #dismiss-all"         : "dismissAll"
 
     initialize: ->
         @collection ?= new NotificationCollection()
@@ -52,6 +53,7 @@ module.exports = class NotificationsView extends ViewCollection
     checkIfEmpty: =>
         newCount = @collection.length
         @$('#no-notif-msg').toggle(newCount is 0)
+        @$('#dismiss-all').toggle(newCount isnt 0)
         newCount = "" if newCount is 0 #hide 0 counter
         @counter.html newCount
 
@@ -69,6 +71,9 @@ module.exports = class NotificationsView extends ViewCollection
             @$el.addClass 'active'
             @notifList.show()
             @clickcatcher.show()
+
+    dismissAll: () ->
+        @collection.removeAll()
 
     hideNotifList: (event) =>
         @notifList.hide()

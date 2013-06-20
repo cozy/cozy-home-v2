@@ -6308,6 +6308,20 @@ html {
   -webkit-box-shadow: 1px 1px 3px #444;
   box-shadow: 1px 1px 3px #444;
 }
+#notifications-container #notifications #dismiss-all {
+  text-align: center;
+  background-color: #a5afaf;
+  margin-top: 5px;
+  padding-top: 5px;
+  clear: both;
+  line-height: 25px;
+  color: #fff;
+  cursor: pointer;
+}
+#notifications-container #notifications #dismiss-all:hover {
+  background-color: #dfae73;
+  color: #000;
+}
 #notifications-container #notifications .notification a.dismiss {
   float: right;
   width: 20px;

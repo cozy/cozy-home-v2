@@ -183,6 +183,13 @@ window.require.register("collections/application", function(exports, require, mo
           git: "https://github.com/frankrousseau/cozy-nirc.git",
           comment: "community contribution",
           description: "Access to your favorite IRC channel from your Cozy"
+        }, {
+          icon: "img/main_icon.png",
+          name: "IRC BotManager",
+          slug: "irc-botmanager",
+          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
+          comment: "community contribution",
+          description: "A friendly bot to help you manage an IRC channel"
         }
       ];
       this.reset(apps);
@@ -216,6 +223,20 @@ window.require.register("collections/notifications", function(exports, require, 
     NotificationCollection.prototype.model = Notification;
 
     NotificationCollection.prototype.url = 'api/notifications';
+
+    NotificationCollection.prototype.removeAll = function(options) {
+      var success,
+        _this = this;
+      if (options == null) {
+        options = {};
+      }
+      success = options.success;
+      options.success = function() {
+        _this.reset([]);
+        return success != null ? success.apply(_this, arguments) : void 0;
+      };
+      return this.sync('delete', this, options);
+    };
 
     return NotificationCollection;
 
@@ -625,6 +646,7 @@ window.require.register("lib/view_collection", function(exports, require, module
         view = _ref[id];
         view.remove();
       }
+      this.checkIfEmpty(this.views);
       return newcollection.forEach(this.addItem);
     };
 
@@ -1001,7 +1023,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li></ul>');
+  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li><li id="dismiss-all">Dismiss All</li></ul>');
   }
   return buf.join("");
   };
@@ -1978,7 +2000,7 @@ window.require.register("views/market", function(exports, require, module) {
         data = {
           git: this.$("#app-git-field").val()
         };
-        this.runInstallation(data, this.installAppButton);
+        this.parsedGit(data);
         event.preventDefault();
         return false;
       }
@@ -1996,32 +2018,40 @@ window.require.register("views/market", function(exports, require, module) {
       return false;
     };
 
-    MarketView.prototype.showDescription = function(appWidget) {
-      var msg, parsed,
-        _this = this;
+    MarketView.prototype.parsedGit = function(app) {
+      var application, data, msg, parsed;
       if (this.isInstalling()) {
         msg = 'An application is already installing. Wait it ';
         msg += 'finishes, then run your installation again';
         return alert(msg);
       } else {
-        parsed = this.parseGitUrl(appWidget.app.get('git'));
+        parsed = this.parseGitUrl(app.git);
         if (parsed.error) {
           return this.displayError(parsed.msg);
         } else {
           this.hideError();
-          this.popover = new PopoverDescriptionView({
-            model: appWidget.app,
-            confirm: function(application) {
-              _this.popover.remove();
-              return _this.showPermissions(appWidget);
-            },
-            cancel: function(application) {
-              return _this.popover.remove();
-            }
-          });
-          return this.$el.append(this.popover.$el);
+          application = new Application(parsed);
+          data = {
+            app: application
+          };
+          return this.showDescription(data);
         }
       }
+    };
+
+    MarketView.prototype.showDescription = function(appWidget) {
+      var _this = this;
+      this.popover = new PopoverDescriptionView({
+        model: appWidget.app,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.showPermissions(appWidget);
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
     };
 
     MarketView.prototype.showPermissions = function(appWidget) {
@@ -2043,11 +2073,15 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
       var _this = this;
-      return appWidget.$el.fadeOut(function() {
-        return setTimeout(function() {
-          return callback();
-        }, 600);
-      });
+      if (appWidget.$el != null) {
+        return appWidget.$el.fadeOut(function() {
+          return setTimeout(function() {
+            return callback();
+          }, 600);
+        });
+      } else {
+        return callback();
+      }
     };
 
     MarketView.prototype.runInstallation = function(application) {
@@ -2337,6 +2371,10 @@ window.require.register("views/notification_view", function(exports, require, mo
       "click .dismiss": "dismiss"
     };
 
+    NotificationView.prototype.initialize = function() {
+      return this.listenTo(this.model, 'change', this.render);
+    };
+
     NotificationView.prototype.doaction = function() {
       var action, url;
       action = this.model.get('resource');
@@ -2357,7 +2395,13 @@ window.require.register("views/notification_view", function(exports, require, mo
       }
     };
 
-    NotificationView.prototype.dismiss = function() {
+    NotificationView.prototype.dismiss = function(event) {
+      if (event != null) {
+        event.preventDefault();
+      }
+      if (event != null) {
+        event.stopPropagation();
+      }
       return this.model.destroy();
     };
 
@@ -2407,7 +2451,8 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.events = {
       "click #notifications-toggle": "showNotifList",
-      "click #clickcatcher": "hideNotifList"
+      "click #clickcatcher": "hideNotifList",
+      "click #dismiss-all": "dismissAll"
     };
 
     NotificationsView.prototype.initialize = function() {
@@ -2454,6 +2499,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       var newCount;
       newCount = this.collection.length;
       this.$('#no-notif-msg').toggle(newCount === 0);
+      this.$('#dismiss-all').toggle(newCount !== 0);
       if (newCount === 0) {
         newCount = "";
       }
@@ -2476,6 +2522,10 @@ window.require.register("views/notifications_view", function(exports, require, m
         this.notifList.show();
         return this.clickcatcher.show();
       }
+    };
+
+    NotificationsView.prototype.dismissAll = function() {
+      return this.collection.removeAll();
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
