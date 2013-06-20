@@ -183,6 +183,13 @@ window.require.register("collections/application", function(exports, require, mo
           git: "https://github.com/frankrousseau/cozy-nirc.git",
           comment: "community contribution",
           description: "Access to your favorite IRC channel from your Cozy"
+        }, {
+          icon: "img/main_icon.png",
+          name: "IRC BotManager",
+          slug: "irc-botmanager",
+          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
+          comment: "community contribution",
+          description: "A friendly bot to help you manage an IRC channel"
         }
       ];
       this.reset(apps);

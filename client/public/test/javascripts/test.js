@@ -285,3 +285,6 @@ window.require.register("test/test-helpers", function(exports, require, module) 
   };
   
 });
+window.require('test/application_collection_test');
+window.require('test/application_view_test');
+window.require('test/home_view_test');
