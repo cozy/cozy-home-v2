@@ -184,7 +184,7 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "Access to your favorite IRC channel from your Cozy"
         }, {
-          icon: "img/main_icon.png",
+          icon: "img/botmanager-icon.png",
           name: "IRC BotManager",
           slug: "irc-botmanager",
           git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
