@@ -1,6 +1,5 @@
 should = require('chai').Should()
 expect = require('chai').expect
-redis = require 'redis'
 compoundInstantiator = require('../server')
 helpers = require('./helpers')
 
