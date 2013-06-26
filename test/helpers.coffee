@@ -17,10 +17,14 @@ helpers = {}
 # will create @app in context
 # usage : before helpers.init require '../server'
 helpers.init = (instantiator) -> (done) ->
+    this.timeout 5000
     @app = instantiator()
     @app.compound.on 'models', (models) ->
         {Application, CozyInstance, User, Notification} = models
-        done()
+
+        setTimeout () ->
+            done()
+        , 3000 #wait 3s for defineRequests
 
 # This function remove everythin from the db
 helpers.clearDb = (callback) ->
