@@ -24,6 +24,7 @@ module.exports = class PopoverDescriptionView extends BaseView
         @cancelCallback = options.cancel
 
     afterRender: () ->
+        @model.set "description", ""
         @body = @$ ".modal-body"
         @model.getDescription
             success: (data) =>
@@ -35,9 +36,9 @@ module.exports = class PopoverDescriptionView extends BaseView
         @body.html ""
         description = @model.get("description")
         if description is " "
-            descriptionDiv = $ "<div class='descriptionLine'> <h4> This application has no description </h4> </div>" 
+            descriptionDiv = $ "<div class='descriptionLine'> <h4> This application has no description </h4> </div>"
         else
-            descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>" 
+            descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>"
         @body.append descriptionDiv
 
     onCancelClicked: () =>
