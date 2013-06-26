@@ -17,6 +17,7 @@ helpers = {}
 # will create @app in context
 # usage : before helpers.init require '../server'
 helpers.init = (instantiator) -> (done) ->
+    this.timeout 5000
     @app = instantiator()
     @app.compound.on 'models', (models) ->
         {Application, CozyInstance, User, Notification} = models
