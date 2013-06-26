@@ -1,7 +1,5 @@
 #no-app-message.center
-    p 
-        | You have actually no application installed on your Cozy. 
-        | Go to the <a href="#applications">app store</a> to install a new one!
+    p!= t('no-app-message')
 
 #app-list
 
@@ -9,19 +7,18 @@
   .machine-infos
     .memory
       div
-        | Memory consumption
-        | (Total: <span class="total"></span>)
+        = t('Memory consumption')
+        | &nbsp;(#{t('total')}: <span class="total"></span>)
       .progress
         .bar
 
-    .disk 
+    .disk
       div
-        | Disk consumption 
-        | (total: <span class="total"></span>)
+        = t('Disk consumption')
+        | &nbsp;(#{t('total')} : <span class="total"></span>)
       .progress
         .bar
 
 
   .btn-group
-      button#manage-app-button.btn
-        | manage
+      button#manage-app-button.btn= t('manage')

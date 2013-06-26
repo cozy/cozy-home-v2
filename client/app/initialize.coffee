@@ -11,6 +11,24 @@ class exports.Application extends BrunchApplication
     initialize: ->
         @initializeJQueryExtensions()
 
+        $.ajax('/api/instances/')
+        .done (instances) =>
+            @locale = instances?.rows?[0]?.locale or 'en'
+            @initialize2()
+        .fail =>
+            @locale = 'en'
+            @initialize2()
+
+    initialize2: ->
+        try
+            locales = require 'locales/' + @locale
+        catch err
+            locales = require 'locales/en'
+
+        @polyglot = new Polyglot()
+        @polyglot.extend locales
+        window.t = @polyglot.t.bind @polyglot
+
         @routers = {}
         @mainView =  new MainView()
         @routers.main = new MainRouter()

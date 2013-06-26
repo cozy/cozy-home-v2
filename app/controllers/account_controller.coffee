@@ -8,65 +8,81 @@ EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
     (\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|
     (([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$///
 
+handleError = (msg, code, err) ->
+    console.log err if err
+    send error: true, msg: msg, code
+
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
 action 'updateAccount', ->
-    newEmail = body.email
-    newTimezone = body.timezone
-    oldPassword = body.password0
-    newPassword = body.password1
-    newPassword2 = body.password2
 
-    changeUserData = (user) ->
-        data = {}
+    updateData = (user, body, data, cb) ->
+
+        if body.timezone?
+            data.timezone = body.timezone
+            #TODO CHECK TIMEZONE VALIDITY
+
+        if body.email? and body.email.length > 0
+            if EMAILREGEX.test body.email
+                data.email = body.email
+            else
+                cb null, "Given email is not a proper email"
+
+        if data.timezone or data.email
+            user.updateAttributes data, (err) ->
+                cb err, null
+        else
+            cb null
+
+    updatePassword = (user, body, data, cb) ->
+
+        oldPassword = body.password0
+        newPassword = body.password1
+        newPassword2 = body.password2
+
+
+        unless newPassword? and newPassword.length > 0
+            return cb null
+
         errors = []
 
-        if newEmail? and newEmail.length > 0
-            if EMAILREGEX.test newEmail
-                data.email = newEmail
-            else
-                errors.push "Given email is not a proper email"
+        unless utils.checkPassword(oldPassword, user.password)
+            errors.push "Old password is incorrect."
 
-        if newTimezone?
-            data.timezone = newTimezone
+        unless newPassword == newPassword2
+            errors.push "Passwords don't match."
 
-        if newPassword? and newPassword.length > 0
-            if not utils.checkPassword(oldPassword, user.password)
-                errors.push "Old password is incorrect"
-            else if newPassword.length > 5
-                if newPassword == newPassword2
-                    data.password = utils.cryptPassword newPassword
-                else
-                    errors.push "Passwords don't match."
-            else
-                errors.push "Password is too short."
-
+        unless newPassword.length > 5
+            errors.push "Password is too short."
 
         if errors.length
-            send error: true, msg: errors, 400
-        else
-            adapter.updateKeys newPassword, (err) =>
-                if err
-                    console.log err
-                    send error: true, msg: 'User cannot be updated', 400
-                else
-                    user.updateAttributes data, (err) ->
-                        if err
-                            console.log err
-                            send error: true, msg: 'User cannot be updated', 400
-                        else
-                            send
-                                success: true,
-                                msg: 'Account informations updated successfully'
+            return cb null, errors
+
+        data.password = utils.cryptPassword newPassword
+        adapter.updateKeys newPassword, cb
+
 
     User.all (err, users) ->
-        if err
-            console.log err
-            send error: true, msg: "Server error occured.", 500
-        else if users.length == 0
-            send error: true, msg: "No user registered.", 400
-        else
-            changeUserData users[0]
+        return handleError "Server error occured", 500, err if err
+        return handleError "No user registered", 400 if users.length is 0
+
+        user = users[0]
+        data = {}
+
+        updatePassword user, body, data, (libErr, userErr) =>
+            return handleError "Cant update user", 400, libErr if libErr
+            return send error: true, msg: userErr, 400 if userErr
+
+            updateData user, body, data, (libErr, userErr) =>
+                return handleError "Cant update user", 500, libErr if libErr
+                return send error: true, msg: userErr, 400 if userErr
+
+                send
+                    success: true,
+                    msg: 'Account informations updated successfully'
+
+
+
 
 # Return list of available users
 action 'users', ->
@@ -87,19 +103,23 @@ action 'instances', ->
 # Update Cozy Instance domain, create it if it does not exist.
 action 'updateInstance', ->
     domain = body.domain
-    if domain?
+    locale = body.locale
+    if domain? or locale?
         CozyInstance.all (err, instances) ->
             if err
                 railway.logger.write err
                 send error: true, msg: "Server error occured.", 500
             else if instances.length == 0
-                CozyInstance.create domain: domain, (err, instance) ->
+                data = domain: domain, locale: locale
+                CozyInstance.create data, (err, instance) ->
                     if err
                         railway.logger.write err
                         send error: true, msg: "Server error occured.", 500
-                    send success: "true", msg: "Domain updated.", 200
+                    else
+                        send success: "true", msg: "Domain updated.", 200
             else
-                instances[0].updateAttributes domain: domain, ->
+                data = domain: domain, locale: locale
+                instances[0].updateAttributes data, ->
                     send success: "true", msg: "Domain updated.", 200
     else
         send error: true, msg: "No domain given", 400
