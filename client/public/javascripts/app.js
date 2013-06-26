@@ -2583,6 +2583,7 @@ window.require.register("views/popover_description", function(exports, require, 
 
     PopoverDescriptionView.prototype.afterRender = function() {
       var _this = this;
+      this.model.set("description", "");
       this.body = this.$(".modal-body");
       this.model.getDescription({
         success: function(data) {},
@@ -2662,6 +2663,7 @@ window.require.register("views/popover_permissions", function(exports, require, 
 
     PopoverPermissionsView.prototype.afterRender = function() {
       var _this = this;
+      this.model.set("permissions", "");
       this.body = this.$(".modal-body");
       this.model.getPermissions({
         success: function(data) {
