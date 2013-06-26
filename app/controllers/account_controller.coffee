@@ -20,18 +20,19 @@ action 'updateAccount', ->
 
         if body.timezone?
             data.timezone = body.timezone
+            #TODO CHECK TIMEZONE VALIDITY
 
         if body.email? and body.email.length > 0
             if EMAILREGEX.test body.email
                 data.email = body.email
             else
-                cb "Given email is not a proper email"
+                cb null, "Given email is not a proper email"
 
         if data.timezone or data.email
-            user.updateAttributes data, cb
+            user.updateAttributes data, (err) ->
+                cb err, null
         else
             cb null
-
 
     updatePassword = (user, body, data, cb) ->
 
@@ -43,14 +44,19 @@ action 'updateAccount', ->
         unless newPassword? and newPassword.length > 0
             return cb null
 
+        errors = []
+
         unless utils.checkPassword(oldPassword, user.password)
-            return cb "Old password is incorrect."
+            errors.push "Old password is incorrect."
 
         unless newPassword == newPassword2
-            return cb "Passwords don't match."
+            errors.push "Passwords don't match."
 
         unless newPassword.length > 5
-            return cb "Password is too short."
+            errors.push "Password is too short."
+
+        if errors.length
+            return cb null, errors
 
         data.password = utils.cryptPassword newPassword
         adapter.updateKeys newPassword, cb
@@ -61,14 +67,15 @@ action 'updateAccount', ->
         return handleError "No user registered", 400 if users.length is 0
 
         user = users[0]
-
         data = {}
 
-        updatePassword user, body, data, (err) =>
-            return handleError "Cant update user", 500, err if err
+        updatePassword user, body, data, (libErr, userErr) =>
+            return handleError "Cant update user", 400, libErr if libErr
+            return send error: true, msg: userErr, 400 if userErr
 
-            updateData user, body, data, (err) =>
-                return handleError "Cant update user", 500, err if err
+            updateData user, body, data, (libErr, userErr) =>
+                return handleError "Cant update user", 500, libErr if libErr
+                return send error: true, msg: userErr, 400 if userErr
 
                 send
                     success: true,
@@ -96,19 +103,23 @@ action 'instances', ->
 # Update Cozy Instance domain, create it if it does not exist.
 action 'updateInstance', ->
     domain = body.domain
-    if domain?
+    locale = body.locale
+    if domain? or locale?
         CozyInstance.all (err, instances) ->
             if err
                 railway.logger.write err
                 send error: true, msg: "Server error occured.", 500
             else if instances.length == 0
-                CozyInstance.create domain: domain, (err, instance) ->
+                data = domain: domain, locale: locale
+                CozyInstance.create data, (err, instance) ->
                     if err
                         railway.logger.write err
                         send error: true, msg: "Server error occured.", 500
-                    send success: "true", msg: "Domain updated.", 200
+                    else
+                        send success: "true", msg: "Domain updated.", 200
             else
-                instances[0].updateAttributes domain: domain, ->
+                data = domain: domain, locale: locale
+                instances[0].updateAttributes data, ->
                     send success: "true", msg: "Domain updated.", 200
     else
         send error: true, msg: "No domain given", 400

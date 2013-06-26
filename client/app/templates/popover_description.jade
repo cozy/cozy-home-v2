@@ -1,6 +1,7 @@
-.modal-header Application Description
-.modal-body 
-    <div>  <h4> Download description ... </h4> </div>
-.modal-footer   
-    a#cancelbtn.btn Cancel
-    a#confirmbtn.btn.btn-primary Ok
+.modal-header= t('Application Description')
+.modal-body
+    div
+      h4= t('downloading-description')
+.modal-footer
+    a#cancelbtn.btn= t('Cancel')
+    a#confirmbtn.btn.btn-primary= t('Ok')
