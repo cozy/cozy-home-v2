@@ -1,37 +1,41 @@
 #account-form.well
-  p email
+  p= t('email')
   p.field
     a#account-email-field
-  p timezone
+  p= t('timezone')
   p.field
     a#account-timezone-field
-  p domain
+  p= t('domain')
   p.field
     a#account-domain-field
 
+  p= t('locale')
+  p.field
+    a#account-locale-field
+
   p
-    button#change-password-button.btn Change password
+    button#change-password-button.btn= t('Change password')
 
   #change-password-form
-      p Change password
+      p= t('Change password')
       p
-        label input your current password
+        label= t('input your current password')
         input#account-password0-field(type="password")
 
       p
-        label fill this field to set a new password
+        label= t('fill this field to set a new password')
         input#account-password1-field(type="password")
       p
-        label confirm new password
+        label= t('confirm new password')
         input#account-password2-field(type="password")
-     
+
       p
-        button#account-form-button(class="btn") Send changes
+        button#account-form-button(class="btn")= t('Send Changes')
 
         p.loading-indicator &nbsp;
 
         #account-info.alert.main-alert.alert-success.hide
-            #account-info-text 
+            #account-info-text
 
         #account-error.alert.alert-error.main-alert.hide
-            #account-form-error-text 
+            #account-form-error-text

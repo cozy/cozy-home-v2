@@ -24,6 +24,7 @@ helpers.init = (instantiator) -> (done) ->
 
 # This function remove everythin from the db
 helpers.clearDb = (callback) ->
+    this.timeout 5000
     User.destroyAll (err) ->
         return callback err if err
         Application.destroyAll (err) ->

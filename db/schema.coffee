@@ -10,6 +10,7 @@ User = define 'User', ->
 # Data linked to current CozyInstance
 CozyInstance = define 'CozyInstance', ->
     property 'domain', String
+    property 'locale', String
 
 
 # Application descrbies an application installed inside the Cozy instance.
