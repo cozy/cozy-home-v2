@@ -373,6 +373,14 @@ window.require.register("helpers/client", function(exports, require, module) {
   };
   
 });
+window.require.register("helpers/locales", function(exports, require, module) {
+  
+  exports.locales = {
+    'en': 'English',
+    'fr': 'Français'
+  };
+  
+});
 window.require.register("helpers/timezone", function(exports, require, module) {
   
   exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Maceio", "America/Managua", "America/Manaus", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montreal", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Vostok", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Canada/Atlantic", "Canada/Central", "Canada/Eastern", "Canada/Mountain", "Canada/Newfoundland", "Canada/Pacific", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/Simferopol", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zaporozhye", "Europe/Zurich", "GMT", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Ponape", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Truk", "Pacific/Wake", "Pacific/Wallis", "US/Alaska", "US/Arizona", "US/Central", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific", "UTC"];
@@ -398,8 +406,28 @@ window.require.register("initialize", function(exports, require, module) {
     }
 
     Application.prototype.initialize = function() {
-      var pathToSocketIO, socket, url;
+      var _this = this;
       this.initializeJQueryExtensions();
+      return $.ajax('/api/instances/').done(function(instances) {
+        var _ref, _ref1;
+        _this.locale = (instances != null ? (_ref = instances.rows) != null ? (_ref1 = _ref[0]) != null ? _ref1.locale : void 0 : void 0 : void 0) || 'en';
+        return _this.initialize2();
+      }).fail(function() {
+        _this.locale = 'en';
+        return _this.initialize2();
+      });
+    };
+
+    Application.prototype.initialize2 = function() {
+      var locales, pathToSocketIO, socket, url;
+      try {
+        locales = require('locales/' + this.locale);
+      } catch (err) {
+        locales = require('locales/en');
+      }
+      this.polyglot = new Polyglot();
+      this.polyglot.extend(locales);
+      window.t = this.polyglot.t.bind(this.polyglot);
       this.routers = {};
       this.mainView = new MainView();
       this.routers.main = new MainRouter();
@@ -672,6 +700,81 @@ window.require.register("lib/view_collection", function(exports, require, module
   })(BaseView);
   
 });
+window.require.register("locales/en", function(exports, require, module) {
+  
+  module.exports = {
+    "Home": "Home",
+    "Apps": "Apps",
+    "Account": "Account",
+    "email": "Email",
+    "timezone": "Timezone",
+    "domain": "Domain",
+    "locale": "Locale",
+    "Change password": "Change password",
+    "input your current password": "input your current password",
+    "fill this field to set a new password": "fill this field to set a new password",
+    "confirm new password": "confirm new password",
+    "Send Changes": "Send Changes",
+    "manage": "Manage",
+    "total": "Total",
+    "Memory consumption": "Memory consumption",
+    "Disk consumption": "Disk consumption",
+    "You have no notifications": "You have no notifications",
+    "Dismiss All": "Dismiss all",
+    "add application ?": "add application ?",
+    "Install": "Install",
+    "your app!": "your app!",
+    "community contribution": "community contribution",
+    "official application": "official application",
+    "Application Description": "Application Description",
+    "downloading-description": "Downloading description ...",
+    "downloading-permissions": "Download permissions ...",
+    "Cancel": "Cancel",
+    "Ok": "Ok",
+    "Applications Permissions": "Applications Permissions",
+    "Confirm": "Confirm",
+    "Installing": "Installing",
+    "remove": "remove",
+    "update": "update",
+    "started": "started",
+    "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
+    "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
+    "installed-everything": "You have already installed everything !"
+  };
+  
+});
+window.require.register("locales/fr", function(exports, require, module) {
+  
+  module.exports = {
+    "Home": "Bureau",
+    "Apps": "Apps",
+    "Account": "Réglages",
+    "email": "Email",
+    "timezone": "Fuseau horraire",
+    "domain": "Nom de domaine",
+    "locale": "Langue",
+    "Change password": "Changer de password",
+    "input your current password": "Mot de passe actuel",
+    "fill this field to set a new password": "Nouveau mot de passe",
+    "confirm new password": "Confirmer le nouveau mot de passe",
+    "Send Changes": "Enregistrer",
+    "manage": "Gestion",
+    "total": "Total",
+    "Memory consumption": "Utilisation Memoire",
+    "Disk consumption": "Utilisation Disque",
+    "You have no notifications": "Vous n'avez aucune notification",
+    "Dismiss All": "Ignorer toutes",
+    "add application ?": "Ajouter l'application ?",
+    "Install": "Installer",
+    "your app!": "Votre Application !",
+    "community contribution": "Developpeur Indépendant",
+    "official application": "Application Officielle",
+    "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer de nouvelle !",
+    "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
+    "installed-everything": "You have already installed everything !"
+  };
+  
+});
 window.require.register("models/application", function(exports, require, module) {
   var Application, client,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -903,7 +1006,37 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="account-form" class="well"><p>email</p><p class="field"><a id="account-email-field"></a></p><p>timezone</p><p class="field"><a id="account-timezone-field"></a></p><p>domain</p><p class="field"><a id="account-domain-field"></a></p><p><button id="change-password-button" class="btn">Change password</button></p><div id="change-password-form"><p>Change password</p><p><label>input your current password</label><input id="account-password0-field" type="password"/></p><p><label>fill this field to set a new password</label><input id="account-password1-field" type="password"/></p><p><label>confirm new password</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">Send changes</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"> </div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"> </div></div></p></div></div>');
+  buf.push('<div id="account-form" class="well"><p>');
+  var __val__ = t('email')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="field"><a id="account-email-field"></a></p><p>');
+  var __val__ = t('timezone')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="field"><a id="account-timezone-field"></a></p><p>');
+  var __val__ = t('domain')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="field"><a id="account-domain-field"></a></p><p>');
+  var __val__ = t('locale')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="field"><a id="account-locale-field"></a></p><p><button id="change-password-button" class="btn">');
+  var __val__ = t('Change password')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></p><div id="change-password-form"><p>');
+  var __val__ = t('Change password')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><label>');
+  var __val__ = t('input your current password')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</label><input id="account-password0-field" type="password"/></p><p><label>');
+  var __val__ = t('fill this field to set a new password')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</label><input id="account-password1-field" type="password"/></p><p><label>');
+  var __val__ = t('confirm new password')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">');
+  var __val__ = t('Send Changes')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
   }
   return buf.join("");
   };
@@ -927,7 +1060,19 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center"><p> \nYou have actually no application installed on your Cozy. \nGo to the <a href="#applications">app store</a> to install a new one!</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>Memory consumption\n(Total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"> <div>Disk consumption \n(total: <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">manage</button></div></div>');
+  buf.push('<div id="no-app-message" class="center"><p>');
+  var __val__ = t('no-app-message')
+  buf.push(null == __val__ ? "" : __val__);
+  buf.push('</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
+  var __val__ = t('Memory consumption')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');
+  var __val__ = t('Disk consumption')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ' : <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">');
+  var __val__ = t('manage')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div></div>');
   }
   return buf.join("");
   };
@@ -940,7 +1085,19 @@ window.require.register("templates/home_application", function(exports, require,
   var interp;
   buf.push('<a');
   buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-  buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">Installing</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">remove</button><button class="btn update-app">update</button></div><div><button class="btn btn-large start-stop-btn">started</button></div></div>');
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
+  var __val__ = t('Installing')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
+  var __val__ = t('remove')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button><button class="btn update-app">');
+  var __val__ = t('update')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div><button class="btn btn-large start-stop-btn">');
+  var __val__ = t('started')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div></div>');
   }
   return buf.join("");
   };
@@ -962,7 +1119,22 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application?</div></div><div class="text"><p>Install&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your app!</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">You have already installed everything !</div></div><div class="clearfix"></div>');
+  buf.push('<p>');
+  var __val__ = t('welcome-app-store')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
+  var __val__ = t('add application ?')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div><div class="text"><p>');
+  var __val__ = t('Install')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">');
+  var __val__ = t('your app!')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
+  var __val__ = t('installed-everything')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div><div class="clearfix"></div>');
   }
   return buf.join("");
   };
@@ -975,7 +1147,13 @@ window.require.register("templates/market_application", function(exports, requir
   var interp;
   buf.push('<div class="app-img pull-left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">add application? </div></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">' + escape((interp = app.comment) == null ? '' : interp) + '</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+  buf.push('/></div><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
+  var __val__ = t('add application ?')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  var __val__ = t(app.comment)
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
   }
   return buf.join("");
   };
@@ -986,7 +1164,16 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar-inner clearfix"><h2 id="header-title"><a href="http://cozycloud.cc/" target="_blank" title="home"><img src="img/grey-logo.png" alt="Cozy Cloud Symbol"/></a></h2><div id="buttons"><ul class="nav"><li id="notifications-container"></li><li class="active"><a id="home-button" href="#home"><i class="icon-home"></i><span>&nbsp;Home</span></a></li><li><a id="market-button" href="#applications"><i class="icon-plus"></i><span>&nbsp;Apps</span></a></li><li><a id="account-button" href="#account"><i class="icon-user"></i><span>&nbsp;Account</span></a></li><li><a id="help-button" href="https://forum.cozycloud.cc/" target="_blank"><i class="icon-help">&nbsp;</i></a></li><li><a id="logout-button" href="#logout"><i class="icon-arrow-right"></i></a></li></ul></div></div>');
+  buf.push('<div class="navbar-inner clearfix"><h2 id="header-title"><a href="http://cozycloud.cc/" target="_blank" title="home"><img src="img/grey-logo.png" alt="Cozy Cloud Symbol"/></a></h2><div id="buttons"><ul class="nav"><li id="notifications-container"></li><li class="active"><a id="home-button" href="#home"><i class="icon-home"></i><span>');
+  var __val__ = t('Home')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></a></li><li><a id="market-button" href="#applications"><i class="icon-plus"></i><span>');
+  var __val__ = t('Apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></a></li><li><a id="account-button" href="#account"><i class="icon-user"></i><span>');
+  var __val__ = t('Account')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></a></li><li><a id="help-button" href="https://forum.cozycloud.cc/" target="_blank"><i class="icon-help">&nbsp;</i></a></li><li><a id="logout-button" href="#logout"><i class="icon-arrow-right"></i></a></li></ul></div></div>');
   }
   return buf.join("");
   };
@@ -1023,7 +1210,13 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">You have no notifications</li><li id="dismiss-all">Dismiss All</li></ul>');
+  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  var __val__ = t('You have no notifications')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</li><li id="dismiss-all">');
+  var __val__ = t('Dismiss All')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</li></ul>');
   }
   return buf.join("");
   };
@@ -1034,7 +1227,19 @@ window.require.register("templates/popover_description", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">Application Description</div><div class="modal-body"> \n<div>  <h4> Download description ... </h4> </div></div><div class="modal-footer">  <a id="cancelbtn" class="btn">Cancel</a><a id="confirmbtn" class="btn btn-primary">Ok</a></div>');
+  buf.push('<div class="modal-header">');
+  var __val__ = t('Application Description')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div><div class="modal-body"><div><h4>');
+  var __val__ = t('downloading-description')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
+  var __val__ = t('Cancel')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
+  var __val__ = t('Ok')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a></div>');
   }
   return buf.join("");
   };
@@ -1045,13 +1250,25 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">Applications Permissions</div><div class="modal-body"> \n<div> <h4> Download permissions ... </h4> </div></div><div class="modal-footer"><a id="cancelbtn" class="btn">Cancel</a><a id="confirmbtn" class="btn btn-primary">Confirm</a></div>');
+  buf.push('<div class="modal-header">');
+  var __val__ = t('Applications Permissions')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div><div class="modal-body"><div><h4>');
+  var __val__ = t('Download permissions ...')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
+  var __val__ = t('Cancel')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
+  var __val__ = t('Confirm')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a></div>');
   }
   return buf.join("");
   };
 });
 window.require.register("views/account", function(exports, require, module) {
-  var BaseView, timezones,
+  var BaseView, locales, timezones,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1059,6 +1276,8 @@ window.require.register("views/account", function(exports, require, module) {
   BaseView = require('lib/base_view');
 
   timezones = require('helpers/timezone').timezones;
+
+  locales = require('helpers/locales').locales;
 
   module.exports = exports.AccountView = (function(_super) {
 
@@ -1122,40 +1341,42 @@ window.require.register("views/account", function(exports, require, module) {
             $("#account-password1-field").val(null);
             $("#account-password2-field").val(null);
           } else {
-            _this.displayErrors(JSON.parse(data.responseText).msg);
+            _this.displayErrors(data.msg || data.responseText);
           }
           return _this.loadingIndicator.spin();
         },
         error: function(data) {
           $("#account-password0-field").val(null);
-          _this.displayErrors(JSON.parse(data.responseText).msg);
+          _this.displayErrors(data.msg || data.responseText);
           return _this.loadingIndicator.spin();
         }
       });
     };
 
     AccountView.prototype.submitData = function(form, url) {
-      var _this = this;
+      var d,
+        _this = this;
       if (url == null) {
         url = 'api/user/';
       }
-      return $.ajax({
+      d = new $.Deferred;
+      $.ajax({
         type: 'POST',
         url: url,
         data: form,
         success: function(data) {
-          var d;
-          if (!data.success) {
-            d = new $.Deferred;
-            return d.reject(JSON.parse(data.responseText).msg);
+          if (data.success) {
+            window.location.reload();
+            return d.resolve();
+          } else {
+            return d.reject(data.msg || data.responseText);
           }
         },
         error: function(data) {
-          var d;
-          d = new $.Deferred;
-          return d.reject(JSON.parse(data.responseText).msg);
+          return d.reject(data.msg || data.responseText);
         }
       });
+      return d;
     };
 
     /* Functions
@@ -1175,10 +1396,9 @@ window.require.register("views/account", function(exports, require, module) {
 
     AccountView.prototype.fetchData = function() {
       var _this = this;
-      return $.get("api/users/", function(data) {
-        var timezone, timezoneData, timezoneIndex, _i, _len;
+      $.get("api/users/", function(data) {
+        var timezone, timezoneData, _i, _len;
         _this.emailField.html(data.rows[0].email);
-        timezoneIndex = {};
         _this.timezoneField.html(data.rows[0].timezone);
         timezoneData = [];
         for (_i = 0, _len = timezones.length; _i < _len; _i++) {
@@ -1198,7 +1418,7 @@ window.require.register("views/account", function(exports, require, module) {
           send: 'always',
           value: data.rows[0].email
         });
-        _this.timezoneField.editable({
+        return _this.timezoneField.editable({
           url: function(params) {
             return _this.submitData({
               timezone: params.value
@@ -1209,24 +1429,46 @@ window.require.register("views/account", function(exports, require, module) {
           source: timezoneData,
           value: data.rows[0].timezone
         });
-        return $.get("api/instances/", function(data) {
-          var domain;
-          if ((data.rows != null) && data.rows.length > 0) {
-            domain = data.rows[0].domain;
-          } else {
-            domain = 'no.domain.set';
+      });
+      return $.get("api/instances/", function(data) {
+        var code, domain, instance, locale, localeData, txt, _ref;
+        instance = (_ref = data.rows) != null ? _ref[0] : void 0;
+        domain = (instance != null ? instance.domain : void 0) || 'no.domain.set';
+        locale = (instance != null ? instance.locale : void 0) || 'en';
+        _this.domainField.html(domain);
+        _this.domainField.editable({
+          url: function(params) {
+            return _this.submitData({
+              domain: params.value
+            }, 'api/instance/');
+          },
+          type: 'text',
+          send: 'always',
+          value: domain
+        });
+        _this.localeField.html(locales[locale]);
+        localeData = (function() {
+          var _results;
+          _results = [];
+          for (code in locales) {
+            txt = locales[code];
+            _results.push({
+              value: code,
+              text: txt
+            });
           }
-          _this.domainField.html(domain);
-          return _this.domainField.editable({
-            url: function(params) {
-              return _this.submitData({
-                domain: params.value
-              }, 'api/instance/');
-            },
-            type: 'text',
-            send: 'always',
-            value: domain
-          });
+          return _results;
+        })();
+        return _this.localeField.editable({
+          url: function(params) {
+            return _this.submitData({
+              locale: params.value
+            }, 'api/instance/');
+          },
+          type: 'select',
+          send: 'always',
+          source: localeData,
+          value: locale
         });
       });
     };
@@ -1240,6 +1482,7 @@ window.require.register("views/account", function(exports, require, module) {
       this.emailField = this.$('#account-email-field');
       this.timezoneField = this.$('#account-timezone-field');
       this.domainField = this.$('#account-domain-field');
+      this.localeField = this.$('#account-locale-field');
       this.infoAlert = this.$('#account-info');
       this.infoAlert.hide();
       this.errorAlert = this.$('#account-error');
