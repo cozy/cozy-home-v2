@@ -13,7 +13,8 @@ class exports.Application extends BrunchApplication
 
         $.ajax('/api/instances/')
         .done (instances) =>
-            @locale = instances?.rows?[0]?.locale or 'en'
+            @instance = instances?.rows?[0]
+            @locale = @instance?.locale or 'en'
             @initialize2()
         .fail =>
             @locale = 'en'
@@ -24,6 +25,8 @@ class exports.Application extends BrunchApplication
             locales = require 'locales/' + @locale
         catch err
             locales = require 'locales/en'
+
+        window.app = @
 
         @polyglot = new Polyglot()
         @polyglot.extend locales
@@ -36,7 +39,6 @@ class exports.Application extends BrunchApplication
         # render layout
         #$("body").html @mainView.el
 
-        window.app = @
         Backbone.history.start()
         if Backbone.history.getFragment() is ''
             @routers.main.navigate 'home', true
