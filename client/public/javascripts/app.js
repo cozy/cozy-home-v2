@@ -410,7 +410,8 @@ window.require.register("initialize", function(exports, require, module) {
       this.initializeJQueryExtensions();
       return $.ajax('/api/instances/').done(function(instances) {
         var _ref, _ref1;
-        _this.locale = (instances != null ? (_ref = instances.rows) != null ? (_ref1 = _ref[0]) != null ? _ref1.locale : void 0 : void 0 : void 0) || 'en';
+        _this.instance = instances != null ? (_ref = instances.rows) != null ? _ref[0] : void 0 : void 0;
+        _this.locale = ((_ref1 = _this.instance) != null ? _ref1.locale : void 0) || 'en';
         return _this.initialize2();
       }).fail(function() {
         _this.locale = 'en';
@@ -425,13 +426,13 @@ window.require.register("initialize", function(exports, require, module) {
       } catch (err) {
         locales = require('locales/en');
       }
+      window.app = this;
       this.polyglot = new Polyglot();
       this.polyglot.extend(locales);
       window.t = this.polyglot.t.bind(this.polyglot);
       this.routers = {};
       this.mainView = new MainView();
       this.routers.main = new MainRouter();
-      window.app = this;
       Backbone.history.start();
       if (Backbone.history.getFragment() === '') {
         this.routers.main.navigate('home', true);
@@ -2518,15 +2519,19 @@ window.require.register("views/navbar", function(exports, require, module) {
     }
 
     NavbarView.prototype.afterRender = function() {
+      var _ref;
       this.notifications = new NotificationsView();
       this.buttons = this.$('#buttons');
       this.$('#help-button').tooltip({
         placement: 'bottom',
-        title: 'Questions and help forum'
+        title: t('Questions and help forum')
       });
+      if ((_ref = window.app.instance) != null ? _ref.helpUrl : void 0) {
+        this.$('#help-button').attr('href', window.app.instance.helpUrl);
+      }
       this.$('#logout-button').tooltip({
         placement: 'bottom',
-        title: 'Sign out'
+        title: t('Sign out')
       });
       if (this.apps.length > 0) {
         onApplicationListReady(this.apps);
@@ -2563,7 +2568,7 @@ window.require.register("views/navbar", function(exports, require, module) {
       button = this.buttons.find("#" + app.id);
       return button.tooltip({
         placement: 'bottom',
-        title: '<a target="' + app.id + '" href="/apps/' + app.id + '/">open in a new tab</a>',
+        title: '<a target="' + app.id + '" href="/apps/' + app.id + '/">' + t('open in a new tab') + '</a>',
         delay: {
           show: 500,
           hide: 1000

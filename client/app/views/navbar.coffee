@@ -18,11 +18,15 @@ module.exports = class NavbarView extends BaseView
         @buttons = @$('#buttons')
         @$('#help-button').tooltip
              placement: 'bottom'
-             title: 'Questions and help forum'
+             title: t('Questions and help forum')
+
+        if window.app.instance?.helpUrl
+            @$('#help-button').attr 'href', window.app.instance.helpUrl
+
 
         @$('#logout-button').tooltip
              placement: 'bottom'
-             title: 'Sign out'
+             title: t('Sign out')
 
         if @apps.length > 0
             onApplicationListReady(@apps)
@@ -52,7 +56,7 @@ module.exports = class NavbarView extends BaseView
         button.tooltip
              placement: 'bottom'
              title: '<a target="' + app.id + '" href="/apps/' + \
-                    app.id + '/">open in a new tab</a>'
+                    app.id + '/">' + t('open in a new tab') + '</a>'
              delay: show: 500, hide: 1000
 
     # Remove an app button from the navbar
