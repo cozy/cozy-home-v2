@@ -44,7 +44,7 @@ module.exports = class NotificationsView extends ViewCollection
 
         @$('a').tooltip
             placement: 'right'
-            title: 'Notifications'
+            title: t('Notifications')
 
     remove: =>
         $(window).off 'click', @hideNotifList
