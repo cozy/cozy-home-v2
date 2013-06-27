@@ -2734,7 +2734,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       $(window).on('click', this.windowClicked);
       return this.$('a').tooltip({
         placement: 'right',
-        title: 'Notifications'
+        title: t('Notifications')
       });
     };
 
