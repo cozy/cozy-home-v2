@@ -22,6 +22,27 @@ module.exports =
     "your app!"                 : "Votre Application !"
     "community contribution"    : "Developpeur Indépendant"
     "official application"      : "Application Officielle"
+    "Application Description"   : "Description de l'Application"
+    "downloading-description"   : "Téléchargement de la description ..."
+    "downloading-permissions"   : "Téléchargement des permissions..."
+    "Cancel"                    : "Annuler"
+    "Ok"                        : "Ok"
+    "Applications Permissions"  : "Permissions de l'Application"
+    "Confirm"                   : "Confirmer"
+    "Installing"                : "Installation en cours"
+    "remove"                    : "Enlever"
+    "update"                    : "M.A.J."
+    "started"                   : "Démarée"
+    "Notifications"             : "Notifications"
+    "Questions and help forum"  : "Forum d'aide"
+    "Sign out"                  : "Déconnection"
+    "open in a new tab"         : "Ouvrir dans un onglet"
+
+
+    "application-is-installing" : """
+        Une application en cours d'installation.
+        Attendez la fin de celle-ci avant d'en lancer une nouvelle.
+        """
 
     "no-app-message": """
         Vous n'avez aucune application installée. Allez sur

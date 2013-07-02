@@ -738,6 +738,11 @@ window.require.register("locales/en", function(exports, require, module) {
     "remove": "remove",
     "update": "update",
     "started": "started",
+    "Notifications": "Notifications",
+    "Questions and help forum": "Questions and help forum",
+    "Sign out": "Sign out",
+    "open in a new tab": "open in a new tab",
+    "application-is-installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
     "installed-everything": "You have already installed everything !"
@@ -770,6 +775,22 @@ window.require.register("locales/fr", function(exports, require, module) {
     "your app!": "Votre Application !",
     "community contribution": "Developpeur Indépendant",
     "official application": "Application Officielle",
+    "Application Description": "Description de l'Application",
+    "downloading-description": "Téléchargement de la description ...",
+    "downloading-permissions": "Téléchargement des permissions...",
+    "Cancel": "Annuler",
+    "Ok": "Ok",
+    "Applications Permissions": "Permissions de l'Application",
+    "Confirm": "Confirmer",
+    "Installing": "Installation en cours",
+    "remove": "Enlever",
+    "update": "M.A.J.",
+    "started": "Démarée",
+    "Notifications": "Notifications",
+    "Questions and help forum": "Forum d'aide",
+    "Sign out": "Déconnection",
+    "open in a new tab": "Ouvrir dans un onglet",
+    "application-is-installing": "Une application en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer de nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed-everything": "You have already installed everything !"
@@ -1255,7 +1276,7 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var __val__ = t('Applications Permissions')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('Download permissions ...')
+  var __val__ = t('downloading-permissions')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
   var __val__ = t('Cancel')
@@ -2235,11 +2256,9 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.onInstallClicked = function(event) {
-      var data, msg;
+      var data;
       if (this.isInstalling()) {
-        msg = 'An application is already installing. Wait it ';
-        msg += 'finishes, then run your installation again';
-        return alert(msg);
+        return alert(t("application-is-installing"));
       } else {
         data = {
           git: this.$("#app-git-field").val()
@@ -2251,23 +2270,15 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.isInstalling = function() {
-      var app, _i, _len, _ref;
-      _ref = this.installedApps.toArray();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        app = _ref[_i];
-        if ('installing' === app.get('state')) {
-          return true;
-        }
-      }
-      return false;
+      return this.installedApps.where({
+        state: 'installing'
+      }).length !== 0;
     };
 
     MarketView.prototype.parsedGit = function(app) {
-      var application, data, msg, parsed;
+      var application, data, parsed;
       if (this.isInstalling()) {
-        msg = 'An application is already installing. Wait it ';
-        msg += 'finishes, then run your installation again';
-        return alert(msg);
+        return alert(t("application-is-installing"));
       } else {
         parsed = this.parseGitUrl(app.git);
         if (parsed.error) {
@@ -2476,7 +2487,11 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.onMouseoutInstallButton = function() {};
 
     ApplicationRow.prototype.onInstallClicked = function() {
-      return this.marketView.showDescription(this, this.installButton);
+      if (this.marketView.isInstalling()) {
+        return alert(t("application-is-installing"));
+      } else {
+        return this.marketView.showDescription(this, this.installButton);
+      }
     };
 
     return ApplicationRow;

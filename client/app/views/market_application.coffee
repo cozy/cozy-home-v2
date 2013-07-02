@@ -33,5 +33,8 @@ module.exports = class ApplicationRow extends BaseView
             #@$(".app-install-text").hide 'slide', {direction: 'right'}, 300
 
     onInstallClicked: =>
-        @marketView.showDescription this, @installButton
+        if @marketView.isInstalling()
+            alert t "application-is-installing"
+        else
+            @marketView.showDescription this, @installButton
 
