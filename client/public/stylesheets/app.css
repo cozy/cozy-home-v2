@@ -6211,6 +6211,9 @@ html {
 .navbar .nav li a {
   text-shadow: none;
 }
+.navbar .nav li a i {
+  margin-right: 5px;
+}
 .navbar .nav li a:hover {
   text-shadow: none;
   cursor: pointer;
