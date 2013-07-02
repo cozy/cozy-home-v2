@@ -40,7 +40,7 @@ module.exports =
 
 
     "application-is-installing" : """
-        Une application en cours d'installation.
+        Une application est en cours d'installation.
         Attendez la fin de celle-ci avant d'en lancer une nouvelle.
         """
 

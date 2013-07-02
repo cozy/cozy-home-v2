@@ -790,7 +790,7 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Questions and help forum": "Forum d'aide",
     "Sign out": "Déconnection",
     "open in a new tab": "Ouvrir dans un onglet",
-    "application-is-installing": "Une application en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
+    "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer de nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed-everything": "You have already installed everything !"
