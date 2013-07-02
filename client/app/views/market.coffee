@@ -79,9 +79,7 @@ module.exports = class MarketView extends BaseView
 
     onInstallClicked: (event) =>
         if @isInstalling()
-            msg = 'An application is already installing. Wait it '
-            msg += 'finishes, then run your installation again'
-            alert msg
+            alert t "application-is-installing"
         else
             data = git: @$("#app-git-field").val()
 
@@ -90,17 +88,12 @@ module.exports = class MarketView extends BaseView
             false
 
     isInstalling: ->
-        for app in @installedApps.toArray()
-            if 'installing' is app.get 'state'
-                return true
-        return false
+        return @installedApps.where(state:'installing').length isnt 0
 
     # parse git url before install application
     parsedGit: (app) ->
         if @isInstalling()
-            msg = 'An application is already installing. Wait it '
-            msg += 'finishes, then run your installation again'
-            alert msg
+            alert t "application-is-installing"
         else
             parsed = @parseGitUrl app.git
             if parsed.error

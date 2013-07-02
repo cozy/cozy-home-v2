@@ -38,6 +38,12 @@ module.exports =
     "Sign out"                  : "Déconnection"
     "open in a new tab"         : "Ouvrir dans un onglet"
 
+
+    "application-is-installing" : """
+        Une application en cours d'installation.
+        Attendez la fin de celle-ci avant d'en lancer une nouvelle.
+        """
+
     "no-app-message": """
         Vous n'avez aucune application installée. Allez sur
         l'<a href="#applications">app store</a> pour en installer de nouvelle !
