@@ -1276,7 +1276,7 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var __val__ = t('Applications Permissions')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('Download permissions ...')
+  var __val__ = t('downloading-permissions')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
   var __val__ = t('Cancel')
