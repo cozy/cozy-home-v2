@@ -64,5 +64,18 @@ module.exports = (compound) ->
                             else console.log "Domain name set with #{domain}"
                             process.exit 0
                 break
+            when 'getdomain'
+                domain = process.argv[4]
+                CozyInstance.all (err, instances) ->
+                    if err
+                        console.log '{domain:"error"}'
+                        process.exit 1
+                    else if instances.length is 0
+                        console.log '{domain:null}'
+                        process.exit 0
+                    else
+                        console.log "{domain:\"#{instances[0].domain}}\""
+                        process.exit 0
+                break
             else
                 console.log 'Usage: compound database [cleanuser|cleanapps|cleandb|setdomain]'
