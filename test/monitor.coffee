@@ -6,7 +6,7 @@ TESTPORT = 8889
 
 describe "Get sys data", ->
 
-    before helpers.init(compoundInitiator)
+    before helpers.init compoundInitiator
     before ->
         @app.listen(TESTPORT)
         @client = helpers.getClient TESTPORT, @

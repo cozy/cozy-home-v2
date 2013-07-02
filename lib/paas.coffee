@@ -88,17 +88,20 @@ reseting routes"
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for updating #{app.name}..."
 
-        @client.lightUpdate manifest, (err, res, body) ->
+        @checkMemory (err) =>
+            return callback err if err
 
-            err ?= new Error body.error.message unless status2XX res
+            @client.lightUpdate manifest, (err, res, body) ->
 
-            if err
-                console.log "Error updating app: #{app.name}"
-                console.log err.stack
-                callback err
-            else
-                console.info "Successfully updated app: #{app.name}"
-                callback null, body
+                err ?= new Error body.error.message unless status2XX res
+
+                if err
+                    console.log "Error updating app: #{app.name}"
+                    console.log err.stack
+                    callback err
+                else
+                    console.info "Successfully updated app: #{app.name}"
+                    callback null, body
 
     # Send a uninstall request to controller server ("clean" request).
     uninstallApp: (app, callback) ->

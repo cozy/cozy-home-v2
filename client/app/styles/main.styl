@@ -105,7 +105,10 @@ html
 .btn:hover
     background: #EFD6B8
     border-color: 1px solid #EFD6B8
-    //box-shadow: 0 0 8px highlightcolor
+
+.btn:active
+    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
+    background: highlightcolor - 10%
 
 .pressed
     box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
@@ -230,6 +233,9 @@ html
         li
             a
                 text-shadow: none
+
+                i
+                    margin-right 5px
 
             a:hover
                 text-shadow: none
@@ -587,6 +593,7 @@ html
     .app-img
         box-sizing: border-box
         height: 140px
+        width 140px
         background: bgcolor + 40%
         padding: 20px 20px 10px 20px
         margin-right: 10px

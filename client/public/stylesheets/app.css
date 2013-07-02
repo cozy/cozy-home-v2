@@ -6075,6 +6075,11 @@ html {
   background: #efd6b8;
   border-color: 1px solid #efd6b8;
 }
+.btn:active {
+  -webkit-box-shadow: 1px 3px 2px rgba(0,0,0,0.2) inset, 0 0 0;
+  box-shadow: 1px 3px 2px rgba(0,0,0,0.2) inset, 0 0 0;
+  background: #e7c295;
+}
 .pressed {
   -webkit-box-shadow: 1px 3px 2px rgba(0,0,0,0.2) inset, 0 0 0;
   box-shadow: 1px 3px 2px rgba(0,0,0,0.2) inset, 0 0 0;
@@ -6205,6 +6210,9 @@ html {
 }
 .navbar .nav li a {
   text-shadow: none;
+}
+.navbar .nav li a i {
+  margin-right: 5px;
 }
 .navbar .nav li a:hover {
   text-shadow: none;
@@ -6608,6 +6616,7 @@ html {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 140px;
+  width: 140px;
   background: #abb4b4;
   padding: 20px 20px 10px 20px;
   margin-right: 10px;
