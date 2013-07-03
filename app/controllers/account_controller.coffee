@@ -28,7 +28,7 @@ action 'updateAccount', ->
             else
                 cb null, "Given email is not a proper email"
 
-        if data.timezone or data.email
+        if data.timezone or data.email or data.password
             user.updateAttributes data, (err) ->
                 cb err, null
         else
