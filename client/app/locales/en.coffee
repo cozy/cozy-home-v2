@@ -33,6 +33,16 @@ module.exports =
     "remove"                    : "remove"
     "update"                    : "update"
     "started"                   : "started"
+    "Notifications"             : "Notifications"
+    "Questions and help forum"  : "Questions and help forum"
+    "Sign out"                  : "Sign out"
+    "open in a new tab"         : "open in a new tab"
+
+
+    "application-is-installing" : """
+        An application is already installing.
+        Wait for it to finish, then run your installation again.
+        """
 
     "no-app-message": """
         You have actually no application installed on your Cozy.
