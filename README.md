@@ -3,6 +3,8 @@
 Cozy Home manages applications installed on your Cozy platform. It is the
 entry point to all your cozy apps.
 
+[![Build
+Status](https://travis-ci.org/mycozycloud/cozy-home.png?branch=master)](https://travis-ci.org/mycozycloud/cozy-home)
 
 # About Cozy
 
