@@ -785,7 +785,7 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Installing": "Installation en cours",
     "remove": "Enlever",
     "update": "M.À.J.",
-    "started": "Démarée",
+    "started": "Démarrée",
     "Notifications": "Notifications",
     "Questions and help forum": "Forum d'aide",
     "Sign out": "Déconnexion",
