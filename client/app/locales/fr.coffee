@@ -3,18 +3,18 @@ module.exports =
     "Apps"                      : "Apps"
     "Account"                   : "Réglages"
     "email"                     : "Email"
-    "timezone"                  : "Fuseau horraire"
+    "timezone"                  : "Fuseau horaire"
     "domain"                    : "Nom de domaine"
     "locale"                    : "Langue"
-    "Change password"           : "Changer de password"
+    "Change password"           : "Changer de mot de passe"
     "input your current password" : "Mot de passe actuel"
     "fill this field to set a new password" : "Nouveau mot de passe"
     "confirm new password"       : "Confirmer le nouveau mot de passe"
     "Send Changes"              : "Enregistrer"
     "manage"                    : "Gestion"
     "total"                     : "Total"
-    "Memory consumption"        : "Utilisation Memoire"
-    "Disk consumption"          : "Utilisation Disque"
+    "Memory consumption"        : "Utilisation mémoire"
+    "Disk consumption"          : "Utilisation disque"
     "You have no notifications" : "Vous n'avez aucune notification"
     "Dismiss All"               : "Ignorer toutes"
     "add application ?"         : "Ajouter l'application ?"
@@ -23,30 +23,30 @@ module.exports =
     "community contribution"    : "Developpeur Indépendant"
     "official application"      : "Application Officielle"
     "Application Description"   : "Description de l'Application"
-    "downloading-description"   : "Téléchargement de la description ..."
-    "downloading-permissions"   : "Téléchargement des permissions..."
+    "downloading-description"   : "Téléchargement de la description…"
+    "downloading-permissions"   : "Téléchargement des permissions…"
     "Cancel"                    : "Annuler"
     "Ok"                        : "Ok"
     "Applications Permissions"  : "Permissions de l'Application"
     "Confirm"                   : "Confirmer"
     "Installing"                : "Installation en cours"
     "remove"                    : "Enlever"
-    "update"                    : "M.A.J."
-    "started"                   : "Démarée"
+    "update"                    : "M.À.J."
+    "started"                   : "Démarrée"
     "Notifications"             : "Notifications"
     "Questions and help forum"  : "Forum d'aide"
-    "Sign out"                  : "Déconnection"
+    "Sign out"                  : "Déconnexion"
     "open in a new tab"         : "Ouvrir dans un onglet"
 
 
     "application-is-installing" : """
-        Une application en cours d'installation.
+        Une application est en cours d'installation.
         Attendez la fin de celle-ci avant d'en lancer une nouvelle.
         """
 
     "no-app-message": """
         Vous n'avez aucune application installée. Allez sur
-        l'<a href="#applications">app store</a> pour en installer de nouvelle !
+        l'<a href="#applications">app store</a> pour en installer une nouvelle !
         """
 
     "welcome-app-store": """
@@ -54,4 +54,4 @@ module.exports =
         ou ajouter une application existante dans la liste
         """
 
-    "installed-everything": "You have already installed everything !"
+    "installed-everything": "Vous avez déjà tout installé !"
