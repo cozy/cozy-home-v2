@@ -44,7 +44,7 @@ module.exports = class AlarmManager
                             resource: resource
                     else
                         data =
-                            from: "Cozy Agenda"
+                            from: "Cozy Agenda <no-reply@cozycloud.cc>"
                             subject: "[Cozy-Agenda] Reminder"
                             content: "Reminder: #{alarm.description}"
 
