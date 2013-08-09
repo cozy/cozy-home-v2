@@ -26,10 +26,6 @@ module.exports = (compound) ->
         Application.find id, (err, app) ->
             return console.log err.stack if err # no notification, no big deal
             switch app.state
-                when 'installed'
-                    notifhelper.createTemporary
-                        text: "#{app.name} is ready."
-                        resource: {app: app.slug}
                 when 'broken'
                     notifhelper.createTemporary
                         text: "#{app.name}'s installation failled."
