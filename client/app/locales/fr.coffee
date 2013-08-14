@@ -35,7 +35,7 @@ module.exports =
     "started"                   : "Démarrée"
     "Notifications"             : "Notifications"
     "Questions and help forum"  : "Forum d'aide"
-    "Sign out"                  : "Déconnexion"
+    "Sign out"                  : "Sortir"
     "open in a new tab"         : "Ouvrir dans un onglet"
 
 
@@ -55,3 +55,6 @@ module.exports =
         """
 
     "installed-everything": "Vous avez déjà tout installé !"
+    "There is already an app with similar name": """
+        Il y a déjà une application installée avec un nom similaire.
+        """

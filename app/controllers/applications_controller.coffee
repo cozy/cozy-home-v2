@@ -78,14 +78,14 @@ action 'applications', ->
 
 action 'getPermissions', ->
     permissions = new PermissionsManager()
-    permissions.get body, (err, docTypes) => 
+    permissions.get body, (err, docTypes) =>
         app =
             permissions: docTypes
         send succes: true, app: app, 201
 
 action 'getDescription', ->
     description = new DescriptionManager()
-    description.get body, (err, description) => 
+    description.get body, (err, description) =>
         app =
             description: description
         send succes: true, app: app, 201
@@ -109,7 +109,7 @@ action 'read', ->
 # Send an error if an application already has same slug.
 action "install", ->
 
-    body.slug = slugify body.name  
+    body.slug = slugify body.name
     body.state = "installing"
     body.password = randomString 32
 
