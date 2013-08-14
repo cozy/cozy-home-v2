@@ -789,7 +789,7 @@ window.require.register("locales/fr", function(exports, require, module) {
     "started": "Démarrée",
     "Notifications": "Notifications",
     "Questions and help forum": "Forum d'aide",
-    "Sign out": "Déconnexion",
+    "Sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
     "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",

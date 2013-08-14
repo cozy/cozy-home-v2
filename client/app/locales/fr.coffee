@@ -35,7 +35,7 @@ module.exports =
     "started"                   : "Démarrée"
     "Notifications"             : "Notifications"
     "Questions and help forum"  : "Forum d'aide"
-    "Sign out"                  : "Déconnexion"
+    "Sign out"                  : "Sortir"
     "open in a new tab"         : "Ouvrir dans un onglet"
 
 
