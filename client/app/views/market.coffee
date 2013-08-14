@@ -75,7 +75,11 @@ module.exports = class MarketView extends BaseView
 
 
     onEnterPressed: (event) =>
-        @onInstallClicked() if event.which == 13
+        if event.which is 13 and not @popover?.$el.is(':visible')
+            @onInstallClicked()
+        else if event.which is 13
+            @popover?.confirmCallback()
+
 
     onInstallClicked: (event) =>
         if @isInstalling()

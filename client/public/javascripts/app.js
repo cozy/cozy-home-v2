@@ -2252,8 +2252,12 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.onEnterPressed = function(event) {
-      if (event.which === 13) {
+      var _ref, _ref1, _ref2;
+      console.log((_ref = this.popover) != null ? _ref.$el.is(':visible') : void 0);
+      if (event.which === 13 && !((_ref1 = this.popover) != null ? _ref1.$el.is(':visible') : void 0)) {
         return this.onInstallClicked();
+      } else if (event.which === 13) {
+        return (_ref2 = this.popover) != null ? _ref2.confirmCallback() : void 0;
       }
     };
 
