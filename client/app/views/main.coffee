@@ -49,7 +49,7 @@ module.exports = class HomeView extends BaseView
         user = new User()
         user.logout
             success: (data) =>
-                window.location.reload()
+                window.location = window.location.origin
             error: =>
                 alert 'Server error occured, logout failed.'
         event.preventDefault()

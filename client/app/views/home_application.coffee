@@ -40,16 +40,16 @@ module.exports = class ApplicationRow extends BaseView
         switch @model.get 'state'
             when 'broken'
                 @icon.attr 'src', "img/broken.png"
-                @stateLabel.show().text 'broken'
-                @removeButton.displayGrey 'abort'
-                @updateButton.displayGrey 'retry'
+                @stateLabel.show().text t 'broken'
+                @removeButton.displayGrey t 'abort'
+                @updateButton.displayGrey t 'retry'
                 @startStopBtn.hide()
             when 'installed'
                 @icon.attr 'src', "apps/#{app.id}/icons/main_icon.png"
                 @stateLabel.hide()
-                @removeButton.displayGrey 'remove'
-                @updateButton.displayGrey 'update'
-                @startStopBtn.displayGrey 'stop this app'
+                @removeButton.displayGrey t 'remove'
+                @updateButton.displayGrey t 'update'
+                @startStopBtn.displayGrey t 'stop this app'
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"
                 @stateLabel.hide()
@@ -59,10 +59,10 @@ module.exports = class ApplicationRow extends BaseView
                 @startStopBtn.hide()
             when 'stopped'
                 @icon.attr 'src', "img/stopped.png"
-                @stateLabel.show().text 'stopped'
-                @removeButton.displayGrey 'remove'
+                @stateLabel.show().text t 'stopped'
+                @removeButton.displayGrey t 'remove'
                 @updateButton.hide()
-                @startStopBtn.displayGrey 'start this app'
+                @startStopBtn.displayGrey t 'start this app'
 
     onAppClicked: (event) =>
         event.preventDefault()
@@ -75,7 +75,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'installed'
                 @launchApp()
             when 'installing'
-                alert 'this app is being installed. Wait a little'
+                alert t 'this app is being installed. Wait a little'
             when 'stopped'
                 @model.start success: @launchApp
 
@@ -85,14 +85,14 @@ module.exports = class ApplicationRow extends BaseView
         @removeButton.spin true
         @model.uninstall
             success: => @remove()
-            error: => @removeButton.displayRed "failed"
+            error: => @removeButton.displayRed t "failed"
 
     onUpdateClicked: (event) =>
         event.preventDefault()
         @showPopover()
 
     showPopover: () ->
-        @popover = new PopoverPermissionsView 
+        @popover = new PopoverPermissionsView
             model: @model
             confirm: (application) =>
                 @popover.remove()
@@ -127,7 +127,7 @@ module.exports = class ApplicationRow extends BaseView
     remove: =>
         return super unless @model.get('state') is 'installed'
         @removeButton.spin false
-        @removeButton.displayGreen "Removed"
+        @removeButton.displayGreen t "Removed"
         setTimeout =>
             @$el.fadeOut =>
                 super
@@ -139,9 +139,9 @@ module.exports = class ApplicationRow extends BaseView
         @updateButton.spin true
         @model.updateApp
             success: =>
-                @updateButton.displayGreen "Updated"
+                @updateButton.displayGreen t "Updated"
             error: (jqXHR) =>
                 error = JSON.parse(jqXHR.responseText)
                 console.log error
                 alert error.message
-                @updateButton.displayRed "failed"
+                @updateButton.displayRed t "failed"
