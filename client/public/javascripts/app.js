@@ -1752,16 +1752,16 @@ window.require.register("views/home_application", function(exports, require, mod
       switch (this.model.get('state')) {
         case 'broken':
           this.icon.attr('src', "img/broken.png");
-          this.stateLabel.show().text('broken');
-          this.removeButton.displayGrey('abort');
-          this.updateButton.displayGrey('retry');
+          this.stateLabel.show().text(t('broken'));
+          this.removeButton.displayGrey(t('abort'));
+          this.updateButton.displayGrey(t('retry'));
           return this.startStopBtn.hide();
         case 'installed':
           this.icon.attr('src', "apps/" + app.id + "/icons/main_icon.png");
           this.stateLabel.hide();
-          this.removeButton.displayGrey('remove');
-          this.updateButton.displayGrey('update');
-          return this.startStopBtn.displayGrey('stop this app');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('update'));
+          return this.startStopBtn.displayGrey(t('stop this app'));
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
           this.stateLabel.hide();
@@ -1770,10 +1770,10 @@ window.require.register("views/home_application", function(exports, require, mod
           return this.startStopBtn.hide();
         case 'stopped':
           this.icon.attr('src', "img/stopped.png");
-          this.stateLabel.show().text('stopped');
-          this.removeButton.displayGrey('remove');
+          this.stateLabel.show().text(t('stopped'));
+          this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();
-          return this.startStopBtn.displayGrey('start this app');
+          return this.startStopBtn.displayGrey(t('start this app'));
       }
     };
 
@@ -1791,7 +1791,7 @@ window.require.register("views/home_application", function(exports, require, mod
         case 'installed':
           return this.launchApp();
         case 'installing':
-          return alert('this app is being installed. Wait a little');
+          return alert(t('this app is being installed. Wait a little'));
         case 'stopped':
           return this.model.start({
             success: this.launchApp
@@ -1809,7 +1809,7 @@ window.require.register("views/home_application", function(exports, require, mod
           return _this.remove();
         },
         error: function() {
-          return _this.removeButton.displayRed("failed");
+          return _this.removeButton.displayRed(t("failed"));
         }
       });
     };
@@ -1874,7 +1874,7 @@ window.require.register("views/home_application", function(exports, require, mod
         return ApplicationRow.__super__.remove.apply(this, arguments);
       }
       this.removeButton.spin(false);
-      this.removeButton.displayGreen("Removed");
+      this.removeButton.displayGreen(t("Removed"));
       return setTimeout(function() {
         return _this.$el.fadeOut(function() {
           return ApplicationRow.__super__.remove.apply(_this, arguments);
@@ -1889,14 +1889,14 @@ window.require.register("views/home_application", function(exports, require, mod
       this.updateButton.spin(true);
       return this.model.updateApp({
         success: function() {
-          return _this.updateButton.displayGreen("Updated");
+          return _this.updateButton.displayGreen(t("Updated"));
         },
         error: function(jqXHR) {
           var error;
           error = JSON.parse(jqXHR.responseText);
           console.log(error);
           alert(error.message);
-          return _this.updateButton.displayRed("failed");
+          return _this.updateButton.displayRed(t("failed"));
         }
       });
     };
@@ -1989,7 +1989,7 @@ window.require.register("views/main", function(exports, require, module) {
       user = new User();
       user.logout({
         success: function(data) {
-          return window.location.reload();
+          return window.location = window.location.origin + '/login/';
         },
         error: function() {
           return alert('Server error occured, logout failed.');
