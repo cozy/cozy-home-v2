@@ -745,7 +745,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "application-is-installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
-    "installed-everything": "You have already installed everything !"
+    "installed-everything": "You have already installed everything !",
+    "There is already an app with similar name": "There is already an app with similar name."
   };
   
 });
@@ -793,7 +794,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
-    "installed-everything": "Vous avez déjà tout installé !"
+    "installed-everything": "Vous avez déjà tout installé !",
+    "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire."
   };
   
 });
@@ -2357,7 +2359,7 @@ window.require.register("views/market", function(exports, require, module) {
           return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
         },
         error: function(jqXHR) {
-          return alert(JSON.stringify(jqXHR.responseText).message);
+          return alert(t(JSON.parse(jqXHR.responseText).message));
         }
       });
     };
@@ -2459,8 +2461,6 @@ window.require.register("views/market_application", function(exports, require, m
       this.marketView = marketView;
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
-      this.onMouseoutInstallButton = __bind(this.onMouseoutInstallButton, this);
-
       this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
 
       this.afterRender = __bind(this.afterRender, this);
@@ -2483,8 +2483,6 @@ window.require.register("views/market_application", function(exports, require, m
         });
       }
     };
-
-    ApplicationRow.prototype.onMouseoutInstallButton = function() {};
 
     ApplicationRow.prototype.onInstallClicked = function() {
       if (this.marketView.isInstalling()) {

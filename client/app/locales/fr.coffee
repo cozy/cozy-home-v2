@@ -55,3 +55,6 @@ module.exports =
         """
 
     "installed-everything": "Vous avez déjà tout installé !"
+    "There is already an app with similar name": """
+        Il y a déjà une application installée avec un nom similaire.
+        """

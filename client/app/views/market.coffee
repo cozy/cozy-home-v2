@@ -154,7 +154,7 @@ module.exports = class MarketView extends BaseView
                 app?.routers.main.navigate 'home', true
 
             error: (jqXHR) =>
-                alert JSON.stringify(jqXHR.responseText).message
+                alert t JSON.parse(jqXHR.responseText).message
 
     parseGitUrl: (url) ->
         url = url.replace 'git@github.com:', 'https://github.com/'
@@ -167,7 +167,7 @@ module.exports = class MarketView extends BaseView
             return error
 
         [git, proto, domain, path, branch] = parsed
-        path = path.replace('.git', '')
+        path = path.replace '.git', ''
         parts = path.split("/")
         name = parts[parts.length - 1]
         name = name.replace /-|_/g, " "

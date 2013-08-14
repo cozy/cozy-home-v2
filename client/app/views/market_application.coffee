@@ -26,15 +26,8 @@ module.exports = class ApplicationRow extends BaseView
             @$(".app-install-text").show 'slide', {direction: 'right'}, 300, =>
                 @isSliding = false
 
-    onMouseoutInstallButton: =>
-        #if not @isSliding
-            #setTimetout @onMouseoutInstallButton, 200
-        #else
-            #@$(".app-install-text").hide 'slide', {direction: 'right'}, 300
-
     onInstallClicked: =>
         if @marketView.isInstalling()
             alert t "application-is-installing"
         else
             @marketView.showDescription this, @installButton
-
