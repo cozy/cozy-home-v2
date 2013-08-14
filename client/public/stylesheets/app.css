@@ -6023,6 +6023,9 @@ a.editable-click:hover {
   color: #fe8800;
   border-bottom: 1px dashed #eaf1f1;
 }
+.tooltip-inner a:hover {
+  text-decoration: none;
+}
 iframe {
   width: 100%;
   height: 100%;
