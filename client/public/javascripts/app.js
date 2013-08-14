@@ -2252,12 +2252,11 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.onEnterPressed = function(event) {
-      var _ref, _ref1, _ref2;
-      console.log((_ref = this.popover) != null ? _ref.$el.is(':visible') : void 0);
-      if (event.which === 13 && !((_ref1 = this.popover) != null ? _ref1.$el.is(':visible') : void 0)) {
+      var _ref, _ref1;
+      if (event.which === 13 && !((_ref = this.popover) != null ? _ref.$el.is(':visible') : void 0)) {
         return this.onInstallClicked();
       } else if (event.which === 13) {
-        return (_ref2 = this.popover) != null ? _ref2.confirmCallback() : void 0;
+        return (_ref1 = this.popover) != null ? _ref1.confirmCallback() : void 0;
       }
     };
 
@@ -2465,11 +2464,14 @@ window.require.register("views/market_application", function(exports, require, m
       this.marketView = marketView;
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
+      this.onMouseoutInstallButton = __bind(this.onMouseoutInstallButton, this);
+
       this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
 
       this.afterRender = __bind(this.afterRender, this);
 
       ApplicationRow.__super__.constructor.call(this);
+      this.mouseOut = true;
     }
 
     ApplicationRow.prototype.afterRender = function() {
@@ -2477,14 +2479,36 @@ window.require.register("views/market_application", function(exports, require, m
     };
 
     ApplicationRow.prototype.onMouseoverInstallButton = function() {
-      var _this = this;
+      var direction,
+        _this = this;
+      this.mouseOut = false;
       if ($(window).width() > 800) {
-        this.isSliding = true;
-        return this.$(".app-install-text").show('slide', {
-          direction: 'right'
-        }, 300, function() {
-          return _this.isSliding = false;
-        });
+        if (!this.isDisplayed) {
+          direction = {
+            direction: 'right'
+          };
+          return this.$(".app-install-text").show('slide', direction, 300, function() {
+            return _this.isDisplayed = true;
+          });
+        }
+      }
+    };
+
+    ApplicationRow.prototype.onMouseoutInstallButton = function() {
+      var _this = this;
+      this.mouseOut = true;
+      if ($(window).width() > 800) {
+        return setTimeout(function() {
+          var direction;
+          if (_this.isDisplayed && _this.mouseOut) {
+            direction = {
+              direction: 'right'
+            };
+            return _this.$(".app-install-text").hide('slide', direction, 300, function() {
+              return _this.isDisplayed = false;
+            });
+          }
+        }, 500);
       }
     };
 
