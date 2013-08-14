@@ -6023,6 +6023,9 @@ a.editable-click:hover {
   color: #fe8800;
   border-bottom: 1px dashed #eaf1f1;
 }
+.tooltip-inner a:hover {
+  text-decoration: none;
+}
 iframe {
   width: 100%;
   height: 100%;
@@ -6679,7 +6682,7 @@ html {
   margin-top: 20px;
   margin-bottom: 0;
   padding-bottom: 0;
-  line-height: 16px;
+  line-height: 30px;
 }
 #market-view #no-app-message .comment,
 .cozy-app .comment {

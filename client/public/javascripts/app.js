@@ -745,7 +745,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "application-is-installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
-    "installed-everything": "You have already installed everything !"
+    "installed-everything": "You have already installed everything !",
+    "There is already an app with similar name": "There is already an app with similar name."
   };
   
 });
@@ -788,12 +789,13 @@ window.require.register("locales/fr", function(exports, require, module) {
     "started": "Démarrée",
     "Notifications": "Notifications",
     "Questions and help forum": "Forum d'aide",
-    "Sign out": "Déconnexion",
+    "Sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
     "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
-    "installed-everything": "Vous avez déjà tout installé !"
+    "installed-everything": "Vous avez déjà tout installé !",
+    "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire."
   };
   
 });
@@ -2250,8 +2252,11 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.onEnterPressed = function(event) {
-      if (event.which === 13) {
+      var _ref, _ref1;
+      if (event.which === 13 && !((_ref = this.popover) != null ? _ref.$el.is(':visible') : void 0)) {
         return this.onInstallClicked();
+      } else if (event.which === 13) {
+        return (_ref1 = this.popover) != null ? _ref1.confirmCallback() : void 0;
       }
     };
 
@@ -2357,7 +2362,7 @@ window.require.register("views/market", function(exports, require, module) {
           return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
         },
         error: function(jqXHR) {
-          return alert(JSON.stringify(jqXHR.responseText).message);
+          return alert(t(JSON.parse(jqXHR.responseText).message));
         }
       });
     };
@@ -2466,6 +2471,7 @@ window.require.register("views/market_application", function(exports, require, m
       this.afterRender = __bind(this.afterRender, this);
 
       ApplicationRow.__super__.constructor.call(this);
+      this.mouseOut = true;
     }
 
     ApplicationRow.prototype.afterRender = function() {
@@ -2473,18 +2479,38 @@ window.require.register("views/market_application", function(exports, require, m
     };
 
     ApplicationRow.prototype.onMouseoverInstallButton = function() {
-      var _this = this;
+      var direction,
+        _this = this;
+      this.mouseOut = false;
       if ($(window).width() > 800) {
-        this.isSliding = true;
-        return this.$(".app-install-text").show('slide', {
-          direction: 'right'
-        }, 300, function() {
-          return _this.isSliding = false;
-        });
+        if (!this.isDisplayed) {
+          direction = {
+            direction: 'right'
+          };
+          return this.$(".app-install-text").show('slide', direction, 300, function() {
+            return _this.isDisplayed = true;
+          });
+        }
       }
     };
 
-    ApplicationRow.prototype.onMouseoutInstallButton = function() {};
+    ApplicationRow.prototype.onMouseoutInstallButton = function() {
+      var _this = this;
+      this.mouseOut = true;
+      if ($(window).width() > 800) {
+        return setTimeout(function() {
+          var direction;
+          if (_this.isDisplayed && _this.mouseOut) {
+            direction = {
+              direction: 'right'
+            };
+            return _this.$(".app-install-text").hide('slide', direction, 300, function() {
+              return _this.isDisplayed = false;
+            });
+          }
+        }, 500);
+      }
+    };
 
     ApplicationRow.prototype.onInstallClicked = function() {
       if (this.marketView.isInstalling()) {
