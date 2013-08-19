@@ -2151,7 +2151,7 @@ window.require.register("views/market", function(exports, require, module) {
 
   slugify = require('helpers').slugify;
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
 
   module.exports = MarketView = (function(_super) {
 
