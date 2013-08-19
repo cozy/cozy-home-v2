@@ -16,25 +16,31 @@ module.exports = class ApplicationRow extends BaseView
 
     constructor: (@app, @marketView) ->
         super()
+        @mouseOut = true
 
     afterRender: =>
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
 
     onMouseoverInstallButton: =>
+        @mouseOut = false
         if $(window).width() > 800
-            @isSliding = true
-            @$(".app-install-text").show 'slide', {direction: 'right'}, 300, =>
-                @isSliding = false
+            unless @isDisplayed
+                direction = direction: 'right'
+                @$(".app-install-text").show 'slide', direction, 300, =>
+                    @isDisplayed = true
 
     onMouseoutInstallButton: =>
-        #if not @isSliding
-            #setTimetout @onMouseoutInstallButton, 200
-        #else
-            #@$(".app-install-text").hide 'slide', {direction: 'right'}, 300
+        @mouseOut = true
+        if $(window).width() > 800
+            setTimeout =>
+                if @isDisplayed and @mouseOut
+                    direction = direction: 'right'
+                    @$(".app-install-text").hide 'slide', direction, 300, =>
+                        @isDisplayed = false
+            , 500
 
     onInstallClicked: =>
         if @marketView.isInstalling()
             alert t "application-is-installing"
         else
             @marketView.showDescription this, @installButton
-

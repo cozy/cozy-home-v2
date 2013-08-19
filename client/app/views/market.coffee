@@ -75,7 +75,11 @@ module.exports = class MarketView extends BaseView
 
 
     onEnterPressed: (event) =>
-        @onInstallClicked() if event.which == 13
+        if event.which is 13 and not @popover?.$el.is(':visible')
+            @onInstallClicked()
+        else if event.which is 13
+            @popover?.confirmCallback()
+
 
     onInstallClicked: (event) =>
         if @isInstalling()
@@ -154,7 +158,7 @@ module.exports = class MarketView extends BaseView
                 app?.routers.main.navigate 'home', true
 
             error: (jqXHR) =>
-                alert JSON.stringify(jqXHR.responseText).message
+                alert t JSON.parse(jqXHR.responseText).message
 
     parseGitUrl: (url) ->
         url = url.replace 'git@github.com:', 'https://github.com/'
@@ -167,7 +171,7 @@ module.exports = class MarketView extends BaseView
             return error
 
         [git, proto, domain, path, branch] = parsed
-        path = path.replace('.git', '')
+        path = path.replace '.git', ''
         parts = path.split("/")
         name = parts[parts.length - 1]
         name = name.replace /-|_/g, " "
