@@ -26,16 +26,17 @@ module.exports = class PopoverDescriptionView extends BaseView
     afterRender: () ->
         @model.set "description", ""
         @body = @$ ".modal-body"
-        @model.getDescription
-            success: (data) =>
-            error: () =>
-                console.log "error have been called"
-        @listenTo @model, "change:description", @renderDescription
+        @model.getMetaData
+            success: (data) ->
+            error: () ->
+                console.log "Error callback have been called"
+        @listenTo @model, "change", @renderDescription
 
     renderDescription: () =>
         @body.html ""
         description = @model.get("description")
-        if description is " "
+        console.debug @model
+        if description is null
             descriptionDiv = $ "<div class='descriptionLine'> <h4> This application has no description </h4> </div>"
         else
             descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>"

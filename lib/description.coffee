@@ -1,6 +1,7 @@
 fs = require 'fs'
 https = require 'https'
 url = require 'url'
+util = require 'util'
 
 # Class to facilitate application' permissions management
 class exports.DescriptionManager
@@ -12,7 +13,7 @@ class exports.DescriptionManager
         # Download file with application's permissions
         path = (app.git).substring(19, (app.git.length - 4))
         path = "https://raw.github.com/" + path + '/master/package.json'
-        options = 
+        options =
             host: url.parse(path).host
             path: url.parse(path).path
         config = ""
@@ -22,10 +23,24 @@ class exports.DescriptionManager
                     config = JSON.parse(data)
                 ).on 'end', () =>
                     # Read application's permissions
+                    @metaData = {}
+
                     if config.description?
-                        @description = config.description
-                    callback null, @description
+                        @metaData.description = config.description
+
+                    if config.name?
+                        @metaData.name = config.name
+
+                    if config['cozy-displayName']?
+                        @metaData.displayName = config['cozy-displayName']
+                    else
+                        @metaData.displayName = config.name
+
+                    if config['cozy-permissions']?
+                        @metaData.permissions = config['cozy-permissions']
+
+                    callback @metaData
             else
-                callback null, " "
+                callback {code: 404, msgs: ['package.json not found']}, null
         request.on 'error', (error) =>
             callback null, " "

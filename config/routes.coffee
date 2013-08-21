@@ -3,6 +3,7 @@ exports.routes = (map) ->
 
     map.post '/api/applications/getPermissions', 'applications#getPermissions'
     map.post '/api/applications/getDescription', 'applications#getDescription'
+    map.post '/api/applications/getMetaData', 'applications#getMetaData'
 
     map.get  '/api/applications'                , 'applications#applications'
     map.get  '/api/applications/byid/:id'       , 'applications#read'

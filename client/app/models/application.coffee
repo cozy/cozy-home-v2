@@ -76,5 +76,10 @@ module.exports = class Application extends Backbone.Model
         @prepareCallbacks callbacks
         client.post "/api/applications/getDescription", @toJSON(), callbacks
 
+    # Get application's metadata
+    getMetaData: (callbacks) ->
+        @prepareCallbacks callbacks
+        client.post "/api/applications/getMetaData", @toJSON(), callbacks
+
 
 

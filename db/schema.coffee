@@ -17,6 +17,7 @@ CozyInstance = define 'CozyInstance', ->
 # Application descrbies an application installed inside the Cozy instance.
 Application = define 'Application', ->
     property 'name', String
+    property 'displayName', String
     property 'description', String
     property 'slug', String
     property 'state', String
