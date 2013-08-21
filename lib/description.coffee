@@ -24,20 +24,12 @@ class exports.DescriptionManager
                 ).on 'end', () =>
                     # Read application's permissions
                     @metaData = {}
-                    err = []
 
                     if config.description?
                         @metaData.description = config.description
-                    else
-                        msg = 'package.json > description field is mandatory.'
-                        err.push msg
-                        console.log msg
 
                     if config.name?
                         @metaData.name = config.name
-                    else
-                        err.push 'package.json > name field is mandatory.'
-                        console.log "name field mandatory"
 
                     if config['cozy-displayName']?
                         @metaData.displayName = config['cozy-displayName']
@@ -46,17 +38,8 @@ class exports.DescriptionManager
 
                     if config['cozy-permissions']?
                         @metaData.permissions = config['cozy-permissions']
-                    else
-                        msg =  'package.json > permissions field is mandatory.'
-                        err.push msg
-                        console.log msg
 
-                    if err.length > 0
-                        code = 412
-                    else
-                        code = 200
-
-                    callback {code: code, msgs: err}, @metaData
+                    callback @metaData
             else
                 callback {code: 404, msgs: ['package.json not found']}, null
         request.on 'error', (error) =>
