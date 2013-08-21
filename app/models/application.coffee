@@ -19,7 +19,6 @@ module.exports = (compound, Application) ->
         descriptor =
             user: @slug
             name: @slug
-            displayName: @displayName
             domain: "127.0.0.1"
             repository:
                 type: "git",
