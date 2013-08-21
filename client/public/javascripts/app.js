@@ -149,13 +149,6 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "official application",
           description: "Write your tasks, order them and execute them efficiently."
         }, {
-          icon: "img/mails-icon.png",
-          name: "mails",
-          slug: "mails",
-          git: "https://github.com/mycozycloud/cozy-mails.git",
-          comment: "official application",
-          description: "Backup your inboxes and browse them from your cozy."
-        }, {
           icon: "img/photos-icon.png",
           name: "photos",
           slug: "photos",
@@ -190,6 +183,27 @@ window.require.register("collections/application", function(exports, require, mo
           git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
           comment: "community contribution",
           description: "A friendly bot to help you manage an IRC channel"
+        }, {
+          icon: "img/cozy-music.png",
+          name: "cozic",
+          slug: "cozic",
+          git: "https://github.com/rdubigny/cozy-music.git",
+          comment: "community contribution",
+          description: "An audio player to always keep your music with you"
+        }, {
+          icon: "img/kyou.png",
+          name: "kyou",
+          slug: "kyou",
+          git: "https://github.com/frankrousseau/kyou.git",
+          comment: "community contribution",
+          description: "Quantified self for Cozycloud!"
+        }, {
+          icon: "img/webdav.png",
+          name: "webdav",
+          slug: "webdav",
+          git: "https://github.com/aenario/cozy-webdav.git",
+          comment: "community contribution",
+          description: "Synchronize your contacts and your agenda with Cozy"
         }
       ];
       this.reset(apps);
