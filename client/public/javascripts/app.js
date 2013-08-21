@@ -922,6 +922,11 @@ window.require.register("models/application", function(exports, require, module)
       return client.post("/api/applications/getDescription", this.toJSON(), callbacks);
     };
 
+    Application.prototype.getMetaData = function(callbacks) {
+      this.prepareCallbacks(callbacks);
+      return client.post("/api/applications/getMetaData", this.toJSON(), callbacks);
+    };
+
     return Application;
 
   })(Backbone.Model);
@@ -1112,7 +1117,7 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
   var __val__ = t('Installing')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
+  buf.push('</p><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><button class="btn update-app">');
@@ -2871,23 +2876,23 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
-      var _this = this;
       this.model.set("description", "");
       this.body = this.$(".modal-body");
-      this.model.getDescription({
+      this.model.getMetaData({
         success: function(data) {},
         error: function() {
-          return console.log("error have been called");
+          return console.log("Error callback have been called");
         }
       });
-      return this.listenTo(this.model, "change:description", this.renderDescription);
+      return this.listenTo(this.model, "change", this.renderDescription);
     };
 
     PopoverDescriptionView.prototype.renderDescription = function() {
       var description, descriptionDiv;
       this.body.html("");
       description = this.model.get("description");
-      if (description === " ") {
+      console.debug(this.model);
+      if (description === null) {
         descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
       } else {
         descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");

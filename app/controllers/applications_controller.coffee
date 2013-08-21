@@ -90,6 +90,15 @@ action 'getDescription', ->
             description: description
         send succes: true, app: app, 201
 
+action 'getMetaData', ->
+    metaDataManager = new DescriptionManager()
+    metaDataManager.get body, (err, metaData) ->
+        if err? and err.msgs? and err.msgs.length > 0
+            code = err.code
+            msgs = err.msgs
+            send error: true, msgs, code
+        else
+            send succes: true, app: metaData, 200
 
 #display one application
 action 'read', ->

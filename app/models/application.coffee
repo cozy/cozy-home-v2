@@ -19,6 +19,7 @@ module.exports = (compound, Application) ->
         descriptor =
             user: @slug
             name: @slug
+            displayName: @displayName
             domain: "127.0.0.1"
             repository:
                 type: "git",
@@ -30,4 +31,4 @@ module.exports = (compound, Application) ->
             descriptor.repository.branch = @branch
         return descriptor
 
-    
+
