@@ -30,4 +30,4 @@ module.exports = (compound, Application) ->
             descriptor.repository.branch = @branch
         return descriptor
 
-    
+
