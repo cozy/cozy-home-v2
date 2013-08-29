@@ -13,7 +13,7 @@ a(href="#apps/#{app.slug}/")
         label(for="app-stoppable")
             input.app-stoppable(
                 name="app-stoppable"
-                checked= app.isStoppable ? "checked" : undefined
+                checked= app.isStoppable ? undefined : "checked"
                 type="checkbox",
                 title=t("always-on"))
             &nbsp;
