@@ -83,9 +83,9 @@ module.exports = class ApplicationRow extends BaseView
     onStoppableClicked: (event) =>
         bool = not @model.get('isStoppable')
         @model.save {isStoppable: bool},
-            success: => @$('.app-stoppable').attr 'checked', bool
+            success: => @$('.app-stoppable').attr 'checked', !bool
             error: =>
-                @$('.app-stoppable').attr 'checked', !bool
+                @$('.app-stoppable').attr 'checked', bool
                 alert 'oh no !'
 
     onRemoveClicked: (event) =>
