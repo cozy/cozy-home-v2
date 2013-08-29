@@ -8,6 +8,17 @@ mark_broken = (app, err) ->
     app.save (saveErr) ->
         return send_error saveErr if saveErr
 
+stop_app = (app) ->    
+    manager = new AppManager
+    manager.stop app, (err, result) =>
+        return mark_broken app, err if err
+        app.state = "stopped"
+        app.port = 0
+        app.save (err) =>
+            return send_error err if err
+            manager.resetProxy (err) =>
+                return mark_broken app, err if err
+
 applicationTimeout = []
 
 module.exports = (compound) ->
@@ -53,13 +64,6 @@ module.exports = (compound) ->
                 Application.all (err, apps) ->
                     for app in apps
                         if app.name is name
-                            manager = new AppManager
-                            manager.stop app, (err, result) =>
-                                return mark_broken app, err if err
-                                app.state = "stopped"
-                                app.port = 0
-                                app.save (err) =>
-                                    return send_error err if err
-                                    manager.resetProxy (err) =>
-                                        return mark_broken app, err if err
+                            if app.isStoppable
+                                stop_app app
         , 15000
