@@ -7,6 +7,7 @@ exports.routes = (map) ->
 
     map.get  '/api/applications'                , 'applications#applications'
     map.get  '/api/applications/byid/:id'       , 'applications#read'
+    map.put  '/api/applications/byid/:id'       , 'applications#updatestoppable'
     map.post '/api/applications/install'        , 'applications#install'
     map.post '/api/applications/:slug/start'    , 'applications#start'
     map.post '/api/applications/:slug/stop'     , 'applications#stop'

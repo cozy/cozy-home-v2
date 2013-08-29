@@ -1146,7 +1146,12 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('</button><button class="btn update-app">');
   var __val__ = t('update')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div><button class="btn btn-large start-stop-btn">');
+  buf.push('</button></div><div><label for="app-stoppable"><input');
+  buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? "checked" : undefined), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
+  buf.push('/>&nbsp;');
+  var __val__ = t('Keep always on')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</label><button class="btn btn-large start-stop-btn">');
   var __val__ = t('started')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div></div>');
@@ -1737,7 +1742,8 @@ window.require.register("views/home_application", function(exports, require, mod
       "click .application-inner": "onAppClicked",
       "click .remove-app": "onRemoveClicked",
       "click .update-app": "onUpdateClicked",
-      "click .start-stop-btn": "onStartStopClicked"
+      "click .start-stop-btn": "onStartStopClicked",
+      "click .app-stoppable": "onStoppableClicked"
     };
 
     /* Constructor
@@ -1754,6 +1760,8 @@ window.require.register("views/home_application", function(exports, require, mod
       this.onUpdateClicked = __bind(this.onUpdateClicked, this);
 
       this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
+      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
 
       this.onAppClicked = __bind(this.onAppClicked, this);
 
@@ -1827,6 +1835,23 @@ window.require.register("views/home_application", function(exports, require, mod
             success: this.launchApp
           });
       }
+    };
+
+    ApplicationRow.prototype.onStoppableClicked = function(event) {
+      var bool,
+        _this = this;
+      bool = !this.model.get('isStoppable');
+      return this.model.save({
+        isStoppable: bool
+      }, {
+        success: function() {
+          return _this.$('.app-stoppable').attr('checked', bool);
+        },
+        error: function() {
+          _this.$('.app-stoppable').attr('checked', !bool);
+          return alert('oh no !');
+        }
+      });
     };
 
     ApplicationRow.prototype.onRemoveClicked = function(event) {
@@ -2017,7 +2042,7 @@ window.require.register("views/main", function(exports, require, module) {
       var user,
         _this = this;
       user = new User();
-      user.logout({
+      return user.logout({
         success: function(data) {
           return window.location = window.location.origin + '/login/';
         },
@@ -2025,7 +2050,6 @@ window.require.register("views/main", function(exports, require, module) {
           return alert('Server error occured, logout failed.');
         }
       });
-      return event.preventDefault();
     };
 
     HomeView.prototype.displayView = function(view) {

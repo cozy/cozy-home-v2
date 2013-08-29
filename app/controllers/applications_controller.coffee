@@ -105,6 +105,18 @@ action 'read', ->
         else
             send app
 
+# update applications options
+action 'updatestoppable', ->
+    Application.find params.id, (err, app) ->
+        if err
+            send_error err
+        else if app is null
+            send_error new Error('Application not found'), 404
+        else
+            app.updateAttributes isStoppable : body.isStoppable, (err, app) ->
+                return send_error err if err
+                send app
+
 
 # Set up app into 3 places :
 # * haibu, application manager
