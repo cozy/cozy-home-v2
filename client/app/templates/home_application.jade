@@ -9,4 +9,13 @@ a(href="#apps/#{app.slug}/")
         button.btn.remove-app= t('remove')
         button.btn.update-app= t('update')
     div
+
+        label(for="app-stoppable")
+            input.app-stoppable(
+                name="app-stoppable"
+                checked= app.isStoppable ? "checked" : undefined
+                type="checkbox",
+                title=t("always-on"))
+            &nbsp;
+            = t('Keep always on')
         button.btn.btn-large.start-stop-btn= t('started')

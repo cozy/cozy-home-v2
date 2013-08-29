@@ -17,6 +17,7 @@ module.exports = class ApplicationRow extends BaseView
         "click .remove-app"        : "onRemoveClicked"
         "click .update-app"        : "onUpdateClicked"
         "click .start-stop-btn"    : "onStartStopClicked"
+        "click .app-stoppable"     : "onStoppableClicked"
 
     ### Constructor ####
 
@@ -78,6 +79,14 @@ module.exports = class ApplicationRow extends BaseView
                 alert t 'this app is being installed. Wait a little'
             when 'stopped'
                 @model.start success: @launchApp
+
+    onStoppableClicked: (event) =>
+        bool = not @model.get('isStoppable')
+        @model.save {isStoppable: bool},
+            success: => @$('.app-stoppable').attr 'checked', bool
+            error: =>
+                @$('.app-stoppable').attr 'checked', !bool
+                alert 'oh no !'
 
     onRemoveClicked: (event) =>
         event.preventDefault()

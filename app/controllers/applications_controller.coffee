@@ -78,14 +78,14 @@ action 'applications', ->
 
 action 'getPermissions', ->
     permissions = new PermissionsManager()
-    permissions.get body, (err, docTypes) => 
+    permissions.get body, (err, docTypes) =>
         app =
             permissions: docTypes
         send succes: true, app: app, 201
 
 action 'getDescription', ->
     description = new DescriptionManager()
-    description.get body, (err, description) => 
+    description.get body, (err, description) =>
         app =
             description: description
         send succes: true, app: app, 201
@@ -101,6 +101,18 @@ action 'read', ->
         else
             send app
 
+# update applications options
+action 'updatestoppable', ->
+    Application.find params.id, (err, app) ->
+        if err
+            send_error err
+        else if app is null
+            send_error new Error('Application not found'), 404
+        else
+            app.updateAttributes isStoppable : body.isStoppable, (err, app) ->
+                return send_error err if err
+                send app
+
 
 # Set up app into 3 places :
 # * haibu, application manager
@@ -109,7 +121,7 @@ action 'read', ->
 # Send an error if an application already has same slug.
 action "install", ->
 
-    body.slug = slugify body.name  
+    body.slug = slugify body.name
     body.state = "installing"
     body.password = randomString 32
 

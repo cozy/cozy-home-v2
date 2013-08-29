@@ -20,6 +20,7 @@ Application = define 'Application', ->
     property 'description', String
     property 'slug', String
     property 'state', String
+    property 'isStoppable', Boolean, default: false
     property 'date', String, default: Date.now
     property 'icon', String
     property 'git', String
