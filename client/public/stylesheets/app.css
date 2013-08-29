@@ -6358,9 +6358,6 @@ html {
   text-align: center;
   margin: 40px 0;
 }
-#app-list button {
-  margin-top: 20px;
-}
 .application {
   width: 170px;
   margin: 6px;
@@ -6411,13 +6408,17 @@ html {
 }
 .application .application-outer {
   display: none;
-}
-.application .application-outer .btn {
-  margin-top: 10px;
+  padding-top: 20px;
 }
 .application .application-outer p {
   margin: 0;
   padding: 0;
+}
+.application .application-outer label {
+  margin: 0px;
+}
+.application .application-outer .app-stoppable {
+  margin: 0px;
 }
 .application:active {
   -webkit-box-shadow: none;
