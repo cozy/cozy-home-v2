@@ -1147,7 +1147,7 @@ window.require.register("templates/home_application", function(exports, require,
   var __val__ = t('update')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><div><label for="app-stoppable"><input');
-  buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? "checked" : undefined), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
+  buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? undefined : "checked"), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
   buf.push('/>&nbsp;');
   var __val__ = t('Keep always on')
   buf.push(escape(null == __val__ ? "" : __val__));
@@ -1845,10 +1845,10 @@ window.require.register("views/home_application", function(exports, require, mod
         isStoppable: bool
       }, {
         success: function() {
-          return _this.$('.app-stoppable').attr('checked', bool);
+          return _this.$('.app-stoppable').attr('checked', !bool);
         },
         error: function() {
-          _this.$('.app-stoppable').attr('checked', !bool);
+          _this.$('.app-stoppable').attr('checked', bool);
           return alert('oh no !');
         }
       });
