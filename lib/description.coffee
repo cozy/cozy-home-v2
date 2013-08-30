@@ -34,7 +34,7 @@ class exports.DescriptionManager
                     if config['cozy-displayName']?
                         @metaData.displayName = config['cozy-displayName']
                     else
-                        @metaData.displayName = config.name
+                        @metaData.displayName = config.name.replace 'cozy-', ''
 
                     if config['cozy-permissions']?
                         @metaData.permissions = config['cozy-permissions']
