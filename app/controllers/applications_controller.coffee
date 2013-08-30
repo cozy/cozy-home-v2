@@ -282,14 +282,17 @@ action "start", ->
                     app: @app
 
 action "stop", ->
+
     manager = new AppManager
     manager.stop @app, (err, result) =>
 
         return mark_broken @app, err if err
 
-        @app.state = "stopped"
-        @app.port = 0
-        @app.save (err) =>
+        data =
+            state: 'stopped'
+            port : 0
+
+        @app.updateAttributes data, (err) =>
 
             return send_error err if err
 
