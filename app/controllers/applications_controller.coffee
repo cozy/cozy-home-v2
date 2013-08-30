@@ -126,7 +126,9 @@ action 'icon', ->
     # else, do the attaching (apps installed before)
     # FOR MIGRATION, REMOVE ME LATER
     saveIcon @app, (err) =>
-        return send 500 if err
+        if err
+            return fs.createReadStream('./client/app/assets/img/stopped.png').pipe res
+
         @app.getFile('icon.png', (->)).pipe res
 
 
