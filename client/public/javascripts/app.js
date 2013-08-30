@@ -1795,7 +1795,7 @@ window.require.register("views/home_application", function(exports, require, mod
           this.updateButton.displayGrey(t('retry'));
           return this.startStopBtn.hide();
         case 'installed':
-          this.icon.attr('src', "apps/" + app.id + "/icons/main_icon.png");
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.stateLabel.hide();
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('update'));
@@ -1807,7 +1807,7 @@ window.require.register("views/home_application", function(exports, require, mod
           this.updateButton.hide();
           return this.startStopBtn.hide();
         case 'stopped':
-          this.icon.attr('src', "img/stopped.png");
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.stateLabel.show().text(t('stopped'));
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();

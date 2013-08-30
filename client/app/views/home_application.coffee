@@ -46,7 +46,7 @@ module.exports = class ApplicationRow extends BaseView
                 @updateButton.displayGrey t 'retry'
                 @startStopBtn.hide()
             when 'installed'
-                @icon.attr 'src', "apps/#{app.id}/icons/main_icon.png"
+                @icon.attr 'src', "api/applications/#{app.id}.png"
                 @stateLabel.hide()
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'update'
@@ -59,7 +59,7 @@ module.exports = class ApplicationRow extends BaseView
                 @updateButton.hide()
                 @startStopBtn.hide()
             when 'stopped'
-                @icon.attr 'src', "img/stopped.png"
+                @icon.attr 'src', "api/applications/#{app.id}.png"
                 @stateLabel.show().text t 'stopped'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.hide()

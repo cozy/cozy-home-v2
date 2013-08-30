@@ -30,6 +30,7 @@ Application = define 'Application', ->
     property 'port', Number
     property 'permissions'
     property 'password', String
+    property '_attachments', Object
 
 # Notifications are messages sent to the user
 Notification = define 'Notification', ->
