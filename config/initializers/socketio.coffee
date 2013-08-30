@@ -8,13 +8,14 @@ mark_broken = (app, err) ->
     app.save (saveErr) ->
         return send_error saveErr if saveErr
 
-stop_app = (app) ->    
+stop_app = (app) ->
     manager = new AppManager
     manager.stop app, (err, result) =>
         return mark_broken app, err if err
-        app.state = "stopped"
-        app.port = 0
-        app.save (err) =>
+        data =
+            state: "stopped"
+            port: 0
+        app.updateAttributes data, (err) =>
             return send_error err if err
             manager.resetProxy (err) =>
                 return mark_broken app, err if err
