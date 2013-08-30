@@ -1796,19 +1796,22 @@ window.require.register("views/home_application", function(exports, require, mod
           return this.startStopBtn.hide();
         case 'installed':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.removeClass('stopped');
           this.stateLabel.hide();
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('update'));
           return this.startStopBtn.displayGrey(t('stop this app'));
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
-          this.stateLabel.hide();
+          this.icon.removeClass('stopped');
+          this.stateLabel.show().text('installing');
           this.removeButton.displayGrey('abort');
           this.updateButton.hide();
           return this.startStopBtn.hide();
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
-          this.stateLabel.show().text(t('stopped'));
+          this.icon.addClass('stopped');
+          this.stateLabel.hide();
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();
           return this.startStopBtn.displayGrey(t('start this app'));

@@ -6388,6 +6388,11 @@ html {
 .application img {
   margin-top: 10px;
 }
+.application img.stopped {
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: alpha(opacity=50);
+}
 .application p {
   margin: 0;
   font-family: main;
