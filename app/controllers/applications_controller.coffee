@@ -2,6 +2,8 @@
 
 
 slugify = require "./common/slug"
+Client = require("request-json").JsonClient
+fs = require('fs')
 {AppManager} = require "./lib/paas"
 {PermissionsManager} = require "./lib/permissions"
 {DescriptionManager} = require "./lib/description"
@@ -53,6 +55,17 @@ randomString = (length) ->
         string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
+# Save an app's icon in the DS
+saveIcon = (appli, callback = ->) ->
+    client = new Client "http://localhost:#{appli.port}/"
+    tmpName = "/tmp/icon_#{appli.slug}.png"
+    client.saveFile "icons/main_icon.png", tmpName, (err, res, body) ->
+        return callback err if err
+        appli.attachFile tmpName, name: 'icon.png', (err) ->
+            fs.unlink tmpName
+            return callback err if err
+            callback null
+
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all key: params.slug, (err, apps) =>
@@ -63,7 +76,7 @@ before 'load application', ->
         else
             @app = apps[0]
             next()
-, only: ['update', 'start','stop','uninstall']
+, only: ['update', 'icon', 'start','stop','uninstall']
 
 
 ## Actions
@@ -104,6 +117,18 @@ action 'read', ->
             send_error new Error('Application not found'), 404
         else
             send app
+
+# display the icon
+action 'icon', ->
+    if @app._attachments?['icon.png']
+        return @app.getFile('icon.png', (->)).pipe res
+
+    # else, do the attaching (apps installed before)
+    # FOR MIGRATION, REMOVE ME LATER
+    saveIcon @app, (err) =>
+        return send 500 if err
+        @app.getFile('icon.png', (->)).pipe res
+
 
 # update applications options
 action 'updatestoppable', ->
@@ -162,6 +187,10 @@ action "install", ->
 
                     console.info 'install succeeded on port ', appli.port
 
+                    saveIcon appli, (err) ->
+                        if err then console.log err.stack
+                        else console.info 'icon attached'
+
                     appli.save (err) ->
 
                         return send_error_socket err if err
@@ -217,6 +246,10 @@ action "update", ->
             @app.permissions = docTypes
             @app.save (err) =>
 
+                saveIcon appli, (err) ->
+                    if err then console.log err.stack
+                    else console.info 'icon attached'
+
                 return send_error err if err
 
                 manager.resetProxy (err) =>
@@ -232,8 +265,6 @@ action "start", ->
     manager.start @app, (err, result) =>
 
         return mark_broken @app, err if err
-
-        # require('eyes').inspect result
 
         @app.state = "installed"
         @app.port = result.drone.port
