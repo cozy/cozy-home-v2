@@ -29,7 +29,7 @@ class exports.DescriptionManager
                         @metaData.description = config.description
 
                     if config.name?
-                        @metaData.name = config.name
+                        @metaData.name = config.name.replace 'cozy-', ''
 
                     if config['cozy-displayName']?
                         @metaData.displayName = config['cozy-displayName']
