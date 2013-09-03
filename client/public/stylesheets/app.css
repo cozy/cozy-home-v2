@@ -6024,6 +6024,7 @@ a.editable-click:hover {
   border-bottom: 1px dashed #eaf1f1;
 }
 .tooltip-inner a:hover {
+  color: #eaf1f1;
   text-decoration: none;
 }
 iframe {
@@ -6747,6 +6748,10 @@ html {
 .modal-footer .btn-primary {
   color: #333;
   background: #f5e6d4;
+}
+.application .permissionsLine p {
+  text-shadow: none;
+  color: #5c5c5c;
 }
 @media (max-width: 1200px) {
   #header-title {
