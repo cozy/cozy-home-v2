@@ -1,7 +1,7 @@
 fs = require 'fs'
 HttpClient = require("request-json").JsonClient
-MemoryManager = require("./memory").MemoryManager
 ControllerClient = require("cozy-clients").ControllerClient
+MemoryManager = require("./memory").MemoryManager
 
 
 # Class to facilitate communications with Haibu, the application server

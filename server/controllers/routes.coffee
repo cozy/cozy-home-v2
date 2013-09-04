@@ -1,6 +1,6 @@
-appications = require './applications'
 monitor = require './monitor'
 account = require './account'
+applications = require './applications'
 notifications = require './notifications'
 
 exports.module =
@@ -23,7 +23,6 @@ exports.module =
 
     '/api/users': get: account.users
     '/api/user': post: account.updateAccount
-
     '/api/instances': get: account.instances
     '/api/instance': post: account.updateInstance
 

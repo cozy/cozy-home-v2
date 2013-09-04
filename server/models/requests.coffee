@@ -1,17 +1,18 @@
-module.exports = (compound) ->
+americano = require 'americano-cozy'
 
-    # Bring models in context
-    {Application, CozyInstance, User, Notification, Alarm} = compound.models
+byApps = -> emit [doc.app, doc.ref], doc if doc.type is 'persistent'
+allSlug = -> emit doc.slug, doc
 
-    requests = require "../../common/requests"
-    User.defineRequest "all", requests.all, requests.checkError
-    Alarm.defineRequest        "all", requests.all, requests.checkError
-    CozyInstance.defineRequest "all", requests.all, requests.checkError
-    Notification.defineRequest "all", requests.all, requests.checkError
+module.exports =
 
-    byApps = -> emit [doc.app, doc.ref], doc if doc.type is 'persistent'
-    Notification.defineRequest "byApps", byApps, requests.checkError
-
-    allSlug = -> emit doc.slug, doc
-    Application.defineRequest "all", allSlug, requests.checkError
-
+    user:
+        all: americano.defaultRequests.all
+    alarm:
+        all: americano.defaultRequests.all
+    cozyinstance:
+        all: americano.defaultRequests.all
+    notification:
+        all: americano.defaultRequests.all
+        byApps: byApps
+    application:
+        all: americano.defaultRequests.all

@@ -42,5 +42,6 @@ class exports.DescriptionManager
                     callback @metaData
             else
                 callback {code: 404, msgs: ['package.json not found']}, null
+
         request.on 'error', (error) =>
             callback null, " "
