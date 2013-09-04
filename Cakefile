@@ -10,7 +10,7 @@ walk = (dir, fileList) ->
             stat = fs.statSync filename
             if stat and stat.isDirectory()
                 walk filename, fileList
-            else if filename.substr(-6) == "coffee"
+            else if filename.substr(-6) is "coffee"
                 fileList.push filename
     fileList
 
@@ -31,6 +31,20 @@ runTests = (fileList) ->
         else
             process.exit 0
 
+task 'compile', 'run tests through mocha', ->
+    files = walk "server", []
+    console.log "Compilation"
+    command = "coffee -cb server.coffee #{files.join ' '} "
+    exec command, (err, stdout, stderr) ->
+        console.log stdout
+        if err
+            console.log "Running compilation caught exception: \n" + err
+            process.exit 1
+        else
+            process.exit 0
+
+
+
 option '-f', '--file [FILE]', 'test file to run'
 
 task 'tests:file', 'run test through mocha for a given file', (options) ->
@@ -46,8 +60,7 @@ task 'tests:file', 'run test through mocha for a given file', (options) ->
 
 task "lint", "Run coffeelint on backend files", ->
     process.env.TZ = "Europe/Paris"
-    command = "coffeelint "
-    command += "  -f coffeelint.json -r app/ lib/ config/ test/"
+    command = "coffeelint -f coffeelint.json -r server.coffee server/"
     exec command, (err, stdout, stderr) ->
         console.log err
         console.log stdout

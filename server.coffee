@@ -1,5 +1,5 @@
 americano = require 'americano'
-NotificationsHelper = require 'cozy-notifications-helper'
+#NotificationsHelper = require 'cozy-notifications-helper'
 request = require 'request-json'
 #RealtimeAdapter     = require 'cozy-realtime-adapter'
 
@@ -83,7 +83,7 @@ stop_app = (app) ->
 
 # notification and application events should be proxyed to client
 applicationTimeout = []
-notifhelper = new NotificationsHelper 'home'
+#notifhelper = new NotificationsHelper 'home'
 
 # setup alarm manager for alarm events handling
 #User.all (err, users) ->
@@ -119,5 +119,6 @@ notifhelper = new NotificationsHelper 'home'
 #                            stop_app app
 #    , 15000
 
-port = process.env.PORT || 9260
-american.ostart name: 'kyou', port: port
+port = process.env.PORT || 9103
+americano.start name: 'kyou', port: port, ->
+    console.log(process.memoryUsage())

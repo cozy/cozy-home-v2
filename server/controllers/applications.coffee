@@ -1,4 +1,4 @@
-request = require("request-json")
+equest = require("request-json")
 fs = require('fs')
 {Application} = require '../models/application'
 {AppManager} = require '../lib/paas'
@@ -8,7 +8,7 @@ fs = require('fs')
 
 # Helpers
 
-send_error res, = (res, err, code=500) ->
+send_error = (res, err, code=500) ->
     err ?=
         stack:   null
         message: "Server error occured"
@@ -22,10 +22,10 @@ send_error res, = (res, err, code=500) ->
         message: err.message
         stack: err.stack
 
-res.send_error_socket = (err) ->
+send_error_socket = (err) ->
     compound.io.sockets.emit 'installerror', err.stack
 
-mark_broken res, = (res, app, err) ->
+mark_broken = (res, app, err) ->
     console.log "Marking app #{app.name} as broken because"
     console.log err.stack
 
@@ -54,14 +54,15 @@ randomString = (length) ->
 saveIcon = (appli, callback = ->) ->
     client = request.newClient "http://localhost:#{appli.port}/"
     tmpName = "/tmp/icon_#{appli.slug}.png"
-    client.saveFile "icons/main_icon.png", tmpName, (err, res, req.body) ->
+    client.saveFile "icons/main_icon.png", tmpName, (err, res, body) ->
         return callback err if err
         appli.attachFile tmpName, name: 'icon.png', (err) ->
             fs.unlink tmpName
             return callback err if err
             callback null
 
-exports.module = [
+module.exports =
+
     # Load application corresponding to slug given in params
     loadApplication: (req, res, next, slug) ->
         Application.all key: params.slug, (err, apps) ->
@@ -79,6 +80,7 @@ exports.module = [
             if err then next err
             else res.send rows: apps
 
+
     getPermissions: (req, res, next) ->
         permissions = new PermissionsManager()
         permissions.get req.body, (err, docTypes) ->
@@ -87,16 +89,19 @@ exports.module = [
                 app = permissions: docTypes
                 res.send success: true, app: app
 
+
     getDescription: (req, res, next) ->
         description = new DescriptionManager()
         description.get req.body, (err, description) ->
             app = description: description
             res.send success: true, app: app
 
+
     getMetaData: (req, res, next) ->
         metaDataManager = new DescriptionManager()
         metaDataManager.get req.body, (metaData) ->
             res.send succes: true, app: metaData, 200
+
 
     read: (req, res, next) ->
         Application.find params.id, (err, app) ->
@@ -105,6 +110,7 @@ exports.module = [
                 send_error res, new Error('Application not found'), 404
             else
                 res.send app
+
 
     icon: (req, res, next) ->
         if req.app._attachments?['icon.png']
@@ -268,6 +274,6 @@ exports.module = [
                 manager.resetProxy (err) ->
                     return mark_broken res, req.app, err if err
                     res.send
-                        success:true
+                        success: true
                         msg: 'Application stopped'
                         app: req.app

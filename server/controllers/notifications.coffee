@@ -1,6 +1,6 @@
 Notification = require '../models/notification'
 
-exports.module =
+module.exports =
     all: (req, res, next) ->
         Notification.all (err, notifs) =>
             if err then next err
@@ -71,16 +71,15 @@ exports.module =
                     else
                         res.send notif
 
-action 'destroy', ->
+    destroy: (req, res, next) ->
+        params = key: [req.params.app, req.params.ref]
 
-    params = key: [req.params.app, req.params.ref]
-
-    Notification.request 'byApps', params, (err, notifs) =>
-        if err then next err
-        else if not notifs or notifs.length is 0
-            res.send success: 'Does not exist', 204
-        else
-            notifs[0].destroy (err) ->
-                if err then next err
-                else
-                    res.send success: 'Deleted', 204
+        Notification.request 'byApps', params, (err, notifs) =>
+            if err then next err
+            else if not notifs or notifs.length is 0
+                res.send success: 'Does not exist', 204
+            else
+                notifs[0].destroy (err) ->
+                    if err then next err
+                    else
+                        res.send success: 'Deleted', 204

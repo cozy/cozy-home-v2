@@ -1,6 +1,6 @@
 {MemoryManager} = require('../lib/memory')
 
-exports.module =
+module.exports =
     # Return as JSON data about memory and hard disk consumption
     sysData: (req, res, next) ->
         memoryManager = new MemoryManager()
