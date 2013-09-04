@@ -1,13 +1,13 @@
 americano = require 'americano-cozy'
 
-module.exports = User = americano.getModel 'User',
+module.exports = Application = americano.getModel 'Application',
     name: String
     displayName: String
     description: String
     slug: String
     state: String
-    isStoppable: {type: Boolean, default: false}
-    date: {type: String, default: Date.now}
+    isStoppable: {type: name: Boolean, default: false}
+    date: {type: name: String, default: Date.now}
     icon: String
     git: String
     errormsg: String

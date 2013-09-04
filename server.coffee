@@ -1,17 +1,18 @@
 americano = require 'americano'
-{AppManager} = require "../../lib/paas"
-RealtimeAdapter     = require 'cozy-realtime-adapter'
 NotificationsHelper = require 'cozy-notifications-helper'
-AlarmManager        = require '../../lib/alarm_manager'
-{User, Alarm, Application, Notification} = compound.models
-realtime = RealtimeAdapter compound, ['notification.*', 'application.*']
-# Bring models in context
-{Application, CozyInstance, User} = compound.models
+request = require 'request-json'
+#RealtimeAdapter     = require 'cozy-realtime-adapter'
 
-Client = require('request-json').JsonClient
+{AppManager} = require "./server/lib/paas"
+AlarmManager = require './server/lib/alarm_manager'
+User = require './server/models/user'
+Alarm = require './server/models/alarm'
+Application = require './server/models/application'
+Notification = require './server/models/notification'
+#realtime = RealtimeAdapter compound, ['notification.*', 'application.*']
 
-client = new Client 'http://localhost:9104/'
-haibuClient =  new Client 'http://localhost:9002/'
+client = request.newClient 'http://localhost:9104/'
+haibuClient =  request.newClient 'http://localhost:9002/'
 
 # Grab all application informations listed in the database and compare
 # them to informations stored inside haibu. If port is different
@@ -53,7 +54,7 @@ resetProxy = ->
         else
             console.info 'Something went wrong while reseting proxy.'
 
-if process.env.NODE_ENV != "test"
+if process.env.NODE_ENV isnt "test"
     resetRoutes()
 
 process.on 'uncaughtException', (err) ->
@@ -85,38 +86,38 @@ applicationTimeout = []
 notifhelper = new NotificationsHelper 'home'
 
 # setup alarm manager for alarm events handling
-User.all (err, users) ->
-    if err? or users.length is 0
-        console.info "Internal server error. Can't retrieve users or no user exists."
-    else
-        timezone = users[0].timezone
-        alarmManager = new AlarmManager(timezone, Alarm, notifhelper)
-        compound.alarmManager = alarmManager
-        realtime.on 'alarm.*', alarmManager.handleAlarm
+#User.all (err, users) ->
+#    if err? or users.length is 0
+#        console.info "Internal server error. Can't retrieve users or no user exists."
+#    else
+#        timezone = users[0].timezone
+#        alarmManager = new AlarmManager(timezone, Alarm, notifhelper)
+#        compound.alarmManager = alarmManager
+#        realtime.on 'alarm.*', alarmManager.handleAlarm
 
 # also create a notification when an app install is complete
-realtime.on 'application.update', (event, id) ->
-    Application.find id, (err, app) ->
-        return console.log err.stack if err # no notification, no big deal
-        switch app.state
-            when 'broken'
-                notifhelper.createTemporary
-                    text: "#{app.name}'s installation failled."
-                    resource: {app: 'home'}
-            else return
+#realtime.on 'application.update', (event, id) ->
+#    Application.find id, (err, app) ->
+#        return console.log err.stack if err # no notification, no big deal
+#        switch app.state
+#            when 'broken'
+#                notifhelper.createTemporary
+#                    text: "#{app.name}'s installation failled."
+#                    resource: {app: 'home'}
+#            else return
 
-realtime.on 'usage.application', (event, name) ->
-    if applicationTimeout[name]?
-        clearTimeout applicationTimeout[name]
-    applicationTimeout[name] = setTimeout () ->
-        console.log "stop : " + name
-        if name isnt "home" and name isnt "proxy"
-            Application.all (err, apps) ->
-                for app in apps
-                    if app.name is name
-                        if app.isStoppable
-                            stop_app app
-    , 15000
+#realtime.on 'usage.application', (event, name) ->
+#    if applicationTimeout[name]?
+#        clearTimeout applicationTimeout[name]
+#    applicationTimeout[name] = setTimeout () ->
+#        console.log "stop : " + name
+#        if name isnt "home" and name isnt "proxy"
+#            Application.all (err, apps) ->
+#                for app in apps
+#                    if app.name is name
+#                        if app.isStoppable
+#                            stop_app app
+#    , 15000
 
 port = process.env.PORT || 9260
-american.ostart name: 'kyou', port: port, (app) -
+american.ostart name: 'kyou', port: port

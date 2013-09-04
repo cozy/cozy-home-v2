@@ -3,8 +3,7 @@
 , "engine": { "node": "*" }
 , "main": "server.coffee"
 , "dependencies":
-  { 
-  , "americano":        "*"
+  { "americano":        "*"
   , "americano-cozy":   "*"
   , "bcrypt":           "= 0.7.4"
   , "async":            "= 0.1.22"
@@ -13,6 +12,7 @@
   , "time": "~0.9.2"
   , "cozy-realtime-adapter":"= 0.11.0"
   , "cozy-notifications-helper":"= 0.0.2"
+  , "jugglingdb-cozy-adapter": "*"
   }
 , "devDependencies":
   { "mocha":            "= 1.9.0"
