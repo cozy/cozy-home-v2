@@ -4,6 +4,8 @@ applications = require './applications'
 notifications = require './notifications'
 
 module.exports =
+    'slug': param: applications.loadApplication
+
     'api/applications/getPermissions': post: applications.getPermissions
     'api/applications/getDescription': post: applications.getDescription
     'api/applications/getMetaData': post: applications.getMetaData
@@ -26,11 +28,14 @@ module.exports =
     'api/instances': get: account.instances
     'api/instance': post: account.updateInstance
 
-    'api/notifications': get: notifications.all
-    'api/notifications/:id': get: notifications.show
-    'api/notifications/:id': del: notifications.delete
-    'api/notifications': del: notifications.deleteAll
+    'api/notifications':
+        get: notifications.all
+        del: notifications.deleteAll
+    'api/notifications/:id':
+        get: notifications.show
+        del: notifications.delete
 
     'notifications': post: notifications.create
-    'notifications/:app/:ref': put: notifications.updateOrCreate
-    'notifications/:app/:ref': del: notifications.destroy
+    'notifications/:app/:ref':
+        put: notifications.updateOrCreate
+        del: notifications.destroy

@@ -33,14 +33,15 @@ runTests = (fileList) ->
 
 task 'compile', 'run tests through mocha', ->
     files = walk "server", []
-    console.log "Compilation"
-    command = "coffee -cb server.coffee #{files.join ' '} "
+    console.log "Compile to JS..."
+    command = "coffee -cb server.coffee config.coffee #{files.join ' '} "
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err
             console.log "Running compilation caught exception: \n" + err
             process.exit 1
         else
+            console.log "Compilation succeeded."
             process.exit 0
 
 

@@ -1131,16 +1131,7 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
   var __val__ = t('Installing')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p>');
-   if (app.displayName !== null)
-  {
-  buf.push('<p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p>');
-  }
-   else
-  {
-  buf.push('<p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p>');
-  }
-  buf.push('</div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
+  buf.push('</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><button class="btn update-app">');

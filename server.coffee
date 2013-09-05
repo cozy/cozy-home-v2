@@ -1,7 +1,7 @@
 americano = require 'americano'
-#NotificationsHelper = require 'cozy-notifications-helper'
 request = require 'request-json'
-#RealtimeAdapter     = require 'cozy-realtime-adapter'
+NotificationsHelper = require 'cozy-notifications-helper'
+RealtimeAdapter     = require 'cozy-realtime-adapter'
 
 {AppManager} = require "./server/lib/paas"
 AlarmManager = require './server/lib/alarm_manager'
@@ -9,7 +9,6 @@ User = require './server/models/user'
 Alarm = require './server/models/alarm'
 Application = require './server/models/application'
 Notification = require './server/models/notification'
-#realtime = RealtimeAdapter compound, ['notification.*', 'application.*']
 
 client = request.newClient 'http://localhost:9104/'
 haibuClient =  request.newClient 'http://localhost:9002/'
@@ -83,42 +82,49 @@ stop_app = (app) ->
 
 # notification and application events should be proxyed to client
 applicationTimeout = []
-#notifhelper = new NotificationsHelper 'home'
-
-# setup alarm manager for alarm events handling
-#User.all (err, users) ->
-#    if err? or users.length is 0
-#        console.info "Internal server error. Can't retrieve users or no user exists."
-#    else
-#        timezone = users[0].timezone
-#        alarmManager = new AlarmManager(timezone, Alarm, notifhelper)
-#        compound.alarmManager = alarmManager
-#        realtime.on 'alarm.*', alarmManager.handleAlarm
-
-# also create a notification when an app install is complete
-#realtime.on 'application.update', (event, id) ->
-#    Application.find id, (err, app) ->
-#        return console.log err.stack if err # no notification, no big deal
-#        switch app.state
-#            when 'broken'
-#                notifhelper.createTemporary
-#                    text: "#{app.name}'s installation failled."
-#                    resource: {app: 'home'}
-#            else return
-
-#realtime.on 'usage.application', (event, name) ->
-#    if applicationTimeout[name]?
-#        clearTimeout applicationTimeout[name]
-#    applicationTimeout[name] = setTimeout () ->
-#        console.log "stop : " + name
-#        if name isnt "home" and name isnt "proxy"
-#            Application.all (err, apps) ->
-#                for app in apps
-#                    if app.name is name
-#                        if app.isStoppable
-#                            stop_app app
-#    , 15000
-
+notifhelper = new NotificationsHelper 'home'
 port = process.env.PORT || 9103
-americano.start name: 'kyou', port: port, ->
-    console.log(process.memoryUsage())
+
+americano.start name: 'Cozy Home', port: port, (app, server) ->
+    app.server = server
+    realtime = RealtimeAdapter app, ['notification.*', 'application.*']
+    app.param 'slug', require('./server/controllers/applications').loadApplication
+
+    # also create a notification when an app install is complete
+    realtime.on 'application.update', (event, id) ->
+        Application.find id, (err, app) ->
+            return console.log err.stack if err # no notification, no big deal
+            switch app.state
+                when 'broken'
+                    notifhelper.createTemporary
+                        text: "#{app.name}'s installation failled."
+                        resource: {app: 'home'}
+                else return
+
+    realtime.on 'usage.application', (event, name) ->
+        if applicationTimeout[name]?
+            clearTimeout applicationTimeout[name]
+        applicationTimeout[name] = setTimeout () ->
+            console.log "stop : " + name
+            if name isnt "home" and name isnt "proxy"
+                Application.all (err, apps) ->
+                    for app in apps
+                        if app.name is name and app.isStoppable
+                            stop_app app
+        , 15000
+
+
+    # setup alarm manager for alarm events handling
+    User.all (err, users) ->
+        if err? or users.length is 0
+            console.info "Internal server error. Can't retrieve users or no user exists."
+        else
+            timezone = users[0].timezone
+            alarmManager = new AlarmManager(timezone, Alarm, notifhelper)
+            app.alarmManager = alarmManager
+            realtime.on 'alarm.*', alarmManager.handleAlarm
+
+
+    setInterval ->
+        console.log(process.memoryUsage())
+    , 5000

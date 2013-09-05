@@ -72,8 +72,7 @@ reseting routes"
         @checkMemory (err) =>
             return callback err if err
 
-            @client.start manifest, (err, res, body) =>
-
+            @client.start manifest, (err, res, body) ->
                 err ?= new Error body.error.message unless status2XX res
 
                 if err
@@ -83,16 +82,16 @@ reseting routes"
                     console.info "Successfully spawned app: #{app.name}"
                     callback null, body
 
+
     # Remove and reinstall app inside Haibu.
     updateApp: (app, callback) ->
         manifest = app.getHaibuDescriptor()
-        console.info "Request controller for updating #{app.name}..."
 
+        console.info "Request controller for updating #{app.name}..."
         @checkMemory (err) =>
             return callback err if err
 
             @client.lightUpdate manifest, (err, res, body) ->
-
                 err ?= new Error body.error.message unless status2XX res
 
                 if err
@@ -103,25 +102,27 @@ reseting routes"
                     console.info "Successfully updated app: #{app.name}"
                     callback null, body
 
+
     # Send a uninstall request to controller server ("clean" request).
     uninstallApp: (app, callback) ->
-        manifest = app.getHaibuDescriptor()
-        console.info "Request controller for cleaning #{app.name}..."
+        if app?
+            manifest = app.getHaibuDescriptor()
+            console.info "Request controller for cleaning #{app.name}..."
 
-        console.log @client
+            @client.clean manifest, (err, res, body) =>
+                err ?= new Error body.error.message unless status2XX res
 
-        @client.clean manifest, (err, res, body) =>
+                if err
+                    console.log "Error cleaning app: #{app.name}"
+                    console.log err.message
+                    console.log err.stack
+                    callback err
+                else
+                    console.info "Successfully cleaning app: #{app.name}"
+                    callback null
+        else
+            callback null
 
-            err ?= new Error body.error.message unless status2XX res
-
-            if err
-                console.log "Error cleaning app: #{app.name}"
-                console.log err.message
-                console.log err.stack
-                callback err
-            else
-                console.info "Successfully cleaning app: #{app.name}"
-                callback null
 
     # Send a start request to controller server
     start: (app, callback) ->
@@ -143,6 +144,7 @@ reseting routes"
                     else
                         console.info "Successfully starting app: #{app.name}"
                         callback null, res.body
+
 
     # Send a stop request to controller server
     stop: (app, callback) ->

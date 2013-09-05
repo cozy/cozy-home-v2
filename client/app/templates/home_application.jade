@@ -3,10 +3,7 @@ a(href="#apps/#{app.slug}/")
         p
           img(src="")
         p.state-label= t('Installing')
-        - if (app.displayName !== null)
-            p.app-title #{app.displayName}
-        - else
-            p.app-title #{app.name}
+        p.app-title #{app.name}
 .application-outer.center
     .btn-group
         button.btn.remove-app= t('remove')

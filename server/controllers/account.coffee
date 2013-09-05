@@ -1,6 +1,7 @@
 utils = require '../lib/passport_utils'
 Adapter = require '../lib/adapter'
 User = require '../models/user'
+CozyInstance = require '../models/cozyinstance'
 
 adapter = new Adapter()
 
@@ -67,7 +68,7 @@ module.exports =
                 return res.send 500, error: libErr if libErr
                 return res.send 400, error: userErr if userErr
 
-                updateData user, body, data, (libErr, userErr) =>
+                updateData user, req.body, data, (libErr, userErr) =>
                     return res.send 500, error: libErr if libErr
                     return res.send 400, error: userErr if userErr
 
@@ -80,17 +81,17 @@ module.exports =
     users: (req, res, next) ->
         User.all (err, users) ->
             if err
-                send 500, error: "Retrieve users failed."
+                res.send 500, error: "Retrieve users failed."
             else
-                send rows: users
+                res.send rows: users
 
     # Return list of instances
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->
             if err
-                send 500, error: "Retrieve instances failed."
+                res.send 500, error: "Retrieve instances failed."
             else
-                send rows: instances
+                res.send rows: instances
 
     # Update Cozy Instance domain, create it if it does not exist.
     updateInstance: (req, res, next) ->

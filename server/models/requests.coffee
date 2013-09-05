@@ -15,4 +15,4 @@ module.exports =
         all: americano.defaultRequests.all
         byApps: byApps
     application:
-        all: americano.defaultRequests.all
+        all: allSlug
