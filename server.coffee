@@ -15,3 +15,8 @@ if not module.parent
             "Railway server listening on #{host}:#{port} within " +
             "#{server.set('env')} environment"
         )
+
+        setInterval ->
+            util = require 'util'
+            console.log(util.inspect process.memoryUsage())
+        , 5000
