@@ -1106,16 +1106,13 @@ window.require.register("templates/home", function(exports, require, module) {
   buf.push('<div id="no-app-message" class="center"><p>');
   var __val__ = t('no-app-message')
   buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
+  buf.push('</p></div><div class="txtright menu-btn"><span>chose your apps</span><img src="img/apps.png"/></div><div class="txtright menu-btn"><span>configure your cozy</span><img src="img/configuration.png"/></div><div class="txtright menu-btn"><span>ask for assistance</span><img src="img/help.png"/></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
   var __val__ = t('Memory consumption')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');
   var __val__ = t('Disk consumption')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ' : <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">');
-  var __val__ = t('manage')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div></div>');
+  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ' : <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div></div>');
   }
   return buf.join("");
   };
@@ -1156,7 +1153,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"></div></div>');
+  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"></div></div><header id="header" class="navbar"></header>');
   }
   return buf.join("");
   };
@@ -1212,16 +1209,7 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar-inner clearfix"><h2 id="header-title"><a href="http://cozycloud.cc/" target="_blank" title="home"><img src="img/grey-logo.png" alt="Cozy Cloud Symbol"/></a></h2><div id="buttons"><ul class="nav"><li id="notifications-container"></li><li class="active"><a id="home-button" href="#home"><i class="icon-home"></i><span>');
-  var __val__ = t('Home')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="market-button" href="#applications"><i class="icon-plus"></i><span>');
-  var __val__ = t('Apps')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="account-button" href="#account"><i class="icon-user"></i><span>');
-  var __val__ = t('Account')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="help-button" href="https://forum.cozycloud.cc/" target="_blank"><i class="icon-help">&nbsp;</i></a></li><li><a id="logout-button" href="#logout"><i class="icon-arrow-right"></i></a></li></ul></div></div>');
+  buf.push('<div class="navbar"><span id="notifications-container"></span><a id="home-button" href="#home"><img src="img/home-black.png"/></a><a id="logout-button" href="#logout" class="right"><img src="img/logout-black.png"/></a></div>');
   }
   return buf.join("");
   };
@@ -1258,13 +1246,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
-  var __val__ = t('You have no notifications')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</li><li id="dismiss-all">');
-  var __val__ = t('Dismiss All')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</li></ul>');
+  buf.push('<img src="img/notification-black.png"/>');
   }
   return buf.join("");
   };

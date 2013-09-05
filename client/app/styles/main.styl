@@ -1,119 +1,25 @@
 @import 'nib'
+@import '_base'
 
-@font-face
-    font-family: styled
-    src: url('/fonts/maven-pro-light-300.otf');
-
-@font-face
-    font-family: main
-    src: url('/fonts/signika-regular.ttf');
-
-bgcolor = #545e5f + 20%
-shadowcolor = #444
-bgshadowcolor = #666688
-lightorange = #EFD6B8
-
-
-bgcolorbuttons = #8CA6AE
-bgclearcolorbuttons = bgcolorbuttons + 50%
-bggreybuttons = #8C8C8C
-bggreycleanbuttons = bggreybuttons + 50%
-appbordercolor = bgcolorbuttons - 20%
-bgcolorhoverbuttons = bgcolorbuttons + 20%
-bgclearcolorhoverbuttons = bgcolorbuttons + 70%
-
-textcolor = #EAF1F1
-buttoncolor = #CAD1D1 + 60%
-highlightcolor = #EFD6B8
-
-green = #3AA131 + 10%
-orange = #BA6131 + 10%
-red = #AA2121 + 20%
-orange = #FE8800
-grey = #333
-
-body
-    background-color: bgcolor
-    box-sizing: border-box
-    min-width: 320px
-    color: textcolor
-    font-family: styled
-    font-size: 18px
-
-a
-    color: linkcolor
-    font-weight bold
-
-a
-a:visited
-a.editable-click
-    color: textcolor
-    border-bottom: 1px dashed textcolor
-
-a.editable-click:hover
-    color: orange
-    border-bottom: 1px dashed textcolor
-
-.tooltip-inner
-    a:hover
-        color: textcolor
-        text-decoration: none
-
-iframe
-    width 100%
-    height 100%
-    border 0
-
-body
-    height 100%
-    padding 0
-    margin 0
-
-html
-    height 100%
-    padding 0
-    margin 0
-
-html
-    height 100%
-
-.ma2
-    margin: 20px
-
-.ma2
-    padding: 20px
-
-.spacer
-.spacer
-    clear both
-
-.close
-    float right
-
-.hidden
-    display: none
-
-.center
-    text-align center
-
-.btn
-    background: buttoncolor
-    border: 1px solid buttoncolor - 20%
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
+button.btn
+    background: blue
+    border: 1px blue - 20%
     margin: 0
-    font-family: styled
-
-.btn-group
-    .btn
-        font-size: 16px
+    font-family: main
+    color: white
+    padding: 5px
+    border-radius: 4px
+    cursor: pointer
 
 .btn:hover
-    background: #EFD6B8
-    border-color: 1px solid #EFD6B8
+    background: orange
+    border-color: 1px solid orange
+    color: whit
 
 .btn:active
     box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: highlightcolor - 10%
+    background: orange - 10%
+    color: white
 
 .pressed
     box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
@@ -182,7 +88,6 @@ html
     // height: 100%
     padding: 0
     margin: 0
-    box-shadow: inset 0 0 100px #2b4244 + 20%
     background: bgcolor
     overflow: hidden
 
@@ -202,6 +107,37 @@ html
 .btn:focus
   outline: none
 
+.menu-btn
+    opacity: 0.3
+    cursor: pointer
+
+    span
+        font-size: 24px
+        display: none
+        color: darkblue
+
+    img
+        margin: 10px
+
+.menu-btn:hover
+    opacity: 1
+
+    span
+        display: inline
+
+.navbar
+    background: orangewhite + 10%
+    z-index: 15
+
+    img
+        width: 24px
+        margin-left: 5px
+        opacity: 0.5
+
+    a:hover
+        img
+            opacity: 1
+
 /* content */
 
 #content
@@ -209,95 +145,6 @@ html
     height: 100%
     overflow: auto
 
-/* Header */
-
-.navbar
-    border-radius: 0
-    .nav
-        float: right
-
-        .active > a
-        .active > a:active
-        .active > a:focus
-            box-shadow: 0
-            box-shadow: inset 1px 1px 2px bgcolor - 20%
-            background: #E1E1E1 - 10%
-            outline: none
-            text-shadow: none
-
-        .active
-            text-shadow: none
-
-        .active > a:hover
-            cursor: default
-            background: bgcolor + 40%
-            box-shadow: inset 1px 1px 2px bgcolor - 20%
-            background: #E1E1E1 - 10%
-            text-shadow: none
-
-        li
-            a
-                text-shadow: none
-
-                i
-                    margin-right 5px
-
-            a:hover
-                text-shadow: none
-                cursor: pointer
-                background-color: lightorange
-
-#header
-    box-sizing: border-box
-    position relative
-    margin-top 0px
-    margin-bottom 0px
-    border: 0
-    border-bottom: 1px solid bgcolor
-
-    .navbar-inner
-        padding-right 5px
-        background-color bgcolor + 80%
-        background-image none
-        height 100%
-        border: 0
-        border-radius: 0
-
-    h2
-        float left
-        color linkcolor
-        font-size: 12px
-
-    a
-        text-decoration none
-        border-bottom: 0
-
-    p
-        margin 0
-
-    a:hover
-        color: linkcolor
-
-    #buttons
-        font-size: 1em
-        float right
-
-    #header-title
-        width: 17%
-        margin: 0
-
-#buttons img
-    width: 15px
-    height: 15px
-
-#app-frames
-    height 100%
-    display:none
-    text-align: center
-
-#buttons
-    text-align right
-    width: 83%
 
 /** Notifications */
 #notifications-container
@@ -381,20 +228,16 @@ html
     margin: 40px 0
 
 .application
-    width: 170px
+    width: 130px
     margin: 6px
     display: inline-block
     text-align: center
-    //border 1px solid appbordercolor
+    padding: 10px
     border: 0
-    box-shadow 1px 1px 2px shadowcolor
-    border-radius 4px
-    background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
-    background: linear-gradient(top,bgcolor + 60%, bgcolor + 20%)
-    padding-bottom: 20px
+    cursor: pointer
 
     img
-        margin-top: 10px
+        width: 100px
 
     img.stopped
         opacity 0.5
@@ -406,12 +249,18 @@ html
         text-shadow 1px 1px 1px shadowcolor
 
     .app-title
-        font-size: 20px
-        line-height: 30px
-        font-weight: bold
+        font-family: styled
+        text-transform: uppercase
+        font-size: 14px
+        color: darkblue
+        text-decoration: none
+
+    .app-title:hover
+        color: orange
 
     .state-label
         font-size: 18px
+        font-weight: normal
         color: red
 
     a:hover
@@ -432,12 +281,14 @@ html
         .app-stoppable
             margin 0px
 
+.application:hover
+    background: orangewhite - 10%
+
+    .app-title
+        color: orange - 50%
 
 .application:active
     box-shadow none
-
-.application:hover
-    background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
 
 .application.broken
     a
@@ -567,7 +418,6 @@ html
     height: 140px
     margin-right: 1%
 
-    background: bgcolor + 20%
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
     margin-top: 1%
 
@@ -602,14 +452,8 @@ html
         box-sizing: border-box
         height: 140px
         width 140px
-        background: bgcolor + 40%
         padding: 20px 20px 10px 20px
         margin-right: 10px
-
-    .app-install-button:hover
-        button
-        div
-            background: highlightcolor + 20%
 
     .app-install-button
         button
@@ -626,7 +470,6 @@ html
             outline: 0
             font-weight: bold
             color: orange - 10%
-            background: bgcolor + 70%
             box-shadow: none
             font-size: 0.8em
             padding: 4px 8px
@@ -641,7 +484,6 @@ html
             cursor: pointer
             font-weight: bold
             color: orange - 10%
-            background: bgcolor + 70%
             box-shadow: none
             height: 20px
 
@@ -653,7 +495,6 @@ html
     height: 140px
     margin-right: 1%
 
-    background: bgcolor + 20%
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
     margin-top: 1%
 
