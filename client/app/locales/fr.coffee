@@ -37,6 +37,9 @@ module.exports =
     "Questions and help forum"  : "Forum d'aide"
     "Sign out"                  : "Sortir"
     "open in a new tab"         : "Ouvrir dans un onglet"
+    "always-on"                 : "toujours démarrée"
+    "keep always on"            : "garder toujours démarrée"
+    "stop this app"             : "arrêter cet app"
 
 
     "application-is-installing" : """
