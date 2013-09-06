@@ -67,4 +67,4 @@ module.exports = (compound) ->
                         if app.name is name
                             if app.isStoppable
                                 stop_app app
-        , 15000
+        , 900000
