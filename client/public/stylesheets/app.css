@@ -510,6 +510,9 @@ iframe {
 .ma2 {
   padding: 20px;
 }
+.mt6 {
+  margin-top: 60px;
+}
 .spacer,
 .spacer {
   clear: both;
@@ -522,6 +525,17 @@ iframe {
 }
 .center {
   text-align: center;
+}
+.help-text {
+  font-size: 26px;
+  text-align: center;
+  color: #000;
+}
+.help-text.small {
+  font-size: 14px;
+}
+.help-text.small img {
+  width: 24px;
 }
 button.btn {
   background: #15a7c7;
@@ -646,6 +660,7 @@ button.btn {
   color: #363a46;
 }
 .menu-btn img {
+  width: 32px;
   margin: 10px;
   cursor: pointer;
 }
@@ -684,6 +699,9 @@ button.btn {
   padding: 0;
   height: 100%;
   overflow: auto;
+}
+#home-content {
+  padding-top: 40px;
 }
 /** Notifications */
 #notifications-container {

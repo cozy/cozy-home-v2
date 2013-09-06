@@ -1114,7 +1114,7 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>this is help</p>');
+  buf.push('<p class="help-text">Do you look for any any assistance?\nYou have two options to contact us:</p><p class="help-text">1) Write an email to our support team at support@cozycloud.cc</p><p class="help-text">2) Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text mt6 small"><a href="#home"><img src="img/home.png"/><br/>go to back to home page</a></p>');
   }
   return buf.join("");
   };
