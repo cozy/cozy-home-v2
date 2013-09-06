@@ -248,7 +248,7 @@ action "update", ->
             @app.permissions = docTypes
             @app.save (err) =>
 
-                saveIcon appli, (err) ->
+                saveIcon @app, (err) ->
                     if err then console.log err.stack
                     else console.info 'icon attached'
 
