@@ -16,17 +16,8 @@ module.exports = class NavbarView extends BaseView
         @notifications = new NotificationsView()
 
         @buttons = @$('#buttons')
-        @$('#help-button').tooltip
-             placement: 'bottom'
-             title: t('Questions and help forum')
-
         if window.app.instance?.helpUrl
             @$('#help-button').attr 'href', window.app.instance.helpUrl
-
-
-        @$('#logout-button').tooltip
-             placement: 'bottom'
-             title: t('Sign out')
 
         if @apps.length > 0
             onApplicationListReady(@apps)

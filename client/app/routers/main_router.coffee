@@ -3,6 +3,7 @@ module.exports = class MainRouter extends Backbone.Router
         "home": "applicationList"
         "applications": "market"
         "account": "account"
+        "help": "help"
         "logout": "logout"
         "apps/:slug" : "application"
         "apps/:slug/*hash" : "application"
@@ -14,6 +15,9 @@ module.exports = class MainRouter extends Backbone.Router
 
     account: ->
         app.mainView.displayAccount()
+
+    help: ->
+        app.mainView.displayHelp()
 
     applicationList: ->
         app.mainView.displayApplicationsList()

@@ -3,6 +3,7 @@ appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
+HelpView = require 'views/help'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
 socketListener = require('lib/socket_listener')
@@ -25,6 +26,7 @@ module.exports = class HomeView extends BaseView
         @navbar = new NavbarView @apps
         @applicationListView = new ApplicationsListView @apps
         @accountView = new AccountView()
+        @helpView = new HelpView()
         @marketView = new MarketView @apps
 
         @frames = @$ '#app-frames'
@@ -54,11 +56,12 @@ module.exports = class HomeView extends BaseView
                 alert 'Server error occured, logout failed.'
 
     displayView: (view) =>
+        console.log 'display'
         displayView = =>
             @content.show()
             @frames.hide()
             view.$el.hide()
-            @content.append view.$el
+            $('#home-content').append view.$el
             view.$el.fadeIn()
             @currentView = view
             @changeFavicon "favicon.ico"
@@ -74,20 +77,21 @@ module.exports = class HomeView extends BaseView
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
-        @navbar.selectButton 'home-button'
         window.document.title = "Cozy - Home"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView
-        @navbar.selectButton 'market-button'
         window.document.title = "Cozy - Market"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView
-        @navbar.selectButton 'account-button'
         window.document.title = 'Cozy - Account'
+
+    displayHelp: =>
+        @displayView @helpView
+        window.document.title = "Cozy - Help"
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app

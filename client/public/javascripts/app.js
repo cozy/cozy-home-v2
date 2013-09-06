@@ -756,6 +756,9 @@ window.require.register("locales/en", function(exports, require, module) {
     "Questions and help forum": "Questions and help forum",
     "Sign out": "Sign out",
     "open in a new tab": "open in a new tab",
+    "always-on": "always on",
+    "keep always on": "keep always on",
+    "stop this app": "stop this app",
     "application-is-installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
@@ -805,6 +808,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Questions and help forum": "Forum d'aide",
     "Sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
+    "always-on": "toujours démarrée",
+    "keep always on": "garder toujours démarrée",
+    "stop this app": "arrêter cet app",
     "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
@@ -1013,6 +1019,7 @@ window.require.register("routers/main_router", function(exports, require, module
       "home": "applicationList",
       "applications": "market",
       "account": "account",
+      "help": "help",
       "logout": "logout",
       "apps/:slug": "application",
       "apps/:slug/*hash": "application"
@@ -1024,6 +1031,10 @@ window.require.register("routers/main_router", function(exports, require, module
 
     MainRouter.prototype.account = function() {
       return app.mainView.displayAccount();
+    };
+
+    MainRouter.prototype.help = function() {
+      return app.mainView.displayHelp();
     };
 
     MainRouter.prototype.applicationList = function() {
@@ -1097,6 +1108,17 @@ window.require.register("templates/application_iframe", function(exports, requir
   return buf.join("");
   };
 });
+window.require.register("templates/help", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<p>this is help</p>');
+  }
+  return buf.join("");
+  };
+});
 window.require.register("templates/home", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -1106,7 +1128,7 @@ window.require.register("templates/home", function(exports, require, module) {
   buf.push('<div id="no-app-message" class="center"><p>');
   var __val__ = t('no-app-message')
   buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p></div><div class="txtright menu-btn"><span>chose your apps</span><img src="img/apps.png"/></div><div class="txtright menu-btn"><span>configure your cozy</span><img src="img/configuration.png"/></div><div class="txtright menu-btn"><span>ask for assistance</span><img src="img/help.png"/></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
+  buf.push('</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
   var __val__ = t('Memory consumption')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');
@@ -1137,7 +1159,7 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('</button></div><div><label for="app-stoppable"><input');
   buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? undefined : "checked"), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
   buf.push('/>&nbsp;');
-  var __val__ = t('Keep always on')
+  var __val__ = t('keep always on')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</label><button class="btn btn-large start-stop-btn">');
   var __val__ = t('started')
@@ -1153,7 +1175,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"></div></div><header id="header" class="navbar"></header>');
+  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><span>chose your apps</span><img src="img/apps.png"/></div><div class="txtright menu-btn"><span>configure your cozy</span><img src="img/configuration.png"/></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div><header id="header" class="navbar"></header>');
   }
   return buf.join("");
   };
@@ -1552,6 +1574,30 @@ window.require.register("views/account", function(exports, require, module) {
   })(BaseView);
   
 });
+window.require.register("views/help", function(exports, require, module) {
+  var BaseView,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = exports.AccountView = (function(_super) {
+
+    __extends(AccountView, _super);
+
+    AccountView.prototype.id = 'help-view';
+
+    AccountView.prototype.template = require('templates/help');
+
+    function AccountView() {
+      AccountView.__super__.constructor.call(this);
+    }
+
+    return AccountView;
+
+  })(BaseView);
+  
+});
 window.require.register("views/home", function(exports, require, module) {
   var ApplicationRow, ApplicationsListView, ViewCollection, client,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1938,7 +1984,7 @@ window.require.register("views/home_application", function(exports, require, mod
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1952,6 +1998,8 @@ window.require.register("views/main", function(exports, require, module) {
   NavbarView = require('views/navbar');
 
   AccountView = require('views/account');
+
+  HelpView = require('views/help');
 
   MarketView = require('views/market');
 
@@ -1974,6 +2022,8 @@ window.require.register("views/main", function(exports, require, module) {
 
       this.onAppHashChanged = __bind(this.onAppHashChanged, this);
 
+      this.displayHelp = __bind(this.displayHelp, this);
+
       this.displayAccount = __bind(this.displayAccount, this);
 
       this.displayMarket = __bind(this.displayMarket, this);
@@ -1995,6 +2045,7 @@ window.require.register("views/main", function(exports, require, module) {
       this.navbar = new NavbarView(this.apps);
       this.applicationListView = new ApplicationsListView(this.apps);
       this.accountView = new AccountView();
+      this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
       this.frames = this.$('#app-frames');
       this.content = this.$('#content');
@@ -2031,11 +2082,12 @@ window.require.register("views/main", function(exports, require, module) {
     HomeView.prototype.displayView = function(view) {
       var displayView,
         _this = this;
+      console.log('display');
       displayView = function() {
         _this.content.show();
         _this.frames.hide();
         view.$el.hide();
-        _this.content.append(view.$el);
+        $('#home-content').append(view.$el);
         view.$el.fadeIn();
         _this.currentView = view;
         _this.changeFavicon("favicon.ico");
@@ -2053,20 +2105,22 @@ window.require.register("views/main", function(exports, require, module) {
 
     HomeView.prototype.displayApplicationsList = function() {
       this.displayView(this.applicationListView);
-      this.navbar.selectButton('home-button');
       return window.document.title = "Cozy - Home";
     };
 
     HomeView.prototype.displayMarket = function() {
       this.displayView(this.marketView);
-      this.navbar.selectButton('market-button');
       return window.document.title = "Cozy - Market";
     };
 
     HomeView.prototype.displayAccount = function() {
       this.displayView(this.accountView);
-      this.navbar.selectButton('account-button');
       return window.document.title = 'Cozy - Account';
+    };
+
+    HomeView.prototype.displayHelp = function() {
+      this.displayView(this.helpView);
+      return window.document.title = "Cozy - Help";
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
@@ -2591,17 +2645,9 @@ window.require.register("views/navbar", function(exports, require, module) {
       var _ref;
       this.notifications = new NotificationsView();
       this.buttons = this.$('#buttons');
-      this.$('#help-button').tooltip({
-        placement: 'bottom',
-        title: t('Questions and help forum')
-      });
       if ((_ref = window.app.instance) != null ? _ref.helpUrl : void 0) {
         this.$('#help-button').attr('href', window.app.instance.helpUrl);
       }
-      this.$('#logout-button').tooltip({
-        placement: 'bottom',
-        title: t('Sign out')
-      });
       if (this.apps.length > 0) {
         onApplicationListReady(this.apps);
       }

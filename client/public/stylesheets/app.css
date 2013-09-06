@@ -639,7 +639,6 @@ button.btn {
   opacity: 0.3;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   filter: alpha(opacity=30);
-  cursor: pointer;
 }
 .menu-btn span {
   font-size: 24px;
@@ -648,11 +647,18 @@ button.btn {
 }
 .menu-btn img {
   margin: 10px;
+  cursor: pointer;
 }
 .menu-btn:hover {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+.menu-btn:hover a {
+  color: #fff;
+  font-weight: normal;
+  background: #15a7c7;
+  padding: 20px 0 20px 20px;
 }
 .menu-btn:hover span {
   display: inline;
