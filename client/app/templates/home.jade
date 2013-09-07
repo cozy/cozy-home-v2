@@ -1,5 +1,27 @@
 #no-app-message.center
-    p!= t('no-app-message')
+    p.bigger!= t('no-app-message')
+    p.mt2
+        | If it's your first time on Cozy here is a little guide about all 
+        | section available in your Cozy Home. All of them can be reached from
+        | the menu located on the top right corner.
+    p
+        img(src="/img/home-black.png")
+        strong Home&nbsp;
+        | It is the place from where all your applications are accessible.
+    p
+        img(src="/img/apps.png")
+        strong App store&nbsp;
+        | There you can install new applications.
+    p
+        img(src="/img/configuration.png")
+        strong Configuration&nbsp;
+        | To run properly your Cozy requires several parameters. Set them in
+        | this section.
+    p
+        img(src="/img/help.png")
+        strong Assistance&nbsp;
+        | You will find here some links to resource where you will find
+        | assistance.
 
 #app-list
 
