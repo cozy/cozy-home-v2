@@ -34,7 +34,7 @@ runTests = (fileList) ->
 task 'compile', 'run tests through mocha', ->
     files = walk "server", []
     console.log "Compile to JS..."
-    command = "coffee -cb server.coffee config.coffee #{files.join ' '} "
+    command = "coffee -cb server.coffee #{files.join ' '} "
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err

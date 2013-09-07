@@ -47,13 +47,13 @@ module.exports = {
       }
       errors = [];
       if (!utils.checkPassword(oldPassword, user.password)) {
-        errors.push("Old password is incorrect.");
+        errors.push("The current password is incorrect.");
       }
       if (newPassword !== newPassword2) {
-        errors.push("Passwords don't match.");
+        errors.push("The new passwords don't match.");
       }
       if (!(newPassword.length > 5)) {
-        errors.push("Password is too short.");
+        errors.push("The new password is too short.");
       }
       if (errors.length) {
         return cb(null, errors);
@@ -99,7 +99,7 @@ module.exports = {
           }
           return res.send({
             success: true,
-            msg: 'Account informations updated successfully'
+            msg: 'Your new password is set'
           });
         });
       });
@@ -135,7 +135,7 @@ module.exports = {
     var domain, locale;
 
     domain = req.body.domain;
-    locale = req.body.local;
+    locale = req.body.locale;
     if ((domain != null) || (locale != null)) {
       return CozyInstance.all(function(err, instances) {
         var data;
@@ -153,7 +153,7 @@ module.exports = {
             } else {
               return res.send({
                 success: true,
-                msg: 'Domain updated.'
+                msg: 'Instance updated.'
               });
             }
           });
@@ -165,7 +165,7 @@ module.exports = {
           return instances[0].updateAttributes(data, function() {
             return res.send({
               success: true,
-              msg: 'Domain updated.'
+              msg: 'Instance updated.'
             });
           });
         }
@@ -173,7 +173,7 @@ module.exports = {
     } else {
       return res.send(400, {
         error: true,
-        msg: 'No domain given'
+        msg: 'No domain or locale given'
       });
     }
   }

@@ -179,7 +179,7 @@ americano.start({
       }
     }, 15000);
   });
-  User.all(function(err, users) {
+  return User.all(function(err, users) {
     var alarmManager, timezone;
 
     if ((err != null) || users.length === 0) {
@@ -191,7 +191,4 @@ americano.start({
       return realtime.on('alarm.*', alarmManager.handleAlarm);
     }
   });
-  return setInterval(function() {
-    return console.log(process.memoryUsage());
-  }, 5000);
 });

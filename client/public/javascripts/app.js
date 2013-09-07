@@ -564,6 +564,54 @@ window.require.register("lib/base_view", function(exports, require, module) {
   })(Backbone.View);
   
 });
+window.require.register("lib/request", function(exports, require, module) {
+  
+  exports.request = function(type, url, data, callback) {
+    return $.ajax({
+      type: type,
+      url: url,
+      data: data != null ? JSON.stringify(data) : null,
+      contentType: "application/json",
+      dataType: "json",
+      success: function(data) {
+        if (callback != null) {
+          return callback(null, data);
+        }
+      },
+      error: function(data) {
+        console.log(data);
+        if (data != null) {
+          data = JSON.parse(data.responseText);
+          if ((data.msg != null) && (callback != null)) {
+            return callback(new Error(data.msg, data));
+          } else if ((data.error != null) && (callback != null)) {
+            data.msg = data.error;
+            return callback(new Error(data.msg, data));
+          }
+        } else if (callback != null) {
+          return callback(new Error("Server error occured", data));
+        }
+      }
+    });
+  };
+
+  exports.get = function(url, callback) {
+    return exports.request("GET", url, null, callback);
+  };
+
+  exports.post = function(url, data, callback) {
+    return exports.request("POST", url, data, callback);
+  };
+
+  exports.put = function(url, data, callback) {
+    return exports.request("PUT", url, data, callback);
+  };
+
+  exports.del = function(url, callback) {
+    return exports.request("DELETE", url, null, callback);
+  };
+  
+});
 window.require.register("lib/socket_listener", function(exports, require, module) {
   var Application, Notification, SocketListener, application_idx, notification_idx,
     __hasProp = {}.hasOwnProperty,
@@ -1060,35 +1108,53 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="account-form" class="well"><p>');
-  var __val__ = t('email')
+  buf.push('<div id="account-form" class="well"><div class="input"><p>');
+  var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-email-field"></a></p><p>');
-  var __val__ = t('timezone')
+  buf.push('</p><input id="account-email-field"/><button class="btn">');
+  var __val__ = t('save')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-timezone-field"></a></p><p>');
-  var __val__ = t('domain')
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('Your timezone is required to display dates properly')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-domain-field"></a></p><p>');
-  var __val__ = t('locale')
+  buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
+  var __val__ = t('save')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-locale-field"></a></p><p><button id="change-password-button" class="btn">');
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('The domain name is used to build urls send via email to you or your contacts')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><input id="account-domain-field"/><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('Chose the language you want I use to speak with you:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><select id="account-locale-field"><option value="French">French</option><option value="English">English</option></select><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><p><button id="change-password-button" class="btn">');
   var __val__ = t('Change password')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></p><div id="change-password-form"><p>');
-  var __val__ = t('Change password')
+  var __val__ = t('Change password procedure')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><p><label>');
   var __val__ = t('input your current password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password0-field" type="password"/></p><p><label>');
-  var __val__ = t('fill this field to set a new password')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password0-field'), 'type':("password"), 'placeholder':("" + (t('current password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><label>');
+  var __val__ = t('enter a new password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password1-field" type="password"/></p><p><label>');
-  var __val__ = t('confirm new password')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password1-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><label>');
+  var __val__ = t('confirm your new password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">');
-  var __val__ = t('Send Changes')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><button id="account-form-button" class="btn">');
+  var __val__ = t('save your new password')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
   }
@@ -1114,7 +1180,7 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p class="help-text">Do you look for assistance?</p><p class="help-text">1) Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">2) Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text mt6 small"><a href="#home"><img src="img/home.png"/><br/>go to back to home page</a></p>');
+  buf.push('<p class="help-text">Do you look for assistance?</p><p class="help-text">1) Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">2) Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P>');
   }
   return buf.join("");
   };
@@ -1175,7 +1241,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><span>chose your apps</span><img src="img/apps.png"/></div><div class="txtright menu-btn"><span>configure your cozy</span><img src="img/configuration.png"/></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div><header id="header" class="navbar"></header>');
+  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div><header id="header" class="navbar"></header>');
   }
   return buf.join("");
   };
@@ -1186,19 +1252,10 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>');
-  var __val__ = t('welcome-app-store')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
-  var __val__ = t('add application ?')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="text"><p>');
+  buf.push('<p>Welcome to the Cozy App Store. This is the place to customize your cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">');
-  var __val__ = t('your app!')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
+  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</div></div><div class="clearfix"></div>');
@@ -1320,7 +1377,7 @@ window.require.register("templates/popover_permissions", function(exports, requi
   };
 });
 window.require.register("views/account", function(exports, require, module) {
-  var BaseView, locales, timezones,
+  var BaseView, locales, request, timezones,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1330,6 +1387,8 @@ window.require.register("views/account", function(exports, require, module) {
   timezones = require('helpers/timezone').timezones;
 
   locales = require('helpers/locales').locales;
+
+  request = require('lib/request');
 
   module.exports = exports.AccountView = (function(_super) {
 
@@ -1346,7 +1405,7 @@ window.require.register("views/account", function(exports, require, module) {
     function AccountView() {
       this.displayErrors = __bind(this.displayErrors, this);
 
-      this.onDataSubmit = __bind(this.onDataSubmit, this);
+      this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
 
       this.closePasswordForm = __bind(this.closePasswordForm, this);
 
@@ -1358,7 +1417,7 @@ window.require.register("views/account", function(exports, require, module) {
       var _this = this;
       return this.changePasswordButton.fadeOut(function() {
         return _this.changePasswordForm.fadeIn(function() {
-          return _this.password1Field.focus();
+          return _this.password0Field.focus();
         });
       });
     };
@@ -1370,65 +1429,42 @@ window.require.register("views/account", function(exports, require, module) {
       });
     };
 
-    AccountView.prototype.onDataSubmit = function(event) {
+    AccountView.prototype.onNewPasswordSubmit = function(event) {
       var form,
         _this = this;
-      this.loadingIndicator.spin();
       form = {
-        password0: $("#account-password0-field").val(),
-        password1: $("#account-password1-field").val(),
-        password2: $("#account-password2-field").val()
+        password0: this.password0Field.val(),
+        password1: this.password1Field.val(),
+        password2: this.password2Field.val()
       };
       this.infoAlert.hide();
       this.errorAlert.hide();
-      return $.ajax({
-        type: 'POST',
-        url: "api/user/",
-        data: form,
-        success: function(data) {
+      this.accountSubmitButton.spin('small');
+      this.accountSubmitButton.css('color', 'transparent');
+      return request.post('api/user', form, function(err, data) {
+        if (err) {
+          _this.password0Field.val(null);
+          _this.password1Field.val(null);
+          _this.password2Field.val(null);
+          if (data != null) {
+            _this.displayErrors(data.msg);
+          } else {
+            _this.displayErrors(err.message);
+          }
+        } else {
           if (data.success) {
             _this.infoAlert.html(data.msg);
             _this.infoAlert.show();
-            $("#account-password0-field").val(null);
-            $("#account-password1-field").val(null);
-            $("#account-password2-field").val(null);
+            _this.password0Field.val(null);
+            _this.password1Field.val(null);
+            _this.password2Field.val(null);
           } else {
-            _this.displayErrors(data.msg || data.responseText);
+            _this.displayErrors(data.msg);
           }
-          return _this.loadingIndicator.spin();
-        },
-        error: function(data) {
-          $("#account-password0-field").val(null);
-          _this.displayErrors(data.msg || data.responseText);
-          return _this.loadingIndicator.spin();
         }
+        _this.accountSubmitButton.css('color', 'white');
+        return _this.accountSubmitButton.spin();
       });
-    };
-
-    AccountView.prototype.submitData = function(form, url) {
-      var d,
-        _this = this;
-      if (url == null) {
-        url = 'api/user/';
-      }
-      d = new $.Deferred;
-      $.ajax({
-        type: 'POST',
-        url: url,
-        data: form,
-        success: function(data) {
-          if (data.success) {
-            window.location.reload();
-            return d.resolve();
-          } else {
-            return d.reject(data.msg || data.responseText);
-          }
-        },
-        error: function(data) {
-          return d.reject(data.msg || data.responseText);
-        }
-      });
-      return d;
     };
 
     /* Functions
@@ -1438,89 +1474,93 @@ window.require.register("views/account", function(exports, require, module) {
     AccountView.prototype.displayErrors = function(msgs) {
       var errorString, msg, _i, _len;
       errorString = "";
+      if (typeof msgs === 'string') {
+        msgs = msgs.split(',');
+      }
       for (_i = 0, _len = msgs.length; _i < _len; _i++) {
         msg = msgs[_i];
-        errorString += msg + "<br />";
+        errorString += "" + msg + "<br />";
       }
       this.errorAlert.html(errorString);
       return this.errorAlert.show();
     };
 
+    AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
+      var saveButton, saveFunction;
+      saveButton = fieldWidget.parent().find('.btn');
+      saveFunction = function() {
+        var data;
+        saveButton.css('color', 'transparent');
+        saveButton.spin('small', 'white');
+        data = {};
+        data[fieldName] = fieldWidget.val();
+        return request.post("api/" + path, data, function(err) {
+          saveButton.spin();
+          saveButton.css('color', 'white');
+          if (err) {
+            saveButton.addClass('red');
+            saveButton.html('error');
+            if (fieldName === 'locale') {
+              return window.location.reload();
+            }
+          } else {
+            saveButton.addClass('green');
+            return saveButton.html('saved');
+          }
+        });
+      };
+      saveButton.click(saveFunction);
+      return saveFunction;
+    };
+
     AccountView.prototype.fetchData = function() {
       var _this = this;
       $.get("api/users/", function(data) {
-        var timezone, timezoneData, _i, _len;
-        _this.emailField.html(data.rows[0].email);
-        _this.timezoneField.html(data.rows[0].timezone);
+        var saveEmail, saveTimezone, timezoneData;
         timezoneData = [];
-        for (_i = 0, _len = timezones.length; _i < _len; _i++) {
-          timezone = timezones[_i];
-          timezoneData.push({
-            value: timezone,
-            text: timezone
-          });
-        }
-        _this.emailField.editable({
-          url: function(params) {
-            return _this.submitData({
-              email: params.value
-            });
-          },
-          type: 'text',
-          send: 'always',
-          value: data.rows[0].email
+        _this.emailField.val(data.rows[0].email);
+        _this.timezoneField.val(data.rows[0].timezone);
+        saveEmail = _this.getSaveFunction('email', _this.emailField, 'user');
+        _this.emailField.on('keyup', function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return saveEmail();
+          }
         });
-        return _this.timezoneField.editable({
-          url: function(params) {
-            return _this.submitData({
-              timezone: params.value
-            });
-          },
-          type: 'select',
-          send: 'always',
-          source: timezoneData,
-          value: data.rows[0].timezone
-        });
+        saveTimezone = _this.getSaveFunction('timezone', _this.timezoneField, 'user');
+        return _this.timezoneField.change(saveTimezone);
       });
       return $.get("api/instances/", function(data) {
-        var code, domain, instance, locale, localeData, txt, _ref;
+        var domain, instance, locale, saveDomain, saveLocale, _ref;
         instance = (_ref = data.rows) != null ? _ref[0] : void 0;
         domain = (instance != null ? instance.domain : void 0) || 'no.domain.set';
         locale = (instance != null ? instance.locale : void 0) || 'en';
-        _this.domainField.html(domain);
-        _this.domainField.editable({
-          url: function(params) {
-            return _this.submitData({
-              domain: params.value
-            }, 'api/instance/');
-          },
-          type: 'text',
-          send: 'always',
-          value: domain
-        });
-        _this.localeField.html(locales[locale]);
-        localeData = (function() {
-          var _results;
-          _results = [];
-          for (code in locales) {
-            txt = locales[code];
-            _results.push({
-              value: code,
-              text: txt
-            });
+        saveDomain = _this.getSaveFunction('domain', _this.domainField, 'instance');
+        _this.domainField.on('keyup', function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return saveDomain();
           }
-          return _results;
-        })();
-        return _this.localeField.editable({
-          url: function(params) {
-            return _this.submitData({
-              locale: params.value
-            }, 'api/instance/');
-          },
-          type: 'select',
-          send: 'always',
-          source: localeData,
-          value: locale
+        });
+        _this.domainField.val(domain);
+        saveLocale = _this.getSaveFunction('locale', _this.localeField, 'instance');
+        _this.localeField.change(saveLocale);
+        _this.localeField.val(locales[locale]);
+        _this.password0Field = $('#account-password0-field');
+        _this.password1Field = $('#account-password1-field');
+        _this.password2Field = $('#account-password2-field');
+        _this.password0Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.password1Field.focus();
+          }
+        });
+        _this.password1Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.password2Field.focus();
+          }
+        });
+        return _this.password2Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.onNewPasswordSubmit();
+          }
         });
       });
     };
@@ -1530,7 +1570,8 @@ window.require.register("views/account", function(exports, require, module) {
 
 
     AccountView.prototype.afterRender = function() {
-      var _this = this;
+      var timezone, _i, _len,
+        _this = this;
       this.emailField = this.$('#account-email-field');
       this.timezoneField = this.$('#account-timezone-field');
       this.domainField = this.$('#account-domain-field');
@@ -1544,28 +1585,16 @@ window.require.register("views/account", function(exports, require, module) {
       this.changePasswordButton = this.$('#change-password-button');
       this.changePasswordButton.click(this.onChangePasswordClicked);
       this.accountSubmitButton = this.$('#account-form-button');
-      this.password1Field = $('#account-password1-field');
-      this.password2Field = $('#account-password2-field');
-      this.password1Field.keyup(function(event) {
-        if (event.which === 13) {
-          return _this.password2Field.focus();
-        }
-      });
-      this.password2Field.keyup(function(event) {
-        if (event.which === 13) {
-          return _this.onDataSubmit();
-        }
-      });
       this.accountSubmitButton.click(function(event) {
         event.preventDefault();
-        return _this.onDataSubmit();
+        return _this.onNewPasswordSubmit();
       });
-      this.installInfo = this.$('#add-app-modal .loading-indicator');
       this.errorAlert.hide();
       this.infoAlert.hide();
-      this.addApplicationCloseCross = this.$('#add-app-modal .close');
-      this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-      this.loadingIndicator = this.$('.loading-indicator');
+      for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+        timezone = timezones[_i];
+        this.timezoneField.append("<option value=\"" + timezone + "\">" + timezone + "</option>");
+      }
       return this.fetchData();
     };
 
@@ -1653,11 +1682,25 @@ window.require.register("views/home", function(exports, require, module) {
     }
 
     ApplicationsListView.prototype.afterRender = function() {
+      var _this = this;
       this.appList = this.$("#app-list");
       this.manageAppsButton = this.$("#manage-app-button");
       this.addApplicationButton = this.$("#add-app-button");
       this.machineInfos = this.$(".machine-infos").hide();
-      return this.$("#no-app-message").hide();
+      this.$("#no-app-message").hide();
+      $("#content").niceScroll();
+      return $(".menu-btn a").click(function(event) {
+        var target;
+        $(".menu-btn").removeClass('active');
+        target = $(event.target);
+        if (!target.hasClass('menu-btn')) {
+          target = target.parent();
+        }
+        if (!target.hasClass('menu-btn')) {
+          target = target.parent();
+        }
+        return target.addClass('active');
+      });
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {

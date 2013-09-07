@@ -1,16 +1,21 @@
-p= t('welcome-app-store')
+p
+    | Welcome to the Cozy App Store. This is the place to customize your cozy
+    | by adding applications.
+    | From there you can install the application you built or chose among the 
+    | applications provided by Cozy Cloud and other developers.
 #app-market-list
     #your-app
-        .app-install-button.pull-right
-            button.app-install +
-            .app-install-text= t('add application ?')
         .text
             p
                 = t('Install')
                 | &nbsp;
-                a(href="https://cozycloud.cc/make/", target="_blank")= t('your app!')
+                a(href="https://cozycloud.cc/make/", target="_blank")
+                    | your own application
             p
-              input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
+                input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
+                button.btn install
+
+            
             .error.alert.alert-error.main-alert
             .info.alert.main-alert
 

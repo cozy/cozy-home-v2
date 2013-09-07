@@ -42,13 +42,13 @@ module.exports =
             errors = []
 
             unless utils.checkPassword oldPassword, user.password
-                errors.push "Old password is incorrect."
+                errors.push "The current password is incorrect."
 
             unless newPassword is newPassword2
-                errors.push "Passwords don't match."
+                errors.push "The new passwords don't match."
 
             unless newPassword.length > 5
-                errors.push "Password is too short."
+                errors.push "The new password is too short."
 
             if errors.length
                 return cb null, errors
@@ -74,7 +74,7 @@ module.exports =
 
                     res.send
                         success: true,
-                        msg: 'Account informations updated successfully'
+                        msg: 'Your new password is set'
 
 
     # Return list of available users
@@ -96,7 +96,8 @@ module.exports =
     # Update Cozy Instance domain, create it if it does not exist.
     updateInstance: (req, res, next) ->
         domain = req.body.domain
-        locale = req.body.local
+        locale = req.body.locale
+
         if domain? or locale?
             CozyInstance.all (err, instances) ->
                 if err then next err
@@ -105,10 +106,10 @@ module.exports =
                     CozyInstance.create data, (err, instance) ->
                         if err then next err
                         else
-                            res.send success: true, msg: 'Domain updated.'
+                            res.send success: true, msg: 'Instance updated.'
                 else
                     data = domain: domain, locale: locale
                     instances[0].updateAttributes data, ->
-                        res.send success: true, msg: 'Domain updated.'
+                        res.send success: true, msg: 'Instance updated.'
         else
-            res.send 400, error: true, msg: 'No domain given'
+            res.send 400, error: true, msg: 'No domain or locale given'

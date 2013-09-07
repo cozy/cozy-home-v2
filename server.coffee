@@ -123,8 +123,3 @@ americano.start name: 'Cozy Home', port: port, (app, server) ->
             alarmManager = new AlarmManager(timezone, Alarm, notifhelper)
             app.alarmManager = alarmManager
             realtime.on 'alarm.*', alarmManager.handleAlarm
-
-
-    setInterval ->
-        console.log(process.memoryUsage())
-    , 5000

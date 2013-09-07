@@ -14,7 +14,7 @@ darkred = #C66666
 darkgreen = #66C666
 orange = #C60 + 20%
 orangewhite = #fcf9f5
-
+lightgrey = #f7f4f0
 
 html
     height 100%
@@ -28,7 +28,7 @@ body
     background-color: orangewhite
     box-sizing: border-box
     min-width: 320px
-    color: darkblue
+    color: black
     font-family: styled
     font-size: 18px
 
@@ -49,11 +49,31 @@ iframe
     border 0
     box-shadow: inset 0px -1px 2px  #BBB
 
+input
+select
+    background: white
+    font-family: styled
+    text-align: center
+    font-size: 30px
+    height: 60px
+    width: 550px
+    padding: 10px
+    border-radius: 0.4em
+    border: 0
+    color: blue
+    box-shadow: 0 0 0 0
+    border: 1px solid white
+
+input:focus
+select:focus
+    color: orange
+    box-shadow: 0 0 0 0
+    border: 1px solid orange + 50%
+
 .tooltip-inner
     a:hover
         color: textcolor
         text-decoration: none
-
 .ma2
     margin: 20px
 
@@ -75,3 +95,44 @@ iframe
 
 .center
     text-align center
+
+.btn
+    background: blue
+    border: 1px blue - 20%
+    margin: 0
+    font-family: main
+    color: white
+    padding: 5px
+    border-radius: 4px
+    cursor: pointer
+
+.btn:hover
+    background: orange
+    border-color: 1px solid orange
+    color: whit
+
+.btn:active
+    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
+    background: orange - 10%
+    color: white
+
+.green
+    background: darkgreen
+
+.red
+    background: darkred
+
+.alert-error
+.alert-success
+    display: none
+    border-radius: 5px
+    font-family: styled
+    font-size: 20px
+    padding: 20px
+    color: white
+
+.alert-error
+    background: darkred
+
+.alert-success
+    background: darkgreen

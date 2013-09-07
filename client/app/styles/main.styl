@@ -2,136 +2,54 @@
 @import '_base'
 @import '_help'
 
-button.btn
-    background: blue
-    border: 1px blue - 20%
-    margin: 0
-    font-family: main
-    color: white
-    padding: 5px
-    border-radius: 4px
-    cursor: pointer
-
-.btn:hover
-    background: orange
-    border-color: 1px solid orange
-    color: whit
-
-.btn:active
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: orange - 10%
-    color: white
-
-.pressed
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: buttoncolor - 10%
-
-.pressed:hover
-    //box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
-    background: lightorange
-    border: 1px solid lightorange
-
-
-.btn:active
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: buttoncolor - 10%
-
-.btn-green
-    background: green
-    border: 1px solid green - 20%
-    color: textcolor
-
-.btn-green:active
-.btn-green:focus
-.btn-green:hover
-    background: green
-    color: textcolor
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
-    cursor: default
-
-.btn-orange
-    background: orange
-    border: 1px solid orange
-    color: textcolor
-.btn-green:active
-.btn-orange:hover
-    background: orange + 10%
-    color: textcolor
-
-.btn-red
-    background: red
-    border: 1px solid red
-    color: textcolor
-.btn-green:active
-.btn-red:hover
-    background: red + 20%
-    color: textcolor
-
-.alert-error
-    shadow: 0 0 6px rgba(100, 60, 60, 0.85) inset
-    background: rgba(242, 222, 222, 0.8)
-
-.alert-success
-    shadow: 0 0 6px rgba(60, 100, 60, 0.85) inset
-    background: rgba(223, 240, 216, 0.8)
-
-.progress
-    margin: 20px 0
-    height: 10px
-    background: bgcolor - 30%
-
-.progress .bar
-    background: #E3E6E6
-    box-shadow: 0 0 6px #E3E6E6
+* 
+    outline: none
 
 .home-body
     width:100%
-    // height: 100%
     padding: 0
     margin: 0
     background: bgcolor
     overflow: hidden
 
-.well
-    background: transparent
-    border: 0
-    margin: 2%
-    color: textcolor
-    text-align: center
-    box-shadow: 0 0 0 0
+#home-menu
+    position: absolute
+    right: 0
 
-.icon-help
-    background-image: url('../img/help.png')
-    background-repeat: no-repeat
-    background-position: 0 0
+    .menu-btn
+        height: 52px
+        opacity: 0.3
+        margin: 0
+        padding: 0
 
-.btn:focus
-  outline: none
+        span
+            font-size: 24px
+            display: none
+            color: darkblue
 
-.menu-btn
-    opacity: 0.3
+        img
+            width: 32px
+            cursor: pointer
+            margin: 10px 10px
 
-    span
-        font-size: 24px
-        display: none
-        color: darkblue
+    .menu-btn:hover
+        opacity: 1
+        margin: 0
+        padding: 0
+        background: orangewhite - 10%
 
-    img
-        width: 32px
-        margin: 10px
-        cursor: pointer
+        a
+            color: white
+            font-weight: normal
+            color: orange - 50%
+            padding: 30px 0px 10px 10px
 
-.menu-btn:hover
-    opacity: 1
+        span
+            display: inline
 
-    a
-        color: white
-        font-weight: normal
-        background: blue
-        padding: 20px 0 20px 20px
+    .active
+        opacity: 1
 
-    span
-        display: inline
 
 .navbar
     background: orangewhite + 10%
@@ -146,17 +64,19 @@ button.btn
         img
             opacity: 1
 
+
 /* content */
 
 #content
-    padding: 0
     height: 100%
     overflow: auto
 
 #home-content
-    padding-top: 40px
+    padding: 40px 60px 20px 40px
+
 
 /** Notifications */
+
 #notifications-container
     position: relative
 
@@ -338,24 +258,15 @@ button.btn
     padding: 0
     margin: 0
 
-    select
-    input
-        height: 1.1em
-        padding: 0.2em
-        border-radius: 0.4em
-        border: 0
-        background-color: textcolor
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.45) inset
-
-    select
-        height: 35px
-
-    input:focus
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.75) inset, 0 0 17px rgba(82, 168, 236, 0.9)
-        background: #e2f8ff
-
     .btn
-        margin-top: 0.2em
+        margin: -5px 0 0 10px
+        outline: 0
+
+    .input
+        .btn
+            position: relative
+            top: -3px
+            height: 60px
 
     p
         margin: 20px 0 10px 0
@@ -363,9 +274,6 @@ button.btn
     .field
         margin: 10px auto 20px auto
         width: 40%
-
-    .icon-white
-        background-image: url("../img/glyphicons-halflings.png")
 
     .alert
         width: 50%
@@ -379,12 +287,6 @@ button.btn
     input
         font-size: 1em
 
-
-#account-form
-.control-group
-    select
-    input
-        font-size: 1em
 
 #account-info
 #account-error
@@ -418,17 +320,14 @@ button.btn
 
 // MARKET PAGE
 
-#market-view
-    padding: 20px
-
 #your-app
     box-sizing: border-box
+    background: light-grey
     float: left
-    width: 32.33%
+    width: 100%
     height: 140px
     margin-right: 1%
 
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
     margin-top: 1%
 
     p
@@ -504,8 +403,7 @@ button.btn
     width: 32.33%
     height: 140px
     margin-right: 1%
-
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+    background: light-grey
     margin-top: 1%
 
     h3
@@ -523,9 +421,8 @@ button.btn
         height: 70px
         margin: 10px 0px 10px 10px
 
-.navbar .nav > li > a > img
-    box-shadow: 1px 1px 3px #555
-    text-shadow: 1px 1px 3px #555
+
+// modals
 
 .modal
     margin-top: -200px

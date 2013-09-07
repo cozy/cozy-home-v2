@@ -1,41 +1,47 @@
 #account-form.well
-  p= t('email')
-  p.field
-    a#account-email-field
-  p= t('timezone')
-  p.field
-    a#account-timezone-field
-  p= t('domain')
-  p.field
-    a#account-domain-field
+    .input
+        p= t('I need your email to send you alerts or for password recovering')
+        input#account-email-field
+        button.btn= t('save')
+    .input
+        p= t('Your timezone is required to display dates properly')
+        select#account-timezone-field
+        button.btn= t('save')
+    .input
+        p= t('The domain name is used to build urls send via email to you or your contacts')
+        input#account-domain-field
+        button.btn= t('save')
 
-  p= t('locale')
-  p.field
-    a#account-locale-field
+    .input
+        p= t('Chose the language you want I use to speak with you:')
+        select#account-locale-field
+            option(value="French") French
+            option(value="English") English
+        button.btn= t('save')
 
-  p
-    button#change-password-button.btn= t('Change password')
+    p
+        button#change-password-button.btn= t('Change password')
 
-  #change-password-form
-      p= t('Change password')
-      p
-        label= t('input your current password')
-        input#account-password0-field(type="password")
+    #change-password-form
+        p= t('Change password procedure')
+        p
+            label= t('input your current password')
+        input#account-password0-field(type="password", placeholder="#{t('current password')}")
 
-      p
-        label= t('fill this field to set a new password')
-        input#account-password1-field(type="password")
-      p
-        label= t('confirm new password')
-        input#account-password2-field(type="password")
+        p
+            label= t('enter a new password')
+        input#account-password1-field(type="password", placeholder="#{t('new password')}")
+        p
+            label= t('confirm your new password')
+        input#account-password2-field(type="password", placeholder="#{t('new password')}")
 
-      p
-        button#account-form-button(class="btn")= t('Send Changes')
+        p
+            button#account-form-button(class="btn")= t('save your new password')
 
-        p.loading-indicator &nbsp;
+            p.loading-indicator &nbsp;
 
-        #account-info.alert.main-alert.alert-success.hide
-            #account-info-text
+            #account-info.alert.main-alert.alert-success.hide
+                    #account-info-text
 
-        #account-error.alert.alert-error.main-alert.hide
-            #account-form-error-text
+            #account-error.alert.alert-error.main-alert.hide
+                    #account-form-error-text
