@@ -623,6 +623,7 @@ select:focus {
   right: 0;
 }
 #home-menu .menu-btn {
+  z-index: 50;
   height: 52px;
   opacity: 0.3;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
@@ -1142,19 +1143,6 @@ select:focus {
   text-shadow: none;
   color: #999;
 }
-@media (max-width: 1200px) {
-  #header-title {
-    display: none;
-  }
-  #buttons {
-    width: 100%;
-  }
-  #market-view #no-app-message,
-  #market-view .cozy-app,
-  #market-view #your-app {
-    width: 49%;
-  }
-}
 @media (max-width: 850px) {
   #header span,
   #market-view span {
@@ -1169,10 +1157,6 @@ select:focus {
   .home-body {
     -webkit-box-shadow: none;
     box-shadow: none;
-  }
-  #header-title a {
-    padding-left: 0;
-    padding-right: 0;
   }
   #account-form {
     text-align: left;
@@ -1222,20 +1206,33 @@ select:focus {
     min-height: 20px;
     height: 20px;
   }
-  #market-view img {
+  #market-view .app-img {
+    padding: 20px 0;
+  }
+  #market-view .app-img img {
     margin: 0;
-    width: 75px;
+    width: 100px;
   }
   #market-view h3 {
     margin-bottom: 10px;
   }
   #market-view #your-app {
+    height: 180px;
     margin-right: 0;
     width: 100%;
+  }
+  #market-view #your-app .btn {
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+  }
+  #market-view #your-app input {
+    font-size: 16px;
   }
   #market-view #no-app-message,
   #market-view .cozy-app {
     width: 100%;
+    height: 150px;
   }
   #notifications .notification a.doaction {
     width: 300px;
@@ -1260,8 +1257,56 @@ select:focus {
     -webkit-border-radius: 3px;
     border-radius: 3px;
   }
+  #home-content {
+    padding: 5px;
+  }
+  #no-app-message {
+    width: 100%;
+    padding-right: 40px;
+  }
+  #market-view {
+    padding: 20px 40px 20px 20px;
+  }
+  #account-view #account-form .btn {
+    width: 100%;
+    margin: 20px 0 0 0;
+    height: 30px;
+  }
+  #account-view select {
+    width: 100%;
+  }
+  #help-view p.help-text {
+    font-size: 20px;
+  }
 }
 @media (max-width: 500px) {
+  #market-view #your-app {
+    height: 180px;
+  }
+  #market-view #your-app .btn {
+    height: 30px;
+  }
+  #market-view #your-app input {
+    font-size: 16px;
+  }
+  #market-view .cozy-app {
+    height: 160px;
+    margin-top: 10px;
+  }
+  #market-view .app-text {
+    padding: 10px;
+  }
+  #market-view .app-img {
+    display: block;
+    padding: 0;
+    width: 100%;
+    height: 60px;
+    text-align: left;
+  }
+  #market-view .app-img img {
+    margin: 0;
+    width: 50px;
+  }
   #notifications-container #notifications {
     left: -50px;
     width: 310px;

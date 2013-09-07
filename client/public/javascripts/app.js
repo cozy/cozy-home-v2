@@ -1192,10 +1192,10 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center"><p class="bigger">');
+  buf.push('<div id="no-app-message" class="center"><p class="biggest">Welcome to your Cozy!</p><p class="bigger">');
   var __val__ = t('no-app-message')
   buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To run properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
+  buf.push('</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
   var __val__ = t('Memory consumption')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');

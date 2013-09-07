@@ -17,6 +17,7 @@
     right: 0
 
     .menu-btn
+        z-index: 50
         height: 52px
         opacity: 0.3
         margin: 0
@@ -501,19 +502,6 @@
 
 // Responsive
 
-@media (max-width: 1200px)
-    #header-title
-        display: none
-
-    #buttons
-        width: 100%
-
-    #market-view
-        #no-app-message,
-        .cozy-app
-        #your-app
-            width: 49%
-
 @media (max-width: 850px)
     #header
     #market-view
@@ -527,11 +515,6 @@
     .home-body
         box-shadow: none
 
-    #header-title
-        a
-            padding-left: 0
-            padding-right: 0
-
     #account-form
         text-align: left
 
@@ -542,6 +525,8 @@
             margin: 15px
 
             select
+
+
             option
                 width: 75%
 
@@ -582,20 +567,34 @@
                 height: 20px
 
     #market-view
-        img
-            margin: 0
-            width: 75px
+        .app-img
+            padding: 20px 0
+
+            img
+                margin: 0
+                width: 100px
 
         h3
             margin-bottom: 10px
 
         #your-app
+            height: 180px
             margin-right: 0
             width: 100%
+
+            .btn
+                width: 100%
+                height: 30px
+                margin-top: 10px
+
+            input
+                font-size: 16px
 
         #no-app-message
         .cozy-app
             width: 100%
+
+            height: 150px
 
     #notifications
         .notification
@@ -621,9 +620,63 @@
                 margin-right: 5px
                 border-radius: 3px
 
+    #home-content
+        padding 5px
+
+    #no-app-message
+        width: 100%
+        padding-right: 40px
+
+    #market-view
+        padding: 20px 40px 20px 20px
+
+    #account-view
+        #account-form
+            .btn
+                width: 100%
+                margin: 20px 0 0 0
+                height: 30px
+
+        select
+            width: 100%
+
+    #help-view
+        p.help-text
+            font-size: 20px
+
+
 
 
 @media (max-width: 500px)
+
+    #market-view
+        #your-app
+            height: 180px
+
+            .btn
+                height: 30px
+
+            input
+                font-size: 16px
+
+        .cozy-app
+            height: 160px
+            margin-top: 10px
+
+        .app-text
+            padding: 10px
+
+        .app-img
+            display: block
+            padding: 0
+            width: 100%
+            height: 60px
+            text-align: left
+
+            img
+                margin: 0
+                width: 50px
+
     #notifications-container
         #notifications
             left: -50px
