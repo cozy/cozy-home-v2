@@ -280,18 +280,16 @@
         margin: auto
         margin-top: 30px
 
+    select
+    input
+        text-align: left
+
 
 #add-app-form
     padding: 3%
 
     input
         font-size: 1em
-
-
-#account-info
-#account-error
-    display: none
-    margin-bottom: 0
 
 #home-view
     overflow:hidden
@@ -302,17 +300,13 @@
     margin: 0
 
 #account-view
+    text-align: center
+
     #change-password-button
         margin-top: 50px
 
 #change-password-form
     margin-top: 50px
-
-.loading-indicator
-    border: 0
-    background: transparent
-    box-shadow: 0
-    color: textcolor
 
 .app-introduction
     margin-top: 60px
@@ -322,19 +316,14 @@
 
 #your-app
     box-sizing: border-box
-    background: light-grey
+    background: lightgrey
     float: left
-    width: 100%
+    width: 99%
     height: 140px
-    margin-right: 1%
-
-    margin-top: 1%
+    margin-top: 20px
 
     p
         margin-bottom: 0
-
-    input
-        margin-top: 10px
 
     .text
         padding: 20px
@@ -342,9 +331,14 @@
     #app-git-field
         box-sizing: border-box
         width: 100%
-        height: 30px
-        max-width: 500px
-        margin-right: 20px
+        max-width: 550px
+        font-size: 24px
+        padding: 10px
+        margin-top: 2px
+        margin-right: 10px
+
+    .btn 
+        height: 60px
 
     .error
         box-sizing: border-box
@@ -356,14 +350,6 @@
 #app-market-list
     box-sizing: border-box
     margin-top: 20px
-
-    .app-img
-        box-sizing: border-box
-        height: 140px
-        width 140px
-        padding: 20px 20px 10px 20px
-        margin-right: 10px
-
     .app-install-button
         button
         div
@@ -373,6 +359,9 @@
             padding: 10px
             word-wrap: normal
             overflow-x: hidden
+
+        .app-text p
+            margin-right: 20px
 
         .app-install
             border: 0
@@ -396,18 +385,22 @@
             box-shadow: none
             height: 20px
 
+
+
 #market-view #no-app-message,
 .cozy-app
     box-sizing: border-box
     float: left
-    width: 32.33%
-    height: 140px
+    width: 49%
+    height: 180px
+    background: lightgrey
     margin-right: 1%
-    background: light-grey
     margin-top: 1%
+    cursor: pointer
+
 
     h3
-        margin-top: 20px
+        margin-top: 30px
         margin-bottom: 0
         padding-bottom: 0
         line-height: 30px
@@ -415,13 +408,43 @@
     .comment
         font-size: 14px
 
+    .right
+        display: none
+
     .btn
         float: right
-        width: 15%
-        height: 70px
-        margin: 10px 0px 10px 10px
+        margin: 10px 10px 10px 10px
 
+    .app-img
+        text-align: center
+        vertical-align: center
+        box-sizing: border-box
+        width: 180px
+        height: 180px
+        padding: 20px 20px 10px 20px
+        margin-right: 10px
 
+    .img-btn
+        width: 24px
+        opacity: 0.3
+        margin: 10px 5px
+
+    .img-btn:hover
+        opacity: 1
+        cursor: pointer
+
+.cozy-app:hover
+    background: lightgrey - 10%
+
+    .right
+        display: inline
+
+.cozy-app.official
+    background: lightgreyblue
+
+.cozy-app.official:hover
+    background: lightgreyblue - 5%
+    
 // modals
 
 .modal

@@ -531,8 +531,11 @@ select:focus {
 .ma2 {
   margin: 20px;
 }
-.ma2 {
+.pa2 {
   padding: 20px;
+}
+.par2 {
+  padding-right: 20px;
 }
 .mt6 {
   margin-top: 60px;
@@ -900,16 +903,19 @@ select:focus {
   margin: auto;
   margin-top: 30px;
 }
+.control-group select,
+#add-app-form select,
+#account-form select,
+.control-group input,
+#add-app-form input,
+#account-form input {
+  text-align: left;
+}
 #add-app-form {
   padding: 3%;
 }
 #add-app-form input {
   font-size: 1em;
-}
-#account-info,
-#account-error {
-  display: none;
-  margin-bottom: 0;
 }
 #home-view {
   overflow: hidden;
@@ -919,18 +925,14 @@ select:focus {
   padding: 0;
   margin: 0;
 }
+#account-view {
+  text-align: center;
+}
 #account-view #change-password-button {
   margin-top: 50px;
 }
 #change-password-form {
   margin-top: 50px;
-}
-.loading-indicator {
-  border: 0;
-  background: transparent;
-  -webkit-box-shadow: 0;
-  box-shadow: 0;
-  color: textcolor;
 }
 .app-introduction {
   margin-top: 60px;
@@ -940,18 +942,14 @@ select:focus {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background: light-grey;
+  background: #f7f4f0;
   float: left;
-  width: 100%;
+  width: 99%;
   height: 140px;
-  margin-right: 1%;
-  margin-top: 1%;
+  margin-top: 20px;
 }
 #your-app p {
   margin-bottom: 0;
-}
-#your-app input {
-  margin-top: 10px;
 }
 #your-app .text {
   padding: 20px;
@@ -961,9 +959,14 @@ select:focus {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
-  height: 30px;
-  max-width: 500px;
-  margin-right: 20px;
+  max-width: 550px;
+  font-size: 24px;
+  padding: 10px;
+  margin-top: 2px;
+  margin-right: 10px;
+}
+#your-app .btn {
+  height: 60px;
 }
 #your-app .error {
   -webkit-box-sizing: border-box;
@@ -980,15 +983,6 @@ select:focus {
   box-sizing: border-box;
   margin-top: 20px;
 }
-#app-market-list .app-img {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 140px;
-  width: 140px;
-  padding: 20px 20px 10px 20px;
-  margin-right: 10px;
-}
 #app-market-list .app-install-button button,
 #app-market-list .app-install-button div {
   display: inline;
@@ -997,6 +991,9 @@ select:focus {
   padding: 10px;
   word-wrap: normal;
   overflow-x: hidden;
+}
+#app-market-list .app-install-button .app-text p {
+  margin-right: 20px;
 }
 #app-market-list .app-install-button .app-install {
   border: 0;
@@ -1028,15 +1025,16 @@ select:focus {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   float: left;
-  width: 32.33%;
-  height: 140px;
+  width: 49%;
+  height: 180px;
+  background: #f7f4f0;
   margin-right: 1%;
-  background: light-grey;
   margin-top: 1%;
+  cursor: pointer;
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 0;
   padding-bottom: 0;
   line-height: 30px;
@@ -1045,12 +1043,53 @@ select:focus {
 .cozy-app .comment {
   font-size: 14px;
 }
+#market-view #no-app-message .right,
+.cozy-app .right {
+  display: none;
+}
 #market-view #no-app-message .btn,
 .cozy-app .btn {
   float: right;
-  width: 15%;
-  height: 70px;
-  margin: 10px 0px 10px 10px;
+  margin: 10px 10px 10px 10px;
+}
+#market-view #no-app-message .app-img,
+.cozy-app .app-img {
+  text-align: center;
+  vertical-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 180px;
+  height: 180px;
+  padding: 20px 20px 10px 20px;
+  margin-right: 10px;
+}
+#market-view #no-app-message .img-btn,
+.cozy-app .img-btn {
+  width: 24px;
+  opacity: 0.3;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  filter: alpha(opacity=30);
+  margin: 10px 5px;
+}
+#market-view #no-app-message .img-btn:hover,
+.cozy-app .img-btn:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  cursor: pointer;
+}
+.cozy-app:hover {
+  background: #e6ddd0;
+}
+.cozy-app:hover .right {
+  display: inline;
+}
+.cozy-app.official {
+  background: #f0f4f7;
+}
+.cozy-app.official:hover {
+  background: #e0e8ef;
 }
 .modal {
   margin-top: -200px;

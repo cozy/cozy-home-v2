@@ -1,10 +1,13 @@
-.app-img.pull-left
+.app-img.left
     img(src="#{app.icon}")
 
-.app-install-button.pull-right
-    button.app-install +
-    .app-install-text= t('add application ?')
+.right
+    if app.website !== undefined
+        a(href="#{app.website}")
+            img.img-btn(src="img/link.png", target="_blank")
+    a(href="#{app.git}")
+        img.img-btn(src="img/git.png", target="_blank")
 .app-text
     h3 #{app.name}
     span.comment= t(app.comment)
-    p #{app.description}
+    p.par2 #{app.description}

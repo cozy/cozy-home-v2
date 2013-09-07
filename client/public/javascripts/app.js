@@ -128,36 +128,15 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "Manage your bookmarks easily"
         }, {
-          icon: "img/feeds-icon.png",
-          name: "feeds",
-          slug: "feeds",
-          git: "https://github.com/Piour/cozy-feeds.git",
+          icon: "img/botmanager-icon.png",
+          name: "irc bot",
+          slug: "irc-botmanager",
+          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
           comment: "community contribution",
-          description: "Aggregate your feeds and save your favorite links in bookmarks."
-        }, {
-          icon: "img/notes-icon.png",
-          name: "notes",
-          slug: "notes",
-          git: "https://github.com/mycozycloud/cozy-notes.git",
-          comment: "official application",
-          description: "Store all your notes and files."
-        }, {
-          icon: "img/todos-icon.png",
-          name: "todos",
-          slug: "todos",
-          git: "https://github.com/mycozycloud/cozy-todos.git",
-          comment: "official application",
-          description: "Write your tasks, order them and execute them efficiently."
-        }, {
-          icon: "img/photos-icon.png",
-          name: "photos",
-          slug: "photos",
-          git: "https://github.com/mycozycloud/cozy-photos.git",
-          comment: "official application",
-          description: "Share photos with your friends."
+          description: "A friendly bot to help you manage an IRC channel"
         }, {
           icon: "img/agenda-icon.png",
-          name: "agenda",
+          name: "calendar",
           slug: "agenda",
           git: "https://github.com/mycozycloud/cozy-agenda.git",
           comment: "official application",
@@ -170,19 +149,27 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "official application",
           description: "Manage your contacts with custom informations"
         }, {
+          icon: "img/feeds-icon.png",
+          name: "feeds",
+          slug: "feeds",
+          git: "https://github.com/Piour/cozy-feeds.git",
+          comment: "community contribution",
+          description: "Aggregate your feeds and save your favorite links in bookmarks."
+        }, {
+          icon: "img/kyou.png",
+          name: "kyou",
+          slug: "kyou",
+          git: "https://github.com/frankrousseau/kyou.git",
+          comment: "community contribution",
+          description: "Quantify your for a better knowledge of yourself",
+          website: "http://frankrousseau.github.io/kyou"
+        }, {
           icon: "img/nirc-icon.png",
           name: "nirc",
           slug: "nirc",
           git: "https://github.com/frankrousseau/cozy-nirc.git",
           comment: "community contribution",
           description: "Access to your favorite IRC channel from your Cozy"
-        }, {
-          icon: "img/botmanager-icon.png",
-          name: "IRC BotManager",
-          slug: "irc-botmanager",
-          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
-          comment: "community contribution",
-          description: "A friendly bot to help you manage an IRC channel"
         }, {
           icon: "img/cozy-music.png",
           name: "cozic",
@@ -191,12 +178,26 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "An audio player to always keep your music with you"
         }, {
-          icon: "img/kyou.png",
-          name: "kyou",
-          slug: "kyou",
-          git: "https://github.com/frankrousseau/kyou.git",
-          comment: "community contribution",
-          description: "Quantified self for Cozycloud!"
+          icon: "img/notes-icon.png",
+          name: "notes",
+          slug: "notes",
+          git: "https://github.com/mycozycloud/cozy-notes.git",
+          comment: "official application",
+          description: "Store all your notes and files."
+        }, {
+          icon: "img/photos-icon.png",
+          name: "photos",
+          slug: "photos",
+          git: "https://github.com/mycozycloud/cozy-photos.git",
+          comment: "official application",
+          description: "Share photos with your friends."
+        }, {
+          icon: "img/todos-icon.png",
+          name: "todos",
+          slug: "todos",
+          git: "https://github.com/mycozycloud/cozy-todos.git",
+          comment: "official application",
+          description: "Write your tasks, order them and execute them efficiently."
         }, {
           icon: "img/webdav.png",
           name: "webdav",
@@ -1180,7 +1181,7 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p class="help-text">Do you look for assistance?</p><p class="help-text">1) Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">2) Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P>');
+  buf.push('<p class="help-text">Do you look for assistance?</p><p class="help-text">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P>');
   }
   return buf.join("");
   };
@@ -1269,15 +1270,21 @@ window.require.register("templates/market_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="app-img pull-left"><img');
+  buf.push('<div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
-  var __val__ = t('add application ?')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  buf.push('/></div><div class="right">');
+  if ( app.website !== undefined)
+  {
+  buf.push('<a');
+  buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+  buf.push('><img src="img/link.png" target="_blank" class="img-btn"/></a>');
+  }
+  buf.push('<a');
+  buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+  buf.push('><img src="img/git.png" target="_blank" class="img-btn"/></a></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+  buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
   }
   return buf.join("");
   };
@@ -1417,7 +1424,8 @@ window.require.register("views/account", function(exports, require, module) {
       var _this = this;
       return this.changePasswordButton.fadeOut(function() {
         return _this.changePasswordForm.fadeIn(function() {
-          return _this.password0Field.focus();
+          _this.password0Field.focus();
+          return $(window).trigger('resize');
         });
       });
     };
@@ -1543,7 +1551,7 @@ window.require.register("views/account", function(exports, require, module) {
         _this.domainField.val(domain);
         saveLocale = _this.getSaveFunction('locale', _this.localeField, 'instance');
         _this.localeField.change(saveLocale);
-        _this.localeField.val(locales[locale]);
+        _this.localeField.val(locale);
         _this.password0Field = $('#account-password0-field');
         _this.password1Field = $('#account-password1-field');
         _this.password2Field = $('#account-password2-field');
@@ -2573,9 +2581,8 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.template = require('templates/market_application');
 
     ApplicationRow.prototype.events = {
-      "mouseover .app-install-button": "onMouseoverInstallButton",
-      "mouseout .app-install-button": "onMouseoutInstallButton",
-      "click .app-install-button": "onInstallClicked"
+      "click .btn": "onInstallClicked",
+      "click": "onInstallClicked"
     };
 
     ApplicationRow.prototype.getRenderData = function() {
@@ -2589,10 +2596,6 @@ window.require.register("views/market_application", function(exports, require, m
       this.marketView = marketView;
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
-      this.onMouseoutInstallButton = __bind(this.onMouseoutInstallButton, this);
-
-      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
-
       this.afterRender = __bind(this.afterRender, this);
 
       ApplicationRow.__super__.constructor.call(this);
@@ -2600,40 +2603,9 @@ window.require.register("views/market_application", function(exports, require, m
     }
 
     ApplicationRow.prototype.afterRender = function() {
-      return this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
-    };
-
-    ApplicationRow.prototype.onMouseoverInstallButton = function() {
-      var direction,
-        _this = this;
-      this.mouseOut = false;
-      if ($(window).width() > 800) {
-        if (!this.isDisplayed) {
-          direction = {
-            direction: 'right'
-          };
-          return this.$(".app-install-text").show('slide', direction, 300, function() {
-            return _this.isDisplayed = true;
-          });
-        }
-      }
-    };
-
-    ApplicationRow.prototype.onMouseoutInstallButton = function() {
-      var _this = this;
-      this.mouseOut = true;
-      if ($(window).width() > 800) {
-        return setTimeout(function() {
-          var direction;
-          if (_this.isDisplayed && _this.mouseOut) {
-            direction = {
-              direction: 'right'
-            };
-            return _this.$(".app-install-text").hide('slide', direction, 300, function() {
-              return _this.isDisplayed = false;
-            });
-          }
-        }, 500);
+      this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
+      if (this.app.get('comment') === 'official application') {
+        return this.$el.addClass('official');
       }
     };
 

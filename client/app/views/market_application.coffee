@@ -7,9 +7,8 @@ module.exports = class ApplicationRow extends BaseView
     template: require 'templates/market_application'
 
     events:
-        "mouseover .app-install-button": "onMouseoverInstallButton"
-        "mouseout .app-install-button": "onMouseoutInstallButton"
-        "click .app-install-button": "onInstallClicked"
+        "click .btn": "onInstallClicked"
+        "click": "onInstallClicked"
 
     getRenderData: ->
         app: @app.attributes
@@ -20,24 +19,8 @@ module.exports = class ApplicationRow extends BaseView
 
     afterRender: =>
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
-
-    onMouseoverInstallButton: =>
-        @mouseOut = false
-        if $(window).width() > 800
-            unless @isDisplayed
-                direction = direction: 'right'
-                @$(".app-install-text").show 'slide', direction, 300, =>
-                    @isDisplayed = true
-
-    onMouseoutInstallButton: =>
-        @mouseOut = true
-        if $(window).width() > 800
-            setTimeout =>
-                if @isDisplayed and @mouseOut
-                    direction = direction: 'right'
-                    @$(".app-install-text").hide 'slide', direction, 300, =>
-                        @isDisplayed = false
-            , 500
+        if @app.get('comment') is 'official application'
+            @$el.addClass 'official'
 
     onInstallClicked: =>
         if @marketView.isInstalling()
