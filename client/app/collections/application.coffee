@@ -26,13 +26,6 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "community contribution"
                 description:"Manage your bookmarks easily"
             ,
-                icon:"img/botmanager-icon.png"
-                name:"irc bot"
-                slug:"irc-botmanager"
-                git:"https://github.com/jsilvestre/cozy-irc-botmanager.git"
-                comment:"community contribution"
-                description:"A friendly bot to help you manage an IRC channel"
-            ,
                 icon:"img/agenda-icon.png"
                 name:"calendar"
                 slug:"agenda"
@@ -47,12 +40,26 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"official application"
                 description:"Manage your contacts with custom informations"
             ,
+                icon: "img/cozy-music.png"
+                name: "cozic"
+                slug: "cozic"
+                git: "https://github.com/rdubigny/cozy-music.git"
+                comment: "community contribution"
+                description: "An audio player to always keep your music with you"
+            ,
                 icon:"img/feeds-icon.png"
                 name:"feeds"
                 slug:"feeds"
                 git:"https://github.com/Piour/cozy-feeds.git"
                 comment:"community contribution"
                 description:"Aggregate your feeds and save your favorite links in bookmarks."
+            ,
+                icon:"img/botmanager-icon.png"
+                name:"irc bot"
+                slug:"irc-botmanager"
+                git:"https://github.com/jsilvestre/cozy-irc-botmanager.git"
+                comment:"community contribution"
+                description:"A friendly bot to help you manage an IRC channel"
             ,
                 icon: "img/kyou.png"
                 name: "kyou"
@@ -68,13 +75,6 @@ module.exports = class ApplicationCollection extends BaseCollection
                 git:"https://github.com/frankrousseau/cozy-nirc.git"
                 comment:"community contribution"
                 description:"Access to your favorite IRC channel from your Cozy"
-            ,
-                icon: "img/cozy-music.png"
-                name: "cozic"
-                slug: "cozic"
-                git: "https://github.com/rdubigny/cozy-music.git"
-                comment: "community contribution"
-                description: "An audio player to always keep your music with you"
             ,
                 icon:"img/notes-icon.png"
                 name:"notes"

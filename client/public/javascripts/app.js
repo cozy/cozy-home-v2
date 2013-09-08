@@ -128,13 +128,6 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "Manage your bookmarks easily"
         }, {
-          icon: "img/botmanager-icon.png",
-          name: "irc bot",
-          slug: "irc-botmanager",
-          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
-          comment: "community contribution",
-          description: "A friendly bot to help you manage an IRC channel"
-        }, {
           icon: "img/agenda-icon.png",
           name: "calendar",
           slug: "agenda",
@@ -149,12 +142,26 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "official application",
           description: "Manage your contacts with custom informations"
         }, {
+          icon: "img/cozy-music.png",
+          name: "cozic",
+          slug: "cozic",
+          git: "https://github.com/rdubigny/cozy-music.git",
+          comment: "community contribution",
+          description: "An audio player to always keep your music with you"
+        }, {
           icon: "img/feeds-icon.png",
           name: "feeds",
           slug: "feeds",
           git: "https://github.com/Piour/cozy-feeds.git",
           comment: "community contribution",
           description: "Aggregate your feeds and save your favorite links in bookmarks."
+        }, {
+          icon: "img/botmanager-icon.png",
+          name: "irc bot",
+          slug: "irc-botmanager",
+          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
+          comment: "community contribution",
+          description: "A friendly bot to help you manage an IRC channel"
         }, {
           icon: "img/kyou.png",
           name: "kyou",
@@ -170,13 +177,6 @@ window.require.register("collections/application", function(exports, require, mo
           git: "https://github.com/frankrousseau/cozy-nirc.git",
           comment: "community contribution",
           description: "Access to your favorite IRC channel from your Cozy"
-        }, {
-          icon: "img/cozy-music.png",
-          name: "cozic",
-          slug: "cozic",
-          git: "https://github.com/rdubigny/cozy-music.git",
-          comment: "community contribution",
-          description: "An audio player to always keep your music with you"
         }, {
           icon: "img/notes-icon.png",
           name: "notes",
@@ -1195,13 +1195,7 @@ window.require.register("templates/home", function(exports, require, module) {
   buf.push('<div id="no-app-message" class="center"><p class="biggest">Welcome to your Cozy!</p><p class="bigger">');
   var __val__ = t('no-app-message')
   buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
-  var __val__ = t('Memory consumption')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');
-  var __val__ = t('Disk consumption')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ' : <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div></div>');
+  buf.push('</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1259,7 +1253,7 @@ window.require.register("templates/market", function(exports, require, module) {
   buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="clearfix"></div>');
+  buf.push('</div></div><div class="md-overlay"></div>');
   }
   return buf.join("");
   };
@@ -1343,19 +1337,7 @@ window.require.register("templates/popover_description", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">');
-  var __val__ = t('Application Description')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('downloading-description')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
-  var __val__ = t('Cancel')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
-  var __val__ = t('Ok')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></div>');
+  buf.push('<div class="md-content"><h3>Modal Dialog</h3><div class="modal-body"></div><div><p>This is a modal window. You can do the following things with it:</p><button id="cancelbtn" class="btn">Close me!</button></div></div>');
   }
   return buf.join("");
   };
@@ -2444,7 +2426,9 @@ window.require.register("views/market", function(exports, require, module) {
           return _this.popover.remove();
         }
       });
-      return this.$el.append(this.popover.$el);
+      this.$el.append(this.popover.$el);
+      this.popover.$el.addClass('md-show');
+      return $('.md-overlay').addClass('md-show');
     };
 
     MarketView.prototype.showPermissions = function(appWidget) {
@@ -2936,13 +2920,15 @@ window.require.register("views/popover_description", function(exports, require, 
 
       this.onCancelClicked = __bind(this.onCancelClicked, this);
 
+      this.hide = __bind(this.hide, this);
+
       this.renderDescription = __bind(this.renderDescription, this);
       return PopoverDescriptionView.__super__.constructor.apply(this, arguments);
     }
 
     PopoverDescriptionView.prototype.id = 'market-popover-description-view';
 
-    PopoverDescriptionView.prototype.className = 'modal';
+    PopoverDescriptionView.prototype.className = 'modal md-modal md-effect-1';
 
     PopoverDescriptionView.prototype.tagName = 'div';
 
@@ -2984,7 +2970,13 @@ window.require.register("views/popover_description", function(exports, require, 
       return this.body.append(descriptionDiv);
     };
 
+    PopoverDescriptionView.prototype.hide = function() {
+      this.$el.removeClass('md-show');
+      return $('.md-overlay').removeClass('md-show');
+    };
+
     PopoverDescriptionView.prototype.onCancelClicked = function() {
+      this.hide();
       return this.cancelCallback(this.model);
     };
 

@@ -10,7 +10,7 @@ REPOREGEX =  /// ^
 
 module.exports = class PopoverDescriptionView extends BaseView
     id: 'market-popover-description-view'
-    className: 'modal'
+    className: 'modal md-modal md-effect-1'
     tagName: 'div'
     template: require 'templates/popover_description'
 
@@ -42,16 +42,13 @@ module.exports = class PopoverDescriptionView extends BaseView
             descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>"
         @body.append descriptionDiv
 
+    hide: =>
+        @$el.removeClass 'md-show'
+        $('.md-overlay').removeClass 'md-show'
+
     onCancelClicked: () =>
+        @hide()
         @cancelCallback(@model)
 
     onConfirmClicked: () =>
         @confirmCallback(@model)
-
-
-
-
-
-
-
-

@@ -119,6 +119,10 @@ module.exports = class MarketView extends BaseView
             cancel: (application) =>
                 @popover.remove()
         @$el.append @popover.$el
+        @popover.$el.addClass 'md-show'
+        $('.md-overlay').addClass 'md-show'
+
+
 
     # pop up with application permissions
     showPermissions: (appWidget) ->
