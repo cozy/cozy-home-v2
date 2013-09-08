@@ -1,7 +1,15 @@
 .md-content
-    .modal-header
-        h3 #{name}
-    .modal-body
-    .modal-footer.clearfix
-        button.btn.right#cancelbtn install
+    .md-header.clearfix
+        .line
+            h3.left #{model.name}
+            .right
+                a(href="#{model.git}")
+                    span.repo-stars &nbsp;
+                    img(src="img/star-white.png")
+                if model.website !== undefined
+                    a(href="#{model.webiste}")
+                        img(src="img/link-white.png")
+    .md-body
+    .md-footer.clearfix
+        button.btn.right#confirmbtn install
         button.btn.light-btn.right#cancelbtn cancel 

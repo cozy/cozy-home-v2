@@ -1192,10 +1192,7 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center"><p class="biggest">Welcome to your Cozy!</p><p class="bigger">');
-  var __val__ = t('no-app-message')
-  buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div>');
+  buf.push('<div id="no-app-message" class="center"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p><p class="bigger"> \nYou have actually no application installed. You should&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1208,10 +1205,7 @@ window.require.register("templates/home_application", function(exports, require,
   var interp;
   buf.push('<a');
   buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-  buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
-  var __val__ = t('Installing')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><button class="btn update-app">');
@@ -1250,7 +1244,7 @@ window.require.register("templates/market", function(exports, require, module) {
   buf.push('<p>Welcome to the Cozy App Store. This is the place to customize your cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
+  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</div></div><div class="md-overlay"></div>');
@@ -1337,7 +1331,16 @@ window.require.register("templates/popover_description", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="md-content"><div class="modal-header"><h3>' + escape((interp = name) == null ? '' : interp) + '</h3></div><div class="modal-body"></div><div class="modal-footer clearfix"><button id="cancelbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
+  buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
+  buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
+  buf.push('><span class="repo-stars">&nbsp;</span><img src="img/star-white.png"/></a>');
+  if ( model.website !== undefined)
+  {
+  buf.push('<a');
+  buf.push(attrs({ 'href':("" + (model.webiste) + "") }, {"href":true}));
+  buf.push('><img src="img/link-white.png"/></a>');
+  }
+  buf.push('</div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
   }
   return buf.join("");
   };
@@ -2405,13 +2408,14 @@ window.require.register("views/market", function(exports, require, module) {
       this.popover = new PopoverDescriptionView({
         model: appWidget.app,
         confirm: function(application) {
-          _this.popover.remove();
+          $('#no-app-message').hide();
+          _this.popover.hide();
           return _this.hideApplication(appWidget, function() {
             return _this.runInstallation(appWidget.app);
           });
         },
         cancel: function(application) {
-          return _this.popover.remove();
+          return _this.popover.hide();
         }
       });
       this.$el.append(this.popover.$el);
@@ -2871,14 +2875,14 @@ window.require.register("views/notifications_view", function(exports, require, m
   
 });
 window.require.register("views/popover_description", function(exports, require, module) {
-  var BaseView, PopoverDescriptionView, REPOREGEX,
+  var BaseView, PopoverDescriptionView, request,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseView = require('lib/base_view');
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+  request = require('lib/request');
 
   module.exports = PopoverDescriptionView = (function(_super) {
 
@@ -2917,28 +2921,21 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
-      var _this = this;
+      var renderDesc,
+        _this = this;
+      console.log(this.model);
       this.model.set("description", "");
-      this.body = this.$(".modal-body");
-      this.header = this.$(".modal-header h3");
+      this.body = this.$(".md-body");
+      this.header = this.$(".md-header h3");
       this.header.html(this.model.get('name'));
+      this.body.spin('small');
+      renderDesc = function() {
+        _this.body.spin();
+        return _this.renderDescription();
+      };
       this.model.getMetaData({
-        success: function(data) {
-          var _this = this;
-          return this.model.getPermissions({
-            success: function(data) {
-              if (!_this.model.hasChanged("permissions")) {
-                return _this.confirmCallback(_this.model);
-              }
-            },
-            error: function() {
-              return console.log("error have been called");
-            }
-          });
-        },
-        error: function() {
-          return console.log("Error callback have been called");
-        }
+        success: renderDesc,
+        error: renderDesc
       });
       this.overlay = $('.md-overlay');
       return this.overlay.click(function() {
@@ -2947,15 +2944,25 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.renderDescription = function() {
-      var description, descriptionDiv;
+      var description, docType, permission, permissionsDiv, _ref;
+      this.body.hide();
       this.body.html("");
+      this.$('.repo-stars').html(this.model.get('stars'));
       description = this.model.get("description");
-      if (description === null) {
-        descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
+      this.header.append("<p> " + description + " </p>");
+      if (Object.keys(this.model.get("permissions")).length === 0) {
+        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
+        this.body.append(permissionsDiv);
       } else {
-        descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");
+        this.body.append('<h4>Required permissions</h4>');
+        _ref = this.model.get("permissions");
+        for (docType in _ref) {
+          permission = _ref[docType];
+          permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
+          this.body.append(permissionsDiv);
+        }
       }
-      return this.body.append(descriptionDiv);
+      return this.body.slideDown();
     };
 
     PopoverDescriptionView.prototype.show = function() {
@@ -2969,8 +2976,12 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.hide = function() {
-      this.$el.removeClass('md-show');
-      this.overlay.removeClass('md-show');
+      var _this = this;
+      $('.md-content').fadeOut(function() {
+        _this.overlay.removeClass('md-show');
+        _this.$el.removeClass('md-show');
+        return _this.remove();
+      });
       return $('#home-content').removeClass('md-open');
     };
 

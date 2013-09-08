@@ -104,11 +104,12 @@ module.exports = class MarketView extends BaseView
         @popover = new PopoverDescriptionView
             model: appWidget.app
             confirm: (application) =>
-                @popover.remove()
+                $('#no-app-message').hide()
+                @popover.hide()
                 @hideApplication appWidget, =>
                     @runInstallation appWidget.app
             cancel: (application) =>
-                @popover.remove()
+                @popover.hide()
         @$el.append @popover.$el
         @popover.show()
 

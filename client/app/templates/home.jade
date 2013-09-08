@@ -1,6 +1,14 @@
 #no-app-message.center
+    a(href="http://cozy.io")
+        img.logo(src="img/happycloud.png")
     p.biggest Welcome to your Cozy!
-    p.bigger!= t('no-app-message')
+    p.bigger 
+        | You have actually no application installed. You should&nbsp;
+        a(href="#account") configure 
+        | your Cozy then install your first application 
+        | via the&nbsp;
+        a(href="#applications") app store
+        |.
     p.mt2
         | If it's your first time on Cozy here is a little guide about all 
         | section available in your Cozy Home. All of them can be reached from

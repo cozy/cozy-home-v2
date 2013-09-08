@@ -2,6 +2,7 @@ fs = require 'fs'
 https = require 'https'
 url = require 'url'
 util = require 'util'
+request = require 'request-json'
 
 # Class to facilitate application' permissions management
 class exports.DescriptionManager
@@ -10,38 +11,41 @@ class exports.DescriptionManager
         @description = " "
 
     get: (app, callback) ->
+        metaData = {}
+
+        getStars = ->
+            clientStars = request.newClient "https://api.github.com/"
+            path = "repos/#{basePath}/stargazers"
+            clientStars.get path, (err, res, body) ->
+                metaData.stars = body.length
+                callback metaData
+
         # Download file with application's permissions
-        path = (app.git).substring(19, (app.git.length - 4))
-        path = "https://raw.github.com/" + path + '/master/package.json'
-        options =
-            host: url.parse(path).host
-            path: url.parse(path).path
-        config = ""
-        request = https.get options, (response) =>
-            if response.headers.status isnt "404 Not Found"
-                response.on('data', (data) =>
-                    config = JSON.parse(data)
-                ).on 'end', () =>
-                    # Read application's permissions
-                    @metaData = {}
+        basePath = (app.git).substring(19, (app.git.length - 4))
+        path =  basePath + '/master/package.json'
+        client = request.newClient "https://raw.github.com/"
+        console.log path
+        client.get path, (err, res, config) =>
 
-                    if config.description?
-                        @metaData.description = config.description
-
-                    if config.name?
-                        @metaData.name = config.name.replace 'cozy-', ''
-
-                    if config['cozy-displayName']?
-                        @metaData.displayName = config['cozy-displayName']
-                    else
-                        @metaData.displayName = config.name.replace 'cozy-', ''
-
-                    if config['cozy-permissions']?
-                        @metaData.permissions = config['cozy-permissions']
-
-                    callback @metaData
-            else
+            if res.statusCode is 404
                 callback {code: 404, msgs: ['package.json not found']}, null
 
-        request.on 'error', (error) =>
-            callback null, " "
+            else if res.statusCode is 500
+                callback {code: 500, msgs: ['server error occured']}, null
+
+            else
+                if config.description?
+                    metaData.description = config.description
+
+                if config.name?
+                    metaData.name = config.name.replace 'cozy-', ''
+
+                if config['cozy-displayName']?
+                    metaData.displayName = config['cozy-displayName']
+                else
+                    metaData.displayName = config.name.replace 'cozy-', ''
+
+                if config['cozy-permissions']?
+                    metaData.permissions = config['cozy-permissions']
+
+                getStars()
