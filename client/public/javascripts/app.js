@@ -1337,7 +1337,7 @@ window.require.register("templates/popover_description", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="md-content"><h3>Modal Dialog</h3><div class="modal-body"></div><div><p>This is a modal window. You can do the following things with it:</p><button id="cancelbtn" class="btn">Close me!</button></div></div>');
+  buf.push('<div class="md-content"><div class="modal-header"><h3>' + escape((interp = name) == null ? '' : interp) + '</h3></div><div class="modal-body"></div><div class="modal-footer clearfix"><button id="cancelbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
   }
   return buf.join("");
   };
@@ -2278,8 +2278,6 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.events = {
       'keyup #app-git-field': 'onEnterPressed',
-      "mouseover #your-app .app-install-button": "onMouseoverInstallButton",
-      "mouseout #your-app .app-install-button": "onMouseoutInstallButton",
       "click #your-app .app-install-button": "onInstallClicked"
     };
 
@@ -2308,8 +2306,6 @@ window.require.register("views/market", function(exports, require, module) {
 
       this.onAppListsChanged = __bind(this.onAppListsChanged, this);
 
-      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
-
       this.afterRender = __bind(this.afterRender, this);
       this.marketApps = new AppCollection();
       this.installedApps = installedApps;
@@ -2330,16 +2326,6 @@ window.require.register("views/market", function(exports, require, module) {
       this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
       this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
       return this.marketApps.fetchFromMarket();
-    };
-
-    MarketView.prototype.onMouseoverInstallButton = function() {
-      var _this = this;
-      this.isSliding = true;
-      return this.$("#your-app .app-install-text").show('slide', {
-        direction: 'right'
-      }, 300, function() {
-        return _this.isSliding = false;
-      });
     };
 
     MarketView.prototype.onAppListsChanged = function() {
@@ -2420,23 +2406,6 @@ window.require.register("views/market", function(exports, require, module) {
         model: appWidget.app,
         confirm: function(application) {
           _this.popover.remove();
-          return _this.showPermissions(appWidget);
-        },
-        cancel: function(application) {
-          return _this.popover.remove();
-        }
-      });
-      this.$el.append(this.popover.$el);
-      this.popover.$el.addClass('md-show');
-      return $('.md-overlay').addClass('md-show');
-    };
-
-    MarketView.prototype.showPermissions = function(appWidget) {
-      var _this = this;
-      this.popover = new PopoverPermissionsView({
-        model: appWidget.app,
-        confirm: function(application) {
-          _this.popover.remove();
           return _this.hideApplication(appWidget, function() {
             return _this.runInstallation(appWidget.app);
           });
@@ -2445,7 +2414,8 @@ window.require.register("views/market", function(exports, require, module) {
           return _this.popover.remove();
         }
       });
-      return this.$el.append(this.popover.$el);
+      this.$el.append(this.popover.$el);
+      return this.popover.show();
     };
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
@@ -2535,7 +2505,6 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.resetForm = function() {
-      this.installAppButton.displayOrange('install');
       return this.appGitField.val('');
     };
 
@@ -2922,6 +2891,8 @@ window.require.register("views/popover_description", function(exports, require, 
 
       this.hide = __bind(this.hide, this);
 
+      this.show = __bind(this.show, this);
+
       this.renderDescription = __bind(this.renderDescription, this);
       return PopoverDescriptionView.__super__.constructor.apply(this, arguments);
     }
@@ -2946,22 +2917,39 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
+      var _this = this;
       this.model.set("description", "");
       this.body = this.$(".modal-body");
+      this.header = this.$(".modal-header h3");
+      this.header.html(this.model.get('name'));
       this.model.getMetaData({
-        success: function(data) {},
+        success: function(data) {
+          var _this = this;
+          return this.model.getPermissions({
+            success: function(data) {
+              if (!_this.model.hasChanged("permissions")) {
+                return _this.confirmCallback(_this.model);
+              }
+            },
+            error: function() {
+              return console.log("error have been called");
+            }
+          });
+        },
         error: function() {
           return console.log("Error callback have been called");
         }
       });
-      return this.listenTo(this.model, "change", this.renderDescription);
+      this.overlay = $('.md-overlay');
+      return this.overlay.click(function() {
+        return _this.hide();
+      });
     };
 
     PopoverDescriptionView.prototype.renderDescription = function() {
       var description, descriptionDiv;
       this.body.html("");
       description = this.model.get("description");
-      console.debug(this.model);
       if (description === null) {
         descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
       } else {
@@ -2970,9 +2958,20 @@ window.require.register("views/popover_description", function(exports, require, 
       return this.body.append(descriptionDiv);
     };
 
+    PopoverDescriptionView.prototype.show = function() {
+      var _this = this;
+      this.$el.addClass('md-show');
+      this.overlay.addClass('md-show');
+      $('#home-content').addClass('md-open');
+      return setTimeout(function() {
+        return _this.$('.md-content').addClass('md-show');
+      }, 300);
+    };
+
     PopoverDescriptionView.prototype.hide = function() {
       this.$el.removeClass('md-show');
-      return $('.md-overlay').removeClass('md-show');
+      this.overlay.removeClass('md-show');
+      return $('#home-content').removeClass('md-open');
     };
 
     PopoverDescriptionView.prototype.onCancelClicked = function() {

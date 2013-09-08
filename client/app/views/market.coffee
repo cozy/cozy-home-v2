@@ -21,10 +21,7 @@ module.exports = class MarketView extends BaseView
 
     events:
         'keyup #app-git-field':'onEnterPressed'
-        "mouseover #your-app .app-install-button": "onMouseoverInstallButton"
-        "mouseout #your-app .app-install-button": "onMouseoutInstallButton"
         "click #your-app .app-install-button": "onInstallClicked"
-
 
     ### Constructor ###
 
@@ -51,12 +48,7 @@ module.exports = class MarketView extends BaseView
         @listenTo @marketApps,    'reset',  @onAppListsChanged
         @marketApps.fetchFromMarket()
 
-    onMouseoverInstallButton: =>
-        @isSliding = true
-        @$("#your-app .app-install-text").show 'slide', {direction: 'right'}, 300, =>
-            @isSliding = false
-
-    onAppListsChanged: () =>
+    onAppListsChanged: =>
         @$(".cozy-app").remove()
         @noAppMessage.show()
         installeds = @installedApps.pluck('slug')
@@ -73,13 +65,11 @@ module.exports = class MarketView extends BaseView
         appButton = @$(row.el)
         appButton.hide().fadeIn()
 
-
     onEnterPressed: (event) =>
         if event.which is 13 and not @popover?.$el.is(':visible')
             @onInstallClicked()
         else if event.which is 13
             @popover?.confirmCallback()
-
 
     onInstallClicked: (event) =>
         if @isInstalling()
@@ -115,26 +105,13 @@ module.exports = class MarketView extends BaseView
             model: appWidget.app
             confirm: (application) =>
                 @popover.remove()
-                @showPermissions appWidget
-            cancel: (application) =>
-                @popover.remove()
-        @$el.append @popover.$el
-        @popover.$el.addClass 'md-show'
-        $('.md-overlay').addClass 'md-show'
-
-
-
-    # pop up with application permissions
-    showPermissions: (appWidget) ->
-        @popover = new PopoverPermissionsView
-            model: appWidget.app
-            confirm: (application) =>
-                @popover.remove()
                 @hideApplication appWidget, =>
                     @runInstallation appWidget.app
             cancel: (application) =>
                 @popover.remove()
         @$el.append @popover.$el
+        @popover.show()
+
 
     hideApplication: (appWidget, callback) =>
         # Test if application is installed by the market
@@ -206,5 +183,4 @@ module.exports = class MarketView extends BaseView
         @errorAlert.hide()
 
     resetForm: =>
-        @installAppButton.displayOrange 'install'
         @appGitField.val ''
