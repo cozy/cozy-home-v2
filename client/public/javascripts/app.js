@@ -1119,7 +1119,7 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="account-form" class="well"><div class="input"><p>');
+  buf.push('<!--.section-title.darkbg.bigger config--><div class="line pa2 w600 bigger darkbg">your parameters</div><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
   var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><input id="account-email-field"/><button class="btn">');
@@ -1221,7 +1221,7 @@ window.require.register("templates/config_applications", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>Hardware consumption</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>&nbsp;GB (Hard Drive)</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>&nbsp;MB (RAM)</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">Manage your applications</h4></div></div></div>');
+  buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>Hardware consumption</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>&nbsp;GB (Hard Drive)</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>&nbsp;MB (RAM)</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">Manage your applications</h4></div></div></div>');
   }
   return buf.join("");
   };
@@ -1232,7 +1232,7 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p class="help-text">Do you look for assistance?</p><p class="help-text">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P>');
+  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><p class="help-text darkbg pa2">Do you look for assistance?</p><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div>');
   }
   return buf.join("");
   };
@@ -1243,7 +1243,7 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p><p class="bigger"> \nYou have actually no application installed. You should&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where all your applications are accessible.</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>There you can install new applications.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to resource where you will find\nassistance.</p></div><div id="app-list"></div>');
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p></div><div class="line"><p class="bigger pa2">Actually, you have actually no application installed. You\nshould&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>App management&nbsp;</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1292,7 +1292,7 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>Welcome to the Cozy App Store. This is the place to customize your cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app"><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
@@ -1920,6 +1920,9 @@ window.require.register("views/config_application_list", function(exports, requi
       ApplicationsListView.__super__.constructor.call(this, {
         collection: apps
       });
+      if (this.apps.length === 0) {
+        this.displayNoAppMessage();
+      }
     }
 
     ApplicationsListView.prototype.afterRender = function() {
@@ -1927,7 +1930,7 @@ window.require.register("views/config_application_list", function(exports, requi
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {
-      return console.log('no app');
+      return this.$el.append('There is no application installed.');
     };
 
     return ApplicationsListView;
@@ -2861,6 +2864,7 @@ window.require.register("views/market", function(exports, require, module) {
         return true;
       }
       this.hideError();
+      $('#no-app-message').hide();
       return application.install({
         ignoreMySocketNotification: true,
         success: function(data) {
