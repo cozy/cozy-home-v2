@@ -457,7 +457,36 @@
 
 .cozy-app.official:hover
     background: lightgreyblue - 5%
+
+
+// Config application
+
+.config-application
+    background: lightgrey
+    padding: 10px
+    margin-bottom: 5px
+    border-radius: 5px
     
+    .mod
+        margin-left: 5px
+
+    .mod.left
+        margin: 0
+
+    .smaller
+        font-family: main
+
+    .md-header
+        background: transparent
+
+    .md-footer
+        padding: 0
+
+        .btn
+            font-weight: normal
+
+
+
 // modals
 
 .application
@@ -660,6 +689,17 @@
             a.doaction
                 width 300px
 
+    #config-applications-view
+        .w33
+            width: 100%
+            padding: 10px 40px 10px 10px
+
+        .w66
+            width: 100%
+            margin-top: 40px
+            padding: 10px 40px 10px 10px
+
+
 @media (max-width: 640px)
     .application
         width: 80px
@@ -704,8 +744,6 @@
             font-size: 20px
 
 
-
-
 @media (max-width: 500px)
 
     #market-view
@@ -744,4 +782,11 @@
             .notification
                 a.doaction
                     width 260px
+
+    #config-applications-view
+        .config-application
+            .mod.left
+                width: 100%
+                margin-bottom: 10px
+
 

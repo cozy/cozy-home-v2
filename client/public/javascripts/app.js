@@ -1067,11 +1067,25 @@ window.require.register("routers/main_router", function(exports, require, module
     MainRouter.prototype.routes = {
       "home": "applicationList",
       "applications": "market",
+      "config-applications": "configApplications",
       "account": "account",
       "help": "help",
       "logout": "logout",
       "apps/:slug": "application",
-      "apps/:slug/*hash": "application"
+      "apps/:slug/*hash": "application",
+      "*path": "applicationList"
+    };
+
+    MainRouter.prototype.applicationList = function() {
+      return app.mainView.displayApplicationsList();
+    };
+
+    MainRouter.prototype.configApplications = function() {
+      return app.mainView.displayConfigApplications();
+    };
+
+    MainRouter.prototype.help = function() {
+      return app.mainView.displayHelp();
     };
 
     MainRouter.prototype.market = function() {
@@ -1084,10 +1098,6 @@ window.require.register("routers/main_router", function(exports, require, module
 
     MainRouter.prototype.help = function() {
       return app.mainView.displayHelp();
-    };
-
-    MainRouter.prototype.applicationList = function() {
-      return app.mainView.displayApplicationsList();
     };
 
     MainRouter.prototype.application = function(slug, hash) {
@@ -1175,6 +1185,47 @@ window.require.register("templates/application_iframe", function(exports, requir
   return buf.join("");
   };
 });
+window.require.register("templates/config_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="clearfix"><div class="mod left"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  if ( app.state === 'installed')
+  {
+  buf.push('<span class="state-label"> \nrunning</span>');
+  }
+  else
+  {
+  buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
+  }
+  buf.push('</div><div class="mod right"><button class="btn remove-app">remove</button></div><div class="mod right"> <button class="btn update-app">update</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">stop this app</button></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_application_list", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_applications", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>Hardware consumption</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>&nbsp;GB (Hard Drive)</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>&nbsp;MB (RAM)</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">Manage your applications</h4></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
 window.require.register("templates/help", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -1230,7 +1281,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div><header id="header" class="navbar"></header>');
+  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div><header id="header" class="navbar"></header>');
   }
   return buf.join("");
   };
@@ -1260,16 +1311,7 @@ window.require.register("templates/market_application", function(exports, requir
   var interp;
   buf.push('<div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="right">');
-  if ( app.website !== undefined)
-  {
-  buf.push('<a');
-  buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
-  buf.push('><img src="img/link.png" target="_blank" class="img-btn"/></a>');
-  }
-  buf.push('<a');
-  buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
-  buf.push('><img src="img/git.png" target="_blank" class="img-btn"/></a></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
@@ -1351,17 +1393,11 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">');
-  var __val__ = t('Applications Permissions')
+  buf.push('<div class="md-header mt2">Once updated, this application will require the following permissions:</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
+  var __val__ = t('confirm update')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('downloading-permissions')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
-  var __val__ = t('Cancel')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
-  var __val__ = t('Confirm')
+  buf.push('</a><a id="cancelbtn" class="btn light-btn right">');
+  var __val__ = t('cancel')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a></div>');
   }
@@ -1592,6 +1628,380 @@ window.require.register("views/account", function(exports, require, module) {
     };
 
     return AccountView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_application", function(exports, require, module) {
+  var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  ColorButton = require('widgets/install_button');
+
+  PopoverPermissionsView = require('views/popover_permissions');
+
+  module.exports = ApplicationRow = (function(_super) {
+
+    __extends(ApplicationRow, _super);
+
+    ApplicationRow.prototype.className = "line config-application clearfix";
+
+    ApplicationRow.prototype.tagName = "div";
+
+    ApplicationRow.prototype.template = require('templates/config_application');
+
+    ApplicationRow.prototype.getRenderData = function() {
+      return {
+        app: this.model.attributes
+      };
+    };
+
+    ApplicationRow.prototype.events = {
+      "click .application-inner": "onAppClicked",
+      "click .remove-app": "onRemoveClicked",
+      "click .update-app": "onUpdateClicked",
+      "click .start-stop-btn": "onStartStopClicked",
+      "click .app-stoppable": "onStoppableClicked"
+    };
+
+    /* Constructor
+    */
+
+
+    function ApplicationRow(options) {
+      this.remove = __bind(this.remove, this);
+
+      this.launchApp = __bind(this.launchApp, this);
+
+      this.onStartStopClicked = __bind(this.onStartStopClicked, this);
+
+      this.onUpdateClicked = __bind(this.onUpdateClicked, this);
+
+      this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
+      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
+
+      this.onAppClicked = __bind(this.onAppClicked, this);
+
+      this.onAppChanged = __bind(this.onAppChanged, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.id = "app-btn-" + options.model.id;
+      ApplicationRow.__super__.constructor.apply(this, arguments);
+    }
+
+    ApplicationRow.prototype.afterRender = function() {
+      this.icon = this.$('img');
+      this.updateButton = new ColorButton(this.$(".update-app"));
+      this.removeButton = new ColorButton(this.$(".remove-app"));
+      this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
+      this.stateLabel = this.$('.state-label');
+      this.listenTo(this.model, 'change', this.onAppChanged);
+      return this.onAppChanged(this.model);
+    };
+
+    /* Listener
+    */
+
+
+    ApplicationRow.prototype.onAppChanged = function(app) {
+      switch (this.model.get('state')) {
+        case 'broken':
+          this.icon.attr('src', "img/broken.png");
+          this.stateLabel.show().text(t('broken'));
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('retry to install'));
+          return this.startStopBtn.hide();
+        case 'installed':
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.removeClass('stopped');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('update'));
+          return this.startStopBtn.displayGrey(t('stop this app'));
+        case 'installing':
+          this.icon.attr('src', "img/installing.gif");
+          this.icon.removeClass('stopped');
+          this.stateLabel.show().text('installing');
+          this.removeButton.displayGrey('abort');
+          this.updateButton.hide();
+          return this.startStopBtn.hide();
+        case 'stopped':
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.addClass('stopped');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.hide();
+          return this.startStopBtn.displayGrey(t('start this app'));
+      }
+    };
+
+    ApplicationRow.prototype.onAppClicked = function(event) {
+      var errormsg, msg;
+      event.preventDefault();
+      switch (this.model.get('state')) {
+        case 'broken':
+          msg = 'This app is broken. Try install again.';
+          errormsg = this.model.get('errormsg');
+          if (errormsg) {
+            msg += " Error was : " + errormsg;
+          }
+          return alert(msg);
+        case 'installed':
+          return this.launchApp();
+        case 'installing':
+          return alert(t('this app is being installed. Wait a little'));
+        case 'stopped':
+          return this.model.start({
+            success: this.launchApp
+          });
+      }
+    };
+
+    ApplicationRow.prototype.onStoppableClicked = function(event) {
+      var bool,
+        _this = this;
+      bool = !this.model.get('isStoppable');
+      return this.model.save({
+        isStoppable: bool
+      }, {
+        success: function() {
+          return _this.$('.app-stoppable').attr('checked', !bool);
+        },
+        error: function() {
+          _this.$('.app-stoppable').attr('checked', bool);
+          return alert('oh no !');
+        }
+      });
+    };
+
+    ApplicationRow.prototype.onRemoveClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.removeButton.spin(true);
+      return this.model.uninstall({
+        success: function() {
+          _this.remove();
+          return Backbone.Mediator.pub('app-state-changed', true);
+        },
+        error: function() {
+          _this.removeButton.displayRed(t("retry to install"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
+      });
+    };
+
+    ApplicationRow.prototype.onUpdateClicked = function(event) {
+      event.preventDefault();
+      return this.showPopover();
+    };
+
+    ApplicationRow.prototype.showPopover = function() {
+      var _this = this;
+      this.popover = new PopoverPermissionsView({
+        model: this.model,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.updateApp();
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
+    };
+
+    ApplicationRow.prototype.onStartStopClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.startStopBtn.spin(true);
+      if (this.model.isRunning()) {
+        return this.model.stop({
+          success: function() {
+            _this.startStopBtn.spin(false);
+            _this.stateLabel.html('stopped');
+            return Backbone.Mediator.pub('app-state-changed', true);
+          },
+          error: function() {
+            return _this.startStopBtn.spin(false);
+          }
+        });
+      } else {
+        return this.model.start({
+          success: function() {
+            _this.startStopBtn.spin(false);
+            _this.stateLabel.html('started');
+            return Backbone.Mediator.pub('app-state-changed', true);
+          },
+          error: function() {
+            return _this.startStopBtn.spin(false);
+          }
+        });
+      }
+    };
+
+    /* Functions
+    */
+
+
+    ApplicationRow.prototype.launchApp = function() {
+      return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
+    };
+
+    ApplicationRow.prototype.remove = function() {
+      var _this = this;
+      if (this.model.get('state') !== 'installed') {
+        return ApplicationRow.__super__.remove.apply(this, arguments);
+      }
+      this.removeButton.spin(false);
+      this.removeButton.displayGreen(t("Removed"));
+      return setTimeout(function() {
+        return _this.$el.fadeOut(function() {
+          return ApplicationRow.__super__.remove.apply(_this, arguments);
+        });
+      }, 1000);
+    };
+
+    ApplicationRow.prototype.updateApp = function() {
+      var _this = this;
+      this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.updateButton.spin(false);
+      return this.updateButton.spin(true, {
+        success: function() {
+          _this.updateButton.displayGreen(t("Updated"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        },
+        error: function(jqXHR) {
+          var error;
+          error = JSON.parse(jqXHR.responseText);
+          console.log(error);
+          alert(error.message);
+          _this.updateButton.displayRed(t("failed"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
+      });
+    };
+
+    return ApplicationRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_application_list", function(exports, require, module) {
+  var ApplicationRow, ApplicationsListView, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  ApplicationRow = require('views/config_application');
+
+  module.exports = ApplicationsListView = (function(_super) {
+
+    __extends(ApplicationsListView, _super);
+
+    ApplicationsListView.prototype.id = 'config-application-list';
+
+    ApplicationsListView.prototype.tagName = 'div';
+
+    ApplicationsListView.prototype.template = require('templates/config_application_list');
+
+    ApplicationsListView.prototype.itemView = require('views/config_application');
+
+    function ApplicationsListView(apps) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.apps = apps;
+      this.isManaging = false;
+      ApplicationsListView.__super__.constructor.call(this, {
+        collection: apps
+      });
+    }
+
+    ApplicationsListView.prototype.afterRender = function() {
+      return this.appList = this.$("#app-list");
+    };
+
+    ApplicationsListView.prototype.displayNoAppMessage = function() {
+      return console.log('no app');
+    };
+
+    return ApplicationsListView;
+
+  })(ViewCollection);
+  
+});
+window.require.register("views/config_applications", function(exports, require, module) {
+  var BaseView, ConfigApplicationList, request,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  request = require('lib/request');
+
+  BaseView = require('lib/base_view');
+
+  ConfigApplicationList = require('./config_application_list');
+
+  module.exports = exports.ConfigApplicationsView = (function(_super) {
+
+    __extends(ConfigApplicationsView, _super);
+
+    ConfigApplicationsView.prototype.id = 'config-applications-view';
+
+    ConfigApplicationsView.prototype.template = require('templates/config_applications');
+
+    ConfigApplicationsView.prototype.subscriptions = {
+      'app-state-changed': 'onAppStateChanged'
+    };
+
+    function ConfigApplicationsView(apps) {
+      this.apps = apps;
+      ConfigApplicationsView.__super__.constructor.call(this);
+    }
+
+    ConfigApplicationsView.prototype.afterRender = function() {
+      this.memoryFree = this.$('.memory-free');
+      this.diskSpace = this.$('.disk-space');
+      this.fetch();
+      this.applicationList = new ConfigApplicationList(this.apps);
+      return this.$el.find('.w66').append(this.applicationList.$el);
+    };
+
+    ConfigApplicationsView.prototype.fetch = function() {
+      var _this = this;
+      this.$('.amount').spin('small');
+      this.$('.total').spin('small');
+      return request.get('api/sys-data', function(err, data) {
+        if (err) {
+          return alert('Server error occured, infos cannot be displayed.');
+        } else {
+          _this.$('.amount').spin();
+          _this.$('.total').spin();
+          _this.displayMemory(data.freeMem, data.totalMem);
+          return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+        }
+      });
+    };
+
+    ConfigApplicationsView.prototype.displayMemory = function(amount, total) {
+      this.memoryFree.find('.amount').html(Math.floor(amount / 1000));
+      return this.memoryFree.find('.total').html(Math.floor(total / 1000));
+    };
+
+    ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
+      this.diskSpace.find('.amount').html(amount);
+      return this.diskSpace.find('.total').html(total);
+    };
+
+    ConfigApplicationsView.prototype.onAppStateChanged = function() {
+      return setTimeout(this.fetch, 2000);
+    };
+
+    return ConfigApplicationsView;
 
   })(BaseView);
   
@@ -2020,7 +2430,7 @@ window.require.register("views/home_application", function(exports, require, mod
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2036,6 +2446,8 @@ window.require.register("views/main", function(exports, require, module) {
   AccountView = require('views/account');
 
   HelpView = require('views/help');
+
+  ConfigApplicationsView = require('views/config_applications');
 
   MarketView = require('views/market');
 
@@ -2057,6 +2469,8 @@ window.require.register("views/main", function(exports, require, module) {
       this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
 
       this.onAppHashChanged = __bind(this.onAppHashChanged, this);
+
+      this.displayConfigApplications = __bind(this.displayConfigApplications, this);
 
       this.displayHelp = __bind(this.displayHelp, this);
 
@@ -2080,6 +2494,7 @@ window.require.register("views/main", function(exports, require, module) {
       var _this = this;
       this.navbar = new NavbarView(this.apps);
       this.applicationListView = new ApplicationsListView(this.apps);
+      this.configApplications = new ConfigApplicationsView(this.apps);
       this.accountView = new AccountView();
       this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
@@ -2157,6 +2572,11 @@ window.require.register("views/main", function(exports, require, module) {
     HomeView.prototype.displayHelp = function() {
       this.displayView(this.helpView);
       return window.document.title = "Cozy - Help";
+    };
+
+    HomeView.prototype.displayConfigApplications = function() {
+      this.displayView(this.configApplications);
+      return window.document.title = "Cozy - Applications configuration";
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
@@ -3044,44 +3464,49 @@ window.require.register("views/popover_permissions", function(exports, require, 
     PopoverPermissionsView.prototype.afterRender = function() {
       var _this = this;
       this.model.set("permissions", "");
-      this.body = this.$(".modal-body");
+      this.body = this.$(".md-body");
+      this.body.spin('small');
       this.model.getPermissions({
         success: function(data) {
           if (!_this.model.hasChanged("permissions")) {
             return _this.confirmCallback(_this.model);
           }
         },
-        error: function() {
-          return console.log("error have been called");
-        }
+        error: function() {}
       });
       return this.listenTo(this.model, "change:permissions", this.renderPermissions);
     };
 
     PopoverPermissionsView.prototype.renderPermissions = function() {
-      var docType, permission, permissionsDiv, _ref, _results;
-      this.body.html("");
+      var docType, permission, permissionsDiv, _ref;
+      this.body.hide();
+      this.body.html('');
       if (Object.keys(this.model.get("permissions")).length === 0) {
-        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
-        return this.body.append(permissionsDiv);
+        permissionsDiv = $("<div class='permissionsLine'> <strong> This application does not need specific permissions </strong> </div>");
+        this.body.append(permissionsDiv);
       } else {
         _ref = this.model.get("permissions");
-        _results = [];
         for (docType in _ref) {
           permission = _ref[docType];
-          permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
-          _results.push(this.body.append(permissionsDiv));
+          permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
+          this.body.append(permissionsDiv);
         }
-        return _results;
       }
+      return this.body.slideDown();
     };
 
     PopoverPermissionsView.prototype.onCancelClicked = function() {
-      return this.cancelCallback(this.model);
+      var _this = this;
+      return this.$el.slideUp(function() {
+        return _this.cancelCallback(_this.model);
+      });
     };
 
     PopoverPermissionsView.prototype.onConfirmClicked = function() {
-      return this.confirmCallback(this.model);
+      var _this = this;
+      return this.$el.slideUp(function() {
+        return _this.confirmCallback(_this.model);
+      });
     };
 
     return PopoverPermissionsView;

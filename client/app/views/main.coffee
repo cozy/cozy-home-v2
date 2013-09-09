@@ -4,6 +4,7 @@ AppCollection = require 'collections/application'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 HelpView = require 'views/help'
+ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
 socketListener = require('lib/socket_listener')
@@ -25,6 +26,7 @@ module.exports = class HomeView extends BaseView
     afterRender: =>
         @navbar = new NavbarView @apps
         @applicationListView = new ApplicationsListView @apps
+        @configApplications = new ConfigApplicationsView @apps
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
@@ -92,6 +94,10 @@ module.exports = class HomeView extends BaseView
     displayHelp: =>
         @displayView @helpView
         window.document.title = "Cozy - Help"
+
+    displayConfigApplications: =>
+        @displayView @configApplications
+        window.document.title = "Cozy - Applications configuration"
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app

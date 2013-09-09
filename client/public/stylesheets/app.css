@@ -533,6 +533,17 @@ select:focus {
   box-shadow: 0 0 0 0;
   border: 1px solid #ffc285;
 }
+.w500 {
+  max-width: 500px;
+}
+.w600 {
+  max-width: 600px;
+}
+.w800 {
+  max-width: 800px;
+  margin: auto;
+}
+.tooltip-inner a:hover,
 .tooltip-inner a:hover {
   color: textcolor;
   text-decoration: none;
@@ -1134,6 +1145,31 @@ select:focus {
 .cozy-app.official:hover {
   background: #e0e8ef;
 }
+.config-application {
+  background: #f7f4f0;
+  padding: 10px;
+  margin-bottom: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.config-application .mod {
+  margin-left: 5px;
+}
+.config-application .mod.left {
+  margin: 0;
+}
+.config-application .smaller {
+  font-family: main;
+}
+.config-application .md-header {
+  background: transparent;
+}
+.config-application .md-footer {
+  padding: 0;
+}
+.config-application .md-footer .btn {
+  font-weight: normal;
+}
 .application .permissionsLine p {
   text-shadow: none;
   color: #999;
@@ -1370,6 +1406,15 @@ select:focus {
   #notifications .notification a.doaction {
     width: 300px;
   }
+  #config-applications-view .w33 {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+  }
+  #config-applications-view .w66 {
+    width: 100%;
+    margin-top: 40px;
+    padding: 10px 40px 10px 10px;
+  }
 }
 @media (max-width: 640px) {
   .application {
@@ -1446,5 +1491,9 @@ select:focus {
   }
   #notifications-container #notifications .notification a.doaction {
     width: 260px;
+  }
+  #config-applications-view .config-application .mod.left {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }

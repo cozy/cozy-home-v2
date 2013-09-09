@@ -1,12 +1,6 @@
 .app-img.left
     img(src="#{app.icon}")
 
-.right
-    if app.website !== undefined
-        a(href="#{app.website}")
-            img.img-btn(src="img/link.png", target="_blank")
-    a(href="#{app.git}")
-        img.img-btn(src="img/git.png", target="_blank")
 .app-text
     h3 #{app.name}
     span.comment= t(app.comment)
