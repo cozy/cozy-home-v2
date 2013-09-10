@@ -1,7 +1,9 @@
 bcrypt = require 'bcrypt'
 should = require('chai').Should()
-compoundInitiator = require '../server'
 helpers = require './helpers'
+americano = require 'americano'
+
+User = require '../server/models/user'
 
 TESTPORT = 8889
 TESTMAIL = 'test@test.com'
@@ -9,11 +11,10 @@ TESTPASS = 'password'
 
 describe 'Modify account failure', ->
 
-    before helpers.init compoundInitiator
+    before helpers.init TESTPORT
     before helpers.clearDb
     before helpers.createUser TESTMAIL, TESTPASS
     before ->
-        @app.listen TESTPORT
         @client = helpers.getClient TESTPORT, @
         @dataClient = helpers.getClient 9101, @
 
@@ -92,7 +93,7 @@ describe 'Modify account success', ->
 
 
     it 'And user data should be updated', (done) ->
-        @app.compound.models.User.all (err, users) ->
+        User.all (err, users) ->
             user = users[0]
             user.email.should.equal 'test@test.fr'
             bcrypt.compare 'password2', user.password,  (err, res) ->
@@ -103,7 +104,7 @@ describe 'Modify account success', ->
 describe 'Modify domain success', ->
 
     after ->
-        @app.compound.server.close()
+        @app.server.close()
 
     it 'When I change my domain', (done) ->
         @client.post 'api/instance', domain: 'domain.new', done

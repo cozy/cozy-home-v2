@@ -8,16 +8,18 @@ process.on 'uncaughtException', (err) ->
     console.error err
     console.error err.stack
 
-
 port = process.env.PORT || 9103
 americano.start name: 'Cozy Home', port: port, (app, server) ->
+    app.server = server
 
     if process.env.NODE_ENV isnt "test"
         initProxy()
 
     # Don't why this one doesn't work with the Americano route file.
-    app.param 'slug', require('./server/controllers/applications').loadApplication
+    ctrler = require('./server/controllers/applications').loadApplication
+    app.param 'slug', ctrler
 
-    app.server = server
     setupRealtime app
+
+    callback app if callback?
 

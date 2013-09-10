@@ -20,10 +20,16 @@ americano.start({
   name: 'Cozy Home',
   port: port
 }, function(app, server) {
+  var ctrler;
+
+  app.server = server;
   if (process.env.NODE_ENV !== "test") {
     initProxy();
   }
-  app.param('slug', require('./server/controllers/applications').loadApplication);
-  app.server = server;
-  return setupRealtime(app);
+  ctrler = require('./server/controllers/applications').loadApplication;
+  app.param('slug', ctrler);
+  setupRealtime(app);
+  if (typeof callback !== "undefined" && callback !== null) {
+    return callback(app);
+  }
 });
