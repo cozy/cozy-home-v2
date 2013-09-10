@@ -1,6 +1,6 @@
 fs = require 'fs'
-https = require 'https'
 url = require 'url'
+request = require 'request-json'
 
 # Class to facilitate application' permissions management
 class exports.PermissionsManager
@@ -10,21 +10,18 @@ class exports.PermissionsManager
 
     get: (app, callback) ->
         path = (app.git).substring(19, (app.git.length - 4))
-        path = "https://raw.github.com/" + path + '/master/package.json'
-        options =
-            host: url.parse(path).host
-            path: url.parse(path).path
+
+        client = request.newClient "https://raw.github.com/"
+
         config = ""
-        request = https.get options, (response) =>
-            if response.headers.status isnt "404 Not Found"
-                response.on('data', (data) =>
-                    config = JSON.parse(data)
-                ).on 'end', () =>
-                    # Read application's permissions
-                    if config["cozy-permissions"]?
-                        @docTypes = config["cozy-permissions"]
-                    callback null, @docTypes
-            else
+        client.get path + '/master/package.json', (err, res, body) =>
+            if err
+                console.log err
                 callback null, {}
-        request.on 'error', (error) =>
-            callback null, {}
+            else
+                if res.statusCode isnt 404
+                    if body["cozy-permissions"]?
+                        @docTypes = body["cozy-permissions"]
+                    callback null, @docTypes
+                else
+                    callback null, {}

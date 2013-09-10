@@ -1,4 +1,3 @@
-
 fs = require 'fs'
 path = require 'path'
 
@@ -19,7 +18,7 @@ exports.init = (compound, callback) =>
             callback exports.stream
         else
             callback null
-	
+
 exports.write = (text) =>
     stream = exports.stream || process.stdout
     stream.write text + '\n' || console.log text

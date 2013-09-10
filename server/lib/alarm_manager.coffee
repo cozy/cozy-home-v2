@@ -11,6 +11,8 @@ module.exports = class AlarmManager
             for alarm in alarms
                 @addAlarmCounter alarm
 
+
+    # Analyze upcoming event from Data System and act with it.
     handleAlarm: (event, msg) =>
 
         if event is "alarm.create"
@@ -23,16 +25,20 @@ module.exports = class AlarmManager
             @removeAlarmCounter msg
 
     addAlarmCounter: (alarm) ->
-        triggerDate = new time.Date(alarm.trigg)
-        triggerDate.setTimezone(@timezone)
+        triggerDate = new time.Date alarm.trigg
+        triggerDate.setTimezone @timezone
+
         now = new time.Date()
-        now.setTimezone(@timezone)
+        now.setTimezone @timezone
+
         delta = triggerDate.getTime() - now.getTime()
+
         if delta > 0
 
             console.info "Notification in #{delta/1000} seconds."
             @timeouts[alarm._id] = setTimeout((
-                () =>
+
+                =>
                     if alarm.action is "DISPLAY"
                         resource = if alarm.related? then alarm.related
                         else
@@ -63,4 +69,3 @@ module.exports = class AlarmManager
             clearTimeout @timeouts[alarm._id]
 
         @addAlarmCounter alarm
-
