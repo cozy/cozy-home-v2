@@ -1,6 +1,7 @@
 BaseView = require 'lib/base_view'
 timezones = require('helpers/timezone').timezones
 locales =   require('helpers/locales' ).locales
+request = require 'lib/request'
 
 # View describing main screen for user once he is logged
 module.exports = class exports.AccountView extends BaseView
@@ -15,7 +16,8 @@ module.exports = class exports.AccountView extends BaseView
     onChangePasswordClicked: =>
         @changePasswordButton.fadeOut =>
             @changePasswordForm.fadeIn =>
-                @password1Field.focus()
+                @password0Field.focus()
+                $(window).trigger 'resize'
 
     closePasswordForm: =>
         @changePasswordForm.fadeOut =>
@@ -23,105 +25,120 @@ module.exports = class exports.AccountView extends BaseView
 
     # When data are submited, it sends a request to backend to save them.
     # If an error occurs, message is displayed.
-    onDataSubmit: (event) =>
-        @loadingIndicator.spin()
+    onNewPasswordSubmit: (event) =>
         form =
-            password0: $("#account-password0-field").val()
-            password1: $("#account-password1-field").val()
-            password2: $("#account-password2-field").val()
+            password0: @password0Field.val()
+            password1: @password1Field.val()
+            password2: @password2Field.val()
 
         @infoAlert.hide()
         @errorAlert.hide()
 
-        $.ajax
-            type: 'POST'
-            url: "api/user/"
-            data: form
-            success: (data) =>
+        @accountSubmitButton.spin 'small'
+        @accountSubmitButton.css 'color', 'transparent'
+        request.post 'api/user', form, (err, data) =>
+            if err
+                @password0Field.val null
+                @password1Field.val null
+                @password2Field.val null
+                if data?
+                    @displayErrors data.msg
+                else
+                    @displayErrors err.message
+            else
                 if data.success
                     @infoAlert.html data.msg
                     @infoAlert.show()
-                    $("#account-password0-field").val null
-                    $("#account-password1-field").val null
-                    $("#account-password2-field").val null
+                    @password0Field.val null
+                    @password1Field.val null
+                    @password2Field.val null
                 else
-                    @displayErrors data.msg or data.responseText
-                @loadingIndicator.spin()
-            error: (data) =>
-                $("#account-password0-field").val null
-                @displayErrors data.msg or data.responseText
-                @loadingIndicator.spin()
+                    @displayErrors data.msg
+            @accountSubmitButton.css 'color', 'white'
+            @accountSubmitButton.spin()
 
-    submitData: (form, url='api/user/') ->
-        d = new $.Deferred
-        $.ajax
-            type: 'POST'
-            url: url
-            data: form
-            success: (data) =>
-                if data.success
-                    window.location.reload()
-                    d.resolve()
-                else d.reject(data.msg or data.responseText)
-            error: (data) =>
-               d.reject(data.msg or data.responseText)
-        d
 
     ### Functions ###
     displayErrors: (msgs) =>
         errorString = ""
+        if typeof(msgs) is 'string'
+            msgs = msgs.split ','
+
         for msg in msgs
-            errorString += msg + "<br />"
+            errorString += "#{msg}<br />"
         @errorAlert.html errorString
         @errorAlert.show()
+
+
+    # Build a function that save given data when triggered and display
+    # a loading indicator on the save button of the field.
+    getSaveFunction: (fieldName, fieldWidget, path) ->
+        saveButton = fieldWidget.parent().find('.btn')
+        saveFunction = ->
+            saveButton.css 'color', 'transparent'
+            saveButton.spin 'small', 'white'
+            data = {}
+            data[fieldName] = fieldWidget.val()
+            request.post "api/#{path}", data, (err) ->
+                saveButton.spin()
+                saveButton.css 'color', 'white'
+                if err
+                    saveButton.addClass 'red'
+                    saveButton.html 'error'
+                    if fieldName is 'locale'
+                        window.location.reload()
+                else
+                    saveButton.addClass 'green'
+                    saveButton.html 'saved'
+
+        saveButton.click saveFunction
+        saveFunction
+
 
     # Fetch data from backend and fill form with collected data.
     fetchData: ->
         $.get "api/users/", (data) =>
-            @emailField.html data.rows[0].email
-
-            @timezoneField.html data.rows[0].timezone
             timezoneData = []
-            for timezone in timezones
-                    timezoneData.push value: timezone, text: timezone
 
-            @emailField.editable
-                url: (params) =>
-                    @submitData email: params.value
-                type: 'text'
-                send: 'always'
-                value: data.rows[0].email
+            @emailField.val data.rows[0].email
+            @timezoneField.val data.rows[0].timezone
 
-            @timezoneField.editable
-                 url: (params) =>
-                    @submitData timezone: params.value
-                 type: 'select'
-                 send: 'always'
-                 source: timezoneData
-                 value: data.rows[0].timezone
+            saveEmail = @getSaveFunction 'email', @emailField, 'user'
+            @emailField.on 'keyup', (event) =>
+                saveEmail() if event.keyCode is 13 or event.which is 13
+
+            saveTimezone = @getSaveFunction 'timezone', @timezoneField, 'user'
+            @timezoneField.change saveTimezone
 
         $.get "api/instances/", (data) =>
             instance = data.rows?[0]
             domain = instance?.domain or 'no.domain.set'
             locale = instance?.locale or 'en'
 
-            @domainField.html domain
-            @domainField.editable
-                url: (params) =>
-                    @submitData domain: params.value, 'api/instance/'
-                type: 'text'
-                send: 'always'
-                value: domain
+            saveDomain = @getSaveFunction 'domain', @domainField, 'instance'
+            @domainField.on 'keyup', (event) =>
+                saveDomain() if event.keyCode is 13 or event.which is 13
+            @domainField.val domain
 
-            @localeField.html locales[locale]
-            localeData = (value: code, text: txt for code, txt of locales)
-            @localeField.editable
-                url: (params) =>
-                    @submitData locale: params.value, 'api/instance/'
-                type: 'select'
-                send: 'always'
-                source: localeData
-                value: locale
+            saveLocale = @getSaveFunction 'locale', @localeField, 'instance'
+            @localeField.change saveLocale
+            #@localeField.val locales[locale]
+            @localeField.val locale
+
+            # Don't know why password fields can't be configured too early...
+            @password0Field = $('#account-password0-field')
+            @password1Field = $('#account-password1-field')
+            @password2Field = $('#account-password2-field')
+            @password0Field.keyup (event) =>
+                if event.keyCode is 13 or event.which is 13
+                    @password1Field.focus()
+            @password1Field.keyup (event) =>
+                if event.keyCode is 13 or event.which is 13
+                    @password2Field.focus()
+            @password2Field.keyup (event) =>
+                if event.keyCode is 13 or event.which is 13
+                    @onNewPasswordSubmit()
+
 
     ### Configuration ###
 
@@ -141,23 +158,15 @@ module.exports = class exports.AccountView extends BaseView
         @changePasswordButton = @$ '#change-password-button'
         @changePasswordButton.click @onChangePasswordClicked
         @accountSubmitButton = @$ '#account-form-button'
-        @password1Field = $('#account-password1-field')
-        @password2Field = $('#account-password2-field')
-        @password1Field.keyup (event) =>
-            @password2Field.focus() if event.which == 13
-        @password2Field.keyup (event) =>
-            @onDataSubmit() if event.which == 13
         @accountSubmitButton.click (event) =>
             event.preventDefault()
-            @onDataSubmit()
+            @onNewPasswordSubmit()
 
-        @installInfo = @$ '#add-app-modal .loading-indicator'
         @errorAlert.hide()
         @infoAlert.hide()
 
-        @addApplicationCloseCross = @$ '#add-app-modal .close'
-        @addApplicationCloseCross.click @onCloseAddAppClicked
-
-        @loadingIndicator = @$ '.loading-indicator'
-
+        for timezone in timezones
+            @timezoneField.append(
+                "<option value=\"#{timezone}\">#{timezone}</option>"
+            )
         @fetchData()

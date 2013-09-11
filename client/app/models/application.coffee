@@ -80,6 +80,3 @@ module.exports = class Application extends Backbone.Model
     getMetaData: (callbacks) ->
         @prepareCallbacks callbacks
         client.post "/api/applications/getMetaData", @toJSON(), callbacks
-
-
-

@@ -128,36 +128,8 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "Manage your bookmarks easily"
         }, {
-          icon: "img/feeds-icon.png",
-          name: "feeds",
-          slug: "feeds",
-          git: "https://github.com/Piour/cozy-feeds.git",
-          comment: "community contribution",
-          description: "Aggregate your feeds and save your favorite links in bookmarks."
-        }, {
-          icon: "img/notes-icon.png",
-          name: "notes",
-          slug: "notes",
-          git: "https://github.com/mycozycloud/cozy-notes.git",
-          comment: "official application",
-          description: "Store all your notes and files."
-        }, {
-          icon: "img/todos-icon.png",
-          name: "todos",
-          slug: "todos",
-          git: "https://github.com/mycozycloud/cozy-todos.git",
-          comment: "official application",
-          description: "Write your tasks, order them and execute them efficiently."
-        }, {
-          icon: "img/photos-icon.png",
-          name: "photos",
-          slug: "photos",
-          git: "https://github.com/mycozycloud/cozy-photos.git",
-          comment: "official application",
-          description: "Share photos with your friends."
-        }, {
           icon: "img/agenda-icon.png",
-          name: "agenda",
+          name: "calendar",
           slug: "agenda",
           git: "https://github.com/mycozycloud/cozy-agenda.git",
           comment: "official application",
@@ -170,20 +142,6 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "official application",
           description: "Manage your contacts with custom informations"
         }, {
-          icon: "img/nirc-icon.png",
-          name: "nirc",
-          slug: "nirc",
-          git: "https://github.com/frankrousseau/cozy-nirc.git",
-          comment: "community contribution",
-          description: "Access to your favorite IRC channel from your Cozy"
-        }, {
-          icon: "img/botmanager-icon.png",
-          name: "IRC BotManager",
-          slug: "irc-botmanager",
-          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
-          comment: "community contribution",
-          description: "A friendly bot to help you manage an IRC channel"
-        }, {
           icon: "img/cozy-music.png",
           name: "cozic",
           slug: "cozic",
@@ -191,12 +149,55 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "An audio player to always keep your music with you"
         }, {
+          icon: "img/feeds-icon.png",
+          name: "feeds",
+          slug: "feeds",
+          git: "https://github.com/Piour/cozy-feeds.git",
+          comment: "community contribution",
+          description: "Aggregate your feeds and save your favorite links in bookmarks."
+        }, {
+          icon: "img/botmanager-icon.png",
+          name: "irc bot",
+          slug: "irc-botmanager",
+          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
+          comment: "community contribution",
+          description: "A friendly bot to help you manage an IRC channel"
+        }, {
           icon: "img/kyou.png",
           name: "kyou",
           slug: "kyou",
           git: "https://github.com/frankrousseau/kyou.git",
           comment: "community contribution",
-          description: "Quantified self for Cozycloud!"
+          description: "Quantify your for a better knowledge of yourself",
+          website: "http://frankrousseau.github.io/kyou"
+        }, {
+          icon: "img/nirc-icon.png",
+          name: "nirc",
+          slug: "nirc",
+          git: "https://github.com/frankrousseau/cozy-nirc.git",
+          comment: "community contribution",
+          description: "Access to your favorite IRC channel from your Cozy"
+        }, {
+          icon: "img/notes-icon.png",
+          name: "notes",
+          slug: "notes",
+          git: "https://github.com/mycozycloud/cozy-notes.git",
+          comment: "official application",
+          description: "Store all your notes and files."
+        }, {
+          icon: "img/photos-icon.png",
+          name: "photos",
+          slug: "photos",
+          git: "https://github.com/mycozycloud/cozy-photos.git",
+          comment: "official application",
+          description: "Share photos with your friends."
+        }, {
+          icon: "img/todos-icon.png",
+          name: "todos",
+          slug: "todos",
+          git: "https://github.com/mycozycloud/cozy-todos.git",
+          comment: "official application",
+          description: "Write your tasks, order them and execute them efficiently."
         }, {
           icon: "img/webdav.png",
           name: "webdav",
@@ -535,10 +536,11 @@ window.require.register("lib/base_view", function(exports, require, module) {
     };
 
     BaseView.prototype.getRenderData = function() {
-      var _ref;
-      return {
-        model: (_ref = this.model) != null ? _ref.toJSON() : void 0
-      };
+      if ((this.model != null) && (this.model.toJSON != null)) {
+        return {
+          model: this.model.toJSON()
+        };
+      }
     };
 
     BaseView.prototype.render = function() {
@@ -562,6 +564,54 @@ window.require.register("lib/base_view", function(exports, require, module) {
     return BaseView;
 
   })(Backbone.View);
+  
+});
+window.require.register("lib/request", function(exports, require, module) {
+  
+  exports.request = function(type, url, data, callback) {
+    return $.ajax({
+      type: type,
+      url: url,
+      data: data != null ? JSON.stringify(data) : null,
+      contentType: "application/json",
+      dataType: "json",
+      success: function(data) {
+        if (callback != null) {
+          return callback(null, data);
+        }
+      },
+      error: function(data) {
+        console.log(data);
+        if (data != null) {
+          data = JSON.parse(data.responseText);
+          if ((data.msg != null) && (callback != null)) {
+            return callback(new Error(data.msg, data));
+          } else if ((data.error != null) && (callback != null)) {
+            data.msg = data.error;
+            return callback(new Error(data.msg, data));
+          }
+        } else if (callback != null) {
+          return callback(new Error("Server error occured", data));
+        }
+      }
+    });
+  };
+
+  exports.get = function(url, callback) {
+    return exports.request("GET", url, null, callback);
+  };
+
+  exports.post = function(url, data, callback) {
+    return exports.request("POST", url, data, callback);
+  };
+
+  exports.put = function(url, data, callback) {
+    return exports.request("PUT", url, data, callback);
+  };
+
+  exports.del = function(url, callback) {
+    return exports.request("DELETE", url, null, callback);
+  };
   
 });
 window.require.register("lib/socket_listener", function(exports, require, module) {
@@ -756,6 +806,9 @@ window.require.register("locales/en", function(exports, require, module) {
     "Questions and help forum": "Questions and help forum",
     "Sign out": "Sign out",
     "open in a new tab": "open in a new tab",
+    "always-on": "always on",
+    "keep always on": "keep always on",
+    "stop this app": "stop this app",
     "application-is-installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
@@ -805,6 +858,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Questions and help forum": "Forum d'aide",
     "Sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
+    "always-on": "toujours démarrée",
+    "keep always on": "garder toujours démarrée",
+    "stop this app": "arrêter cet app",
     "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
@@ -1012,10 +1068,25 @@ window.require.register("routers/main_router", function(exports, require, module
     MainRouter.prototype.routes = {
       "home": "applicationList",
       "applications": "market",
+      "config-applications": "configApplications",
       "account": "account",
+      "help": "help",
       "logout": "logout",
       "apps/:slug": "application",
-      "apps/:slug/*hash": "application"
+      "apps/:slug/*hash": "application",
+      "*path": "applicationList"
+    };
+
+    MainRouter.prototype.applicationList = function() {
+      return app.mainView.displayApplicationsList();
+    };
+
+    MainRouter.prototype.configApplications = function() {
+      return app.mainView.displayConfigApplications();
+    };
+
+    MainRouter.prototype.help = function() {
+      return app.mainView.displayHelp();
     };
 
     MainRouter.prototype.market = function() {
@@ -1026,8 +1097,8 @@ window.require.register("routers/main_router", function(exports, require, module
       return app.mainView.displayAccount();
     };
 
-    MainRouter.prototype.applicationList = function() {
-      return app.mainView.displayApplicationsList();
+    MainRouter.prototype.help = function() {
+      return app.mainView.displayHelp();
     };
 
     MainRouter.prototype.application = function(slug, hash) {
@@ -1049,35 +1120,53 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="account-form" class="well"><p>');
-  var __val__ = t('email')
+  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">your parameters</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+  var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-email-field"></a></p><p>');
-  var __val__ = t('timezone')
+  buf.push('</p><input id="account-email-field"/><button class="btn">');
+  var __val__ = t('save')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-timezone-field"></a></p><p>');
-  var __val__ = t('domain')
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('Your timezone is required to display dates properly')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-domain-field"></a></p><p>');
-  var __val__ = t('locale')
+  buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
+  var __val__ = t('save')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-locale-field"></a></p><p><button id="change-password-button" class="btn">');
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('The domain name is used to build urls send via email to you or your contacts')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><input id="account-domain-field"/><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('Chose the language you want I use to speak with you:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><select id="account-locale-field"><option value="French">French</option><option value="English">English</option></select><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><p><button id="change-password-button" class="btn">');
   var __val__ = t('Change password')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></p><div id="change-password-form"><p>');
-  var __val__ = t('Change password')
+  var __val__ = t('Change password procedure')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><p><label>');
   var __val__ = t('input your current password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password0-field" type="password"/></p><p><label>');
-  var __val__ = t('fill this field to set a new password')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password0-field'), 'type':("password"), 'placeholder':("" + (t('current password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><label>');
+  var __val__ = t('enter a new password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password1-field" type="password"/></p><p><label>');
-  var __val__ = t('confirm new password')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password1-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><label>');
+  var __val__ = t('confirm your new password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">');
-  var __val__ = t('Send Changes')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><button id="account-form-button" class="btn">');
+  var __val__ = t('save your new password')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
   }
@@ -1097,25 +1186,65 @@ window.require.register("templates/application_iframe", function(exports, requir
   return buf.join("");
   };
 });
+window.require.register("templates/config_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="clearfix"><div class="mod left"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  if ( app.state === 'installed')
+  {
+  buf.push('<span class="state-label"> \nrunning</span>');
+  }
+  else
+  {
+  buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
+  }
+  buf.push('</div><div class="mod right"><button class="btn remove-app">remove</button></div><div class="mod right"> <button class="btn update-app">update</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">stop this app</button></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_application_list", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_applications", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>Hardware consumption</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>&nbsp;GB (Hard Drive)</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>&nbsp;MB (RAM)</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">Manage your applications</h4></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/help", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">Do you look for assistance?</h4><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div>');
+  }
+  return buf.join("");
+  };
+});
 window.require.register("templates/home", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center"><p>');
-  var __val__ = t('no-app-message')
-  buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
-  var __val__ = t('Memory consumption')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');
-  var __val__ = t('Disk consumption')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ' : <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">');
-  var __val__ = t('manage')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div></div>');
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p></div><div class="line"><p class="bigger pa2">You have no application installed. You\nshould&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>App management&nbsp;</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1128,19 +1257,7 @@ window.require.register("templates/home_application", function(exports, require,
   var interp;
   buf.push('<a');
   buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-  buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
-  var __val__ = t('Installing')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p>');
-   if (app.displayName !== null)
-  {
-  buf.push('<p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p>');
-  }
-   else
-  {
-  buf.push('<p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p>');
-  }
-  buf.push('</div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><button class="btn update-app">');
@@ -1149,7 +1266,7 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('</button></div><div><label for="app-stoppable"><input');
   buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? undefined : "checked"), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
   buf.push('/>&nbsp;');
-  var __val__ = t('Keep always on')
+  var __val__ = t('keep always on')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</label><button class="btn btn-large start-stop-btn">');
   var __val__ = t('started')
@@ -1165,7 +1282,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"></div></div>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -1176,22 +1293,13 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>');
-  var __val__ = t('welcome-app-store')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
-  var __val__ = t('add application ?')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">');
-  var __val__ = t('your app!')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
+  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="clearfix"></div>');
+  buf.push('</div></div><div class="md-overlay"></div>');
   }
   return buf.join("");
   };
@@ -1202,15 +1310,45 @@ window.require.register("templates/market_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="app-img pull-left"><img');
+  buf.push('<div class="right"><a');
+  buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+  buf.push('><img src="img/git.png" class="img-btn"/></a>');
+  if ( app.website !== undefined)
+  {
+  buf.push('<a');
+  buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+  buf.push('><img src="img/link.png" class="img-btn"/></a>');
+  }
+  buf.push('</div><div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
-  var __val__ = t('add application ?')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+  buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/menu_application_item", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a');
+  buf.push(attrs({ 'href':("#apps/" + (model.slug) + "/") }, {"href":true}));
+  buf.push('>' + escape((interp = model.displayName) == null ? '' : interp) + '</a>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/menu_applications", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"><a href="#home">Home</a></div></div>');
   }
   return buf.join("");
   };
@@ -1221,16 +1359,7 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar-inner clearfix"><h2 id="header-title"><a href="http://cozycloud.cc/" target="_blank" title="home"><img src="img/grey-logo.png" alt="Cozy Cloud Symbol"/></a></h2><div id="buttons"><ul class="nav"><li id="notifications-container"></li><li class="active"><a id="home-button" href="#home"><i class="icon-home"></i><span>');
-  var __val__ = t('Home')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="market-button" href="#applications"><i class="icon-plus"></i><span>');
-  var __val__ = t('Apps')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="account-button" href="#account"><i class="icon-user"></i><span>');
-  var __val__ = t('Account')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="help-button" href="https://forum.cozycloud.cc/" target="_blank"><i class="icon-help">&nbsp;</i></a></li><li><a id="logout-button" href="#logout"><i class="icon-arrow-right"></i></a></li></ul></div></div>');
+  buf.push('<div class="navbar clearfix"><a href="http://cozy.io" class="left"><img src="img/happycloud-black.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-black.png"/></a></div>');
   }
   return buf.join("");
   };
@@ -1267,10 +1396,10 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  buf.push('<a id="notifications-toggle"><img src="img/notification-black.png"/></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
   var __val__ = t('You have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</li><li id="dismiss-all">');
+  buf.push('</li><li id="dismiss-all" class="btn">');
   var __val__ = t('Dismiss All')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li></ul>');
@@ -1284,19 +1413,11 @@ window.require.register("templates/popover_description", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">');
-  var __val__ = t('Application Description')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('downloading-description')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
-  var __val__ = t('Cancel')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
-  var __val__ = t('Ok')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></div>');
+  buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
+  buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
+  buf.push('>&nbsp;</a><a');
+  buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
+  buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
   }
   return buf.join("");
   };
@@ -1307,17 +1428,11 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">');
-  var __val__ = t('Applications Permissions')
+  buf.push('<div class="md-header mt2">Once updated, this application will require the following permissions:</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
+  var __val__ = t('confirm update')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('downloading-permissions')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
-  var __val__ = t('Cancel')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
-  var __val__ = t('Confirm')
+  buf.push('</a><a id="cancelbtn" class="btn light-btn right">');
+  var __val__ = t('cancel')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a></div>');
   }
@@ -1325,7 +1440,7 @@ window.require.register("templates/popover_permissions", function(exports, requi
   };
 });
 window.require.register("views/account", function(exports, require, module) {
-  var BaseView, locales, timezones,
+  var BaseView, locales, request, timezones,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1335,6 +1450,8 @@ window.require.register("views/account", function(exports, require, module) {
   timezones = require('helpers/timezone').timezones;
 
   locales = require('helpers/locales').locales;
+
+  request = require('lib/request');
 
   module.exports = exports.AccountView = (function(_super) {
 
@@ -1351,7 +1468,7 @@ window.require.register("views/account", function(exports, require, module) {
     function AccountView() {
       this.displayErrors = __bind(this.displayErrors, this);
 
-      this.onDataSubmit = __bind(this.onDataSubmit, this);
+      this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
 
       this.closePasswordForm = __bind(this.closePasswordForm, this);
 
@@ -1363,7 +1480,8 @@ window.require.register("views/account", function(exports, require, module) {
       var _this = this;
       return this.changePasswordButton.fadeOut(function() {
         return _this.changePasswordForm.fadeIn(function() {
-          return _this.password1Field.focus();
+          _this.password0Field.focus();
+          return $(window).trigger('resize');
         });
       });
     };
@@ -1375,65 +1493,42 @@ window.require.register("views/account", function(exports, require, module) {
       });
     };
 
-    AccountView.prototype.onDataSubmit = function(event) {
+    AccountView.prototype.onNewPasswordSubmit = function(event) {
       var form,
         _this = this;
-      this.loadingIndicator.spin();
       form = {
-        password0: $("#account-password0-field").val(),
-        password1: $("#account-password1-field").val(),
-        password2: $("#account-password2-field").val()
+        password0: this.password0Field.val(),
+        password1: this.password1Field.val(),
+        password2: this.password2Field.val()
       };
       this.infoAlert.hide();
       this.errorAlert.hide();
-      return $.ajax({
-        type: 'POST',
-        url: "api/user/",
-        data: form,
-        success: function(data) {
+      this.accountSubmitButton.spin('small');
+      this.accountSubmitButton.css('color', 'transparent');
+      return request.post('api/user', form, function(err, data) {
+        if (err) {
+          _this.password0Field.val(null);
+          _this.password1Field.val(null);
+          _this.password2Field.val(null);
+          if (data != null) {
+            _this.displayErrors(data.msg);
+          } else {
+            _this.displayErrors(err.message);
+          }
+        } else {
           if (data.success) {
             _this.infoAlert.html(data.msg);
             _this.infoAlert.show();
-            $("#account-password0-field").val(null);
-            $("#account-password1-field").val(null);
-            $("#account-password2-field").val(null);
+            _this.password0Field.val(null);
+            _this.password1Field.val(null);
+            _this.password2Field.val(null);
           } else {
-            _this.displayErrors(data.msg || data.responseText);
+            _this.displayErrors(data.msg);
           }
-          return _this.loadingIndicator.spin();
-        },
-        error: function(data) {
-          $("#account-password0-field").val(null);
-          _this.displayErrors(data.msg || data.responseText);
-          return _this.loadingIndicator.spin();
         }
+        _this.accountSubmitButton.css('color', 'white');
+        return _this.accountSubmitButton.spin();
       });
-    };
-
-    AccountView.prototype.submitData = function(form, url) {
-      var d,
-        _this = this;
-      if (url == null) {
-        url = 'api/user/';
-      }
-      d = new $.Deferred;
-      $.ajax({
-        type: 'POST',
-        url: url,
-        data: form,
-        success: function(data) {
-          if (data.success) {
-            window.location.reload();
-            return d.resolve();
-          } else {
-            return d.reject(data.msg || data.responseText);
-          }
-        },
-        error: function(data) {
-          return d.reject(data.msg || data.responseText);
-        }
-      });
-      return d;
     };
 
     /* Functions
@@ -1443,89 +1538,93 @@ window.require.register("views/account", function(exports, require, module) {
     AccountView.prototype.displayErrors = function(msgs) {
       var errorString, msg, _i, _len;
       errorString = "";
+      if (typeof msgs === 'string') {
+        msgs = msgs.split(',');
+      }
       for (_i = 0, _len = msgs.length; _i < _len; _i++) {
         msg = msgs[_i];
-        errorString += msg + "<br />";
+        errorString += "" + msg + "<br />";
       }
       this.errorAlert.html(errorString);
       return this.errorAlert.show();
     };
 
+    AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
+      var saveButton, saveFunction;
+      saveButton = fieldWidget.parent().find('.btn');
+      saveFunction = function() {
+        var data;
+        saveButton.css('color', 'transparent');
+        saveButton.spin('small', 'white');
+        data = {};
+        data[fieldName] = fieldWidget.val();
+        return request.post("api/" + path, data, function(err) {
+          saveButton.spin();
+          saveButton.css('color', 'white');
+          if (err) {
+            saveButton.addClass('red');
+            saveButton.html('error');
+            if (fieldName === 'locale') {
+              return window.location.reload();
+            }
+          } else {
+            saveButton.addClass('green');
+            return saveButton.html('saved');
+          }
+        });
+      };
+      saveButton.click(saveFunction);
+      return saveFunction;
+    };
+
     AccountView.prototype.fetchData = function() {
       var _this = this;
       $.get("api/users/", function(data) {
-        var timezone, timezoneData, _i, _len;
-        _this.emailField.html(data.rows[0].email);
-        _this.timezoneField.html(data.rows[0].timezone);
+        var saveEmail, saveTimezone, timezoneData;
         timezoneData = [];
-        for (_i = 0, _len = timezones.length; _i < _len; _i++) {
-          timezone = timezones[_i];
-          timezoneData.push({
-            value: timezone,
-            text: timezone
-          });
-        }
-        _this.emailField.editable({
-          url: function(params) {
-            return _this.submitData({
-              email: params.value
-            });
-          },
-          type: 'text',
-          send: 'always',
-          value: data.rows[0].email
+        _this.emailField.val(data.rows[0].email);
+        _this.timezoneField.val(data.rows[0].timezone);
+        saveEmail = _this.getSaveFunction('email', _this.emailField, 'user');
+        _this.emailField.on('keyup', function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return saveEmail();
+          }
         });
-        return _this.timezoneField.editable({
-          url: function(params) {
-            return _this.submitData({
-              timezone: params.value
-            });
-          },
-          type: 'select',
-          send: 'always',
-          source: timezoneData,
-          value: data.rows[0].timezone
-        });
+        saveTimezone = _this.getSaveFunction('timezone', _this.timezoneField, 'user');
+        return _this.timezoneField.change(saveTimezone);
       });
       return $.get("api/instances/", function(data) {
-        var code, domain, instance, locale, localeData, txt, _ref;
+        var domain, instance, locale, saveDomain, saveLocale, _ref;
         instance = (_ref = data.rows) != null ? _ref[0] : void 0;
         domain = (instance != null ? instance.domain : void 0) || 'no.domain.set';
         locale = (instance != null ? instance.locale : void 0) || 'en';
-        _this.domainField.html(domain);
-        _this.domainField.editable({
-          url: function(params) {
-            return _this.submitData({
-              domain: params.value
-            }, 'api/instance/');
-          },
-          type: 'text',
-          send: 'always',
-          value: domain
-        });
-        _this.localeField.html(locales[locale]);
-        localeData = (function() {
-          var _results;
-          _results = [];
-          for (code in locales) {
-            txt = locales[code];
-            _results.push({
-              value: code,
-              text: txt
-            });
+        saveDomain = _this.getSaveFunction('domain', _this.domainField, 'instance');
+        _this.domainField.on('keyup', function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return saveDomain();
           }
-          return _results;
-        })();
-        return _this.localeField.editable({
-          url: function(params) {
-            return _this.submitData({
-              locale: params.value
-            }, 'api/instance/');
-          },
-          type: 'select',
-          send: 'always',
-          source: localeData,
-          value: locale
+        });
+        _this.domainField.val(domain);
+        saveLocale = _this.getSaveFunction('locale', _this.localeField, 'instance');
+        _this.localeField.change(saveLocale);
+        _this.localeField.val(locale);
+        _this.password0Field = $('#account-password0-field');
+        _this.password1Field = $('#account-password1-field');
+        _this.password2Field = $('#account-password2-field');
+        _this.password0Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.password1Field.focus();
+          }
+        });
+        _this.password1Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.password2Field.focus();
+          }
+        });
+        return _this.password2Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.onNewPasswordSubmit();
+          }
         });
       });
     };
@@ -1535,7 +1634,8 @@ window.require.register("views/account", function(exports, require, module) {
 
 
     AccountView.prototype.afterRender = function() {
-      var _this = this;
+      var timezone, _i, _len,
+        _this = this;
       this.emailField = this.$('#account-email-field');
       this.timezoneField = this.$('#account-timezone-field');
       this.domainField = this.$('#account-domain-field');
@@ -1549,30 +1649,419 @@ window.require.register("views/account", function(exports, require, module) {
       this.changePasswordButton = this.$('#change-password-button');
       this.changePasswordButton.click(this.onChangePasswordClicked);
       this.accountSubmitButton = this.$('#account-form-button');
-      this.password1Field = $('#account-password1-field');
-      this.password2Field = $('#account-password2-field');
-      this.password1Field.keyup(function(event) {
-        if (event.which === 13) {
-          return _this.password2Field.focus();
-        }
-      });
-      this.password2Field.keyup(function(event) {
-        if (event.which === 13) {
-          return _this.onDataSubmit();
-        }
-      });
       this.accountSubmitButton.click(function(event) {
         event.preventDefault();
-        return _this.onDataSubmit();
+        return _this.onNewPasswordSubmit();
       });
-      this.installInfo = this.$('#add-app-modal .loading-indicator');
       this.errorAlert.hide();
       this.infoAlert.hide();
-      this.addApplicationCloseCross = this.$('#add-app-modal .close');
-      this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-      this.loadingIndicator = this.$('.loading-indicator');
+      for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+        timezone = timezones[_i];
+        this.timezoneField.append("<option value=\"" + timezone + "\">" + timezone + "</option>");
+      }
       return this.fetchData();
     };
+
+    return AccountView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_application", function(exports, require, module) {
+  var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  ColorButton = require('widgets/install_button');
+
+  PopoverPermissionsView = require('views/popover_permissions');
+
+  module.exports = ApplicationRow = (function(_super) {
+
+    __extends(ApplicationRow, _super);
+
+    ApplicationRow.prototype.className = "line config-application clearfix";
+
+    ApplicationRow.prototype.tagName = "div";
+
+    ApplicationRow.prototype.template = require('templates/config_application');
+
+    ApplicationRow.prototype.getRenderData = function() {
+      return {
+        app: this.model.attributes
+      };
+    };
+
+    ApplicationRow.prototype.events = {
+      "click .application-inner": "onAppClicked",
+      "click .remove-app": "onRemoveClicked",
+      "click .update-app": "onUpdateClicked",
+      "click .start-stop-btn": "onStartStopClicked",
+      "click .app-stoppable": "onStoppableClicked"
+    };
+
+    /* Constructor
+    */
+
+
+    function ApplicationRow(options) {
+      this.remove = __bind(this.remove, this);
+
+      this.launchApp = __bind(this.launchApp, this);
+
+      this.onStartStopClicked = __bind(this.onStartStopClicked, this);
+
+      this.onUpdateClicked = __bind(this.onUpdateClicked, this);
+
+      this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
+      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
+
+      this.onAppClicked = __bind(this.onAppClicked, this);
+
+      this.onAppChanged = __bind(this.onAppChanged, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.id = "app-btn-" + options.model.id;
+      ApplicationRow.__super__.constructor.apply(this, arguments);
+    }
+
+    ApplicationRow.prototype.afterRender = function() {
+      this.icon = this.$('img');
+      this.updateButton = new ColorButton(this.$(".update-app"));
+      this.removeButton = new ColorButton(this.$(".remove-app"));
+      this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
+      this.stateLabel = this.$('.state-label');
+      this.listenTo(this.model, 'change', this.onAppChanged);
+      return this.onAppChanged(this.model);
+    };
+
+    /* Listener
+    */
+
+
+    ApplicationRow.prototype.onAppChanged = function(app) {
+      switch (this.model.get('state')) {
+        case 'broken':
+          this.icon.attr('src', "img/broken.png");
+          this.stateLabel.show().text(t('broken'));
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('retry to install'));
+          return this.startStopBtn.hide();
+        case 'installed':
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.removeClass('stopped');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('update'));
+          return this.startStopBtn.displayGrey(t('stop this app'));
+        case 'installing':
+          this.icon.attr('src', "img/installing.gif");
+          this.icon.removeClass('stopped');
+          this.stateLabel.show().text('installing');
+          this.removeButton.displayGrey('abort');
+          this.updateButton.hide();
+          return this.startStopBtn.hide();
+        case 'stopped':
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.addClass('stopped');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.hide();
+          return this.startStopBtn.displayGrey(t('start this app'));
+      }
+    };
+
+    ApplicationRow.prototype.onAppClicked = function(event) {
+      var errormsg, msg;
+      event.preventDefault();
+      switch (this.model.get('state')) {
+        case 'broken':
+          msg = 'This app is broken. Try install again.';
+          errormsg = this.model.get('errormsg');
+          if (errormsg) {
+            msg += " Error was : " + errormsg;
+          }
+          return alert(msg);
+        case 'installed':
+          return this.launchApp();
+        case 'installing':
+          return alert(t('this app is being installed. Wait a little'));
+        case 'stopped':
+          return this.model.start({
+            success: this.launchApp
+          });
+      }
+    };
+
+    ApplicationRow.prototype.onStoppableClicked = function(event) {
+      var bool,
+        _this = this;
+      bool = !this.model.get('isStoppable');
+      return this.model.save({
+        isStoppable: bool
+      }, {
+        success: function() {
+          return _this.$('.app-stoppable').attr('checked', !bool);
+        },
+        error: function() {
+          _this.$('.app-stoppable').attr('checked', bool);
+          return alert('oh no !');
+        }
+      });
+    };
+
+    ApplicationRow.prototype.onRemoveClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.removeButton.spin(true);
+      return this.model.uninstall({
+        success: function() {
+          _this.remove();
+          return Backbone.Mediator.pub('app-state-changed', true);
+        },
+        error: function() {
+          _this.removeButton.displayRed(t("retry to install"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
+      });
+    };
+
+    ApplicationRow.prototype.onUpdateClicked = function(event) {
+      event.preventDefault();
+      return this.showPopover();
+    };
+
+    ApplicationRow.prototype.showPopover = function() {
+      var _this = this;
+      this.popover = new PopoverPermissionsView({
+        model: this.model,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.updateApp();
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
+    };
+
+    ApplicationRow.prototype.onStartStopClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.startStopBtn.spin(true);
+      if (this.model.isRunning()) {
+        return this.model.stop({
+          success: function() {
+            _this.startStopBtn.spin(false);
+            _this.stateLabel.html('stopped');
+            return Backbone.Mediator.pub('app-state-changed', true);
+          },
+          error: function() {
+            return _this.startStopBtn.spin(false);
+          }
+        });
+      } else {
+        return this.model.start({
+          success: function() {
+            _this.startStopBtn.spin(false);
+            _this.stateLabel.html('started');
+            return Backbone.Mediator.pub('app-state-changed', true);
+          },
+          error: function() {
+            return _this.startStopBtn.spin(false);
+          }
+        });
+      }
+    };
+
+    /* Functions
+    */
+
+
+    ApplicationRow.prototype.launchApp = function() {
+      return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
+    };
+
+    ApplicationRow.prototype.remove = function() {
+      var _this = this;
+      if (this.model.get('state') !== 'installed') {
+        return ApplicationRow.__super__.remove.apply(this, arguments);
+      }
+      this.removeButton.spin(false);
+      this.removeButton.displayGreen(t("Removed"));
+      return setTimeout(function() {
+        return _this.$el.fadeOut(function() {
+          return ApplicationRow.__super__.remove.apply(_this, arguments);
+        });
+      }, 1000);
+    };
+
+    ApplicationRow.prototype.updateApp = function() {
+      var _this = this;
+      this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.updateButton.spin(false);
+      return this.updateButton.spin(true, {
+        success: function() {
+          _this.updateButton.displayGreen(t("Updated"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        },
+        error: function(jqXHR) {
+          var error;
+          error = JSON.parse(jqXHR.responseText);
+          console.log(error);
+          alert(error.message);
+          _this.updateButton.displayRed(t("failed"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
+      });
+    };
+
+    return ApplicationRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_application_list", function(exports, require, module) {
+  var ApplicationRow, ApplicationsListView, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  ApplicationRow = require('views/config_application');
+
+  module.exports = ApplicationsListView = (function(_super) {
+
+    __extends(ApplicationsListView, _super);
+
+    ApplicationsListView.prototype.id = 'config-application-list';
+
+    ApplicationsListView.prototype.tagName = 'div';
+
+    ApplicationsListView.prototype.template = require('templates/config_application_list');
+
+    ApplicationsListView.prototype.itemView = require('views/config_application');
+
+    function ApplicationsListView(apps) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.apps = apps;
+      this.isManaging = false;
+      ApplicationsListView.__super__.constructor.call(this, {
+        collection: apps
+      });
+      if (this.apps.length === 0) {
+        this.displayNoAppMessage();
+      }
+    }
+
+    ApplicationsListView.prototype.afterRender = function() {
+      return this.appList = this.$("#app-list");
+    };
+
+    ApplicationsListView.prototype.displayNoAppMessage = function() {
+      return this.$el.append('There is no application installed.');
+    };
+
+    return ApplicationsListView;
+
+  })(ViewCollection);
+  
+});
+window.require.register("views/config_applications", function(exports, require, module) {
+  var BaseView, ConfigApplicationList, request,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  request = require('lib/request');
+
+  BaseView = require('lib/base_view');
+
+  ConfigApplicationList = require('./config_application_list');
+
+  module.exports = exports.ConfigApplicationsView = (function(_super) {
+
+    __extends(ConfigApplicationsView, _super);
+
+    ConfigApplicationsView.prototype.id = 'config-applications-view';
+
+    ConfigApplicationsView.prototype.template = require('templates/config_applications');
+
+    ConfigApplicationsView.prototype.subscriptions = {
+      'app-state-changed': 'onAppStateChanged'
+    };
+
+    function ConfigApplicationsView(apps) {
+      this.apps = apps;
+      ConfigApplicationsView.__super__.constructor.call(this);
+    }
+
+    ConfigApplicationsView.prototype.afterRender = function() {
+      this.memoryFree = this.$('.memory-free');
+      this.diskSpace = this.$('.disk-space');
+      this.fetch();
+      this.applicationList = new ConfigApplicationList(this.apps);
+      return this.$el.find('.w66').append(this.applicationList.$el);
+    };
+
+    ConfigApplicationsView.prototype.fetch = function() {
+      var _this = this;
+      this.$('.amount').spin('small');
+      this.$('.total').spin('small');
+      return request.get('api/sys-data', function(err, data) {
+        if (err) {
+          return alert('Server error occured, infos cannot be displayed.');
+        } else {
+          _this.$('.amount').spin();
+          _this.$('.total').spin();
+          _this.displayMemory(data.freeMem, data.totalMem);
+          return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+        }
+      });
+    };
+
+    ConfigApplicationsView.prototype.displayMemory = function(amount, total) {
+      this.memoryFree.find('.amount').html(Math.floor(amount / 1000));
+      return this.memoryFree.find('.total').html(Math.floor(total / 1000));
+    };
+
+    ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
+      this.diskSpace.find('.amount').html(amount);
+      return this.diskSpace.find('.total').html(total);
+    };
+
+    ConfigApplicationsView.prototype.onAppStateChanged = function() {
+      return setTimeout(this.fetch, 2000);
+    };
+
+    return ConfigApplicationsView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/help", function(exports, require, module) {
+  var BaseView,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = exports.AccountView = (function(_super) {
+
+    __extends(AccountView, _super);
+
+    AccountView.prototype.id = 'help-view';
+
+    AccountView.prototype.template = require('templates/help');
+
+    function AccountView() {
+      AccountView.__super__.constructor.call(this);
+    }
 
     return AccountView;
 
@@ -1634,11 +2123,24 @@ window.require.register("views/home", function(exports, require, module) {
     }
 
     ApplicationsListView.prototype.afterRender = function() {
+      var _this = this;
       this.appList = this.$("#app-list");
       this.manageAppsButton = this.$("#manage-app-button");
       this.addApplicationButton = this.$("#add-app-button");
       this.machineInfos = this.$(".machine-infos").hide();
-      return this.$("#no-app-message").hide();
+      this.$("#no-app-message").hide();
+      return $(".menu-btn a").click(function(event) {
+        var target;
+        $(".menu-btn").removeClass('active');
+        target = $(event.target);
+        if (!target.hasClass('menu-btn')) {
+          target = target.parent();
+        }
+        if (!target.hasClass('menu-btn')) {
+          target = target.parent();
+        }
+        return target.addClass('active');
+      });
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {
@@ -1965,7 +2467,7 @@ window.require.register("views/home_application", function(exports, require, mod
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1979,6 +2481,10 @@ window.require.register("views/main", function(exports, require, module) {
   NavbarView = require('views/navbar');
 
   AccountView = require('views/account');
+
+  HelpView = require('views/help');
+
+  ConfigApplicationsView = require('views/config_applications');
 
   MarketView = require('views/market');
 
@@ -2001,6 +2507,10 @@ window.require.register("views/main", function(exports, require, module) {
 
       this.onAppHashChanged = __bind(this.onAppHashChanged, this);
 
+      this.displayConfigApplications = __bind(this.displayConfigApplications, this);
+
+      this.displayHelp = __bind(this.displayHelp, this);
+
       this.displayAccount = __bind(this.displayAccount, this);
 
       this.displayMarket = __bind(this.displayMarket, this);
@@ -2021,7 +2531,9 @@ window.require.register("views/main", function(exports, require, module) {
       var _this = this;
       this.navbar = new NavbarView(this.apps);
       this.applicationListView = new ApplicationsListView(this.apps);
+      this.configApplications = new ConfigApplicationsView(this.apps);
       this.accountView = new AccountView();
+      this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
       this.frames = this.$('#app-frames');
       this.content = this.$('#content');
@@ -2058,15 +2570,17 @@ window.require.register("views/main", function(exports, require, module) {
     HomeView.prototype.displayView = function(view) {
       var displayView,
         _this = this;
+      $("#current-application").html('home');
       displayView = function() {
         _this.content.show();
         _this.frames.hide();
         view.$el.hide();
-        _this.content.append(view.$el);
+        $('#home-content').append(view.$el);
         view.$el.fadeIn();
         _this.currentView = view;
         _this.changeFavicon("favicon.ico");
-        return _this.resetLayoutSizes();
+        _this.resetLayoutSizes();
+        return $("#content").niceScroll();
       };
       if (this.currentView != null) {
         return this.currentView.$el.fadeOut(function() {
@@ -2080,20 +2594,27 @@ window.require.register("views/main", function(exports, require, module) {
 
     HomeView.prototype.displayApplicationsList = function() {
       this.displayView(this.applicationListView);
-      this.navbar.selectButton('home-button');
       return window.document.title = "Cozy - Home";
     };
 
     HomeView.prototype.displayMarket = function() {
       this.displayView(this.marketView);
-      this.navbar.selectButton('market-button');
       return window.document.title = "Cozy - Market";
     };
 
     HomeView.prototype.displayAccount = function() {
       this.displayView(this.accountView);
-      this.navbar.selectButton('account-button');
       return window.document.title = 'Cozy - Account';
+    };
+
+    HomeView.prototype.displayHelp = function() {
+      this.displayView(this.helpView);
+      return window.document.title = "Cozy - Help";
+    };
+
+    HomeView.prototype.displayConfigApplications = function() {
+      this.displayView(this.configApplications);
+      return window.document.title = "Cozy - Applications configuration";
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
@@ -2113,6 +2634,7 @@ window.require.register("views/main", function(exports, require, module) {
       }
       this.$('#app-frames').find('iframe').hide();
       frame.show();
+      frame.niceScroll();
       this.navbar.selectButton(slug);
       this.selectedApp = slug;
       name = this.apps.get(slug).get('name');
@@ -2120,6 +2642,7 @@ window.require.register("views/main", function(exports, require, module) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
+      $("#current-application").html(name);
       this.changeFavicon("/apps/" + slug + "/favicon.ico");
       return this.resetLayoutSizes();
     };
@@ -2173,10 +2696,8 @@ window.require.register("views/main", function(exports, require, module) {
 
 
     HomeView.prototype.resetLayoutSizes = function() {
-      var height;
-      height = this.$("#header").height() + 1;
-      this.frames.height($(window).height() - height);
-      return this.content.height($(window).height() - height);
+      this.frames.height($(window).height() - 32);
+      return this.content.height($(window).height() - 32);
     };
 
     return HomeView;
@@ -2218,8 +2739,6 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.events = {
       'keyup #app-git-field': 'onEnterPressed',
-      "mouseover #your-app .app-install-button": "onMouseoverInstallButton",
-      "mouseout #your-app .app-install-button": "onMouseoutInstallButton",
       "click #your-app .app-install-button": "onInstallClicked"
     };
 
@@ -2248,8 +2767,6 @@ window.require.register("views/market", function(exports, require, module) {
 
       this.onAppListsChanged = __bind(this.onAppListsChanged, this);
 
-      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
-
       this.afterRender = __bind(this.afterRender, this);
       this.marketApps = new AppCollection();
       this.installedApps = installedApps;
@@ -2270,16 +2787,6 @@ window.require.register("views/market", function(exports, require, module) {
       this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
       this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
       return this.marketApps.fetchFromMarket();
-    };
-
-    MarketView.prototype.onMouseoverInstallButton = function() {
-      var _this = this;
-      this.isSliding = true;
-      return this.$("#your-app .app-install-text").show('slide', {
-        direction: 'right'
-      }, 300, function() {
-        return _this.isSliding = false;
-      });
     };
 
     MarketView.prototype.onAppListsChanged = function() {
@@ -2359,31 +2866,18 @@ window.require.register("views/market", function(exports, require, module) {
       this.popover = new PopoverDescriptionView({
         model: appWidget.app,
         confirm: function(application) {
-          _this.popover.remove();
-          return _this.showPermissions(appWidget);
-        },
-        cancel: function(application) {
-          return _this.popover.remove();
-        }
-      });
-      return this.$el.append(this.popover.$el);
-    };
-
-    MarketView.prototype.showPermissions = function(appWidget) {
-      var _this = this;
-      this.popover = new PopoverPermissionsView({
-        model: appWidget.app,
-        confirm: function(application) {
-          _this.popover.remove();
+          $('#no-app-message').hide();
+          _this.popover.hide();
           return _this.hideApplication(appWidget, function() {
             return _this.runInstallation(appWidget.app);
           });
         },
         cancel: function(application) {
-          return _this.popover.remove();
+          return _this.popover.hide();
         }
       });
-      return this.$el.append(this.popover.$el);
+      this.$el.append(this.popover.$el);
+      return this.popover.show();
     };
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
@@ -2473,7 +2967,6 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.resetForm = function() {
-      this.installAppButton.displayOrange('install');
       return this.appGitField.val('');
     };
 
@@ -2503,9 +2996,8 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.template = require('templates/market_application');
 
     ApplicationRow.prototype.events = {
-      "mouseover .app-install-button": "onMouseoverInstallButton",
-      "mouseout .app-install-button": "onMouseoutInstallButton",
-      "click .app-install-button": "onInstallClicked"
+      "click .btn": "onInstallClicked",
+      "click": "onInstallClicked"
     };
 
     ApplicationRow.prototype.getRenderData = function() {
@@ -2519,10 +3011,6 @@ window.require.register("views/market_application", function(exports, require, m
       this.marketView = marketView;
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
-      this.onMouseoutInstallButton = __bind(this.onMouseoutInstallButton, this);
-
-      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
-
       this.afterRender = __bind(this.afterRender, this);
 
       ApplicationRow.__super__.constructor.call(this);
@@ -2530,40 +3018,9 @@ window.require.register("views/market_application", function(exports, require, m
     }
 
     ApplicationRow.prototype.afterRender = function() {
-      return this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
-    };
-
-    ApplicationRow.prototype.onMouseoverInstallButton = function() {
-      var direction,
-        _this = this;
-      this.mouseOut = false;
-      if ($(window).width() > 800) {
-        if (!this.isDisplayed) {
-          direction = {
-            direction: 'right'
-          };
-          return this.$(".app-install-text").show('slide', direction, 300, function() {
-            return _this.isDisplayed = true;
-          });
-        }
-      }
-    };
-
-    ApplicationRow.prototype.onMouseoutInstallButton = function() {
-      var _this = this;
-      this.mouseOut = true;
-      if ($(window).width() > 800) {
-        return setTimeout(function() {
-          var direction;
-          if (_this.isDisplayed && _this.mouseOut) {
-            direction = {
-              direction: 'right'
-            };
-            return _this.$(".app-install-text").hide('slide', direction, 300, function() {
-              return _this.isDisplayed = false;
-            });
-          }
-        }, 500);
+      this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
+      if (this.app.get('comment') === 'official application') {
+        return this.$el.addClass('official');
       }
     };
 
@@ -2580,8 +3037,145 @@ window.require.register("views/market_application", function(exports, require, m
   })(BaseView);
   
 });
+window.require.register("views/menu_application", function(exports, require, module) {
+  var ApplicationView, BaseView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = ApplicationView = (function(_super) {
+
+    __extends(ApplicationView, _super);
+
+    function ApplicationView() {
+      this.onLinkClick = __bind(this.onLinkClick, this);
+      return ApplicationView.__super__.constructor.apply(this, arguments);
+    }
+
+    ApplicationView.prototype.tagName = 'div';
+
+    ApplicationView.prototype.className = 'menu-application clearfix';
+
+    ApplicationView.prototype.template = require('templates/menu_application_item');
+
+    ApplicationView.prototype.events = {
+      'click a': 'onLinkClick'
+    };
+
+    ApplicationView.prototype.onLinkClick = function() {
+      return this.menu.hideAppList();
+    };
+
+    return ApplicationView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/menu_applications", function(exports, require, module) {
+  var AppsMenu, SocketListener, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  SocketListener = require('lib/socket_listener');
+
+  module.exports = AppsMenu = (function(_super) {
+
+    __extends(AppsMenu, _super);
+
+    AppsMenu.prototype.el = '#menu-applications-container';
+
+    AppsMenu.prototype.itemView = require('views/menu_application');
+
+    AppsMenu.prototype.template = require('templates/menu_applications');
+
+    AppsMenu.prototype.events = {
+      "click #menu-applications-toggle": "showAppList",
+      "click .clickcatcher": "hideAppList",
+      "click #home-btn": "hideAppList"
+    };
+
+    function AppsMenu(collection) {
+      this.collection = collection;
+      this.hideAppList = __bind(this.hideAppList, this);
+
+      this.showAppList = __bind(this.showAppList, this);
+
+      this.windowClicked = __bind(this.windowClicked, this);
+
+      this.remove = __bind(this.remove, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+
+      AppsMenu.__super__.constructor.apply(this, arguments);
+    }
+
+    AppsMenu.prototype.appendView = function(view) {
+      this.appList.append(view.$el);
+      return view.menu = this;
+    };
+
+    AppsMenu.prototype.afterRender = function() {
+      this.clickcatcher = this.$('.clickcatcher');
+      this.clickcatcher.hide();
+      this.appList = this.$('#menu-applications');
+      AppsMenu.__super__.afterRender.apply(this, arguments);
+      this.initializing = true;
+      this.collection.fetch().always(function() {
+        return this.initializing = false;
+      });
+      return $(window).on('click', this.windowClicked);
+    };
+
+    AppsMenu.prototype.remove = function() {
+      $(window).off('click', this.hideAppList);
+      return AppsMenu.__super__.remove.apply(this, arguments);
+    };
+
+    AppsMenu.prototype.windowClicked = function() {
+      if ((typeof event !== "undefined" && event !== null) && this.$el.has($(event.target)).length === 0) {
+        return this.hideAppList();
+      }
+    };
+
+    AppsMenu.prototype.showAppList = function() {
+      if (this.appList.is(':visible')) {
+        this.appList.hide();
+        this.clickcatcher.hide();
+        return this.$el.removeClass('active');
+      } else {
+        if (this.collection.size() > 0) {
+          this.$('#no-app-message').hide();
+        } else {
+          this.$('#no-app-message').show();
+        }
+        this.$el.addClass('active');
+        this.appList.slideDown();
+        return this.clickcatcher.show();
+      }
+    };
+
+    AppsMenu.prototype.dismissAll = function() {
+      return this.collection.removeAll();
+    };
+
+    AppsMenu.prototype.hideAppList = function(event) {
+      this.appList.slideUp();
+      this.clickcatcher.hide();
+      return this.$el.removeClass('active');
+    };
+
+    return AppsMenu;
+
+  })(ViewCollection);
+  
+});
 window.require.register("views/navbar", function(exports, require, module) {
-  var BaseView, NavbarView, NotificationsView, appButtonTemplate,
+  var AppsMenu, BaseView, NavbarView, NotificationsView, appButtonTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2591,6 +3185,8 @@ window.require.register("views/navbar", function(exports, require, module) {
   appButtonTemplate = require("templates/navbar_app_btn");
 
   NotificationsView = require('./notifications_view');
+
+  AppsMenu = require('./menu_applications');
 
   module.exports = NavbarView = (function(_super) {
 
@@ -2615,23 +3211,12 @@ window.require.register("views/navbar", function(exports, require, module) {
     }
 
     NavbarView.prototype.afterRender = function() {
-      var _ref;
       this.notifications = new NotificationsView();
-      this.buttons = this.$('#buttons');
-      this.$('#help-button').tooltip({
-        placement: 'bottom',
-        title: t('Questions and help forum')
-      });
-      if ((_ref = window.app.instance) != null ? _ref.helpUrl : void 0) {
-        this.$('#help-button').attr('href', window.app.instance.helpUrl);
-      }
-      this.$('#logout-button').tooltip({
-        placement: 'bottom',
-        title: t('Sign out')
-      });
+      this.appMenu = new AppsMenu(this.apps);
       if (this.apps.length > 0) {
         onApplicationListReady(this.apps);
       }
+      this.buttons = this.$(".app-button");
       this.apps.bind('reset', this.onApplicationListReady);
       this.apps.bind('change', this.onApplicationChanged);
       this.apps.bind('add', this.addApplication);
@@ -2706,7 +3291,7 @@ window.require.register("views/notification_view", function(exports, require, mo
 
     NotificationView.prototype.tagName = 'li';
 
-    NotificationView.prototype.className = 'notification';
+    NotificationView.prototype.className = 'notification clearfix';
 
     NotificationView.prototype.template = require('templates/notification_item');
 
@@ -2810,6 +3395,7 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.appendView = function(view) {
       this.notifList.prepend(view.el);
+      this.$('#nottications-toggle').attr('src', 'img/notification-orange.png');
       if (!this.initializing) {
         return this.sound.play();
       }
@@ -2827,11 +3413,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.collection.fetch().always(function() {
         return this.initializing = false;
       });
-      $(window).on('click', this.windowClicked);
-      return this.$('a').tooltip({
-        placement: 'right',
-        title: t('Notifications')
-      });
+      return $(window).on('click', this.windowClicked);
     };
 
     NotificationsView.prototype.remove = function() {
@@ -2863,7 +3445,7 @@ window.require.register("views/notifications_view", function(exports, require, m
         return this.$el.removeClass('active');
       } else {
         this.$el.addClass('active');
-        this.notifList.show();
+        this.notifList.slideDown();
         return this.clickcatcher.show();
       }
     };
@@ -2873,7 +3455,7 @@ window.require.register("views/notifications_view", function(exports, require, m
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
-      this.notifList.hide();
+      this.notifList.slideUp();
       this.clickcatcher.hide();
       return this.$el.removeClass('active');
     };
@@ -2884,14 +3466,14 @@ window.require.register("views/notifications_view", function(exports, require, m
   
 });
 window.require.register("views/popover_description", function(exports, require, module) {
-  var BaseView, PopoverDescriptionView, REPOREGEX,
+  var BaseView, PopoverDescriptionView, request,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseView = require('lib/base_view');
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+  request = require('lib/request');
 
   module.exports = PopoverDescriptionView = (function(_super) {
 
@@ -2902,13 +3484,17 @@ window.require.register("views/popover_description", function(exports, require, 
 
       this.onCancelClicked = __bind(this.onCancelClicked, this);
 
+      this.hide = __bind(this.hide, this);
+
+      this.show = __bind(this.show, this);
+
       this.renderDescription = __bind(this.renderDescription, this);
       return PopoverDescriptionView.__super__.constructor.apply(this, arguments);
     }
 
     PopoverDescriptionView.prototype.id = 'market-popover-description-view';
 
-    PopoverDescriptionView.prototype.className = 'modal';
+    PopoverDescriptionView.prototype.className = 'modal md-modal md-effect-1';
 
     PopoverDescriptionView.prototype.tagName = 'div';
 
@@ -2926,31 +3512,72 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
+      var renderDesc,
+        _this = this;
+      console.log(this.model);
       this.model.set("description", "");
-      this.body = this.$(".modal-body");
+      this.body = this.$(".md-body");
+      this.header = this.$(".md-header h3");
+      this.header.html(this.model.get('name'));
+      this.body.spin('small');
+      renderDesc = function() {
+        _this.body.spin();
+        return _this.renderDescription();
+      };
       this.model.getMetaData({
-        success: function(data) {},
-        error: function() {
-          return console.log("Error callback have been called");
-        }
+        success: renderDesc,
+        error: renderDesc
       });
-      return this.listenTo(this.model, "change", this.renderDescription);
+      this.overlay = $('.md-overlay');
+      return this.overlay.click(function() {
+        return _this.hide();
+      });
     };
 
     PopoverDescriptionView.prototype.renderDescription = function() {
-      var description, descriptionDiv;
+      var description, docType, permission, permissionsDiv, _ref;
+      this.body.hide();
       this.body.html("");
+      this.$('.repo-stars').html(this.model.get('stars'));
       description = this.model.get("description");
-      console.debug(this.model);
-      if (description === null) {
-        descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
+      this.header.append("<p> " + description + " </p>");
+      if (Object.keys(this.model.get("permissions")).length === 0) {
+        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
+        this.body.append(permissionsDiv);
       } else {
-        descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");
+        this.body.append('<h4>Required permissions</h4>');
+        _ref = this.model.get("permissions");
+        for (docType in _ref) {
+          permission = _ref[docType];
+          permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
+          this.body.append(permissionsDiv);
+        }
       }
-      return this.body.append(descriptionDiv);
+      return this.body.slideDown();
+    };
+
+    PopoverDescriptionView.prototype.show = function() {
+      var _this = this;
+      this.$el.addClass('md-show');
+      this.overlay.addClass('md-show');
+      $('#home-content').addClass('md-open');
+      return setTimeout(function() {
+        return _this.$('.md-content').addClass('md-show');
+      }, 300);
+    };
+
+    PopoverDescriptionView.prototype.hide = function() {
+      var _this = this;
+      $('.md-content').fadeOut(function() {
+        _this.overlay.removeClass('md-show');
+        _this.$el.removeClass('md-show');
+        return _this.remove();
+      });
+      return $('#home-content').removeClass('md-open');
     };
 
     PopoverDescriptionView.prototype.onCancelClicked = function() {
+      this.hide();
       return this.cancelCallback(this.model);
     };
 
@@ -3008,44 +3635,49 @@ window.require.register("views/popover_permissions", function(exports, require, 
     PopoverPermissionsView.prototype.afterRender = function() {
       var _this = this;
       this.model.set("permissions", "");
-      this.body = this.$(".modal-body");
+      this.body = this.$(".md-body");
+      this.body.spin('small');
       this.model.getPermissions({
         success: function(data) {
           if (!_this.model.hasChanged("permissions")) {
             return _this.confirmCallback(_this.model);
           }
         },
-        error: function() {
-          return console.log("error have been called");
-        }
+        error: function() {}
       });
       return this.listenTo(this.model, "change:permissions", this.renderPermissions);
     };
 
     PopoverPermissionsView.prototype.renderPermissions = function() {
-      var docType, permission, permissionsDiv, _ref, _results;
-      this.body.html("");
+      var docType, permission, permissionsDiv, _ref;
+      this.body.hide();
+      this.body.html('');
       if (Object.keys(this.model.get("permissions")).length === 0) {
-        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
-        return this.body.append(permissionsDiv);
+        permissionsDiv = $("<div class='permissionsLine'> <strong> This application does not need specific permissions </strong> </div>");
+        this.body.append(permissionsDiv);
       } else {
         _ref = this.model.get("permissions");
-        _results = [];
         for (docType in _ref) {
           permission = _ref[docType];
-          permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
-          _results.push(this.body.append(permissionsDiv));
+          permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
+          this.body.append(permissionsDiv);
         }
-        return _results;
       }
+      return this.body.slideDown();
     };
 
     PopoverPermissionsView.prototype.onCancelClicked = function() {
-      return this.cancelCallback(this.model);
+      var _this = this;
+      return this.$el.slideUp(function() {
+        return _this.cancelCallback(_this.model);
+      });
     };
 
     PopoverPermissionsView.prototype.onConfirmClicked = function() {
-      return this.confirmCallback(this.model);
+      var _this = this;
+      return this.$el.slideUp(function() {
+        return _this.confirmCallback(_this.model);
+      });
     };
 
     return PopoverPermissionsView;

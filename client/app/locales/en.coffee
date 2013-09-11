@@ -37,6 +37,9 @@ module.exports =
     "Questions and help forum"  : "Questions and help forum"
     "Sign out"                  : "Sign out"
     "open in a new tab"         : "open in a new tab"
+    "always-on"                 : "always on"
+    "keep always on"            : "keep always on"
+    "stop this app"             : "stop this app"
 
 
     "application-is-installing" : """

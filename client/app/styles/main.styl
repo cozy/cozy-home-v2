@@ -1,305 +1,190 @@
 @import 'nib'
+@import '_base'
+@import '_help'
 
-@font-face
-    font-family: styled
-    src: url('/fonts/maven-pro-light-300.otf');
-
-@font-face
-    font-family: main
-    src: url('/fonts/signika-regular.ttf');
-
-bgcolor = #545e5f + 20%
-shadowcolor = #444
-bgshadowcolor = #666688
-lightorange = #EFD6B8
-
-
-bgcolorbuttons = #8CA6AE
-bgclearcolorbuttons = bgcolorbuttons + 50%
-bggreybuttons = #8C8C8C
-bggreycleanbuttons = bggreybuttons + 50%
-appbordercolor = bgcolorbuttons - 20%
-bgcolorhoverbuttons = bgcolorbuttons + 20%
-bgclearcolorhoverbuttons = bgcolorbuttons + 70%
-
-textcolor = #EAF1F1
-buttoncolor = #CAD1D1 + 60%
-highlightcolor = #EFD6B8
-
-green = #3AA131 + 10%
-orange = #BA6131 + 10%
-red = #AA2121 + 20%
-orange = #FE8800
-grey = #333
-
-body
-    background-color: bgcolor
-    box-sizing: border-box
-    min-width: 320px
-    color: textcolor
-    font-family: styled
-    font-size: 18px
-
-a
-    color: linkcolor
-    font-weight bold
-
-a
-a:visited
-a.editable-click
-    color: textcolor
-    border-bottom: 1px dashed textcolor
-
-a.editable-click:hover
-    color: orange
-    border-bottom: 1px dashed textcolor
-
-.tooltip-inner
-    a:hover
-        color: textcolor
-        text-decoration: none
-
-iframe
-    width 100%
-    height 100%
-    border 0
-
-body
-    height 100%
-    padding 0
-    margin 0
-
-html
-    height 100%
-    padding 0
-    margin 0
-
-html
-    height 100%
-
-.ma2
-    margin: 20px
-
-.ma2
-    padding: 20px
-
-.spacer
-.spacer
-    clear both
-
-.close
-    float right
-
-.hidden
-    display: none
-
-.center
-    text-align center
-
-.btn
-    background: buttoncolor
-    border: 1px solid buttoncolor - 20%
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
-    margin: 0
-    font-family: styled
-
-.btn-group
-    .btn
-        font-size: 16px
-
-.btn:hover
-    background: #EFD6B8
-    border-color: 1px solid #EFD6B8
-
-.btn:active
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: highlightcolor - 10%
-
-.pressed
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: buttoncolor - 10%
-
-.pressed:hover
-    //box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 8px highlightcolor
-    background: lightorange
-    border: 1px solid lightorange
-
-
-.btn:active
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: buttoncolor - 10%
-
-.btn-green
-    background: green
-    border: 1px solid green - 20%
-    color: textcolor
-
-.btn-green:active
-.btn-green:focus
-.btn-green:hover
-    background: green
-    color: textcolor
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
-    cursor: default
-
-.btn-orange
-    background: orange
-    border: 1px solid orange
-    color: textcolor
-.btn-green:active
-.btn-orange:hover
-    background: orange + 10%
-    color: textcolor
-
-.btn-red
-    background: red
-    border: 1px solid red
-    color: textcolor
-.btn-green:active
-.btn-red:hover
-    background: red + 20%
-    color: textcolor
-
-.alert-error
-    shadow: 0 0 6px rgba(100, 60, 60, 0.85) inset
-    background: rgba(242, 222, 222, 0.8)
-
-.alert-success
-    shadow: 0 0 6px rgba(60, 100, 60, 0.85) inset
-    background: rgba(223, 240, 216, 0.8)
-
-.progress
-    margin: 20px 0
-    height: 10px
-    background: bgcolor - 30%
-
-.progress .bar
-    background: #E3E6E6
-    box-shadow: 0 0 6px #E3E6E6
+* 
+    outline: none
 
 .home-body
     width:100%
-    // height: 100%
     padding: 0
     margin: 0
-    box-shadow: inset 0 0 100px #2b4244 + 20%
     background: bgcolor
     overflow: hidden
+    box-sizing: border-box
+    padding-top: 32px
 
-.well
-    background: transparent
-    border: 0
-    margin: 2%
-    color: textcolor
-    text-align: center
-    box-shadow: 0 0 0 0
+body
+    box-sizing: border-box
 
-.icon-help
-    background-image: url('../img/help.png')
-    background-repeat: no-repeat
-    background-position: 0 0
+#home-menu
+    position: fixed
+    right: 0
 
-.btn:focus
-  outline: none
+    .menu-btn
+        z-index: 50
+        height: 52px
+        opacity: 0.3
+        margin: 0
+        padding: 0
+
+        span
+            font-size: 24px
+            display: none
+            color: darkblue
+
+        img
+            width: 32px
+            cursor: pointer
+            margin: 10px 10px
+
+    .menu-btn:hover
+        opacity: 1
+        margin: 0
+        padding: 0
+        background: orangewhite - 10%
+
+        a
+            color: white
+            font-weight: normal
+            color: orange - 50%
+            padding: 30px 0px 10px 10px
+
+        span
+            display: inline
+
+    .active
+        opacity: 1
+
+
+.navbar
+    background: orangewhite + 20%
+    z-index: 1500
+    box-shadow: 2px 0 2px #BBB !important
+    position: fixed
+    top: 0
+    width: 100%
+
+    img
+        width: 32px
+        margin-left: 5px
+        opacity: 0.5
+
+    a
+        color: black
+
+    a:hover
+        color: black
+        margin: 0
+        padding: 0
+
+        img
+            opacity: 1
+
+
+    #logout-button
+        span
+            display: none
+
+    #logout-button:hover
+        span
+            display: inline
 
 /* content */
 
 #content
-    padding: 0
     height: 100%
     overflow: auto
 
-/* Header */
+#home-content
+    padding: 40px 60px 20px 40px
 
-.navbar
-    border-radius: 0
-    .nav
-        float: right
-
-        .active > a
-        .active > a:active
-        .active > a:focus
-            box-shadow: 0
-            box-shadow: inset 1px 1px 2px bgcolor - 20%
-            background: #E1E1E1 - 10%
-            outline: none
-            text-shadow: none
-
-        .active
-            text-shadow: none
-
-        .active > a:hover
-            cursor: default
-            background: bgcolor + 40%
-            box-shadow: inset 1px 1px 2px bgcolor - 20%
-            background: #E1E1E1 - 10%
-            text-shadow: none
-
-        li
-            a
-                text-shadow: none
-
-                i
-                    margin-right 5px
-
-            a:hover
-                text-shadow: none
-                cursor: pointer
-                background-color: lightorange
-
-#header
-    box-sizing: border-box
-    position relative
-    margin-top 0px
-    margin-bottom 0px
-    border: 0
-    border-bottom: 1px solid bgcolor
-
-    .navbar-inner
-        padding-right 5px
-        background-color bgcolor + 80%
-        background-image none
-        height 100%
-        border: 0
-        border-radius: 0
-
-    h2
-        float left
-        color linkcolor
-        font-size: 12px
-
-    a
-        text-decoration none
-        border-bottom: 0
-
-    p
-        margin 0
-
-    a:hover
-        color: linkcolor
-
-    #buttons
-        font-size: 1em
-        float right
-
-    #header-title
-        width: 17%
-        margin: 0
-
-#buttons img
-    width: 15px
-    height: 15px
-
-#app-frames
-    height 100%
-    display:none
-    text-align: center
-
-#buttons
-    text-align right
-    width: 83%
 
 /** Notifications */
+
+#menu-applications-toggle
+    height: 32px
+    line-height: 32px
+    font-size: 32px
+    margin-left: 10px
+    padding-left: 5px
+    padding-right: 5px
+    cursor: pointer
+    transition: all 0.3s
+    text-transform: lowercase
+
+    span
+        font-size: 24px
+
+.active
+    #menu-applications-toggle
+        background: rgba(100, 100, 100, 0.3)
+        height: 32px
+        line-height: 32px
+        cursor: pointer
+        box-shadow: inset 2px 2px 2px #777
+
+
+#menu-applications-container
+    position: relative
+
+    .clickcatcher
+        position fixed
+        width 100%
+        height 100%
+        background-color red
+        opacity 0.001
+        top 40px
+        left 0px
+        z-index 40
+
+    #menu-applications
+        display: none
+        position: absolute
+        left: 10px
+        width: 420px
+        z-index: 50
+        margin: 0
+        list-style-type: none
+        padding: 5px
+
+        text-align: left
+        background: lightgrey - 10%
+        border: 1px solid lightgrey - 20%
+        box-shadow 1px 1px 2px #CCC
+
+        .menu-application
+            a
+                display:block
+                width: 100%
+                cursor: pointer
+
+        .menu-application:hover
+            background: orange
+
+#notifications-toggle
+    height: 32px
+    line-height: 32px
+    font-size: 32px
+    cursor: pointer
+    width: 60px
+    margin-left: 10px
+    padding-left: 5px
+    padding-right: 5px
+    transition: all 0.3s
+
+    img
+        margin-left: 0
+
+.active
+    #notifications-toggle
+        background: rgba(100, 100, 100, 0.3)
+        height: 32px
+        line-height: 32px
+        cursor: pointer
+        box-shadow: inset 2px 2px 2px #777
+
+
 #notifications-container
     position: relative
 
@@ -328,7 +213,7 @@ html
     #notifications
         display: none
         position: absolute
-        left: 0px
+        left: 10px
         width: 420px
         z-index: 50
         margin: 0
@@ -336,36 +221,46 @@ html
         padding: 5px
 
         text-align: left
-        background: #8f9b9b
-        box-shadow 1px 1px 3px shadowcolor
+        background: lightgrey - 10%
+        border: 1px solid lightgrey - 20%
+        box-shadow 1px 1px 2px #CCC
 
         #dismiss-all
             text-align center
-            background-color #8f9b9b + 20%
+            background-color orangewhite - 20%
             margin-top 5px
             padding-top 5px
             clear both
             line-height 25px
-            color white
+            color black
             cursor pointer
 
             &:hover
-                background-color lightorange - 20%
+                background-color orange + 20%
                 color black
 
+        .notification:hover
+            a.dismiss
+                cursor: pointer
+                display: inline
+
+            a.dismiss:hover
+                opacity: 1
 
         .notification
             a.dismiss
-                float right
-                width 20px
+                display: none
+                float: right
                 line-height 20px
                 padding 5px
+                opacity: 0.5
 
             a.doaction
-                width 360px
-                float left
+                float: left
                 line-height 20px
                 padding 5px
+                max-width: 360px
+                width: 360px
 
             &.new
                 background: #8f9b9b + 20%
@@ -381,20 +276,18 @@ html
     margin: 40px 0
 
 .application
-    width: 170px
+    width: 130px
     margin: 6px
     display: inline-block
     text-align: center
-    //border 1px solid appbordercolor
+    padding: 10px
     border: 0
-    box-shadow 1px 1px 2px shadowcolor
-    border-radius 4px
-    background linear-gradient(top, bgclearcolorbuttons 0%, bgcolorbuttons 100%)
-    background: linear-gradient(top,bgcolor + 60%, bgcolor + 20%)
-    padding-bottom: 20px
+    cursor: pointer
+    transition: all 0.3s
+    background: lightgrey
 
     img
-        margin-top: 10px
+        max-width: 100px
 
     img.stopped
         opacity 0.5
@@ -403,15 +296,20 @@ html
         margin: 0
         font-family: main
         color textcolor
-        text-shadow 1px 1px 1px shadowcolor
 
     .app-title
-        font-size: 20px
-        line-height: 30px
-        font-weight: bold
+        font-family: styled
+        text-transform: uppercase
+        font-size: 14px
+        color: darkblue
+        text-decoration: none
+
+    .app-title:hover
+        color: orange
 
     .state-label
         font-size: 18px
+        font-weight: normal
         color: red
 
     a:hover
@@ -432,12 +330,14 @@ html
         .app-stoppable
             margin 0px
 
+.application:hover
+    background: orangewhite - 10%
+
+    .app-title
+        color: orange - 50%
 
 .application:active
     box-shadow none
-
-.application:hover
-    background linear-gradient(top, bgclearcolorhoverbuttons 0%, bgcolorhoverbuttons 100%)
 
 .application.broken
     a
@@ -456,11 +356,45 @@ html
     margin-bottom: 20px
 
 #no-app-message
+    margin: auto
     margin-top: 30px
-    padding: 1em
+    width: 80%
+    background: lightgrey
+
+    #start-title
+        padding: 20px
+        font-size: 28px
+        margin-bottom: 30px
+
+        img
+            float: left
+
+    p
+        padding-left 20px
+        padding-right 20px
+
+    img 
+        width: 32px
+        margin-right: 10px
+
+    img.logo
+        width: auto
 
     a
         border-bottom: 0
+
+.darkbg
+    background: darkblue
+    //background: orangewhite - 40%
+    color: white
+
+.section-title
+    background: darkblue
+    color: white
+    padding: 5px 20px
+    position: absolute
+    top: 0
+    margin: auto
 
 .install-info
     width: 40%
@@ -469,66 +403,21 @@ html
 
 // Account page
 
-.control-group
-#add-app-form
-#account-form
-    border: 0
-    font-size: 1.1em
-    padding: 0
-    margin: 0
-
-    select
-    input
-        height: 1.1em
-        padding: 0.2em
-        border-radius: 0.4em
-        border: 0
-        background-color: textcolor
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.45) inset
-
-    select
-        height: 35px
-
-    input:focus
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.75) inset, 0 0 17px rgba(82, 168, 236, 0.9)
-        background: #e2f8ff
-
-    .btn
-        margin-top: 0.2em
-
-    p
-        margin: 20px 0 10px 0
-
-    .field
-        margin: 10px auto 20px auto
-        width: 40%
-
-    .icon-white
-        background-image: url("../img/glyphicons-halflings.png")
-
-    .alert
-        width: 50%
-        margin: auto
-        margin-top: 30px
-
-
-#add-app-form
-    padding: 3%
+#account-view
 
     input
-        font-size: 1em
-
-
-#account-form
-.control-group
     select
-    input
-        font-size: 1em
+        max-width: 490px
+        text-align: left
+        margin-bottom: 10px
 
-#account-info
-#account-error
-    display: none
-    margin-bottom: 0
+    .input
+        .btn 
+            height: 60px
+            width: 60px
+            margin-left: 10px
+
+
 
 #home-view
     overflow:hidden
@@ -538,18 +427,8 @@ html
     padding: 0
     margin: 0
 
-#account-view
-    #change-password-button
-        margin-top: 50px
-
 #change-password-form
     margin-top: 50px
-
-.loading-indicator
-    border: 0
-    background: transparent
-    box-shadow: 0
-    color: textcolor
 
 .app-introduction
     margin-top: 60px
@@ -557,35 +436,32 @@ html
 
 // MARKET PAGE
 
-#market-view
-    padding: 20px
-
 #your-app
     box-sizing: border-box
+    background: lightgrey
     float: left
-    width: 32.33%
+    width: 99%
     height: 140px
-    margin-right: 1%
-
-    background: bgcolor + 20%
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
-    margin-top: 1%
+    margin-top: 20px
 
     p
         margin-bottom: 0
-
-    input
-        margin-top: 10px
 
     .text
         padding: 20px
 
     #app-git-field
+        text-align: left
         box-sizing: border-box
         width: 100%
-        height: 30px
-        max-width: 500px
-        margin-right: 20px
+        max-width: 550px
+        font-size: 24px
+        padding: 10px
+        margin-top: 2px
+        margin-right: 10px
+
+    .btn 
+        height: 60px
 
     .error
         box-sizing: border-box
@@ -597,20 +473,6 @@ html
 #app-market-list
     box-sizing: border-box
     margin-top: 20px
-
-    .app-img
-        box-sizing: border-box
-        height: 140px
-        width 140px
-        background: bgcolor + 40%
-        padding: 20px 20px 10px 20px
-        margin-right: 10px
-
-    .app-install-button:hover
-        button
-        div
-            background: highlightcolor + 20%
-
     .app-install-button
         button
         div
@@ -621,12 +483,14 @@ html
             word-wrap: normal
             overflow-x: hidden
 
+        .app-text p
+            margin-right: 20px
+
         .app-install
             border: 0
             outline: 0
             font-weight: bold
             color: orange - 10%
-            background: bgcolor + 70%
             box-shadow: none
             font-size: 0.8em
             padding: 4px 8px
@@ -641,24 +505,26 @@ html
             cursor: pointer
             font-weight: bold
             color: orange - 10%
-            background: bgcolor + 70%
             box-shadow: none
             height: 20px
+
+
 
 #market-view #no-app-message,
 .cozy-app
     box-sizing: border-box
     float: left
-    width: 32.33%
-    height: 140px
+    width: 49%
+    height: 180px
+    background: lightgrey
     margin-right: 1%
-
-    background: bgcolor + 20%
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
     margin-top: 1%
+    cursor: pointer
+    transition: all 0.3s
+
 
     h3
-        margin-top: 20px
+        margin-top: 30px
         margin-bottom: 0
         padding-bottom: 0
         line-height: 30px
@@ -668,54 +534,72 @@ html
 
     .btn
         float: right
-        width: 15%
-        height: 70px
-        margin: 10px 0px 10px 10px
+        margin: 10px 10px 10px 10px
 
-.navbar .nav > li > a > img
-    box-shadow: 1px 1px 3px #555
-    text-shadow: 1px 1px 3px #555
+    .app-img
+        text-align: center
+        vertical-align: center
+        box-sizing: border-box
+        width: 180px
+        height: 180px
+        padding: 20px 20px 10px 20px
+        margin-right: 10px
 
-.modal
-    margin-top: -200px
+    .img-btn
+        width: 24px
+        opacity: 0.3
+        margin: 10px 5px
+        display: none
 
-.modal-header
-    color: grey
-    font-weight: bold
-    background-color: lightgrey
+    .img-btn:hover
+        opacity: 1
+        cursor: pointer
 
-.modal-body
-    color: grey
-    font-family: main
-    text-align: left;
+.cozy-app:hover
+    background: lightgrey - 10%
 
-.modal-footer
-    background-color: white
-    border-radius: 0
+    .right
+        display: inline
 
-    .btn
-        text-shadow: none
-        border: 0
-        color: grey
-        background: buttoncolor
-        border: 1px solid buttoncolor - 20%
-        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 1px 2px rgba(0, 0, 0, 0.05)
+    .img-btn
+        display: inline
+
+.cozy-app.official
+    background: lightgreyblue
+
+.cozy-app.official:hover
+    background: lightgreyblue - 5%
+
+
+// Config application
+
+.config-application
+    background: lightgrey
+    padding: 10px
+    margin-bottom: 5px
+    border-radius: 5px
+    
+    .mod
+        margin-left: 5px
+
+    .mod.left
         margin: 0
-        font-family: styled
 
-    .btn:hover
-        background: #EFD6B8
-        border-color: 1px solid #EFD6B8
-        //box-shadow: 0 0 8px highlightcolor
+    .smaller
+        font-family: main
 
-    .btn:active
-        box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-        background: buttoncolor - 10%
+    .md-header
+        background: transparent
+
+    .md-footer
+        padding: 0
+
+        .btn
+            font-weight: normal
 
 
-    .btn-primary
-        color: grey
-        background: #EFD6B8 + 40%
+
+// modals
 
 .application
     .permissionsLine
@@ -723,23 +607,108 @@ html
             text-shadow: none
             color: grey + 20%
 
+.md-open
+    overflow: hidden
+
+.md-modal 
+    position: fixed
+    top: 50%
+    left: 50%
+    width: 50%
+    max-width: 630px
+    min-width: 320px
+    height: auto
+    z-index: 2000
+    visibility: hidden
+    backface-visibility: hidden
+    transform: translateX(-50%) translateY(-50%)
+
+
+.md-modal .md-content
+    transform: translateX(20%)
+    opacity: 0
+    transition: all 3s
+    background: orangewhite
+    position: relative
+    border-radius: 5px
+    margin: 0 auto
+    transition: all 0.3s
+
+.md-show.md-content
+    transform: translateX(0)
+    opacity: 1
+    transition: all 0.3s
+ 
+.md-overlay 
+    position: fixed
+    width: 100%
+    height: 100%
+    visibility: hidden
+    top: 0
+    left: 0
+    z-index: 1000
+    opacity: 0
+    background: rgba(143,140,140,0.8)
+    transition: all 0.6s
+    cursor: pointer
+
+.md-header
+    padding: 10px 20px
+    background: darkblue
+
+    h3
+        color: white
+
+    img
+        width: 32px
+
+    span
+        padding-top: 30px
+
+    p
+        font-size: 18px
+
+    a
+        color: white
+        opacity: 0.7
+        transition: all 0.3s
+        line-height: 32px
+        font-size: 24px
+
+    a:hover
+        color: white
+        opacity: 1
+
+    .repo-stars
+        right: 55px
+        padding-top: 3px
+        position: absolute
+
+.md-body
+    padding: 20px
+    color: darkblue
+
+    p
+        margin-top: 0
+
+    h4
+        margin-bottom: 20px
+        font-size: 20px
+
+.md-footer
+    background: lightgrey
+    padding: 10px
+
+
+.md-show
+    opacity: 1
+    visibility: visible
+
 // Responsive
-
-@media (max-width: 1200px)
-    #header-title
-        display: none
-
-    #buttons
-        width: 100%
-
-    #market-view
-        #no-app-message,
-        .cozy-app
-        #your-app
-            width: 49%
 
 @media (max-width: 850px)
     #header
+
     #market-view
         span
             display: none
@@ -748,13 +717,11 @@ html
             display: inline
 
 @media (max-width: 800px)
+    .section-title 
+        display: none
+
     .home-body
         box-shadow: none
-
-    #header-title
-        a
-            padding-left: 0
-            padding-right: 0
 
     #account-form
         text-align: left
@@ -766,6 +733,8 @@ html
             margin: 15px
 
             select
+
+
             option
                 width: 75%
 
@@ -780,10 +749,6 @@ html
 
     .comment
         font-size: 14px
-
-    #header
-        .navbar-inner
-            height: 20px
 
     #buttons
         width: 100%
@@ -806,25 +771,50 @@ html
                 height: 20px
 
     #market-view
-        img
-            margin: 0
-            width: 75px
+        .app-img
+            padding: 20px 0
+
+            img
+                margin: 0
+                width: 100px
 
         h3
             margin-bottom: 10px
 
         #your-app
+            height: 180px
             margin-right: 0
             width: 100%
 
-        #no-app-message
+            .btn
+                width: 100%
+                height: 30px
+                margin-top: 10px
+
+            input
+                font-size: 16px
+
         .cozy-app
             width: 100%
+
+            height: 150px
+
 
     #notifications
         .notification
             a.doaction
                 width 300px
+
+    #config-applications-view
+        .w33
+            width: 100%
+            padding: 10px 40px 10px 10px
+
+        .w66
+            width: 100%
+            margin-top: 40px
+            padding: 10px 40px 10px 10px
+
 
 @media (max-width: 640px)
     .application
@@ -845,9 +835,61 @@ html
                 margin-right: 5px
                 border-radius: 3px
 
+    #home-content
+        padding 5px
+
+    #no-app-message
+        width: 100%
+        padding-right: 40px
+
+    #market-view
+        padding: 20px 40px 20px 20px
+
+    #account-view
+        #account-form
+            .btn
+                width: 100%
+                margin: 20px 0 0 0
+                height: 30px
+
+        select
+            width: 100%
+
+    #help-view
+        p.help-text
+            font-size: 20px
 
 
 @media (max-width: 500px)
+
+    #market-view
+        #your-app
+            height: 180px
+
+            .btn
+                height: 30px
+
+            input
+                font-size: 16px
+
+        .cozy-app
+            height: 160px
+            margin-top: 10px
+
+        .app-text
+            padding: 10px
+
+        .app-img
+            display: block
+            padding: 0
+            width: 100%
+            height: 60px
+            text-align: left
+
+            img
+                margin: 0
+                width: 50px
+
     #notifications-container
         #notifications
             left: -50px
@@ -856,4 +898,11 @@ html
             .notification
                 a.doaction
                     width 260px
+
+    #config-applications-view
+        .config-application
+            .mod.left
+                width: 100%
+                margin-bottom: 10px
+
 

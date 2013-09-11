@@ -3,6 +3,8 @@ appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
+HelpView = require 'views/help'
+ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
 socketListener = require('lib/socket_listener')
@@ -24,7 +26,9 @@ module.exports = class HomeView extends BaseView
     afterRender: =>
         @navbar = new NavbarView @apps
         @applicationListView = new ApplicationsListView @apps
+        @configApplications = new ConfigApplicationsView @apps
         @accountView = new AccountView()
+        @helpView = new HelpView()
         @marketView = new MarketView @apps
 
         @frames = @$ '#app-frames'
@@ -54,15 +58,17 @@ module.exports = class HomeView extends BaseView
                 alert 'Server error occured, logout failed.'
 
     displayView: (view) =>
+        $("#current-application").html 'home'
         displayView = =>
             @content.show()
             @frames.hide()
             view.$el.hide()
-            @content.append view.$el
+            $('#home-content').append view.$el
             view.$el.fadeIn()
             @currentView = view
             @changeFavicon "favicon.ico"
             @resetLayoutSizes()
+            $("#content").niceScroll()
 
         if @currentView?
             @currentView.$el.fadeOut =>
@@ -74,20 +80,25 @@ module.exports = class HomeView extends BaseView
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
-        @navbar.selectButton 'home-button'
         window.document.title = "Cozy - Home"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView
-        @navbar.selectButton 'market-button'
         window.document.title = "Cozy - Market"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView
-        @navbar.selectButton 'account-button'
         window.document.title = 'Cozy - Account'
+
+    displayHelp: =>
+        @displayView @helpView
+        window.document.title = "Cozy - Help"
+
+    displayConfigApplications: =>
+        @displayView @configApplications
+        window.document.title = "Cozy - Applications configuration"
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
@@ -107,6 +118,7 @@ module.exports = class HomeView extends BaseView
 
         @$('#app-frames').find('iframe').hide()
         frame.show()
+        frame.niceScroll()
 
         @navbar.selectButton slug
         @selectedApp = slug
@@ -114,6 +126,7 @@ module.exports = class HomeView extends BaseView
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
+        $("#current-application").html name
         @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
 
@@ -144,6 +157,5 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        height = @$("#header").height() + 1
-        @frames.height $(window).height() - height
-        @content.height $(window).height() - height
+        @frames.height $(window).height() - 32
+        @content.height $(window).height() - 32

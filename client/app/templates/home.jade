@@ -1,24 +1,46 @@
-#no-app-message.center
-    p!= t('no-app-message')
+// .section-title.darkbg.bigger home
+
+#no-app-message.w600
+  
+  .darkbg#start-title.clearfix
+    a(href="http://cozy.io")
+        img.logo(src="img/happycloud.png")
+    p.biggest Welcome to your Cozy!
+  .line
+    p.bigger.pa2
+        | You have no application installed. You
+        | should&nbsp;
+        a(href="#account") configure 
+        | your Cozy then install your first application 
+        | via the&nbsp;
+        a(href="#applications") app store
+        |.
+    p.mt2.pa2
+        | If it's your first time on Cozy here is a little guide about all 
+        | section available in your Cozy Home. All of them can be reached from
+        | the menu located on the top right corner.
+    p
+        img(src="/img/home-black.png")
+        strong Home&nbsp;
+        | It is the place from where you can reach your applications
+    p
+        img(src="/img/config-apps.png")
+        strong App management&nbsp;
+        | There you can manage the state of your applications: start it,
+        | stop it, remove it...
+    p
+        img(src="/img/apps.png")
+        strong App store&nbsp;
+        | In the app store, you will find new applications to install on your
+        | Cozy.
+    p
+        img(src="/img/configuration.png")
+        strong Configuration&nbsp;
+        | To work properly your Cozy requires several parameters. Set them in
+        | this section.
+    p
+        img(src="/img/help.png")
+        strong Assistance&nbsp;
+        | You will find here some links to assistance resources.
 
 #app-list
-
-.app-tools
-  .machine-infos
-    .memory
-      div
-        = t('Memory consumption')
-        | &nbsp;(#{t('total')}: <span class="total"></span>)
-      .progress
-        .bar
-
-    .disk
-      div
-        = t('Disk consumption')
-        | &nbsp;(#{t('total')} : <span class="total"></span>)
-      .progress
-        .bar
-
-
-  .btn-group
-      button#manage-app-button.btn= t('manage')

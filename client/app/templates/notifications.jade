@@ -1,8 +1,7 @@
 a#notifications-toggle
-    i.icon-exclamation-sign &nbsp;
-    span#notifications-counter.badge.badge-important
+    img(src="img/notification-black.png")
 audio#notification-sound(src="sounds/notification.wav", preload)
 #clickcatcher
 ul#notifications
     li#no-notif-msg= t('You have no notifications')
-    li#dismiss-all= t('Dismiss All')
+    li#dismiss-all.btn= t('Dismiss All')

@@ -1,26 +1,9 @@
-.navbar-inner.clearfix
-      h2#header-title
-          a(href="http://cozycloud.cc/", target="_blank", title="home")
-              img(src="img/grey-logo.png", alt="Cozy Cloud Symbol")
-        #buttons
-              ul.nav
-                li#notifications-container
-                li.active
-                  a#home-button(href="#home")
-                    i.icon-home
-                    span= t('Home')
-                li
-                  a#market-button(href="#applications")
-                    i.icon-plus
-                    span= t('Apps')
-                li
-                  a#account-button(href="#account")
-                    i.icon-user
-                    span= t('Account')
-                li
-                    a#help-button(href="https://forum.cozycloud.cc/",
-                                  target="_blank")
-                        i.icon-help &nbsp;
-                li
-                  a#logout-button(href="#logout")
-                    i.icon-arrow-right
+.navbar.clearfix
+    a.left(href="http://cozy.io")
+        img(src="img/happycloud-black.png")
+    span#notifications-container
+    span#menu-applications-container
+        
+    a#logout-button.right(href="#logout")
+        span logout
+        img(src="img/logout-black.png")

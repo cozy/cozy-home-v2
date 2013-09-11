@@ -1,22 +1,24 @@
-#!/usr/bin/env coffee
-app = module.exports = (params) ->
-    params = params || {}
-    params.root = params.root || __dirname
-    return require('compound').createServer params
+americano = require 'americano'
+request = require 'request-json'
+initProxy = require './server/initializers/proxy'
+setupRealtime = require './server/initializers/realtime'
 
-if not module.parent
 
-    port = process.env.PORT or 9103
-    host = process.env.HOST or "127.0.0.1"
-    server = app()
+process.on 'uncaughtException', (err) ->
+    console.error err
+    console.error err.stack
 
-    server.listen port, host, ->
-        console.log(
-            "Railway server listening on #{host}:#{port} within " +
-            "#{server.set('env')} environment"
-        )
+port = process.env.PORT || 9103
+americano.start name: 'Cozy Home', port: port, (app, server) ->
+    app.server = server
 
-        setInterval ->
-            util = require 'util'
-            console.log(util.inspect process.memoryUsage())
-        , 5000
+    if process.env.NODE_ENV isnt "test"
+        initProxy()
+
+    # Don't why this one doesn't work with the Americano route file.
+    ctrler = require('./server/controllers/applications').loadApplication
+    app.param 'slug', ctrler
+
+    setupRealtime app
+
+    callback app if callback?

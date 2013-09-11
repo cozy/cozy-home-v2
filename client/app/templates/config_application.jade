@@ -1,0 +1,22 @@
+.clearfix
+    .mod.left
+        strong #{app.name}
+        span &nbsp;-&nbsp;
+        if app.state === 'installed'
+            span.state-label 
+                | running
+        else
+            span.state-label 
+                | #{app.state}
+    .mod.right
+        button.btn.remove-app remove
+    .mod.right 
+        button.btn.update-app update
+    .mod.right
+        button.btn.btn-large.start-stop-btn stop this app
+    //-.mod.right.smaller
+        //-input(class="app-stoppable",
+              //-type="checkbox",
+              //-title="always-on",
+              //-checked="checked",name="app-stoppable")
+        //-| auto stop
