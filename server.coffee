@@ -22,4 +22,3 @@ americano.start name: 'Cozy Home', port: port, (app, server) ->
     setupRealtime app
 
     callback app if callback?
-
