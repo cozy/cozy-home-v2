@@ -3,7 +3,7 @@ BaseView = require 'lib/base_view'
 module.exports = class NotificationView extends BaseView
 
     tagName: 'li'
-    className: 'notification'
+    className: 'notification clearfix'
     template: require 'templates/notification_item'
     events:
         "click .doaction": "doaction"

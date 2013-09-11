@@ -536,10 +536,11 @@ window.require.register("lib/base_view", function(exports, require, module) {
     };
 
     BaseView.prototype.getRenderData = function() {
-      var _ref;
-      return {
-        model: (_ref = this.model) != null ? _ref.toJSON() : void 0
-      };
+      if ((this.model != null) && (this.model.toJSON != null)) {
+        return {
+          model: this.model.toJSON()
+        };
+      }
     };
 
     BaseView.prototype.render = function() {
@@ -1281,7 +1282,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div><header id="header" class="navbar"></header>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -1328,13 +1329,37 @@ window.require.register("templates/market_application", function(exports, requir
   return buf.join("");
   };
 });
+window.require.register("templates/menu_application_item", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a');
+  buf.push(attrs({ 'href':("#apps/" + (model.slug) + "/") }, {"href":true}));
+  buf.push('>' + escape((interp = model.displayName) == null ? '' : interp) + '</a>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/menu_applications", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"><a href="#home">Home</a></div></div>');
+  }
+  return buf.join("");
+  };
+});
 window.require.register("templates/navbar", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar"><span id="notifications-container"></span><a id="home-button" href="#home"><img src="img/home-black.png"/></a><a id="logout-button" href="#logout" class="right"><img src="img/logout-black.png"/></a></div>');
+  buf.push('<div class="navbar clearfix"><a href="http://cozy.io" class="left"><img src="img/happycloud-black.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-black.png"/></a></div>');
   }
   return buf.join("");
   };
@@ -1371,7 +1396,13 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<img src="img/notification-black.png"/>');
+  buf.push('<a id="notifications-toggle"><img src="img/notification-black.png"/></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  var __val__ = t('You have no notifications')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</li><li id="dismiss-all" class="btn">');
+  var __val__ = t('Dismiss All')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</li></ul>');
   }
   return buf.join("");
   };
@@ -2113,7 +2144,7 @@ window.require.register("views/home", function(exports, require, module) {
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {
-      if (this.apps.size() === 0 && app.mainView.marketView.installedApps === 0) {
+      if (this.apps.size() === 0) {
         return this.$("#no-app-message").show();
       } else {
         return this.$("#no-app-message").hide();
@@ -2539,7 +2570,7 @@ window.require.register("views/main", function(exports, require, module) {
     HomeView.prototype.displayView = function(view) {
       var displayView,
         _this = this;
-      console.log('display');
+      $("#current-application").html('home');
       displayView = function() {
         _this.content.show();
         _this.frames.hide();
@@ -2548,7 +2579,8 @@ window.require.register("views/main", function(exports, require, module) {
         view.$el.fadeIn();
         _this.currentView = view;
         _this.changeFavicon("favicon.ico");
-        return _this.resetLayoutSizes();
+        _this.resetLayoutSizes();
+        return $("#content").niceScroll();
       };
       if (this.currentView != null) {
         return this.currentView.$el.fadeOut(function() {
@@ -2602,6 +2634,7 @@ window.require.register("views/main", function(exports, require, module) {
       }
       this.$('#app-frames').find('iframe').hide();
       frame.show();
+      frame.niceScroll();
       this.navbar.selectButton(slug);
       this.selectedApp = slug;
       name = this.apps.get(slug).get('name');
@@ -2609,6 +2642,7 @@ window.require.register("views/main", function(exports, require, module) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
+      $("#current-application").html(name);
       this.changeFavicon("/apps/" + slug + "/favicon.ico");
       return this.resetLayoutSizes();
     };
@@ -2662,10 +2696,8 @@ window.require.register("views/main", function(exports, require, module) {
 
 
     HomeView.prototype.resetLayoutSizes = function() {
-      var height;
-      height = this.$("#header").height() + 1;
-      this.frames.height($(window).height() - height);
-      return this.content.height($(window).height() - height);
+      this.frames.height($(window).height() - 32);
+      return this.content.height($(window).height() - 32);
     };
 
     return HomeView;
@@ -3005,8 +3037,145 @@ window.require.register("views/market_application", function(exports, require, m
   })(BaseView);
   
 });
+window.require.register("views/menu_application", function(exports, require, module) {
+  var ApplicationView, BaseView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = ApplicationView = (function(_super) {
+
+    __extends(ApplicationView, _super);
+
+    function ApplicationView() {
+      this.onLinkClick = __bind(this.onLinkClick, this);
+      return ApplicationView.__super__.constructor.apply(this, arguments);
+    }
+
+    ApplicationView.prototype.tagName = 'div';
+
+    ApplicationView.prototype.className = 'menu-application clearfix';
+
+    ApplicationView.prototype.template = require('templates/menu_application_item');
+
+    ApplicationView.prototype.events = {
+      'click a': 'onLinkClick'
+    };
+
+    ApplicationView.prototype.onLinkClick = function() {
+      return this.menu.hideAppList();
+    };
+
+    return ApplicationView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/menu_applications", function(exports, require, module) {
+  var AppsMenu, SocketListener, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  SocketListener = require('lib/socket_listener');
+
+  module.exports = AppsMenu = (function(_super) {
+
+    __extends(AppsMenu, _super);
+
+    AppsMenu.prototype.el = '#menu-applications-container';
+
+    AppsMenu.prototype.itemView = require('views/menu_application');
+
+    AppsMenu.prototype.template = require('templates/menu_applications');
+
+    AppsMenu.prototype.events = {
+      "click #menu-applications-toggle": "showAppList",
+      "click .clickcatcher": "hideAppList",
+      "click #home-btn": "hideAppList"
+    };
+
+    function AppsMenu(collection) {
+      this.collection = collection;
+      this.hideAppList = __bind(this.hideAppList, this);
+
+      this.showAppList = __bind(this.showAppList, this);
+
+      this.windowClicked = __bind(this.windowClicked, this);
+
+      this.remove = __bind(this.remove, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+
+      AppsMenu.__super__.constructor.apply(this, arguments);
+    }
+
+    AppsMenu.prototype.appendView = function(view) {
+      this.appList.append(view.$el);
+      return view.menu = this;
+    };
+
+    AppsMenu.prototype.afterRender = function() {
+      this.clickcatcher = this.$('.clickcatcher');
+      this.clickcatcher.hide();
+      this.appList = this.$('#menu-applications');
+      AppsMenu.__super__.afterRender.apply(this, arguments);
+      this.initializing = true;
+      this.collection.fetch().always(function() {
+        return this.initializing = false;
+      });
+      return $(window).on('click', this.windowClicked);
+    };
+
+    AppsMenu.prototype.remove = function() {
+      $(window).off('click', this.hideAppList);
+      return AppsMenu.__super__.remove.apply(this, arguments);
+    };
+
+    AppsMenu.prototype.windowClicked = function() {
+      if ((typeof event !== "undefined" && event !== null) && this.$el.has($(event.target)).length === 0) {
+        return this.hideAppList();
+      }
+    };
+
+    AppsMenu.prototype.showAppList = function() {
+      if (this.appList.is(':visible')) {
+        this.appList.hide();
+        this.clickcatcher.hide();
+        return this.$el.removeClass('active');
+      } else {
+        if (this.collection.size() > 0) {
+          this.$('#no-app-message').hide();
+        } else {
+          this.$('#no-app-message').show();
+        }
+        this.$el.addClass('active');
+        this.appList.slideDown();
+        return this.clickcatcher.show();
+      }
+    };
+
+    AppsMenu.prototype.dismissAll = function() {
+      return this.collection.removeAll();
+    };
+
+    AppsMenu.prototype.hideAppList = function(event) {
+      this.appList.slideUp();
+      this.clickcatcher.hide();
+      return this.$el.removeClass('active');
+    };
+
+    return AppsMenu;
+
+  })(ViewCollection);
+  
+});
 window.require.register("views/navbar", function(exports, require, module) {
-  var BaseView, NavbarView, NotificationsView, appButtonTemplate,
+  var AppsMenu, BaseView, NavbarView, NotificationsView, appButtonTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3016,6 +3185,8 @@ window.require.register("views/navbar", function(exports, require, module) {
   appButtonTemplate = require("templates/navbar_app_btn");
 
   NotificationsView = require('./notifications_view');
+
+  AppsMenu = require('./menu_applications');
 
   module.exports = NavbarView = (function(_super) {
 
@@ -3040,15 +3211,12 @@ window.require.register("views/navbar", function(exports, require, module) {
     }
 
     NavbarView.prototype.afterRender = function() {
-      var _ref;
       this.notifications = new NotificationsView();
-      this.buttons = this.$('#buttons');
-      if ((_ref = window.app.instance) != null ? _ref.helpUrl : void 0) {
-        this.$('#help-button').attr('href', window.app.instance.helpUrl);
-      }
+      this.appMenu = new AppsMenu(this.apps);
       if (this.apps.length > 0) {
         onApplicationListReady(this.apps);
       }
+      this.buttons = this.$(".app-button");
       this.apps.bind('reset', this.onApplicationListReady);
       this.apps.bind('change', this.onApplicationChanged);
       this.apps.bind('add', this.addApplication);
@@ -3123,7 +3291,7 @@ window.require.register("views/notification_view", function(exports, require, mo
 
     NotificationView.prototype.tagName = 'li';
 
-    NotificationView.prototype.className = 'notification';
+    NotificationView.prototype.className = 'notification clearfix';
 
     NotificationView.prototype.template = require('templates/notification_item');
 
@@ -3227,6 +3395,7 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.appendView = function(view) {
       this.notifList.prepend(view.el);
+      this.$('#nottications-toggle').attr('src', 'img/notification-orange.png');
       if (!this.initializing) {
         return this.sound.play();
       }
@@ -3244,11 +3413,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.collection.fetch().always(function() {
         return this.initializing = false;
       });
-      $(window).on('click', this.windowClicked);
-      return this.$('a').tooltip({
-        placement: 'right',
-        title: t('Notifications')
-      });
+      return $(window).on('click', this.windowClicked);
     };
 
     NotificationsView.prototype.remove = function() {
@@ -3280,7 +3445,7 @@ window.require.register("views/notifications_view", function(exports, require, m
         return this.$el.removeClass('active');
       } else {
         this.$el.addClass('active');
-        this.notifList.show();
+        this.notifList.slideDown();
         return this.clickcatcher.show();
       }
     };
@@ -3290,7 +3455,7 @@ window.require.register("views/notifications_view", function(exports, require, m
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
-      this.notifList.hide();
+      this.notifList.slideUp();
       this.clickcatcher.hide();
       return this.$el.removeClass('active');
     };

@@ -41,7 +41,7 @@ module.exports =
         Notification.create attributes, (err, notif) =>
             if err then next err
             else
-                send success: 'Notification created', 201
+                res.send success: 'Notification created', 201
 
     updateOrCreate: (req, res, next) ->
         if not req.params.app or not req.params.ref

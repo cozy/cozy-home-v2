@@ -18,6 +18,8 @@ module.exports = {
     var updateData, updatePassword;
 
     updateData = function(user, body, data, cb) {
+      var errors;
+
       if (body.timezone != null) {
         data.timezone = body.timezone;
       }
@@ -25,7 +27,8 @@ module.exports = {
         if (EMAILREGEX.test(body.email)) {
           data.email = body.email;
         } else {
-          cb(null, "Given email is not a proper email");
+          errors = ["Given email is not a proper email"];
+          return cb(null, errors);
         }
       }
       if (data.timezone || data.email || data.password) {

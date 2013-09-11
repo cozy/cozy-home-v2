@@ -58,7 +58,7 @@ module.exports = class HomeView extends BaseView
                 alert 'Server error occured, logout failed.'
 
     displayView: (view) =>
-        console.log 'display'
+        $("#current-application").html 'home'
         displayView = =>
             @content.show()
             @frames.hide()
@@ -68,6 +68,7 @@ module.exports = class HomeView extends BaseView
             @currentView = view
             @changeFavicon "favicon.ico"
             @resetLayoutSizes()
+            $("#content").niceScroll()
 
         if @currentView?
             @currentView.$el.fadeOut =>
@@ -117,6 +118,7 @@ module.exports = class HomeView extends BaseView
 
         @$('#app-frames').find('iframe').hide()
         frame.show()
+        frame.niceScroll()
 
         @navbar.selectButton slug
         @selectedApp = slug
@@ -124,6 +126,7 @@ module.exports = class HomeView extends BaseView
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
+        $("#current-application").html name
         @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
 
@@ -154,6 +157,5 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        height = @$("#header").height() + 1
-        @frames.height $(window).height() - height
-        @content.height $(window).height() - height
+        @frames.height $(window).height() - 32
+        @content.height $(window).height() - 32

@@ -1,6 +1,7 @@
 BaseView = require 'lib/base_view'
 appButtonTemplate = require "templates/navbar_app_btn"
 NotificationsView = require './notifications_view'
+AppsMenu = require './menu_applications'
 
 module.exports = class NavbarView extends BaseView
 
@@ -12,16 +13,13 @@ module.exports = class NavbarView extends BaseView
         super()
 
     afterRender: =>
-
         @notifications = new NotificationsView()
-
-        @buttons = @$('#buttons')
-        if window.app.instance?.helpUrl
-            @$('#help-button').attr 'href', window.app.instance.helpUrl
+        @appMenu = new AppsMenu @apps
 
         if @apps.length > 0
             onApplicationListReady(@apps)
 
+        @buttons = @$(".app-button")
         @apps.bind 'reset', @onApplicationListReady
         @apps.bind 'change', @onApplicationChanged
         @apps.bind 'add', @addApplication

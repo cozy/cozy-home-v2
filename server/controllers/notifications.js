@@ -72,7 +72,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return send({
+        return res.send({
           success: 'Notification created'
         }, 201);
       }

@@ -552,8 +552,6 @@ iframe {
   width: 100%;
   height: 100%;
   border: 0;
-  -webkit-box-shadow: inset 0px -1px 2px #bbb;
-  box-shadow: inset 0px -1px 2px #bbb;
 }
 input,
 select {
@@ -710,9 +708,18 @@ select:focus {
   margin: 0;
   background: bgcolor;
   overflow: hidden;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-top: 32px;
+}
+body {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 #home-menu {
-  position: absolute;
+  position: fixed;
   right: 0;
 }
 #home-menu .menu-btn {
@@ -757,8 +764,13 @@ select:focus {
   filter: none;
 }
 .navbar {
-  background: #fcfaf6;
-  z-index: 15;
+  background: #fdfaf7;
+  z-index: 1500;
+  -webkit-box-shadow: 2px 0 2px #bbb !important;
+  box-shadow: 2px 0 2px #bbb !important;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 .navbar img {
   width: 32px;
@@ -767,10 +779,24 @@ select:focus {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   filter: alpha(opacity=50);
 }
+.navbar a {
+  color: #000;
+}
+.navbar a:hover {
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
 .navbar a:hover img {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+.navbar #logout-button span {
+  display: none;
+}
+.navbar #logout-button:hover span {
+  display: inline;
 }
 /* content */
 #content {
@@ -781,6 +807,96 @@ select:focus {
   padding: 40px 60px 20px 40px;
 }
 /** Notifications */
+#menu-applications-toggle {
+  height: 32px;
+  line-height: 32px;
+  font-size: 32px;
+  margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+  text-transform: lowercase;
+}
+#menu-applications-toggle span {
+  font-size: 24px;
+}
+.active #menu-applications-toggle {
+  background: rgba(100,100,100,0.3);
+  height: 32px;
+  line-height: 32px;
+  cursor: pointer;
+  -webkit-box-shadow: inset 2px 2px 2px #777;
+  box-shadow: inset 2px 2px 2px #777;
+}
+#menu-applications-container {
+  position: relative;
+}
+#menu-applications-container .clickcatcher {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #f00;
+  opacity: 0.001;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  filter: alpha(opacity=0);
+  top: 40px;
+  left: 0px;
+  z-index: 40;
+}
+#menu-applications-container #menu-applications {
+  display: none;
+  position: absolute;
+  left: 10px;
+  width: 420px;
+  z-index: 50;
+  margin: 0;
+  list-style-type: none;
+  padding: 5px;
+  text-align: left;
+  background: #e6ddd0;
+  border: 1px solid #d5c5b0;
+  -webkit-box-shadow: 1px 1px 2px #ccc;
+  box-shadow: 1px 1px 2px #ccc;
+}
+#menu-applications-container #menu-applications .menu-application a {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+#menu-applications-container #menu-applications .menu-application:hover {
+  background: #ff850a;
+}
+#notifications-toggle {
+  height: 32px;
+  line-height: 32px;
+  font-size: 32px;
+  cursor: pointer;
+  width: 60px;
+  margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#notifications-toggle img {
+  margin-left: 0;
+}
+.active #notifications-toggle {
+  background: rgba(100,100,100,0.3);
+  height: 32px;
+  line-height: 32px;
+  cursor: pointer;
+  -webkit-box-shadow: inset 2px 2px 2px #777;
+  box-shadow: inset 2px 2px 2px #777;
+}
 #notifications-container {
   position: relative;
 }
@@ -811,42 +927,56 @@ select:focus {
 #notifications-container #notifications {
   display: none;
   position: absolute;
-  left: 0px;
+  left: 10px;
   width: 420px;
   z-index: 50;
   margin: 0;
   list-style-type: none;
   padding: 5px;
   text-align: left;
-  background: #8f9b9b;
-  -webkit-box-shadow: 1px 1px 3px shadowcolor;
-  box-shadow: 1px 1px 3px shadowcolor;
+  background: #e6ddd0;
+  border: 1px solid #d5c5b0;
+  -webkit-box-shadow: 1px 1px 2px #ccc;
+  box-shadow: 1px 1px 2px #ccc;
 }
 #notifications-container #notifications #dismiss-all {
   text-align: center;
-  background-color: #a5afaf;
+  background-color: #e5cba9;
   margin-top: 5px;
   padding-top: 5px;
   clear: both;
   line-height: 25px;
-  color: #fff;
+  color: #000;
   cursor: pointer;
 }
 #notifications-container #notifications #dismiss-all:hover {
-  background-color: lightorange -20%;
+  background-color: #ff9d3b;
   color: #000;
 }
+#notifications-container #notifications .notification:hover a.dismiss {
+  cursor: pointer;
+  display: inline;
+}
+#notifications-container #notifications .notification:hover a.dismiss:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 #notifications-container #notifications .notification a.dismiss {
+  display: none;
   float: right;
-  width: 20px;
   line-height: 20px;
   padding: 5px;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: alpha(opacity=50);
 }
 #notifications-container #notifications .notification a.doaction {
-  width: 360px;
   float: left;
   line-height: 20px;
   padding: 5px;
+  max-width: 360px;
+  width: 360px;
 }
 #notifications-container #notifications .notification.new {
   background: #a5afaf;
@@ -877,6 +1007,7 @@ select:focus {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
+  background: #f7f4f0;
 }
 .application img {
   max-width: 100px;
@@ -890,7 +1021,6 @@ select:focus {
   margin: 0;
   font-family: main;
   color: textcolor;
-  text-shadow: 1px 1px 1px shadowcolor;
 }
 .application .app-title {
   font-family: styled;
@@ -1157,6 +1287,7 @@ select:focus {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   filter: alpha(opacity=30);
   margin: 10px 5px;
+  display: none;
 }
 #market-view #no-app-message .img-btn:hover,
 .cozy-app .img-btn:hover {
@@ -1169,6 +1300,9 @@ select:focus {
   background: #e6ddd0;
 }
 .cozy-app:hover .right {
+  display: inline;
+}
+.cozy-app:hover .img-btn {
   display: inline;
 }
 .cozy-app.official {
@@ -1391,9 +1525,6 @@ select:focus {
   }
   .comment {
     font-size: 14px;
-  }
-  #header .navbar-inner {
-    height: 20px;
   }
   #buttons {
     width: 100%;
