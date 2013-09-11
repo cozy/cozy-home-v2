@@ -33,7 +33,6 @@ module.exports = class ApplicationsListView extends ViewCollection
         @addApplicationButton = @$ "#add-app-button"
         @machineInfos = @$(".machine-infos").hide()
         @$("#no-app-message").hide()
-        $("#content").niceScroll()
         $(".menu-btn a").click (event) =>
             $(".menu-btn").removeClass 'active'
             target = $(event.target)
@@ -41,8 +40,9 @@ module.exports = class ApplicationsListView extends ViewCollection
             target = target.parent() unless target.hasClass 'menu-btn'
             target.addClass 'active'
 
+
     displayNoAppMessage: ->
-        if @apps.size() is 0
+        if @apps.size() is 0 and app.mainView.marketView.installedApps is 0
             @$("#no-app-message").show()
         else
             @$("#no-app-message").hide()

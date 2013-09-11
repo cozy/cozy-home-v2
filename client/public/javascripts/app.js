@@ -1119,7 +1119,7 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger config--><div class="line pa2 w600 bigger darkbg">your parameters</div><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">your parameters</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
   var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><input id="account-email-field"/><button class="btn">');
@@ -1232,7 +1232,7 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><p class="help-text darkbg pa2">Do you look for assistance?</p><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div>');
+  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">Do you look for assistance?</h4><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div>');
   }
   return buf.join("");
   };
@@ -1243,7 +1243,7 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p></div><div class="line"><p class="bigger pa2">Actually, you have actually no application installed. You\nshould&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>App management&nbsp;</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p></div><div class="line"><p class="bigger pa2">You have no application installed. You\nshould&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>App management&nbsp;</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1309,7 +1309,16 @@ window.require.register("templates/market_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="app-img left"><img');
+  buf.push('<div class="right"><a');
+  buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+  buf.push('><img src="img/git.png" class="img-btn"/></a>');
+  if ( app.website !== undefined)
+  {
+  buf.push('<a');
+  buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+  buf.push('><img src="img/link.png" class="img-btn"/></a>');
+  }
+  buf.push('</div><div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
   buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
@@ -1374,15 +1383,10 @@ window.require.register("templates/popover_description", function(exports, requi
   with (locals || {}) {
   var interp;
   buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
+  buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
+  buf.push('>&nbsp;</a><a');
   buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
-  buf.push('><span class="repo-stars">&nbsp;</span><img src="img/star-white.png"/></a>');
-  if ( model.website !== undefined)
-  {
-  buf.push('<a');
-  buf.push(attrs({ 'href':("" + (model.webiste) + "") }, {"href":true}));
-  buf.push('><img src="img/link-white.png"/></a>');
-  }
-  buf.push('</div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
+  buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
   }
   return buf.join("");
   };
@@ -2094,7 +2098,6 @@ window.require.register("views/home", function(exports, require, module) {
       this.addApplicationButton = this.$("#add-app-button");
       this.machineInfos = this.$(".machine-infos").hide();
       this.$("#no-app-message").hide();
-      $("#content").niceScroll();
       return $(".menu-btn a").click(function(event) {
         var target;
         $(".menu-btn").removeClass('active');
@@ -2110,7 +2113,7 @@ window.require.register("views/home", function(exports, require, module) {
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {
-      if (this.apps.size() === 0) {
+      if (this.apps.size() === 0 && app.mainView.marketView.installedApps === 0) {
         return this.$("#no-app-message").show();
       } else {
         return this.$("#no-app-message").hide();
@@ -2864,7 +2867,6 @@ window.require.register("views/market", function(exports, require, module) {
         return true;
       }
       this.hideError();
-      $('#no-app-message').hide();
       return application.install({
         ignoreMySocketNotification: true,
         success: function(data) {

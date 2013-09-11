@@ -170,7 +170,7 @@
     transition: all 0.3s
 
     img
-        width: 100px
+        max-width: 100px
 
     img.stopped
         opacity 0.5
@@ -288,15 +288,17 @@
 // Account page
 
 #account-view
+
     input
     select
-        max-width: 500px
+        max-width: 490px
         text-align: left
         margin-bottom: 10px
 
     .input
         .btn 
             height: 60px
+            width: 60px
             margin-left: 10px
 
 
@@ -413,9 +415,6 @@
 
     .comment
         font-size: 14px
-
-    .right
-        display: none
 
     .btn
         float: right
@@ -559,6 +558,11 @@
     a:hover
         color: white
         opacity: 1
+
+    .repo-stars
+        right: 55px
+        padding-top: 3px
+        position: absolute
 
 .md-body
     padding: 20px

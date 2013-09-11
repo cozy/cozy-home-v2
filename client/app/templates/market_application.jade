@@ -1,7 +1,14 @@
+.right
+    a(href="#{app.git}")
+        img(src="img/git.png").img-btn
+    if app.website !== undefined
+        a(href="#{app.website}")
+            img(src="img/link.png").img-btn
 .app-img.left
     img(src="#{app.icon}")
 
 .app-text
+            
     h3 #{app.name}
     span.comment= t(app.comment)
     p.par2 #{app.description}

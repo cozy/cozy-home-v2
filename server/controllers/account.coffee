@@ -23,7 +23,8 @@ module.exports =
                 if EMAILREGEX.test body.email
                     data.email = body.email
                 else
-                    cb null, "Given email is not a proper email"
+                    errors = ["Given email is not a proper email"]
+                    return cb null, errors
 
             if data.timezone or data.email or data.password
                 user.updateAttributes data, (err) ->

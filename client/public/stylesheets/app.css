@@ -456,6 +456,61 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
 /* @import url(my-styles.css); */
 
 
+/** initial setup **/
+.nano {
+  position : relative;
+  width    : 100%;
+  height   : 100%;
+  overflow : hidden;
+}
+.nano .content {
+  position      : absolute;
+  overflow      : scroll;
+  overflow-x    : hidden;
+  top           : 0;
+  right         : 0;
+  bottom        : 0;
+  left          : 0;
+}
+.nano .content:focus {
+  outline: thin dotted;
+}
+.nano .content::-webkit-scrollbar {
+  visibility: hidden;
+}
+.has-scrollbar .content::-webkit-scrollbar {
+  visibility: visible;
+}
+.nano > .pane {
+  background : rgba(0,0,0,.25);
+  position   : absolute;
+  width      : 10px;
+  right      : 0;
+  top        : 0;
+  bottom     : 0;
+  visibility : hidden\9; /* Target only IE7 and IE8 with this hack */
+  opacity    : .01; 
+  -webkit-transition    : .2s;
+  -moz-transition       : .2s;
+  -o-transition         : .2s;
+  transition            : .2s;
+  -moz-border-radius    : 5px;
+  -webkit-border-radius : 5px;  
+  border-radius         : 5px;
+}
+.nano > .pane > .slider {
+  background: #444;
+  background: rgba(0,0,0,.5);
+  position              : relative;
+  margin                : 0 1px;
+  -moz-border-radius    : 3px;
+  -webkit-border-radius : 3px;  
+  border-radius         : 3px;
+}
+.nano:hover > .pane, .pane.active, .pane.flashed {
+  visibility : visible\9; /* Target only IE7 and IE8 with this hack */
+  opacity    : 0.99;
+}
 @font-face {
   font-family: styled;
   src: url("/fonts/maven-pro-light-200.otf");
@@ -824,7 +879,7 @@ select:focus {
   transition: all 0.3s;
 }
 .application img {
-  width: 100px;
+  max-width: 100px;
 }
 .application img.stopped {
   opacity: 0.5;
@@ -943,12 +998,13 @@ select:focus {
 }
 #account-view input,
 #account-view select {
-  max-width: 500px;
+  max-width: 490px;
   text-align: left;
   margin-bottom: 10px;
 }
 #account-view .input .btn {
   height: 60px;
+  width: 60px;
   margin-left: 10px;
 }
 #home-view {
@@ -1076,10 +1132,6 @@ select:focus {
 #market-view #no-app-message .comment,
 .cozy-app .comment {
   font-size: 14px;
-}
-#market-view #no-app-message .right,
-.cozy-app .right {
-  display: none;
 }
 #market-view #no-app-message .btn,
 .cozy-app .btn {
@@ -1270,6 +1322,11 @@ select:focus {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+.md-header .repo-stars {
+  right: 55px;
+  padding-top: 3px;
+  position: absolute;
 }
 .md-body {
   padding: 20px;

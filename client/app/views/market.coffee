@@ -128,7 +128,6 @@ module.exports = class MarketView extends BaseView
     runInstallation: (application) =>
         return true if @isInstalling()
         @hideError()
-        $('#no-app-message').hide()
 
         application.install
             ignoreMySocketNotification: true

@@ -3,12 +3,9 @@
         .line
             h3.left #{model.name}
             .right
+                a(href="#{model.git}").repo-stars &nbsp;
                 a(href="#{model.git}")
-                    span.repo-stars &nbsp;
                     img(src="img/star-white.png")
-                if model.website !== undefined
-                    a(href="#{model.webiste}")
-                        img(src="img/link-white.png")
     .md-body
     .md-footer.clearfix
         button.btn.right#confirmbtn install
