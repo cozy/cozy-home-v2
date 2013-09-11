@@ -380,9 +380,6 @@ html
     text-align: center
     margin: 40px 0
 
-    button
-        margin-top: 20px
-
 .application
     width: 170px
     margin: 6px
@@ -398,6 +395,9 @@ html
 
     img
         margin-top: 10px
+
+    img.stopped
+        opacity 0.5
 
     p
         margin: 0
@@ -422,12 +422,15 @@ html
 
     .application-outer
         display:none
+        padding-top 20px
 
-        .btn
-            margin-top: 10px
         p
             margin: 0
             padding: 0
+        label
+            margin 0px
+        .app-stoppable
+            margin 0px
 
 
 .application:active

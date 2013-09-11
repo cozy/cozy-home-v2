@@ -149,13 +149,6 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "official application",
           description: "Write your tasks, order them and execute them efficiently."
         }, {
-          icon: "img/mails-icon.png",
-          name: "mails",
-          slug: "mails",
-          git: "https://github.com/mycozycloud/cozy-mails.git",
-          comment: "official application",
-          description: "Backup your inboxes and browse them from your cozy."
-        }, {
           icon: "img/photos-icon.png",
           name: "photos",
           slug: "photos",
@@ -190,6 +183,27 @@ window.require.register("collections/application", function(exports, require, mo
           git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
           comment: "community contribution",
           description: "A friendly bot to help you manage an IRC channel"
+        }, {
+          icon: "img/cozy-music.png",
+          name: "cozic",
+          slug: "cozic",
+          git: "https://github.com/rdubigny/cozy-music.git",
+          comment: "community contribution",
+          description: "An audio player to always keep your music with you"
+        }, {
+          icon: "img/kyou.png",
+          name: "kyou",
+          slug: "kyou",
+          git: "https://github.com/frankrousseau/kyou.git",
+          comment: "community contribution",
+          description: "Quantified self for Cozycloud!"
+        }, {
+          icon: "img/webdav.png",
+          name: "webdav",
+          slug: "webdav",
+          git: "https://github.com/aenario/cozy-webdav.git",
+          comment: "community contribution",
+          description: "Synchronize your contacts and your agenda with Cozy"
         }
       ];
       this.reset(apps);
@@ -922,6 +936,11 @@ window.require.register("models/application", function(exports, require, module)
       return client.post("/api/applications/getDescription", this.toJSON(), callbacks);
     };
 
+    Application.prototype.getMetaData = function(callbacks) {
+      this.prepareCallbacks(callbacks);
+      return client.post("/api/applications/getMetaData", this.toJSON(), callbacks);
+    };
+
     return Application;
 
   })(Backbone.Model);
@@ -1112,13 +1131,27 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
   var __val__ = t('Installing')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
+  buf.push('</p>');
+   if (app.displayName !== null)
+  {
+  buf.push('<p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p>');
+  }
+   else
+  {
+  buf.push('<p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p>');
+  }
+  buf.push('</div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><button class="btn update-app">');
   var __val__ = t('update')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div><button class="btn btn-large start-stop-btn">');
+  buf.push('</button></div><div><label for="app-stoppable"><input');
+  buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? undefined : "checked"), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
+  buf.push('/>&nbsp;');
+  var __val__ = t('Keep always on')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</label><button class="btn btn-large start-stop-btn">');
   var __val__ = t('started')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div></div>');
@@ -1709,7 +1742,8 @@ window.require.register("views/home_application", function(exports, require, mod
       "click .application-inner": "onAppClicked",
       "click .remove-app": "onRemoveClicked",
       "click .update-app": "onUpdateClicked",
-      "click .start-stop-btn": "onStartStopClicked"
+      "click .start-stop-btn": "onStartStopClicked",
+      "click .app-stoppable": "onStoppableClicked"
     };
 
     /* Constructor
@@ -1726,6 +1760,8 @@ window.require.register("views/home_application", function(exports, require, mod
       this.onUpdateClicked = __bind(this.onUpdateClicked, this);
 
       this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
+      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
 
       this.onAppClicked = __bind(this.onAppClicked, this);
 
@@ -1759,20 +1795,23 @@ window.require.register("views/home_application", function(exports, require, mod
           this.updateButton.displayGrey(t('retry'));
           return this.startStopBtn.hide();
         case 'installed':
-          this.icon.attr('src', "apps/" + app.id + "/icons/main_icon.png");
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.removeClass('stopped');
           this.stateLabel.hide();
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('update'));
           return this.startStopBtn.displayGrey(t('stop this app'));
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
-          this.stateLabel.hide();
+          this.icon.removeClass('stopped');
+          this.stateLabel.show().text('installing');
           this.removeButton.displayGrey('abort');
           this.updateButton.hide();
           return this.startStopBtn.hide();
         case 'stopped':
-          this.icon.attr('src', "img/stopped.png");
-          this.stateLabel.show().text(t('stopped'));
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.addClass('stopped');
+          this.stateLabel.hide();
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();
           return this.startStopBtn.displayGrey(t('start this app'));
@@ -1799,6 +1838,23 @@ window.require.register("views/home_application", function(exports, require, mod
             success: this.launchApp
           });
       }
+    };
+
+    ApplicationRow.prototype.onStoppableClicked = function(event) {
+      var bool,
+        _this = this;
+      bool = !this.model.get('isStoppable');
+      return this.model.save({
+        isStoppable: bool
+      }, {
+        success: function() {
+          return _this.$('.app-stoppable').attr('checked', !bool);
+        },
+        error: function() {
+          _this.$('.app-stoppable').attr('checked', bool);
+          return alert('oh no !');
+        }
+      });
     };
 
     ApplicationRow.prototype.onRemoveClicked = function(event) {
@@ -1989,7 +2045,7 @@ window.require.register("views/main", function(exports, require, module) {
       var user,
         _this = this;
       user = new User();
-      user.logout({
+      return user.logout({
         success: function(data) {
           return window.location = window.location.origin + '/login/';
         },
@@ -1997,7 +2053,6 @@ window.require.register("views/main", function(exports, require, module) {
           return alert('Server error occured, logout failed.');
         }
       });
-      return event.preventDefault();
     };
 
     HomeView.prototype.displayView = function(view) {
@@ -2151,7 +2206,7 @@ window.require.register("views/market", function(exports, require, module) {
 
   slugify = require('helpers').slugify;
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
 
   module.exports = MarketView = (function(_super) {
 
@@ -2871,23 +2926,23 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
-      var _this = this;
       this.model.set("description", "");
       this.body = this.$(".modal-body");
-      this.model.getDescription({
+      this.model.getMetaData({
         success: function(data) {},
         error: function() {
-          return console.log("error have been called");
+          return console.log("Error callback have been called");
         }
       });
-      return this.listenTo(this.model, "change:description", this.renderDescription);
+      return this.listenTo(this.model, "change", this.renderDescription);
     };
 
     PopoverDescriptionView.prototype.renderDescription = function() {
       var description, descriptionDiv;
       this.body.html("");
       description = this.model.get("description");
-      if (description === " ") {
+      console.debug(this.model);
+      if (description === null) {
         descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
       } else {
         descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");

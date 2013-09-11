@@ -17,6 +17,7 @@ module.exports = class ApplicationRow extends BaseView
         "click .remove-app"        : "onRemoveClicked"
         "click .update-app"        : "onUpdateClicked"
         "click .start-stop-btn"    : "onStartStopClicked"
+        "click .app-stoppable"     : "onStoppableClicked"
 
     ### Constructor ####
 
@@ -45,21 +46,23 @@ module.exports = class ApplicationRow extends BaseView
                 @updateButton.displayGrey t 'retry'
                 @startStopBtn.hide()
             when 'installed'
-                @icon.attr 'src', "apps/#{app.id}/icons/main_icon.png"
+                @icon.attr 'src', "api/applications/#{app.id}.png"
+                @icon.removeClass 'stopped'
                 @stateLabel.hide()
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'update'
                 @startStopBtn.displayGrey t 'stop this app'
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"
-                @stateLabel.hide()
-                #@stateLabel.show().text 'installing'
+                @icon.removeClass 'stopped'
+                @stateLabel.show().text 'installing'
                 @removeButton.displayGrey 'abort'
                 @updateButton.hide()
                 @startStopBtn.hide()
             when 'stopped'
-                @icon.attr 'src', "img/stopped.png"
-                @stateLabel.show().text t 'stopped'
+                @icon.attr 'src', "api/applications/#{app.id}.png"
+                @icon.addClass 'stopped'
+                @stateLabel.hide()
                 @removeButton.displayGrey t 'remove'
                 @updateButton.hide()
                 @startStopBtn.displayGrey t 'start this app'
@@ -78,6 +81,14 @@ module.exports = class ApplicationRow extends BaseView
                 alert t 'this app is being installed. Wait a little'
             when 'stopped'
                 @model.start success: @launchApp
+
+    onStoppableClicked: (event) =>
+        bool = not @model.get('isStoppable')
+        @model.save {isStoppable: bool},
+            success: => @$('.app-stoppable').attr 'checked', !bool
+            error: =>
+                @$('.app-stoppable').attr 'checked', bool
+                alert 'oh no !'
 
     onRemoveClicked: (event) =>
         event.preventDefault()

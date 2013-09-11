@@ -17,9 +17,11 @@ CozyInstance = define 'CozyInstance', ->
 # Application descrbies an application installed inside the Cozy instance.
 Application = define 'Application', ->
     property 'name', String
+    property 'displayName', String
     property 'description', String
     property 'slug', String
     property 'state', String
+    property 'isStoppable', Boolean, default: false
     property 'date', String, default: Date.now
     property 'icon', String
     property 'git', String
@@ -28,6 +30,7 @@ Application = define 'Application', ->
     property 'port', Number
     property 'permissions'
     property 'password', String
+    property '_attachments', Object
 
 # Notifications are messages sent to the user
 Notification = define 'Notification', ->

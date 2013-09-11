@@ -2,6 +2,8 @@
 
 
 slugify = require "./common/slug"
+Client = require("request-json").JsonClient
+fs = require('fs')
 {AppManager} = require "./lib/paas"
 {PermissionsManager} = require "./lib/permissions"
 {DescriptionManager} = require "./lib/description"
@@ -53,6 +55,17 @@ randomString = (length) ->
         string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
+# Save an app's icon in the DS
+saveIcon = (appli, callback = ->) ->
+    client = new Client "http://localhost:#{appli.port}/"
+    tmpName = "/tmp/icon_#{appli.slug}.png"
+    client.saveFile "icons/main_icon.png", tmpName, (err, res, body) ->
+        return callback err if err
+        appli.attachFile tmpName, name: 'icon.png', (err) ->
+            fs.unlink tmpName
+            return callback err if err
+            callback null
+
 # Load application corresponding to slug given in params
 before 'load application', ->
     Application.all key: params.slug, (err, apps) =>
@@ -63,7 +76,7 @@ before 'load application', ->
         else
             @app = apps[0]
             next()
-, only: ['update', 'start','stop','uninstall']
+, only: ['update', 'icon', 'start','stop','uninstall']
 
 
 ## Actions
@@ -90,6 +103,10 @@ action 'getDescription', ->
             description: description
         send succes: true, app: app, 201
 
+action 'getMetaData', ->
+    metaDataManager = new DescriptionManager()
+    metaDataManager.get body, (metaData) ->
+        send succes: true, app: metaData, 200
 
 #display one application
 action 'read', ->
@@ -100,6 +117,32 @@ action 'read', ->
             send_error new Error('Application not found'), 404
         else
             send app
+
+# display the icon
+action 'icon', ->
+    if @app._attachments?['icon.png']
+        return @app.getFile('icon.png', (->)).pipe res
+
+    # else, do the attaching (apps installed before)
+    # FOR MIGRATION, REMOVE ME LATER
+    saveIcon @app, (err) =>
+        if err
+            return fs.createReadStream('./client/app/assets/img/stopped.png').pipe res
+
+        @app.getFile('icon.png', (->)).pipe res
+
+
+# update applications options
+action 'updatestoppable', ->
+    Application.find params.id, (err, app) ->
+        if err
+            send_error err
+        else if app is null
+            send_error new Error('Application not found'), 404
+        else
+            app.updateAttributes isStoppable : body.isStoppable, (err, app) ->
+                return send_error err if err
+                send app
 
 
 # Set up app into 3 places :
@@ -145,6 +188,10 @@ action "install", ->
                     appli.port  = result.drone.port
 
                     console.info 'install succeeded on port ', appli.port
+
+                    saveIcon appli, (err) ->
+                        if err then console.log err.stack
+                        else console.info 'icon attached'
 
                     appli.save (err) ->
 
@@ -201,6 +248,10 @@ action "update", ->
             @app.permissions = docTypes
             @app.save (err) =>
 
+                saveIcon @app, (err) ->
+                    if err then console.log err.stack
+                    else console.info 'icon attached'
+
                 return send_error err if err
 
                 manager.resetProxy (err) =>
@@ -216,8 +267,6 @@ action "start", ->
     manager.start @app, (err, result) =>
 
         return mark_broken @app, err if err
-
-        # require('eyes').inspect result
 
         @app.state = "installed"
         @app.port = result.drone.port
@@ -235,14 +284,17 @@ action "start", ->
                     app: @app
 
 action "stop", ->
+
     manager = new AppManager
     manager.stop @app, (err, result) =>
 
         return mark_broken @app, err if err
 
-        @app.state = "stopped"
-        @app.port = 0
-        @app.save (err) =>
+        data =
+            state: 'stopped'
+            port : 0
+
+        @app.updateAttributes data, (err) =>
 
             return send_error err if err
 

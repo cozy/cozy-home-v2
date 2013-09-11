@@ -3,10 +3,13 @@ exports.routes = (map) ->
 
     map.post '/api/applications/getPermissions', 'applications#getPermissions'
     map.post '/api/applications/getDescription', 'applications#getDescription'
+    map.post '/api/applications/getMetaData', 'applications#getMetaData'
 
     map.get  '/api/applications'                , 'applications#applications'
     map.get  '/api/applications/byid/:id'       , 'applications#read'
+    map.put  '/api/applications/byid/:id'       , 'applications#updatestoppable'
     map.post '/api/applications/install'        , 'applications#install'
+    map.get  '/api/applications/:slug.png'      , 'applications#icon'
     map.post '/api/applications/:slug/start'    , 'applications#start'
     map.post '/api/applications/:slug/stop'     , 'applications#stop'
     map.del  '/api/applications/:slug/uninstall', 'applications#uninstall'

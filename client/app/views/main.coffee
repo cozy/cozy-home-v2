@@ -52,7 +52,6 @@ module.exports = class HomeView extends BaseView
                 window.location = window.location.origin + '/login/'
             error: =>
                 alert 'Server error occured, logout failed.'
-        event.preventDefault()
 
     displayView: (view) =>
         displayView = =>
