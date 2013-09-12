@@ -771,13 +771,20 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
+  height: 48px;
 }
 .navbar img {
   width: 32px;
-  margin-left: 5px;
+  margin-left: 15px;
+  margin-top: 8px;
   opacity: 0.5;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   filter: alpha(opacity=50);
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
 }
 .navbar a {
   color: #000;
@@ -791,6 +798,9 @@ body {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+.navbar #logout-button {
+  margin-right: 10px;
 }
 .navbar #logout-button span {
   display: none;
@@ -808,9 +818,9 @@ body {
 }
 /** Notifications */
 #menu-applications-toggle {
-  height: 32px;
-  line-height: 32px;
-  font-size: 32px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 48px;
   margin-left: 10px;
   padding-left: 5px;
   padding-right: 5px;
@@ -823,6 +833,8 @@ body {
   text-transform: lowercase;
 }
 #menu-applications-toggle span {
+  position: relative;
+  top: -5px;
   font-size: 24px;
 }
 .active #menu-applications-toggle {
@@ -852,6 +864,7 @@ body {
   display: none;
   position: absolute;
   left: 10px;
+  top: 25px;
   width: 420px;
   z-index: 50;
   margin: 0;
@@ -872,9 +885,9 @@ body {
   background: #fce9d5;
 }
 #notifications-toggle {
-  height: 32px;
-  line-height: 32px;
-  font-size: 32px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 48px;
   cursor: pointer;
   width: 60px;
   margin-left: 10px;
@@ -887,12 +900,11 @@ body {
   transition: all 0.3s;
 }
 #notifications-toggle img {
+  margin-top: 0;
   margin-left: 0;
 }
 .active #notifications-toggle {
   background: rgba(100,100,100,0.3);
-  height: 32px;
-  line-height: 32px;
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #777;
   box-shadow: inset 2px 2px 2px #777;
@@ -925,6 +937,7 @@ body {
   z-index: 40;
 }
 #notifications-container #notifications {
+  top: 25px;
   display: none;
   position: absolute;
   left: 10px;
