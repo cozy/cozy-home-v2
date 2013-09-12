@@ -1282,7 +1282,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -2535,6 +2535,7 @@ window.require.register("views/main", function(exports, require, module) {
       this.accountView = new AccountView();
       this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
+      $("#content").niceScroll();
       this.frames = this.$('#app-frames');
       this.content = this.$('#content');
       this.favicon = this.$('fav1');
@@ -2572,15 +2573,14 @@ window.require.register("views/main", function(exports, require, module) {
         _this = this;
       $("#current-application").html('home');
       displayView = function() {
-        _this.content.show();
         _this.frames.hide();
         view.$el.hide();
         $('#home-content').append(view.$el);
+        _this.content.show();
         view.$el.fadeIn();
         _this.currentView = view;
         _this.changeFavicon("favicon.ico");
-        _this.resetLayoutSizes();
-        return $("#content").niceScroll();
+        return _this.resetLayoutSizes();
       };
       if (this.currentView != null) {
         return this.currentView.$el.fadeOut(function() {
@@ -3125,9 +3125,6 @@ window.require.register("views/menu_applications", function(exports, require, mo
       this.appList = this.$('#menu-applications');
       AppsMenu.__super__.afterRender.apply(this, arguments);
       this.initializing = true;
-      this.collection.fetch().always(function() {
-        return this.initializing = false;
-      });
       return $(window).on('click', this.windowClicked);
     };
 

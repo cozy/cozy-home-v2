@@ -26,7 +26,6 @@ module.exports = class AppsMenu extends ViewCollection
         super
 
         @initializing = true
-        @collection.fetch().always -> @initializing = false
 
         $(window).on 'click', @windowClicked
 

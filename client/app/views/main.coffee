@@ -31,6 +31,7 @@ module.exports = class HomeView extends BaseView
         @helpView = new HelpView()
         @marketView = new MarketView @apps
 
+        $("#content").niceScroll()
         @frames = @$ '#app-frames'
         @content = @$ '#content'
 
@@ -60,15 +61,14 @@ module.exports = class HomeView extends BaseView
     displayView: (view) =>
         $("#current-application").html 'home'
         displayView = =>
-            @content.show()
             @frames.hide()
             view.$el.hide()
             $('#home-content').append view.$el
+            @content.show()
             view.$el.fadeIn()
             @currentView = view
             @changeFavicon "favicon.ico"
             @resetLayoutSizes()
-            $("#content").niceScroll()
 
         if @currentView?
             @currentView.$el.fadeOut =>
