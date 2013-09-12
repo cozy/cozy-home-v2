@@ -3442,7 +3442,7 @@ window.require.register("views/notifications_view", function(exports, require, m
         return this.$el.removeClass('active');
       } else {
         this.$el.addClass('active');
-        this.notifList.slideDown();
+        this.notifList.slideDown(300);
         return this.clickcatcher.show();
       }
     };
@@ -3452,7 +3452,7 @@ window.require.register("views/notifications_view", function(exports, require, m
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
-      this.notifList.slideUp();
+      this.notifList.slideUp(300);
       this.clickcatcher.hide();
       return this.$el.removeClass('active');
     };

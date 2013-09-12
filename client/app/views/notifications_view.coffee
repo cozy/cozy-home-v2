@@ -66,13 +66,13 @@ module.exports = class NotificationsView extends ViewCollection
             @$el.removeClass 'active'
         else
             @$el.addClass 'active'
-            @notifList.slideDown()
+            @notifList.slideDown 300
             @clickcatcher.show()
 
     dismissAll: () ->
         @collection.removeAll()
 
     hideNotifList: (event) =>
-        @notifList.slideUp()
+        @notifList.slideUp 300
         @clickcatcher.hide()
         @$el.removeClass 'active'
