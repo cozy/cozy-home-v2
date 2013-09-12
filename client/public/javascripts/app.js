@@ -1234,7 +1234,7 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">Do you look for assistance?</h4><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div>');
+  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">Do you look for assistance?</h4><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">Visit the project website and learn to build your app:</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
   }
   return buf.join("");
   };
@@ -1258,21 +1258,7 @@ window.require.register("templates/home_application", function(exports, require,
   var interp;
   buf.push('<a');
   buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
-  var __val__ = t('remove')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button><button class="btn update-app">');
-  var __val__ = t('update')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div><label for="app-stoppable"><input');
-  buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? undefined : "checked"), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
-  buf.push('/>&nbsp;');
-  var __val__ = t('keep always on')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><button class="btn btn-large start-stop-btn">');
-  var __val__ = t('started')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div></div>');
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a>');
   }
   return buf.join("");
   };
@@ -1349,7 +1335,7 @@ window.require.register("templates/menu_applications", function(exports, require
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"><a href="#home">Home</a></div></div>');
+  buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"></div></div>');
   }
   return buf.join("");
   };
@@ -1360,7 +1346,7 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar clearfix"><a href="http://cozy.io" class="left"><img src="img/happycloud-black.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-black.png"/></a></div>');
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-black.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-black.png"/></a></div>');
   }
   return buf.join("");
   };
@@ -1698,7 +1684,6 @@ window.require.register("views/config_application", function(exports, require, m
     };
 
     ApplicationRow.prototype.events = {
-      "click .application-inner": "onAppClicked",
       "click .remove-app": "onRemoveClicked",
       "click .update-app": "onUpdateClicked",
       "click .start-stop-btn": "onStartStopClicked",
@@ -1712,8 +1697,6 @@ window.require.register("views/config_application", function(exports, require, m
     function ApplicationRow(options) {
       this.remove = __bind(this.remove, this);
 
-      this.launchApp = __bind(this.launchApp, this);
-
       this.onStartStopClicked = __bind(this.onStartStopClicked, this);
 
       this.onUpdateClicked = __bind(this.onUpdateClicked, this);
@@ -1721,8 +1704,6 @@ window.require.register("views/config_application", function(exports, require, m
       this.onRemoveClicked = __bind(this.onRemoveClicked, this);
 
       this.onStoppableClicked = __bind(this.onStoppableClicked, this);
-
-      this.onAppClicked = __bind(this.onAppClicked, this);
 
       this.onAppChanged = __bind(this.onAppChanged, this);
 
@@ -1772,28 +1753,6 @@ window.require.register("views/config_application", function(exports, require, m
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();
           return this.startStopBtn.displayGrey(t('start this app'));
-      }
-    };
-
-    ApplicationRow.prototype.onAppClicked = function(event) {
-      var errormsg, msg;
-      event.preventDefault();
-      switch (this.model.get('state')) {
-        case 'broken':
-          msg = 'This app is broken. Try install again.';
-          errormsg = this.model.get('errormsg');
-          if (errormsg) {
-            msg += " Error was : " + errormsg;
-          }
-          return alert(msg);
-        case 'installed':
-          return this.launchApp();
-        case 'installing':
-          return alert(t('this app is being installed. Wait a little'));
-        case 'stopped':
-          return this.model.start({
-            success: this.launchApp
-          });
       }
     };
 
@@ -1881,14 +1840,6 @@ window.require.register("views/config_application", function(exports, require, m
       }
     };
 
-    /* Functions
-    */
-
-
-    ApplicationRow.prototype.launchApp = function() {
-      return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
-    };
-
     ApplicationRow.prototype.remove = function() {
       var _this = this;
       if (this.model.get('state') !== 'installed') {
@@ -1915,7 +1866,6 @@ window.require.register("views/config_application", function(exports, require, m
         error: function(jqXHR) {
           var error;
           error = JSON.parse(jqXHR.responseText);
-          console.log(error);
           alert(error.message);
           _this.updateButton.displayRed(t("failed"));
           return Backbone.Mediator.pub('app-state-changed', true);
@@ -1953,7 +1903,6 @@ window.require.register("views/config_application_list", function(exports, requi
     function ApplicationsListView(apps) {
       this.afterRender = __bind(this.afterRender, this);
       this.apps = apps;
-      this.isManaging = false;
       ApplicationsListView.__super__.constructor.call(this, {
         collection: apps
       });
@@ -2038,7 +1987,7 @@ window.require.register("views/config_applications", function(exports, require, 
     };
 
     ConfigApplicationsView.prototype.onAppStateChanged = function() {
-      return setTimeout(this.fetch, 2000);
+      return setTimeout(this.fetch, 10000);
     };
 
     return ConfigApplicationsView;
@@ -2243,11 +2192,7 @@ window.require.register("views/home_application", function(exports, require, mod
     };
 
     ApplicationRow.prototype.events = {
-      "click .application-inner": "onAppClicked",
-      "click .remove-app": "onRemoveClicked",
-      "click .update-app": "onUpdateClicked",
-      "click .start-stop-btn": "onStartStopClicked",
-      "click .app-stoppable": "onStoppableClicked"
+      "click .application-inner": "onAppClicked"
     };
 
     /* Constructor
@@ -2255,17 +2200,7 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     function ApplicationRow(options) {
-      this.remove = __bind(this.remove, this);
-
       this.launchApp = __bind(this.launchApp, this);
-
-      this.onStartStopClicked = __bind(this.onStartStopClicked, this);
-
-      this.onUpdateClicked = __bind(this.onUpdateClicked, this);
-
-      this.onRemoveClicked = __bind(this.onRemoveClicked, this);
-
-      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
 
       this.onAppClicked = __bind(this.onAppClicked, this);
 
@@ -2278,9 +2213,6 @@ window.require.register("views/home_application", function(exports, require, mod
 
     ApplicationRow.prototype.afterRender = function() {
       this.icon = this.$('img');
-      this.updateButton = new ColorButton(this.$(".update-app"));
-      this.removeButton = new ColorButton(this.$(".remove-app"));
-      this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
       this.stateLabel = this.$('.state-label');
       this.listenTo(this.model, 'change', this.onAppChanged);
       return this.onAppChanged(this.model);
@@ -2294,31 +2226,19 @@ window.require.register("views/home_application", function(exports, require, mod
       switch (this.model.get('state')) {
         case 'broken':
           this.icon.attr('src', "img/broken.png");
-          this.stateLabel.show().text(t('broken'));
-          this.removeButton.displayGrey(t('abort'));
-          this.updateButton.displayGrey(t('retry'));
-          return this.startStopBtn.hide();
+          return this.stateLabel.show().text(t('broken'));
         case 'installed':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
-          this.stateLabel.hide();
-          this.removeButton.displayGrey(t('remove'));
-          this.updateButton.displayGrey(t('update'));
-          return this.startStopBtn.displayGrey(t('stop this app'));
+          return this.stateLabel.hide();
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
           this.icon.removeClass('stopped');
-          this.stateLabel.show().text('installing');
-          this.removeButton.displayGrey('abort');
-          this.updateButton.hide();
-          return this.startStopBtn.hide();
+          return this.stateLabel.show().text('installing');
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.addClass('stopped');
-          this.stateLabel.hide();
-          this.removeButton.displayGrey(t('remove'));
-          this.updateButton.hide();
-          return this.startStopBtn.displayGrey(t('start this app'));
+          return this.stateLabel.hide();
       }
     };
 
@@ -2344,123 +2264,12 @@ window.require.register("views/home_application", function(exports, require, mod
       }
     };
 
-    ApplicationRow.prototype.onStoppableClicked = function(event) {
-      var bool,
-        _this = this;
-      bool = !this.model.get('isStoppable');
-      return this.model.save({
-        isStoppable: bool
-      }, {
-        success: function() {
-          return _this.$('.app-stoppable').attr('checked', !bool);
-        },
-        error: function() {
-          _this.$('.app-stoppable').attr('checked', bool);
-          return alert('oh no !');
-        }
-      });
-    };
-
-    ApplicationRow.prototype.onRemoveClicked = function(event) {
-      var _this = this;
-      event.preventDefault();
-      this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.removeButton.spin(true);
-      return this.model.uninstall({
-        success: function() {
-          return _this.remove();
-        },
-        error: function() {
-          return _this.removeButton.displayRed(t("failed"));
-        }
-      });
-    };
-
-    ApplicationRow.prototype.onUpdateClicked = function(event) {
-      event.preventDefault();
-      return this.showPopover();
-    };
-
-    ApplicationRow.prototype.showPopover = function() {
-      var _this = this;
-      this.popover = new PopoverPermissionsView({
-        model: this.model,
-        confirm: function(application) {
-          _this.popover.remove();
-          return _this.updateApp();
-        },
-        cancel: function(application) {
-          return _this.popover.remove();
-        }
-      });
-      return this.$el.append(this.popover.$el);
-    };
-
-    ApplicationRow.prototype.onStartStopClicked = function(event) {
-      var _this = this;
-      event.preventDefault();
-      this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.startStopBtn.spin(true);
-      if (this.model.isRunning()) {
-        return this.model.stop({
-          success: function() {
-            return _this.startStopBtn.spin(false);
-          },
-          error: function() {
-            return _this.startStopBtn.spin(false);
-          }
-        });
-      } else {
-        return this.model.start({
-          success: function() {
-            return _this.startStopBtn.spin(false);
-          },
-          error: function() {
-            return _this.startStopBtn.spin(false);
-          }
-        });
-      }
-    };
-
     /* Functions
     */
 
 
     ApplicationRow.prototype.launchApp = function() {
       return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
-    };
-
-    ApplicationRow.prototype.remove = function() {
-      var _this = this;
-      if (this.model.get('state') !== 'installed') {
-        return ApplicationRow.__super__.remove.apply(this, arguments);
-      }
-      this.removeButton.spin(false);
-      this.removeButton.displayGreen(t("Removed"));
-      return setTimeout(function() {
-        return _this.$el.fadeOut(function() {
-          return ApplicationRow.__super__.remove.apply(_this, arguments);
-        });
-      }, 1000);
-    };
-
-    ApplicationRow.prototype.updateApp = function() {
-      var _this = this;
-      this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.updateButton.spin(false);
-      this.updateButton.spin(true);
-      return this.model.updateApp({
-        success: function() {
-          return _this.updateButton.displayGreen(t("Updated"));
-        },
-        error: function(jqXHR) {
-          var error;
-          error = JSON.parse(jqXHR.responseText);
-          console.log(error);
-          alert(error.message);
-          return _this.updateButton.displayRed(t("failed"));
-        }
-      });
     };
 
     return ApplicationRow;
@@ -2636,15 +2445,12 @@ window.require.register("views/main", function(exports, require, module) {
       }
       this.$('#app-frames').find('iframe').hide();
       frame.show();
-      frame.niceScroll();
-      this.navbar.selectButton(slug);
       this.selectedApp = slug;
       name = this.apps.get(slug).get('name');
       if (!(name != null)) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
-      $("#current-application").html(name);
       this.changeFavicon("/apps/" + slug + "/favicon.ico");
       return this.resetLayoutSizes();
     };
@@ -3153,7 +2959,7 @@ window.require.register("views/menu_applications", function(exports, require, mo
           this.$('#no-app-message').show();
         }
         this.$el.addClass('active');
-        this.appList.slideDown();
+        this.appList.slideDown(100);
         return this.clickcatcher.show();
       }
     };
@@ -3163,7 +2969,7 @@ window.require.register("views/menu_applications", function(exports, require, mo
     };
 
     AppsMenu.prototype.hideAppList = function(event) {
-      this.appList.slideUp();
+      this.appList.slideUp(100);
       this.clickcatcher.hide();
       return this.$el.removeClass('active');
     };
@@ -3196,14 +3002,6 @@ window.require.register("views/navbar", function(exports, require, module) {
     NavbarView.prototype.template = require('templates/navbar');
 
     function NavbarView(apps) {
-      this.onAppRemoved = __bind(this.onAppRemoved, this);
-
-      this.addApplication = __bind(this.addApplication, this);
-
-      this.onApplicationChanged = __bind(this.onApplicationChanged, this);
-
-      this.onApplicationListReady = __bind(this.onApplicationListReady, this);
-
       this.afterRender = __bind(this.afterRender, this);
       this.apps = apps;
       NavbarView.__super__.constructor.call(this);
@@ -3211,61 +3009,7 @@ window.require.register("views/navbar", function(exports, require, module) {
 
     NavbarView.prototype.afterRender = function() {
       this.notifications = new NotificationsView();
-      this.appMenu = new AppsMenu(this.apps);
-      if (this.apps.length > 0) {
-        onApplicationListReady(this.apps);
-      }
-      this.buttons = this.$(".app-button");
-      this.apps.bind('reset', this.onApplicationListReady);
-      this.apps.bind('change', this.onApplicationChanged);
-      this.apps.bind('add', this.addApplication);
-      return this.apps.bind('remove', this.onAppRemoved);
-    };
-
-    NavbarView.prototype.onApplicationListReady = function(apps) {
-      this.$(".app-button").remove();
-      return apps.forEach(this.onApplicationChanged);
-    };
-
-    NavbarView.prototype.onApplicationChanged = function(app) {
-      if (app.isRunning()) {
-        if (!this.buttons.find("#" + app.id).length) {
-          return this.addApplication(app);
-        }
-      } else {
-        return this.onAppRemoved(app);
-      }
-    };
-
-    NavbarView.prototype.addApplication = function(app) {
-      var button;
-      if (!app.isRunning()) {
-        return;
-      }
-      this.buttons.find(".nav:last").prepend(appButtonTemplate({
-        app: app.attributes
-      }));
-      button = this.buttons.find("#" + app.id);
-      return button.tooltip({
-        placement: 'bottom',
-        title: '<a target="' + app.id + '" href="/apps/' + app.id + '/">' + t('open in a new tab') + '</a>',
-        delay: {
-          show: 500,
-          hide: 1000
-        }
-      });
-    };
-
-    NavbarView.prototype.onAppRemoved = function(app) {
-      if (app.id != null) {
-        return this.buttons.find("#" + app.id).remove();
-      }
-    };
-
-    NavbarView.prototype.selectButton = function(button) {
-      button = this.$("#" + button);
-      this.buttons.find("li").removeClass("active");
-      return button.parent().addClass("active");
+      return this.appMenu = new AppsMenu(this.apps);
     };
 
     return NavbarView;

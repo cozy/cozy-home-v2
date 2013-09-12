@@ -48,13 +48,13 @@ module.exports = class AppsMenu extends ViewCollection
             else
                 @$('#no-app-message').show()
             @$el.addClass 'active'
-            @appList.slideDown()
+            @appList.slideDown 100
             @clickcatcher.show()
 
     dismissAll: () ->
         @collection.removeAll()
 
     hideAppList: (event) =>
-        @appList.slideUp()
+        @appList.slideUp 100
         @clickcatcher.hide()
         @$el.removeClass 'active'

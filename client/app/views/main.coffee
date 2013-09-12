@@ -118,25 +118,22 @@ module.exports = class HomeView extends BaseView
 
         @$('#app-frames').find('iframe').hide()
         frame.show()
-        frame.niceScroll()
 
-        @navbar.selectButton slug
         @selectedApp = slug
 
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
-        $("#current-application").html name
         @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
 
-    createApplicationIframe: (slug, hash="")->
+    createApplicationIframe: (slug, hash="") ->
         @frames.append appIframeTemplate(id: slug, hash:hash)
         frame = @$("##{slug}-frame")
         $(frame.prop('contentWindow')).on 'hashchange', =>
             location = frame.prop('contentWindow').location
             newhash = location.hash.replace '#', ''
-            @onAppHashChanged(slug, newhash)
+            @onAppHashChanged slug, newhash
         @resetLayoutSizes()
         return frame
 

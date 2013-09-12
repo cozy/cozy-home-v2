@@ -2,7 +2,6 @@ request = require 'lib/request'
 BaseView = require 'lib/base_view'
 ConfigApplicationList = require './config_application_list'
 
-# View describing main screen for user once he is logged
 module.exports = class exports.ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
     template: require 'templates/config_applications'
@@ -41,4 +40,4 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @diskSpace.find('.total').html total
 
     onAppStateChanged: ->
-        setTimeout @fetch, 2000
+        setTimeout @fetch, 10000

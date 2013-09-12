@@ -12,7 +12,6 @@ module.exports = class ApplicationRow extends BaseView
         app: @model.attributes
 
     events:
-        "click .application-inner" : "onAppClicked"
         "click .remove-app"        : "onRemoveClicked"
         "click .update-app"        : "onUpdateClicked"
         "click .start-stop-btn"    : "onStartStopClicked"
@@ -63,21 +62,6 @@ module.exports = class ApplicationRow extends BaseView
                 @removeButton.displayGrey t 'remove'
                 @updateButton.hide()
                 @startStopBtn.displayGrey t 'start this app'
-
-    onAppClicked: (event) =>
-        event.preventDefault()
-        switch @model.get 'state'
-            when 'broken'
-                msg = 'This app is broken. Try install again.'
-                errormsg = @model.get 'errormsg'
-                msg += " Error was : #{errormsg}" if errormsg
-                alert msg
-            when 'installed'
-                @launchApp()
-            when 'installing'
-                alert t 'this app is being installed. Wait a little'
-            when 'stopped'
-                @model.start success: @launchApp
 
     onStoppableClicked: (event) =>
         bool = not @model.get('isStoppable')
@@ -135,11 +119,6 @@ module.exports = class ApplicationRow extends BaseView
                 error: =>
                     @startStopBtn.spin false
 
-    ### Functions ###
-
-    launchApp: =>
-        window.app.routers.main.navigate "apps/#{@model.id}/", true
-
     remove: =>
         return super unless @model.get('state') is 'installed'
         @removeButton.spin false
@@ -158,7 +137,6 @@ module.exports = class ApplicationRow extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
             error: (jqXHR) =>
                 error = JSON.parse(jqXHR.responseText)
-                console.log error
                 alert error.message
                 @updateButton.displayRed t "failed"
                 Backbone.Mediator.pub 'app-state-changed', true

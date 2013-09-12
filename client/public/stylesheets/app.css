@@ -830,7 +830,6 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
-  text-transform: lowercase;
 }
 #menu-applications-toggle span {
   position: relative;
@@ -875,6 +874,9 @@ body {
   border: 1px solid #d5c5b0;
   -webkit-box-shadow: 1px 1px 2px #ccc;
   box-shadow: 1px 1px 2px #ccc;
+}
+#menu-applications-container #menu-applications .menu-application {
+  text-transform: lowercase;
 }
 #menu-applications-container #menu-applications .menu-application a {
   display: block;
@@ -1330,6 +1332,9 @@ body {
   margin-bottom: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+}
+.config-application strong {
+  text-transform: lowercase;
 }
 .config-application .mod {
   margin-left: 5px;

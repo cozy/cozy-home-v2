@@ -10,10 +10,9 @@ module.exports = class ApplicationsListView extends ViewCollection
 
     constructor: (apps) ->
         @apps = apps
-        @isManaging = false
         super collection: apps
-        if @apps.length is 0
-            @displayNoAppMessage()
+
+        @displayNoAppMessage() if @apps.length is 0
 
     afterRender: =>
         @appList = @$ "#app-list"

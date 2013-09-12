@@ -43,9 +43,8 @@ module.exports = class MarketView extends BaseView
         @installAppButton = new ColorButton @$ "#add-app-submit"
 
         @listenTo @installedApps, 'reset',  @onAppListsChanged
-        #@listenTo @installedApps, 'add',    @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
-        @listenTo @marketApps,    'reset',  @onAppListsChanged
+        @listenTo @marketApps, 'reset',  @onAppListsChanged
         @marketApps.fetchFromMarket()
 
     onAppListsChanged: =>
