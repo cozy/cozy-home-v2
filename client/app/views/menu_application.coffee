@@ -4,7 +4,7 @@ module.exports = class ApplicationView extends BaseView
 
     tagName: 'div'
     className: 'menu-application clearfix'
-    template: require 'templates/menu_application_item'
+    template: require 'templates/menu_application'
 
     events:
         'click a': 'onLinkClick'

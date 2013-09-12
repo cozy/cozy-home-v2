@@ -9,6 +9,7 @@ module.exports = class MainRouter extends Backbone.Router
         "apps/:slug" : "application"
         "apps/:slug/*hash" : "application"
         "*path": "applicationList"
+        '*notFound': 'applicationList'
 
     ## Route behaviors
 

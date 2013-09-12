@@ -4,7 +4,7 @@ module.exports = class NotificationView extends BaseView
 
     tagName: 'li'
     className: 'notification clearfix'
-    template: require 'templates/notification_item'
+    template: require 'templates/notification'
     events:
         "click .doaction": "doaction"
         "click .dismiss" : "dismiss"

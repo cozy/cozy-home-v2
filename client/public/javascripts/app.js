@@ -1074,7 +1074,8 @@ window.require.register("routers/main_router", function(exports, require, module
       "logout": "logout",
       "apps/:slug": "application",
       "apps/:slug/*hash": "application",
-      "*path": "applicationList"
+      "*path": "applicationList",
+      '*notFound': 'applicationList'
     };
 
     MainRouter.prototype.applicationList = function() {
@@ -1329,7 +1330,7 @@ window.require.register("templates/market_application", function(exports, requir
   return buf.join("");
   };
 });
-window.require.register("templates/menu_application_item", function(exports, require, module) {
+window.require.register("templates/menu_application", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
@@ -1379,7 +1380,7 @@ window.require.register("templates/navbar_app_btn", function(exports, require, m
   return buf.join("");
   };
 });
-window.require.register("templates/notification_item", function(exports, require, module) {
+window.require.register("templates/notification", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
@@ -1569,7 +1570,10 @@ window.require.register("views/account", function(exports, require, module) {
             }
           } else {
             saveButton.addClass('green');
-            return saveButton.html('saved');
+            saveButton.html('saved');
+            return setTimeout(function() {
+              return saveButton.removeClass('green');
+            }, 2000);
           }
         });
       };
@@ -1653,8 +1657,6 @@ window.require.register("views/account", function(exports, require, module) {
         event.preventDefault();
         return _this.onNewPasswordSubmit();
       });
-      this.errorAlert.hide();
-      this.infoAlert.hide();
       for (_i = 0, _len = timezones.length; _i < _len; _i++) {
         timezone = timezones[_i];
         this.timezoneField.append("<option value=\"" + timezone + "\">" + timezone + "</option>");
@@ -3058,7 +3060,7 @@ window.require.register("views/menu_application", function(exports, require, mod
 
     ApplicationView.prototype.className = 'menu-application clearfix';
 
-    ApplicationView.prototype.template = require('templates/menu_application_item');
+    ApplicationView.prototype.template = require('templates/menu_application');
 
     ApplicationView.prototype.events = {
       'click a': 'onLinkClick'
@@ -3290,7 +3292,7 @@ window.require.register("views/notification_view", function(exports, require, mo
 
     NotificationView.prototype.className = 'notification clearfix';
 
-    NotificationView.prototype.template = require('templates/notification_item');
+    NotificationView.prototype.template = require('templates/notification');
 
     NotificationView.prototype.events = {
       "click .doaction": "doaction",

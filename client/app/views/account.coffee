@@ -61,11 +61,9 @@ module.exports = class exports.AccountView extends BaseView
     ### Functions ###
     displayErrors: (msgs) =>
         errorString = ""
-        if typeof(msgs) is 'string'
-            msgs = msgs.split ','
+        msgs = msgs.split ',' if typeof(msgs) is 'string'
+        errorString += "#{msg}<br />" for msg in msgs
 
-        for msg in msgs
-            errorString += "#{msg}<br />"
         @errorAlert.html errorString
         @errorAlert.show()
 
@@ -77,11 +75,14 @@ module.exports = class exports.AccountView extends BaseView
         saveFunction = ->
             saveButton.css 'color', 'transparent'
             saveButton.spin 'small', 'white'
+
             data = {}
             data[fieldName] = fieldWidget.val()
             request.post "api/#{path}", data, (err) ->
+
                 saveButton.spin()
                 saveButton.css 'color', 'white'
+
                 if err
                     saveButton.addClass 'red'
                     saveButton.html 'error'
@@ -90,6 +91,10 @@ module.exports = class exports.AccountView extends BaseView
                 else
                     saveButton.addClass 'green'
                     saveButton.html 'saved'
+                    setTimeout ->
+                        saveButton.removeClass 'green'
+                    , 2000
+
 
         saveButton.click saveFunction
         saveFunction
@@ -97,6 +102,7 @@ module.exports = class exports.AccountView extends BaseView
 
     # Fetch data from backend and fill form with collected data.
     fetchData: ->
+
         $.get "api/users/", (data) =>
             timezoneData = []
 
@@ -158,15 +164,14 @@ module.exports = class exports.AccountView extends BaseView
         @changePasswordButton = @$ '#change-password-button'
         @changePasswordButton.click @onChangePasswordClicked
         @accountSubmitButton = @$ '#account-form-button'
+
         @accountSubmitButton.click (event) =>
             event.preventDefault()
             @onNewPasswordSubmit()
-
-        @errorAlert.hide()
-        @infoAlert.hide()
 
         for timezone in timezones
             @timezoneField.append(
                 "<option value=\"#{timezone}\">#{timezone}</option>"
             )
+
         @fetchData()
