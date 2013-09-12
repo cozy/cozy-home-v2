@@ -1,7 +1,7 @@
 { "name": "cozy-home"
 , "version": "0.9.0"
 , "engine": { "node": "*" }
-, "main": "server.coffee"
+, "main": "server.js"
 , "dependencies":
   { "americano":        "*"
   , "americano-cozy":   "0.1.2"
