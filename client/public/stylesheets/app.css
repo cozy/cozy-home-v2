@@ -711,7 +711,7 @@ select:focus {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding-top: 32px;
+  padding-top: 48px;
 }
 body {
   -webkit-box-sizing: border-box;
