@@ -1121,7 +1121,7 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">your parameters</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">Your parameters</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
   var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><input id="account-email-field"/><button class="btn">');
@@ -1346,7 +1346,7 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-black.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-black.png"/></a></div>');
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-white.png"/></a></div>');
   }
   return buf.join("");
   };
@@ -1383,7 +1383,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><img src="img/notification-black.png"/></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  buf.push('<a id="notifications-toggle"><img src="img/notification-white.png"/></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
   var __val__ = t('You have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li><li id="dismiss-all" class="btn">');
@@ -2451,6 +2451,7 @@ window.require.register("views/main", function(exports, require, module) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
+      $("#current-application").html(name);
       this.changeFavicon("/apps/" + slug + "/favicon.ico");
       return this.resetLayoutSizes();
     };

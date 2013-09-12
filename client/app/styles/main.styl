@@ -27,6 +27,8 @@ body
         opacity: 0.3
         margin: 0
         padding: 0
+        border-top-left-radius: 5px
+        border-bottom-left-radius: 5px
 
         span
             font-size: 24px
@@ -59,8 +61,10 @@ body
 
 .navbar
     background: orangewhite + 20%
+    background: darkblue
     z-index: 1500
     box-shadow: 2px 0 2px #BBB !important
+    box-shadow: 2px 0 2px darkblue - 20% !important
     position: fixed
     top: 0
     width: 100%
@@ -74,7 +78,7 @@ body
         transition: all 0.3s
 
     a
-        color: black
+        color: white
 
     a:hover
         color: black
@@ -92,7 +96,7 @@ body
 
     #logout-button:hover
         span
-            display: inline
+            display: none
 
 /* content */
 
@@ -110,24 +114,35 @@ body
     height: 48px
     line-height: 48px
     font-size: 48px
-    margin-left: 10px
+    margin-left: 5px
     padding-left: 5px
     padding-right: 5px
     cursor: pointer
-    transition: all 0.3s
+    color: white
+
+    #current-application
+        font-weight: normal
+        opacity: 0.5
+
+    #current-application:active
+        color: white
+
+    #current-application:hover
+        color: white
+        opacity: 1
 
     span
         position: relative
-        top: -5px
-        font-size: 24px
+        top: -6px
+        font-size: 28px
 
 .active
     #menu-applications-toggle
-        background: rgba(100, 100, 100, 0.3)
+        background: rgba(20, 20, 22, 0.3)
         height: 32px
         line-height: 32px
         cursor: pointer
-        box-shadow: inset 2px 2px 2px #777
+        box-shadow: inset 2px 2px 2px #000
 
 
 #menu-applications-container
@@ -146,13 +161,14 @@ body
     #menu-applications
         display: none
         position: absolute
-        left: 10px
+        left: 5px
         top: 25px
         width: 420px
         z-index: 50
         margin: 0
         list-style-type: none
         padding: 5px
+        color: darkblue
 
         text-align: left
         background: lightgrey - 10%
@@ -165,6 +181,7 @@ body
             a
                 display:block
                 width: 100%
+                color: darkblue
                 cursor: pointer
 
         .menu-application:hover

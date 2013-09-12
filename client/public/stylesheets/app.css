@@ -730,6 +730,8 @@ body {
   filter: alpha(opacity=30);
   margin: 0;
   padding: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 #home-menu .menu-btn span {
   font-size: 24px;
@@ -765,9 +767,12 @@ body {
 }
 .navbar {
   background: #fdfaf7;
+  background: #363a46;
   z-index: 1500;
   -webkit-box-shadow: 2px 0 2px #bbb !important;
   box-shadow: 2px 0 2px #bbb !important;
+  -webkit-box-shadow: 2px 0 2px #2b2e38 !important;
+  box-shadow: 2px 0 2px #2b2e38 !important;
   position: fixed;
   top: 0;
   width: 100%;
@@ -787,7 +792,7 @@ body {
   transition: all 0.3s;
 }
 .navbar a {
-  color: #000;
+  color: #fff;
 }
 .navbar a:hover {
   color: #000;
@@ -806,7 +811,7 @@ body {
   display: none;
 }
 .navbar #logout-button:hover span {
-  display: inline;
+  display: none;
 }
 /* content */
 #content {
@@ -821,28 +826,39 @@ body {
   height: 48px;
   line-height: 48px;
   font-size: 48px;
-  margin-left: 10px;
+  margin-left: 5px;
   padding-left: 5px;
   padding-right: 5px;
   cursor: pointer;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  transition: all 0.3s;
+  color: #fff;
+}
+#menu-applications-toggle #current-application {
+  font-weight: normal;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: alpha(opacity=50);
+}
+#menu-applications-toggle #current-application:active {
+  color: #fff;
+}
+#menu-applications-toggle #current-application:hover {
+  color: #fff;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 #menu-applications-toggle span {
   position: relative;
-  top: -5px;
-  font-size: 24px;
+  top: -6px;
+  font-size: 28px;
 }
 .active #menu-applications-toggle {
-  background: rgba(100,100,100,0.3);
+  background: rgba(20,20,22,0.3);
   height: 32px;
   line-height: 32px;
   cursor: pointer;
-  -webkit-box-shadow: inset 2px 2px 2px #777;
-  box-shadow: inset 2px 2px 2px #777;
+  -webkit-box-shadow: inset 2px 2px 2px #000;
+  box-shadow: inset 2px 2px 2px #000;
 }
 #menu-applications-container {
   position: relative;
@@ -862,13 +878,14 @@ body {
 #menu-applications-container #menu-applications {
   display: none;
   position: absolute;
-  left: 10px;
+  left: 5px;
   top: 25px;
   width: 420px;
   z-index: 50;
   margin: 0;
   list-style-type: none;
   padding: 5px;
+  color: #363a46;
   text-align: left;
   background: #e6ddd0;
   border: 1px solid #d5c5b0;
@@ -881,6 +898,7 @@ body {
 #menu-applications-container #menu-applications .menu-application a {
   display: block;
   width: 100%;
+  color: #363a46;
   cursor: pointer;
 }
 #menu-applications-container #menu-applications .menu-application:hover {
