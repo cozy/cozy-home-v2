@@ -858,7 +858,17 @@ window.require.register("locales/en", function(exports, require, module) {
     "retry to install": "retry to install",
     "Cozy - Account": "Cozy - Account",
     "Cozy - App Store": "Cozy - App Store",
-    "Cozy - Home": "Cozy - Home"
+    "Cozy - Home": "Cozy - Home",
+    "Cozy - Applications configuration": "Cozy - Applications configuration",
+    "running": "running",
+    "Cozy - Help": "Cozy - Help",
+    "Changing the locale requires to reload the page.": "Changing the locale requires to reload the page.",
+    "cancel": "cancel",
+    "installing": "installing",
+    "abort": "abort",
+    "Once updated, this application will require the following permissions:": "Once updated, this application will require the following permissions:",
+    "confirm update": "confirm update",
+    "This application does not need specific permissions": "This application does not need specific permissions"
   };
   
 });
@@ -955,7 +965,17 @@ window.require.register("locales/fr", function(exports, require, module) {
     "retry to install": "réessai d'installation",
     "Cozy - Account": "Cozy - Compte",
     "Cozy - App Store": "Cozy - App Store",
-    "Cozy - Home": "Cozy - Home"
+    "Cozy - Home": "Cozy - Home",
+    "Cozy - Applications configuration": "Cozy - Configuration d'applications",
+    "running": "démarrée",
+    "Cozy - Help": "Cozy - Aide",
+    "Changing the locale requires to reload the page.": "Le changement de langue nécessite le rechargement de la page.",
+    "cancel": "cancel",
+    "installing": "installing",
+    "abort": "abort",
+    "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requièra les permissions suivantes:",
+    "confirm update": "confirmez la mise à jour",
+    "This application does not need specific permissions": "Cette applicatiion n'a pas besoin d'informations spécifiques"
   };
   
 });

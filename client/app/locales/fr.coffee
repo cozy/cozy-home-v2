@@ -122,3 +122,19 @@ module.exports =
     "Cozy - Account":"Cozy - Compte"
     "Cozy - App Store":"Cozy - App Store"
     "Cozy - Home":"Cozy - Home"
+    "Cozy - Applications configuration":"Cozy - Configuration d'applications"
+    "running":"démarrée"
+    "Cozy - Help":"Cozy - Aide"
+    "Changing the locale requires to reload the page.":"""
+        Le changement de langue nécessite le rechargement de la page.
+    """
+    "cancel":"cancel"
+    "installing":"installing"
+    "abort":"abort"
+    "Once updated, this application will require the following permissions:": """
+        Une fois mise à jour l'application requièra les permissions suivantes:
+    """
+    "confirm update":"confirmez la mise à jour"
+    "This application does not need specific permissions":"""
+        Cette applicatiion n'a pas besoin d'informations spécifiques
+    """
