@@ -36,7 +36,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @memoryFree.find('.total').html Math.floor(total / 1000)
 
     displayDiskSpace: (amount, total) ->
-        @diskSpace.find('.amount').html amount
+        @diskSpace.find('.amount').html (amount / 10)
         @diskSpace.find('.total').html total
 
     onAppStateChanged: ->

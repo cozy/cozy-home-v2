@@ -51,7 +51,7 @@ module.exports = class AppsMenu extends ViewCollection
             @appList.slideDown 100
             @clickcatcher.show()
 
-    dismissAll: () ->
+    dismissAll: ->
         @collection.removeAll()
 
     hideAppList: (event) =>
