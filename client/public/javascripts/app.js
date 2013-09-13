@@ -3055,10 +3055,17 @@ window.require.register("views/notification_view", function(exports, require, mo
 
     NotificationView.prototype.doaction = function() {
       var action, url;
+      console.log("action");
+      console.log(this.model);
       action = this.model.get('resource');
+      if (action == null) {
+        action = {
+          app: home
+        };
+      }
       if (typeof action === 'string') {
         url = action;
-      } else if (action.app) {
+      } else if (action.app != null) {
         url = action.app === 'home' ? "/" : "/apps/" + action.app + "/";
         url += action.url || '';
         url = url.replace('//', '/');

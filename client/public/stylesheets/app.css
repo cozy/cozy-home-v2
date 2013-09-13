@@ -1025,6 +1025,7 @@ body {
   color: #363a46;
   max-width: 360px;
   width: 360px;
+  cursor: pointer;
 }
 #notifications-container #notifications .notification.new {
   background: #a5afaf;

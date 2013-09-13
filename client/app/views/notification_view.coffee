@@ -13,10 +13,14 @@ module.exports = class NotificationView extends BaseView
         @listenTo @model, 'change', @render
 
     doaction: ->
+        console.log "action"
+        console.log @model
         action = @model.get 'resource'
+        action = app: home unless action?
+
         if typeof action is 'string'
             url = action
-        else if action.app
+        else if action.app?
             # .replace is a quickfix
             url = if action.app is 'home' then "/" else "/apps/#{action.app}/"
             url += action.url or ''
