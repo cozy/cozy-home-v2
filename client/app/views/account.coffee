@@ -86,14 +86,14 @@ module.exports = class exports.AccountView extends BaseView
                 if err
                     saveButton.addClass 'red'
                     saveButton.html 'error'
-                    if fieldName is 'locale'
-                        window.location.reload()
                 else
                     saveButton.addClass 'green'
                     saveButton.html 'saved'
+                    alert 'Changing the locale requires to reload the page.'
+                    window.location.reload() if fieldName is 'locale'
                     setTimeout ->
-                        saveButton.removeClass 'green'
-                    , 2000
+                        window.location.reload() if fieldName is 'locale'
+                    , 1000
 
 
         saveButton.click saveFunction

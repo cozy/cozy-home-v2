@@ -1280,13 +1280,13 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app"><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">install</button></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
+  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">install</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="md-overlay"></div>');
+  buf.push('</div></div></div><div class="md-overlay"></div>');
   }
   return buf.join("");
   };
@@ -1387,7 +1387,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var __val__ = t('You have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li><li id="dismiss-all" class="btn">');
-  var __val__ = t('Dismiss All')
+  var __val__ = t('dismiss all')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li></ul>');
   }
@@ -1550,16 +1550,19 @@ window.require.register("views/account", function(exports, require, module) {
           saveButton.css('color', 'white');
           if (err) {
             saveButton.addClass('red');
-            saveButton.html('error');
-            if (fieldName === 'locale') {
-              return window.location.reload();
-            }
+            return saveButton.html('error');
           } else {
             saveButton.addClass('green');
             saveButton.html('saved');
+            alert('Changing the locale requires to reload the page.');
+            if (fieldName === 'locale') {
+              window.location.reload();
+            }
             return setTimeout(function() {
-              return saveButton.removeClass('green');
-            }, 2000);
+              if (fieldName === 'locale') {
+                return window.location.reload();
+              }
+            }, 1000);
           }
         });
       };
@@ -2546,6 +2549,8 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.template = require('templates/market');
 
+    MarketView.prototype.tagName = 'div';
+
     MarketView.prototype.events = {
       'keyup #app-git-field': 'onEnterPressed',
       "click #your-app .app-install-button": "onInstallClicked"
@@ -2583,7 +2588,7 @@ window.require.register("views/market", function(exports, require, module) {
     }
 
     MarketView.prototype.afterRender = function() {
-      this.appList = this.$('#app-market-list');
+      this.appList = this.$('#market-applications-list');
       this.appGitField = this.$("#app-git-field");
       this.installInfo = this.$("#add-app-modal .loading-indicator");
       this.infoAlert = this.$("#your-app .info");

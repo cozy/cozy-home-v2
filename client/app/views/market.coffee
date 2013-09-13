@@ -18,6 +18,7 @@ REPOREGEX =  /// ^
 module.exports = class MarketView extends BaseView
     id: 'market-view'
     template: require 'templates/market'
+    tagName: 'div'
 
     events:
         'keyup #app-git-field':'onEnterPressed'
@@ -32,7 +33,7 @@ module.exports = class MarketView extends BaseView
 
 
     afterRender: =>
-        @appList = @$ '#app-market-list'
+        @appList = @$ '#market-applications-list'
         @appGitField = @$ "#app-git-field"
         @installInfo = @$ "#add-app-modal .loading-indicator"
         @infoAlert = @$ "#your-app .info"

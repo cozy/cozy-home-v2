@@ -766,17 +766,15 @@ body {
   filter: none;
 }
 .navbar {
-  background: #fdfaf7;
+  position: fixed;
   background: #363a46;
   z-index: 1500;
-  -webkit-box-shadow: 2px 0 2px #bbb !important;
-  box-shadow: 2px 0 2px #bbb !important;
   -webkit-box-shadow: 2px 0 2px #2b2e38 !important;
   box-shadow: 2px 0 2px #2b2e38 !important;
-  position: fixed;
   top: 0;
   width: 100%;
   height: 48px;
+  padding: 0;
 }
 .navbar img {
   width: 32px;
@@ -790,6 +788,10 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
+}
+.navbar span {
+  height: 48px;
+  margin: 0;
 }
 .navbar a {
   color: #fff;
@@ -849,7 +851,7 @@ body {
 }
 #menu-applications-toggle span {
   position: relative;
-  top: -6px;
+  top: -8px;
   font-size: 28px;
 }
 .active #menu-applications-toggle {
@@ -859,6 +861,14 @@ body {
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #000;
   box-shadow: inset 2px 2px 2px #000;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .navbar {
+    height: 45px;
+  }
+  #menu-applications-toggle span {
+    top: -4px;
+  }
 }
 #menu-applications-container {
   position: relative;
@@ -908,8 +918,8 @@ body {
   height: 48px;
   line-height: 48px;
   font-size: 48px;
-  cursor: pointer;
   width: 60px;
+  cursor: pointer;
   margin-left: 10px;
   padding-left: 5px;
   padding-right: 5px;
@@ -920,20 +930,23 @@ body {
   transition: all 0.3s;
 }
 #notifications-toggle img {
-  margin-top: 0;
-  margin-left: 0;
+  padding: 0;
+  margin: 0;
 }
 .active #notifications-toggle {
-  background: rgba(100,100,100,0.3);
+  background: rgba(20,20,22,0.3);
+  height: 48px;
+  line-height: 48px;
   cursor: pointer;
-  -webkit-box-shadow: inset 2px 2px 2px #777;
-  box-shadow: inset 2px 2px 2px #777;
+  -webkit-box-shadow: inset 2px 2px 2px #000;
+  box-shadow: inset 2px 2px 2px #000;
 }
 #notifications-container {
   position: relative;
 }
 #notifications-container a {
   width: 20px;
+  color: #363a46;
 }
 #notifications-container .badge {
   padding: 1px 2px 1px 3px;
@@ -989,6 +1002,7 @@ body {
 #notifications-container #notifications .notification:hover a.dismiss {
   cursor: pointer;
   display: inline;
+  color: #363a46;
 }
 #notifications-container #notifications .notification:hover a.dismiss:hover {
   opacity: 1;
@@ -1008,6 +1022,7 @@ body {
   float: left;
   line-height: 20px;
   padding: 5px;
+  color: #363a46;
   max-width: 360px;
   width: 360px;
 }
@@ -1120,6 +1135,9 @@ body {
   margin-top: 30px;
   width: 80%;
   background: #f7f4f0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-bottom: 20px;
 }
 #no-app-message #start-title {
   padding: 20px;
@@ -1192,8 +1210,6 @@ body {
   background: #f7f4f0;
   float: left;
   width: 99%;
-  height: 140px;
-  margin-top: 20px;
 }
 #your-app p {
   margin-bottom: 0;
@@ -1221,9 +1237,10 @@ body {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
-  max-width: 500px;
-  margin-right: 20px;
+  max-width: 615px;
+  margin-top: 10px;
   font-size: 0.8em;
+  padding: 5px;
 }
 #app-market-list {
   -webkit-box-sizing: border-box;
@@ -1284,6 +1301,7 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
+  text-align: left;
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {
@@ -1593,7 +1611,6 @@ body {
     margin-bottom: 10px;
   }
   #market-view #your-app {
-    height: 180px;
     margin-right: 0;
     width: 100%;
   }
@@ -1664,9 +1681,6 @@ body {
   }
 }
 @media (max-width: 500px) {
-  #market-view #your-app {
-    height: 180px;
-  }
   #market-view #your-app .btn {
     height: 30px;
   }
