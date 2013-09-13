@@ -1121,7 +1121,10 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">Your parameters</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">');
+  var __val__ = t(' Your parameters')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
   var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><input id="account-email-field"/><button class="btn">');
@@ -1142,7 +1145,13 @@ window.require.register("templates/account", function(exports, require, module) 
   buf.push('</button></div><div class="input"><p>');
   var __val__ = t('Chose the language you want I use to speak with you:')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><select id="account-locale-field"><option value="French">French</option><option value="English">English</option></select><button class="btn">');
+  buf.push('</p><select id="account-locale-field"><option value="French">');
+  var __val__ = t('French')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</option><option value="English">');
+  var __val__ = t('English')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</option></select><button class="btn">');
   var __val__ = t('save')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><p><button id="change-password-button" class="btn">');
@@ -1196,13 +1205,25 @@ window.require.register("templates/config_application", function(exports, requir
   buf.push('<div class="clearfix"><div class="mod left"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
   if ( app.state === 'installed')
   {
-  buf.push('<span class="state-label"> \nrunning</span>');
+  buf.push('<span class="state-label">');
+  var __val__ = t('running')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span>');
   }
   else
   {
   buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
   }
-  buf.push('</div><div class="mod right"><button class="btn remove-app">remove</button></div><div class="mod right"> <button class="btn update-app">update</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">stop this app</button></div></div>');
+  buf.push('</div><div class="mod right"><button class="btn remove-app">');
+  var __val__ = t('remove')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
+  var __val__ = t('update')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
+  var __val__ = t('stop this app')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div></div>');
   }
   return buf.join("");
   };
@@ -1223,7 +1244,19 @@ window.require.register("templates/config_applications", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>Hardware consumption</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>&nbsp;GB (Hard Drive)</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>&nbsp;MB (RAM)</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">Manage your applications</h4></div></div></div>');
+  buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>');
+  var __val__ = t('Hardware consumption')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>');
+  var __val__ = t('&nbsp;GB (Hard Drive)')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
+  var __val__ = t('&nbsp;MB (RAM)')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
+  var __val__ = t('Manage your applications')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4></div></div></div>');
   }
   return buf.join("");
   };
@@ -1234,7 +1267,22 @@ window.require.register("templates/help", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">Do you look for assistance?</h4><div class="line pa2"><p class="help-text mt2">Write an email to our support team at:</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc/</a></P><p class="help-text">Register and post on our forum: </p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">Ask your question on Twitter: </p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">Visit the project website and learn to build your app:</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
+  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">');
+  var __val__ = t('Do you look for assistance?')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4><div class="line pa2"><p class="help-text mt2">');
+  var __val__ = t('Write an email to our support team at:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
+  var __val__ = t('Register and post on our forum: ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">');
+  var __val__ = t('Ask your question on Twitter: ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
+  var __val__ = t('Visit the project website and learn to build your app:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
   }
   return buf.join("");
   };
@@ -1245,7 +1293,31 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">Welcome to your Cozy!</p></div><div class="line"><p class="bigger pa2">You have no application installed. You\nshould&nbsp;<a href="#account">configure </a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>Home&nbsp;</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>App management&nbsp;</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>App store&nbsp;</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>Configuration&nbsp;</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>Assistance&nbsp;</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+  var __val__ = t('Welcome to your Cozy!')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p></div><div class="line"><p class="bigger pa2">');
+  var __val__ = t('You have no application installed. You should')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('<a href="#account">');
+  var __val__ = t('configure ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>');
+  var __val__ = t('Home')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>');
+  var __val__ = t('App management')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>');
+  var __val__ = t('App store')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>');
+  var __val__ = t('Configuration')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>');
+  var __val__ = t('Assistance')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1269,7 +1341,22 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>your cozy home </span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>manage your apps</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>chose your apps</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>configure your cozy</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>ask for assistance</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>');
+  var __val__ = t('your cozy home')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
+  var __val__ = t('manage your apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
+  var __val__ = t('chose your apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+  var __val__ = t('configure your cozy')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
+  var __val__ = t('ask for assistance')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -1283,7 +1370,13 @@ window.require.register("templates/market", function(exports, require, module) {
   buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">your own application</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">install</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
+  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">');
+  var __val__ = t('your own application')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
+  var __val__ = t('install')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</div></div></div><div class="md-overlay"></div>');
@@ -1346,7 +1439,10 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>logout</span><img src="img/logout-white.png"/></a></div>');
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>');
+  var __val__ = t('logout')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/logout-white.png"/></a></div>');
   }
   return buf.join("");
   };
@@ -1404,7 +1500,13 @@ window.require.register("templates/popover_description", function(exports, requi
   buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
   buf.push('>&nbsp;</a><a');
   buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
-  buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">install</button><button id="cancelbtn" class="btn light-btn right">cancel </button></div></div>');
+  buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
+  var __val__ = t('install')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
+  var __val__ = t('cancel')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div></div>');
   }
   return buf.join("");
   };
@@ -1415,7 +1517,10 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="md-header mt2">Once updated, this application will require the following permissions:</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
+  buf.push('<div class="md-header mt2">');
+  var __val__ = t('Once updated, this application will require the following permissions:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
   var __val__ = t('confirm update')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a><a id="cancelbtn" class="btn light-btn right">');
@@ -1554,7 +1659,7 @@ window.require.register("views/account", function(exports, require, module) {
           } else {
             saveButton.addClass('green');
             saveButton.html('saved');
-            alert('Changing the locale requires to reload the page.');
+            alert(t('Changing the locale requires to reload the page.'));
             if (fieldName === 'locale') {
               window.location.reload();
             }
@@ -1589,7 +1694,7 @@ window.require.register("views/account", function(exports, require, module) {
       return $.get("api/instances/", function(data) {
         var domain, instance, locale, saveDomain, saveLocale, _ref;
         instance = (_ref = data.rows) != null ? _ref[0] : void 0;
-        domain = (instance != null ? instance.domain : void 0) || 'no.domain.set';
+        domain = (instance != null ? instance.domain : void 0) || t('no.domain.set');
         locale = (instance != null ? instance.locale : void 0) || 'en';
         saveDomain = _this.getSaveFunction('domain', _this.domainField, 'instance');
         _this.domainField.on('keyup', function(event) {
@@ -1747,7 +1852,7 @@ window.require.register("views/config_application", function(exports, require, m
           this.icon.attr('src', "img/installing.gif");
           this.icon.removeClass('stopped');
           this.stateLabel.show().text('installing');
-          this.removeButton.displayGrey('abort');
+          this.removeButton.displayGrey(t('abort'));
           this.updateButton.hide();
           return this.startStopBtn.hide();
         case 'stopped':
@@ -1770,8 +1875,7 @@ window.require.register("views/config_application", function(exports, require, m
           return _this.$('.app-stoppable').attr('checked', !bool);
         },
         error: function() {
-          _this.$('.app-stoppable').attr('checked', bool);
-          return alert('oh no !');
+          return _this.$('.app-stoppable').attr('checked', bool);
         }
       });
     };
@@ -1822,7 +1926,7 @@ window.require.register("views/config_application", function(exports, require, m
         return this.model.stop({
           success: function() {
             _this.startStopBtn.spin(false);
-            _this.stateLabel.html('stopped');
+            _this.stateLabel.html(t('stopped'));
             return Backbone.Mediator.pub('app-state-changed', true);
           },
           error: function() {
@@ -1833,7 +1937,7 @@ window.require.register("views/config_application", function(exports, require, m
         return this.model.start({
           success: function() {
             _this.startStopBtn.spin(false);
-            _this.stateLabel.html('started');
+            _this.stateLabel.html(t('started'));
             return Backbone.Mediator.pub('app-state-changed', true);
           },
           error: function() {
@@ -1859,6 +1963,8 @@ window.require.register("views/config_application", function(exports, require, m
 
     ApplicationRow.prototype.updateApp = function() {
       var _this = this;
+      this.updateButton.displayRed(t("installing"));
+      Backbone.Mediator.pub('app-state-changed', true);
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
       this.updateButton.spin(false);
       return this.updateButton.spin(true, {
@@ -1919,7 +2025,7 @@ window.require.register("views/config_application_list", function(exports, requi
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {
-      return this.$el.append('There is no application installed.');
+      return this.$el.append(t('There is no application installed.'));
     };
 
     return ApplicationsListView;
@@ -1969,7 +2075,7 @@ window.require.register("views/config_applications", function(exports, require, 
       this.$('.total').spin('small');
       return request.get('api/sys-data', function(err, data) {
         if (err) {
-          return alert('Server error occured, infos cannot be displayed.');
+          return alert(t('Server error occured, infos cannot be displayed.'));
         } else {
           _this.$('.amount').spin();
           _this.$('.total').spin();
@@ -2062,10 +2168,6 @@ window.require.register("views/home", function(exports, require, module) {
 
 
     function ApplicationsListView(apps) {
-      this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
-
-      this.onAddClicked = __bind(this.onAddClicked, this);
-
       this.appendView = __bind(this.appendView, this);
 
       this.afterRender = __bind(this.afterRender, this);
@@ -2111,54 +2213,6 @@ window.require.register("views/home", function(exports, require, module) {
       if (this.isManaging) {
         return view.$el.find(".application-outer").css('display', 'block');
       }
-    };
-
-    /* Listeners
-    */
-
-
-    ApplicationsListView.prototype.onAddClicked = function(event) {
-      event.preventDefault();
-      return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('market', true) : void 0;
-    };
-
-    ApplicationsListView.prototype.onManageAppsClicked = function(event) {
-      var _this = this;
-      event.preventDefault();
-      if (!this.machineInfos.is(':visible')) {
-        this.$('.application-outer').show();
-        this.machineInfos.find('.progress').spin();
-        this.manageAppsButton.addClass('pressed');
-        client.get('api/sys-data', {
-          success: function(data) {
-            _this.machineInfos.find('.progress').spin();
-            _this.displayMemory(data.freeMem, data.totalMem);
-            return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
-          },
-          error: function() {
-            _this.machineInfos.find('.progress').spin();
-            return alert('Server error occured, infos cannot be displayed.');
-          }
-        });
-      } else {
-        this.$('.application-outer').hide();
-        this.manageAppsButton.removeClass('pressed');
-      }
-      this.machineInfos.toggle();
-      return this.isManaging = !this.isManaging;
-    };
-
-    ApplicationsListView.prototype.displayMemory = function(freeMem, totalMem) {
-      var total, usedMemory;
-      total = Math.floor(totalMem / 1024) + "Mo";
-      this.machineInfos.find('.memory .total').html(total);
-      usedMemory = ((totalMem - freeMem) / totalMem) * 100;
-      return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
-    };
-
-    ApplicationsListView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
-      this.machineInfos.find('.disk .total').html(totalSpace + "Go");
-      return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
     };
 
     return ApplicationsListView;
@@ -2408,27 +2462,27 @@ window.require.register("views/main", function(exports, require, module) {
 
     HomeView.prototype.displayApplicationsList = function() {
       this.displayView(this.applicationListView);
-      return window.document.title = "Cozy - Home";
+      return window.document.title = t("Cozy - Home");
     };
 
     HomeView.prototype.displayMarket = function() {
       this.displayView(this.marketView);
-      return window.document.title = "Cozy - Market";
+      return window.document.title = t("Cozy - App Store");
     };
 
     HomeView.prototype.displayAccount = function() {
       this.displayView(this.accountView);
-      return window.document.title = 'Cozy - Account';
+      return window.document.title = t('Cozy - Account');
     };
 
     HomeView.prototype.displayHelp = function() {
       this.displayView(this.helpView);
-      return window.document.title = "Cozy - Help";
+      return window.document.title = t("Cozy - Help");
     };
 
     HomeView.prototype.displayConfigApplications = function() {
       this.displayView(this.configApplications);
-      return window.document.title = "Cozy - Applications configuration";
+      return window.document.title = t("Cozy - Applications configuration");
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
@@ -2738,7 +2792,7 @@ window.require.register("views/market", function(exports, require, module) {
       if (parsed == null) {
         error = {
           error: true,
-          msg: "Git url should be of form https://.../my-repo.git"
+          msg: t("Git url should be of form https://.../my-repo.git")
         };
         return error;
       }
@@ -3055,8 +3109,6 @@ window.require.register("views/notification_view", function(exports, require, mo
 
     NotificationView.prototype.doaction = function() {
       var action, url;
-      console.log("action");
-      console.log(this.model);
       action = this.model.get('resource');
       if (action == null) {
         action = {
@@ -3270,7 +3322,6 @@ window.require.register("views/popover_description", function(exports, require, 
     PopoverDescriptionView.prototype.afterRender = function() {
       var renderDesc,
         _this = this;
-      console.log(this.model);
       this.model.set("description", "");
       this.body = this.$(".md-body");
       this.header = this.$(".md-header h3");
@@ -3298,10 +3349,10 @@ window.require.register("views/popover_description", function(exports, require, 
       description = this.model.get("description");
       this.header.append("<p> " + description + " </p>");
       if (Object.keys(this.model.get("permissions")).length === 0) {
-        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
+        permissionsDiv = $("<div class='permissionsLine'> <h4>" + (t('This application does not need specific permissions')) + " </h4> </div>");
         this.body.append(permissionsDiv);
       } else {
-        this.body.append('<h4>Required permissions</h4>');
+        this.body.append("<h4>" + (t('Required permissions')) + "</h4>");
         _ref = this.model.get("permissions");
         for (docType in _ref) {
           permission = _ref[docType];
@@ -3409,7 +3460,7 @@ window.require.register("views/popover_permissions", function(exports, require, 
       this.body.hide();
       this.body.html('');
       if (Object.keys(this.model.get("permissions")).length === 0) {
-        permissionsDiv = $("<div class='permissionsLine'> <strong> This application does not need specific permissions </strong> </div>");
+        permissionsDiv = $("<div class='permissionsLine'> <strong>" + (t('This application does not need specific permissions')) + " </strong> </div>");
         this.body.append(permissionsDiv);
       } else {
         _ref = this.model.get("permissions");

@@ -5,12 +5,10 @@
   .darkbg#start-title.clearfix
     a(href="http://cozy.io")
         img.logo(src="img/happycloud.png")
-    p.biggest Welcome to your Cozy!
+    p.biggest= t('Welcome to your Cozy!')
   .line
-    p.bigger.pa2
-        | You have no application installed. You
-        | should&nbsp;
-        a(href="#account") configure 
+    p.bigger.pa2= t('You have no application installed. You should')
+        a(href="#account")= t('configure ')
         | your Cozy then install your first application 
         | via the&nbsp;
         a(href="#applications") app store
@@ -21,26 +19,26 @@
         | the menu located on the top right corner.
     p
         img(src="/img/home-black.png")
-        strong Home&nbsp;
+        strong=t('Home')
         | It is the place from where you can reach your applications
     p
         img(src="/img/config-apps.png")
-        strong App management&nbsp;
+        strong=t('App management')
         | There you can manage the state of your applications: start it,
         | stop it, remove it...
     p
         img(src="/img/apps.png")
-        strong App store&nbsp;
+        strong=t('App store')
         | In the app store, you will find new applications to install on your
         | Cozy.
     p
         img(src="/img/configuration.png")
-        strong Configuration&nbsp;
+        strong=t('Configuration')
         | To work properly your Cozy requires several parameters. Set them in
         | this section.
     p
         img(src="/img/help.png")
-        strong Assistance&nbsp;
+        strong=t('Assistance')
         | You will find here some links to assistance resources.
 
 #app-list

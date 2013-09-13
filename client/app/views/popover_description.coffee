@@ -18,7 +18,6 @@ module.exports = class PopoverDescriptionView extends BaseView
         @cancelCallback = options.cancel
 
     afterRender: ->
-        console.log @model
         @model.set "description", ""
         @body = @$ ".md-body"
         @header = @$ ".md-header h3"
@@ -45,10 +44,10 @@ module.exports = class PopoverDescriptionView extends BaseView
         @header.append "<p> #{description} </p>"
 
         if Object.keys(@model.get("permissions")).length is 0
-            permissionsDiv = $ "<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>"
+            permissionsDiv = $ "<div class='permissionsLine'> <h4>#{t('This application does not need specific permissions')} </h4> </div>"
             @body.append permissionsDiv
         else
-            @body.append '<h4>Required permissions</h4>'
+            @body.append "<h4>#{t('Required permissions')}</h4>"
             for docType, permission of @model.get("permissions")
                 permissionsDiv = $ "<div class='permissionsLine'> <strong> #{docType} </strong> <p> #{permission.description} </p> </div>"
                 @body.append permissionsDiv

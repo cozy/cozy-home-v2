@@ -1,7 +1,7 @@
 //.section-title.darkbg.bigger config
 
 
-h4.pa2.w600.biggest.darkbg.center Your parameters
+h4.pa2.w600.biggest.darkbg.center= t(' Your parameters')
 #account-form.lightgrey.w600.pa2
     .input
         p= t('I need your email to send you alerts or for password recovering')
@@ -19,8 +19,8 @@ h4.pa2.w600.biggest.darkbg.center Your parameters
     .input
         p= t('Chose the language you want I use to speak with you:')
         select#account-locale-field
-            option(value="French") French
-            option(value="English") English
+            option(value="French")= t('French')
+            option(value="English")= t('English')
         button.btn= t('save')
 
     p

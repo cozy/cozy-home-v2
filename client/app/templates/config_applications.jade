@@ -4,7 +4,7 @@
         .mod.w33.left
             .sys-infos.line
                 .mod.center-txt
-                    h4 Hardware consumption
+                    h4= t('Hardware consumption')
                     .disk-space.mt2
                         .line
                             img(src="img/hard-drive.png")
@@ -12,7 +12,7 @@
                             span.amount 0
                             span &nbsp;/&nbsp;
                             span.total 0
-                            span &nbsp;GB (Hard Drive)
+                            span= t('&nbsp;GB (Hard Drive)')
                     .memory-free.mt2
                         .line 
                             img(src="img/ram.png")
@@ -20,6 +20,6 @@
                             span.amount 0
                             span &nbsp;/&nbsp;
                             span.total 0&nbsp;
-                            span &nbsp;MB (RAM)
+                            span= t('&nbsp;MB (RAM)')
         .mod.w66.left
-            h4.mb3 Manage your applications
+            h4.mb3= t('Manage your applications')

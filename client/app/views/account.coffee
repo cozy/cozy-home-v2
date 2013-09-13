@@ -89,7 +89,7 @@ module.exports = class exports.AccountView extends BaseView
                 else
                     saveButton.addClass 'green'
                     saveButton.html 'saved'
-                    alert 'Changing the locale requires to reload the page.'
+                    alert t 'Changing the locale requires to reload the page.'
                     window.location.reload() if fieldName is 'locale'
                     setTimeout ->
                         window.location.reload() if fieldName is 'locale'
@@ -118,7 +118,7 @@ module.exports = class exports.AccountView extends BaseView
 
         $.get "api/instances/", (data) =>
             instance = data.rows?[0]
-            domain = instance?.domain or 'no.domain.set'
+            domain = instance?.domain or t('no.domain.set')
             locale = instance?.locale or 'en'
 
             saveDomain = @getSaveFunction 'domain', @domainField, 'instance'

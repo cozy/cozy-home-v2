@@ -24,7 +24,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @$('.total').spin 'small'
         request.get 'api/sys-data', (err, data) =>
             if err
-                alert 'Server error occured, infos cannot be displayed.'
+                alert t 'Server error occured, infos cannot be displayed.'
             else
                 @$('.amount').spin()
                 @$('.total').spin()

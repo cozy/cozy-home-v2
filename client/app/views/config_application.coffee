@@ -53,7 +53,7 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "img/installing.gif"
                 @icon.removeClass 'stopped'
                 @stateLabel.show().text 'installing'
-                @removeButton.displayGrey 'abort'
+                @removeButton.displayGrey t 'abort'
                 @updateButton.hide()
                 @startStopBtn.hide()
             when 'stopped'
@@ -69,7 +69,6 @@ module.exports = class ApplicationRow extends BaseView
             success: => @$('.app-stoppable').attr 'checked', !bool
             error: =>
                 @$('.app-stoppable').attr 'checked', bool
-                alert 'oh no !'
 
     onRemoveClicked: (event) =>
         event.preventDefault()
@@ -105,7 +104,7 @@ module.exports = class ApplicationRow extends BaseView
             @model.stop
                 success: =>
                     @startStopBtn.spin false
-                    @stateLabel.html 'stopped'
+                    @stateLabel.html t 'stopped'
                     Backbone.Mediator.pub 'app-state-changed', true
                 error: =>
                     @startStopBtn.spin false
@@ -114,7 +113,7 @@ module.exports = class ApplicationRow extends BaseView
             @model.start
                 success: =>
                     @startStopBtn.spin false
-                    @stateLabel.html 'started'
+                    @stateLabel.html t 'started'
                     Backbone.Mediator.pub 'app-state-changed', true
                 error: =>
                     @startStopBtn.spin false
@@ -129,6 +128,8 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
+        @updateButton.displayRed t "installing"
+        Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateButton.spin false
         @updateButton.spin true

@@ -13,8 +13,6 @@ module.exports = class NotificationView extends BaseView
         @listenTo @model, 'change', @render
 
     doaction: ->
-        console.log "action"
-        console.log @model
         action = @model.get 'resource'
         action = app: home unless action?
 

@@ -149,7 +149,7 @@ module.exports = class MarketView extends BaseView
         unless parsed?
             error =
                 error: true
-                msg:"Git url should be of form https://.../my-repo.git"
+                msg: t "Git url should be of form https://.../my-repo.git"
             return error
 
         [git, proto, domain, path, branch] = parsed

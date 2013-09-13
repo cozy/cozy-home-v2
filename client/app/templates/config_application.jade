@@ -3,17 +3,16 @@
         strong #{app.name}
         span &nbsp;-&nbsp;
         if app.state === 'installed'
-            span.state-label 
-                | running
+            span.state-label= t('running')
         else
             span.state-label 
                 | #{app.state}
     .mod.right
-        button.btn.remove-app remove
+        button.btn.remove-app= t('remove')
     .mod.right 
-        button.btn.update-app update
+        button.btn.update-app= t('update')
     .mod.right
-        button.btn.btn-large.start-stop-btn stop this app
+        button.btn.btn-large.start-stop-btn= t('stop this app')
     //-.mod.right.smaller
         //-input(class="app-stoppable",
               //-type="checkbox",
