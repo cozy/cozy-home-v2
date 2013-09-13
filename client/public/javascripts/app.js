@@ -1851,7 +1851,7 @@ window.require.register("views/config_application", function(exports, require, m
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
           this.icon.removeClass('stopped');
-          this.stateLabel.show().text('installing');
+          this.stateLabel.show().text(t('installing'));
           this.removeButton.displayGrey(t('abort'));
           this.updateButton.hide();
           return this.startStopBtn.hide();
@@ -2140,14 +2140,6 @@ window.require.register("views/home", function(exports, require, module) {
 
   ApplicationRow = require('views/home_application');
 
-  String.prototype.startsWith = function(prefix) {
-    return this.indexOf(prefix, 0) === 0;
-  };
-
-  String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-  };
-
   module.exports = ApplicationsListView = (function(_super) {
 
     __extends(ApplicationsListView, _super);
@@ -2158,11 +2150,6 @@ window.require.register("views/home", function(exports, require, module) {
 
     ApplicationsListView.prototype.itemView = require('views/home_application');
 
-    ApplicationsListView.prototype.events = {
-      'click #add-app-button': 'onAddClicked',
-      'click #manage-app-button': 'onManageAppsClicked'
-    };
-
     /* Constructor
     */
 
@@ -2172,7 +2159,6 @@ window.require.register("views/home", function(exports, require, module) {
 
       this.afterRender = __bind(this.afterRender, this);
       this.apps = apps;
-      this.isManaging = false;
       ApplicationsListView.__super__.constructor.call(this, {
         collection: apps
       });
@@ -2181,8 +2167,6 @@ window.require.register("views/home", function(exports, require, module) {
     ApplicationsListView.prototype.afterRender = function() {
       var _this = this;
       this.appList = this.$("#app-list");
-      this.manageAppsButton = this.$("#manage-app-button");
-      this.addApplicationButton = this.$("#add-app-button");
       this.machineInfos = this.$(".machine-infos").hide();
       this.$("#no-app-message").hide();
       return $(".menu-btn a").click(function(event) {
@@ -2209,10 +2193,7 @@ window.require.register("views/home", function(exports, require, module) {
 
     ApplicationsListView.prototype.appendView = function(view) {
       this.appList.append(view.el);
-      view.$el.hide().fadeIn();
-      if (this.isManaging) {
-        return view.$el.find(".application-outer").css('display', 'block');
-      }
+      return view.$el.hide().fadeIn();
     };
 
     return ApplicationsListView;
@@ -2776,7 +2757,10 @@ window.require.register("views/market", function(exports, require, module) {
             _this.resetForm();
           }
           _this.installedApps.add(application);
-          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+          if (typeof app !== "undefined" && app !== null) {
+            app.routers.main.navigate('home', true);
+          }
+          return typeof app !== "undefined" && app !== null ? app.mainView.applicationListView.displayNoAppMessage() : void 0;
         },
         error: function(jqXHR) {
           return alert(t(JSON.parse(jqXHR.responseText).message));

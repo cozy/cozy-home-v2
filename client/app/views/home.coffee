@@ -3,11 +3,6 @@ client = require 'helpers/client'
 ApplicationRow = require 'views/home_application'
 
 
-String::startsWith = (prefix) ->
-     @indexOf(prefix, 0) is 0
-
-String::endsWith = (suffix) ->
-     @indexOf(suffix, @length - suffix.length) isnt -1
 
 # View describing main screen for user once he is logged
 module.exports = class ApplicationsListView extends ViewCollection
@@ -15,22 +10,15 @@ module.exports = class ApplicationsListView extends ViewCollection
     template: require 'templates/home'
     itemView: require 'views/home_application'
 
-    events:
-        'click #add-app-button': 'onAddClicked'
-        'click #manage-app-button': 'onManageAppsClicked'
-
     ### Constructor ###
 
     constructor: (apps) ->
         @apps = apps
-        @isManaging = false
 
         super collection: apps
 
     afterRender: =>
         @appList = @$ "#app-list"
-        @manageAppsButton = @$ "#manage-app-button"
-        @addApplicationButton = @$ "#add-app-button"
         @machineInfos = @$(".machine-infos").hide()
         @$("#no-app-message").hide()
         $(".menu-btn a").click (event) =>
@@ -49,5 +37,3 @@ module.exports = class ApplicationsListView extends ViewCollection
     appendView: (view) =>
         @appList.append view.el
         view.$el.hide().fadeIn()
-        if @isManaging
-            view.$el.find(".application-outer").css 'display', 'block'
