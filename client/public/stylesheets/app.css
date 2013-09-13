@@ -1483,6 +1483,8 @@ body {
 }
 .md-header h3 {
   color: #fff;
+  margin-bottom: 0px;
+  margin-top: 10px;
 }
 .md-header img {
   width: 32px;
@@ -1491,7 +1493,9 @@ body {
   padding-top: 30px;
 }
 .md-header p {
+  margin-top: 0px;
   font-size: 18px;
+  color: #fff;
 }
 .md-header a {
   color: #fff;
@@ -1513,7 +1517,7 @@ body {
   filter: none;
 }
 .md-header .repo-stars {
-  right: 55px;
+  right: 60px;
   padding-top: 3px;
   position: absolute;
 }
@@ -1549,6 +1553,29 @@ body {
   }
 }
 @media (max-width: 800px) {
+  .md-content {
+    overflow: auto;
+  }
+  .md-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateX(0) translateY(0);
+    -moz-transform: translateX(0) translateY(0);
+    -o-transform: translateX(0) translateY(0);
+    -ms-transform: translateX(0) translateY(0);
+    transform: translateX(0) translateY(0);
+    margin: 0;
+    padding: 0;
+  }
   .section-title {
     display: none;
   }

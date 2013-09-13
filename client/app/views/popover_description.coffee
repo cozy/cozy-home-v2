@@ -41,7 +41,7 @@ module.exports = class PopoverDescriptionView extends BaseView
         @$('.repo-stars').html @model.get('stars')
 
         description = @model.get "description"
-        @header.append "<p> #{description} </p>"
+        @header.parent().append "<p class=\"line left\"> #{description} </p>"
 
         if Object.keys(@model.get("permissions")).length is 0
             permissionsDiv = $ "<div class='permissionsLine'> <h4>#{t('This application does not need specific permissions')} </h4> </div>"

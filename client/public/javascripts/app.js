@@ -3347,7 +3347,7 @@ window.require.register("views/popover_description", function(exports, require, 
       this.body.html("");
       this.$('.repo-stars').html(this.model.get('stars'));
       description = this.model.get("description");
-      this.header.append("<p> " + description + " </p>");
+      this.header.parent().append("<p class=\"line left\"> " + description + " </p>");
       if (Object.keys(this.model.get("permissions")).length === 0) {
         permissionsDiv = $("<div class='permissionsLine'> <h4>" + (t('This application does not need specific permissions')) + " </h4> </div>");
         this.body.append(permissionsDiv);
