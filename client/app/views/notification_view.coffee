@@ -14,8 +14,8 @@ module.exports = class NotificationView extends BaseView
 
     doaction: ->
         action = @model.get 'resource'
-        action = app: home unless action?
-
+        unless action?
+            action = app: home
         if typeof action is 'string'
             url = action
         else if action.app?
