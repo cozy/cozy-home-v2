@@ -18,3 +18,7 @@ http://cozycloud.cc
 
 # Cozy on IRC
 Feel free to check out our IRC channel (#cozycloud on irc.freenode.org) if you have any technical issues/inquiries or simply to speak about Cozy cloud in general.
+
+## Icons
+
+by [iconmonstr](http://iconmonstr.com/)
