@@ -63,9 +63,9 @@ module.exports =
         """
 
 
-    "your cozy home":"votr cozy home"
+    "your cozy home":"votre accueil Cozy"
     "manage your apps":"gérer vos apps"
-    "chose your apps":"choisissezrvos apps"
+    "chose your apps":"choisissez vos apps"
     "configure your cozy":"configurer votre cozy"
     "ask for assistance":"demandez de l'aide"
     "logout":"déconnexion"
@@ -93,12 +93,11 @@ module.exports =
         Votre timezone est require pour vous afficher les dates correctements.
     """
     "The domain name is used to build urls send via email to you or your contacts":"""
-        The domain name is used to build urls send via email to you or your contacts
-        Le nom de domaine que tu utilises est utilisé pour construire les urls
+        Le nom de domaine est utilisé pour construire les urls
         envoyées par mail à vos contacts.
     """
     "Chose the language you want I use to speak with you:":"""
-        Choisis la langue que tu veux que j'utilises pour te parler.
+        Choisissez la langue que vous voulez que j'utilise pour vous parler.
     """
     "French":"Français"
     "English":"Anglais"
@@ -109,8 +108,8 @@ module.exports =
     "confirm your new password":"confirmez votre nouveau mot de passe"
     "save your new password":"sauvegarder votre nouveau mot de passe"
     "Do you look for assistance?":"Est-ce que vous cherchez de l'aide ?"
-    "Write an email to our support team at:":"Ecrire un email à notre équipe support:"
-    "Register and post on our forum: ":"S'enregistrer et poster sur notre forum: "
+    "Write an email to our support team at:":"Ecrivez un email à notre équipe support:"
+    "Register and post on our forum: ":"Postez un message sur notre forum: "
     "Ask your question on Twitter: ":"Posez votre question sur Twitter: "
     "Visit the project website and learn to build your app:":"""
         Visitez le site du projet et apprenez à construire des applications.

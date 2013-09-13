@@ -129,7 +129,6 @@ module.exports = class exports.AccountView extends BaseView
 
             saveLocale = @getSaveFunction 'locale', @localeField, 'instance'
             @localeField.change saveLocale
-            #@localeField.val locales[locale]
             @localeField.val locale
 
             # Don't know why password fields can't be configured too early...

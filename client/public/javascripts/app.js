@@ -921,9 +921,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed-everything": "Vous avez déjà tout installé !",
     "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire.",
-    "your cozy home": "votr cozy home",
+    "your cozy home": "votre accueil Cozy",
     "manage your apps": "gérer vos apps",
-    "chose your apps": "choisissezrvos apps",
+    "chose your apps": "choisissez vos apps",
     "configure your cozy": "configurer votre cozy",
     "ask for assistance": "demandez de l'aide",
     "logout": "déconnexion",
@@ -944,8 +944,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     " Your parameters": " Vos paramètres",
     "I need your email to send you alerts or for password recovering": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
     "Your timezone is required to display dates properly": "Votre timezone est require pour vous afficher les dates correctements.",
-    "The domain name is used to build urls send via email to you or your contacts": "The domain name is used to build urls send via email to you or your contacts\nLe nom de domaine que tu utilises est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
-    "Chose the language you want I use to speak with you:": "Choisis la langue que tu veux que j'utilises pour te parler.",
+    "The domain name is used to build urls send via email to you or your contacts": "Le nom de domaine est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
+    "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
     "French": "Français",
     "English": "Anglais",
     "Change password procedure": "Procédure de changement de mot de passe",
@@ -955,8 +955,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "confirm your new password": "confirmez votre nouveau mot de passe",
     "save your new password": "sauvegarder votre nouveau mot de passe",
     "Do you look for assistance?": "Est-ce que vous cherchez de l'aide ?",
-    "Write an email to our support team at:": "Ecrire un email à notre équipe support:",
-    "Register and post on our forum: ": "S'enregistrer et poster sur notre forum: ",
+    "Write an email to our support team at:": "Ecrivez un email à notre équipe support:",
+    "Register and post on our forum: ": "Postez un message sur notre forum: ",
     "Ask your question on Twitter: ": "Posez votre question sur Twitter: ",
     "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
     "your own application": "votre propre application",
@@ -1255,10 +1255,10 @@ window.require.register("templates/account", function(exports, require, module) 
   buf.push('</button></div><div class="input"><p>');
   var __val__ = t('Chose the language you want I use to speak with you:')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><select id="account-locale-field"><option value="French">');
+  buf.push('</p><select id="account-locale-field"><option value="fr">');
   var __val__ = t('French')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</option><option value="English">');
+  buf.push('</option><option value="en">');
   var __val__ = t('English')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</option></select><button class="btn">');
