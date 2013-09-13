@@ -813,7 +813,52 @@ window.require.register("locales/en", function(exports, require, module) {
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
     "installed-everything": "You have already installed everything !",
-    "There is already an app with similar name": "There is already an app with similar name."
+    "There is already an app with similar name": "There is already an app with similar name.",
+    "your cozy home": "your cozy home",
+    "manage your apps": "manage your app",
+    "chose your apps": "chose your apps",
+    "configure your cozy": "configure your cozy",
+    "ask for assistance": "ask for assistance",
+    "logout": "logout",
+    "dismiss all": "dismiss all",
+    "Welcome to your Cozy!": "Welcome to your Cozy!",
+    "You have no application installed. You should": "You have no application installed. You should",
+    "configure ": "configure ",
+    "App management": "App management",
+    "App store": "App store",
+    "Configuration": "Configuration",
+    "Assistance": "Assistance",
+    "Hardware consumption": "Hardware consumption",
+    "&nbsp;GB (Hard Drive)": "&nbsp;GB (Hard Drive)",
+    "&nbsp;MB (RAM)": "&nbsp;MB (RAM)",
+    "Manage your applications": "Manage your applications",
+    "There is no application installed.": "There is no application installed.",
+    " Your parameters": " Your parameters",
+    "I need your email to send you alerts or for password recovering": "I need your email to send you alerts or for password recovering",
+    "Your timezone is required to display dates properly": "Your timezone is required to display dates properly",
+    "The domain name is used to build urls send via email to you or your contacts": "The domain name is used to build urls send via email to you or your contacts",
+    "save": "save",
+    "Chose the language you want I use to speak with you:": "Chose the language you want I use to speak with you:",
+    "French": "French",
+    "English": "English",
+    "Change password procedure": "Change password procedure",
+    "current password": "current password",
+    "enter a new password": "enter a new password",
+    "new password": "new password",
+    "confirm your new password": "confirm your new password",
+    "save your new password": "save your new password",
+    "Do you look for assistance?": "Do you look for assistance?",
+    "Write an email to our support team at:": "Write an email to our support team at:",
+    "Register and post on our forum: ": "Register and post on our forum: ",
+    "Ask your question on Twitter: ": "Ask your question on Twitter: ",
+    "Visit the project website and learn to build your app:": "Visit the project website and learn to build your app:",
+    "your own application": "your own application",
+    "install": "install",
+    "broken": "broken",
+    "retry to install": "retry to install",
+    "Cozy - Account": "Cozy - Account",
+    "Cozy - App Store": "Cozy - App Store",
+    "Cozy - Home": "Cozy - Home"
   };
   
 });
@@ -865,7 +910,52 @@ window.require.register("locales/fr", function(exports, require, module) {
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed-everything": "Vous avez déjà tout installé !",
-    "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire."
+    "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire.",
+    "your cozy home": "votr cozy home",
+    "manage your apps": "gérer vos apps",
+    "chose your apps": "choisissezrvos apps",
+    "configure your cozy": "configurer votre cozy",
+    "ask for assistance": "demandez de l'aide",
+    "logout": "déconnexion",
+    "dismiss all": "tout enlever",
+    "Welcome to your Cozy!": "Bienvenue sur votre Cozy!",
+    "You have no application installed. You should": "Vous n'avez pas d'applications installées vous devriez",
+    "configure ": "configurer ",
+    "App management": "Gestion des apps",
+    "App store": "App store",
+    "Configuration": "Configuration",
+    "Assistance": "Aide",
+    "Hardware consumption": "Consommation Hardware",
+    "&nbsp;GB (Hard Drive)": "&nbsp;Go (Disque Dur)",
+    "&nbsp;MB (RAM)": "&nbsp;Mo (RAM)",
+    "Manage your applications": "Gérez vos applications",
+    "There is no application installed.": "Il n'y a pas d'applications installées.",
+    "save": "sauvegarder",
+    " Your parameters": " Vos paramètres",
+    "I need your email to send you alerts or for password recovering": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
+    "Your timezone is required to display dates properly": "Votre timezone est require pour vous afficher les dates correctements.",
+    "The domain name is used to build urls send via email to you or your contacts": "The domain name is used to build urls send via email to you or your contacts\nLe nom de domaine que tu utilises est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
+    "Chose the language you want I use to speak with you:": "Choisis la langue que tu veux que j'utilises pour te parler.",
+    "French": "Français",
+    "English": "Anglais",
+    "Change password procedure": "Procédure de changement de mot de passe",
+    "current password": "mot de passe actuel",
+    "enter a new password": "entrez un nouveau mot de passe",
+    "new password": "nouveau mot de passe",
+    "confirm your new password": "confirmez votre nouveau mot de passe",
+    "save your new password": "sauvegarder votre nouveau mot de passe",
+    "Do you look for assistance?": "Est-ce que vous cherchez de l'aide ?",
+    "Write an email to our support team at:": "Ecrire un email à notre équipe support:",
+    "Register and post on our forum: ": "S'enregistrer et poster sur notre forum: ",
+    "Ask your question on Twitter: ": "Posez votre question sur Twitter: ",
+    "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
+    "your own application": "votre propre application",
+    "install": "installation",
+    "broken": "cassé",
+    "retry to install": "réessai d'installation",
+    "Cozy - Account": "Cozy - Compte",
+    "Cozy - App Store": "Cozy - App Store",
+    "Cozy - Home": "Cozy - Home"
   };
   
 });
@@ -1659,8 +1749,8 @@ window.require.register("views/account", function(exports, require, module) {
           } else {
             saveButton.addClass('green');
             saveButton.html('saved');
-            alert(t('Changing the locale requires to reload the page.'));
             if (fieldName === 'locale') {
+              alert(t('Changing the locale requires to reload the page.'));
               window.location.reload();
             }
             return setTimeout(function() {
@@ -2424,8 +2514,8 @@ window.require.register("views/main", function(exports, require, module) {
       displayView = function() {
         _this.frames.hide();
         view.$el.hide();
-        $('#home-content').append(view.$el);
         _this.content.show();
+        $('#home-content').append(view.$el);
         view.$el.fadeIn();
         _this.currentView = view;
         _this.changeFavicon("favicon.ico");

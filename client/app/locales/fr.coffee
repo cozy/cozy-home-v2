@@ -61,3 +61,64 @@ module.exports =
     "There is already an app with similar name": """
         Il y a déjà une application installée avec un nom similaire.
         """
+
+
+    "your cozy home":"votr cozy home"
+    "manage your apps":"gérer vos apps"
+    "chose your apps":"choisissezrvos apps"
+    "configure your cozy":"configurer votre cozy"
+    "ask for assistance":"demandez de l'aide"
+    "logout":"déconnexion"
+    "dismiss all":"tout enlever"
+    "Welcome to your Cozy!":"Bienvenue sur votre Cozy!"
+    "You have no application installed. You should":"Vous n'avez pas d'applications installées vous devriez"
+    "configure ":"configurer "
+    "App management":"Gestion des apps"
+    "App store":"App store"
+    "Configuration":"Configuration"
+    "Assistance":"Aide"
+    "Hardware consumption":"Consommation Hardware"
+    "&nbsp;GB (Hard Drive)":"&nbsp;Go (Disque Dur)"
+    "&nbsp;MB (RAM)":"&nbsp;Mo (RAM)"
+    "Manage your applications":"Gérez vos applications"
+    "There is no application installed.":"Il n'y a pas d'applications installées."
+    "save":"sauvegarder"
+
+    " Your parameters":" Vos paramètres"
+    "I need your email to send you alerts or for password recovering":"""
+        J'ai besoin de votre email pour la récupération de mot de passe ou
+        pour vous envoyer des alertes.
+    """
+    "Your timezone is required to display dates properly":"""
+        Votre timezone est require pour vous afficher les dates correctements.
+    """
+    "The domain name is used to build urls send via email to you or your contacts":"""
+        The domain name is used to build urls send via email to you or your contacts
+        Le nom de domaine que tu utilises est utilisé pour construire les urls
+        envoyées par mail à vos contacts.
+    """
+    "Chose the language you want I use to speak with you:":"""
+        Choisis la langue que tu veux que j'utilises pour te parler.
+    """
+    "French":"Français"
+    "English":"Anglais"
+    "Change password procedure":"Procédure de changement de mot de passe"
+    "current password":"mot de passe actuel"
+    "enter a new password":"entrez un nouveau mot de passe"
+    "new password":"nouveau mot de passe"
+    "confirm your new password":"confirmez votre nouveau mot de passe"
+    "save your new password":"sauvegarder votre nouveau mot de passe"
+    "Do you look for assistance?":"Est-ce que vous cherchez de l'aide ?"
+    "Write an email to our support team at:":"Ecrire un email à notre équipe support:"
+    "Register and post on our forum: ":"S'enregistrer et poster sur notre forum: "
+    "Ask your question on Twitter: ":"Posez votre question sur Twitter: "
+    "Visit the project website and learn to build your app:":"""
+        Visitez le site du projet et apprenez à construire des applications.
+    """
+    "your own application":"votre propre application"
+    "install":"installation"
+    "broken":"cassé"
+    "retry to install":"réessai d'installation"
+    "Cozy - Account":"Cozy - Compte"
+    "Cozy - App Store":"Cozy - App Store"
+    "Cozy - Home":"Cozy - Home"

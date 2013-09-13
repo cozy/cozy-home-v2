@@ -63,8 +63,8 @@ module.exports = class HomeView extends BaseView
         displayView = =>
             @frames.hide()
             view.$el.hide()
-            $('#home-content').append view.$el
             @content.show()
+            $('#home-content').append view.$el
             view.$el.fadeIn()
             @currentView = view
             @changeFavicon "favicon.ico"
