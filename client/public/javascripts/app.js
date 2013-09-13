@@ -1439,7 +1439,7 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>');
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>');
   var __val__ = t('logout')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/logout-white.png"/></a></div>');
