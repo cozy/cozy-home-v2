@@ -243,7 +243,7 @@ module.exports =
                 req.application.permissions = docTypes
                 req.application.save (err) ->
 
-                    saveIcon appli, (err) ->
+                    saveIcon req.application, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
 

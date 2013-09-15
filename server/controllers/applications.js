@@ -336,7 +336,7 @@ module.exports = {
       return permissions.get(req.application, function(err, docTypes) {
         req.application.permissions = docTypes;
         return req.application.save(function(err) {
-          saveIcon(appli, function(err) {
+          saveIcon(req.application, function(err) {
             if (err) {
               return console.log(err.stack);
             } else {

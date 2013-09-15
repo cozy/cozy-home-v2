@@ -23,7 +23,10 @@ helpers.init = (port) ->
         params = name: 'Cozy Home', port: port
         americano.start params, (app, server) =>
             app.server = server
+            ctrler = require('../server/controllers/applications').loadApplication
+            app.param 'slug', ctrler
             @app = app
+
             setTimeout done, 1000 # wait 1s for defineRequests
 
 # This function remove everythin from the db
