@@ -20,11 +20,23 @@ module.exports = Adapter = (function() {
     return client.put("accounts/password/", {
       password: pwd
     }, function(err, res, body) {
-      if (err) {
-        return callback(err);
-      } else {
-        return callback();
-      }
+      return callback(err);
+    });
+  };
+
+  Adapter.prototype.initializeKeys = function(pwd, callback) {
+    var name, token,
+      _this = this;
+
+    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
+      name = process.env.NAME;
+      token = process.env.TOKEN;
+      client.setBasicAuth(name, token);
+    }
+    return client.post("accounts/password/", {
+      password: pwd
+    }, function(err, res, body) {
+      return callback(err);
     });
   };
 

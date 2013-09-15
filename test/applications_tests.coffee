@@ -1,6 +1,5 @@
 should = require('chai').Should()
 expect = require('chai').expect
-compoundInstantiator = require('../server')
 helpers = require('./helpers')
 
 TESTMAIL = "test@test.com"
@@ -33,19 +32,18 @@ startTestServers = ->
 stopTestServers = ->
     @haibu.close()
     @proxy.close()
-    @app.compound.server.close()
+    @app.server.close()
 
 
 
 describe "Applications install", ->
 
-    before helpers.init compoundInstantiator # create @app in test scope
+    before helpers.init TESTPORT
     before helpers.clearDb
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.createApp "Noty plus", "noty-plus", 0, "installed"
     before startTestServers
     before ->
-        @app.listen(TESTPORT)
         @client = helpers.getClient TESTPORT, @
 
 

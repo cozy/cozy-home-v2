@@ -7,14 +7,13 @@ TESTPORT = 8889
 
 describe 'External Notification API', ->
 
-    before helpers.init(compoundInitiator)
+    before helpers.init TESTPORT
     before helpers.clearDb
     before ->
-        @app.listen TESTPORT
         @client = helpers.getClient TESTPORT, @
 
     after ->
-        @app.compound.server.close()
+        @app.server.close()
 
     describe 'Temporary Notifications', ->
 
@@ -89,13 +88,12 @@ describe 'External Notification API', ->
 
 describe 'Home Client Notification API', ->
 
-    before helpers.init(compoundInitiator)
+    before helpers.init TESTPORT
     before ->
-        @app.listen TESTPORT
-        @client = helpers.getClient TESTPORT, @
+        @HKclient = helpers.getClient TESTPORT, @
 
     after ->
-        @app.compound.server.close()
+        @app.server.close()
 
     # all not tested because used above
 

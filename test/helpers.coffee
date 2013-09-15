@@ -8,6 +8,7 @@ Application = require '../server/models/application'
 CozyInstance = require '../server/models/cozyinstance'
 Notification = require '../server/models/notification'
 User = require '../server/models/user'
+Adapter = require '../server/lib/adapter'
 
 process.env.NAME = "home"
 process.env.TOKEN = "token"
@@ -19,12 +20,11 @@ helpers = {}
 # usage : before helpers.init port
 helpers.init = (port) ->
     (done) ->
-        this.timeout 5000
         params = name: 'Cozy Home', port: port
         americano.start params, (app, server) =>
             app.server = server
             @app = app
-            setTimeout done, 3000 # wait 3s for defineRequests
+            setTimeout done, 1000 # wait 1s for defineRequests
 
 # This function remove everythin from the db
 helpers.clearDb = (callback) ->
