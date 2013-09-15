@@ -45,6 +45,7 @@ describe 'External Notification API', ->
             @client.get 'api/notifications', done
 
         it "with proper resources ", ->
+            console.log @body[1]
             expect(@body).to.be.an 'array'
             expect(@body).to.have.length 3
             expect(@body[1]).to.have.deep.property 'resource.url', '/apps/todos/#3615'
