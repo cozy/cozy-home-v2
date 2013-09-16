@@ -909,9 +909,9 @@ body {
   background: #fce9d5;
 }
 #notifications-toggle {
-  height: 47px;
-  line-height: 47px;
-  font-size: 47px;
+  height: 45px;
+  line-height: 45px;
+  font-size: 45px;
   width: 60px;
   cursor: pointer;
   margin-left: 10px;
@@ -922,6 +922,8 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
+  margin-top: 0;
+  padding-top: 0;
 }
 #notifications-toggle img {
   padding: 0;
@@ -933,9 +935,6 @@ body {
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #000;
   box-shadow: inset 2px 2px 2px #000;
-}
-.active #notifications-toggle img {
-  margin-top: 0;
 }
 #notifications-container {
   position: relative;
@@ -1039,9 +1038,6 @@ body {
   }
   #menu-applications-toggle span {
     top: -4px;
-  }
-  .active #notifications-toggle {
-    font-size: 44px;
   }
 }
 /** Applications */
