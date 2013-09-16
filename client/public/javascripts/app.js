@@ -1188,28 +1188,34 @@ window.require.register("routers/main_router", function(exports, require, module
       '*notFound': 'applicationList'
     };
 
+    MainRouter.prototype.selectIcon = function(index) {
+      $('.menu-btn').removeClass('active');
+      return $($('.menu-btn').get(index)).addClass('active');
+    };
+
     MainRouter.prototype.applicationList = function() {
-      return app.mainView.displayApplicationsList();
+      app.mainView.displayApplicationsList();
+      return this.selectIcon(0);
     };
 
     MainRouter.prototype.configApplications = function() {
-      return app.mainView.displayConfigApplications();
+      app.mainView.displayConfigApplications();
+      return this.selectIcon(1);
     };
 
     MainRouter.prototype.help = function() {
-      return app.mainView.displayHelp();
+      app.mainView.displayHelp();
+      return this.selectIcon(4);
     };
 
     MainRouter.prototype.market = function() {
-      return app.mainView.displayMarket();
+      app.mainView.displayMarket();
+      return this.selectIcon(2);
     };
 
     MainRouter.prototype.account = function() {
-      return app.mainView.displayAccount();
-    };
-
-    MainRouter.prototype.help = function() {
-      return app.mainView.displayHelp();
+      app.mainView.displayAccount();
+      return this.selectIcon(3);
     };
 
     MainRouter.prototype.application = function(slug, hash) {
