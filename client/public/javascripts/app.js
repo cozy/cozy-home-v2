@@ -1407,25 +1407,25 @@ window.require.register("templates/home", function(exports, require, module) {
   var __val__ = t('Welcome to your Cozy!')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p></div><div class="line"><p class="bigger pa2">');
-  var __val__ = t('You have no application installed. You should')
+  var __val__ = t('You have no application installed. You should ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('<a href="#account">');
   var __val__ = t('configure ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>');
-  var __val__ = t('Home')
+  var __val__ = t('Home ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>');
-  var __val__ = t('App management')
+  var __val__ = t('App management ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>');
-  var __val__ = t('App store')
+  var __val__ = t('App store ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>');
-  var __val__ = t('Configuration')
+  var __val__ = t('Configuration ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>');
-  var __val__ = t('Assistance')
+  var __val__ = t('Assistance ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
   }
