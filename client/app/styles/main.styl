@@ -63,7 +63,7 @@ body
     position: fixed
     background: darkblue
     z-index: 1500
-    box-shadow: 2px 0 2px darkblue - 20% !important
+    //box-shadow: 2px 0 2px darkblue - 20% !important
     top: 0
     width: 100%
     height: 48px
@@ -114,9 +114,9 @@ body
 /** Notifications */
 
 #menu-applications-toggle
-    height: 48px
-    line-height: 48px
-    font-size: 48px
+    height: 46px
+    line-height: 46px
+    font-size: 46px
     margin-left: 5px
     padding-left: 5px
     padding-right: 5px
@@ -136,24 +136,17 @@ body
 
     span
         position: relative
-        top: -8px
+        top: -4px
         font-size: 28px
 
 .active
     #menu-applications-toggle
         background: rgba(20, 20, 22, 0.3)
-        height: 32px
-        line-height: 32px
+        height: 47px
+        line-height: 47px
+        font-size: 47px
         cursor: pointer
         box-shadow: inset 2px 2px 2px #000
-
-@media screen and (-webkit-min-device-pixel-ratio:0)
-    .navbar
-        height: 45px
-
-    #menu-applications-toggle
-        span
-            top: -4px
 
 #menu-applications-container
     position: relative
@@ -183,7 +176,7 @@ body
         text-align: left
         background: lightgrey - 10%
         border: 1px solid lightgrey - 20%
-        box-shadow 1px 1px 2px #CCC
+        //box-shadow 1px 1px 2px #CCC
 
         .menu-application
             text-transform: lowercase
@@ -195,12 +188,12 @@ body
                 cursor: pointer
 
         .menu-application:hover
-            background: orangewhite = #fce9d5
+            background: #fce9d5
 
 #notifications-toggle
-    height: 48px
-    line-height: 48px
-    font-size: 48px
+    height: 47px
+    line-height: 47px
+    font-size: 47px
     width: 60px
     cursor: pointer
     margin-left: 10px
@@ -216,14 +209,20 @@ body
 .active
     #notifications-toggle
         background: rgba(20, 20, 22, 0.3)
-        height: 48px
-        line-height: 48px
+        //height: 47px
+        //line-height: 47px
+        //font-size: 47px
+        margin-top: 0
         cursor: pointer
         box-shadow: inset 2px 2px 2px #000
+
+        img 
+            margin-top: 0
 
 
 #notifications-container
     position: relative
+    padding: 0
 
     a
         width: 20px
@@ -249,20 +248,20 @@ body
         z-index 40
 
     #notifications
-        top: 25px
+        z-index: 50
         display: none
         position: absolute
-        left: 10px
+        top: 48px
+        right: 0px
         width: 420px
-        z-index: 50
-        margin: 0
         list-style-type: none
+        margin: 0
         padding: 5px
 
         text-align: left
         background: lightgrey - 10%
         border: 1px solid lightgrey - 20%
-        box-shadow 1px 1px 2px #CCC
+        //box-shadow 1px 1px 2px #CCC
 
         #dismiss-all
             text-align center
@@ -309,6 +308,19 @@ body
             &.transition
                 background-color: #8f9b9b
                 transition: background-color 3s
+
+@media screen and (-webkit-min-device-pixel-ratio:0)
+    .navbar
+        height: 45px
+
+    #menu-applications-toggle
+        span
+            top: -4px
+
+    .active
+        #notifications-toggle
+            font-size: 44px
+
 
 
 /** Applications */

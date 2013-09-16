@@ -688,6 +688,11 @@ select:focus {
   padding: 5px;
   margin-right: 5px;
 }
+.opaque {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 .help-text {
   font-size: 26px;
   text-align: center;
@@ -769,8 +774,6 @@ body {
   position: fixed;
   background: #363a46;
   z-index: 1500;
-  -webkit-box-shadow: 2px 0 2px #2b2e38 !important;
-  box-shadow: 2px 0 2px #2b2e38 !important;
   top: 0;
   width: 100%;
   height: 48px;
@@ -825,9 +828,9 @@ body {
 }
 /** Notifications */
 #menu-applications-toggle {
-  height: 48px;
-  line-height: 48px;
-  font-size: 48px;
+  height: 46px;
+  line-height: 46px;
+  font-size: 46px;
   margin-left: 5px;
   padding-left: 5px;
   padding-right: 5px;
@@ -851,24 +854,17 @@ body {
 }
 #menu-applications-toggle span {
   position: relative;
-  top: -8px;
+  top: -4px;
   font-size: 28px;
 }
 .active #menu-applications-toggle {
   background: rgba(20,20,22,0.3);
-  height: 32px;
-  line-height: 32px;
+  height: 47px;
+  line-height: 47px;
+  font-size: 47px;
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #000;
   box-shadow: inset 2px 2px 2px #000;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  .navbar {
-    height: 45px;
-  }
-  #menu-applications-toggle span {
-    top: -4px;
-  }
 }
 #menu-applications-container {
   position: relative;
@@ -899,8 +895,6 @@ body {
   text-align: left;
   background: #e6ddd0;
   border: 1px solid #d5c5b0;
-  -webkit-box-shadow: 1px 1px 2px #ccc;
-  box-shadow: 1px 1px 2px #ccc;
 }
 #menu-applications-container #menu-applications .menu-application {
   text-transform: lowercase;
@@ -915,9 +909,9 @@ body {
   background: #fce9d5;
 }
 #notifications-toggle {
-  height: 48px;
-  line-height: 48px;
-  font-size: 48px;
+  height: 47px;
+  line-height: 47px;
+  font-size: 47px;
   width: 60px;
   cursor: pointer;
   margin-left: 10px;
@@ -935,14 +929,17 @@ body {
 }
 .active #notifications-toggle {
   background: rgba(20,20,22,0.3);
-  height: 48px;
-  line-height: 48px;
+  margin-top: 0;
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #000;
   box-shadow: inset 2px 2px 2px #000;
 }
+.active #notifications-toggle img {
+  margin-top: 0;
+}
 #notifications-container {
   position: relative;
+  padding: 0;
 }
 #notifications-container a {
   width: 20px;
@@ -970,20 +967,18 @@ body {
   z-index: 40;
 }
 #notifications-container #notifications {
-  top: 25px;
+  z-index: 50;
   display: none;
   position: absolute;
-  left: 10px;
+  top: 48px;
+  right: 0px;
   width: 420px;
-  z-index: 50;
-  margin: 0;
   list-style-type: none;
+  margin: 0;
   padding: 5px;
   text-align: left;
   background: #e6ddd0;
   border: 1px solid #d5c5b0;
-  -webkit-box-shadow: 1px 1px 2px #ccc;
-  box-shadow: 1px 1px 2px #ccc;
 }
 #notifications-container #notifications #dismiss-all {
   text-align: center;
@@ -1037,6 +1032,17 @@ body {
   -o-transition: background-color 3s;
   -ms-transition: background-color 3s;
   transition: background-color 3s;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .navbar {
+    height: 45px;
+  }
+  #menu-applications-toggle span {
+    top: -4px;
+  }
+  .active #notifications-toggle {
+    font-size: 44px;
+  }
 }
 /** Applications */
 #app-list {

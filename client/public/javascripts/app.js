@@ -1549,10 +1549,10 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><span id="notifications-container"></span><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>');
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>');
   var __val__ = t('logout')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/logout-white.png"/></a></div>');
+  buf.push('</span><img src="img/logout-white.png"/></a><span id="notifications-container" class="right"></span></div>');
   }
   return buf.join("");
   };
@@ -3290,10 +3290,11 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.appendView = function(view) {
       this.notifList.prepend(view.el);
-      this.$('#nottications-toggle').attr('src', 'img/notification-orange.png');
       if (!this.initializing) {
-        return this.sound.play();
+        this.sound.play();
       }
+      this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
+      return this.$('#notifications-toggle').addClass('opaque');
     };
 
     NotificationsView.prototype.afterRender = function() {
@@ -3340,17 +3341,19 @@ window.require.register("views/notifications_view", function(exports, require, m
         return this.$el.removeClass('active');
       } else {
         this.$el.addClass('active');
-        this.notifList.slideDown(300);
+        this.notifList.slideDown(100);
         return this.clickcatcher.show();
       }
     };
 
     NotificationsView.prototype.dismissAll = function() {
-      return this.collection.removeAll();
+      this.collection.removeAll();
+      this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
+      return this.$('#notifications-toggle').removeClass('opaque');
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
-      this.notifList.slideUp(300);
+      this.notifList.slideUp(100);
       this.clickcatcher.hide();
       return this.$el.removeClass('active');
     };
