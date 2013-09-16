@@ -12,11 +12,11 @@ module.exports = class ApplicationsListView extends ViewCollection
         @apps = apps
         super collection: apps
 
-        @displayNoAppMessage() if @apps.length is 0
+        #@displayNoAppMessage() if @apps.length is 0
 
     afterRender: =>
         @appList = @$ "#app-list"
 
-    displayNoAppMessage: ->
-        @$el.append t 'There is no application installed.'
+    #displayNoAppMessage: ->
+        #@$el.append t 'There is no application installed.'
 

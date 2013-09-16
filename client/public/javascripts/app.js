@@ -2125,17 +2125,10 @@ window.require.register("views/config_application_list", function(exports, requi
       ApplicationsListView.__super__.constructor.call(this, {
         collection: apps
       });
-      if (this.apps.length === 0) {
-        this.displayNoAppMessage();
-      }
     }
 
     ApplicationsListView.prototype.afterRender = function() {
       return this.appList = this.$("#app-list");
-    };
-
-    ApplicationsListView.prototype.displayNoAppMessage = function() {
-      return this.$el.append(t('There is no application installed.'));
     };
 
     return ApplicationsListView;
