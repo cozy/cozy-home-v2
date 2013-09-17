@@ -26,7 +26,7 @@ module.exports = Application = americano.getModel('Application', {
   errormsg: String,
   branch: String,
   port: Number,
-  permissions: String,
+  permissions: Object,
   password: String,
   _attachments: Object
 });
