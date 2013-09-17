@@ -9,36 +9,30 @@
   .line
     p.bigger.pa2= t('You have no application installed. You should ')
         a(href="#account")= t('configure ')
-        | your Cozy then install your first application 
-        | via the&nbsp;
-        a(href="#applications") app store
+        = t ('your Cozy then install your first application via the&nbsp;')
+        a(href="#applications")= t('app store')
         |.
     p.mt2.pa2
-        | If it's your first time on Cozy here is a little guide about all 
-        | section available in your Cozy Home. All of them can be reached from
-        | the menu located on the top right corner.
+        =t ('menu-descrtiption')
     p
         img(src="/img/home-black.png")
         strong=t('Home ')
-        | It is the place from where you can reach your applications
+        = t('It is the place from where you can reach your applications')
     p
         img(src="/img/config-apps.png")
         strong=t('App management ')
-        | There you can manage the state of your applications: start it,
-        | stop it, remove it...
+        = t('There you can manage the state of your applications: start it, stop it, remove it...')
     p
         img(src="/img/apps.png")
-        strong=t('App store ')
-        | In the app store, you will find new applications to install on your
-        | Cozy.
+        strong= t('App store ')
+        = t('In the app store, you will find new applications to install on your Cozy.')
     p
         img(src="/img/configuration.png")
         strong=t('Configuration ')
-        | To work properly your Cozy requires several parameters. Set them in
-        | this section.
+        = t('To work properly your Cozy requires several parameters. Set them in this section.')
     p
         img(src="/img/help.png")
         strong=t('Assistance ')
-        | You will find here some links to assistance resources.
+        = t('You will find here some links to assistance resources.')
 
 #app-list

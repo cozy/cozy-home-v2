@@ -868,7 +868,21 @@ window.require.register("locales/en", function(exports, require, module) {
     "abort": "abort",
     "Once updated, this application will require the following permissions:": "Once updated, this application will require the following permissions:",
     "confirm update": "confirm update",
-    "This application does not need specific permissions": "This application does not need specific permissions"
+    "This application does not need specific permissions": "This application does not need specific permissions",
+    "menu-descrtiption": "If it's your first time on Cozy here is a little guide\nabout all section available in your Cozy Home. All of them can be reached\nfrom the menu located on the top right corner.",
+    "You have no application installed. You should ": "You have no application installed. You should ",
+    "your Cozy then install your first application via the&nbsp;": "your Cozy then install your first application via the&nbsp;",
+    "app store": "app store",
+    "Home ": "Home ",
+    "It is the place from where you can reach your applications": "It is the place from where you can reach your applications",
+    "App management ": "App management ",
+    "There you can manage the state of your applications: start it, stop it, remove it...": "There you can manage the state of your applications: start it, stop it, remove it...",
+    "App store ": "App store ",
+    "In the app store, you will find new applications to install on your Cozy.": "In the app store, you will find new applications to install on your Cozy.",
+    "Configuration ": "Configuration ",
+    "To work properly your Cozy requires several parameters. Set them in this section.": "To work properly your Cozy requires several parameters. Set them in this section.",
+    "Assistance ": "Assistance ",
+    "You will find here some links to assistance resources.": "You will find here some links to assistance resources."
   };
   
 });
@@ -975,7 +989,21 @@ window.require.register("locales/fr", function(exports, require, module) {
     "abort": "abort",
     "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requièra les permissions suivantes:",
     "confirm update": "confirmez la mise à jour",
-    "This application does not need specific permissions": "Cette applicatiion n'a pas besoin d'informations spécifiques"
+    "This application does not need specific permissions": "Cette applicatiion n'a pas besoin d'informations spécifiques",
+    "menu-descrtiption": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.",
+    "You have no application installed. You should ": "Vous n'avez pas d'applications installées vous devriez ",
+    "your Cozy then install your first application via the&nbsp;": "votre Cozy puis installer votre première application via&nbsp;",
+    "app store": "app store",
+    "Home ": "Accueil ",
+    "It is the place from where you can reach your applications": "C'est ici que vous pouvez accéder à toutes vos applications.",
+    "App management ": "Gestion des applications ",
+    "There you can manage the state of your applications: start it, stop it, remove it...": "Ici tu peux gérer l'état de tes applications: démarre, arrête et supprime les...",
+    "App store ": "App store ",
+    "In the app store, you will find new applications to install on your Cozy.": "Dans l'app store, vous trouverez de nouvelles applications pour installer Cozy.",
+    "Configuration ": "Configuration ",
+    "To work properly your Cozy requires several parameters. Set them in this section.": "Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section.",
+    "Assistance ": "Aide ",
+    "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin."
   };
   
 });
@@ -1418,22 +1446,46 @@ window.require.register("templates/home", function(exports, require, module) {
   buf.push('<a href="#account">');
   var __val__ = t('configure ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a>your Cozy then install your first application \nvia the&nbsp;<a href="#applications">app store</a>.</p><p class="mt2 pa2">If it\'s your first time on Cozy here is a little guide about all \nsection available in your Cozy Home. All of them can be reached from\nthe menu located on the top right corner.</p><p><img src="/img/home-black.png"/><strong>');
+  buf.push('</a>');
+  var __val__ = t ('your Cozy then install your first application via the&nbsp;')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('<a href="#applications">');
+  var __val__ = t('app store')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a>.</p><p class="mt2 pa2">');
+  var __val__ = t ('menu-descrtiption')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/home-black.png"/><strong>');
   var __val__ = t('Home ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</strong>It is the place from where you can reach your applications</p><p><img src="/img/config-apps.png"/><strong>');
+  buf.push('</strong>');
+  var __val__ = t('It is the place from where you can reach your applications')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/config-apps.png"/><strong>');
   var __val__ = t('App management ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</strong>There you can manage the state of your applications: start it,\nstop it, remove it...</p><p><img src="/img/apps.png"/><strong>');
+  buf.push('</strong>');
+  var __val__ = t('There you can manage the state of your applications: start it, stop it, remove it...')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/apps.png"/><strong>');
   var __val__ = t('App store ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</strong>In the app store, you will find new applications to install on your\nCozy.</p><p><img src="/img/configuration.png"/><strong>');
+  buf.push('</strong>');
+  var __val__ = t('In the app store, you will find new applications to install on your Cozy.')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/configuration.png"/><strong>');
   var __val__ = t('Configuration ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</strong>To work properly your Cozy requires several parameters. Set them in\nthis section.</p><p><img src="/img/help.png"/><strong>');
+  buf.push('</strong>');
+  var __val__ = t('To work properly your Cozy requires several parameters. Set them in this section.')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/help.png"/><strong>');
   var __val__ = t('Assistance ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</strong>You will find here some links to assistance resources.</p></div></div><div id="app-list"></div>');
+  buf.push('</strong>');
+  var __val__ = t('You will find here some links to assistance resources.')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p></div></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -2231,6 +2283,19 @@ window.require.register("views/help", function(exports, require, module) {
     function AccountView() {
       AccountView.__super__.constructor.call(this);
     }
+
+    AccountView.prototype.afterRender = function() {
+      var _this = this;
+      return $.get("api/instances/", function(data) {
+        var helpUrl, instance, _ref;
+        console.log(data);
+        instance = (_ref = data.rows) != null ? _ref[0] : void 0;
+        helpUrl = instance != null ? instance.helpUrl : void 0;
+        if (helpUrl != null) {
+          return $(_this.$el.find('.line')[1]).prepend('<p class="help-text">' + helpUrl + '</p>');
+        }
+      });
+    };
 
     return AccountView;
 

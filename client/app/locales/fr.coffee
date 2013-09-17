@@ -137,3 +137,20 @@ module.exports =
     "This application does not need specific permissions":"""
         Cette applicatiion n'a pas besoin d'informations spécifiques
     """
+    "menu-descrtiption":"""Si c'est votre première fois sur Cozy, vous trouverez
+    dans la suite un petit guide décrivant les sections de votre Cozy. Elles
+    peuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.
+    """
+    "You have no application installed. You should ":"Vous n'avez pas d'applications installées vous devriez "
+    "your Cozy then install your first application via the&nbsp;":"votre Cozy puis installer votre première application via&nbsp;"
+    "app store":"app store"
+    "Home ":"Accueil "
+    "It is the place from where you can reach your applications":"C'est ici que vous pouvez accéder à toutes vos applications."
+    "App management ":"Gestion des applications "
+    "There you can manage the state of your applications: start it, stop it, remove it...":"Ici tu peux gérer l'état de tes applications: démarre, arrête et supprime les..."
+    "App store ":"App store "
+    "In the app store, you will find new applications to install on your Cozy.":"Dans l'app store, vous trouverez de nouvelles applications pour installer Cozy."
+    "Configuration ":"Configuration "
+    "To work properly your Cozy requires several parameters. Set them in this section.":"Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section."
+    "Assistance ":"Aide "
+    "You will find here some links to assistance resources.":"Vous trouverez ici toutes les ressources dont vous avez besoin."
