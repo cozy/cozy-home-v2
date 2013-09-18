@@ -27,6 +27,6 @@
   }
 , "scripts":
   { "test": "cake tests"
-  , "start": "./node_modules/coffee-script/bin/coffee server.coffee"
+  , "start": "coffee server.coffee"
   }
 }
