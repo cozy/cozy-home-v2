@@ -74,12 +74,12 @@ module.exports = class ApplicationsListView extends ViewCollection
         @isManaging = not @isManaging
 
     displayMemory: (freeMem, totalMem)->
-        total = Math.floor(totalMem / 1024) + "Mo"
+        total = Math.floor(totalMem / 1024) + "MB"
         @machineInfos.find('.memory .total').html total
 
         usedMemory = ((totalMem - freeMem) / totalMem) * 100
         @machineInfos.find('.memory .bar').css('width', usedMemory + '%')
 
     displayDiskSpace: (usedSpace, totalSpace)->
-        @machineInfos.find('.disk .total').html(totalSpace + "Go")
+        @machineInfos.find('.disk .total').html(totalSpace + "GB")
         @machineInfos.find('.disk .bar').css('width', usedSpace + '%')
