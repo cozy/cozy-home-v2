@@ -37,6 +37,8 @@ module.exports =
     "Questions and help forum"  : "Questions and help forum"
     "Sign out"                  : "Sign out"
     "open in a new tab"         : "open in a new tab"
+    "Disc Unit"                 : "GB"
+    "Memory Unit"               : "MB"
 
 
     "application-is-installing" : """
