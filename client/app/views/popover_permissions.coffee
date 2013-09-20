@@ -25,35 +25,31 @@ module.exports = class PopoverPermissionsView extends BaseView
 
     afterRender: () ->
         @model.set "permissions", ""
-        @body = @$ ".modal-body"
+        @body = @$ ".md-body"
+        @body.spin 'small'
         @model.getPermissions
             success: (data) =>
                 if not @model.hasChanged("permissions")
                     @confirmCallback(@model)
             error: () =>
-                console.log "error have been called"
         @listenTo @model, "change:permissions", @renderPermissions
 
     renderPermissions: () =>
-        @body.html ""
+        @body.hide()
+        @body.html ''
         if Object.keys(@model.get("permissions")).length is 0
-            permissionsDiv = $ "<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>"
+            permissionsDiv = $ "<div class='permissionsLine'> <strong>#{t('This application does not need specific permissions')} </strong> </div>"
             @body.append permissionsDiv
         else
             for docType, permission of @model.get("permissions")
-                permissionsDiv = $ "<div class='permissionsLine'> <h4> #{docType} </h4> <p> #{permission.description} </p> </div>"
+                permissionsDiv = $ "<div class='permissionsLine'> <strong> #{docType} </strong> <p> #{permission.description} </p> </div>"
                 @body.append permissionsDiv
+        @body.slideDown()
 
     onCancelClicked: () =>
-        @cancelCallback(@model)
+        @$el.slideUp =>
+            @cancelCallback(@model)
 
     onConfirmClicked: () =>
-        @confirmCallback(@model)
-
-
-
-
-
-
-
-
+        @$el.slideUp =>
+            @confirmCallback(@model)

@@ -18,13 +18,11 @@ REPOREGEX =  /// ^
 module.exports = class MarketView extends BaseView
     id: 'market-view'
     template: require 'templates/market'
+    tagName: 'div'
 
     events:
         'keyup #app-git-field':'onEnterPressed'
-        "mouseover #your-app .app-install-button": "onMouseoverInstallButton"
-        "mouseout #your-app .app-install-button": "onMouseoutInstallButton"
         "click #your-app .app-install-button": "onInstallClicked"
-
 
     ### Constructor ###
 
@@ -35,7 +33,7 @@ module.exports = class MarketView extends BaseView
 
 
     afterRender: =>
-        @appList = @$ '#app-market-list'
+        @appList = @$ '#market-applications-list'
         @appGitField = @$ "#app-git-field"
         @installInfo = @$ "#add-app-modal .loading-indicator"
         @infoAlert = @$ "#your-app .info"
@@ -46,17 +44,11 @@ module.exports = class MarketView extends BaseView
         @installAppButton = new ColorButton @$ "#add-app-submit"
 
         @listenTo @installedApps, 'reset',  @onAppListsChanged
-        #@listenTo @installedApps, 'add',    @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
-        @listenTo @marketApps,    'reset',  @onAppListsChanged
+        @listenTo @marketApps, 'reset',  @onAppListsChanged
         @marketApps.fetchFromMarket()
 
-    onMouseoverInstallButton: =>
-        @isSliding = true
-        @$("#your-app .app-install-text").show 'slide', {direction: 'right'}, 300, =>
-            @isSliding = false
-
-    onAppListsChanged: () =>
+    onAppListsChanged: =>
         @$(".cozy-app").remove()
         @noAppMessage.show()
         installeds = @installedApps.pluck('slug')
@@ -73,13 +65,11 @@ module.exports = class MarketView extends BaseView
         appButton = @$(row.el)
         appButton.hide().fadeIn()
 
-
     onEnterPressed: (event) =>
         if event.which is 13 and not @popover?.$el.is(':visible')
             @onInstallClicked()
         else if event.which is 13
             @popover?.confirmCallback()
-
 
     onInstallClicked: (event) =>
         if @isInstalling()
@@ -114,23 +104,15 @@ module.exports = class MarketView extends BaseView
         @popover = new PopoverDescriptionView
             model: appWidget.app
             confirm: (application) =>
-                @popover.remove()
-                @showPermissions appWidget
-            cancel: (application) =>
-                @popover.remove()
-        @$el.append @popover.$el
-
-    # pop up with application permissions
-    showPermissions: (appWidget) ->
-        @popover = new PopoverPermissionsView
-            model: appWidget.app
-            confirm: (application) =>
-                @popover.remove()
+                $('#no-app-message').hide()
+                @popover.hide()
                 @hideApplication appWidget, =>
                     @runInstallation appWidget.app
             cancel: (application) =>
-                @popover.remove()
+                @popover.hide()
         @$el.append @popover.$el
+        @popover.show()
+
 
     hideApplication: (appWidget, callback) =>
         # Test if application is installed by the market
@@ -156,6 +138,7 @@ module.exports = class MarketView extends BaseView
                     @resetForm()
                 @installedApps.add application
                 app?.routers.main.navigate 'home', true
+                app?.mainView.applicationListView.displayNoAppMessage()
 
             error: (jqXHR) =>
                 alert t JSON.parse(jqXHR.responseText).message
@@ -167,7 +150,7 @@ module.exports = class MarketView extends BaseView
         unless parsed?
             error =
                 error: true
-                msg:"Git url should be of form https://.../my-repo.git"
+                msg: t "Git url should be of form https://.../my-repo.git"
             return error
 
         [git, proto, domain, path, branch] = parsed
@@ -202,5 +185,4 @@ module.exports = class MarketView extends BaseView
         @errorAlert.hide()
 
     resetForm: =>
-        @installAppButton.displayOrange 'install'
         @appGitField.val ''

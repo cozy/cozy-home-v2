@@ -128,36 +128,8 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "Manage your bookmarks easily"
         }, {
-          icon: "img/feeds-icon.png",
-          name: "feeds",
-          slug: "feeds",
-          git: "https://github.com/Piour/cozy-feeds.git",
-          comment: "community contribution",
-          description: "Aggregate your feeds and save your favorite links in bookmarks."
-        }, {
-          icon: "img/notes-icon.png",
-          name: "notes",
-          slug: "notes",
-          git: "https://github.com/mycozycloud/cozy-notes.git",
-          comment: "official application",
-          description: "Store all your notes and files."
-        }, {
-          icon: "img/todos-icon.png",
-          name: "todos",
-          slug: "todos",
-          git: "https://github.com/mycozycloud/cozy-todos.git",
-          comment: "official application",
-          description: "Write your tasks, order them and execute them efficiently."
-        }, {
-          icon: "img/photos-icon.png",
-          name: "photos",
-          slug: "photos",
-          git: "https://github.com/mycozycloud/cozy-photos.git",
-          comment: "official application",
-          description: "Share photos with your friends."
-        }, {
           icon: "img/agenda-icon.png",
-          name: "agenda",
+          name: "calendar",
           slug: "agenda",
           git: "https://github.com/mycozycloud/cozy-agenda.git",
           comment: "official application",
@@ -170,20 +142,6 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "official application",
           description: "Manage your contacts with custom informations"
         }, {
-          icon: "img/nirc-icon.png",
-          name: "nirc",
-          slug: "nirc",
-          git: "https://github.com/frankrousseau/cozy-nirc.git",
-          comment: "community contribution",
-          description: "Access to your favorite IRC channel from your Cozy"
-        }, {
-          icon: "img/botmanager-icon.png",
-          name: "IRC BotManager",
-          slug: "irc-botmanager",
-          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
-          comment: "community contribution",
-          description: "A friendly bot to help you manage an IRC channel"
-        }, {
           icon: "img/cozy-music.png",
           name: "cozic",
           slug: "cozic",
@@ -191,12 +149,55 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "An audio player to always keep your music with you"
         }, {
+          icon: "img/feeds-icon.png",
+          name: "feeds",
+          slug: "feeds",
+          git: "https://github.com/Piour/cozy-feeds.git",
+          comment: "community contribution",
+          description: "Aggregate your feeds and save your favorite links in bookmarks."
+        }, {
+          icon: "img/botmanager-icon.png",
+          name: "irc bot",
+          slug: "irc-botmanager",
+          git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
+          comment: "community contribution",
+          description: "A friendly bot to help you manage an IRC channel"
+        }, {
           icon: "img/kyou.png",
           name: "kyou",
           slug: "kyou",
           git: "https://github.com/frankrousseau/kyou.git",
           comment: "community contribution",
-          description: "Quantified self for Cozycloud!"
+          description: "Quantify your for a better knowledge of yourself",
+          website: "http://frankrousseau.github.io/kyou"
+        }, {
+          icon: "img/nirc-icon.png",
+          name: "nirc",
+          slug: "nirc",
+          git: "https://github.com/frankrousseau/cozy-nirc.git",
+          comment: "community contribution",
+          description: "Access to your favorite IRC channel from your Cozy"
+        }, {
+          icon: "img/notes-icon.png",
+          name: "notes",
+          slug: "notes",
+          git: "https://github.com/mycozycloud/cozy-notes.git",
+          comment: "official application",
+          description: "Store all your notes and files."
+        }, {
+          icon: "img/photos-icon.png",
+          name: "photos",
+          slug: "photos",
+          git: "https://github.com/mycozycloud/cozy-photos.git",
+          comment: "official application",
+          description: "Share photos with your friends."
+        }, {
+          icon: "img/todos-icon.png",
+          name: "todos",
+          slug: "todos",
+          git: "https://github.com/mycozycloud/cozy-todos.git",
+          comment: "official application",
+          description: "Write your tasks, order them and execute them efficiently."
         }, {
           icon: "img/webdav.png",
           name: "webdav",
@@ -535,10 +536,11 @@ window.require.register("lib/base_view", function(exports, require, module) {
     };
 
     BaseView.prototype.getRenderData = function() {
-      var _ref;
-      return {
-        model: (_ref = this.model) != null ? _ref.toJSON() : void 0
-      };
+      if ((this.model != null) && (this.model.toJSON != null)) {
+        return {
+          model: this.model.toJSON()
+        };
+      }
     };
 
     BaseView.prototype.render = function() {
@@ -562,6 +564,54 @@ window.require.register("lib/base_view", function(exports, require, module) {
     return BaseView;
 
   })(Backbone.View);
+  
+});
+window.require.register("lib/request", function(exports, require, module) {
+  
+  exports.request = function(type, url, data, callback) {
+    return $.ajax({
+      type: type,
+      url: url,
+      data: data != null ? JSON.stringify(data) : null,
+      contentType: "application/json",
+      dataType: "json",
+      success: function(data) {
+        if (callback != null) {
+          return callback(null, data);
+        }
+      },
+      error: function(data) {
+        console.log(data);
+        if (data != null) {
+          data = JSON.parse(data.responseText);
+          if ((data.msg != null) && (callback != null)) {
+            return callback(new Error(data.msg, data));
+          } else if ((data.error != null) && (callback != null)) {
+            data.msg = data.error;
+            return callback(new Error(data.msg, data));
+          }
+        } else if (callback != null) {
+          return callback(new Error("Server error occured", data));
+        }
+      }
+    });
+  };
+
+  exports.get = function(url, callback) {
+    return exports.request("GET", url, null, callback);
+  };
+
+  exports.post = function(url, data, callback) {
+    return exports.request("POST", url, data, callback);
+  };
+
+  exports.put = function(url, data, callback) {
+    return exports.request("PUT", url, data, callback);
+  };
+
+  exports.del = function(url, callback) {
+    return exports.request("DELETE", url, null, callback);
+  };
   
 });
 window.require.register("lib/socket_listener", function(exports, require, module) {
@@ -756,11 +806,83 @@ window.require.register("locales/en", function(exports, require, module) {
     "Questions and help forum": "Questions and help forum",
     "Sign out": "Sign out",
     "open in a new tab": "open in a new tab",
+    "always-on": "always on",
+    "keep always on": "keep always on",
+    "stop this app": "stop this app",
     "application-is-installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
     "no-app-message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
     "welcome-app-store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
     "installed-everything": "You have already installed everything !",
-    "There is already an app with similar name": "There is already an app with similar name."
+    "There is already an app with similar name": "There is already an app with similar name.",
+    "your cozy home": "your cozy home",
+    "manage your apps": "manage your app",
+    "chose your apps": "chose your apps",
+    "configure your cozy": "configure your cozy",
+    "ask for assistance": "ask for assistance",
+    "logout": "logout",
+    "dismiss all": "dismiss all",
+    "Welcome to your Cozy!": "Welcome to your Cozy!",
+    "You have no application installed. You should": "You have no application installed. You should",
+    "configure ": "configure ",
+    "App management": "App management",
+    "App store": "App store",
+    "Configuration": "Configuration",
+    "Assistance": "Assistance",
+    "Hardware consumption": "Hardware consumption",
+    "&nbsp;GB (Hard Drive)": "&nbsp;GB (Hard Drive)",
+    "&nbsp;MB (RAM)": "&nbsp;MB (RAM)",
+    "Manage your applications": "Manage your applications",
+    "There is no application installed.": "There is no application installed.",
+    " Your parameters": " Your parameters",
+    "I need your email to send you alerts or for password recovering": "I need your email to send you alerts or for password recovering",
+    "Your timezone is required to display dates properly": "Your timezone is required to display dates properly",
+    "The domain name is used to build urls send via email to you or your contacts": "The domain name is used to build urls send via email to you or your contacts",
+    "save": "save",
+    "Chose the language you want I use to speak with you:": "Chose the language you want I use to speak with you:",
+    "French": "French",
+    "English": "English",
+    "Change password procedure": "Change password procedure",
+    "current password": "current password",
+    "enter a new password": "enter a new password",
+    "new password": "new password",
+    "confirm your new password": "confirm your new password",
+    "save your new password": "save your new password",
+    "Do you look for assistance?": "Do you look for assistance?",
+    "Write an email to our support team at:": "Write an email to our support team at:",
+    "Register and post on our forum: ": "Register and post on our forum: ",
+    "Ask your question on Twitter: ": "Ask your question on Twitter: ",
+    "Visit the project website and learn to build your app:": "Visit the project website and learn to build your app:",
+    "your own application": "your own application",
+    "install": "install",
+    "broken": "broken",
+    "retry to install": "retry to install",
+    "Cozy - Account": "Cozy - Account",
+    "Cozy - App Store": "Cozy - App Store",
+    "Cozy - Home": "Cozy - Home",
+    "Cozy - Applications configuration": "Cozy - Applications configuration",
+    "running": "running",
+    "Cozy - Help": "Cozy - Help",
+    "Changing the locale requires to reload the page.": "Changing the locale requires to reload the page.",
+    "cancel": "cancel",
+    "installing": "installing",
+    "abort": "abort",
+    "Once updated, this application will require the following permissions:": "Once updated, this application will require the following permissions:",
+    "confirm update": "confirm update",
+    "This application does not need specific permissions": "This application does not need specific permissions",
+    "menu-descrtiption": "If it's your first time on Cozy here is a little guide\nabout all section available in your Cozy Home. All of them can be reached\nfrom the menu located on the top right corner.",
+    "You have no application installed. You should ": "You have no application installed. You should ",
+    "your Cozy then install your first application via the&nbsp;": "your Cozy then install your first application via the&nbsp;",
+    "app store": "app store",
+    "Home ": "Home ",
+    "It is the place from where you can reach your applications": "It is the place from where you can reach your applications",
+    "App management ": "App management ",
+    "There you can manage the state of your applications: start it, stop it, remove it...": "There you can manage the state of your applications: start it, stop it, remove it...",
+    "App store ": "App store ",
+    "In the app store, you will find new applications to install on your Cozy.": "In the app store, you will find new applications to install on your Cozy.",
+    "Configuration ": "Configuration ",
+    "To work properly your Cozy requires several parameters. Set them in this section.": "To work properly your Cozy requires several parameters. Set them in this section.",
+    "Assistance ": "Assistance ",
+    "You will find here some links to assistance resources.": "You will find here some links to assistance resources."
   };
   
 });
@@ -798,18 +920,90 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Applications Permissions": "Permissions de l'Application",
     "Confirm": "Confirmer",
     "Installing": "Installation en cours",
-    "remove": "Enlever",
-    "update": "M.À.J.",
+    "remove": "enlever",
+    "update": "m.à.j.",
     "started": "Démarrée",
     "Notifications": "Notifications",
     "Questions and help forum": "Forum d'aide",
     "Sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
+    "always-on": "toujours démarrée",
+    "keep always on": "garder toujours démarrée",
+    "stop this app": "arrêter cet app",
     "application-is-installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
     "no-app-message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
     "welcome-app-store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed-everything": "Vous avez déjà tout installé !",
-    "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire."
+    "There is already an app with similar name": "Il y a déjà une application installée avec un nom similaire.",
+    "your cozy home": "votre accueil Cozy",
+    "manage your apps": "gérer vos apps",
+    "chose your apps": "choisissez vos apps",
+    "configure your cozy": "configurer votre cozy",
+    "ask for assistance": "demandez de l'aide",
+    "logout": "déconnexion",
+    "dismiss all": "tout enlever",
+    "Welcome to your Cozy!": "Bienvenue sur votre Cozy!",
+    "You have no application installed. You should": "Vous n'avez pas d'applications installées vous devriez",
+    "configure ": "configurer ",
+    "App management": "Gestion des apps",
+    "App store": "App store",
+    "Configuration": "Configuration",
+    "Assistance": "Aide",
+    "Hardware consumption": "Consommation Hardware",
+    "&nbsp;GB (Hard Drive)": "&nbsp;Go (Disque Dur)",
+    "&nbsp;MB (RAM)": "&nbsp;Mo (RAM)",
+    "Manage your applications": "Gérez vos applications",
+    "There is no application installed.": "Il n'y a pas d'applications installées.",
+    "save": "sauvegarder",
+    " Your parameters": " Vos paramètres",
+    "I need your email to send you alerts or for password recovering": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
+    "Your timezone is required to display dates properly": "Votre timezone est require pour vous afficher les dates correctements.",
+    "The domain name is used to build urls send via email to you or your contacts": "Le nom de domaine est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
+    "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
+    "French": "Français",
+    "English": "Anglais",
+    "Change password procedure": "Procédure de changement de mot de passe",
+    "current password": "mot de passe actuel",
+    "enter a new password": "entrez un nouveau mot de passe",
+    "new password": "nouveau mot de passe",
+    "confirm your new password": "confirmez votre nouveau mot de passe",
+    "save your new password": "sauvegarder votre nouveau mot de passe",
+    "Do you look for assistance?": "Est-ce que vous cherchez de l'aide ?",
+    "Write an email to our support team at:": "Ecrivez un email à notre équipe support:",
+    "Register and post on our forum: ": "Postez un message sur notre forum: ",
+    "Ask your question on Twitter: ": "Posez votre question sur Twitter: ",
+    "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
+    "your own application": "votre propre application",
+    "install": "installation",
+    "broken": "cassé",
+    "retry to install": "réessai d'installation",
+    "Cozy - Account": "Cozy - Compte",
+    "Cozy - App Store": "Cozy - App Store",
+    "Cozy - Home": "Cozy - Home",
+    "Cozy - Applications configuration": "Cozy - Configuration d'applications",
+    "running": "démarrée",
+    "Cozy - Help": "Cozy - Aide",
+    "Changing the locale requires to reload the page.": "Le changement de langue nécessite le rechargement de la page.",
+    "cancel": "cancel",
+    "installing": "installing",
+    "abort": "abort",
+    "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requièra les permissions suivantes:",
+    "confirm update": "confirmez la mise à jour",
+    "This application does not need specific permissions": "Cette applicatiion n'a pas besoin d'informations spécifiques",
+    "menu-descrtiption": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.",
+    "You have no application installed. You should ": "Vous n'avez pas d'applications installées vous devriez ",
+    "your Cozy then install your first application via the&nbsp;": "votre Cozy puis installer votre première application via&nbsp;",
+    "app store": "app store",
+    "Home ": "Accueil ",
+    "It is the place from where you can reach your applications": "C'est ici que vous pouvez accéder à toutes vos applications.",
+    "App management ": "Gestion des applications ",
+    "There you can manage the state of your applications: start it, stop it, remove it...": "Ici tu peux gérer l'état de tes applications: démarre, arrête et supprime les...",
+    "App store ": "App store ",
+    "In the app store, you will find new applications to install on your Cozy.": "Dans l'app store, vous trouverez de nouvelles applications pour installer Cozy.",
+    "Configuration ": "Configuration ",
+    "To work properly your Cozy requires several parameters. Set them in this section.": "Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section.",
+    "Assistance ": "Aide ",
+    "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin."
   };
   
 });
@@ -1012,22 +1206,44 @@ window.require.register("routers/main_router", function(exports, require, module
     MainRouter.prototype.routes = {
       "home": "applicationList",
       "applications": "market",
+      "config-applications": "configApplications",
       "account": "account",
+      "help": "help",
       "logout": "logout",
       "apps/:slug": "application",
-      "apps/:slug/*hash": "application"
+      "apps/:slug/*hash": "application",
+      "*path": "applicationList",
+      '*notFound': 'applicationList'
     };
 
-    MainRouter.prototype.market = function() {
-      return app.mainView.displayMarket();
-    };
-
-    MainRouter.prototype.account = function() {
-      return app.mainView.displayAccount();
+    MainRouter.prototype.selectIcon = function(index) {
+      $('.menu-btn').removeClass('active');
+      return $($('.menu-btn').get(index)).addClass('active');
     };
 
     MainRouter.prototype.applicationList = function() {
-      return app.mainView.displayApplicationsList();
+      app.mainView.displayApplicationsList();
+      return this.selectIcon(0);
+    };
+
+    MainRouter.prototype.configApplications = function() {
+      app.mainView.displayConfigApplications();
+      return this.selectIcon(1);
+    };
+
+    MainRouter.prototype.help = function() {
+      app.mainView.displayHelp();
+      return this.selectIcon(4);
+    };
+
+    MainRouter.prototype.market = function() {
+      app.mainView.displayMarket();
+      return this.selectIcon(2);
+    };
+
+    MainRouter.prototype.account = function() {
+      app.mainView.displayAccount();
+      return this.selectIcon(3);
     };
 
     MainRouter.prototype.application = function(slug, hash) {
@@ -1049,35 +1265,62 @@ window.require.register("templates/account", function(exports, require, module) 
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="account-form" class="well"><p>');
-  var __val__ = t('email')
+  buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">');
+  var __val__ = t(' Your parameters')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-email-field"></a></p><p>');
-  var __val__ = t('timezone')
+  buf.push('</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+  var __val__ = t('I need your email to send you alerts or for password recovering')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-timezone-field"></a></p><p>');
-  var __val__ = t('domain')
+  buf.push('</p><input id="account-email-field"/><button class="btn">');
+  var __val__ = t('save')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-domain-field"></a></p><p>');
-  var __val__ = t('locale')
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('Your timezone is required to display dates properly')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><p class="field"><a id="account-locale-field"></a></p><p><button id="change-password-button" class="btn">');
+  buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('The domain name is used to build urls send via email to you or your contacts')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><input id="account-domain-field"/><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="input"><p>');
+  var __val__ = t('Chose the language you want I use to speak with you:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><select id="account-locale-field"><option value="fr">');
+  var __val__ = t('French')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</option><option value="en">');
+  var __val__ = t('English')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</option></select><button class="btn">');
+  var __val__ = t('save')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><p><button id="change-password-button" class="btn">');
   var __val__ = t('Change password')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></p><div id="change-password-form"><p>');
-  var __val__ = t('Change password')
+  var __val__ = t('Change password procedure')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><p><label>');
   var __val__ = t('input your current password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password0-field" type="password"/></p><p><label>');
-  var __val__ = t('fill this field to set a new password')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password0-field'), 'type':("password"), 'placeholder':("" + (t('current password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><label>');
+  var __val__ = t('enter a new password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password1-field" type="password"/></p><p><label>');
-  var __val__ = t('confirm new password')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password1-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><label>');
+  var __val__ = t('confirm your new password')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><input id="account-password2-field" type="password"/></p><p><button id="account-form-button" class="btn">');
-  var __val__ = t('Send Changes')
+  buf.push('</label></p><input');
+  buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+  buf.push('/><p><button id="account-form-button" class="btn">');
+  var __val__ = t('save your new password')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
   }
@@ -1097,25 +1340,152 @@ window.require.register("templates/application_iframe", function(exports, requir
   return buf.join("");
   };
 });
+window.require.register("templates/config_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="clearfix"><div class="mod left"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  if ( app.state === 'installed')
+  {
+  buf.push('<span class="state-label">');
+  var __val__ = t('running')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span>');
+  }
+  else
+  {
+  buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
+  }
+  buf.push('</div><div class="mod right"><button class="btn remove-app">');
+  var __val__ = t('remove')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
+  var __val__ = t('update')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
+  var __val__ = t('stop this app')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always-on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_application_list", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_applications", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>');
+  var __val__ = t('Hardware consumption')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>');
+  var __val__ = t('&nbsp;GB (Hard Drive)')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
+  var __val__ = t('&nbsp;MB (RAM)')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
+  var __val__ = t('Manage your applications')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/help", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">');
+  var __val__ = t('Do you look for assistance?')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</h4><div class="line pa2"><p class="help-text mt2">');
+  var __val__ = t('Write an email to our support team at:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
+  var __val__ = t('Register and post on our forum: ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">');
+  var __val__ = t('Ask your question on Twitter: ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
+  var __val__ = t('Visit the project website and learn to build your app:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
+  }
+  return buf.join("");
+  };
+});
 window.require.register("templates/home", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div id="no-app-message" class="center"><p>');
-  var __val__ = t('no-app-message')
-  buf.push(null == __val__ ? "" : __val__);
-  buf.push('</p></div><div id="app-list"></div><div class="app-tools"><div class="machine-infos"><div class="memory"><div>');
-  var __val__ = t('Memory consumption')
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+  var __val__ = t('Welcome to your Cozy!')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ': <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div><div class="disk"><div>');
-  var __val__ = t('Disk consumption')
+  buf.push('</p></div><div class="line"><p class="bigger pa2">');
+  var __val__ = t('You have no application installed. You should ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;(' + escape((interp = t('total')) == null ? '' : interp) + ' : <span class="total"></span>)</div><div class="progress"><div class="bar"></div></div></div></div><div class="btn-group"><button id="manage-app-button" class="btn">');
-  var __val__ = t('manage')
+  buf.push('<a href="#account">');
+  var __val__ = t('configure ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div></div>');
+  buf.push('</a>');
+  var __val__ = t ('your Cozy then install your first application via the&nbsp;')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('<a href="#applications">');
+  var __val__ = t('app store')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a>.</p><p class="mt2 pa2">');
+  var __val__ = t ('menu-descrtiption')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/home-black.png"/><strong>');
+  var __val__ = t('Home ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>');
+  var __val__ = t('It is the place from where you can reach your applications')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/config-apps.png"/><strong>');
+  var __val__ = t('App management ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>');
+  var __val__ = t('There you can manage the state of your applications: start it, stop it, remove it...')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/apps.png"/><strong>');
+  var __val__ = t('App store ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>');
+  var __val__ = t('In the app store, you will find new applications to install on your Cozy.')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/configuration.png"/><strong>');
+  var __val__ = t('Configuration ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>');
+  var __val__ = t('To work properly your Cozy requires several parameters. Set them in this section.')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p><img src="/img/help.png"/><strong>');
+  var __val__ = t('Assistance ')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</strong>');
+  var __val__ = t('You will find here some links to assistance resources.')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p></div></div><div id="app-list"></div>');
   }
   return buf.join("");
   };
@@ -1128,33 +1498,7 @@ window.require.register("templates/home_application", function(exports, require,
   var interp;
   buf.push('<a');
   buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-  buf.push('><div class="application-inner"><p><img src=""/></p><p class="state-label">');
-  var __val__ = t('Installing')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p>');
-   if (app.displayName !== null)
-  {
-  buf.push('<p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p>');
-  }
-   else
-  {
-  buf.push('<p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p>');
-  }
-  buf.push('</div></a><div class="application-outer center"><div class="btn-group"><button class="btn remove-app">');
-  var __val__ = t('remove')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button><button class="btn update-app">');
-  var __val__ = t('update')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div><label for="app-stoppable"><input');
-  buf.push(attrs({ 'name':("app-stoppable"), 'checked':(app.isStoppable ? undefined : "checked"), 'type':("checkbox"), 'title':(t("always-on")), "class": ('app-stoppable') }, {"name":true,"checked":true,"type":true,"title":true}));
-  buf.push('/>&nbsp;');
-  var __val__ = t('Keep always on')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</label><button class="btn btn-large start-stop-btn">');
-  var __val__ = t('started')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div></div>');
+  buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a>');
   }
   return buf.join("");
   };
@@ -1165,7 +1509,22 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"></div></div>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>');
+  var __val__ = t('your cozy home')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
+  var __val__ = t('manage your apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
+  var __val__ = t('chose your apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+  var __val__ = t('configure your cozy')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
+  var __val__ = t('ask for assistance')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -1176,22 +1535,19 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<p>');
-  var __val__ = t('welcome-app-store')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><div id="app-market-list"><div id="your-app"><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
-  var __val__ = t('add application ?')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
   var __val__ = t('Install')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">');
-  var __val__ = t('your app!')
+  var __val__ = t('your own application')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/></p><div class="error alert alert-error main-alert"></div><div class="info alert main-alert"></div></div></div><div id="no-app-message">');
+  buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
+  var __val__ = t('install')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
   var __val__ = t('installed-everything')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="clearfix"></div>');
+  buf.push('</div></div></div><div class="md-overlay"></div>');
   }
   return buf.join("");
   };
@@ -1202,15 +1558,45 @@ window.require.register("templates/market_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="app-img pull-left"><img');
+  buf.push('<div class="right"><a');
+  buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+  buf.push('><img src="img/git.png" class="img-btn"/></a>');
+  if ( app.website !== undefined)
+  {
+  buf.push('<a');
+  buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+  buf.push('><img src="img/link.png" class="img-btn"/></a>');
+  }
+  buf.push('</div><div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="app-install-button pull-right"><button class="app-install">+</button><div class="app-install-text">');
-  var __val__ = t('add application ?')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><p>' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+  buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/menu_application", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a');
+  buf.push(attrs({ 'href':("#apps/" + (model.slug) + "/") }, {"href":true}));
+  buf.push('>' + escape((interp = model.displayName) == null ? '' : interp) + '</a>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/menu_applications", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"></div></div>');
   }
   return buf.join("");
   };
@@ -1221,16 +1607,10 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar-inner clearfix"><h2 id="header-title"><a href="http://cozycloud.cc/" target="_blank" title="home"><img src="img/grey-logo.png" alt="Cozy Cloud Symbol"/></a></h2><div id="buttons"><ul class="nav"><li id="notifications-container"></li><li class="active"><a id="home-button" href="#home"><i class="icon-home"></i><span>');
-  var __val__ = t('Home')
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><div id="menu-applications-container" class="left"></div><a id="logout-button" href="#logout" class="right"><span>');
+  var __val__ = t('logout')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="market-button" href="#applications"><i class="icon-plus"></i><span>');
-  var __val__ = t('Apps')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="account-button" href="#account"><i class="icon-user"></i><span>');
-  var __val__ = t('Account')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></a></li><li><a id="help-button" href="https://forum.cozycloud.cc/" target="_blank"><i class="icon-help">&nbsp;</i></a></li><li><a id="logout-button" href="#logout"><i class="icon-arrow-right"></i></a></li></ul></div></div>');
+  buf.push('</span><img src="img/logout-white.png"/></a><div id="notifications-container" class="right"></div></div>');
   }
   return buf.join("");
   };
@@ -1250,7 +1630,7 @@ window.require.register("templates/navbar_app_btn", function(exports, require, m
   return buf.join("");
   };
 });
-window.require.register("templates/notification_item", function(exports, require, module) {
+window.require.register("templates/notification", function(exports, require, module) {
   module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
   attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
   var buf = [];
@@ -1267,11 +1647,11 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><i class="icon-exclamation-sign">&nbsp;</i><span id="notifications-counter" class="badge badge-important"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  buf.push('<a id="notifications-toggle"><img src="img/notification-white.png"/></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
   var __val__ = t('You have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</li><li id="dismiss-all">');
-  var __val__ = t('Dismiss All')
+  buf.push('</li><li id="dismiss-all" class="btn">');
+  var __val__ = t('dismiss all')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li></ul>');
   }
@@ -1284,19 +1664,17 @@ window.require.register("templates/popover_description", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">');
-  var __val__ = t('Application Description')
+  buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
+  buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
+  buf.push('>&nbsp;</a><a');
+  buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
+  buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
+  var __val__ = t('install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('downloading-description')
+  buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
+  var __val__ = t('cancel')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
-  var __val__ = t('Cancel')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
-  var __val__ = t('Ok')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></div>');
+  buf.push('</button></div></div>');
   }
   return buf.join("");
   };
@@ -1307,17 +1685,14 @@ window.require.register("templates/popover_permissions", function(exports, requi
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="modal-header">');
-  var __val__ = t('Applications Permissions')
+  buf.push('<div class="md-header mt2">');
+  var __val__ = t('Once updated, this application will require the following permissions:')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div><div class="modal-body"><div><h4>');
-  var __val__ = t('downloading-permissions')
+  buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
+  var __val__ = t('confirm update')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div><div class="modal-footer"><a id="cancelbtn" class="btn">');
-  var __val__ = t('Cancel')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a><a id="confirmbtn" class="btn btn-primary">');
-  var __val__ = t('Confirm')
+  buf.push('</a><a id="cancelbtn" class="btn light-btn right">');
+  var __val__ = t('cancel')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a></div>');
   }
@@ -1325,7 +1700,7 @@ window.require.register("templates/popover_permissions", function(exports, requi
   };
 });
 window.require.register("views/account", function(exports, require, module) {
-  var BaseView, locales, timezones,
+  var BaseView, locales, request, timezones,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1335,6 +1710,8 @@ window.require.register("views/account", function(exports, require, module) {
   timezones = require('helpers/timezone').timezones;
 
   locales = require('helpers/locales').locales;
+
+  request = require('lib/request');
 
   module.exports = exports.AccountView = (function(_super) {
 
@@ -1351,7 +1728,7 @@ window.require.register("views/account", function(exports, require, module) {
     function AccountView() {
       this.displayErrors = __bind(this.displayErrors, this);
 
-      this.onDataSubmit = __bind(this.onDataSubmit, this);
+      this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
 
       this.closePasswordForm = __bind(this.closePasswordForm, this);
 
@@ -1363,7 +1740,8 @@ window.require.register("views/account", function(exports, require, module) {
       var _this = this;
       return this.changePasswordButton.fadeOut(function() {
         return _this.changePasswordForm.fadeIn(function() {
-          return _this.password1Field.focus();
+          _this.password0Field.focus();
+          return $(window).trigger('resize');
         });
       });
     };
@@ -1375,65 +1753,42 @@ window.require.register("views/account", function(exports, require, module) {
       });
     };
 
-    AccountView.prototype.onDataSubmit = function(event) {
+    AccountView.prototype.onNewPasswordSubmit = function(event) {
       var form,
         _this = this;
-      this.loadingIndicator.spin();
       form = {
-        password0: $("#account-password0-field").val(),
-        password1: $("#account-password1-field").val(),
-        password2: $("#account-password2-field").val()
+        password0: this.password0Field.val(),
+        password1: this.password1Field.val(),
+        password2: this.password2Field.val()
       };
       this.infoAlert.hide();
       this.errorAlert.hide();
-      return $.ajax({
-        type: 'POST',
-        url: "api/user/",
-        data: form,
-        success: function(data) {
+      this.accountSubmitButton.spin('small');
+      this.accountSubmitButton.css('color', 'transparent');
+      return request.post('api/user', form, function(err, data) {
+        if (err) {
+          _this.password0Field.val(null);
+          _this.password1Field.val(null);
+          _this.password2Field.val(null);
+          if (data != null) {
+            _this.displayErrors(data.msg);
+          } else {
+            _this.displayErrors(err.message);
+          }
+        } else {
           if (data.success) {
             _this.infoAlert.html(data.msg);
             _this.infoAlert.show();
-            $("#account-password0-field").val(null);
-            $("#account-password1-field").val(null);
-            $("#account-password2-field").val(null);
+            _this.password0Field.val(null);
+            _this.password1Field.val(null);
+            _this.password2Field.val(null);
           } else {
-            _this.displayErrors(data.msg || data.responseText);
+            _this.displayErrors(data.msg);
           }
-          return _this.loadingIndicator.spin();
-        },
-        error: function(data) {
-          $("#account-password0-field").val(null);
-          _this.displayErrors(data.msg || data.responseText);
-          return _this.loadingIndicator.spin();
         }
+        _this.accountSubmitButton.css('color', 'white');
+        return _this.accountSubmitButton.spin();
       });
-    };
-
-    AccountView.prototype.submitData = function(form, url) {
-      var d,
-        _this = this;
-      if (url == null) {
-        url = 'api/user/';
-      }
-      d = new $.Deferred;
-      $.ajax({
-        type: 'POST',
-        url: url,
-        data: form,
-        success: function(data) {
-          if (data.success) {
-            window.location.reload();
-            return d.resolve();
-          } else {
-            return d.reject(data.msg || data.responseText);
-          }
-        },
-        error: function(data) {
-          return d.reject(data.msg || data.responseText);
-        }
-      });
-      return d;
     };
 
     /* Functions
@@ -1443,89 +1798,99 @@ window.require.register("views/account", function(exports, require, module) {
     AccountView.prototype.displayErrors = function(msgs) {
       var errorString, msg, _i, _len;
       errorString = "";
+      if (typeof msgs === 'string') {
+        msgs = msgs.split(',');
+      }
       for (_i = 0, _len = msgs.length; _i < _len; _i++) {
         msg = msgs[_i];
-        errorString += msg + "<br />";
+        errorString += "" + msg + "<br />";
       }
       this.errorAlert.html(errorString);
       return this.errorAlert.show();
     };
 
+    AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
+      var saveButton, saveFunction;
+      saveButton = fieldWidget.parent().find('.btn');
+      saveFunction = function() {
+        var data;
+        saveButton.css('color', 'transparent');
+        saveButton.spin('small', 'white');
+        data = {};
+        data[fieldName] = fieldWidget.val();
+        return request.post("api/" + path, data, function(err) {
+          saveButton.spin();
+          saveButton.css('color', 'white');
+          if (err) {
+            saveButton.addClass('red');
+            return saveButton.html('error');
+          } else {
+            saveButton.addClass('green');
+            saveButton.html('saved');
+            if (fieldName === 'locale') {
+              alert(t('Changing the locale requires to reload the page.'));
+              window.location.reload();
+            }
+            return setTimeout(function() {
+              if (fieldName === 'locale') {
+                return window.location.reload();
+              }
+            }, 1000);
+          }
+        });
+      };
+      saveButton.click(saveFunction);
+      return saveFunction;
+    };
+
     AccountView.prototype.fetchData = function() {
       var _this = this;
       $.get("api/users/", function(data) {
-        var timezone, timezoneData, _i, _len;
-        _this.emailField.html(data.rows[0].email);
-        _this.timezoneField.html(data.rows[0].timezone);
+        var saveEmail, saveTimezone, timezoneData;
         timezoneData = [];
-        for (_i = 0, _len = timezones.length; _i < _len; _i++) {
-          timezone = timezones[_i];
-          timezoneData.push({
-            value: timezone,
-            text: timezone
-          });
-        }
-        _this.emailField.editable({
-          url: function(params) {
-            return _this.submitData({
-              email: params.value
-            });
-          },
-          type: 'text',
-          send: 'always',
-          value: data.rows[0].email
+        _this.emailField.val(data.rows[0].email);
+        _this.timezoneField.val(data.rows[0].timezone);
+        saveEmail = _this.getSaveFunction('email', _this.emailField, 'user');
+        _this.emailField.on('keyup', function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return saveEmail();
+          }
         });
-        return _this.timezoneField.editable({
-          url: function(params) {
-            return _this.submitData({
-              timezone: params.value
-            });
-          },
-          type: 'select',
-          send: 'always',
-          source: timezoneData,
-          value: data.rows[0].timezone
-        });
+        saveTimezone = _this.getSaveFunction('timezone', _this.timezoneField, 'user');
+        return _this.timezoneField.change(saveTimezone);
       });
       return $.get("api/instances/", function(data) {
-        var code, domain, instance, locale, localeData, txt, _ref;
+        var domain, instance, locale, saveDomain, saveLocale, _ref;
         instance = (_ref = data.rows) != null ? _ref[0] : void 0;
-        domain = (instance != null ? instance.domain : void 0) || 'no.domain.set';
+        domain = (instance != null ? instance.domain : void 0) || t('no.domain.set');
         locale = (instance != null ? instance.locale : void 0) || 'en';
-        _this.domainField.html(domain);
-        _this.domainField.editable({
-          url: function(params) {
-            return _this.submitData({
-              domain: params.value
-            }, 'api/instance/');
-          },
-          type: 'text',
-          send: 'always',
-          value: domain
-        });
-        _this.localeField.html(locales[locale]);
-        localeData = (function() {
-          var _results;
-          _results = [];
-          for (code in locales) {
-            txt = locales[code];
-            _results.push({
-              value: code,
-              text: txt
-            });
+        saveDomain = _this.getSaveFunction('domain', _this.domainField, 'instance');
+        _this.domainField.on('keyup', function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return saveDomain();
           }
-          return _results;
-        })();
-        return _this.localeField.editable({
-          url: function(params) {
-            return _this.submitData({
-              locale: params.value
-            }, 'api/instance/');
-          },
-          type: 'select',
-          send: 'always',
-          source: localeData,
-          value: locale
+        });
+        _this.domainField.val(domain);
+        saveLocale = _this.getSaveFunction('locale', _this.localeField, 'instance');
+        _this.localeField.change(saveLocale);
+        _this.localeField.val(locale);
+        _this.password0Field = $('#account-password0-field');
+        _this.password1Field = $('#account-password1-field');
+        _this.password2Field = $('#account-password2-field');
+        _this.password0Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.password1Field.focus();
+          }
+        });
+        _this.password1Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.password2Field.focus();
+          }
+        });
+        return _this.password2Field.keyup(function(event) {
+          if (event.keyCode === 13 || event.which === 13) {
+            return _this.onNewPasswordSubmit();
+          }
         });
       });
     };
@@ -1535,7 +1900,8 @@ window.require.register("views/account", function(exports, require, module) {
 
 
     AccountView.prototype.afterRender = function() {
-      var _this = this;
+      var timezone, _i, _len,
+        _this = this;
       this.emailField = this.$('#account-email-field');
       this.timezoneField = this.$('#account-timezone-field');
       this.domainField = this.$('#account-domain-field');
@@ -1549,29 +1915,401 @@ window.require.register("views/account", function(exports, require, module) {
       this.changePasswordButton = this.$('#change-password-button');
       this.changePasswordButton.click(this.onChangePasswordClicked);
       this.accountSubmitButton = this.$('#account-form-button');
-      this.password1Field = $('#account-password1-field');
-      this.password2Field = $('#account-password2-field');
-      this.password1Field.keyup(function(event) {
-        if (event.which === 13) {
-          return _this.password2Field.focus();
-        }
-      });
-      this.password2Field.keyup(function(event) {
-        if (event.which === 13) {
-          return _this.onDataSubmit();
-        }
-      });
       this.accountSubmitButton.click(function(event) {
         event.preventDefault();
-        return _this.onDataSubmit();
+        return _this.onNewPasswordSubmit();
       });
-      this.installInfo = this.$('#add-app-modal .loading-indicator');
-      this.errorAlert.hide();
-      this.infoAlert.hide();
-      this.addApplicationCloseCross = this.$('#add-app-modal .close');
-      this.addApplicationCloseCross.click(this.onCloseAddAppClicked);
-      this.loadingIndicator = this.$('.loading-indicator');
+      for (_i = 0, _len = timezones.length; _i < _len; _i++) {
+        timezone = timezones[_i];
+        this.timezoneField.append("<option value=\"" + timezone + "\">" + timezone + "</option>");
+      }
       return this.fetchData();
+    };
+
+    return AccountView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_application", function(exports, require, module) {
+  var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  ColorButton = require('widgets/install_button');
+
+  PopoverPermissionsView = require('views/popover_permissions');
+
+  module.exports = ApplicationRow = (function(_super) {
+
+    __extends(ApplicationRow, _super);
+
+    ApplicationRow.prototype.className = "line config-application clearfix";
+
+    ApplicationRow.prototype.tagName = "div";
+
+    ApplicationRow.prototype.template = require('templates/config_application');
+
+    ApplicationRow.prototype.getRenderData = function() {
+      return {
+        app: this.model.attributes
+      };
+    };
+
+    ApplicationRow.prototype.events = {
+      "click .remove-app": "onRemoveClicked",
+      "click .update-app": "onUpdateClicked",
+      "click .start-stop-btn": "onStartStopClicked",
+      "click .app-stoppable": "onStoppableClicked"
+    };
+
+    /* Constructor
+    */
+
+
+    function ApplicationRow(options) {
+      this.remove = __bind(this.remove, this);
+
+      this.onStartStopClicked = __bind(this.onStartStopClicked, this);
+
+      this.onUpdateClicked = __bind(this.onUpdateClicked, this);
+
+      this.onRemoveClicked = __bind(this.onRemoveClicked, this);
+
+      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
+
+      this.onAppChanged = __bind(this.onAppChanged, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+      this.id = "app-btn-" + options.model.id;
+      ApplicationRow.__super__.constructor.apply(this, arguments);
+    }
+
+    ApplicationRow.prototype.afterRender = function() {
+      this.icon = this.$('img');
+      this.updateButton = new ColorButton(this.$(".update-app"));
+      this.removeButton = new ColorButton(this.$(".remove-app"));
+      this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
+      this.stateLabel = this.$('.state-label');
+      this.appStoppable = this.$(".app-stoppable");
+      this.listenTo(this.model, 'change', this.onAppChanged);
+      return this.onAppChanged(this.model);
+    };
+
+    /* Listener
+    */
+
+
+    ApplicationRow.prototype.onAppChanged = function(app) {
+      var bool;
+      switch (this.model.get('state')) {
+        case 'broken':
+          this.icon.attr('src', "img/broken.png");
+          this.stateLabel.show().text(t('broken'));
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('retry to install'));
+          this.appStoppable.hide();
+          this.appStoppable.next().hide();
+          this.startStopBtn.hide();
+          break;
+        case 'installed':
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.removeClass('stopped');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.displayGrey(t('update'));
+          this.appStoppable.show();
+          this.appStoppable.next().show();
+          this.startStopBtn.displayGrey(t('stop this app'));
+          break;
+        case 'installing':
+          this.icon.attr('src', "img/installing.gif");
+          this.icon.removeClass('stopped');
+          this.stateLabel.show().text(t('installing'));
+          this.removeButton.displayGrey(t('abort'));
+          this.updateButton.hide();
+          this.appStoppable.hide();
+          this.appStoppable.next().hide();
+          this.startStopBtn.hide();
+          break;
+        case 'stopped':
+          this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.addClass('stopped');
+          this.removeButton.displayGrey(t('remove'));
+          this.updateButton.hide();
+          this.appStoppable.hide();
+          this.appStoppable.next().hide();
+          this.startStopBtn.displayGrey(t('start this app'));
+      }
+      bool = !this.model.get('isStoppable');
+      return this.$('.app-stoppable').attr('checked', bool);
+    };
+
+    ApplicationRow.prototype.onStoppableClicked = function(event) {
+      var bool,
+        _this = this;
+      bool = !this.model.get('isStoppable');
+      return this.model.save({
+        isStoppable: bool
+      }, {
+        success: function() {
+          return _this.$('.app-stoppable').attr('checked', !bool);
+        },
+        error: function() {
+          return _this.$('.app-stoppable').attr('checked', bool);
+        }
+      });
+    };
+
+    ApplicationRow.prototype.onRemoveClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.removeButton.spin(true);
+      return this.model.uninstall({
+        success: function() {
+          _this.remove();
+          return Backbone.Mediator.pub('app-state-changed', true);
+        },
+        error: function() {
+          _this.removeButton.displayRed(t("retry to install"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
+      });
+    };
+
+    ApplicationRow.prototype.onUpdateClicked = function(event) {
+      event.preventDefault();
+      return this.showPopover();
+    };
+
+    ApplicationRow.prototype.showPopover = function() {
+      var _this = this;
+      this.popover = new PopoverPermissionsView({
+        model: this.model,
+        confirm: function(application) {
+          _this.popover.remove();
+          return _this.updateApp();
+        },
+        cancel: function(application) {
+          return _this.popover.remove();
+        }
+      });
+      return this.$el.append(this.popover.$el);
+    };
+
+    ApplicationRow.prototype.onStartStopClicked = function(event) {
+      var _this = this;
+      event.preventDefault();
+      this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.startStopBtn.spin(true);
+      if (this.model.isRunning()) {
+        return this.model.stop({
+          success: function() {
+            _this.startStopBtn.spin(false);
+            _this.stateLabel.html(t('stopped'));
+            return Backbone.Mediator.pub('app-state-changed', true);
+          },
+          error: function() {
+            return _this.startStopBtn.spin(false);
+          }
+        });
+      } else {
+        return this.model.start({
+          success: function() {
+            _this.startStopBtn.spin(false);
+            _this.stateLabel.html(t('started'));
+            return Backbone.Mediator.pub('app-state-changed', true);
+          },
+          error: function() {
+            return _this.startStopBtn.spin(false);
+          }
+        });
+      }
+    };
+
+    ApplicationRow.prototype.remove = function() {
+      var _this = this;
+      if (this.model.get('state') !== 'installed') {
+        return ApplicationRow.__super__.remove.apply(this, arguments);
+      }
+      this.removeButton.spin(false);
+      this.removeButton.displayGreen(t("Removed"));
+      return setTimeout(function() {
+        return _this.$el.fadeOut(function() {
+          return ApplicationRow.__super__.remove.apply(_this, arguments);
+        });
+      }, 1000);
+    };
+
+    ApplicationRow.prototype.updateApp = function() {
+      var _this = this;
+      this.updateButton.displayRed(t("installing"));
+      Backbone.Mediator.pub('app-state-changed', true);
+      this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      this.updateButton.spin(false);
+      return this.updateButton.spin(true, {
+        success: function() {
+          _this.updateButton.displayGreen(t("Updated"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        },
+        error: function(jqXHR) {
+          var error;
+          error = JSON.parse(jqXHR.responseText);
+          alert(error.message);
+          _this.updateButton.displayRed(t("failed"));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
+      });
+    };
+
+    return ApplicationRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_application_list", function(exports, require, module) {
+  var ApplicationRow, ApplicationsListView, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  ApplicationRow = require('views/config_application');
+
+  module.exports = ApplicationsListView = (function(_super) {
+
+    __extends(ApplicationsListView, _super);
+
+    ApplicationsListView.prototype.id = 'config-application-list';
+
+    ApplicationsListView.prototype.tagName = 'div';
+
+    ApplicationsListView.prototype.template = require('templates/config_application_list');
+
+    ApplicationsListView.prototype.itemView = require('views/config_application');
+
+    function ApplicationsListView(apps) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.apps = apps;
+      ApplicationsListView.__super__.constructor.call(this, {
+        collection: apps
+      });
+    }
+
+    ApplicationsListView.prototype.afterRender = function() {
+      return this.appList = this.$("#app-list");
+    };
+
+    return ApplicationsListView;
+
+  })(ViewCollection);
+  
+});
+window.require.register("views/config_applications", function(exports, require, module) {
+  var BaseView, ConfigApplicationList, request,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  request = require('lib/request');
+
+  BaseView = require('lib/base_view');
+
+  ConfigApplicationList = require('./config_application_list');
+
+  module.exports = exports.ConfigApplicationsView = (function(_super) {
+
+    __extends(ConfigApplicationsView, _super);
+
+    ConfigApplicationsView.prototype.id = 'config-applications-view';
+
+    ConfigApplicationsView.prototype.template = require('templates/config_applications');
+
+    ConfigApplicationsView.prototype.subscriptions = {
+      'app-state-changed': 'onAppStateChanged'
+    };
+
+    function ConfigApplicationsView(apps) {
+      this.apps = apps;
+      ConfigApplicationsView.__super__.constructor.call(this);
+    }
+
+    ConfigApplicationsView.prototype.afterRender = function() {
+      this.memoryFree = this.$('.memory-free');
+      this.diskSpace = this.$('.disk-space');
+      this.fetch();
+      this.applicationList = new ConfigApplicationList(this.apps);
+      return this.$el.find('.w66').append(this.applicationList.$el);
+    };
+
+    ConfigApplicationsView.prototype.fetch = function() {
+      var _this = this;
+      this.$('.amount').spin('small');
+      this.$('.total').spin('small');
+      return request.get('api/sys-data', function(err, data) {
+        if (err) {
+          return alert(t('Server error occured, infos cannot be displayed.'));
+        } else {
+          _this.$('.amount').spin();
+          _this.$('.total').spin();
+          _this.displayMemory(data.freeMem, data.totalMem);
+          return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+        }
+      });
+    };
+
+    ConfigApplicationsView.prototype.displayMemory = function(amount, total) {
+      this.memoryFree.find('.amount').html(Math.floor(amount / 1000));
+      return this.memoryFree.find('.total').html(Math.floor(total / 1000));
+    };
+
+    ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
+      this.diskSpace.find('.amount').html(amount / 10);
+      return this.diskSpace.find('.total').html(total);
+    };
+
+    ConfigApplicationsView.prototype.onAppStateChanged = function() {
+      return setTimeout(this.fetch, 10000);
+    };
+
+    return ConfigApplicationsView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/help", function(exports, require, module) {
+  var BaseView,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = exports.AccountView = (function(_super) {
+
+    __extends(AccountView, _super);
+
+    AccountView.prototype.id = 'help-view';
+
+    AccountView.prototype.template = require('templates/help');
+
+    function AccountView() {
+      AccountView.__super__.constructor.call(this);
+    }
+
+    AccountView.prototype.afterRender = function() {
+      var _this = this;
+      return $.get("api/instances/", function(data) {
+        var helpUrl, instance, _ref;
+        console.log(data);
+        instance = (_ref = data.rows) != null ? _ref[0] : void 0;
+        helpUrl = instance != null ? instance.helpUrl : void 0;
+        if (helpUrl != null) {
+          return $(_this.$el.find('.line')[1]).prepend('<p class="help-text">' + helpUrl + '</p>');
+        }
+      });
     };
 
     return AccountView;
@@ -1591,14 +2329,6 @@ window.require.register("views/home", function(exports, require, module) {
 
   ApplicationRow = require('views/home_application');
 
-  String.prototype.startsWith = function(prefix) {
-    return this.indexOf(prefix, 0) === 0;
-  };
-
-  String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-  };
-
   module.exports = ApplicationsListView = (function(_super) {
 
     __extends(ApplicationsListView, _super);
@@ -1609,36 +2339,37 @@ window.require.register("views/home", function(exports, require, module) {
 
     ApplicationsListView.prototype.itemView = require('views/home_application');
 
-    ApplicationsListView.prototype.events = {
-      'click #add-app-button': 'onAddClicked',
-      'click #manage-app-button': 'onManageAppsClicked'
-    };
-
     /* Constructor
     */
 
 
     function ApplicationsListView(apps) {
-      this.onManageAppsClicked = __bind(this.onManageAppsClicked, this);
-
-      this.onAddClicked = __bind(this.onAddClicked, this);
-
       this.appendView = __bind(this.appendView, this);
 
       this.afterRender = __bind(this.afterRender, this);
       this.apps = apps;
-      this.isManaging = false;
       ApplicationsListView.__super__.constructor.call(this, {
         collection: apps
       });
     }
 
     ApplicationsListView.prototype.afterRender = function() {
+      var _this = this;
       this.appList = this.$("#app-list");
-      this.manageAppsButton = this.$("#manage-app-button");
-      this.addApplicationButton = this.$("#add-app-button");
       this.machineInfos = this.$(".machine-infos").hide();
-      return this.$("#no-app-message").hide();
+      this.$("#no-app-message").hide();
+      return $(".menu-btn a").click(function(event) {
+        var target;
+        $(".menu-btn").removeClass('active');
+        target = $(event.target);
+        if (!target.hasClass('menu-btn')) {
+          target = target.parent();
+        }
+        if (!target.hasClass('menu-btn')) {
+          target = target.parent();
+        }
+        return target.addClass('active');
+      });
     };
 
     ApplicationsListView.prototype.displayNoAppMessage = function() {
@@ -1651,58 +2382,7 @@ window.require.register("views/home", function(exports, require, module) {
 
     ApplicationsListView.prototype.appendView = function(view) {
       this.appList.append(view.el);
-      view.$el.hide().fadeIn();
-      if (this.isManaging) {
-        return view.$el.find(".application-outer").css('display', 'block');
-      }
-    };
-
-    /* Listeners
-    */
-
-
-    ApplicationsListView.prototype.onAddClicked = function(event) {
-      event.preventDefault();
-      return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('market', true) : void 0;
-    };
-
-    ApplicationsListView.prototype.onManageAppsClicked = function(event) {
-      var _this = this;
-      event.preventDefault();
-      if (!this.machineInfos.is(':visible')) {
-        this.$('.application-outer').show();
-        this.machineInfos.find('.progress').spin();
-        this.manageAppsButton.addClass('pressed');
-        client.get('api/sys-data', {
-          success: function(data) {
-            _this.machineInfos.find('.progress').spin();
-            _this.displayMemory(data.freeMem, data.totalMem);
-            return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
-          },
-          error: function() {
-            _this.machineInfos.find('.progress').spin();
-            return alert('Server error occured, infos cannot be displayed.');
-          }
-        });
-      } else {
-        this.$('.application-outer').hide();
-        this.manageAppsButton.removeClass('pressed');
-      }
-      this.machineInfos.toggle();
-      return this.isManaging = !this.isManaging;
-    };
-
-    ApplicationsListView.prototype.displayMemory = function(freeMem, totalMem) {
-      var total, usedMemory;
-      total = Math.floor(totalMem / 1024) + "Mo";
-      this.machineInfos.find('.memory .total').html(total);
-      usedMemory = ((totalMem - freeMem) / totalMem) * 100;
-      return this.machineInfos.find('.memory .bar').css('width', usedMemory + '%');
-    };
-
-    ApplicationsListView.prototype.displayDiskSpace = function(usedSpace, totalSpace) {
-      this.machineInfos.find('.disk .total').html(totalSpace + "Go");
-      return this.machineInfos.find('.disk .bar').css('width', usedSpace + '%');
+      return view.$el.hide().fadeIn();
     };
 
     return ApplicationsListView;
@@ -1739,11 +2419,7 @@ window.require.register("views/home_application", function(exports, require, mod
     };
 
     ApplicationRow.prototype.events = {
-      "click .application-inner": "onAppClicked",
-      "click .remove-app": "onRemoveClicked",
-      "click .update-app": "onUpdateClicked",
-      "click .start-stop-btn": "onStartStopClicked",
-      "click .app-stoppable": "onStoppableClicked"
+      "click .application-inner": "onAppClicked"
     };
 
     /* Constructor
@@ -1751,17 +2427,7 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     function ApplicationRow(options) {
-      this.remove = __bind(this.remove, this);
-
       this.launchApp = __bind(this.launchApp, this);
-
-      this.onStartStopClicked = __bind(this.onStartStopClicked, this);
-
-      this.onUpdateClicked = __bind(this.onUpdateClicked, this);
-
-      this.onRemoveClicked = __bind(this.onRemoveClicked, this);
-
-      this.onStoppableClicked = __bind(this.onStoppableClicked, this);
 
       this.onAppClicked = __bind(this.onAppClicked, this);
 
@@ -1774,9 +2440,6 @@ window.require.register("views/home_application", function(exports, require, mod
 
     ApplicationRow.prototype.afterRender = function() {
       this.icon = this.$('img');
-      this.updateButton = new ColorButton(this.$(".update-app"));
-      this.removeButton = new ColorButton(this.$(".remove-app"));
-      this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
       this.stateLabel = this.$('.state-label');
       this.listenTo(this.model, 'change', this.onAppChanged);
       return this.onAppChanged(this.model);
@@ -1790,31 +2453,19 @@ window.require.register("views/home_application", function(exports, require, mod
       switch (this.model.get('state')) {
         case 'broken':
           this.icon.attr('src', "img/broken.png");
-          this.stateLabel.show().text(t('broken'));
-          this.removeButton.displayGrey(t('abort'));
-          this.updateButton.displayGrey(t('retry'));
-          return this.startStopBtn.hide();
+          return this.stateLabel.show().text(t('broken'));
         case 'installed':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
-          this.stateLabel.hide();
-          this.removeButton.displayGrey(t('remove'));
-          this.updateButton.displayGrey(t('update'));
-          return this.startStopBtn.displayGrey(t('stop this app'));
+          return this.stateLabel.hide();
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
           this.icon.removeClass('stopped');
-          this.stateLabel.show().text('installing');
-          this.removeButton.displayGrey('abort');
-          this.updateButton.hide();
-          return this.startStopBtn.hide();
+          return this.stateLabel.show().text('installing');
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.addClass('stopped');
-          this.stateLabel.hide();
-          this.removeButton.displayGrey(t('remove'));
-          this.updateButton.hide();
-          return this.startStopBtn.displayGrey(t('start this app'));
+          return this.stateLabel.hide();
       }
     };
 
@@ -1840,84 +2491,6 @@ window.require.register("views/home_application", function(exports, require, mod
       }
     };
 
-    ApplicationRow.prototype.onStoppableClicked = function(event) {
-      var bool,
-        _this = this;
-      bool = !this.model.get('isStoppable');
-      return this.model.save({
-        isStoppable: bool
-      }, {
-        success: function() {
-          return _this.$('.app-stoppable').attr('checked', !bool);
-        },
-        error: function() {
-          _this.$('.app-stoppable').attr('checked', bool);
-          return alert('oh no !');
-        }
-      });
-    };
-
-    ApplicationRow.prototype.onRemoveClicked = function(event) {
-      var _this = this;
-      event.preventDefault();
-      this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.removeButton.spin(true);
-      return this.model.uninstall({
-        success: function() {
-          return _this.remove();
-        },
-        error: function() {
-          return _this.removeButton.displayRed(t("failed"));
-        }
-      });
-    };
-
-    ApplicationRow.prototype.onUpdateClicked = function(event) {
-      event.preventDefault();
-      return this.showPopover();
-    };
-
-    ApplicationRow.prototype.showPopover = function() {
-      var _this = this;
-      this.popover = new PopoverPermissionsView({
-        model: this.model,
-        confirm: function(application) {
-          _this.popover.remove();
-          return _this.updateApp();
-        },
-        cancel: function(application) {
-          return _this.popover.remove();
-        }
-      });
-      return this.$el.append(this.popover.$el);
-    };
-
-    ApplicationRow.prototype.onStartStopClicked = function(event) {
-      var _this = this;
-      event.preventDefault();
-      this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.startStopBtn.spin(true);
-      if (this.model.isRunning()) {
-        return this.model.stop({
-          success: function() {
-            return _this.startStopBtn.spin(false);
-          },
-          error: function() {
-            return _this.startStopBtn.spin(false);
-          }
-        });
-      } else {
-        return this.model.start({
-          success: function() {
-            return _this.startStopBtn.spin(false);
-          },
-          error: function() {
-            return _this.startStopBtn.spin(false);
-          }
-        });
-      }
-    };
-
     /* Functions
     */
 
@@ -1926,46 +2499,13 @@ window.require.register("views/home_application", function(exports, require, mod
       return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
     };
 
-    ApplicationRow.prototype.remove = function() {
-      var _this = this;
-      if (this.model.get('state') !== 'installed') {
-        return ApplicationRow.__super__.remove.apply(this, arguments);
-      }
-      this.removeButton.spin(false);
-      this.removeButton.displayGreen(t("Removed"));
-      return setTimeout(function() {
-        return _this.$el.fadeOut(function() {
-          return ApplicationRow.__super__.remove.apply(_this, arguments);
-        });
-      }, 1000);
-    };
-
-    ApplicationRow.prototype.updateApp = function() {
-      var _this = this;
-      this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.updateButton.spin(false);
-      this.updateButton.spin(true);
-      return this.model.updateApp({
-        success: function() {
-          return _this.updateButton.displayGreen(t("Updated"));
-        },
-        error: function(jqXHR) {
-          var error;
-          error = JSON.parse(jqXHR.responseText);
-          console.log(error);
-          alert(error.message);
-          return _this.updateButton.displayRed(t("failed"));
-        }
-      });
-    };
-
     return ApplicationRow;
 
   })(BaseView);
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1979,6 +2519,10 @@ window.require.register("views/main", function(exports, require, module) {
   NavbarView = require('views/navbar');
 
   AccountView = require('views/account');
+
+  HelpView = require('views/help');
+
+  ConfigApplicationsView = require('views/config_applications');
 
   MarketView = require('views/market');
 
@@ -2001,6 +2545,10 @@ window.require.register("views/main", function(exports, require, module) {
 
       this.onAppHashChanged = __bind(this.onAppHashChanged, this);
 
+      this.displayConfigApplications = __bind(this.displayConfigApplications, this);
+
+      this.displayHelp = __bind(this.displayHelp, this);
+
       this.displayAccount = __bind(this.displayAccount, this);
 
       this.displayMarket = __bind(this.displayMarket, this);
@@ -2021,8 +2569,11 @@ window.require.register("views/main", function(exports, require, module) {
       var _this = this;
       this.navbar = new NavbarView(this.apps);
       this.applicationListView = new ApplicationsListView(this.apps);
+      this.configApplications = new ConfigApplicationsView(this.apps);
       this.accountView = new AccountView();
+      this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
+      $("#content").niceScroll();
       this.frames = this.$('#app-frames');
       this.content = this.$('#content');
       this.favicon = this.$('fav1');
@@ -2058,11 +2609,12 @@ window.require.register("views/main", function(exports, require, module) {
     HomeView.prototype.displayView = function(view) {
       var displayView,
         _this = this;
+      $("#current-application").html('home');
       displayView = function() {
-        _this.content.show();
         _this.frames.hide();
         view.$el.hide();
-        _this.content.append(view.$el);
+        _this.content.show();
+        $('#home-content').append(view.$el);
         view.$el.fadeIn();
         _this.currentView = view;
         _this.changeFavicon("favicon.ico");
@@ -2080,20 +2632,27 @@ window.require.register("views/main", function(exports, require, module) {
 
     HomeView.prototype.displayApplicationsList = function() {
       this.displayView(this.applicationListView);
-      this.navbar.selectButton('home-button');
-      return window.document.title = "Cozy - Home";
+      return window.document.title = t("Cozy - Home");
     };
 
     HomeView.prototype.displayMarket = function() {
       this.displayView(this.marketView);
-      this.navbar.selectButton('market-button');
-      return window.document.title = "Cozy - Market";
+      return window.document.title = t("Cozy - App Store");
     };
 
     HomeView.prototype.displayAccount = function() {
       this.displayView(this.accountView);
-      this.navbar.selectButton('account-button');
-      return window.document.title = 'Cozy - Account';
+      return window.document.title = t('Cozy - Account');
+    };
+
+    HomeView.prototype.displayHelp = function() {
+      this.displayView(this.helpView);
+      return window.document.title = t("Cozy - Help");
+    };
+
+    HomeView.prototype.displayConfigApplications = function() {
+      this.displayView(this.configApplications);
+      return window.document.title = t("Cozy - Applications configuration");
     };
 
     HomeView.prototype.displayApplication = function(slug, hash) {
@@ -2113,13 +2672,13 @@ window.require.register("views/main", function(exports, require, module) {
       }
       this.$('#app-frames').find('iframe').hide();
       frame.show();
-      this.navbar.selectButton(slug);
       this.selectedApp = slug;
       name = this.apps.get(slug).get('name');
       if (!(name != null)) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
+      $("#current-application").html(name);
       this.changeFavicon("/apps/" + slug + "/favicon.ico");
       return this.resetLayoutSizes();
     };
@@ -2173,10 +2732,8 @@ window.require.register("views/main", function(exports, require, module) {
 
 
     HomeView.prototype.resetLayoutSizes = function() {
-      var height;
-      height = this.$("#header").height() + 1;
-      this.frames.height($(window).height() - height);
-      return this.content.height($(window).height() - height);
+      this.frames.height($(window).height() - 48);
+      return this.content.height($(window).height() - 48);
     };
 
     return HomeView;
@@ -2216,10 +2773,10 @@ window.require.register("views/market", function(exports, require, module) {
 
     MarketView.prototype.template = require('templates/market');
 
+    MarketView.prototype.tagName = 'div';
+
     MarketView.prototype.events = {
       'keyup #app-git-field': 'onEnterPressed',
-      "mouseover #your-app .app-install-button": "onMouseoverInstallButton",
-      "mouseout #your-app .app-install-button": "onMouseoutInstallButton",
       "click #your-app .app-install-button": "onInstallClicked"
     };
 
@@ -2248,8 +2805,6 @@ window.require.register("views/market", function(exports, require, module) {
 
       this.onAppListsChanged = __bind(this.onAppListsChanged, this);
 
-      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
-
       this.afterRender = __bind(this.afterRender, this);
       this.marketApps = new AppCollection();
       this.installedApps = installedApps;
@@ -2257,7 +2812,7 @@ window.require.register("views/market", function(exports, require, module) {
     }
 
     MarketView.prototype.afterRender = function() {
-      this.appList = this.$('#app-market-list');
+      this.appList = this.$('#market-applications-list');
       this.appGitField = this.$("#app-git-field");
       this.installInfo = this.$("#add-app-modal .loading-indicator");
       this.infoAlert = this.$("#your-app .info");
@@ -2270,16 +2825,6 @@ window.require.register("views/market", function(exports, require, module) {
       this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
       this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
       return this.marketApps.fetchFromMarket();
-    };
-
-    MarketView.prototype.onMouseoverInstallButton = function() {
-      var _this = this;
-      this.isSliding = true;
-      return this.$("#your-app .app-install-text").show('slide', {
-        direction: 'right'
-      }, 300, function() {
-        return _this.isSliding = false;
-      });
     };
 
     MarketView.prototype.onAppListsChanged = function() {
@@ -2359,31 +2904,18 @@ window.require.register("views/market", function(exports, require, module) {
       this.popover = new PopoverDescriptionView({
         model: appWidget.app,
         confirm: function(application) {
-          _this.popover.remove();
-          return _this.showPermissions(appWidget);
-        },
-        cancel: function(application) {
-          return _this.popover.remove();
-        }
-      });
-      return this.$el.append(this.popover.$el);
-    };
-
-    MarketView.prototype.showPermissions = function(appWidget) {
-      var _this = this;
-      this.popover = new PopoverPermissionsView({
-        model: appWidget.app,
-        confirm: function(application) {
-          _this.popover.remove();
+          $('#no-app-message').hide();
+          _this.popover.hide();
           return _this.hideApplication(appWidget, function() {
             return _this.runInstallation(appWidget.app);
           });
         },
         cancel: function(application) {
-          return _this.popover.remove();
+          return _this.popover.hide();
         }
       });
-      return this.$el.append(this.popover.$el);
+      this.$el.append(this.popover.$el);
+      return this.popover.show();
     };
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
@@ -2414,7 +2946,10 @@ window.require.register("views/market", function(exports, require, module) {
             _this.resetForm();
           }
           _this.installedApps.add(application);
-          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+          if (typeof app !== "undefined" && app !== null) {
+            app.routers.main.navigate('home', true);
+          }
+          return typeof app !== "undefined" && app !== null ? app.mainView.applicationListView.displayNoAppMessage() : void 0;
         },
         error: function(jqXHR) {
           return alert(t(JSON.parse(jqXHR.responseText).message));
@@ -2430,7 +2965,7 @@ window.require.register("views/market", function(exports, require, module) {
       if (parsed == null) {
         error = {
           error: true,
-          msg: "Git url should be of form https://.../my-repo.git"
+          msg: t("Git url should be of form https://.../my-repo.git")
         };
         return error;
       }
@@ -2473,7 +3008,6 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.resetForm = function() {
-      this.installAppButton.displayOrange('install');
       return this.appGitField.val('');
     };
 
@@ -2503,9 +3037,8 @@ window.require.register("views/market_application", function(exports, require, m
     ApplicationRow.prototype.template = require('templates/market_application');
 
     ApplicationRow.prototype.events = {
-      "mouseover .app-install-button": "onMouseoverInstallButton",
-      "mouseout .app-install-button": "onMouseoutInstallButton",
-      "click .app-install-button": "onInstallClicked"
+      "click .btn": "onInstallClicked",
+      "click": "onInstallClicked"
     };
 
     ApplicationRow.prototype.getRenderData = function() {
@@ -2519,10 +3052,6 @@ window.require.register("views/market_application", function(exports, require, m
       this.marketView = marketView;
       this.onInstallClicked = __bind(this.onInstallClicked, this);
 
-      this.onMouseoutInstallButton = __bind(this.onMouseoutInstallButton, this);
-
-      this.onMouseoverInstallButton = __bind(this.onMouseoverInstallButton, this);
-
       this.afterRender = __bind(this.afterRender, this);
 
       ApplicationRow.__super__.constructor.call(this);
@@ -2530,40 +3059,9 @@ window.require.register("views/market_application", function(exports, require, m
     }
 
     ApplicationRow.prototype.afterRender = function() {
-      return this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
-    };
-
-    ApplicationRow.prototype.onMouseoverInstallButton = function() {
-      var direction,
-        _this = this;
-      this.mouseOut = false;
-      if ($(window).width() > 800) {
-        if (!this.isDisplayed) {
-          direction = {
-            direction: 'right'
-          };
-          return this.$(".app-install-text").show('slide', direction, 300, function() {
-            return _this.isDisplayed = true;
-          });
-        }
-      }
-    };
-
-    ApplicationRow.prototype.onMouseoutInstallButton = function() {
-      var _this = this;
-      this.mouseOut = true;
-      if ($(window).width() > 800) {
-        return setTimeout(function() {
-          var direction;
-          if (_this.isDisplayed && _this.mouseOut) {
-            direction = {
-              direction: 'right'
-            };
-            return _this.$(".app-install-text").hide('slide', direction, 300, function() {
-              return _this.isDisplayed = false;
-            });
-          }
-        }, 500);
+      this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
+      if (this.app.get('comment') === 'official application') {
+        return this.$el.addClass('official');
       }
     };
 
@@ -2580,8 +3078,142 @@ window.require.register("views/market_application", function(exports, require, m
   })(BaseView);
   
 });
+window.require.register("views/menu_application", function(exports, require, module) {
+  var ApplicationView, BaseView,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  module.exports = ApplicationView = (function(_super) {
+
+    __extends(ApplicationView, _super);
+
+    function ApplicationView() {
+      this.onLinkClick = __bind(this.onLinkClick, this);
+      return ApplicationView.__super__.constructor.apply(this, arguments);
+    }
+
+    ApplicationView.prototype.tagName = 'div';
+
+    ApplicationView.prototype.className = 'menu-application clearfix';
+
+    ApplicationView.prototype.template = require('templates/menu_application');
+
+    ApplicationView.prototype.events = {
+      'click a': 'onLinkClick'
+    };
+
+    ApplicationView.prototype.onLinkClick = function() {
+      return this.menu.hideAppList();
+    };
+
+    return ApplicationView;
+
+  })(BaseView);
+  
+});
+window.require.register("views/menu_applications", function(exports, require, module) {
+  var AppsMenu, SocketListener, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  SocketListener = require('lib/socket_listener');
+
+  module.exports = AppsMenu = (function(_super) {
+
+    __extends(AppsMenu, _super);
+
+    AppsMenu.prototype.el = '#menu-applications-container';
+
+    AppsMenu.prototype.itemView = require('views/menu_application');
+
+    AppsMenu.prototype.template = require('templates/menu_applications');
+
+    AppsMenu.prototype.events = {
+      "click #menu-applications-toggle": "showAppList",
+      "click .clickcatcher": "hideAppList",
+      "click #home-btn": "hideAppList"
+    };
+
+    function AppsMenu(collection) {
+      this.collection = collection;
+      this.hideAppList = __bind(this.hideAppList, this);
+
+      this.showAppList = __bind(this.showAppList, this);
+
+      this.windowClicked = __bind(this.windowClicked, this);
+
+      this.remove = __bind(this.remove, this);
+
+      this.afterRender = __bind(this.afterRender, this);
+
+      AppsMenu.__super__.constructor.apply(this, arguments);
+    }
+
+    AppsMenu.prototype.appendView = function(view) {
+      this.appList.append(view.$el);
+      return view.menu = this;
+    };
+
+    AppsMenu.prototype.afterRender = function() {
+      this.clickcatcher = this.$('.clickcatcher');
+      this.clickcatcher.hide();
+      this.appList = this.$('#menu-applications');
+      AppsMenu.__super__.afterRender.apply(this, arguments);
+      this.initializing = true;
+      return $(window).on('click', this.windowClicked);
+    };
+
+    AppsMenu.prototype.remove = function() {
+      $(window).off('click', this.hideAppList);
+      return AppsMenu.__super__.remove.apply(this, arguments);
+    };
+
+    AppsMenu.prototype.windowClicked = function() {
+      if ((typeof event !== "undefined" && event !== null) && this.$el.has($(event.target)).length === 0) {
+        return this.hideAppList();
+      }
+    };
+
+    AppsMenu.prototype.showAppList = function() {
+      if (this.appList.is(':visible')) {
+        this.appList.hide();
+        this.clickcatcher.hide();
+        return this.$el.removeClass('active');
+      } else {
+        if (this.collection.size() > 0) {
+          this.$('#no-app-message').hide();
+        } else {
+          this.$('#no-app-message').show();
+        }
+        this.$el.addClass('active');
+        this.appList.slideDown(100);
+        return this.clickcatcher.show();
+      }
+    };
+
+    AppsMenu.prototype.dismissAll = function() {
+      return this.collection.removeAll();
+    };
+
+    AppsMenu.prototype.hideAppList = function(event) {
+      this.appList.slideUp(100);
+      this.clickcatcher.hide();
+      return this.$el.removeClass('active');
+    };
+
+    return AppsMenu;
+
+  })(ViewCollection);
+  
+});
 window.require.register("views/navbar", function(exports, require, module) {
-  var BaseView, NavbarView, NotificationsView, appButtonTemplate,
+  var AppsMenu, BaseView, NavbarView, NotificationsView, appButtonTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2592,6 +3224,8 @@ window.require.register("views/navbar", function(exports, require, module) {
 
   NotificationsView = require('./notifications_view');
 
+  AppsMenu = require('./menu_applications');
+
   module.exports = NavbarView = (function(_super) {
 
     __extends(NavbarView, _super);
@@ -2601,87 +3235,14 @@ window.require.register("views/navbar", function(exports, require, module) {
     NavbarView.prototype.template = require('templates/navbar');
 
     function NavbarView(apps) {
-      this.onAppRemoved = __bind(this.onAppRemoved, this);
-
-      this.addApplication = __bind(this.addApplication, this);
-
-      this.onApplicationChanged = __bind(this.onApplicationChanged, this);
-
-      this.onApplicationListReady = __bind(this.onApplicationListReady, this);
-
       this.afterRender = __bind(this.afterRender, this);
       this.apps = apps;
       NavbarView.__super__.constructor.call(this);
     }
 
     NavbarView.prototype.afterRender = function() {
-      var _ref;
       this.notifications = new NotificationsView();
-      this.buttons = this.$('#buttons');
-      this.$('#help-button').tooltip({
-        placement: 'bottom',
-        title: t('Questions and help forum')
-      });
-      if ((_ref = window.app.instance) != null ? _ref.helpUrl : void 0) {
-        this.$('#help-button').attr('href', window.app.instance.helpUrl);
-      }
-      this.$('#logout-button').tooltip({
-        placement: 'bottom',
-        title: t('Sign out')
-      });
-      if (this.apps.length > 0) {
-        onApplicationListReady(this.apps);
-      }
-      this.apps.bind('reset', this.onApplicationListReady);
-      this.apps.bind('change', this.onApplicationChanged);
-      this.apps.bind('add', this.addApplication);
-      return this.apps.bind('remove', this.onAppRemoved);
-    };
-
-    NavbarView.prototype.onApplicationListReady = function(apps) {
-      this.$(".app-button").remove();
-      return apps.forEach(this.onApplicationChanged);
-    };
-
-    NavbarView.prototype.onApplicationChanged = function(app) {
-      if (app.isRunning()) {
-        if (!this.buttons.find("#" + app.id).length) {
-          return this.addApplication(app);
-        }
-      } else {
-        return this.onAppRemoved(app);
-      }
-    };
-
-    NavbarView.prototype.addApplication = function(app) {
-      var button;
-      if (!app.isRunning()) {
-        return;
-      }
-      this.buttons.find(".nav:last").prepend(appButtonTemplate({
-        app: app.attributes
-      }));
-      button = this.buttons.find("#" + app.id);
-      return button.tooltip({
-        placement: 'bottom',
-        title: '<a target="' + app.id + '" href="/apps/' + app.id + '/">' + t('open in a new tab') + '</a>',
-        delay: {
-          show: 500,
-          hide: 1000
-        }
-      });
-    };
-
-    NavbarView.prototype.onAppRemoved = function(app) {
-      if (app.id != null) {
-        return this.buttons.find("#" + app.id).remove();
-      }
-    };
-
-    NavbarView.prototype.selectButton = function(button) {
-      button = this.$("#" + button);
-      this.buttons.find("li").removeClass("active");
-      return button.parent().addClass("active");
+      return this.appMenu = new AppsMenu(this.apps);
     };
 
     return NavbarView;
@@ -2706,9 +3267,9 @@ window.require.register("views/notification_view", function(exports, require, mo
 
     NotificationView.prototype.tagName = 'li';
 
-    NotificationView.prototype.className = 'notification';
+    NotificationView.prototype.className = 'notification clearfix';
 
-    NotificationView.prototype.template = require('templates/notification_item');
+    NotificationView.prototype.template = require('templates/notification');
 
     NotificationView.prototype.events = {
       "click .doaction": "doaction",
@@ -2722,9 +3283,14 @@ window.require.register("views/notification_view", function(exports, require, mo
     NotificationView.prototype.doaction = function() {
       var action, url;
       action = this.model.get('resource');
+      if (action == null) {
+        action = {
+          app: home
+        };
+      }
       if (typeof action === 'string') {
         url = action;
-      } else if (action.app) {
+      } else if (action.app != null) {
         url = action.app === 'home' ? "/" : "/apps/" + action.app + "/";
         url += action.url || '';
         url = url.replace('//', '/');
@@ -2811,8 +3377,10 @@ window.require.register("views/notifications_view", function(exports, require, m
     NotificationsView.prototype.appendView = function(view) {
       this.notifList.prepend(view.el);
       if (!this.initializing) {
-        return this.sound.play();
+        this.sound.play();
       }
+      this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
+      return this.$('#notifications-toggle').addClass('opaque');
     };
 
     NotificationsView.prototype.afterRender = function() {
@@ -2827,11 +3395,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.collection.fetch().always(function() {
         return this.initializing = false;
       });
-      $(window).on('click', this.windowClicked);
-      return this.$('a').tooltip({
-        placement: 'right',
-        title: t('Notifications')
-      });
+      return $(window).on('click', this.windowClicked);
     };
 
     NotificationsView.prototype.remove = function() {
@@ -2863,17 +3427,19 @@ window.require.register("views/notifications_view", function(exports, require, m
         return this.$el.removeClass('active');
       } else {
         this.$el.addClass('active');
-        this.notifList.show();
+        this.notifList.slideDown(100);
         return this.clickcatcher.show();
       }
     };
 
     NotificationsView.prototype.dismissAll = function() {
-      return this.collection.removeAll();
+      this.collection.removeAll();
+      this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
+      return this.$('#notifications-toggle').removeClass('opaque');
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
-      this.notifList.hide();
+      this.notifList.slideUp(100);
       this.clickcatcher.hide();
       return this.$el.removeClass('active');
     };
@@ -2884,14 +3450,14 @@ window.require.register("views/notifications_view", function(exports, require, m
   
 });
 window.require.register("views/popover_description", function(exports, require, module) {
-  var BaseView, PopoverDescriptionView, REPOREGEX,
+  var BaseView, PopoverDescriptionView, request,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseView = require('lib/base_view');
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
+  request = require('lib/request');
 
   module.exports = PopoverDescriptionView = (function(_super) {
 
@@ -2902,13 +3468,17 @@ window.require.register("views/popover_description", function(exports, require, 
 
       this.onCancelClicked = __bind(this.onCancelClicked, this);
 
+      this.hide = __bind(this.hide, this);
+
+      this.show = __bind(this.show, this);
+
       this.renderDescription = __bind(this.renderDescription, this);
       return PopoverDescriptionView.__super__.constructor.apply(this, arguments);
     }
 
     PopoverDescriptionView.prototype.id = 'market-popover-description-view';
 
-    PopoverDescriptionView.prototype.className = 'modal';
+    PopoverDescriptionView.prototype.className = 'modal md-modal md-effect-1';
 
     PopoverDescriptionView.prototype.tagName = 'div';
 
@@ -2926,31 +3496,71 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
+      var renderDesc,
+        _this = this;
       this.model.set("description", "");
-      this.body = this.$(".modal-body");
+      this.body = this.$(".md-body");
+      this.header = this.$(".md-header h3");
+      this.header.html(this.model.get('name'));
+      this.body.spin('small');
+      renderDesc = function() {
+        _this.body.spin();
+        return _this.renderDescription();
+      };
       this.model.getMetaData({
-        success: function(data) {},
-        error: function() {
-          return console.log("Error callback have been called");
-        }
+        success: renderDesc,
+        error: renderDesc
       });
-      return this.listenTo(this.model, "change", this.renderDescription);
+      this.overlay = $('.md-overlay');
+      return this.overlay.click(function() {
+        return _this.hide();
+      });
     };
 
     PopoverDescriptionView.prototype.renderDescription = function() {
-      var description, descriptionDiv;
+      var description, docType, permission, permissionsDiv, _ref;
+      this.body.hide();
       this.body.html("");
+      this.$('.repo-stars').html(this.model.get('stars'));
       description = this.model.get("description");
-      console.debug(this.model);
-      if (description === null) {
-        descriptionDiv = $("<div class='descriptionLine'> <h4> This application has no description </h4> </div>");
+      this.header.parent().append("<p class=\"line left\"> " + description + " </p>");
+      if (Object.keys(this.model.get("permissions")).length === 0) {
+        permissionsDiv = $("<div class='permissionsLine'> <h4>" + (t('This application does not need specific permissions')) + " </h4> </div>");
+        this.body.append(permissionsDiv);
       } else {
-        descriptionDiv = $("<div class='descriptionLine'> <h4> Description </h4> <p> " + description + " </p> </div>");
+        this.body.append("<h4>" + (t('Required permissions')) + "</h4>");
+        _ref = this.model.get("permissions");
+        for (docType in _ref) {
+          permission = _ref[docType];
+          permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
+          this.body.append(permissionsDiv);
+        }
       }
-      return this.body.append(descriptionDiv);
+      return this.body.slideDown();
+    };
+
+    PopoverDescriptionView.prototype.show = function() {
+      var _this = this;
+      this.$el.addClass('md-show');
+      this.overlay.addClass('md-show');
+      $('#home-content').addClass('md-open');
+      return setTimeout(function() {
+        return _this.$('.md-content').addClass('md-show');
+      }, 300);
+    };
+
+    PopoverDescriptionView.prototype.hide = function() {
+      var _this = this;
+      $('.md-content').fadeOut(function() {
+        _this.overlay.removeClass('md-show');
+        _this.$el.removeClass('md-show');
+        return _this.remove();
+      });
+      return $('#home-content').removeClass('md-open');
     };
 
     PopoverDescriptionView.prototype.onCancelClicked = function() {
+      this.hide();
       return this.cancelCallback(this.model);
     };
 
@@ -3008,44 +3618,49 @@ window.require.register("views/popover_permissions", function(exports, require, 
     PopoverPermissionsView.prototype.afterRender = function() {
       var _this = this;
       this.model.set("permissions", "");
-      this.body = this.$(".modal-body");
+      this.body = this.$(".md-body");
+      this.body.spin('small');
       this.model.getPermissions({
         success: function(data) {
           if (!_this.model.hasChanged("permissions")) {
             return _this.confirmCallback(_this.model);
           }
         },
-        error: function() {
-          return console.log("error have been called");
-        }
+        error: function() {}
       });
       return this.listenTo(this.model, "change:permissions", this.renderPermissions);
     };
 
     PopoverPermissionsView.prototype.renderPermissions = function() {
-      var docType, permission, permissionsDiv, _ref, _results;
-      this.body.html("");
+      var docType, permission, permissionsDiv, _ref;
+      this.body.hide();
+      this.body.html('');
       if (Object.keys(this.model.get("permissions")).length === 0) {
-        permissionsDiv = $("<div class='permissionsLine'> <h4> This application does not need specific permissions </h4> </div>");
-        return this.body.append(permissionsDiv);
+        permissionsDiv = $("<div class='permissionsLine'> <strong>" + (t('This application does not need specific permissions')) + " </strong> </div>");
+        this.body.append(permissionsDiv);
       } else {
         _ref = this.model.get("permissions");
-        _results = [];
         for (docType in _ref) {
           permission = _ref[docType];
-          permissionsDiv = $("<div class='permissionsLine'> <h4> " + docType + " </h4> <p> " + permission.description + " </p> </div>");
-          _results.push(this.body.append(permissionsDiv));
+          permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
+          this.body.append(permissionsDiv);
         }
-        return _results;
       }
+      return this.body.slideDown();
     };
 
     PopoverPermissionsView.prototype.onCancelClicked = function() {
-      return this.cancelCallback(this.model);
+      var _this = this;
+      return this.$el.slideUp(function() {
+        return _this.cancelCallback(_this.model);
+      });
     };
 
     PopoverPermissionsView.prototype.onConfirmClicked = function() {
-      return this.confirmCallback(this.model);
+      var _this = this;
+      return this.$el.slideUp(function() {
+        return _this.confirmCallback(_this.model);
+      });
     };
 
     return PopoverPermissionsView;

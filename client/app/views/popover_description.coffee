@@ -1,16 +1,10 @@
 BaseView = require 'lib/base_view'
+request = require 'lib/request'
 
-REPOREGEX =  /// ^
-    (https?://)?                   #protocol
-    ([\da-z\.-]+\.[a-z\.]{2,6})    #domain
-    ([/\w \.-]*)*                  #path to repo
-    (?:\.git)?                     #.git extension
-    (@[\da-z/-]+)?                 #branch
-     $ ///
 
 module.exports = class PopoverDescriptionView extends BaseView
     id: 'market-popover-description-view'
-    className: 'modal'
+    className: 'modal md-modal md-effect-1'
     tagName: 'div'
     template: require 'templates/popover_description'
 
@@ -23,35 +17,61 @@ module.exports = class PopoverDescriptionView extends BaseView
         @confirmCallback = options.confirm
         @cancelCallback = options.cancel
 
-    afterRender: () ->
+    afterRender: ->
         @model.set "description", ""
-        @body = @$ ".modal-body"
-        @model.getMetaData
-            success: (data) ->
-            error: () ->
-                console.log "Error callback have been called"
-        @listenTo @model, "change", @renderDescription
+        @body = @$ ".md-body"
+        @header = @$ ".md-header h3"
+        @header.html @model.get 'name'
 
-    renderDescription: () =>
+        @body.spin 'small'
+        renderDesc = =>
+            @body.spin()
+            @renderDescription()
+        @model.getMetaData
+            success: renderDesc
+            error: renderDesc
+        @overlay = $ '.md-overlay'
+        @overlay.click =>
+            @hide()
+
+    renderDescription: =>
+        @body.hide()
         @body.html ""
-        description = @model.get("description")
-        console.debug @model
-        if description is null
-            descriptionDiv = $ "<div class='descriptionLine'> <h4> This application has no description </h4> </div>"
+
+        @$('.repo-stars').html @model.get('stars')
+
+        description = @model.get "description"
+        @header.parent().append "<p class=\"line left\"> #{description} </p>"
+
+        if Object.keys(@model.get("permissions")).length is 0
+            permissionsDiv = $ "<div class='permissionsLine'> <h4>#{t('This application does not need specific permissions')} </h4> </div>"
+            @body.append permissionsDiv
         else
-            descriptionDiv = $ "<div class='descriptionLine'> <h4> Description </h4> <p> #{description} </p> </div>"
-        @body.append descriptionDiv
+            @body.append "<h4>#{t('Required permissions')}</h4>"
+            for docType, permission of @model.get("permissions")
+                permissionsDiv = $ "<div class='permissionsLine'> <strong> #{docType} </strong> <p> #{permission.description} </p> </div>"
+                @body.append permissionsDiv
+        @body.slideDown()
+
+
+    show: =>
+        @$el.addClass 'md-show'
+        @overlay.addClass 'md-show'
+        $('#home-content').addClass 'md-open'
+        setTimeout =>
+            @$('.md-content').addClass 'md-show'
+        , 300
+
+    hide: =>
+        $('.md-content').fadeOut =>
+            @overlay.removeClass 'md-show'
+            @$el.removeClass 'md-show'
+            @remove()
+        $('#home-content').removeClass 'md-open'
 
     onCancelClicked: () =>
+        @hide()
         @cancelCallback(@model)
 
     onConfirmClicked: () =>
         @confirmCallback(@model)
-
-
-
-
-
-
-
-

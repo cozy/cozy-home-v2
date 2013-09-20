@@ -1,7 +1,12 @@
-.modal-header= t('Application Description')
-.modal-body
-    div
-      h4= t('downloading-description')
-.modal-footer
-    a#cancelbtn.btn= t('Cancel')
-    a#confirmbtn.btn.btn-primary= t('Ok')
+.md-content
+    .md-header.clearfix
+        .line
+            h3.left #{model.name}
+            .right
+                a(href="#{model.git}").repo-stars &nbsp;
+                a(href="#{model.git}")
+                    img(src="img/star-white.png")
+    .md-body
+    .md-footer.clearfix
+        button.btn.right#confirmbtn= t('install')
+        button.btn.light-btn.right#cancelbtn= t('cancel')

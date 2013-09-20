@@ -8,7 +8,8 @@ module.exports = class BaseView extends Backbone.View
         super()
 
     getRenderData: ->
-        model: @model?.toJSON()
+        if @model? and @model.toJSON?
+            model: @model.toJSON()
 
     render: ->
         # console.debug "Rendering #{@constructor.name}", @

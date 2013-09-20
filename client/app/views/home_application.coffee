@@ -14,10 +14,6 @@ module.exports = class ApplicationRow extends BaseView
 
     events:
         "click .application-inner" : "onAppClicked"
-        "click .remove-app"        : "onRemoveClicked"
-        "click .update-app"        : "onUpdateClicked"
-        "click .start-stop-btn"    : "onStartStopClicked"
-        "click .app-stoppable"     : "onStoppableClicked"
 
     ### Constructor ####
 
@@ -27,9 +23,6 @@ module.exports = class ApplicationRow extends BaseView
 
     afterRender: =>
         @icon = @$ 'img'
-        @updateButton = new ColorButton @$ ".update-app"
-        @removeButton = new ColorButton @$ ".remove-app"
-        @startStopBtn = new ColorButton @$ ".start-stop-btn"
         @stateLabel = @$ '.state-label'
 
         @listenTo @model, 'change', @onAppChanged
@@ -42,30 +35,18 @@ module.exports = class ApplicationRow extends BaseView
             when 'broken'
                 @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
-                @removeButton.displayGrey t 'abort'
-                @updateButton.displayGrey t 'retry'
-                @startStopBtn.hide()
             when 'installed'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
-                @removeButton.displayGrey t 'remove'
-                @updateButton.displayGrey t 'update'
-                @startStopBtn.displayGrey t 'stop this app'
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"
                 @icon.removeClass 'stopped'
                 @stateLabel.show().text 'installing'
-                @removeButton.displayGrey 'abort'
-                @updateButton.hide()
-                @startStopBtn.hide()
             when 'stopped'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.addClass 'stopped'
                 @stateLabel.hide()
-                @removeButton.displayGrey t 'remove'
-                @updateButton.hide()
-                @startStopBtn.displayGrey t 'start this app'
 
     onAppClicked: (event) =>
         event.preventDefault()
@@ -82,77 +63,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'stopped'
                 @model.start success: @launchApp
 
-    onStoppableClicked: (event) =>
-        bool = not @model.get('isStoppable')
-        @model.save {isStoppable: bool},
-            success: => @$('.app-stoppable').attr 'checked', !bool
-            error: =>
-                @$('.app-stoppable').attr 'checked', bool
-                alert 'oh no !'
-
-    onRemoveClicked: (event) =>
-        event.preventDefault()
-        @removeButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @removeButton.spin true
-        @model.uninstall
-            success: => @remove()
-            error: => @removeButton.displayRed t "failed"
-
-    onUpdateClicked: (event) =>
-        event.preventDefault()
-        @showPopover()
-
-    showPopover: () ->
-        @popover = new PopoverPermissionsView
-            model: @model
-            confirm: (application) =>
-                @popover.remove()
-                @updateApp()
-            cancel: (application) =>
-                @popover.remove()
-        @$el.append @popover.$el
-
-    onStartStopClicked: (event) =>
-        event.preventDefault()
-        @startStopBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @startStopBtn.spin true
-        if(@model.isRunning())
-            @model.stop
-                success: =>
-                    @startStopBtn.spin false
-                error: =>
-                    @startStopBtn.spin false
-
-        else
-            @model.start
-                success: =>
-                    @startStopBtn.spin false
-                error: =>
-                    @startStopBtn.spin false
-
     ### Functions ###
 
     launchApp: =>
         window.app.routers.main.navigate "apps/#{@model.id}/", true
-
-    remove: =>
-        return super unless @model.get('state') is 'installed'
-        @removeButton.spin false
-        @removeButton.displayGreen t "Removed"
-        setTimeout =>
-            @$el.fadeOut =>
-                super
-        , 1000
-
-    updateApp: ->
-        @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @updateButton.spin false
-        @updateButton.spin true
-        @model.updateApp
-            success: =>
-                @updateButton.displayGreen t "Updated"
-            error: (jqXHR) =>
-                error = JSON.parse(jqXHR.responseText)
-                console.log error
-                alert error.message
-                @updateButton.displayRed t "failed"

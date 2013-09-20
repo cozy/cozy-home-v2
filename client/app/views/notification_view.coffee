@@ -3,8 +3,8 @@ BaseView = require 'lib/base_view'
 module.exports = class NotificationView extends BaseView
 
     tagName: 'li'
-    className: 'notification'
-    template: require 'templates/notification_item'
+    className: 'notification clearfix'
+    template: require 'templates/notification'
     events:
         "click .doaction": "doaction"
         "click .dismiss" : "dismiss"
@@ -14,9 +14,11 @@ module.exports = class NotificationView extends BaseView
 
     doaction: ->
         action = @model.get 'resource'
+        unless action?
+            action = app: home
         if typeof action is 'string'
             url = action
-        else if action.app
+        else if action.app?
             # .replace is a quickfix
             url = if action.app is 'home' then "/" else "/apps/#{action.app}/"
             url += action.url or ''

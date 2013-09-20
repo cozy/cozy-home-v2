@@ -26,6 +26,8 @@ module.exports = class NotificationsView extends ViewCollection
         # TODO use visibility.js to only play sound
         # when window is not visible
         @sound.play() unless @initializing
+        @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
+        @$('#notifications-toggle').addClass 'opaque'
 
     afterRender: =>
         @counter    = @$ '#notifications-counter'
@@ -41,10 +43,6 @@ module.exports = class NotificationsView extends ViewCollection
         @collection.fetch().always -> @initializing = false
 
         $(window).on 'click', @windowClicked
-
-        @$('a').tooltip
-            placement: 'right'
-            title: t('Notifications')
 
     remove: =>
         $(window).off 'click', @hideNotifList
@@ -69,13 +67,15 @@ module.exports = class NotificationsView extends ViewCollection
             @$el.removeClass 'active'
         else
             @$el.addClass 'active'
-            @notifList.show()
+            @notifList.slideDown 100
             @clickcatcher.show()
 
     dismissAll: () ->
         @collection.removeAll()
+        @$('#notifications-toggle img').attr 'src', 'img/notification-white.png'
+        @$('#notifications-toggle').removeClass 'opaque'
 
     hideNotifList: (event) =>
-        @notifList.hide()
+        @notifList.slideUp 100
         @clickcatcher.hide()
         @$el.removeClass 'active'

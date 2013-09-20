@@ -1,12 +1,14 @@
-Client = require('request-json').JsonClient
 bcrypt = require('bcrypt')
 http = require('http')
+Client = require('request-json').JsonClient
+americano = require 'americano'
 
 # Bring models in context
-Application = null
-CozyInstance = null
-Notification = null
-User = null
+Application = require '../server/models/application'
+CozyInstance = require '../server/models/cozyinstance'
+Notification = require '../server/models/notification'
+User = require '../server/models/user'
+Adapter = require '../server/lib/adapter'
 
 process.env.NAME = "home"
 process.env.TOKEN = "token"
@@ -15,16 +17,17 @@ helpers = {}
 
 # init the compound application
 # will create @app in context
-# usage : before helpers.init require '../server'
-helpers.init = (instantiator) -> (done) ->
-    this.timeout 5000
-    @app = instantiator()
-    @app.compound.on 'models', (models) ->
-        {Application, CozyInstance, User, Notification} = models
+# usage : before helpers.init port
+helpers.init = (port) ->
+    (done) ->
+        params = name: 'Cozy Home', port: port
+        americano.start params, (app, server) =>
+            app.server = server
+            ctrler = require('../server/controllers/applications').loadApplication
+            app.param 'slug', ctrler
+            @app = app
 
-        setTimeout () ->
-            done()
-        , 3000 #wait 3s for defineRequests
+            setTimeout done, 1000 # wait 1s for defineRequests
 
 # This function remove everythin from the db
 helpers.clearDb = (callback) ->

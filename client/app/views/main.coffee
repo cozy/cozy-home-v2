@@ -3,6 +3,8 @@ appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
+HelpView = require 'views/help'
+ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
 socketListener = require('lib/socket_listener')
@@ -24,9 +26,12 @@ module.exports = class HomeView extends BaseView
     afterRender: =>
         @navbar = new NavbarView @apps
         @applicationListView = new ApplicationsListView @apps
+        @configApplications = new ConfigApplicationsView @apps
         @accountView = new AccountView()
+        @helpView = new HelpView()
         @marketView = new MarketView @apps
 
+        $("#content").niceScroll()
         @frames = @$ '#app-frames'
         @content = @$ '#content'
 
@@ -54,11 +59,12 @@ module.exports = class HomeView extends BaseView
                 alert 'Server error occured, logout failed.'
 
     displayView: (view) =>
+        $("#current-application").html 'home'
         displayView = =>
-            @content.show()
             @frames.hide()
             view.$el.hide()
-            @content.append view.$el
+            @content.show()
+            $('#home-content').append view.$el
             view.$el.fadeIn()
             @currentView = view
             @changeFavicon "favicon.ico"
@@ -74,20 +80,25 @@ module.exports = class HomeView extends BaseView
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
-        @navbar.selectButton 'home-button'
-        window.document.title = "Cozy - Home"
+        window.document.title = t "Cozy - Home"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView
-        @navbar.selectButton 'market-button'
-        window.document.title = "Cozy - Market"
+        window.document.title = t "Cozy - App Store"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView
-        @navbar.selectButton 'account-button'
-        window.document.title = 'Cozy - Account'
+        window.document.title = t 'Cozy - Account'
+
+    displayHelp: =>
+        @displayView @helpView
+        window.document.title = t "Cozy - Help"
+
+    displayConfigApplications: =>
+        @displayView @configApplications
+        window.document.title = t "Cozy - Applications configuration"
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
@@ -108,22 +119,22 @@ module.exports = class HomeView extends BaseView
         @$('#app-frames').find('iframe').hide()
         frame.show()
 
-        @navbar.selectButton slug
         @selectedApp = slug
 
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
+        $("#current-application").html name
         @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
 
-    createApplicationIframe: (slug, hash="")->
+    createApplicationIframe: (slug, hash="") ->
         @frames.append appIframeTemplate(id: slug, hash:hash)
         frame = @$("##{slug}-frame")
         $(frame.prop('contentWindow')).on 'hashchange', =>
             location = frame.prop('contentWindow').location
             newhash = location.hash.replace '#', ''
-            @onAppHashChanged(slug, newhash)
+            @onAppHashChanged slug, newhash
         @resetLayoutSizes()
         return frame
 
@@ -144,6 +155,5 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        height = @$("#header").height() + 1
-        @frames.height $(window).height() - height
-        @content.height $(window).height() - height
+        @frames.height $(window).height() - 48
+        @content.height $(window).height() - 48

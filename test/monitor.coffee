@@ -6,13 +6,12 @@ TESTPORT = 8889
 
 describe "Get sys data", ->
 
-    before helpers.init compoundInitiator
+    before helpers.init TESTPORT
     before ->
-        @app.listen(TESTPORT)
         @client = helpers.getClient TESTPORT, @
 
     after ->
-        @app.compound.server.close()
+        @app.server.close()
 
     it "When I load sys data", (done) ->
         @client.get "api/sys-data", done

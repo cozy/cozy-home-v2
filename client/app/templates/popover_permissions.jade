@@ -1,7 +1,6 @@
-.modal-header= t('Applications Permissions')
-.modal-body
-    div
-      h4= t('downloading-permissions')
-.modal-footer
-    a#cancelbtn.btn= t('Cancel')
-    a#confirmbtn.btn.btn-primary= t('Confirm')
+.md-header.mt2=t('Once updated, this application will require the following permissions:')
+.md-body
+    div &nbsp;
+.md-footer.mt2
+    a#confirmbtn.btn.right= t('confirm update')
+    a#cancelbtn.btn.light-btn.right= t('cancel')
