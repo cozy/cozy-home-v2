@@ -7,6 +7,10 @@
         else
             span.state-label 
                 | #{app.state}
+     .roundedOne
+         input(type="checkbox", value="None", id="roundedOne", name="check")
+         label(for="roundedOne") &nbsp;
+        
     .mod.right
         button.btn.remove-app= t('remove')
     .mod.right 

@@ -693,6 +693,76 @@ select:focus {
   -ms-filter: none;
   filter: none;
 }
+input[type=checkbox] {
+  visibility: hidden;
+}
+.roundedOne {
+  width: 28px;
+  height: 28px;
+  background: #fcfff4;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fcfff4), color-stop(0.4, #dfe5d7), color-stop(1, #b3bead));
+  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  margin: 20px auto;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-box-shadow: inset 0px 1px 1px #fff, 0px 1px 3px rgba(0,0,0,0.5);
+  box-shadow: inset 0px 1px 1px #fff, 0px 1px 3px rgba(0,0,0,0.5);
+  position: relative;
+}
+.roundedOne label {
+  cursor: pointer;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 4px;
+  top: 4px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px #fff;
+  box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px #fff;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #222), color-stop(1, #45484d));
+  background: -webkit-linear-gradient(top, #222 0%, #45484d 100%);
+  background: -moz-linear-gradient(top, #222 0%, #45484d 100%);
+  background: -o-linear-gradient(top, #222 0%, #45484d 100%);
+  background: -ms-linear-gradient(top, #222 0%, #45484d 100%);
+  background: linear-gradient(top, #222 0%, #45484d 100%);
+}
+.roundedOne label:after {
+  opacity: 0;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  filter: alpha(opacity=0);
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #00bf00;
+  top: 2px;
+  left: 2px;
+  -webkit-box-shadow: inset 0px 1px 1px #fff, 0px 1px 3px rgba(0,0,0,0.5);
+  box-shadow: inset 0px 1px 1px #fff, 0px 1px 3px rgba(0,0,0,0.5);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #00bf00), color-stop(1, #009400));
+  background: -webkit-linear-gradient(top, #00bf00 0%, #009400 100%);
+  background: -moz-linear-gradient(top, #00bf00 0%, #009400 100%);
+  background: -o-linear-gradient(top, #00bf00 0%, #009400 100%);
+  background: -ms-linear-gradient(top, #00bf00 0%, #009400 100%);
+  background: linear-gradient(top, #00bf00 0%, #009400 100%);
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+}
+.roundedOne label:hover::after {
+  opacity: 0.3;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  filter: alpha(opacity=30);
+}
+.roundedOne input[type=checkbox]:checked + label:after {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 .help-text {
   font-size: 26px;
   text-align: center;
@@ -793,7 +863,6 @@ body {
   transition: all 0.3s;
 }
 .navbar span {
-  height: 48px;
   margin: 0;
 }
 .navbar a {
@@ -829,8 +898,8 @@ body {
 /** Notifications */
 #menu-applications-toggle {
   height: 46px;
-  line-height: 46px;
-  font-size: 46px;
+  line-height: 42px;
+  font-size: 42px;
   margin-left: 5px;
   padding-left: 5px;
   padding-right: 5px;
@@ -853,18 +922,20 @@ body {
   filter: none;
 }
 #menu-applications-toggle span {
-  position: relative;
-  top: -4px;
   font-size: 28px;
+  padding-top: 5px;
 }
-.active #menu-applications-toggle {
+#menu-applications-container.active #menu-applications-toggle {
   background: rgba(20,20,22,0.3);
-  height: 47px;
-  line-height: 47px;
-  font-size: 47px;
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #000;
   box-shadow: inset 2px 2px 2px #000;
+  height: 42px;
+  line-height: 42px;
+  font-size: 42px;
+}
+#menu-applications-container.active #menu-applications-toggle span {
+  margin-top: 2px;
 }
 #menu-applications-container {
   position: relative;
@@ -885,7 +956,7 @@ body {
   display: none;
   position: absolute;
   left: 5px;
-  top: 25px;
+  top: 48px;
   width: 420px;
   z-index: 50;
   margin: 0;
@@ -1033,11 +1104,8 @@ body {
   transition: background-color 3s;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-  .navbar {
-    height: 45px;
-  }
   #menu-applications-toggle span {
-    top: -4px;
+    padding-top: 10px;
   }
 }
 /** Applications */

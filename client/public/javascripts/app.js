@@ -920,8 +920,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Applications Permissions": "Permissions de l'Application",
     "Confirm": "Confirmer",
     "Installing": "Installation en cours",
-    "remove": "Enlever",
-    "update": "M.À.J.",
+    "remove": "enlever",
+    "update": "m.à.j.",
     "started": "Démarrée",
     "Notifications": "Notifications",
     "Questions and help forum": "Forum d'aide",
@@ -1358,7 +1358,7 @@ window.require.register("templates/config_application", function(exports, requir
   {
   buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
   }
-  buf.push('</div><div class="mod right"><button class="btn remove-app">');
+  buf.push('</div><div class="roundedOne"><input type="checkbox" value="None" id="roundedOne" name="check"/><label for="roundedOne">&nbsp;</label></div><div class="mod right"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
@@ -1607,10 +1607,10 @@ window.require.register("templates/navbar", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><span id="menu-applications-container"></span><a id="logout-button" href="#logout" class="right"><span>');
+  buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><div id="menu-applications-container" class="left"></div><a id="logout-button" href="#logout" class="right"><span>');
   var __val__ = t('logout')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/logout-white.png"/></a><span id="notifications-container" class="right"></span></div>');
+  buf.push('</span><img src="img/logout-white.png"/></a><div id="notifications-container" class="right"></div></div>');
   }
   return buf.join("");
   };
