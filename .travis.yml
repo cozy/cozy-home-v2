@@ -15,5 +15,5 @@ before_install:
     - ps aux | grep coffee
     - sleep 3
     - curl http://localhost:9101/
-    - npm install coffeescript -g
+    - npm install coffee-script -g
     - cd ..
