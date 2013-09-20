@@ -787,8 +787,6 @@ body
         margin: 0
         padding: 0
 
-
-
     .section-title 
         display: none
 
@@ -867,7 +865,6 @@ body
 
         .cozy-app
             width: 100%
-
             height: 150px
 
 
@@ -888,6 +885,11 @@ body
 
 
 @media (max-width: 640px)
+
+    #account-view
+        input
+            max-width: 215px
+
     .application
         width: 80px
 
@@ -906,15 +908,25 @@ body
                 margin-right: 5px
                 border-radius: 3px
 
+        img
+            width: 60px
+
     #home-content
-        padding 5px
+        padding 5px 60px 5px 5px
 
     #no-app-message
         width: 100%
-        padding-right: 40px
 
     #market-view
-        padding: 20px 40px 20px 20px
+        padding: 10px 0 10px 10px
+
+        .right
+            img
+                display: none
+
+        #market-application-list
+            .cozy-app
+                height: 300px
 
     #account-view
         #account-form
@@ -930,6 +942,10 @@ body
         p.help-text
             font-size: 20px
 
+    #config-applications-view
+        .w66
+            padding-right: 10px
+
 
 @media (max-width: 500px)
 
@@ -943,7 +959,7 @@ body
                 font-size: 16px
 
         .cozy-app
-            height: 160px
+            height: 200px
             margin-top: 10px
 
         .app-text
