@@ -29,6 +29,7 @@ module.exports = class ApplicationRow extends BaseView
         @removeButton = new ColorButton @$ ".remove-app"
         @startStopBtn = new ColorButton @$ ".start-stop-btn"
         @stateLabel = @$ '.state-label'
+        @appStoppable  = @$ ".app-stoppable"
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
@@ -42,12 +43,16 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.show().text t 'broken'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'retry to install'
+                @appStoppable.hide()
+                @appStoppable.next().hide()
                 @startStopBtn.hide()
             when 'installed'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'update'
+                @appStoppable.show()
+                @appStoppable.next().show()
                 @startStopBtn.displayGrey t 'stop this app'
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"
@@ -55,13 +60,19 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.show().text t 'installing'
                 @removeButton.displayGrey t 'abort'
                 @updateButton.hide()
+                @appStoppable.hide()
+                @appStoppable.next().hide()
                 @startStopBtn.hide()
             when 'stopped'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.addClass 'stopped'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.hide()
+                @appStoppable.hide()
+                @appStoppable.next().hide()
                 @startStopBtn.displayGrey t 'start this app'
+        bool = not @model.get('isStoppable')
+        @$('.app-stoppable').attr 'checked', bool
 
     onStoppableClicked: (event) =>
         bool = not @model.get('isStoppable')

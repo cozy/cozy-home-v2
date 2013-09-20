@@ -7,9 +7,6 @@
         else
             span.state-label 
                 | #{app.state}
-     .roundedOne
-         input(type="checkbox", value="None", id="roundedOne", name="check")
-         label(for="roundedOne") &nbsp;
         
     .mod.right
         button.btn.remove-app= t('remove')
@@ -17,9 +14,10 @@
         button.btn.update-app= t('update')
     .mod.right
         button.btn.btn-large.start-stop-btn= t('stop this app')
-    //-.mod.right.smaller
-        //-input(class="app-stoppable",
-              //-type="checkbox",
-              //-title="always-on",
-              //-checked="checked",name="app-stoppable")
-        //-| auto stop
+    .mod.right.smaller
+        input(class="app-stoppable",
+              type="checkbox",
+              title="always-on",
+              checked="checked",
+              name="app-stoppable") 
+        label(for="app-stoppable") auto stop

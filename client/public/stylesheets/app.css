@@ -694,7 +694,7 @@ select:focus {
   filter: none;
 }
 input[type=checkbox] {
-  visibility: hidden;
+  margin-top: 8px;
 }
 .roundedOne {
   width: 28px;

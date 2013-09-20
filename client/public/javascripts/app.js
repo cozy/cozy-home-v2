@@ -1358,7 +1358,7 @@ window.require.register("templates/config_application", function(exports, requir
   {
   buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
   }
-  buf.push('</div><div class="roundedOne"><input type="checkbox" value="None" id="roundedOne" name="check"/><label for="roundedOne">&nbsp;</label></div><div class="mod right"><button class="btn remove-app">');
+  buf.push('</div><div class="mod right"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
@@ -1367,7 +1367,7 @@ window.require.register("templates/config_application", function(exports, requir
   buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
   var __val__ = t('stop this app')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div></div>');
+  buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always-on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div>');
   }
   return buf.join("");
   };
@@ -1994,6 +1994,7 @@ window.require.register("views/config_application", function(exports, require, m
       this.removeButton = new ColorButton(this.$(".remove-app"));
       this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
       this.stateLabel = this.$('.state-label');
+      this.appStoppable = this.$(".app-stoppable");
       this.listenTo(this.model, 'change', this.onAppChanged);
       return this.onAppChanged(this.model);
     };
@@ -2003,33 +2004,47 @@ window.require.register("views/config_application", function(exports, require, m
 
 
     ApplicationRow.prototype.onAppChanged = function(app) {
+      var bool;
       switch (this.model.get('state')) {
         case 'broken':
           this.icon.attr('src', "img/broken.png");
           this.stateLabel.show().text(t('broken'));
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('retry to install'));
-          return this.startStopBtn.hide();
+          this.appStoppable.hide();
+          this.appStoppable.next().hide();
+          this.startStopBtn.hide();
+          break;
         case 'installed':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('update'));
-          return this.startStopBtn.displayGrey(t('stop this app'));
+          this.appStoppable.show();
+          this.appStoppable.next().show();
+          this.startStopBtn.displayGrey(t('stop this app'));
+          break;
         case 'installing':
           this.icon.attr('src', "img/installing.gif");
           this.icon.removeClass('stopped');
           this.stateLabel.show().text(t('installing'));
           this.removeButton.displayGrey(t('abort'));
           this.updateButton.hide();
-          return this.startStopBtn.hide();
+          this.appStoppable.hide();
+          this.appStoppable.next().hide();
+          this.startStopBtn.hide();
+          break;
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.addClass('stopped');
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();
-          return this.startStopBtn.displayGrey(t('start this app'));
+          this.appStoppable.hide();
+          this.appStoppable.next().hide();
+          this.startStopBtn.displayGrey(t('start this app'));
       }
+      bool = !this.model.get('isStoppable');
+      return this.$('.app-stoppable').attr('checked', bool);
     };
 
     ApplicationRow.prototype.onStoppableClicked = function(event) {
