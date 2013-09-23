@@ -6,6 +6,7 @@ Application = require '../models/application'
 {AppManager} = require '../lib/paas'
 {PermissionsManager} = require '../lib/permissions'
 {DescriptionManager} = require '../lib/description'
+{WidgetManager} = require '../lib/widget'
 
 
 # Helpers
@@ -166,42 +167,47 @@ module.exports =
                 return send_error res, err if err
                 req.body.permissions = docTypes
 
-                Application.create req.body, (err, appli) ->
+                widget = new WidgetManager()
+                widget.get req.body, (err, widget) ->
                     return send_error res, err if err
+                    req.body.widget = widget
+                    console.log req.body
+                    Application.create req.body, (err, appli) ->
+                        return send_error res, err if err
 
-                    res.send success: true, app: appli, 201
+                        res.send success: true, app: appli, 201
 
-                    infos = JSON.stringify appli
-                    console.info "attempt to install app #{infos}"
-                    manager = new AppManager()
-                    manager.installApp appli, (err, result) ->
+                        infos = JSON.stringify appli
+                        console.info "attempt to install app #{infos}"
+                        manager = new AppManager()
+                        manager.installApp appli, (err, result) ->
 
-                        if err
-                            mark_broken res, appli, err
-                            res.send_error_socket err
-                            return
+                            if err
+                                mark_broken res, appli, err
+                                res.send_error_socket err
+                                return
 
-                        if result.drone?
-                            appli.state = "installed"
-                            appli.port = result.drone.port
+                            if result.drone?
+                                appli.state = "installed"
+                                appli.port = result.drone.port
 
-                            msg = "install succeeded on port #{appli.port}"
-                            console.info msg
+                                msg = "install succeeded on port #{appli.port}"
+                                console.info msg
 
-                            saveIcon appli, (err) ->
-                                if err then console.log err.stack
-                                else console.info 'icon attached'
+                                saveIcon appli, (err) ->
+                                    if err then console.log err.stack
+                                    else console.info 'icon attached'
 
-                            appli.save (err) ->
-                                return res.send_error_socket err if err
-                                console.info 'saved port in db', appli.port
-                                manager.resetProxy (err) ->
-                                    return send_error_socket err if err
-                                    console.info 'proxy reset', appli.port
-                        else
-                            err = new Error "Controller has no " + \
-                                            "informations about #{appli.name}"
-                            return send_error_socket err if err
+                                appli.save (err) ->
+                                    return res.send_error_socket err if err
+                                    console.info 'saved port in db', appli.port
+                                    manager.resetProxy (err) ->
+                                        return send_error_socket err if err
+                                        console.info 'proxy reset', appli.port
+                            else
+                                err = new Error "Controller has no " + \
+                                                "informations about #{appli.name}"
+                                return send_error_socket err if err
 
 
     # Remove app from 3 places :

@@ -22,9 +22,12 @@ class exports.DescriptionManager
 
         # Download file with application's permissions
         basePath = (app.git).substring(19, (app.git.length - 4))
-        path =  basePath + '/master/package.json'
+        if app.branch?
+            basePath = basePath + '/' + app.branch
+        else
+            basePath = basePath + '/master'
+        path =  basePath + '/package.json'
         client = request.newClient "https://raw.github.com/"
-        console.log path
         client.get path, (err, res, config) =>
 
             if res.statusCode is 404

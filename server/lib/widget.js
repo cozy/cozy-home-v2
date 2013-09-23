@@ -8,40 +8,41 @@
 
   request = require('request-json');
 
-  exports.PermissionsManager = (function() {
-    function PermissionsManager() {
-      this.docTypes = {};
-    }
+  exports.WidgetManager = (function() {
+    function WidgetManager() {}
 
-    PermissionsManager.prototype.get = function(app, callback) {
+    WidgetManager.prototype.get = function(app, callback) {
       var client, path,
         _this = this;
 
       path = app.git.substring(19, app.git.length - 4);
-      client = request.newClient("https://raw.github.com/");
       if (app.branch != null) {
         path = path + '/' + app.branch;
       } else {
         path = path + '/master';
       }
+      client = request.newClient("https://raw.github.com/");
       return client.get(path + '/package.json', function(err, res, body) {
         if (err) {
           console.log(err);
           return callback(null, {});
         } else {
           if (res.statusCode !== 404) {
-            if (body["cozy-permissions"] != null) {
-              _this.docTypes = body["cozy-permissions"];
+            if (body["cozy-widget"] != null) {
+              _this.widget = body["cozy-widget"];
+            } else {
+              _this.widget = null;
             }
-            return callback(null, _this.docTypes);
+            console.log(_this.widget);
+            return callback(null, _this.widget);
           } else {
-            return callback(null, {});
+            return callback(null, null);
           }
         }
       });
     };
 
-    return PermissionsManager;
+    return WidgetManager;
 
   })();
 
