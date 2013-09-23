@@ -106,7 +106,6 @@ module.exports =
         manifest = new Manifest req.body, (err) ->
             if err then next err
             manifest.getMetaData (metaData) ->
-                console.log metaData
                 res.send success: true, app: metaData, 200
 
 

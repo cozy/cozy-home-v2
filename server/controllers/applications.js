@@ -172,7 +172,6 @@
           next(err);
         }
         return manifest.getMetaData(function(metaData) {
-          console.log(metaData);
           return res.send({
             success: true,
             app: metaData
