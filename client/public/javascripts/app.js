@@ -2154,7 +2154,8 @@ window.require.register("views/config_application", function(exports, require, m
       Backbone.Mediator.pub('app-state-changed', true);
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
       this.updateButton.spin(false);
-      return this.updateButton.spin(true, {
+      this.updateButton.spin(true);
+      return this.model.updateApp({
         success: function() {
           _this.updateButton.displayGreen(t("Updated"));
           return Backbone.Mediator.pub('app-state-changed', true);

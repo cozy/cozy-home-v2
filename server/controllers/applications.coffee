@@ -171,7 +171,7 @@ module.exports =
                 widget.get req.body, (err, widget) ->
                     return send_error res, err if err
                     req.body.widget = widget
-                    console.log req.body
+  
                     Application.create req.body, (err, appli) ->
                         return send_error res, err if err
 
@@ -247,20 +247,26 @@ module.exports =
             permissions = new PermissionsManager()
             permissions.get req.application, (err, docTypes) ->
                 req.application.permissions = docTypes
-                req.application.save (err) ->
 
-                    saveIcon req.application, (err) ->
-                        if err then console.log err.stack
-                        else console.info 'icon attached'
-
+                widget = new WidgetManager()
+                widget.get req.application, (err, widget) ->
                     return send_error res, err if err
+                    req.application.widget = widget
+  
+                    req.application.save (err) ->
 
-                    manager.resetProxy (err) ->
-                        return mark_broken res, req.application, err if err
+                        saveIcon req.application, (err) ->
+                            if err then console.log err.stack
+                            else console.info 'icon attached'
 
-                        res.send
-                            success: true
-                            msg: 'Application succesfuly updated'
+                        return send_error res, err if err
+
+                        manager.resetProxy (err) ->
+                            return mark_broken res, req.application, err if err
+
+                            res.send
+                                success: true
+                                msg: 'Application succesfuly updated'
 
 
     start: (req, res, next) ->

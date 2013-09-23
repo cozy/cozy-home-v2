@@ -248,7 +248,6 @@
               return send_error(res, err);
             }
             req.body.widget = widget;
-            console.log(req.body);
             return Application.create(req.body, function(err, appli) {
               var infos, manager;
 
@@ -347,25 +346,34 @@
         req.application.state = "installed";
         permissions = new PermissionsManager();
         return permissions.get(req.application, function(err, docTypes) {
+          var widget;
+
           req.application.permissions = docTypes;
-          return req.application.save(function(err) {
-            saveIcon(req.application, function(err) {
-              if (err) {
-                return console.log(err.stack);
-              } else {
-                return console.info('icon attached');
-              }
-            });
+          widget = new WidgetManager();
+          return widget.get(req.application, function(err, widget) {
             if (err) {
               return send_error(res, err);
             }
-            return manager.resetProxy(function(err) {
+            req.application.widget = widget;
+            return req.application.save(function(err) {
+              saveIcon(req.application, function(err) {
+                if (err) {
+                  return console.log(err.stack);
+                } else {
+                  return console.info('icon attached');
+                }
+              });
               if (err) {
-                return mark_broken(res, req.application, err);
+                return send_error(res, err);
               }
-              return res.send({
-                success: true,
-                msg: 'Application succesfuly updated'
+              return manager.resetProxy(function(err) {
+                if (err) {
+                  return mark_broken(res, req.application, err);
+                }
+                return res.send({
+                  success: true,
+                  msg: 'Application succesfuly updated'
+                });
               });
             });
           });

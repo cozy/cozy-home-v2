@@ -143,7 +143,8 @@ module.exports = class ApplicationRow extends BaseView
         Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateButton.spin false
-        @updateButton.spin true
+        @updateButton.spin true        
+        @model.updateApp
             success: =>
                 @updateButton.displayGreen t "Updated"
                 Backbone.Mediator.pub 'app-state-changed', true
