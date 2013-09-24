@@ -132,9 +132,9 @@ module.exports = class exports.AccountView extends BaseView
             @localeField.val locale
 
             # Don't know why password fields can't be configured too early...
-            @password0Field = $('#account-password0-field')
-            @password1Field = $('#account-password1-field')
-            @password2Field = $('#account-password2-field')
+            @password0Field = @$('#account-password0-field')
+            @password1Field = @$('#account-password1-field')
+            @password2Field = @$('#account-password2-field')
             @password0Field.keyup (event) =>
                 if event.keyCode is 13 or event.which is 13
                     @password1Field.focus()

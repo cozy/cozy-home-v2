@@ -1878,9 +1878,9 @@ window.require.register("views/account", function(exports, require, module) {
         saveLocale = _this.getSaveFunction('locale', _this.localeField, 'instance');
         _this.localeField.change(saveLocale);
         _this.localeField.val(locale);
-        _this.password0Field = $('#account-password0-field');
-        _this.password1Field = $('#account-password1-field');
-        _this.password2Field = $('#account-password2-field');
+        _this.password0Field = _this.$('#account-password0-field');
+        _this.password1Field = _this.$('#account-password1-field');
+        _this.password2Field = _this.$('#account-password2-field');
         _this.password0Field.keyup(function(event) {
           if (event.keyCode === 13 || event.which === 13) {
             return _this.password1Field.focus();
