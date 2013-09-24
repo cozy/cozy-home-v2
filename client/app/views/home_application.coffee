@@ -50,6 +50,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onAppClicked: (event) =>
         event.preventDefault()
+        return null if app.mainView.applicationListView.state is 'layout'
         switch @model.get 'state'
             when 'broken'
                 msg = 'This app is broken. Try install again.'

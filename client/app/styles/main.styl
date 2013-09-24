@@ -2,7 +2,7 @@
 @import '_base'
 @import '_help'
 
-* 
+*
     outline: none
 
 .home-body
@@ -320,10 +320,14 @@ body
     text-align: center
     margin: 40px 0
 
+    .preview-holder
+        padding 10px
+        display: block
+        list-style-type: none
+        background-color: orange
+
 .application
     width: 130px
-    margin: 6px
-    display: inline-block
     text-align: center
     padding: 10px
     border: 0
@@ -421,7 +425,7 @@ body
         padding-left 20px
         padding-right 20px
 
-    img 
+    img
         width: 32px
         margin-right: 10px
 
@@ -460,7 +464,7 @@ body
         margin-bottom: 10px
 
     .input
-        .btn 
+        .btn
             height: 60px
             width: 60px
             margin-left: 10px
@@ -506,7 +510,7 @@ body
         margin-top: 2px
         margin-right: 10px
 
-    .btn 
+    .btn
         height: 60px
 
     .error
@@ -629,7 +633,7 @@ body
 
     strong
         text-transform: lowercase
-    
+
     .mod
         margin-left: 5px
 
@@ -661,7 +665,7 @@ body
 .md-open
     overflow: hidden
 
-.md-modal 
+.md-modal
     position: fixed
     top: 50%
     left: 50%
@@ -689,8 +693,8 @@ body
     transform: translateX(0)
     opacity: 1
     transition: all 0.3s
- 
-.md-overlay 
+
+.md-overlay
     position: fixed
     width: 100%
     height: 100%
@@ -774,7 +778,7 @@ body
 @media (max-width: 800px)
     .md-content
         overflow: auto
-    .md-modal 
+    .md-modal
         position: absolute
         top: 0
         left: 0
@@ -787,7 +791,7 @@ body
         margin: 0
         padding: 0
 
-    .section-title 
+    .section-title
         display: none
 
     .home-body
