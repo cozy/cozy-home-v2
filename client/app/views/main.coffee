@@ -80,6 +80,12 @@ module.exports = class HomeView extends BaseView
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
+        @applicationListView.setMode 'view'
+        window.document.title = t "Cozy - Home"
+
+    displayApplicationsListEdit: =>
+        @displayView @applicationListView
+        @applicationListView.setMode 'edit'
         window.document.title = t "Cozy - Home"
 
     # Display application manager page, hides app frames, active home button.
@@ -121,6 +127,7 @@ module.exports = class HomeView extends BaseView
 
         @selectedApp = slug
 
+        frame.prop('contentWindow').location.hash = hash
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"

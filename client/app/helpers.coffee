@@ -55,6 +55,37 @@ class exports.BrunchApplication
                 throw "Spinner class not available."
                 null
 
+        # Patch Gridster to allow resizing of the grid while running
+
+        oldAST = $.Gridster.add_style_tag
+        $.Gridster.add_style_tag = (css) ->
+            tag.parentNode?.removeChild tag for tag in @$style_tags
+            @$style_tags = $ []
+            oldAST.apply this, arguments
+
+        oldGST = $.Gridster.generate_stylesheets
+        $.Gridster.generate_stylesheets = () ->
+            $.Gridster.generated_stylesheets = []
+            oldGST.apply this, arguments
+
+
+        $.Gridster.resize_widget_dimensions = (options) ->
+            @options.widget_margins = options.widget_margins if options.widget_margins
+            @options.widget_base_dimensions = options.widget_base_dimensions if options.widget_base_dimensions
+
+            @min_widget_width  = (@options.widget_margins[0] * 2) + @options.widget_base_dimensions[0]
+            @min_widget_height = (@options.widget_margins[1] * 2) + @options.widget_base_dimensions[1]
+
+            serializedGrid = @serialize()
+            @$widgets.each $.proxy (i, widget) =>
+                data = serializedGrid[i]
+                @resize_widget $(widget), data.sizex, data.sizey
+
+            @generate_grid_and_stylesheet()
+            @get_widgets_from_DOM()
+
+            return false
+
     initialize: ->
 
 # Select all content of an input field.

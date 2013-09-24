@@ -1,6 +1,7 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 PopoverPermissionsView = require 'views/popover_permissions'
+WidgetTemplate = require 'templates/home_application_widget'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
@@ -36,6 +37,10 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
             when 'installed'
+                if widgetUrl = @model.get 'widget'
+                    @$('.application-inner').html WidgetTemplate url: widgetUrl
+                    return
+
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
@@ -50,7 +55,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onAppClicked: (event) =>
         event.preventDefault()
-        return null if app.mainView.applicationListView.state is 'layout'
+        return null if app.mainView.applicationListView.state is 'edit'
         switch @model.get 'state'
             when 'broken'
                 msg = 'This app is broken. Try install again.'
