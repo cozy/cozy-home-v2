@@ -2224,9 +2224,10 @@ module.exports = ApplicationRow = (function(_super) {
     Backbone.Mediator.pub('app-state-changed', true);
     this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     this.updateButton.spin(false);
-    return this.updateButton.spin(true, {
+    this.updateButton.spin(true);
+    return this.model.updateApp({
       success: function() {
-        _this.updateButton.displayGreen(t("Updated"));
+        _this.updateButton.displayGreen(t("updated"));
         return Backbone.Mediator.pub('app-state-changed', true);
       },
       error: function(jqXHR) {
