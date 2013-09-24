@@ -283,7 +283,8 @@ exports.BrunchApplication = (function() {
   }
 
   BrunchApplication.prototype.initializeJQueryExtensions = function() {
-    return $.fn.spin = function(opts, color) {
+    var oldAST, oldGST;
+    $.fn.spin = function(opts, color) {
       var presets;
       presets = {
         tiny: {
@@ -343,6 +344,45 @@ exports.BrunchApplication = (function() {
         throw "Spinner class not available.";
         return null;
       }
+    };
+    oldAST = $.Gridster.add_style_tag;
+    $.Gridster.add_style_tag = function(css) {
+      var tag, _i, _len, _ref, _ref1;
+      _ref = this.$style_tags;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tag = _ref[_i];
+        if ((_ref1 = tag.parentNode) != null) {
+          _ref1.removeChild(tag);
+        }
+      }
+      this.$style_tags = $([]);
+      return oldAST.apply(this, arguments);
+    };
+    oldGST = $.Gridster.generate_stylesheets;
+    $.Gridster.generate_stylesheets = function() {
+      $.Gridster.generated_stylesheets = [];
+      return oldGST.apply(this, arguments);
+    };
+    return $.Gridster.resize_widget_dimensions = function(options) {
+      var serializedGrid,
+        _this = this;
+      if (options.widget_margins) {
+        this.options.widget_margins = options.widget_margins;
+      }
+      if (options.widget_base_dimensions) {
+        this.options.widget_base_dimensions = options.widget_base_dimensions;
+      }
+      this.min_widget_width = (this.options.widget_margins[0] * 2) + this.options.widget_base_dimensions[0];
+      this.min_widget_height = (this.options.widget_margins[1] * 2) + this.options.widget_base_dimensions[1];
+      serializedGrid = this.serialize();
+      this.$widgets.each($.proxy(function(i, widget) {
+        var data;
+        data = serializedGrid[i];
+        return _this.resize_widget($(widget), data.sizex, data.sizey);
+      }));
+      this.generate_grid_and_stylesheet();
+      this.get_widgets_from_DOM();
+      return false;
     };
   };
 
@@ -1258,6 +1298,7 @@ module.exports = MainRouter = (function(_super) {
 
   MainRouter.prototype.routes = {
     "home": "applicationList",
+    "home/edit": "applicationListEdit",
     "applications": "market",
     "config-applications": "configApplications",
     "account": "account",
@@ -1269,6 +1310,23 @@ module.exports = MainRouter = (function(_super) {
     '*notFound': 'applicationList'
   };
 
+  MainRouter.prototype.initialize = function() {
+    var _this = this;
+    return window.addEventListener('message', function(event) {
+      var intent;
+      if (event.origin !== window.location.origin) {
+        return false;
+      }
+      intent = event.data;
+      switch (intent.action) {
+        case 'goto':
+          return _this.navigate("apps/" + intent.params, true);
+        default:
+          return console.log("WEIRD INTENT", intent);
+      }
+    });
+  };
+
   MainRouter.prototype.selectIcon = function(index) {
     $('.menu-btn').removeClass('active');
     return $($('.menu-btn').get(index)).addClass('active');
@@ -1276,6 +1334,11 @@ module.exports = MainRouter = (function(_super) {
 
   MainRouter.prototype.applicationList = function() {
     app.mainView.displayApplicationsList();
+    return this.selectIcon(0);
+  };
+
+  MainRouter.prototype.applicationListEdit = function() {
+    app.mainView.displayApplicationsListEdit();
     return this.selectIcon(0);
   };
 
@@ -1452,10 +1515,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>');
 var __val__ = t('&nbsp;GB (Hard Drive)')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="memory-free mt2"><div class="line"> <img src="img/ram.png"/></div><div class="lien"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
+buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
 var __val__ = t('&nbsp;MB (RAM)')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
+buf.push('</span></div></div><div class="change-layout mt2"><div class="line"><img src="img/changelayout.png"/></div><div class="line"><a href="#home/edit">Change the layout</a></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
 var __val__ = t('Manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4></div></div></div>');
@@ -1497,7 +1560,10 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w600"><a href="#home" class="btn btn-large">');
+var __val__ = t('Finish Layout Edition')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('Welcome to your Cozy!')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><div class="line"><p class="bigger pa2">');
@@ -1557,9 +1623,21 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a');
-buf.push(attrs({ 'href':("#apps/" + (app.slug) + "/") }, {"href":true}));
-buf.push('><div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div></a>');
+buf.push('<div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div>');
+}
+return buf.join("");
+};
+});
+
+;require.register("templates/home_application_widget", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="widget-mask"></div><iframe');
+buf.push(attrs({ 'src':("" + (url) + ""), "class": ("widget-iframe") }, {"class":true,"src":true}));
+buf.push('></iframe>');
 }
 return buf.join("");
 };
@@ -2397,18 +2475,12 @@ module.exports = exports.AccountView = (function(_super) {
 });
 
 ;require.register("views/home", function(exports, require, module) {
-var ApplicationsListView, ViewCollection, grid_margin, grid_size, grid_step,
+var ApplicationsListView, ViewCollection,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 ViewCollection = require('lib/view_collection');
-
-grid_size = 130;
-
-grid_margin = 12;
-
-grid_step = grid_margin + grid_size + grid_margin;
 
 module.exports = ApplicationsListView = (function(_super) {
 
@@ -2431,7 +2503,9 @@ module.exports = ApplicationsListView = (function(_super) {
         return _this.gridster.disable();
       },
       'mouseleave .ui-resizable-handle': function() {
-        return _this.gridster.enable();
+        if (_this.state === 'edit') {
+          return _this.gridster.enable();
+        }
       }
     };
   };
@@ -2439,9 +2513,11 @@ module.exports = ApplicationsListView = (function(_super) {
   function ApplicationsListView(apps) {
     this.saveChanges = __bind(this.saveChanges, this);
 
+    this.onWindowResize = __bind(this.onWindowResize, this);
+
     this.afterRender = __bind(this.afterRender, this);
     this.apps = apps;
-    this.state = 'layout';
+    this.state = 'view';
     ApplicationsListView.__super__.constructor.call(this, {
       collection: apps
     });
@@ -2450,12 +2526,75 @@ module.exports = ApplicationsListView = (function(_super) {
   ApplicationsListView.prototype.afterRender = function() {
     var _this = this;
     this.appList = this.$("#app-list");
+    this.$("#no-app-message").hide();
+    $(".menu-btn a").click(function(event) {
+      var target;
+      $(".menu-btn").removeClass('active');
+      target = $(event.target).closest('.menu-btn');
+      return target.addClass('active');
+    });
+    return this.initGridster();
+  };
+
+  ApplicationsListView.prototype.displayNoAppMessage = function() {
+    return this.$("#no-app-message").toggle(this.apps.size() === 0);
+  };
+
+  ApplicationsListView.prototype.computeColNumber = function() {
+    var nbcol;
+    nbcol = parseInt($(document.body).width() / 160);
+    if (nbcol < 6) {
+      return 2;
+    } else {
+      return 6;
+    }
+  };
+
+  ApplicationsListView.prototype.computeGridDims = function(cols) {
+    var grid_margin, grid_size, grid_step, step;
+    step = $('#home-content').width() / cols;
+    grid_size = step - 24;
+    grid_margin = 12;
+    grid_step = grid_margin + grid_size + grid_margin;
+    return {
+      grid_size: grid_size,
+      grid_margin: grid_margin,
+      grid_step: grid_step
+    };
+  };
+
+  ApplicationsListView.prototype.setMode = function(mode) {
+    var _ref, _ref1;
+    this.state = mode;
+    if (this.state === 'edit') {
+      if ((_ref = this.gridster) != null) {
+        _ref.enable();
+      }
+      this.$('.application').resizable('enable');
+      this.$('.widget-mask').show();
+      return this.$('#home-edit-close').show();
+    } else {
+      if ((_ref1 = this.gridster) != null) {
+        _ref1.disable();
+      }
+      this.$('.application').resizable('disable');
+      this.$('.widget-mask').hide();
+      return this.$('#home-edit-close').hide();
+    }
+  };
+
+  ApplicationsListView.prototype.initGridster = function() {
+    var _ref,
+      _this = this;
+    this.colsNb = this.computeColNumber();
+    _ref = this.computeGridDims(this.colsNb), this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
     this.appList.gridster({
-      min_cols: this.computeColNumber(),
-      max_cols: this.computeColNumber(),
+      min_cols: this.colsNb,
+      max_cols: this.colsNb,
+      max_size_x: this.colsNb,
       widget_selector: 'div.application',
-      widget_margins: [grid_margin, grid_margin],
-      widget_base_dimensions: [grid_size, grid_size],
+      widget_margins: [this.grid_margin, this.grid_margin],
+      widget_base_dimensions: [this.grid_size, this.grid_size],
       draggable: {
         stop: function() {
           console.log("DRAG STOP", arguments);
@@ -2474,29 +2613,21 @@ module.exports = ApplicationsListView = (function(_super) {
       }
     });
     this.gridster = this.appList.data('gridster');
-    this.$("#no-app-message").hide();
-    return $(".menu-btn a").click(function(event) {
-      var target;
-      $(".menu-btn").removeClass('active');
-      target = $(event.target).closest('.menu-btn');
-      return target.addClass('active');
-    });
-  };
-
-  ApplicationsListView.prototype.displayNoAppMessage = function() {
-    return this.$("#no-app-message").toggle(this.apps.size() === 0);
-  };
-
-  ApplicationsListView.prototype.computeColNumber = function() {
-    var nbcol;
-    nbcol = parseInt($('body').width() / 160);
-    if (nbcol < 5) {
-      return 3;
-    } else if (nbcol < 8) {
-      return 5;
-    } else {
-      return 8;
+    if (this.state === 'view') {
+      this.gridster.disable();
+      this.$('#home-edit-close').hide();
     }
+    return $(window).on('resize', _.debounce(this.onWindowResize));
+  };
+
+  ApplicationsListView.prototype.onWindowResize = function() {
+    var oldNb, _ref;
+    oldNb = this.colsNb;
+    _ref = this.computeGridDims(this.colsNb), this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
+    return this.gridster.resize_widget_dimensions({
+      widget_margins: [this.grid_margin, this.grid_margin],
+      widget_base_dimensions: [this.grid_size, this.grid_size]
+    });
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
@@ -2512,9 +2643,9 @@ module.exports = ApplicationsListView = (function(_super) {
       };
     }
     view.$el.resizable({
-      grid: [grid_step + grid_margin, grid_step + grid_margin],
+      grid: [this.grid_step, this.grid_step],
       animate: false,
-      containment: this.$el,
+      containment: this.appList,
       stop: function(event, ui) {
         return setTimeout((function() {
           return _this.doResize(view.$el);
@@ -2522,13 +2653,22 @@ module.exports = ApplicationsListView = (function(_super) {
       }
     });
     this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
-    return view.$el.hide().fadeIn();
+    view.$el.show();
+    if (this.state === 'view') {
+      return view.$el.find('.widget-mask').hide();
+    }
+  };
+
+  ApplicationsListView.prototype.removeItem = function(model) {
+    this.gridster.remove_widget(this.views[model.cid]);
+    return ApplicationsListView.__super__.removeItem.apply(this, arguments);
   };
 
   ApplicationsListView.prototype.doResize = function($el) {
     var grid_h, grid_w;
-    grid_w = Math.ceil($el.width() / grid_step);
-    grid_h = Math.ceil($el.height() / grid_step);
+    grid_w = Math.ceil($el.width() / this.grid_step);
+    grid_h = Math.ceil($el.height() / this.grid_step);
+    console.log("doResize", $el, grid_h, grid_w);
     this.gridster.resize_widget($el, grid_w, grid_h);
     this.gridster.set_dom_grid_height();
     $el.height('');
@@ -2567,7 +2707,7 @@ module.exports = ApplicationsListView = (function(_super) {
 });
 
 ;require.register("views/home_application", function(exports, require, module) {
-var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView,
+var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView, WidgetTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2577,6 +2717,8 @@ BaseView = require('lib/base_view');
 ColorButton = require('widgets/install_button');
 
 PopoverPermissionsView = require('views/popover_permissions');
+
+WidgetTemplate = require('templates/home_application_widget');
 
 module.exports = ApplicationRow = (function(_super) {
 
@@ -2626,11 +2768,18 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
+    var widgetUrl;
     switch (this.model.get('state')) {
       case 'broken':
         this.icon.attr('src', "img/broken.png");
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
+        if (widgetUrl = this.model.get('widget')) {
+          this.$('.application-inner').html(WidgetTemplate({
+            url: widgetUrl
+          }));
+          return;
+        }
         this.icon.attr('src', "api/applications/" + app.id + ".png");
         this.icon.removeClass('stopped');
         return this.stateLabel.hide();
@@ -2648,7 +2797,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onAppClicked = function(event) {
     var errormsg, msg;
     event.preventDefault();
-    if (app.mainView.applicationListView.state === 'layout') {
+    if (app.mainView.applicationListView.state === 'edit') {
       return null;
     }
     switch (this.model.get('state')) {
@@ -2733,6 +2882,8 @@ module.exports = HomeView = (function(_super) {
 
     this.displayMarket = __bind(this.displayMarket, this);
 
+    this.displayApplicationsListEdit = __bind(this.displayApplicationsListEdit, this);
+
     this.displayApplicationsList = __bind(this.displayApplicationsList, this);
 
     this.displayView = __bind(this.displayView, this);
@@ -2812,6 +2963,13 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.displayApplicationsList = function() {
     this.displayView(this.applicationListView);
+    this.applicationListView.setMode('view');
+    return window.document.title = t("Cozy - Home");
+  };
+
+  HomeView.prototype.displayApplicationsListEdit = function() {
+    this.displayView(this.applicationListView);
+    this.applicationListView.setMode('edit');
     return window.document.title = t("Cozy - Home");
   };
 
@@ -2853,6 +3011,7 @@ module.exports = HomeView = (function(_super) {
     this.$('#app-frames').find('iframe').hide();
     frame.show();
     this.selectedApp = slug;
+    frame.prop('contentWindow').location.hash = hash;
     name = this.apps.get(slug).get('name');
     if (!(name != null)) {
       name = '';
