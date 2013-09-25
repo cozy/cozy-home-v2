@@ -126,7 +126,8 @@ module.exports = {
   getPermissions: function(req, res, next) {
     var manifest;
 
-    return manifest = new Manifest(req.body, function(err) {
+    manifest = new Manifest();
+    return manifest.download(req.body, function(err) {
       if (err) {
         next(err);
       }
@@ -146,11 +147,12 @@ module.exports = {
   getDescription: function(req, res, next) {
     var manifest;
 
-    return manifest = new Manifest(req.body, function(err) {
+    manifest = new Manifest();
+    return manifest.download(req.body, function(err) {
       if (err) {
         next(err);
       }
-      return manifest.getManifest(function(description) {
+      return manifest.getDescription(function(description) {
         var app;
 
         app = {
@@ -166,7 +168,8 @@ module.exports = {
   getMetaData: function(req, res, next) {
     var manifest;
 
-    return manifest = new Manifest(req.body, function(err) {
+    manifest = new Manifest();
+    return manifest.download(req.body, function(err) {
       if (err) {
         next(err);
       }
@@ -242,7 +245,8 @@ module.exports = {
         err = new Error("There is already an app with similar name");
         return send_error(res, err, 400);
       }
-      return manifest = new Manifest(req.body, function(err) {
+      manifest = new Manifest();
+      return manifest.download(req.body, function(err) {
         if (err) {
           return send_error(res, err);
         }
@@ -348,7 +352,8 @@ module.exports = {
         return mark_broken(res, req.application, err);
       }
       req.application.state = "installed";
-      return manifest = new Manifest(req.application, function(err) {
+      manifest = new Manifest();
+      return manifest.download(req.application, function(err) {
         if (err) {
           return send_error(res, err);
         }

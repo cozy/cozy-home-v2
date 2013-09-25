@@ -2,6 +2,7 @@ americano = require 'americano'
 request = require 'request-json'
 initProxy = require './server/initializers/proxy'
 setupRealtime = require './server/initializers/realtime'
+setupChecking = require './server/initializers/checking'
 
 
 process.on 'uncaughtException', (err) ->
@@ -20,6 +21,8 @@ americano.start name: 'Cozy Home', port: port, (app, server) ->
     app.param 'slug', ctrler
 
     setupRealtime app
+    setupChecking()
+
 
     callback app if callback?
 
