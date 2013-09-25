@@ -71,6 +71,14 @@ module.exports = class HomeView extends BaseView
             @resetLayoutSizes()
 
         if @currentView?
+
+            if view is @currentView
+                @frames.hide()
+                @content.show()
+                @changeFavicon "favicon.ico"
+                @resetLayoutSizes()
+                return
+
             @currentView.$el.fadeOut =>
                 @currentView.$el.detach()
                 displayView()
@@ -127,7 +135,7 @@ module.exports = class HomeView extends BaseView
 
         @selectedApp = slug
 
-        frame.prop('contentWindow').location.hash = hash
+        frame.prop('contentWindow').location.hash = hash or ''
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"

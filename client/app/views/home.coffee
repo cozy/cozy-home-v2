@@ -19,17 +19,22 @@ module.exports = class ApplicationsListView extends ViewCollection
         @state = 'view'
         super collection: apps
 
+    initialize: =>
+        super
+        # onWindowResize when the user is done resizing
+        $(window).on 'resize', _.debounce @onWindowResize, 300
+
     afterRender: =>
         @appList = @$ "#app-list"
 
-        # @machineInfos = @$(".machine-infos").hide()
         @$("#no-app-message").hide()
         $(".menu-btn a").click (event) =>
             $(".menu-btn").removeClass 'active'
-            target = $(event.target).closest '.menu-btn'
-            target.addClass 'active'
+            $(event.target).closest('.menu-btn').addClass 'active'
 
         @initGridster()
+        super
+        @$('#home-edit-close').hide() if @state is 'view'
 
     displayNoAppMessage: ->
         @$("#no-app-message").toggle @apps.size() is 0
@@ -37,8 +42,11 @@ module.exports = class ApplicationsListView extends ViewCollection
 
     computeColNumber: ->
         nbcol = parseInt $(document.body).width()  / 160
-        return if nbcol < 6 then 2 else 6
-        # @TODO : change me a l'usage
+        nbcol = nbcol - nbcol % 2 if nbcol > 3 # 1,2,3,4,6,8,...
+        console.log "NBCOL = ", nbcol
+        return nbcol
+        # @TODO : change me if complains
+        # return if nbcol < 6 then 2 else 6
 
     computeGridDims: (cols) ->
         step = $('#home-content').width() / cols
@@ -54,15 +62,18 @@ module.exports = class ApplicationsListView extends ViewCollection
             @$('.application').resizable('enable')
             @$('.widget-mask').show()
             @$('#home-edit-close').show()
+            @$('.can-use-widget .use-widget').show()
         else
             @gridster?.disable()
             @$('.application').resizable('disable')
             @$('.widget-mask').hide()
             @$('#home-edit-close').hide()
+            @$('.can-use-widget .use-widget').hide()
 
     initGridster: ->
         @colsNb = @computeColNumber()
         {@grid_size, @grid_margin, @grid_step} = @computeGridDims @colsNb
+        console.log @grid_size, @grid_step
 
         @appList.gridster
             min_cols: @colsNb
@@ -71,6 +82,7 @@ module.exports = class ApplicationsListView extends ViewCollection
             widget_selector: 'div.application'
             widget_margins: [@grid_margin, @grid_margin]
             widget_base_dimensions: [@grid_size, @grid_size]
+            autogenerate_stylesheet: false
             draggable: stop: =>
                 console.log "DRAG STOP", arguments
                 setTimeout @saveChanges, 300
@@ -87,35 +99,36 @@ module.exports = class ApplicationsListView extends ViewCollection
 
         @gridster = @appList.data('gridster')
 
-        if @state is 'view'
-            @gridster.disable()
-            @$('#home-edit-close').hide()
+        @gridster.generate_stylesheet cols: 16, rows: 16
+        @gridster.disable() if @state is 'view'
 
-        $(window).on 'resize', _.debounce @onWindowResize
 
     onWindowResize: =>
         oldNb = @colsNb
-        # @colsNb = @computeColNumber()
+        @colsNb = @computeColNumber()
         {@grid_size, @grid_margin, @grid_step} = @computeGridDims @colsNb
+        console.log @grid_size, @grid_step
 
-        # if oldNb isnt @colsNb
-        #     for cid, view of @views
-        #         @gridster.remove_widget view.$el, true,
+        width = @colsNb * @grid_step
+        @appList.width width
+        @gridster.container_width = width
+        @gridster.options.container_width = width
 
-        @gridster.resize_widget_dimensions
+        @gridster?.resize_widget_dimensions
             widget_margins: [@grid_margin, @grid_margin]
             widget_base_dimensions: [@grid_size, @grid_size]
 
-        # if oldNb is @colsNb
-        #     @appendView view for cid, view of @views
+        @gridster.generate_stylesheet cols: 16, rows: 16
 
+        # force redraw - change layout
+        if oldNb isnt @colsNb
+            console.log "resetting"
+            @onReset @collection
 
-        # width = @colsNb * @grid_step
-        # @appList.width width
 
     appendView: (view) ->
 
-        pos = view.model.getHomePosition @computeColNumber()
+        pos = view.model.getHomePosition @colsNb
         pos ?= col: 1, row: 1, sizex: 1, sizey: 1 # default
 
         view.$el.resizable
@@ -127,13 +140,14 @@ module.exports = class ApplicationsListView extends ViewCollection
 
         @gridster.add_widget view.$el, pos.sizex, pos.sizey, pos.col, pos.row
         view.$el.show()
-        # view.$el.hide().fadeIn()
 
         if @state is 'view'
+            view.$el.resizable('disable')
             view.$el.find('.widget-mask').hide()
+            view.$el.find('.use-widget').hide()
 
-    removeItem: (model) ->
-        @gridster.remove_widget @views[model.cid]
+    removeView: (view) ->
+        @gridster.remove_widget view.$el, true
         super
 
     doResize: ($el) ->
@@ -151,7 +165,7 @@ module.exports = class ApplicationsListView extends ViewCollection
         $el.css 'top', ''
         $el.css 'left', ''
 
-        setTimeout @saveChanges, 300
+        @saveChanges()
 
     saveChanges: () =>
 
@@ -163,10 +177,10 @@ module.exports = class ApplicationsListView extends ViewCollection
             model = @apps.get newpos.slug
             delete newpos.slug
             view = @views[model.cid]
-            oldpos = model.getHomePosition @computeColNumber()
+            oldpos = model.getHomePosition @colsNb
             console.log view.model.id, oldpos, newpos
             continue if _.isEqual oldpos, newpos
 
             # this object have changed
             console.log "SAVING !"
-            view.model.saveHomePosition @computeColNumber(), newpos
+            view.model.saveHomePosition @colsNb, newpos

@@ -27,6 +27,10 @@ module.exports = class ViewCollection extends BaseView
     appendView: (view) ->
         @$el.append view.el
 
+    # can be overriden if we need to do something else
+    removeView: (view) ->
+        view.remove()
+
     # bind listeners to the collection
     initialize: ->
         super
@@ -53,7 +57,8 @@ module.exports = class ViewCollection extends BaseView
 
     # event listener for reset
     onReset: (newcollection) ->
-        view.remove() for id, view of @views
+        @removeView view for id, view of @views
+        @views = []
         @checkIfEmpty @views
         newcollection.forEach @addItem
 
@@ -67,6 +72,6 @@ module.exports = class ViewCollection extends BaseView
 
     # event listeners for remove
     removeItem: (model) =>
-        @views[model.cid].remove()
+        @removeView @views[model.cid]
         delete @views[model.cid]
         @checkIfEmpty @views
