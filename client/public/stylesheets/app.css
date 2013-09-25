@@ -1286,6 +1286,12 @@ body {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
   filter: alpha(opacity=20);
 }
+#app-list .use-widget {
+  z-index: 20;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
 #app-list .application-inner {
   position: relative;
   -webkit-box-sizing: border-box;
@@ -1310,7 +1316,7 @@ body {
   transition: all 0.3s;
   background: #f7f4f0;
 }
-.application img {
+.application img.icon {
   max-width: 100px;
 }
 .application img.stopped {

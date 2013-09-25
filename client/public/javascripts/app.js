@@ -761,6 +761,10 @@ module.exports = ViewCollection = (function(_super) {
     return this.$el.append(view.el);
   };
 
+  ViewCollection.prototype.removeView = function(view) {
+    return view.remove();
+  };
+
   ViewCollection.prototype.initialize = function() {
     ViewCollection.__super__.initialize.apply(this, arguments);
     this.views = {};
@@ -800,8 +804,9 @@ module.exports = ViewCollection = (function(_super) {
     _ref = this.views;
     for (id in _ref) {
       view = _ref[id];
-      view.remove();
+      this.removeView(view);
     }
+    this.views = [];
     this.checkIfEmpty(this.views);
     return newcollection.forEach(this.addItem);
   };
@@ -818,7 +823,7 @@ module.exports = ViewCollection = (function(_super) {
   };
 
   ViewCollection.prototype.removeItem = function(model) {
-    this.views[model.cid].remove();
+    this.removeView(this.views[model.cid]);
     delete this.views[model.cid];
     return this.checkIfEmpty(this.views);
   };
@@ -1623,7 +1628,10 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="application-inner"><p><img src=""/></p><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div>');
+buf.push('<button class="btn use-widget">');
+var __val__ = t('Use widget')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><div class="application-inner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div>');
 }
 return buf.join("");
 };
@@ -2025,9 +2033,9 @@ module.exports = exports.AccountView = (function(_super) {
       saveLocale = _this.getSaveFunction('locale', _this.localeField, 'instance');
       _this.localeField.change(saveLocale);
       _this.localeField.val(locale);
-      _this.password0Field = $('#account-password0-field');
-      _this.password1Field = $('#account-password1-field');
-      _this.password2Field = $('#account-password2-field');
+      _this.password0Field = _this.$('#account-password0-field');
+      _this.password1Field = _this.$('#account-password1-field');
+      _this.password2Field = _this.$('#account-password2-field');
       _this.password0Field.keyup(function(event) {
         if (event.keyCode === 13 || event.which === 13) {
           return _this.password1Field.focus();
@@ -2516,6 +2524,8 @@ module.exports = ApplicationsListView = (function(_super) {
     this.onWindowResize = __bind(this.onWindowResize, this);
 
     this.afterRender = __bind(this.afterRender, this);
+
+    this.initialize = __bind(this.initialize, this);
     this.apps = apps;
     this.state = 'view';
     ApplicationsListView.__super__.constructor.call(this, {
@@ -2523,17 +2533,24 @@ module.exports = ApplicationsListView = (function(_super) {
     });
   }
 
+  ApplicationsListView.prototype.initialize = function() {
+    ApplicationsListView.__super__.initialize.apply(this, arguments);
+    return $(window).on('resize', _.debounce(this.onWindowResize, 300));
+  };
+
   ApplicationsListView.prototype.afterRender = function() {
     var _this = this;
     this.appList = this.$("#app-list");
     this.$("#no-app-message").hide();
     $(".menu-btn a").click(function(event) {
-      var target;
       $(".menu-btn").removeClass('active');
-      target = $(event.target).closest('.menu-btn');
-      return target.addClass('active');
+      return $(event.target).closest('.menu-btn').addClass('active');
     });
-    return this.initGridster();
+    this.initGridster();
+    ApplicationsListView.__super__.afterRender.apply(this, arguments);
+    if (this.state === 'view') {
+      return this.$('#home-edit-close').hide();
+    }
   };
 
   ApplicationsListView.prototype.displayNoAppMessage = function() {
@@ -2543,11 +2560,11 @@ module.exports = ApplicationsListView = (function(_super) {
   ApplicationsListView.prototype.computeColNumber = function() {
     var nbcol;
     nbcol = parseInt($(document.body).width() / 160);
-    if (nbcol < 6) {
-      return 2;
-    } else {
-      return 6;
+    if (nbcol > 3) {
+      nbcol = nbcol - nbcol % 2;
     }
+    console.log("NBCOL = ", nbcol);
+    return nbcol;
   };
 
   ApplicationsListView.prototype.computeGridDims = function(cols) {
@@ -2572,14 +2589,16 @@ module.exports = ApplicationsListView = (function(_super) {
       }
       this.$('.application').resizable('enable');
       this.$('.widget-mask').show();
-      return this.$('#home-edit-close').show();
+      this.$('#home-edit-close').show();
+      return this.$('.can-use-widget .use-widget').show();
     } else {
       if ((_ref1 = this.gridster) != null) {
         _ref1.disable();
       }
       this.$('.application').resizable('disable');
       this.$('.widget-mask').hide();
-      return this.$('#home-edit-close').hide();
+      this.$('#home-edit-close').hide();
+      return this.$('.can-use-widget .use-widget').hide();
     }
   };
 
@@ -2588,6 +2607,7 @@ module.exports = ApplicationsListView = (function(_super) {
       _this = this;
     this.colsNb = this.computeColNumber();
     _ref = this.computeGridDims(this.colsNb), this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
+    console.log(this.grid_size, this.grid_step);
     this.appList.gridster({
       min_cols: this.colsNb,
       max_cols: this.colsNb,
@@ -2595,6 +2615,7 @@ module.exports = ApplicationsListView = (function(_super) {
       widget_selector: 'div.application',
       widget_margins: [this.grid_margin, this.grid_margin],
       widget_base_dimensions: [this.grid_size, this.grid_size],
+      autogenerate_stylesheet: false,
       draggable: {
         stop: function() {
           console.log("DRAG STOP", arguments);
@@ -2613,27 +2634,45 @@ module.exports = ApplicationsListView = (function(_super) {
       }
     });
     this.gridster = this.appList.data('gridster');
+    this.gridster.generate_stylesheet({
+      cols: 16,
+      rows: 16
+    });
     if (this.state === 'view') {
-      this.gridster.disable();
-      this.$('#home-edit-close').hide();
+      return this.gridster.disable();
     }
-    return $(window).on('resize', _.debounce(this.onWindowResize));
   };
 
   ApplicationsListView.prototype.onWindowResize = function() {
-    var oldNb, _ref;
+    var oldNb, width, _ref, _ref1;
     oldNb = this.colsNb;
+    this.colsNb = this.computeColNumber();
     _ref = this.computeGridDims(this.colsNb), this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    return this.gridster.resize_widget_dimensions({
-      widget_margins: [this.grid_margin, this.grid_margin],
-      widget_base_dimensions: [this.grid_size, this.grid_size]
+    console.log(this.grid_size, this.grid_step);
+    width = this.colsNb * this.grid_step;
+    this.appList.width(width);
+    this.gridster.container_width = width;
+    this.gridster.options.container_width = width;
+    if ((_ref1 = this.gridster) != null) {
+      _ref1.resize_widget_dimensions({
+        widget_margins: [this.grid_margin, this.grid_margin],
+        widget_base_dimensions: [this.grid_size, this.grid_size]
+      });
+    }
+    this.gridster.generate_stylesheet({
+      cols: 16,
+      rows: 16
     });
+    if (oldNb !== this.colsNb) {
+      console.log("resetting");
+      return this.onReset(this.collection);
+    }
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
     var pos,
       _this = this;
-    pos = view.model.getHomePosition(this.computeColNumber());
+    pos = view.model.getHomePosition(this.colsNb);
     if (pos == null) {
       pos = {
         col: 1,
@@ -2655,13 +2694,15 @@ module.exports = ApplicationsListView = (function(_super) {
     this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
     view.$el.show();
     if (this.state === 'view') {
-      return view.$el.find('.widget-mask').hide();
+      view.$el.resizable('disable');
+      view.$el.find('.widget-mask').hide();
+      return view.$el.find('.use-widget').hide();
     }
   };
 
-  ApplicationsListView.prototype.removeItem = function(model) {
-    this.gridster.remove_widget(this.views[model.cid]);
-    return ApplicationsListView.__super__.removeItem.apply(this, arguments);
+  ApplicationsListView.prototype.removeView = function(view) {
+    this.gridster.remove_widget(view.$el, true);
+    return ApplicationsListView.__super__.removeView.apply(this, arguments);
   };
 
   ApplicationsListView.prototype.doResize = function($el) {
@@ -2675,7 +2716,7 @@ module.exports = ApplicationsListView = (function(_super) {
     $el.width('');
     $el.css('top', '');
     $el.css('left', '');
-    return setTimeout(this.saveChanges, 300);
+    return this.saveChanges();
   };
 
   ApplicationsListView.prototype.saveChanges = function() {
@@ -2689,13 +2730,13 @@ module.exports = ApplicationsListView = (function(_super) {
       model = this.apps.get(newpos.slug);
       delete newpos.slug;
       view = this.views[model.cid];
-      oldpos = model.getHomePosition(this.computeColNumber());
+      oldpos = model.getHomePosition(this.colsNb);
       console.log(view.model.id, oldpos, newpos);
       if (_.isEqual(oldpos, newpos)) {
         continue;
       }
       console.log("SAVING !");
-      _results.push(view.model.saveHomePosition(this.computeColNumber(), newpos));
+      _results.push(view.model.saveHomePosition(this.colsNb, newpos));
     }
     return _results;
   };
@@ -2737,7 +2778,8 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.events = {
-    "click .application-inner": "onAppClicked"
+    "click .application-inner": "onAppClicked",
+    'click .use-widget': 'onUseWidgetClicked'
   };
 
   /* Constructor
@@ -2747,7 +2789,11 @@ module.exports = ApplicationRow = (function(_super) {
   function ApplicationRow(options) {
     this.launchApp = __bind(this.launchApp, this);
 
+    this.onUseWidgetClicked = __bind(this.onUseWidgetClicked, this);
+
     this.onAppClicked = __bind(this.onAppClicked, this);
+
+    this.setUseWidget = __bind(this.setUseWidget, this);
 
     this.onAppChanged = __bind(this.onAppChanged, this);
 
@@ -2759,6 +2805,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.afterRender = function() {
     this.icon = this.$('img');
     this.stateLabel = this.$('.state-label');
+    this.title = this.$('.app-title');
     this.listenTo(this.model, 'change', this.onAppChanged);
     return this.onAppChanged(this.model);
   };
@@ -2768,21 +2815,25 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var widgetUrl;
+    var useWidget, _ref;
     switch (this.model.get('state')) {
       case 'broken':
         this.icon.attr('src', "img/broken.png");
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
-        if (widgetUrl = this.model.get('widget')) {
-          this.$('.application-inner').html(WidgetTemplate({
-            url: widgetUrl
-          }));
-          return;
+        if (this.model.get('widget')) {
+          this.$el.addClass('can-use-widget');
+        } else {
+          this.$('.use-widget').hide();
         }
         this.icon.attr('src', "api/applications/" + app.id + ".png");
         this.icon.removeClass('stopped');
-        return this.stateLabel.hide();
+        this.stateLabel.hide();
+        useWidget = (_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0;
+        if (useWidget && this.model.has('widget')) {
+          this.setUseWidget(true);
+        }
+        break;
       case 'installing':
         this.icon.attr('src', "img/installing.gif");
         this.icon.removeClass('stopped');
@@ -2791,6 +2842,29 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.attr('src', "api/applications/" + app.id + ".png");
         this.icon.addClass('stopped');
         return this.stateLabel.hide();
+    }
+  };
+
+  ApplicationRow.prototype.setUseWidget = function(widget) {
+    var widgetUrl;
+    if (widget == null) {
+      widget = true;
+    }
+    widgetUrl = this.model.get('widget');
+    if (widget) {
+      this.$('.use-widget').text(t('Use icon'));
+      this.icon.detach();
+      this.stateLabel.detach();
+      this.title.detach();
+      return this.$('.application-inner').html(WidgetTemplate({
+        url: widgetUrl
+      }));
+    } else {
+      this.$('.use-widget').text(t('Use widget'));
+      this.$('.application-inner').empty();
+      this.$('.application-inner').append(this.icon);
+      this.$('.application-inner').append(this.title);
+      return this.$('.application-inner').append(this.stateLabel);
     }
   };
 
@@ -2817,6 +2891,17 @@ module.exports = ApplicationRow = (function(_super) {
           success: this.launchApp
         });
     }
+  };
+
+  ApplicationRow.prototype.onUseWidgetClicked = function() {
+    var useWidget, _ref,
+      _this = this;
+    useWidget = !((_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0);
+    return this.model.saveHomePosition('useWidget', useWidget, {
+      success: function() {
+        return _this.setUseWidget(useWidget);
+      }
+    });
   };
 
   /* Functions
@@ -2952,6 +3037,13 @@ module.exports = HomeView = (function(_super) {
       return _this.resetLayoutSizes();
     };
     if (this.currentView != null) {
+      if (view === this.currentView) {
+        this.frames.hide();
+        this.content.show();
+        this.changeFavicon("favicon.ico");
+        this.resetLayoutSizes();
+        return;
+      }
       return this.currentView.$el.fadeOut(function() {
         _this.currentView.$el.detach();
         return displayView();
@@ -3011,7 +3103,7 @@ module.exports = HomeView = (function(_super) {
     this.$('#app-frames').find('iframe').hide();
     frame.show();
     this.selectedApp = slug;
-    frame.prop('contentWindow').location.hash = hash;
+    frame.prop('contentWindow').location.hash = hash || '';
     name = this.apps.get(slug).get('name');
     if (!(name != null)) {
       name = '';
