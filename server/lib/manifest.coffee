@@ -1,11 +1,9 @@
-fs = require 'fs'
-url = require 'url'
 request = require 'request-json'
 
 # Class to facilitate application' permissions management
 class exports.Manifest
 
-    constructor: (app, callback) ->
+    download: (app, callback) ->
         path = (app.git).substring(19, (app.git.length - 4))
 
         client = request.newClient "https://raw.github.com/"

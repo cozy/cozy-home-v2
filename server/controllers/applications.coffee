@@ -87,7 +87,8 @@ module.exports =
 
 
     getPermissions: (req, res, next) ->
-        manifest = new Manifest req.body, (err) ->
+        manifest = new Manifest()
+        manifest.download req.body, (err) ->
             if err then next err
             manifest.getPermissions (docTypes) ->
                 app = permissions: docTypes
@@ -95,15 +96,17 @@ module.exports =
 
 
     getDescription: (req, res, next) ->
-        manifest = new Manifest req.body, (err) ->
+        manifest = new Manifest()
+        manifest.download req.body, (err) ->
             if err then next err
-            manifest.getManifest (description) ->
+            manifest.getDescription (description) ->
                 app = description: description
                 res.send success: true, app: app
 
 
     getMetaData: (req, res, next) ->
-        manifest = new Manifest req.body, (err) ->
+        manifest = new Manifest()
+        manifest.download req.body, (err) ->
             if err then next err
             manifest.getMetaData (metaData) ->
                 res.send success: true, app: metaData, 200
@@ -160,7 +163,8 @@ module.exports =
                 err = new Error "There is already an app with similar name"
                 return send_error res, err, 400
 
-            manifest = new Manifest req.body, (err) ->
+            manifest = new Manifest()
+            manifest.download req.body, (err) ->
                 return send_error res, err if err
                 manifest.getPermissions (docTypes) ->
                     req.body.permissions = docTypes
@@ -239,7 +243,8 @@ module.exports =
             return mark_broken res, req.application, err if err
             req.application.state = "installed"
 
-            manifest = new Manifest req.application, (err) =>
+            manifest = new Manifest()
+            manifest.download req.application, (err) =>
                 return send_error res, err if err
                 manifest.getPermissions (docTypes) ->
                     req.application.permissions = docTypes
