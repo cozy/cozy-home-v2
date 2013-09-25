@@ -4,9 +4,7 @@ slugify = require 'cozy-slug'
 
 Application = require '../models/application'
 {AppManager} = require '../lib/paas'
-{PermissionsManager} = require '../lib/permissions'
-{DescriptionManager} = require '../lib/description'
-
+{Manifest} = require '../lib/manifest'
 
 # Helpers
 
@@ -89,25 +87,29 @@ module.exports =
 
 
     getPermissions: (req, res, next) ->
-        permissions = new PermissionsManager()
-        permissions.get req.body, (err, docTypes) ->
+        manifest = new Manifest()
+        manifest.download req.body, (err) ->
             if err then next err
-            else
+            manifest.getPermissions (docTypes) ->
                 app = permissions: docTypes
                 res.send success: true, app: app
 
 
     getDescription: (req, res, next) ->
-        description = new DescriptionManager()
-        description.get req.body, (err, description) ->
-            app = description: description
-            res.send success: true, app: app
+        manifest = new Manifest()
+        manifest.download req.body, (err) ->
+            if err then next err
+            manifest.getDescription (description) ->
+                app = description: description
+                res.send success: true, app: app
 
 
     getMetaData: (req, res, next) ->
-        metaDataManager = new DescriptionManager()
-        metaDataManager.get req.body, (metaData) ->
-            res.send success: true, app: metaData, 200
+        manifest = new Manifest()
+        manifest.download req.body, (err) ->
+            if err then next err
+            manifest.getMetaData (metaData) ->
+                res.send success: true, app: metaData, 200
 
 
     read: (req, res, next) ->
@@ -161,47 +163,50 @@ module.exports =
                 err = new Error "There is already an app with similar name"
                 return send_error res, err, 400
 
-            permissions = new PermissionsManager()
-            permissions.get req.body, (err, docTypes) ->
+            manifest = new Manifest()
+            manifest.download req.body, (err) ->
                 return send_error res, err if err
-                req.body.permissions = docTypes
+                manifest.getPermissions (docTypes) ->
+                    req.body.permissions = docTypes
+                    manifest.getWidget (widget) ->
+                        req.body.widget = widget
+      
+                        Application.create req.body, (err, appli) ->
+                            return send_error res, err if err
 
-                Application.create req.body, (err, appli) ->
-                    return send_error res, err if err
+                            res.send success: true, app: appli, 201
 
-                    res.send success: true, app: appli, 201
+                            infos = JSON.stringify appli
+                            console.info "attempt to install app #{infos}"
+                            manager = new AppManager()
+                            manager.installApp appli, (err, result) ->
 
-                    infos = JSON.stringify appli
-                    console.info "attempt to install app #{infos}"
-                    manager = new AppManager()
-                    manager.installApp appli, (err, result) ->
+                                if err
+                                    mark_broken res, appli, err
+                                    res.send_error_socket err
+                                    return
 
-                        if err
-                            mark_broken res, appli, err
-                            res.send_error_socket err
-                            return
+                                if result.drone?
+                                    appli.state = "installed"
+                                    appli.port = result.drone.port
 
-                        if result.drone?
-                            appli.state = "installed"
-                            appli.port = result.drone.port
+                                    msg = "install succeeded on port #{appli.port}"
+                                    console.info msg
 
-                            msg = "install succeeded on port #{appli.port}"
-                            console.info msg
+                                    saveIcon appli, (err) ->
+                                        if err then console.log err.stack
+                                        else console.info 'icon attached'
 
-                            saveIcon appli, (err) ->
-                                if err then console.log err.stack
-                                else console.info 'icon attached'
-
-                            appli.save (err) ->
-                                return res.send_error_socket err if err
-                                console.info 'saved port in db', appli.port
-                                manager.resetProxy (err) ->
+                                    appli.save (err) ->
+                                        return res.send_error_socket err if err
+                                        console.info 'saved port in db', appli.port
+                                        manager.resetProxy (err) ->
+                                            return send_error_socket err if err
+                                            console.info 'proxy reset', appli.port
+                                else
+                                    err = new Error "Controller has no " + \
+                                                    "informations about #{appli.name}"
                                     return send_error_socket err if err
-                                    console.info 'proxy reset', appli.port
-                        else
-                            err = new Error "Controller has no " + \
-                                            "informations about #{appli.name}"
-                            return send_error_socket err if err
 
 
     # Remove app from 3 places :
@@ -236,25 +241,30 @@ module.exports =
 
         manager.updateApp req.application, (err, result) ->
             return mark_broken res, req.application, err if err
-
             req.application.state = "installed"
-            permissions = new PermissionsManager()
-            permissions.get req.application, (err, docTypes) ->
-                req.application.permissions = docTypes
-                req.application.save (err) ->
 
-                    saveIcon req.application, (err) ->
-                        if err then console.log err.stack
-                        else console.info 'icon attached'
+            manifest = new Manifest()
+            manifest.download req.application, (err) =>
+                return send_error res, err if err
+                manifest.getPermissions (docTypes) ->
+                    req.application.permissions = docTypes
+                    manifest.getWidget (widget) ->
+                        req.application.widget = widget
+      
+                        req.application.save (err) ->
 
-                    return send_error res, err if err
+                            saveIcon req.application, (err) ->
+                                if err then console.log err.stack
+                                else console.info 'icon attached'
 
-                    manager.resetProxy (err) ->
-                        return mark_broken res, req.application, err if err
+                            return send_error res, err if err
 
-                        res.send
-                            success: true
-                            msg: 'Application succesfuly updated'
+                            manager.resetProxy (err) ->
+                                return mark_broken res, req.application, err if err
+
+                                res.send
+                                    success: true
+                                    msg: 'Application succesfuly updated'
 
 
     start: (req, res, next) ->
