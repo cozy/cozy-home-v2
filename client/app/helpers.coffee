@@ -70,6 +70,11 @@ class exports.BrunchApplication
 
 
         $.Gridster.resize_widget_dimensions = (options) ->
+
+            @$container.width width
+            @container_width = width
+            @options.container_width = width
+
             @options.widget_margins = options.widget_margins if options.widget_margins
             @options.widget_base_dimensions = options.widget_base_dimensions if options.widget_base_dimensions
 
@@ -83,6 +88,8 @@ class exports.BrunchApplication
 
             @generate_grid_and_stylesheet()
             @get_widgets_from_DOM()
+
+            @gridster.generate_stylesheet options.styles_for
 
             return false
 

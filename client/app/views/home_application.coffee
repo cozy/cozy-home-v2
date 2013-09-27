@@ -21,7 +21,15 @@ module.exports = class ApplicationRow extends BaseView
 
     constructor: (options) ->
         @id = "app-btn-#{options.model.id}"
+        @enabled = true
         super
+
+    enable: (enabled = true) ->
+        @enabled = enabled
+        @$el.resizable if enabled then 'disable' else 'enable'
+        @$('.widget-mask').toggle not enabled
+        if @canUseWidget()
+            @$('.use-widget').toggle not enabled
 
     afterRender: =>
         @icon = @$ 'img'
@@ -40,17 +48,15 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.show().text t 'broken'
             when 'installed'
 
-                if @model.get 'widget' then @$el.addClass 'can-use-widget'
-                else @$('.use-widget').hide()
+                @$('.use-widget').hide() unless @canUseWidget()
 
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
                 useWidget = @model.get('homeposition')?.useWidget
 
-                if useWidget and @model.has 'widget'
-                    @setUseWidget true
-                    return
+                @setUseWidget true if @canUseWidget() and useWidget
+
 
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"
@@ -60,6 +66,22 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.addClass 'stopped'
                 @stateLabel.hide()
+
+    onAppClicked: (event) =>
+        event.preventDefault()
+        return null unless @enabled
+        switch @model.get 'state'
+            when 'broken'
+                msg = 'This app is broken. Try install again.'
+                errormsg = @model.get 'errormsg'
+                msg += " Error was : #{errormsg}" if errormsg
+                alert msg
+            when 'installed'
+                @launchApp()
+            when 'installing'
+                alert t 'this app is being installed. Wait a little'
+            when 'stopped'
+                @model.start success: @launchApp
 
     setUseWidget: (widget = true) =>
         widgetUrl = @model.get 'widget'
@@ -76,21 +98,7 @@ module.exports = class ApplicationRow extends BaseView
             @$('.application-inner').append @title
             @$('.application-inner').append @stateLabel
 
-    onAppClicked: (event) =>
-        event.preventDefault()
-        return null if app.mainView.applicationListView.state is 'edit'
-        switch @model.get 'state'
-            when 'broken'
-                msg = 'This app is broken. Try install again.'
-                errormsg = @model.get 'errormsg'
-                msg += " Error was : #{errormsg}" if errormsg
-                alert msg
-            when 'installed'
-                @launchApp()
-            when 'installing'
-                alert t 'this app is being installed. Wait a little'
-            when 'stopped'
-                @model.start success: @launchApp
+    canUseWidget: () => @model.has 'widget'
 
     onUseWidgetClicked: () =>
         useWidget = not @model.get('homeposition')?.useWidget
