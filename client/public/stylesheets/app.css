@@ -1198,7 +1198,7 @@ body {
 }
 #app-list {
   text-align: center;
-  margin: 40px 0;
+  margin-bottom: 40px 0;
 }
 #app-list .preview-holder {
   padding: 10px;

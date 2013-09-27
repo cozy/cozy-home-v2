@@ -366,6 +366,11 @@ exports.BrunchApplication = (function() {
     return $.Gridster.resize_widget_dimensions = function(options) {
       var serializedGrid,
         _this = this;
+      if (options.width) {
+        this.drag_api.$container.width(options.width);
+        this.container_width = options.width;
+        this.options.container_width = options.width;
+      }
       if (options.widget_margins) {
         this.options.widget_margins = options.widget_margins;
       }
@@ -382,6 +387,7 @@ exports.BrunchApplication = (function() {
       }));
       this.generate_grid_and_stylesheet();
       this.get_widgets_from_DOM();
+      this.generate_stylesheet(options.styles_for);
       return false;
     };
   };
@@ -2521,6 +2527,8 @@ module.exports = ApplicationsListView = (function(_super) {
   function ApplicationsListView(apps) {
     this.saveChanges = __bind(this.saveChanges, this);
 
+    this.doResize = __bind(this.doResize, this);
+
     this.onWindowResize = __bind(this.onWindowResize, this);
 
     this.afterRender = __bind(this.afterRender, this);
@@ -2539,8 +2547,10 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.afterRender = function() {
-    var _this = this;
+    var cid, view, _ref, _results,
+      _this = this;
     this.appList = this.$("#app-list");
+    this.closeEditBtn = this.$('#home-edit-close');
     this.$("#no-app-message").hide();
     $(".menu-btn a").click(function(event) {
       $(".menu-btn").removeClass('active');
@@ -2549,31 +2559,40 @@ module.exports = ApplicationsListView = (function(_super) {
     this.initGridster();
     ApplicationsListView.__super__.afterRender.apply(this, arguments);
     if (this.state === 'view') {
-      return this.$('#home-edit-close').hide();
+      this.$('#home-edit-close').hide();
+      this.gridster.disable();
+      _ref = this.views;
+      _results = [];
+      for (cid in _ref) {
+        view = _ref[cid];
+        _results.push(this.view.enable());
+      }
+      return _results;
     }
   };
 
-  ApplicationsListView.prototype.displayNoAppMessage = function() {
+  ApplicationsListView.prototype.checkIfEmpty = function() {
     return this.$("#no-app-message").toggle(this.apps.size() === 0);
   };
 
-  ApplicationsListView.prototype.computeColNumber = function() {
-    var nbcol;
-    nbcol = parseInt($(document.body).width() / 160);
-    if (nbcol > 3) {
-      nbcol = nbcol - nbcol % 2;
+  ApplicationsListView.prototype.computeGridDims = function() {
+    var colsNb, grid_margin, grid_size, grid_step, smallest_step, width;
+    width = $(window).width();
+    if (width > 640) {
+      width = width - 100;
+    } else {
+      width = width - 65;
     }
-    console.log("NBCOL = ", nbcol);
-    return nbcol;
-  };
-
-  ApplicationsListView.prototype.computeGridDims = function(cols) {
-    var grid_margin, grid_size, grid_step, step;
-    step = $('#home-content').width() / cols;
-    grid_size = step - 24;
     grid_margin = 12;
-    grid_step = grid_margin + grid_size + grid_margin;
+    smallest_step = 130 + 2 * grid_margin;
+    colsNb = Math.floor(width / smallest_step);
+    if (colsNb > 3) {
+      colsNb = colsNb - colsNb % 2;
+    }
+    grid_step = width / colsNb;
+    grid_size = grid_step - 2 * grid_margin;
     return {
+      colsNb: colsNb,
       grid_size: grid_size,
       grid_margin: grid_margin,
       grid_step: grid_step
@@ -2581,33 +2600,39 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.setMode = function(mode) {
-    var _ref, _ref1;
+    var cid, view, _ref, _ref1, _ref2, _ref3, _results, _results1;
     this.state = mode;
     if (this.state === 'edit') {
       if ((_ref = this.gridster) != null) {
         _ref.enable();
       }
-      this.$('.application').resizable('enable');
-      this.$('.widget-mask').show();
-      this.$('#home-edit-close').show();
-      return this.$('.can-use-widget .use-widget').show();
-    } else {
-      if ((_ref1 = this.gridster) != null) {
-        _ref1.disable();
+      this.closeEditBtn.show();
+      _ref1 = this.views;
+      _results = [];
+      for (cid in _ref1) {
+        view = _ref1[cid];
+        _results.push(view.disable());
       }
-      this.$('.application').resizable('disable');
-      this.$('.widget-mask').hide();
-      this.$('#home-edit-close').hide();
-      return this.$('.can-use-widget .use-widget').hide();
+      return _results;
+    } else {
+      if ((_ref2 = this.gridster) != null) {
+        _ref2.disable();
+      }
+      this.closeEditBtn.slideUp();
+      _ref3 = this.views;
+      _results1 = [];
+      for (cid in _ref3) {
+        view = _ref3[cid];
+        _results1.push(view.enable());
+      }
+      return _results1;
     }
   };
 
   ApplicationsListView.prototype.initGridster = function() {
     var _ref,
       _this = this;
-    this.colsNb = this.computeColNumber();
-    _ref = this.computeGridDims(this.colsNb), this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    console.log(this.grid_size, this.grid_step);
+    _ref = this.computeGridDims(), this.colsNb = _ref.colsNb, this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
     this.appList.gridster({
       min_cols: this.colsNb,
       max_cols: this.colsNb,
@@ -2618,9 +2643,7 @@ module.exports = ApplicationsListView = (function(_super) {
       autogenerate_stylesheet: false,
       draggable: {
         stop: function() {
-          console.log("DRAG STOP", arguments);
-          setTimeout(_this.saveChanges, 300);
-          return true;
+          return setTimeout(_this.saveChanges, 300);
         }
       },
       serialize_params: function(el, wgd) {
@@ -2634,37 +2657,30 @@ module.exports = ApplicationsListView = (function(_super) {
       }
     });
     this.gridster = this.appList.data('gridster');
-    this.gridster.generate_stylesheet({
+    this.gridster.set_dom_grid_height();
+    return this.gridster.generate_stylesheet({
       cols: 16,
       rows: 16
     });
-    if (this.state === 'view') {
-      return this.gridster.disable();
-    }
   };
 
   ApplicationsListView.prototype.onWindowResize = function() {
-    var oldNb, width, _ref, _ref1;
+    var oldNb, _ref, _ref1;
     oldNb = this.colsNb;
-    this.colsNb = this.computeColNumber();
-    _ref = this.computeGridDims(this.colsNb), this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    console.log(this.grid_size, this.grid_step);
-    width = this.colsNb * this.grid_step;
-    this.appList.width(width);
-    this.gridster.container_width = width;
-    this.gridster.options.container_width = width;
+    _ref = this.computeGridDims(), this.colsNb = _ref.colsNb, this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
+    console.log('onWindowResize', this.grid_step);
     if ((_ref1 = this.gridster) != null) {
       _ref1.resize_widget_dimensions({
+        width: this.colsNb * this.grid_step,
+        styles_for: {
+          cols: 16,
+          rows: 16
+        },
         widget_margins: [this.grid_margin, this.grid_margin],
         widget_base_dimensions: [this.grid_size, this.grid_size]
       });
     }
-    this.gridster.generate_stylesheet({
-      cols: 16,
-      rows: 16
-    });
     if (oldNb !== this.colsNb) {
-      console.log("resetting");
       return this.onReset(this.collection);
     }
   };
@@ -2682,21 +2698,30 @@ module.exports = ApplicationsListView = (function(_super) {
       };
     }
     view.$el.resizable({
-      grid: [this.grid_step, this.grid_step],
       animate: false,
-      containment: this.appList,
       stop: function(event, ui) {
-        return setTimeout((function() {
-          return _this.doResize(view.$el);
-        }), 300);
+        return _.delay(_this.doResize, 300, view.$el);
+      },
+      resize: function(event, ui) {
+        var a, cs, dim, os, wm, _i, _len, _ref, _results;
+        os = ui.originalSize;
+        cs = ui.size;
+        _ref = ['width', 'height'];
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          dim = _ref[_i];
+          wm = cs[dim] + _this.grid_margin * 2;
+          a = Math.round(wm / _this.grid_size) * _this.grid_size;
+          _results.push(ui.element[dim](a - _this.grid_margin * 2));
+        }
+        return _results;
       }
     });
     this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
-    view.$el.show();
     if (this.state === 'view') {
-      view.$el.resizable('disable');
-      view.$el.find('.widget-mask').hide();
-      return view.$el.find('.use-widget').hide();
+      return view.enable();
+    } else {
+      return view.disable();
     }
   };
 
@@ -2709,7 +2734,6 @@ module.exports = ApplicationsListView = (function(_super) {
     var grid_h, grid_w;
     grid_w = Math.ceil($el.width() / this.grid_step);
     grid_h = Math.ceil($el.height() / this.grid_step);
-    console.log("doResize", $el, grid_h, grid_w);
     this.gridster.resize_widget($el, grid_w, grid_h);
     this.gridster.set_dom_grid_height();
     $el.height('');
@@ -2721,7 +2745,6 @@ module.exports = ApplicationsListView = (function(_super) {
 
   ApplicationsListView.prototype.saveChanges = function() {
     var items, model, newpos, oldpos, properties, view, _i, _len, _results;
-    console.log("SAVE CHANGES");
     properties = ['col', 'row', 'sizex', 'sizey'];
     items = this.gridster.serialize();
     _results = [];
@@ -2731,11 +2754,9 @@ module.exports = ApplicationsListView = (function(_super) {
       delete newpos.slug;
       view = this.views[model.cid];
       oldpos = model.getHomePosition(this.colsNb);
-      console.log(view.model.id, oldpos, newpos);
       if (_.isEqual(oldpos, newpos)) {
         continue;
       }
-      console.log("SAVING !");
       _results.push(view.model.saveHomePosition(this.colsNb, newpos));
     }
     return _results;
@@ -2791,16 +2812,37 @@ module.exports = ApplicationRow = (function(_super) {
 
     this.onUseWidgetClicked = __bind(this.onUseWidgetClicked, this);
 
-    this.onAppClicked = __bind(this.onAppClicked, this);
+    this.canUseWidget = __bind(this.canUseWidget, this);
 
     this.setUseWidget = __bind(this.setUseWidget, this);
+
+    this.onAppClicked = __bind(this.onAppClicked, this);
 
     this.onAppChanged = __bind(this.onAppChanged, this);
 
     this.afterRender = __bind(this.afterRender, this);
     this.id = "app-btn-" + options.model.id;
+    this.enabled = true;
     ApplicationRow.__super__.constructor.apply(this, arguments);
   }
+
+  ApplicationRow.prototype.enable = function() {
+    this.enabled = true;
+    this.$el.resizable('disable');
+    this.$('.widget-mask').hide();
+    return this.$('.use-widget').hide();
+  };
+
+  ApplicationRow.prototype.disable = function() {
+    this.enabled = false;
+    if (this.$el.resizable('widget')) {
+      this.$el.resizable('enable');
+    }
+    if (this.canUseWidget()) {
+      this.$('.widget-mask').show();
+      return this.$('.use-widget').show();
+    }
+  };
 
   ApplicationRow.prototype.afterRender = function() {
     this.icon = this.$('img');
@@ -2816,22 +2858,20 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.onAppChanged = function(app) {
     var useWidget, _ref;
+    if (this.model.get('state') !== 'installed' || !this.canUseWidget()) {
+      this.$('.use-widget').hide();
+    }
     switch (this.model.get('state')) {
       case 'broken':
         this.icon.attr('src', "img/broken.png");
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
-        if (this.model.get('widget')) {
-          this.$el.addClass('can-use-widget');
-        } else {
-          this.$('.use-widget').hide();
-        }
         this.icon.attr('src', "api/applications/" + app.id + ".png");
         this.icon.removeClass('stopped');
         this.stateLabel.hide();
         useWidget = (_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0;
-        if (useWidget && this.model.has('widget')) {
-          this.setUseWidget(true);
+        if (this.canUseWidget() && useWidget) {
+          return this.setUseWidget(true);
         }
         break;
       case 'installing':
@@ -2842,6 +2882,31 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.attr('src', "api/applications/" + app.id + ".png");
         this.icon.addClass('stopped');
         return this.stateLabel.hide();
+    }
+  };
+
+  ApplicationRow.prototype.onAppClicked = function(event) {
+    var errormsg, msg;
+    event.preventDefault();
+    if (!this.enabled) {
+      return null;
+    }
+    switch (this.model.get('state')) {
+      case 'broken':
+        msg = 'This app is broken. Try install again.';
+        errormsg = this.model.get('errormsg');
+        if (errormsg) {
+          msg += " Error was : " + errormsg;
+        }
+        return alert(msg);
+      case 'installed':
+        return this.launchApp();
+      case 'installing':
+        return alert(t('this app is being installed. Wait a little'));
+      case 'stopped':
+        return this.model.start({
+          success: this.launchApp
+        });
     }
   };
 
@@ -2868,29 +2933,8 @@ module.exports = ApplicationRow = (function(_super) {
     }
   };
 
-  ApplicationRow.prototype.onAppClicked = function(event) {
-    var errormsg, msg;
-    event.preventDefault();
-    if (app.mainView.applicationListView.state === 'edit') {
-      return null;
-    }
-    switch (this.model.get('state')) {
-      case 'broken':
-        msg = 'This app is broken. Try install again.';
-        errormsg = this.model.get('errormsg');
-        if (errormsg) {
-          msg += " Error was : " + errormsg;
-        }
-        return alert(msg);
-      case 'installed':
-        return this.launchApp();
-      case 'installing':
-        return alert(t('this app is being installed. Wait a little'));
-      case 'stopped':
-        return this.model.start({
-          success: this.launchApp
-        });
-    }
+  ApplicationRow.prototype.canUseWidget = function() {
+    return this.model.has('widget');
   };
 
   ApplicationRow.prototype.onUseWidgetClicked = function() {
@@ -2982,7 +3026,6 @@ module.exports = HomeView = (function(_super) {
   }
 
   HomeView.prototype.afterRender = function() {
-    var _this = this;
     this.navbar = new NavbarView(this.apps);
     this.applicationListView = new ApplicationsListView(this.apps);
     this.configApplications = new ConfigApplicationsView(this.apps);
@@ -2996,10 +3039,7 @@ module.exports = HomeView = (function(_super) {
     this.favicon2 = this.$('fav2');
     $(window).resize(this.resetLayoutSizes);
     this.apps.fetch({
-      reset: true,
-      success: function() {
-        return _this.applicationListView.displayNoAppMessage();
-      }
+      reset: true
     });
     return this.resetLayoutSizes();
   };
@@ -3378,10 +3418,7 @@ module.exports = MarketView = (function(_super) {
           _this.resetForm();
         }
         _this.installedApps.add(application);
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate('home', true);
-        }
-        return typeof app !== "undefined" && app !== null ? app.mainView.applicationListView.displayNoAppMessage() : void 0;
+        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
       },
       error: function(jqXHR) {
         return alert(t(JSON.parse(jqXHR.responseText).message));

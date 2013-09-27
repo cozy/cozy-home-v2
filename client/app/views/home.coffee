@@ -139,7 +139,6 @@ module.exports = class ApplicationsListView extends ViewCollection
         super
 
     doResize: ($el) =>
-        console.log 'doResize', @grid_step
         grid_w = Math.ceil $el.width() / @grid_step
         grid_h = Math.ceil $el.height() / @grid_step
 
@@ -155,8 +154,6 @@ module.exports = class ApplicationsListView extends ViewCollection
         @saveChanges()
 
     saveChanges: () =>
-
-        console.log "SAVE CHANGES"
         properties = ['col', 'row', 'sizex', 'sizey']
 
         items = @gridster.serialize()
@@ -165,9 +162,7 @@ module.exports = class ApplicationsListView extends ViewCollection
             delete newpos.slug
             view = @views[model.cid]
             oldpos = model.getHomePosition @colsNb
-            console.log view.model.id, oldpos, newpos
             continue if _.isEqual oldpos, newpos
 
             # this object have changed
-            console.log "SAVING !"
             view.model.saveHomePosition @colsNb, newpos

@@ -31,7 +31,6 @@ module.exports = class ApplicationRow extends BaseView
         @$('.use-widget').hide()
 
     disable: () ->
-        console.log "disable called", new Error().stack
         @enabled = false
         @$el.resizable('enable') if @$el.resizable 'widget'
         if @canUseWidget()
@@ -39,7 +38,6 @@ module.exports = class ApplicationRow extends BaseView
             @$('.use-widget').show()
 
     afterRender: =>
-        console.log "enabled called"
         @icon = @$ 'img'
         @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
