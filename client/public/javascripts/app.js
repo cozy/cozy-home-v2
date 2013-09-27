@@ -2702,23 +2702,21 @@ module.exports = ApplicationsListView = (function(_super) {
         return _.delay(_this.doResize, 300, view.$el);
       },
       resize: function(event, ui) {
-        var cs, dim, fs, i, s, _i, _len, _ref, _results;
-        cs = ui.size;
+        var clip, dim, size, toobig, _i, _len, _ref, _results;
         _ref = ['width', 'height'];
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           dim = _ref[_i];
-          s = cs[dim];
-          fs = _this.grid_size;
-          i = 1;
-          while (fs < s) {
-            fs += _this.grid_step;
-            i += s;
+          size = ui.size[dim];
+          clip = _this.grid_size;
+          while (clip < size) {
+            clip += _this.grid_step;
           }
-          if (fs !== _this.grid_size && fs - s > s - fs + _this.grid_step) {
-            fs = fs - _this.grid_step;
+          toobig = clip - size > size - clip + _this.grid_step;
+          if (toobig && clip !== _this.grid_size) {
+            clip -= _this.grid_step;
           }
-          _results.push(ui.element[dim](fs));
+          _results.push(ui.element[dim](clip));
         }
         return _results;
       }

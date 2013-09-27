@@ -119,22 +119,16 @@ module.exports = class ApplicationsListView extends ViewCollection
             animate: false
             stop: (event, ui) => _.delay @doResize, 300,  view.$el
             resize: (event, ui) =>
-                # TODO, tune me
-                cs = ui.size
-
                 for dim in ['width', 'height']
+                    size = ui.size[dim]
+                    clip = @grid_size
+                    clip += @grid_step while clip < size
 
-                    s = cs[dim]
-                    fs = @grid_size
-                    i = 1
-                    while fs < s
-                        fs += @grid_step
-                        i  += s
+                    toobig = clip - size > size - clip + @grid_step
+                    if toobig and clip isnt @grid_size
+                        clip -= @grid_step
 
-                    if fs isnt @grid_size and fs - s > s - fs + @grid_step
-                        fs = fs - @grid_step
-
-                    ui.element[dim] fs
+                    ui.element[dim] clip
 
 
         @gridster.add_widget view.$el, pos.sizex, pos.sizey, pos.col, pos.row
