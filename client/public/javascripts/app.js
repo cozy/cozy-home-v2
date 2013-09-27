@@ -2668,7 +2668,6 @@ module.exports = ApplicationsListView = (function(_super) {
     var oldNb, _ref, _ref1;
     oldNb = this.colsNb;
     _ref = this.computeGridDims(), this.colsNb = _ref.colsNb, this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    console.log('onWindowResize', this.grid_step);
     if ((_ref1 = this.gridster) != null) {
       _ref1.resize_widget_dimensions({
         width: this.colsNb * this.grid_step,
@@ -2703,16 +2702,23 @@ module.exports = ApplicationsListView = (function(_super) {
         return _.delay(_this.doResize, 300, view.$el);
       },
       resize: function(event, ui) {
-        var a, cs, dim, os, wm, _i, _len, _ref, _results;
-        os = ui.originalSize;
+        var cs, dim, fs, i, s, _i, _len, _ref, _results;
         cs = ui.size;
         _ref = ['width', 'height'];
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           dim = _ref[_i];
-          wm = cs[dim] + _this.grid_margin * 2;
-          a = Math.round(wm / _this.grid_size) * _this.grid_size;
-          _results.push(ui.element[dim](a - _this.grid_margin * 2));
+          s = cs[dim];
+          fs = _this.grid_size;
+          i = 1;
+          while (fs < s) {
+            fs += _this.grid_step;
+            i += s;
+          }
+          if (fs !== _this.grid_size && fs - s > s - fs + _this.grid_step) {
+            fs = fs - _this.grid_step;
+          }
+          _results.push(ui.element[dim](fs));
         }
         return _results;
       }

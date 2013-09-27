@@ -98,7 +98,6 @@ module.exports = class ApplicationsListView extends ViewCollection
     onWindowResize: =>
         oldNb = @colsNb
         {@colsNb, @grid_size, @grid_margin, @grid_step} = @computeGridDims()
-        console.log 'onWindowResize', @grid_step
 
         # inform gridster plugin
         @gridster?.resize_widget_dimensions
@@ -121,13 +120,22 @@ module.exports = class ApplicationsListView extends ViewCollection
             stop: (event, ui) => _.delay @doResize, 300,  view.$el
             resize: (event, ui) =>
                 # TODO, tune me
-                os = ui.originalSize
                 cs = ui.size
 
                 for dim in ['width', 'height']
-                    wm = cs[dim] + @grid_margin * 2
-                    a = Math.round(wm / @grid_size) * @grid_size
-                    ui.element[dim] a - @grid_margin * 2
+
+                    s = cs[dim]
+                    fs = @grid_size
+                    i = 1
+                    while fs < s
+                        fs += @grid_step
+                        i  += s
+
+                    if fs isnt @grid_size and fs - s > s - fs + @grid_step
+                        fs = fs - @grid_step
+
+                    ui.element[dim] fs
+
 
         @gridster.add_widget view.$el, pos.sizex, pos.sizey, pos.col, pos.row
 
