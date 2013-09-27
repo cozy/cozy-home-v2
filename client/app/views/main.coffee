@@ -39,9 +39,7 @@ module.exports = class HomeView extends BaseView
         @favicon2 = @$ 'fav2'
 
         $(window).resize @resetLayoutSizes
-        @apps.fetch
-            reset: true
-            success: => @applicationListView.displayNoAppMessage()
+        @apps.fetch reset: true
         @resetLayoutSizes()
 
 

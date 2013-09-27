@@ -24,14 +24,22 @@ module.exports = class ApplicationRow extends BaseView
         @enabled = true
         super
 
-    enable: (enabled = true) ->
-        @enabled = enabled
-        @$el.resizable if enabled then 'disable' else 'enable'
-        @$('.widget-mask').toggle not enabled
+    enable: () ->
+        @enabled = true
+        @$el.resizable 'disable'
+        @$('.widget-mask').hide()
+        @$('.use-widget').hide()
+
+    disable: () ->
+        console.log "disable called", new Error().stack
+        @enabled = false
+        @$el.resizable('enable') if @$el.resizable 'widget'
         if @canUseWidget()
-            @$('.use-widget').toggle not enabled
+            @$('.widget-mask').show()
+            @$('.use-widget').show()
 
     afterRender: =>
+        console.log "enabled called"
         @icon = @$ 'img'
         @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
@@ -42,21 +50,19 @@ module.exports = class ApplicationRow extends BaseView
     ### Listener ###
 
     onAppChanged: (app) =>
+        if @model.get('state') isnt 'installed' or not @canUseWidget()
+            @$('.use-widget').hide()
+
         switch @model.get 'state'
             when 'broken'
                 @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
             when 'installed'
-
-                @$('.use-widget').hide() unless @canUseWidget()
-
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
                 useWidget = @model.get('homeposition')?.useWidget
-
                 @setUseWidget true if @canUseWidget() and useWidget
-
 
             when 'installing'
                 @icon.attr 'src', "img/installing.gif"

@@ -35,7 +35,10 @@ module.exports = class ApplicationsListView extends ViewCollection
 
         @initGridster()
         super
-        @$('#home-edit-close').hide() if @state is 'view'
+        if @state is 'view'
+            @$('#home-edit-close').hide()
+            @gridster.disable()
+            @view.enable() for cid, view of @views
 
     checkIfEmpty: ->
         @$("#no-app-message").toggle @apps.size() is 0
@@ -50,22 +53,22 @@ module.exports = class ApplicationsListView extends ViewCollection
         grid_margin = 12
         smallest_step = 130 + 2*grid_margin
 
-        nbcol = Math.floor width / smallest_step
-        nbcol = nbcol - nbcol % 2 if nbcol > 3 # 1,2,3,4,6,8,...
-        grid_step = width / nbcol
+        colsNb = Math.floor width / smallest_step
+        colsNb = colsNb - colsNb % 2 if colsNb > 3 # 1,2,3,4,6,8,...
+        grid_step = width / colsNb
         grid_size = grid_step - 2 * grid_margin
-        return {nbcol, grid_size, grid_margin, grid_step}
+        return {colsNb, grid_size, grid_margin, grid_step}
 
     setMode: (mode) ->
         @state = mode
         if @state is 'edit'
             @gridster?.enable()
-            @view.enable false for cid, view of @views
             @closeEditBtn.show()
+            view.disable() for cid, view of @views
         else
             @gridster?.disable()
-            @view.enable true for cid, view of @views
-            @closeEditBtn.hide()
+            @closeEditBtn.slideUp()
+            view.enable() for cid, view of @views
 
     initGridster: ->
         {@colsNb, @grid_size, @grid_margin, @grid_step} = @computeGridDims()
@@ -87,16 +90,17 @@ module.exports = class ApplicationsListView extends ViewCollection
                 sizey: wgd.size_y
 
         @gridster = @appList.data('gridster')
-        # @gridster.set_dom_grid_height()
+        @gridster.set_dom_grid_height()
 
         @gridster.generate_stylesheet cols: 16, rows: 16
-        @gridster.disable() if @state is 'view'
 
 
     onWindowResize: =>
         oldNb = @colsNb
         {@colsNb, @grid_size, @grid_margin, @grid_step} = @computeGridDims()
+        console.log 'onWindowResize', @grid_step
 
+        # inform gridster plugin
         @gridster?.resize_widget_dimensions
             width: @colsNb * @grid_step
             styles_for: cols: 16, rows: 16
@@ -113,22 +117,29 @@ module.exports = class ApplicationsListView extends ViewCollection
         pos ?= col: 1, row: 1, sizex: 1, sizey: 1 # default
 
         view.$el.resizable
-            grid: [@grid_step, @grid_step]
             animate: false
-            containment: @appList
             stop: (event, ui) => _.delay @doResize, 300,  view.$el
+            resize: (event, ui) =>
+                # TODO, tune me
+                os = ui.originalSize
+                cs = ui.size
+
+                for dim in ['width', 'height']
+                    wm = cs[dim] + @grid_margin * 2
+                    a = Math.round(wm / @grid_size) * @grid_size
+                    ui.element[dim] a - @grid_margin * 2
 
         @gridster.add_widget view.$el, pos.sizex, pos.sizey, pos.col, pos.row
 
-        if @state is 'view'
-            view.$el.resizable 'disable'
-            view.enable false
+        if @state is 'view' then view.enable()
+        else view.disable()
 
     removeView: (view) ->
         @gridster.remove_widget view.$el, true
         super
 
-    doResize: ($el) ->
+    doResize: ($el) =>
+        console.log 'doResize', @grid_step
         grid_w = Math.ceil $el.width() / @grid_step
         grid_h = Math.ceil $el.height() / @grid_step
 
