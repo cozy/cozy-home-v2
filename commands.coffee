@@ -47,6 +47,24 @@ runCmd = ->
 
             destroyUsers()
             break
+
+        when 'set_help_url'
+            url = process.argv[3]
+            CozyInstance.all (err, instances) ->
+                if err
+                    console.log err
+                else if instances.length is 0
+                    console.log "No instance found"
+                    process.exit 1
+                else
+                    instance = instances[0]
+                    instance.helpUrl = url
+                    instance.save (err) ->
+                        if err then console.log err
+                        else console.log "Help url name set with #{url}"
+                        process.exit 0
+            break
+
         when 'setdomain'
             domain = process.argv[3]
             CozyInstance.all (err, instances) ->
@@ -65,6 +83,7 @@ runCmd = ->
                         else console.log "Domain name set with #{domain}"
                         process.exit 0
             break
+
         when 'getdomain'
             CozyInstance.all (err, instances) ->
                 if err
