@@ -6,7 +6,7 @@ module.exports = Application = americano.getModel 'Application',
     description: String
     slug: String
     state: String
-    isStoppable: {type: name: Boolean, default: false}
+    isStoppable: {type: Boolean, default: false}
     date: {type: name: String, default: Date.now}
     icon: String
     git: String

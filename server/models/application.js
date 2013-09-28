@@ -10,10 +10,8 @@ module.exports = Application = americano.getModel('Application', {
   slug: String,
   state: String,
   isStoppable: {
-    type: {
-      name: Boolean,
-      "default": false
-    }
+    type: Boolean,
+    "default": false
   },
   date: {
     type: {
