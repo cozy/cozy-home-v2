@@ -2047,7 +2047,7 @@ window.require.register("views/config_application", function(exports, require, m
           this.appStoppable.next().hide();
           this.startStopBtn.displayGrey(t('start this app'));
       }
-      bool = !this.model.get('isStoppable');
+      bool = this.model.get('isStoppable');
       return this.$('.app-stoppable').attr('checked', bool);
     };
 
@@ -2059,10 +2059,10 @@ window.require.register("views/config_application", function(exports, require, m
         isStoppable: bool
       }, {
         success: function() {
-          return _this.$('.app-stoppable').attr('checked', !bool);
+          return _this.$('.app-stoppable').attr('checked', bool);
         },
         error: function() {
-          return _this.$('.app-stoppable').attr('checked', bool);
+          return _this.$('.app-stoppable').attr('checked', !bool);
         }
       });
     };

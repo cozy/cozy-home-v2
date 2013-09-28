@@ -102,7 +102,7 @@ module.exports = function(app) {
           return _results;
         });
       }
-    }, 15000);
+    }, 900000);
   });
   return User.all(function(err, users) {
     var alarmManager, timezone;

@@ -59,7 +59,7 @@ module.exports = (app) ->
                     for app in apps
                         if app.name is name and app.isStoppable
                             stop_app app
-        , 15000
+        , 900000
 
 
     # setup alarm manager for alarm events handling
