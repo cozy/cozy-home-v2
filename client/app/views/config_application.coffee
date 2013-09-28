@@ -71,15 +71,15 @@ module.exports = class ApplicationRow extends BaseView
                 @appStoppable.hide()
                 @appStoppable.next().hide()
                 @startStopBtn.displayGrey t 'start this app'
-        bool = not @model.get('isStoppable')
+        bool = @model.get('isStoppable')
         @$('.app-stoppable').attr 'checked', bool
 
     onStoppableClicked: (event) =>
         bool = not @model.get('isStoppable')
         @model.save {isStoppable: bool},
-            success: => @$('.app-stoppable').attr 'checked', !bool
+            success: => @$('.app-stoppable').attr 'checked', bool
             error: =>
-                @$('.app-stoppable').attr 'checked', bool
+                @$('.app-stoppable').attr 'checked', !bool
 
     onRemoveClicked: (event) =>
         event.preventDefault()
