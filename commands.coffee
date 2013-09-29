@@ -70,6 +70,7 @@ runCmd = ->
             CozyInstance.all (err, instances) ->
                 if err
                     console.log err
+                    process.exit 1
                 else if instances.length is 0
                     CozyInstance.create domain: domain, (err) ->
                         if err then console.log err
