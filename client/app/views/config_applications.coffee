@@ -19,7 +19,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @applicationList = new ConfigApplicationList @apps
         @$el.find('.w66').append @applicationList.$el
 
-    fetch: ->
+    fetch: =>
         @$('.amount').spin 'small'
         @$('.total').spin 'small'
         request.get 'api/sys-data', (err, data) =>

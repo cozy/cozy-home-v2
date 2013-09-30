@@ -106,6 +106,8 @@ module.exports =
     "your own application":"your own application"
     "install":"install"
     "broken":"broken"
+    "start this app":"start this app"
+    "stopped":"stopped"
     "retry to install":"retry to install"
     "Cozy - Account":"Cozy - Account"
     "Cozy - App Store":"Cozy - App Store"

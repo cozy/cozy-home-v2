@@ -857,6 +857,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "your own application": "your own application",
     "install": "install",
     "broken": "broken",
+    "start this app": "start this app",
+    "stopped": "stopped",
     "retry to install": "retry to install",
     "Cozy - Account": "Cozy - Account",
     "Cozy - App Store": "Cozy - App Store",
@@ -980,7 +982,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
     "your own application": "votre propre application",
     "install": "installation",
-    "broken": "cassé",
+    "broken": "cassée",
+    "start this app": "démarrer cette application",
+    "stopped": "stoppée",
     "retry to install": "réessai d'installation",
     "Cozy - Account": "Cozy - Compte",
     "Cozy - App Store": "Cozy - App Store",
@@ -2234,6 +2238,7 @@ window.require.register("views/config_application_list", function(exports, requi
 });
 window.require.register("views/config_applications", function(exports, require, module) {
   var BaseView, ConfigApplicationList, request,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -2257,6 +2262,8 @@ window.require.register("views/config_applications", function(exports, require, 
 
     function ConfigApplicationsView(apps) {
       this.apps = apps;
+      this.fetch = __bind(this.fetch, this);
+
       ConfigApplicationsView.__super__.constructor.call(this);
     }
 
