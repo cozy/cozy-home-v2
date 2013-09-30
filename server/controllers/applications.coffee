@@ -25,7 +25,7 @@ send_error = (res, err, code=500) ->
 send_error_socket = (err) ->
     console.log "Sending error through socket"
     console.log err.stack
-    compound.io.sockets.emit 'installerror', err.stack
+    #compound.io.sockets.emit 'installerror', err.stack
 
 mark_broken = (res, app, err) ->
     console.log "Marking app #{app.name} as broken because"
