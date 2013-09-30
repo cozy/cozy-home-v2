@@ -2277,14 +2277,12 @@ window.require.register("views/config_applications", function(exports, require, 
 
     ConfigApplicationsView.prototype.fetch = function() {
       var _this = this;
-      this.$('.amount').spin('small');
-      this.$('.total').spin('small');
+      this.$('.amount').html("--");
+      this.$('.total').html("--");
       return request.get('api/sys-data', function(err, data) {
         if (err) {
           return alert(t('Server error occured, infos cannot be displayed.'));
         } else {
-          _this.$('.amount').spin();
-          _this.$('.total').spin();
           _this.displayMemory(data.freeMem, data.totalMem);
           return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
         }
