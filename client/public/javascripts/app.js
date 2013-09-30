@@ -857,6 +857,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "your own application": "your own application",
     "install": "install",
     "broken": "broken",
+    "start this app": "start this app",
+    "stopped": "stopped",
     "retry to install": "retry to install",
     "Cozy - Account": "Cozy - Account",
     "Cozy - App Store": "Cozy - App Store",
@@ -884,7 +886,10 @@ window.require.register("locales/en", function(exports, require, module) {
     "Configuration ": "Configuration ",
     "To work properly your Cozy requires several parameters. Set them in this section.": "To work properly your Cozy requires several parameters. Set them in this section.",
     "Assistance ": "Assistance ",
-    "You will find here some links to assistance resources.": "You will find here some links to assistance resources."
+    "You will find here some links to assistance resources.": "You will find here some links to assistance resources.",
+    "The first place to find help is:": "The first place to find help is:",
+    "removed": "removed",
+    "Required permissions": "Required Permissions"
   };
   
 });
@@ -958,7 +963,7 @@ window.require.register("locales/fr", function(exports, require, module) {
     "&nbsp;MB (RAM)": "&nbsp;Mo (RAM)",
     "Manage your applications": "Gérez vos applications",
     "There is no application installed.": "Il n'y a pas d'applications installées.",
-    "save": "sauvegarder",
+    "save": "sauver",
     " Your parameters": " Vos paramètres",
     "I need your email to send you alerts or for password recovering": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
     "Your timezone is required to display dates properly": "Votre timezone est require pour vous afficher les dates correctements.",
@@ -979,7 +984,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
     "your own application": "votre propre application",
     "install": "installation",
-    "broken": "cassé",
+    "broken": "cassée",
+    "start this app": "démarrer cette application",
+    "stopped": "stoppée",
     "retry to install": "réessai d'installation",
     "Cozy - Account": "Cozy - Compte",
     "Cozy - App Store": "Cozy - App Store",
@@ -1007,7 +1014,10 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Configuration ": "Configuration ",
     "To work properly your Cozy requires several parameters. Set them in this section.": "Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section.",
     "Assistance ": "Aide ",
-    "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin."
+    "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
+    "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
+    "removed": "supprimée",
+    "Required permissions": "Permissions requises"
   };
   
 });
@@ -1350,7 +1360,7 @@ window.require.register("templates/config_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="clearfix"><div class="mod left"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
   if ( app.state === 'installed')
   {
   buf.push('<span class="state-label">');
@@ -1362,7 +1372,7 @@ window.require.register("templates/config_application", function(exports, requir
   {
   buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
   }
-  buf.push('</div><div class="mod right"><button class="btn remove-app">');
+  buf.push('</div><div class="buttons"><div class="mod right"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
@@ -1371,7 +1381,7 @@ window.require.register("templates/config_application", function(exports, requir
   buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
   var __val__ = t('stop this app')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always-on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div>');
+  buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always-on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div></div>');
   }
   return buf.join("");
   };
@@ -1431,6 +1441,22 @@ window.require.register("templates/help", function(exports, require, module) {
   var __val__ = t('Visit the project website and learn to build your app:')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/help_url", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="line"><p class="help-text mt2">');
+  var __val__ = t('The first place to find help is:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="help-text"><a');
+  buf.push(attrs({ 'href':("" + (helpUrl) + "") }, {"href":true}));
+  buf.push('>' + escape((interp = helpUrl) == null ? '' : interp) + '</a></p></div>');
   }
   return buf.join("");
   };
@@ -2140,7 +2166,7 @@ window.require.register("views/config_application", function(exports, require, m
         return ApplicationRow.__super__.remove.apply(this, arguments);
       }
       this.removeButton.spin(false);
-      this.removeButton.displayGreen(t("Removed"));
+      this.removeButton.displayGreen(t("removed"));
       return setTimeout(function() {
         return _this.$el.fadeOut(function() {
           return ApplicationRow.__super__.remove.apply(_this, arguments);
@@ -2150,6 +2176,10 @@ window.require.register("views/config_application", function(exports, require, m
 
     ApplicationRow.prototype.updateApp = function() {
       var _this = this;
+      if (app.mainView.marketView.isInstalling()) {
+        alert(t('Cannot update application while an application is installing'));
+        return false;
+      }
       this.updateButton.displayRed(t("installing"));
       Backbone.Mediator.pub('app-state-changed', true);
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -2216,6 +2246,7 @@ window.require.register("views/config_application_list", function(exports, requi
 });
 window.require.register("views/config_applications", function(exports, require, module) {
   var BaseView, ConfigApplicationList, request,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -2239,6 +2270,8 @@ window.require.register("views/config_applications", function(exports, require, 
 
     function ConfigApplicationsView(apps) {
       this.apps = apps;
+      this.fetch = __bind(this.fetch, this);
+
       ConfigApplicationsView.__super__.constructor.call(this);
     }
 
@@ -2252,14 +2285,12 @@ window.require.register("views/config_applications", function(exports, require, 
 
     ConfigApplicationsView.prototype.fetch = function() {
       var _this = this;
-      this.$('.amount').spin('small');
-      this.$('.total').spin('small');
+      this.$('.amount').html("--");
+      this.$('.total').html("--");
       return request.get('api/sys-data', function(err, data) {
         if (err) {
           return alert(t('Server error occured, infos cannot be displayed.'));
         } else {
-          _this.$('.amount').spin();
-          _this.$('.total').spin();
           _this.displayMemory(data.freeMem, data.totalMem);
           return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
         }
@@ -2307,12 +2338,14 @@ window.require.register("views/help", function(exports, require, module) {
     AccountView.prototype.afterRender = function() {
       var _this = this;
       return $.get("api/instances/", function(data) {
-        var helpUrl, instance, _ref;
-        console.log(data);
+        var helpUrl, instance, template, _ref;
         instance = (_ref = data.rows) != null ? _ref[0] : void 0;
         helpUrl = instance != null ? instance.helpUrl : void 0;
         if (helpUrl != null) {
-          return $(_this.$el.find('.line')[1]).prepend('<p class="help-text">' + helpUrl + '</p>');
+          template = require('templates/help_url');
+          return $(_this.$el.find('.line')[1]).prepend(template({
+            helpUrl: helpUrl
+          }));
         }
       });
     };
@@ -3395,6 +3428,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.noNotifMsg = this.$('#no-notif-msg');
       this.notifList = this.$('#notifications');
       this.sound = this.$('#notification-sound')[0];
+      this.dismissButton = this.$("#dismiss-all");
       NotificationsView.__super__.afterRender.apply(this, arguments);
       this.initializing = true;
       this.collection.fetch().always(function() {
@@ -3438,7 +3472,19 @@ window.require.register("views/notifications_view", function(exports, require, m
     };
 
     NotificationsView.prototype.dismissAll = function() {
-      this.collection.removeAll();
+      var _this = this;
+      this.dismissButton.spin('small');
+      this.dismissButton.css('color', 'transparent');
+      this.collection.removeAll({
+        success: function() {
+          _this.dismissButton.spin();
+          return _this.dismissButton.css('color', '#333');
+        },
+        error: function() {
+          _this.dismissButton.spin();
+          return _this.dismissButton.css('color', '#333');
+        }
+      });
       this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
       return this.$('#notifications-toggle').removeClass('opaque');
     };
