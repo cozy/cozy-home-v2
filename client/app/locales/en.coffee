@@ -66,7 +66,7 @@ module.exports =
 
     "your cozy home":"your cozy home"
     "manage your apps":"manage your app"
-    "chose your apps":"chose your apps"
+    "choose your apps":"choose your apps"
     "configure your cozy":"configure your cozy"
     "ask for assistance":"ask for assistance"
     "logout":"logout"
@@ -89,7 +89,7 @@ module.exports =
     "Your timezone is required to display dates properly":"Your timezone is required to display dates properly"
     "The domain name is used to build urls send via email to you or your contacts":"The domain name is used to build urls send via email to you or your contacts"
     "save":"save"
-    "Chose the language you want I use to speak with you:":"Chose the language you want I use to speak with you:"
+    "Choose the language you want me to use to speak to you:":"Choose the language you want me to use to speak to you:"
     "French":"French"
     "English":"English"
     "Change password procedure":"Change password procedure"
