@@ -9,7 +9,6 @@ module.exports = class exports.AccountView extends BaseView
 
     afterRender: ->
         $.get "api/instances/", (data) =>
-            console.log data
             instance = data.rows?[0]
             helpUrl = instance?.helpUrl
 

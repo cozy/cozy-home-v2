@@ -23,6 +23,8 @@ send_error = (res, err, code=500) ->
         stack: err.stack
 
 send_error_socket = (err) ->
+    console.log "Sending error through socket"
+    console.log err.stack
     compound.io.sockets.emit 'installerror', err.stack
 
 mark_broken = (res, app, err) ->
@@ -170,7 +172,7 @@ module.exports =
                     req.body.permissions = docTypes
                     manifest.getWidget (widget) ->
                         req.body.widget = widget
-      
+
                         Application.create req.body, (err, appli) ->
                             return send_error res, err if err
 
@@ -183,7 +185,7 @@ module.exports =
 
                                 if err
                                     mark_broken res, appli, err
-                                    res.send_error_socket err
+                                    send_error_socket err
                                     return
 
                                 if result.drone?
@@ -198,7 +200,7 @@ module.exports =
                                         else console.info 'icon attached'
 
                                     appli.save (err) ->
-                                        return res.send_error_socket err if err
+                                        return send_error_socket err if err
                                         console.info 'saved port in db', appli.port
                                         manager.resetProxy (err) ->
                                             return send_error_socket err if err
@@ -250,7 +252,7 @@ module.exports =
                     req.application.permissions = docTypes
                     manifest.getWidget (widget) ->
                         req.application.widget = widget
-      
+
                         req.application.save (err) ->
 
                             saveIcon req.application, (err) ->
