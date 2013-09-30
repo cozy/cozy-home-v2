@@ -158,3 +158,5 @@ module.exports =
     "Assistance ":"Aide "
     "You will find here some links to assistance resources.":"Vous trouverez ici toutes les ressources dont vous avez besoin."
     "The first place to find help is:":"Le premier endroit où trouver de l'aide est:"
+    "removed":"supprimée"
+    "Required permissions":"Permissions requises"

@@ -132,7 +132,7 @@ module.exports = class ApplicationRow extends BaseView
     remove: =>
         return super unless @model.get('state') is 'installed'
         @removeButton.spin false
-        @removeButton.displayGreen t "Removed"
+        @removeButton.displayGreen t "removed"
         setTimeout =>
             @$el.fadeOut =>
                 super

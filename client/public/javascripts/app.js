@@ -887,7 +887,9 @@ window.require.register("locales/en", function(exports, require, module) {
     "To work properly your Cozy requires several parameters. Set them in this section.": "To work properly your Cozy requires several parameters. Set them in this section.",
     "Assistance ": "Assistance ",
     "You will find here some links to assistance resources.": "You will find here some links to assistance resources.",
-    "The first place to find help is:": "The first place to find help is:"
+    "The first place to find help is:": "The first place to find help is:",
+    "removed": "removed",
+    "Required permissions": "Required Permissions"
   };
   
 });
@@ -1013,7 +1015,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "To work properly your Cozy requires several parameters. Set them in this section.": "Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section.",
     "Assistance ": "Aide ",
     "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
-    "The first place to find help is:": "Le premier endroit où trouver de l'aide est:"
+    "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
+    "removed": "supprimée",
+    "Required permissions": "Permissions requises"
   };
   
 });
@@ -2162,7 +2166,7 @@ window.require.register("views/config_application", function(exports, require, m
         return ApplicationRow.__super__.remove.apply(this, arguments);
       }
       this.removeButton.spin(false);
-      this.removeButton.displayGreen(t("Removed"));
+      this.removeButton.displayGreen(t("removed"));
       return setTimeout(function() {
         return _this.$el.fadeOut(function() {
           return ApplicationRow.__super__.remove.apply(_this, arguments);
