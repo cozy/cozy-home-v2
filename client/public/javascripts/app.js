@@ -2176,6 +2176,10 @@ window.require.register("views/config_application", function(exports, require, m
 
     ApplicationRow.prototype.updateApp = function() {
       var _this = this;
+      if (app.mainView.marketView.isInstalling()) {
+        alert(t('Cannot update application while an application is installing'));
+        return false;
+      }
       this.updateButton.displayRed(t("installing"));
       Backbone.Mediator.pub('app-state-changed', true);
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -3424,6 +3428,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.noNotifMsg = this.$('#no-notif-msg');
       this.notifList = this.$('#notifications');
       this.sound = this.$('#notification-sound')[0];
+      this.dismissButton = this.$("#dismiss-all");
       NotificationsView.__super__.afterRender.apply(this, arguments);
       this.initializing = true;
       this.collection.fetch().always(function() {
@@ -3467,7 +3472,19 @@ window.require.register("views/notifications_view", function(exports, require, m
     };
 
     NotificationsView.prototype.dismissAll = function() {
-      this.collection.removeAll();
+      var _this = this;
+      this.dismissButton.spin('small');
+      this.dismissButton.css('color', 'transparent');
+      this.collection.removeAll({
+        success: function() {
+          _this.dismissButton.spin();
+          return _this.dismissButton.css('color', '#333');
+        },
+        error: function() {
+          _this.dismissButton.spin();
+          return _this.dismissButton.css('color', '#333');
+        }
+      });
       this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
       return this.$('#notifications-toggle').removeClass('opaque');
     };

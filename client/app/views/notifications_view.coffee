@@ -36,6 +36,7 @@ module.exports = class NotificationsView extends ViewCollection
         @noNotifMsg = @$ '#no-notif-msg'
         @notifList  = @$ '#notifications'
         @sound      = @$('#notification-sound')[0]
+        @dismissButton = @$ "#dismiss-all"
 
         super
 
@@ -71,7 +72,15 @@ module.exports = class NotificationsView extends ViewCollection
             @clickcatcher.show()
 
     dismissAll: () ->
-        @collection.removeAll()
+        @dismissButton.spin 'small'
+        @dismissButton.css 'color', 'transparent'
+        @collection.removeAll
+            success: =>
+                @dismissButton.spin()
+                @dismissButton.css 'color', '#333'
+            error: =>
+                @dismissButton.spin()
+                @dismissButton.css 'color', '#333'
         @$('#notifications-toggle img').attr 'src', 'img/notification-white.png'
         @$('#notifications-toggle').removeClass 'opaque'
 

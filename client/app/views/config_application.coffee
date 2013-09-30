@@ -139,6 +139,9 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
+        if app.mainView.marketView.isInstalling()
+            alert t 'Cannot update application while an application is installing'
+            return false
         @updateButton.displayRed t "installing"
         Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
