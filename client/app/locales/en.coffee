@@ -138,3 +138,4 @@ module.exports =
     "To work properly your Cozy requires several parameters. Set them in this section.":"To work properly your Cozy requires several parameters. Set them in this section."
     "Assistance ":"Assistance "
     "You will find here some links to assistance resources.":"You will find here some links to assistance resources."
+    "The first place to find help is:":"The first place to find help is:"

@@ -884,7 +884,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "Configuration ": "Configuration ",
     "To work properly your Cozy requires several parameters. Set them in this section.": "To work properly your Cozy requires several parameters. Set them in this section.",
     "Assistance ": "Assistance ",
-    "You will find here some links to assistance resources.": "You will find here some links to assistance resources."
+    "You will find here some links to assistance resources.": "You will find here some links to assistance resources.",
+    "The first place to find help is:": "The first place to find help is:"
   };
   
 });
@@ -1007,7 +1008,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Configuration ": "Configuration ",
     "To work properly your Cozy requires several parameters. Set them in this section.": "Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section.",
     "Assistance ": "Aide ",
-    "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin."
+    "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
+    "The first place to find help is:": "Le premier endroit où trouver de l'aide est:"
   };
   
 });
@@ -1431,6 +1433,22 @@ window.require.register("templates/help", function(exports, require, module) {
   var __val__ = t('Visit the project website and learn to build your app:')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/help_url", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="line"><p class="help-text mt2">');
+  var __val__ = t('The first place to find help is:')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</p><p class="help-text"><a');
+  buf.push(attrs({ 'href':("" + (helpUrl) + "") }, {"href":true}));
+  buf.push('>' + escape((interp = helpUrl) == null ? '' : interp) + '</a></p></div>');
   }
   return buf.join("");
   };
@@ -2307,12 +2325,14 @@ window.require.register("views/help", function(exports, require, module) {
     AccountView.prototype.afterRender = function() {
       var _this = this;
       return $.get("api/instances/", function(data) {
-        var helpUrl, instance, _ref;
-        console.log(data);
+        var helpUrl, instance, template, _ref;
         instance = (_ref = data.rows) != null ? _ref[0] : void 0;
         helpUrl = instance != null ? instance.helpUrl : void 0;
         if (helpUrl != null) {
-          return $(_this.$el.find('.line')[1]).prepend('<p class="help-text">' + helpUrl + '</p>');
+          template = require('templates/help_url');
+          return $(_this.$el.find('.line')[1]).prepend(template({
+            helpUrl: helpUrl
+          }));
         }
       });
     };
