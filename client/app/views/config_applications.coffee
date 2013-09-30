@@ -19,15 +19,13 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @applicationList = new ConfigApplicationList @apps
         @$el.find('.w66').append @applicationList.$el
 
-    fetch: ->
-        @$('.amount').spin 'small'
-        @$('.total').spin 'small'
+    fetch: =>
+        @$('.amount').html "--"
+        @$('.total').html "--"
         request.get 'api/sys-data', (err, data) =>
             if err
                 alert t 'Server error occured, infos cannot be displayed.'
             else
-                @$('.amount').spin()
-                @$('.total').spin()
                 @displayMemory data.freeMem, data.totalMem
                 @displayDiskSpace data.usedDiskSpace, data.totalDiskSpace
 

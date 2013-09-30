@@ -1396,6 +1396,12 @@ body {
 .config-application .md-footer .btn {
   font-weight: normal;
 }
+.config-application .buttons {
+  display: none;
+}
+.config-application:hover .buttons {
+  display: block;
+}
 .application .permissionsLine p {
   text-shadow: none;
   color: #999;
@@ -1670,6 +1676,9 @@ body {
     width: 100%;
     margin-top: 40px;
     padding: 10px 40px 10px 10px;
+  }
+  #config-applications-view .config-applications .buttons {
+    display: block;
   }
 }
 @media (max-width: 640px) {
