@@ -959,7 +959,7 @@ window.require.register("locales/fr", function(exports, require, module) {
     "&nbsp;MB (RAM)": "&nbsp;Mo (RAM)",
     "Manage your applications": "Gérez vos applications",
     "There is no application installed.": "Il n'y a pas d'applications installées.",
-    "save": "sauvegarder",
+    "save": "sauver",
     " Your parameters": " Vos paramètres",
     "I need your email to send you alerts or for password recovering": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
     "Your timezone is required to display dates properly": "Votre timezone est require pour vous afficher les dates correctements.",
@@ -1352,7 +1352,7 @@ window.require.register("templates/config_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="clearfix"><div class="mod left"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
   if ( app.state === 'installed')
   {
   buf.push('<span class="state-label">');
@@ -1364,7 +1364,7 @@ window.require.register("templates/config_application", function(exports, requir
   {
   buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
   }
-  buf.push('</div><div class="mod right"><button class="btn remove-app">');
+  buf.push('</div><div class="buttons"><div class="mod right"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
@@ -1373,7 +1373,7 @@ window.require.register("templates/config_application", function(exports, requir
   buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
   var __val__ = t('stop this app')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always-on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div>');
+  buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always-on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div></div>');
   }
   return buf.join("");
   };

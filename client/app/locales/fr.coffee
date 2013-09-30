@@ -83,7 +83,7 @@ module.exports =
     "&nbsp;MB (RAM)":"&nbsp;Mo (RAM)"
     "Manage your applications":"Gérez vos applications"
     "There is no application installed.":"Il n'y a pas d'applications installées."
-    "save":"sauvegarder"
+    "save":"sauver"
 
     " Your parameters":" Vos paramètres"
     "I need your email to send you alerts or for password recovering":"""
