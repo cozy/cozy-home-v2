@@ -1,6 +1,9 @@
 module.exports = class MainRouter extends Backbone.Router
+
+
     routes :
         "home": "applicationList"
+        "home/edit": "applicationListEdit"
         "applications": "market"
         "config-applications": "configApplications"
         "account": "account"
@@ -11,6 +14,16 @@ module.exports = class MainRouter extends Backbone.Router
         "*path": "applicationList"
         '*notFound': 'applicationList'
 
+    initialize: ->
+        # expect applications to send intents
+        window.addEventListener 'message', (event) =>
+            return false unless event.origin is window.location.origin
+            intent = event.data
+            switch intent.action
+                when 'goto' then @navigate "apps/#{intent.params}", true
+                else console.log "WEIRD INTENT", intent
+
+
     selectIcon: (index) ->
         $('.menu-btn').removeClass 'active'
         $($('.menu-btn').get(index)).addClass 'active'
@@ -19,6 +32,10 @@ module.exports = class MainRouter extends Backbone.Router
 
     applicationList: ->
         app.mainView.displayApplicationsList()
+        @selectIcon 0
+
+    applicationListEdit: ->
+        app.mainView.displayApplicationsListEdit()
         @selectIcon 0
 
     configApplications: ->

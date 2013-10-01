@@ -138,7 +138,6 @@ module.exports = class MarketView extends BaseView
                     @resetForm()
                 @installedApps.add application
                 app?.routers.main.navigate 'home', true
-                app?.mainView.applicationListView.displayNoAppMessage()
 
             error: (jqXHR) =>
                 alert t JSON.parse(jqXHR.responseText).message
