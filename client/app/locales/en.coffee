@@ -143,3 +143,7 @@ module.exports =
     "The first place to find help is:":"The first place to find help is:"
     "removed":"removed"
     "Required permissions":"Required Permissions"
+    "finish layout edition": "Finish Layout Edition"
+    "use widget": "Use widget"
+    "use icon": "Use icon"
+    "change layout": "Change the layout"
