@@ -113,7 +113,14 @@ module.exports = class ApplicationsListView extends ViewCollection
     appendView: (view) ->
 
         pos = view.model.getHomePosition @colsNb
-        pos ?= col: 1, row: 1, sizex: 1, sizey: 1 # default
+
+        if not pos
+            pos = col: 1, row: 1, sizex: 1, sizey: 1 # default
+            while @gridster.is_occupied pos.col, pos.row
+                pos.col += 1
+                if pos.col > @colsNb
+                    pos.col = 0
+                    pos.row += 1
 
         view.$el.resizable
             animate: false
