@@ -58,12 +58,10 @@ module.exports = class ApplicationsListView extends ViewCollection
         smallest_step = 130 + 2*grid_margin
 
         colsNb = Math.floor width / smallest_step
-        console.log "base", colsNb
         colsNb = 3 if colsNb < 3
         colsNb = 6 if 5 <= colsNb <= 7
         colsNb = colsNb - colsNb % 3
         # colsNb in [3, 6, 9, 12]
-        console.log colsNb
         grid_step = width / colsNb
         grid_size = grid_step - 2 * grid_margin
         return {colsNb, grid_size, grid_margin, grid_step}
@@ -108,28 +106,26 @@ module.exports = class ApplicationsListView extends ViewCollection
         oldNb = @colsNb
         {@colsNb, @grid_size, @grid_margin, @grid_step} = @computeGridDims()
 
-        # inform gridster plugin
+        if oldNb is @colsNb
+            @resizeGridster()
+        else
+            @onReset []
+            @gridster.$widgets = $ []
+            @resizeGridster()
+            @onReset @collection
+
+    resizeGridster: =>
         @gridster?.resize_widget_dimensions
             width: @colsNb * @grid_step
+            colsNb: @colsNb
             styles_for: cols: 16, rows: 16
             widget_margins: [@grid_margin, @grid_margin]
             widget_base_dimensions: [@grid_size, @grid_size]
 
-        # force redraw - change layout
-        @onReset @collection if oldNb isnt @colsNb
-
 
     appendView: (view) ->
-
         pos = view.model.getHomePosition @colsNb
-
-        if not pos
-            pos = col: 1, row: 1, sizex: 1, sizey: 1 # default
-            while @gridster.is_occupied pos.col, pos.row
-                pos.col += 1
-                if pos.col > @colsNb
-                    pos.col = 0
-                    pos.row += 1
+        pos ?= col: 0, row: 0, sizex: 1, sizey: 1 # default
 
         view.$el.resizable
             animate: false
@@ -148,6 +144,9 @@ module.exports = class ApplicationsListView extends ViewCollection
 
 
         @gridster.add_widget view.$el, pos.sizex, pos.sizey, pos.col, pos.row
+
+        # Somehow make the widget work immediately
+        @gridster.resize_widget view.$el, pos.sizex, pos.sizey
 
         if @state is 'view' then view.enable()
         else view.disable()

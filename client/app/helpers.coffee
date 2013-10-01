@@ -76,6 +76,10 @@ class exports.BrunchApplication
                 @container_width = options.width
                 @options.container_width = options.width
 
+            if options.colsNb
+                @options.min_cols = options.colsNb
+                @options.max_cols = options.colsNb
+
             @options.widget_margins = options.widget_margins if options.widget_margins
             @options.widget_base_dimensions = options.widget_base_dimensions if options.widget_base_dimensions
 
