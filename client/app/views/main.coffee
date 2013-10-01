@@ -139,7 +139,9 @@ module.exports = class HomeView extends BaseView
         $("#current-application").html name
         @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
-        frame.prop('contentWindow').location.hash = hash or ''
+        if hash
+            hash = '' if hash is '#'
+            frame.prop('contentWindow').location.hash = hash
 
     createApplicationIframe: (slug, hash="") ->
         @frames.append appIframeTemplate(id: slug, hash:hash)
