@@ -15,6 +15,7 @@ module.exports = Application = americano.getModel 'Application',
     port: Number
     permissions: Object
     password: String
+    homeposition: Object
     widget: String
     _attachments: Object
 

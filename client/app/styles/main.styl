@@ -2,7 +2,7 @@
 @import '_base'
 @import '_help'
 
-* 
+*
     outline: none
 
 .home-body
@@ -19,6 +19,7 @@ body
 
 #home-menu
     position: fixed
+    z-index: 50
     right: 0
 
     .menu-btn
@@ -316,22 +317,60 @@ body
 
 /** Applications */
 
+#home-edit-close
+    text-align center
+    a
+        display block
+        margin auto
+        padding 10px
+        font-weight normal
+
+
 #app-list
     text-align: center
-    margin: 40px 0
+    margin-bottom: 40px 0
+
+    .preview-holder
+        padding 10px
+        display: block
+        list-style-type: none
+        background-color: orange
+
+    .widget-iframe, .widget-mask
+        position absolute
+        top 0px
+        left 0px
+        width 100%
+        height 100%
+
+    .widget-mask
+        z-index 10
+        background grey
+        opacity 0.2
+
+    .use-widget
+        z-index 20
+        position absolute
+        bottom 10px
+        right 10px
+
+    .application-inner
+        position relative
+        box-sizing border-box
+        width 100%
+        height 100%
 
 .application
     width: 130px
-    margin: 6px
-    display: inline-block
     text-align: center
-    padding: 10px
+    padding: 6px
+    box-sizing border-box
     border: 0
     cursor: pointer
     transition: all 0.3s
     background: lightgrey
 
-    img
+    img.icon
         max-width: 100px
 
     img.stopped
@@ -421,7 +460,7 @@ body
         padding-left 20px
         padding-right 20px
 
-    img 
+    img
         width: 32px
         margin-right: 10px
 
@@ -460,7 +499,7 @@ body
         margin-bottom: 10px
 
     .input
-        .btn 
+        .btn
             height: 60px
             width: 60px
             margin-left: 10px
@@ -506,7 +545,7 @@ body
         margin-top: 2px
         margin-right: 10px
 
-    .btn 
+    .btn
         height: 60px
 
     .error
@@ -629,7 +668,7 @@ body
 
     strong
         text-transform: lowercase
-    
+
     .mod
         margin-left: 5px
 
@@ -667,7 +706,7 @@ body
 .md-open
     overflow: hidden
 
-.md-modal 
+.md-modal
     position: fixed
     top: 50%
     left: 50%
@@ -695,8 +734,8 @@ body
     transform: translateX(0)
     opacity: 1
     transition: all 0.3s
- 
-.md-overlay 
+
+.md-overlay
     position: fixed
     width: 100%
     height: 100%
@@ -780,7 +819,7 @@ body
 @media (max-width: 800px)
     .md-content
         overflow: auto
-    .md-modal 
+    .md-modal
         position: absolute
         top: 0
         left: 0
@@ -793,7 +832,7 @@ body
         margin: 0
         padding: 0
 
-    .section-title 
+    .section-title
         display: none
 
     .home-body

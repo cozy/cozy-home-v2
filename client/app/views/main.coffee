@@ -39,9 +39,7 @@ module.exports = class HomeView extends BaseView
         @favicon2 = @$ 'fav2'
 
         $(window).resize @resetLayoutSizes
-        @apps.fetch
-            reset: true
-            success: => @applicationListView.displayNoAppMessage()
+        @apps.fetch reset: true
         @resetLayoutSizes()
 
 
@@ -71,6 +69,14 @@ module.exports = class HomeView extends BaseView
             @resetLayoutSizes()
 
         if @currentView?
+
+            if view is @currentView
+                @frames.hide()
+                @content.show()
+                @changeFavicon "favicon.ico"
+                @resetLayoutSizes()
+                return
+
             @currentView.$el.fadeOut =>
                 @currentView.$el.detach()
                 displayView()
@@ -80,6 +86,12 @@ module.exports = class HomeView extends BaseView
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
+        @applicationListView.setMode 'view'
+        window.document.title = t "Cozy - Home"
+
+    displayApplicationsListEdit: =>
+        @displayView @applicationListView
+        @applicationListView.setMode 'edit'
         window.document.title = t "Cozy - Home"
 
     # Display application manager page, hides app frames, active home button.
@@ -121,6 +133,7 @@ module.exports = class HomeView extends BaseView
 
         @selectedApp = slug
 
+        frame.prop('contentWindow').location.hash = hash or ''
         name = @apps.get(slug).get('name')
         name = '' if not name?
         window.document.title = "Cozy - #{name}"

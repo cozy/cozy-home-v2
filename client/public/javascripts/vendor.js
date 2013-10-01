@@ -37,7 +37,7 @@
     return function(name) {
       var dir = dirname(path);
       var absolute = expand(dir, name);
-      return globals.require(absolute);
+      return globals.require(absolute, path);
     };
   };
 
@@ -48,8 +48,9 @@
     return exports;
   };
 
-  var require = function(name) {
+  var require = function(name, loaderPath) {
     var path = expand(name, '.');
+    if (loaderPath == null) loaderPath = '/';
 
     if (has(cache, path)) return cache[path];
     if (has(modules, path)) return initModule(path, modules[path]);
@@ -58,7 +59,7 @@
     if (has(cache, dirIndex)) return cache[dirIndex];
     if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
-    throw new Error('Cannot find module "' + name + '"');
+    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
   var define = function(bundle, fn) {
@@ -73,12 +74,22 @@
     }
   };
 
+  var list = function() {
+    var result = [];
+    for (var item in modules) {
+      if (has(modules, item)) {
+        result.push(item);
+      }
+    }
+    return result;
+  };
+
   globals.require = require;
   globals.require.define = define;
   globals.require.register = define;
+  globals.require.list = list;
   globals.require.brunch = true;
 })();
-
 (function (con) {
     // the dummy function
     function dummy() {};
@@ -90,8 +101,8 @@
 // we do this crazy little dance so that the `console` object
 // inside the function is a name that can be shortened to a single
 // letter by the compressor to make the compressed script as tiny
-// as possible.;
-
+// as possible.
+;
 /*!
  * jQuery JavaScript Library v1.7.1
  * http://jquery.com/
@@ -9359,8 +9370,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 
 })( window );
-;
-// Underscore.js 1.4.4
+
+;// Underscore.js 1.4.4
 // ===================
 
 // > http://underscorejs.org
@@ -10587,8 +10598,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   });
 
 }).call(this);
-;
-//     Backbone.js 1.0.0
+
+;//     Backbone.js 1.0.0
 
 //     (c) 2010-2013 Jeremy Ashkenas, DocumentCloud Inc.
 //     Backbone may be freely distributed under the MIT license.
@@ -12159,8 +12170,3274 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   };
 
 }).call(this);
-;
-/**
+
+;/*! jQuery UI - v1.10.3 - 2013-09-23
+* http://jqueryui.com
+* Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.resizable.js, jquery.ui.effect.js, jquery.ui.effect-slide.js
+* Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
+
+(function( $, undefined ) {
+
+var uuid = 0,
+	runiqueId = /^ui-id-\d+$/;
+
+// $.ui might exist from components with no dependencies, e.g., $.ui.position
+$.ui = $.ui || {};
+
+$.extend( $.ui, {
+	version: "1.10.3",
+
+	keyCode: {
+		BACKSPACE: 8,
+		COMMA: 188,
+		DELETE: 46,
+		DOWN: 40,
+		END: 35,
+		ENTER: 13,
+		ESCAPE: 27,
+		HOME: 36,
+		LEFT: 37,
+		NUMPAD_ADD: 107,
+		NUMPAD_DECIMAL: 110,
+		NUMPAD_DIVIDE: 111,
+		NUMPAD_ENTER: 108,
+		NUMPAD_MULTIPLY: 106,
+		NUMPAD_SUBTRACT: 109,
+		PAGE_DOWN: 34,
+		PAGE_UP: 33,
+		PERIOD: 190,
+		RIGHT: 39,
+		SPACE: 32,
+		TAB: 9,
+		UP: 38
+	}
+});
+
+// plugins
+$.fn.extend({
+	focus: (function( orig ) {
+		return function( delay, fn ) {
+			return typeof delay === "number" ?
+				this.each(function() {
+					var elem = this;
+					setTimeout(function() {
+						$( elem ).focus();
+						if ( fn ) {
+							fn.call( elem );
+						}
+					}, delay );
+				}) :
+				orig.apply( this, arguments );
+		};
+	})( $.fn.focus ),
+
+	scrollParent: function() {
+		var scrollParent;
+		if (($.ui.ie && (/(static|relative)/).test(this.css("position"))) || (/absolute/).test(this.css("position"))) {
+			scrollParent = this.parents().filter(function() {
+				return (/(relative|absolute|fixed)/).test($.css(this,"position")) && (/(auto|scroll)/).test($.css(this,"overflow")+$.css(this,"overflow-y")+$.css(this,"overflow-x"));
+			}).eq(0);
+		} else {
+			scrollParent = this.parents().filter(function() {
+				return (/(auto|scroll)/).test($.css(this,"overflow")+$.css(this,"overflow-y")+$.css(this,"overflow-x"));
+			}).eq(0);
+		}
+
+		return (/fixed/).test(this.css("position")) || !scrollParent.length ? $(document) : scrollParent;
+	},
+
+	zIndex: function( zIndex ) {
+		if ( zIndex !== undefined ) {
+			return this.css( "zIndex", zIndex );
+		}
+
+		if ( this.length ) {
+			var elem = $( this[ 0 ] ), position, value;
+			while ( elem.length && elem[ 0 ] !== document ) {
+				// Ignore z-index if position is set to a value where z-index is ignored by the browser
+				// This makes behavior of this function consistent across browsers
+				// WebKit always returns auto if the element is positioned
+				position = elem.css( "position" );
+				if ( position === "absolute" || position === "relative" || position === "fixed" ) {
+					// IE returns 0 when zIndex is not specified
+					// other browsers return a string
+					// we ignore the case of nested elements with an explicit value of 0
+					// <div style="z-index: -10;"><div style="z-index: 0;"></div></div>
+					value = parseInt( elem.css( "zIndex" ), 10 );
+					if ( !isNaN( value ) && value !== 0 ) {
+						return value;
+					}
+				}
+				elem = elem.parent();
+			}
+		}
+
+		return 0;
+	},
+
+	uniqueId: function() {
+		return this.each(function() {
+			if ( !this.id ) {
+				this.id = "ui-id-" + (++uuid);
+			}
+		});
+	},
+
+	removeUniqueId: function() {
+		return this.each(function() {
+			if ( runiqueId.test( this.id ) ) {
+				$( this ).removeAttr( "id" );
+			}
+		});
+	}
+});
+
+// selectors
+function focusable( element, isTabIndexNotNaN ) {
+	var map, mapName, img,
+		nodeName = element.nodeName.toLowerCase();
+	if ( "area" === nodeName ) {
+		map = element.parentNode;
+		mapName = map.name;
+		if ( !element.href || !mapName || map.nodeName.toLowerCase() !== "map" ) {
+			return false;
+		}
+		img = $( "img[usemap=#" + mapName + "]" )[0];
+		return !!img && visible( img );
+	}
+	return ( /input|select|textarea|button|object/.test( nodeName ) ?
+		!element.disabled :
+		"a" === nodeName ?
+			element.href || isTabIndexNotNaN :
+			isTabIndexNotNaN) &&
+		// the element and all of its ancestors must be visible
+		visible( element );
+}
+
+function visible( element ) {
+	return $.expr.filters.visible( element ) &&
+		!$( element ).parents().addBack().filter(function() {
+			return $.css( this, "visibility" ) === "hidden";
+		}).length;
+}
+
+$.extend( $.expr[ ":" ], {
+	data: $.expr.createPseudo ?
+		$.expr.createPseudo(function( dataName ) {
+			return function( elem ) {
+				return !!$.data( elem, dataName );
+			};
+		}) :
+		// support: jQuery <1.8
+		function( elem, i, match ) {
+			return !!$.data( elem, match[ 3 ] );
+		},
+
+	focusable: function( element ) {
+		return focusable( element, !isNaN( $.attr( element, "tabindex" ) ) );
+	},
+
+	tabbable: function( element ) {
+		var tabIndex = $.attr( element, "tabindex" ),
+			isTabIndexNaN = isNaN( tabIndex );
+		return ( isTabIndexNaN || tabIndex >= 0 ) && focusable( element, !isTabIndexNaN );
+	}
+});
+
+// support: jQuery <1.8
+if ( !$( "<a>" ).outerWidth( 1 ).jquery ) {
+	$.each( [ "Width", "Height" ], function( i, name ) {
+		var side = name === "Width" ? [ "Left", "Right" ] : [ "Top", "Bottom" ],
+			type = name.toLowerCase(),
+			orig = {
+				innerWidth: $.fn.innerWidth,
+				innerHeight: $.fn.innerHeight,
+				outerWidth: $.fn.outerWidth,
+				outerHeight: $.fn.outerHeight
+			};
+
+		function reduce( elem, size, border, margin ) {
+			$.each( side, function() {
+				size -= parseFloat( $.css( elem, "padding" + this ) ) || 0;
+				if ( border ) {
+					size -= parseFloat( $.css( elem, "border" + this + "Width" ) ) || 0;
+				}
+				if ( margin ) {
+					size -= parseFloat( $.css( elem, "margin" + this ) ) || 0;
+				}
+			});
+			return size;
+		}
+
+		$.fn[ "inner" + name ] = function( size ) {
+			if ( size === undefined ) {
+				return orig[ "inner" + name ].call( this );
+			}
+
+			return this.each(function() {
+				$( this ).css( type, reduce( this, size ) + "px" );
+			});
+		};
+
+		$.fn[ "outer" + name] = function( size, margin ) {
+			if ( typeof size !== "number" ) {
+				return orig[ "outer" + name ].call( this, size );
+			}
+
+			return this.each(function() {
+				$( this).css( type, reduce( this, size, true, margin ) + "px" );
+			});
+		};
+	});
+}
+
+// support: jQuery <1.8
+if ( !$.fn.addBack ) {
+	$.fn.addBack = function( selector ) {
+		return this.add( selector == null ?
+			this.prevObject : this.prevObject.filter( selector )
+		);
+	};
+}
+
+// support: jQuery 1.6.1, 1.6.2 (http://bugs.jquery.com/ticket/9413)
+if ( $( "<a>" ).data( "a-b", "a" ).removeData( "a-b" ).data( "a-b" ) ) {
+	$.fn.removeData = (function( removeData ) {
+		return function( key ) {
+			if ( arguments.length ) {
+				return removeData.call( this, $.camelCase( key ) );
+			} else {
+				return removeData.call( this );
+			}
+		};
+	})( $.fn.removeData );
+}
+
+
+
+
+
+// deprecated
+$.ui.ie = !!/msie [\w.]+/.exec( navigator.userAgent.toLowerCase() );
+
+$.support.selectstart = "onselectstart" in document.createElement( "div" );
+$.fn.extend({
+	disableSelection: function() {
+		return this.bind( ( $.support.selectstart ? "selectstart" : "mousedown" ) +
+			".ui-disableSelection", function( event ) {
+				event.preventDefault();
+			});
+	},
+
+	enableSelection: function() {
+		return this.unbind( ".ui-disableSelection" );
+	}
+});
+
+$.extend( $.ui, {
+	// $.ui.plugin is deprecated. Use $.widget() extensions instead.
+	plugin: {
+		add: function( module, option, set ) {
+			var i,
+				proto = $.ui[ module ].prototype;
+			for ( i in set ) {
+				proto.plugins[ i ] = proto.plugins[ i ] || [];
+				proto.plugins[ i ].push( [ option, set[ i ] ] );
+			}
+		},
+		call: function( instance, name, args ) {
+			var i,
+				set = instance.plugins[ name ];
+			if ( !set || !instance.element[ 0 ].parentNode || instance.element[ 0 ].parentNode.nodeType === 11 ) {
+				return;
+			}
+
+			for ( i = 0; i < set.length; i++ ) {
+				if ( instance.options[ set[ i ][ 0 ] ] ) {
+					set[ i ][ 1 ].apply( instance.element, args );
+				}
+			}
+		}
+	},
+
+	// only used by resizable
+	hasScroll: function( el, a ) {
+
+		//If overflow is hidden, the element might have extra content, but the user wants to hide it
+		if ( $( el ).css( "overflow" ) === "hidden") {
+			return false;
+		}
+
+		var scroll = ( a && a === "left" ) ? "scrollLeft" : "scrollTop",
+			has = false;
+
+		if ( el[ scroll ] > 0 ) {
+			return true;
+		}
+
+		// TODO: determine which cases actually cause this to happen
+		// if the element doesn't have the scroll set, see if it's possible to
+		// set the scroll
+		el[ scroll ] = 1;
+		has = ( el[ scroll ] > 0 );
+		el[ scroll ] = 0;
+		return has;
+	}
+});
+
+})( jQuery );
+(function( $, undefined ) {
+
+var uuid = 0,
+	slice = Array.prototype.slice,
+	_cleanData = $.cleanData;
+$.cleanData = function( elems ) {
+	for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
+		try {
+			$( elem ).triggerHandler( "remove" );
+		// http://bugs.jquery.com/ticket/8235
+		} catch( e ) {}
+	}
+	_cleanData( elems );
+};
+
+$.widget = function( name, base, prototype ) {
+	var fullName, existingConstructor, constructor, basePrototype,
+		// proxiedPrototype allows the provided prototype to remain unmodified
+		// so that it can be used as a mixin for multiple widgets (#8876)
+		proxiedPrototype = {},
+		namespace = name.split( "." )[ 0 ];
+
+	name = name.split( "." )[ 1 ];
+	fullName = namespace + "-" + name;
+
+	if ( !prototype ) {
+		prototype = base;
+		base = $.Widget;
+	}
+
+	// create selector for plugin
+	$.expr[ ":" ][ fullName.toLowerCase() ] = function( elem ) {
+		return !!$.data( elem, fullName );
+	};
+
+	$[ namespace ] = $[ namespace ] || {};
+	existingConstructor = $[ namespace ][ name ];
+	constructor = $[ namespace ][ name ] = function( options, element ) {
+		// allow instantiation without "new" keyword
+		if ( !this._createWidget ) {
+			return new constructor( options, element );
+		}
+
+		// allow instantiation without initializing for simple inheritance
+		// must use "new" keyword (the code above always passes args)
+		if ( arguments.length ) {
+			this._createWidget( options, element );
+		}
+	};
+	// extend with the existing constructor to carry over any static properties
+	$.extend( constructor, existingConstructor, {
+		version: prototype.version,
+		// copy the object used to create the prototype in case we need to
+		// redefine the widget later
+		_proto: $.extend( {}, prototype ),
+		// track widgets that inherit from this widget in case this widget is
+		// redefined after a widget inherits from it
+		_childConstructors: []
+	});
+
+	basePrototype = new base();
+	// we need to make the options hash a property directly on the new instance
+	// otherwise we'll modify the options hash on the prototype that we're
+	// inheriting from
+	basePrototype.options = $.widget.extend( {}, basePrototype.options );
+	$.each( prototype, function( prop, value ) {
+		if ( !$.isFunction( value ) ) {
+			proxiedPrototype[ prop ] = value;
+			return;
+		}
+		proxiedPrototype[ prop ] = (function() {
+			var _super = function() {
+					return base.prototype[ prop ].apply( this, arguments );
+				},
+				_superApply = function( args ) {
+					return base.prototype[ prop ].apply( this, args );
+				};
+			return function() {
+				var __super = this._super,
+					__superApply = this._superApply,
+					returnValue;
+
+				this._super = _super;
+				this._superApply = _superApply;
+
+				returnValue = value.apply( this, arguments );
+
+				this._super = __super;
+				this._superApply = __superApply;
+
+				return returnValue;
+			};
+		})();
+	});
+	constructor.prototype = $.widget.extend( basePrototype, {
+		// TODO: remove support for widgetEventPrefix
+		// always use the name + a colon as the prefix, e.g., draggable:start
+		// don't prefix for widgets that aren't DOM-based
+		widgetEventPrefix: existingConstructor ? basePrototype.widgetEventPrefix : name
+	}, proxiedPrototype, {
+		constructor: constructor,
+		namespace: namespace,
+		widgetName: name,
+		widgetFullName: fullName
+	});
+
+	// If this widget is being redefined then we need to find all widgets that
+	// are inheriting from it and redefine all of them so that they inherit from
+	// the new version of this widget. We're essentially trying to replace one
+	// level in the prototype chain.
+	if ( existingConstructor ) {
+		$.each( existingConstructor._childConstructors, function( i, child ) {
+			var childPrototype = child.prototype;
+
+			// redefine the child widget using the same prototype that was
+			// originally used, but inherit from the new version of the base
+			$.widget( childPrototype.namespace + "." + childPrototype.widgetName, constructor, child._proto );
+		});
+		// remove the list of existing child constructors from the old constructor
+		// so the old child constructors can be garbage collected
+		delete existingConstructor._childConstructors;
+	} else {
+		base._childConstructors.push( constructor );
+	}
+
+	$.widget.bridge( name, constructor );
+};
+
+$.widget.extend = function( target ) {
+	var input = slice.call( arguments, 1 ),
+		inputIndex = 0,
+		inputLength = input.length,
+		key,
+		value;
+	for ( ; inputIndex < inputLength; inputIndex++ ) {
+		for ( key in input[ inputIndex ] ) {
+			value = input[ inputIndex ][ key ];
+			if ( input[ inputIndex ].hasOwnProperty( key ) && value !== undefined ) {
+				// Clone objects
+				if ( $.isPlainObject( value ) ) {
+					target[ key ] = $.isPlainObject( target[ key ] ) ?
+						$.widget.extend( {}, target[ key ], value ) :
+						// Don't extend strings, arrays, etc. with objects
+						$.widget.extend( {}, value );
+				// Copy everything else by reference
+				} else {
+					target[ key ] = value;
+				}
+			}
+		}
+	}
+	return target;
+};
+
+$.widget.bridge = function( name, object ) {
+	var fullName = object.prototype.widgetFullName || name;
+	$.fn[ name ] = function( options ) {
+		var isMethodCall = typeof options === "string",
+			args = slice.call( arguments, 1 ),
+			returnValue = this;
+
+		// allow multiple hashes to be passed on init
+		options = !isMethodCall && args.length ?
+			$.widget.extend.apply( null, [ options ].concat(args) ) :
+			options;
+
+		if ( isMethodCall ) {
+			this.each(function() {
+				var methodValue,
+					instance = $.data( this, fullName );
+				if ( !instance ) {
+					return $.error( "cannot call methods on " + name + " prior to initialization; " +
+						"attempted to call method '" + options + "'" );
+				}
+				if ( !$.isFunction( instance[options] ) || options.charAt( 0 ) === "_" ) {
+					return $.error( "no such method '" + options + "' for " + name + " widget instance" );
+				}
+				methodValue = instance[ options ].apply( instance, args );
+				if ( methodValue !== instance && methodValue !== undefined ) {
+					returnValue = methodValue && methodValue.jquery ?
+						returnValue.pushStack( methodValue.get() ) :
+						methodValue;
+					return false;
+				}
+			});
+		} else {
+			this.each(function() {
+				var instance = $.data( this, fullName );
+				if ( instance ) {
+					instance.option( options || {} )._init();
+				} else {
+					$.data( this, fullName, new object( options, this ) );
+				}
+			});
+		}
+
+		return returnValue;
+	};
+};
+
+$.Widget = function( /* options, element */ ) {};
+$.Widget._childConstructors = [];
+
+$.Widget.prototype = {
+	widgetName: "widget",
+	widgetEventPrefix: "",
+	defaultElement: "<div>",
+	options: {
+		disabled: false,
+
+		// callbacks
+		create: null
+	},
+	_createWidget: function( options, element ) {
+		element = $( element || this.defaultElement || this )[ 0 ];
+		this.element = $( element );
+		this.uuid = uuid++;
+		this.eventNamespace = "." + this.widgetName + this.uuid;
+		this.options = $.widget.extend( {},
+			this.options,
+			this._getCreateOptions(),
+			options );
+
+		this.bindings = $();
+		this.hoverable = $();
+		this.focusable = $();
+
+		if ( element !== this ) {
+			$.data( element, this.widgetFullName, this );
+			this._on( true, this.element, {
+				remove: function( event ) {
+					if ( event.target === element ) {
+						this.destroy();
+					}
+				}
+			});
+			this.document = $( element.style ?
+				// element within the document
+				element.ownerDocument :
+				// element is window or document
+				element.document || element );
+			this.window = $( this.document[0].defaultView || this.document[0].parentWindow );
+		}
+
+		this._create();
+		this._trigger( "create", null, this._getCreateEventData() );
+		this._init();
+	},
+	_getCreateOptions: $.noop,
+	_getCreateEventData: $.noop,
+	_create: $.noop,
+	_init: $.noop,
+
+	destroy: function() {
+		this._destroy();
+		// we can probably remove the unbind calls in 2.0
+		// all event bindings should go through this._on()
+		this.element
+			.unbind( this.eventNamespace )
+			// 1.9 BC for #7810
+			// TODO remove dual storage
+			.removeData( this.widgetName )
+			.removeData( this.widgetFullName )
+			// support: jquery <1.6.3
+			// http://bugs.jquery.com/ticket/9413
+			.removeData( $.camelCase( this.widgetFullName ) );
+		this.widget()
+			.unbind( this.eventNamespace )
+			.removeAttr( "aria-disabled" )
+			.removeClass(
+				this.widgetFullName + "-disabled " +
+				"ui-state-disabled" );
+
+		// clean up events and states
+		this.bindings.unbind( this.eventNamespace );
+		this.hoverable.removeClass( "ui-state-hover" );
+		this.focusable.removeClass( "ui-state-focus" );
+	},
+	_destroy: $.noop,
+
+	widget: function() {
+		return this.element;
+	},
+
+	option: function( key, value ) {
+		var options = key,
+			parts,
+			curOption,
+			i;
+
+		if ( arguments.length === 0 ) {
+			// don't return a reference to the internal hash
+			return $.widget.extend( {}, this.options );
+		}
+
+		if ( typeof key === "string" ) {
+			// handle nested keys, e.g., "foo.bar" => { foo: { bar: ___ } }
+			options = {};
+			parts = key.split( "." );
+			key = parts.shift();
+			if ( parts.length ) {
+				curOption = options[ key ] = $.widget.extend( {}, this.options[ key ] );
+				for ( i = 0; i < parts.length - 1; i++ ) {
+					curOption[ parts[ i ] ] = curOption[ parts[ i ] ] || {};
+					curOption = curOption[ parts[ i ] ];
+				}
+				key = parts.pop();
+				if ( value === undefined ) {
+					return curOption[ key ] === undefined ? null : curOption[ key ];
+				}
+				curOption[ key ] = value;
+			} else {
+				if ( value === undefined ) {
+					return this.options[ key ] === undefined ? null : this.options[ key ];
+				}
+				options[ key ] = value;
+			}
+		}
+
+		this._setOptions( options );
+
+		return this;
+	},
+	_setOptions: function( options ) {
+		var key;
+
+		for ( key in options ) {
+			this._setOption( key, options[ key ] );
+		}
+
+		return this;
+	},
+	_setOption: function( key, value ) {
+		this.options[ key ] = value;
+
+		if ( key === "disabled" ) {
+			this.widget()
+				.toggleClass( this.widgetFullName + "-disabled ui-state-disabled", !!value )
+				.attr( "aria-disabled", value );
+			this.hoverable.removeClass( "ui-state-hover" );
+			this.focusable.removeClass( "ui-state-focus" );
+		}
+
+		return this;
+	},
+
+	enable: function() {
+		return this._setOption( "disabled", false );
+	},
+	disable: function() {
+		return this._setOption( "disabled", true );
+	},
+
+	_on: function( suppressDisabledCheck, element, handlers ) {
+		var delegateElement,
+			instance = this;
+
+		// no suppressDisabledCheck flag, shuffle arguments
+		if ( typeof suppressDisabledCheck !== "boolean" ) {
+			handlers = element;
+			element = suppressDisabledCheck;
+			suppressDisabledCheck = false;
+		}
+
+		// no element argument, shuffle and use this.element
+		if ( !handlers ) {
+			handlers = element;
+			element = this.element;
+			delegateElement = this.widget();
+		} else {
+			// accept selectors, DOM elements
+			element = delegateElement = $( element );
+			this.bindings = this.bindings.add( element );
+		}
+
+		$.each( handlers, function( event, handler ) {
+			function handlerProxy() {
+				// allow widgets to customize the disabled handling
+				// - disabled as an array instead of boolean
+				// - disabled class as method for disabling individual parts
+				if ( !suppressDisabledCheck &&
+						( instance.options.disabled === true ||
+							$( this ).hasClass( "ui-state-disabled" ) ) ) {
+					return;
+				}
+				return ( typeof handler === "string" ? instance[ handler ] : handler )
+					.apply( instance, arguments );
+			}
+
+			// copy the guid so direct unbinding works
+			if ( typeof handler !== "string" ) {
+				handlerProxy.guid = handler.guid =
+					handler.guid || handlerProxy.guid || $.guid++;
+			}
+
+			var match = event.match( /^(\w+)\s*(.*)$/ ),
+				eventName = match[1] + instance.eventNamespace,
+				selector = match[2];
+			if ( selector ) {
+				delegateElement.delegate( selector, eventName, handlerProxy );
+			} else {
+				element.bind( eventName, handlerProxy );
+			}
+		});
+	},
+
+	_off: function( element, eventName ) {
+		eventName = (eventName || "").split( " " ).join( this.eventNamespace + " " ) + this.eventNamespace;
+		element.unbind( eventName ).undelegate( eventName );
+	},
+
+	_delay: function( handler, delay ) {
+		function handlerProxy() {
+			return ( typeof handler === "string" ? instance[ handler ] : handler )
+				.apply( instance, arguments );
+		}
+		var instance = this;
+		return setTimeout( handlerProxy, delay || 0 );
+	},
+
+	_hoverable: function( element ) {
+		this.hoverable = this.hoverable.add( element );
+		this._on( element, {
+			mouseenter: function( event ) {
+				$( event.currentTarget ).addClass( "ui-state-hover" );
+			},
+			mouseleave: function( event ) {
+				$( event.currentTarget ).removeClass( "ui-state-hover" );
+			}
+		});
+	},
+
+	_focusable: function( element ) {
+		this.focusable = this.focusable.add( element );
+		this._on( element, {
+			focusin: function( event ) {
+				$( event.currentTarget ).addClass( "ui-state-focus" );
+			},
+			focusout: function( event ) {
+				$( event.currentTarget ).removeClass( "ui-state-focus" );
+			}
+		});
+	},
+
+	_trigger: function( type, event, data ) {
+		var prop, orig,
+			callback = this.options[ type ];
+
+		data = data || {};
+		event = $.Event( event );
+		event.type = ( type === this.widgetEventPrefix ?
+			type :
+			this.widgetEventPrefix + type ).toLowerCase();
+		// the original event may come from any element
+		// so we need to reset the target on the new event
+		event.target = this.element[ 0 ];
+
+		// copy original event properties over to the new event
+		orig = event.originalEvent;
+		if ( orig ) {
+			for ( prop in orig ) {
+				if ( !( prop in event ) ) {
+					event[ prop ] = orig[ prop ];
+				}
+			}
+		}
+
+		this.element.trigger( event, data );
+		return !( $.isFunction( callback ) &&
+			callback.apply( this.element[0], [ event ].concat( data ) ) === false ||
+			event.isDefaultPrevented() );
+	}
+};
+
+$.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
+	$.Widget.prototype[ "_" + method ] = function( element, options, callback ) {
+		if ( typeof options === "string" ) {
+			options = { effect: options };
+		}
+		var hasOptions,
+			effectName = !options ?
+				method :
+				options === true || typeof options === "number" ?
+					defaultEffect :
+					options.effect || defaultEffect;
+		options = options || {};
+		if ( typeof options === "number" ) {
+			options = { duration: options };
+		}
+		hasOptions = !$.isEmptyObject( options );
+		options.complete = callback;
+		if ( options.delay ) {
+			element.delay( options.delay );
+		}
+		if ( hasOptions && $.effects && $.effects.effect[ effectName ] ) {
+			element[ method ]( options );
+		} else if ( effectName !== method && element[ effectName ] ) {
+			element[ effectName ]( options.duration, options.easing, callback );
+		} else {
+			element.queue(function( next ) {
+				$( this )[ method ]();
+				if ( callback ) {
+					callback.call( element[ 0 ] );
+				}
+				next();
+			});
+		}
+	};
+});
+
+})( jQuery );
+(function( $, undefined ) {
+
+var mouseHandled = false;
+$( document ).mouseup( function() {
+	mouseHandled = false;
+});
+
+$.widget("ui.mouse", {
+	version: "1.10.3",
+	options: {
+		cancel: "input,textarea,button,select,option",
+		distance: 1,
+		delay: 0
+	},
+	_mouseInit: function() {
+		var that = this;
+
+		this.element
+			.bind("mousedown."+this.widgetName, function(event) {
+				return that._mouseDown(event);
+			})
+			.bind("click."+this.widgetName, function(event) {
+				if (true === $.data(event.target, that.widgetName + ".preventClickEvent")) {
+					$.removeData(event.target, that.widgetName + ".preventClickEvent");
+					event.stopImmediatePropagation();
+					return false;
+				}
+			});
+
+		this.started = false;
+	},
+
+	// TODO: make sure destroying one instance of mouse doesn't mess with
+	// other instances of mouse
+	_mouseDestroy: function() {
+		this.element.unbind("."+this.widgetName);
+		if ( this._mouseMoveDelegate ) {
+			$(document)
+				.unbind("mousemove."+this.widgetName, this._mouseMoveDelegate)
+				.unbind("mouseup."+this.widgetName, this._mouseUpDelegate);
+		}
+	},
+
+	_mouseDown: function(event) {
+		// don't let more than one widget handle mouseStart
+		if( mouseHandled ) { return; }
+
+		// we may have missed mouseup (out of window)
+		(this._mouseStarted && this._mouseUp(event));
+
+		this._mouseDownEvent = event;
+
+		var that = this,
+			btnIsLeft = (event.which === 1),
+			// event.target.nodeName works around a bug in IE 8 with
+			// disabled inputs (#7620)
+			elIsCancel = (typeof this.options.cancel === "string" && event.target.nodeName ? $(event.target).closest(this.options.cancel).length : false);
+		if (!btnIsLeft || elIsCancel || !this._mouseCapture(event)) {
+			return true;
+		}
+
+		this.mouseDelayMet = !this.options.delay;
+		if (!this.mouseDelayMet) {
+			this._mouseDelayTimer = setTimeout(function() {
+				that.mouseDelayMet = true;
+			}, this.options.delay);
+		}
+
+		if (this._mouseDistanceMet(event) && this._mouseDelayMet(event)) {
+			this._mouseStarted = (this._mouseStart(event) !== false);
+			if (!this._mouseStarted) {
+				event.preventDefault();
+				return true;
+			}
+		}
+
+		// Click event may never have fired (Gecko & Opera)
+		if (true === $.data(event.target, this.widgetName + ".preventClickEvent")) {
+			$.removeData(event.target, this.widgetName + ".preventClickEvent");
+		}
+
+		// these delegates are required to keep context
+		this._mouseMoveDelegate = function(event) {
+			return that._mouseMove(event);
+		};
+		this._mouseUpDelegate = function(event) {
+			return that._mouseUp(event);
+		};
+		$(document)
+			.bind("mousemove."+this.widgetName, this._mouseMoveDelegate)
+			.bind("mouseup."+this.widgetName, this._mouseUpDelegate);
+
+		event.preventDefault();
+
+		mouseHandled = true;
+		return true;
+	},
+
+	_mouseMove: function(event) {
+		// IE mouseup check - mouseup happened when mouse was out of window
+		if ($.ui.ie && ( !document.documentMode || document.documentMode < 9 ) && !event.button) {
+			return this._mouseUp(event);
+		}
+
+		if (this._mouseStarted) {
+			this._mouseDrag(event);
+			return event.preventDefault();
+		}
+
+		if (this._mouseDistanceMet(event) && this._mouseDelayMet(event)) {
+			this._mouseStarted =
+				(this._mouseStart(this._mouseDownEvent, event) !== false);
+			(this._mouseStarted ? this._mouseDrag(event) : this._mouseUp(event));
+		}
+
+		return !this._mouseStarted;
+	},
+
+	_mouseUp: function(event) {
+		$(document)
+			.unbind("mousemove."+this.widgetName, this._mouseMoveDelegate)
+			.unbind("mouseup."+this.widgetName, this._mouseUpDelegate);
+
+		if (this._mouseStarted) {
+			this._mouseStarted = false;
+
+			if (event.target === this._mouseDownEvent.target) {
+				$.data(event.target, this.widgetName + ".preventClickEvent", true);
+			}
+
+			this._mouseStop(event);
+		}
+
+		return false;
+	},
+
+	_mouseDistanceMet: function(event) {
+		return (Math.max(
+				Math.abs(this._mouseDownEvent.pageX - event.pageX),
+				Math.abs(this._mouseDownEvent.pageY - event.pageY)
+			) >= this.options.distance
+		);
+	},
+
+	_mouseDelayMet: function(/* event */) {
+		return this.mouseDelayMet;
+	},
+
+	// These are placeholder methods, to be overriden by extending plugin
+	_mouseStart: function(/* event */) {},
+	_mouseDrag: function(/* event */) {},
+	_mouseStop: function(/* event */) {},
+	_mouseCapture: function(/* event */) { return true; }
+});
+
+})(jQuery);
+(function( $, undefined ) {
+
+function num(v) {
+	return parseInt(v, 10) || 0;
+}
+
+function isNumber(value) {
+	return !isNaN(parseInt(value, 10));
+}
+
+$.widget("ui.resizable", $.ui.mouse, {
+	version: "1.10.3",
+	widgetEventPrefix: "resize",
+	options: {
+		alsoResize: false,
+		animate: false,
+		animateDuration: "slow",
+		animateEasing: "swing",
+		aspectRatio: false,
+		autoHide: false,
+		containment: false,
+		ghost: false,
+		grid: false,
+		handles: "e,s,se",
+		helper: false,
+		maxHeight: null,
+		maxWidth: null,
+		minHeight: 10,
+		minWidth: 10,
+		// See #7960
+		zIndex: 90,
+
+		// callbacks
+		resize: null,
+		start: null,
+		stop: null
+	},
+	_create: function() {
+
+		var n, i, handle, axis, hname,
+			that = this,
+			o = this.options;
+		this.element.addClass("ui-resizable");
+
+		$.extend(this, {
+			_aspectRatio: !!(o.aspectRatio),
+			aspectRatio: o.aspectRatio,
+			originalElement: this.element,
+			_proportionallyResizeElements: [],
+			_helper: o.helper || o.ghost || o.animate ? o.helper || "ui-resizable-helper" : null
+		});
+
+		//Wrap the element if it cannot hold child nodes
+		if(this.element[0].nodeName.match(/canvas|textarea|input|select|button|img/i)) {
+
+			//Create a wrapper element and set the wrapper to the new current internal element
+			this.element.wrap(
+				$("<div class='ui-wrapper' style='overflow: hidden;'></div>").css({
+					position: this.element.css("position"),
+					width: this.element.outerWidth(),
+					height: this.element.outerHeight(),
+					top: this.element.css("top"),
+					left: this.element.css("left")
+				})
+			);
+
+			//Overwrite the original this.element
+			this.element = this.element.parent().data(
+				"ui-resizable", this.element.data("ui-resizable")
+			);
+
+			this.elementIsWrapper = true;
+
+			//Move margins to the wrapper
+			this.element.css({ marginLeft: this.originalElement.css("marginLeft"), marginTop: this.originalElement.css("marginTop"), marginRight: this.originalElement.css("marginRight"), marginBottom: this.originalElement.css("marginBottom") });
+			this.originalElement.css({ marginLeft: 0, marginTop: 0, marginRight: 0, marginBottom: 0});
+
+			//Prevent Safari textarea resize
+			this.originalResizeStyle = this.originalElement.css("resize");
+			this.originalElement.css("resize", "none");
+
+			//Push the actual element to our proportionallyResize internal array
+			this._proportionallyResizeElements.push(this.originalElement.css({ position: "static", zoom: 1, display: "block" }));
+
+			// avoid IE jump (hard set the margin)
+			this.originalElement.css({ margin: this.originalElement.css("margin") });
+
+			// fix handlers offset
+			this._proportionallyResize();
+
+		}
+
+		this.handles = o.handles || (!$(".ui-resizable-handle", this.element).length ? "e,s,se" : { n: ".ui-resizable-n", e: ".ui-resizable-e", s: ".ui-resizable-s", w: ".ui-resizable-w", se: ".ui-resizable-se", sw: ".ui-resizable-sw", ne: ".ui-resizable-ne", nw: ".ui-resizable-nw" });
+		if(this.handles.constructor === String) {
+
+			if ( this.handles === "all") {
+				this.handles = "n,e,s,w,se,sw,ne,nw";
+			}
+
+			n = this.handles.split(",");
+			this.handles = {};
+
+			for(i = 0; i < n.length; i++) {
+
+				handle = $.trim(n[i]);
+				hname = "ui-resizable-"+handle;
+				axis = $("<div class='ui-resizable-handle " + hname + "'></div>");
+
+				// Apply zIndex to all handles - see #7960
+				axis.css({ zIndex: o.zIndex });
+
+				//TODO : What's going on here?
+				if ("se" === handle) {
+					axis.addClass("ui-icon ui-icon-gripsmall-diagonal-se");
+				}
+
+				//Insert into internal handles object and append to element
+				this.handles[handle] = ".ui-resizable-"+handle;
+				this.element.append(axis);
+			}
+
+		}
+
+		this._renderAxis = function(target) {
+
+			var i, axis, padPos, padWrapper;
+
+			target = target || this.element;
+
+			for(i in this.handles) {
+
+				if(this.handles[i].constructor === String) {
+					this.handles[i] = $(this.handles[i], this.element).show();
+				}
+
+				//Apply pad to wrapper element, needed to fix axis position (textarea, inputs, scrolls)
+				if (this.elementIsWrapper && this.originalElement[0].nodeName.match(/textarea|input|select|button/i)) {
+
+					axis = $(this.handles[i], this.element);
+
+					//Checking the correct pad and border
+					padWrapper = /sw|ne|nw|se|n|s/.test(i) ? axis.outerHeight() : axis.outerWidth();
+
+					//The padding type i have to apply...
+					padPos = [ "padding",
+						/ne|nw|n/.test(i) ? "Top" :
+						/se|sw|s/.test(i) ? "Bottom" :
+						/^e$/.test(i) ? "Right" : "Left" ].join("");
+
+					target.css(padPos, padWrapper);
+
+					this._proportionallyResize();
+
+				}
+
+				//TODO: What's that good for? There's not anything to be executed left
+				if(!$(this.handles[i]).length) {
+					continue;
+				}
+			}
+		};
+
+		//TODO: make renderAxis a prototype function
+		this._renderAxis(this.element);
+
+		this._handles = $(".ui-resizable-handle", this.element)
+			.disableSelection();
+
+		//Matching axis name
+		this._handles.mouseover(function() {
+			if (!that.resizing) {
+				if (this.className) {
+					axis = this.className.match(/ui-resizable-(se|sw|ne|nw|n|e|s|w)/i);
+				}
+				//Axis, default = se
+				that.axis = axis && axis[1] ? axis[1] : "se";
+			}
+		});
+
+		//If we want to auto hide the elements
+		if (o.autoHide) {
+			this._handles.hide();
+			$(this.element)
+				.addClass("ui-resizable-autohide")
+				.mouseenter(function() {
+					if (o.disabled) {
+						return;
+					}
+					$(this).removeClass("ui-resizable-autohide");
+					that._handles.show();
+				})
+				.mouseleave(function(){
+					if (o.disabled) {
+						return;
+					}
+					if (!that.resizing) {
+						$(this).addClass("ui-resizable-autohide");
+						that._handles.hide();
+					}
+				});
+		}
+
+		//Initialize the mouse interaction
+		this._mouseInit();
+
+	},
+
+	_destroy: function() {
+
+		this._mouseDestroy();
+
+		var wrapper,
+			_destroy = function(exp) {
+				$(exp).removeClass("ui-resizable ui-resizable-disabled ui-resizable-resizing")
+					.removeData("resizable").removeData("ui-resizable").unbind(".resizable").find(".ui-resizable-handle").remove();
+			};
+
+		//TODO: Unwrap at same DOM position
+		if (this.elementIsWrapper) {
+			_destroy(this.element);
+			wrapper = this.element;
+			this.originalElement.css({
+				position: wrapper.css("position"),
+				width: wrapper.outerWidth(),
+				height: wrapper.outerHeight(),
+				top: wrapper.css("top"),
+				left: wrapper.css("left")
+			}).insertAfter( wrapper );
+			wrapper.remove();
+		}
+
+		this.originalElement.css("resize", this.originalResizeStyle);
+		_destroy(this.originalElement);
+
+		return this;
+	},
+
+	_mouseCapture: function(event) {
+		var i, handle,
+			capture = false;
+
+		for (i in this.handles) {
+			handle = $(this.handles[i])[0];
+			if (handle === event.target || $.contains(handle, event.target)) {
+				capture = true;
+			}
+		}
+
+		return !this.options.disabled && capture;
+	},
+
+	_mouseStart: function(event) {
+
+		var curleft, curtop, cursor,
+			o = this.options,
+			iniPos = this.element.position(),
+			el = this.element;
+
+		this.resizing = true;
+
+		// bugfix for http://dev.jquery.com/ticket/1749
+		if ( (/absolute/).test( el.css("position") ) ) {
+			el.css({ position: "absolute", top: el.css("top"), left: el.css("left") });
+		} else if (el.is(".ui-draggable")) {
+			el.css({ position: "absolute", top: iniPos.top, left: iniPos.left });
+		}
+
+		this._renderProxy();
+
+		curleft = num(this.helper.css("left"));
+		curtop = num(this.helper.css("top"));
+
+		if (o.containment) {
+			curleft += $(o.containment).scrollLeft() || 0;
+			curtop += $(o.containment).scrollTop() || 0;
+		}
+
+		//Store needed variables
+		this.offset = this.helper.offset();
+		this.position = { left: curleft, top: curtop };
+		this.size = this._helper ? { width: el.outerWidth(), height: el.outerHeight() } : { width: el.width(), height: el.height() };
+		this.originalSize = this._helper ? { width: el.outerWidth(), height: el.outerHeight() } : { width: el.width(), height: el.height() };
+		this.originalPosition = { left: curleft, top: curtop };
+		this.sizeDiff = { width: el.outerWidth() - el.width(), height: el.outerHeight() - el.height() };
+		this.originalMousePosition = { left: event.pageX, top: event.pageY };
+
+		//Aspect Ratio
+		this.aspectRatio = (typeof o.aspectRatio === "number") ? o.aspectRatio : ((this.originalSize.width / this.originalSize.height) || 1);
+
+		cursor = $(".ui-resizable-" + this.axis).css("cursor");
+		$("body").css("cursor", cursor === "auto" ? this.axis + "-resize" : cursor);
+
+		el.addClass("ui-resizable-resizing");
+		this._propagate("start", event);
+		return true;
+	},
+
+	_mouseDrag: function(event) {
+
+		//Increase performance, avoid regex
+		var data,
+			el = this.helper, props = {},
+			smp = this.originalMousePosition,
+			a = this.axis,
+			prevTop = this.position.top,
+			prevLeft = this.position.left,
+			prevWidth = this.size.width,
+			prevHeight = this.size.height,
+			dx = (event.pageX-smp.left)||0,
+			dy = (event.pageY-smp.top)||0,
+			trigger = this._change[a];
+
+		if (!trigger) {
+			return false;
+		}
+
+		// Calculate the attrs that will be change
+		data = trigger.apply(this, [event, dx, dy]);
+
+		// Put this in the mouseDrag handler since the user can start pressing shift while resizing
+		this._updateVirtualBoundaries(event.shiftKey);
+		if (this._aspectRatio || event.shiftKey) {
+			data = this._updateRatio(data, event);
+		}
+
+		data = this._respectSize(data, event);
+
+		this._updateCache(data);
+
+		// plugins callbacks need to be called first
+		this._propagate("resize", event);
+
+		if (this.position.top !== prevTop) {
+			props.top = this.position.top + "px";
+		}
+		if (this.position.left !== prevLeft) {
+			props.left = this.position.left + "px";
+		}
+		if (this.size.width !== prevWidth) {
+			props.width = this.size.width + "px";
+		}
+		if (this.size.height !== prevHeight) {
+			props.height = this.size.height + "px";
+		}
+		el.css(props);
+
+		if (!this._helper && this._proportionallyResizeElements.length) {
+			this._proportionallyResize();
+		}
+
+		// Call the user callback if the element was resized
+		if ( ! $.isEmptyObject(props) ) {
+			this._trigger("resize", event, this.ui());
+		}
+
+		return false;
+	},
+
+	_mouseStop: function(event) {
+
+		this.resizing = false;
+		var pr, ista, soffseth, soffsetw, s, left, top,
+			o = this.options, that = this;
+
+		if(this._helper) {
+
+			pr = this._proportionallyResizeElements;
+			ista = pr.length && (/textarea/i).test(pr[0].nodeName);
+			soffseth = ista && $.ui.hasScroll(pr[0], "left") /* TODO - jump height */ ? 0 : that.sizeDiff.height;
+			soffsetw = ista ? 0 : that.sizeDiff.width;
+
+			s = { width: (that.helper.width()  - soffsetw), height: (that.helper.height() - soffseth) };
+			left = (parseInt(that.element.css("left"), 10) + (that.position.left - that.originalPosition.left)) || null;
+			top = (parseInt(that.element.css("top"), 10) + (that.position.top - that.originalPosition.top)) || null;
+
+			if (!o.animate) {
+				this.element.css($.extend(s, { top: top, left: left }));
+			}
+
+			that.helper.height(that.size.height);
+			that.helper.width(that.size.width);
+
+			if (this._helper && !o.animate) {
+				this._proportionallyResize();
+			}
+		}
+
+		$("body").css("cursor", "auto");
+
+		this.element.removeClass("ui-resizable-resizing");
+
+		this._propagate("stop", event);
+
+		if (this._helper) {
+			this.helper.remove();
+		}
+
+		return false;
+
+	},
+
+	_updateVirtualBoundaries: function(forceAspectRatio) {
+		var pMinWidth, pMaxWidth, pMinHeight, pMaxHeight, b,
+			o = this.options;
+
+		b = {
+			minWidth: isNumber(o.minWidth) ? o.minWidth : 0,
+			maxWidth: isNumber(o.maxWidth) ? o.maxWidth : Infinity,
+			minHeight: isNumber(o.minHeight) ? o.minHeight : 0,
+			maxHeight: isNumber(o.maxHeight) ? o.maxHeight : Infinity
+		};
+
+		if(this._aspectRatio || forceAspectRatio) {
+			// We want to create an enclosing box whose aspect ration is the requested one
+			// First, compute the "projected" size for each dimension based on the aspect ratio and other dimension
+			pMinWidth = b.minHeight * this.aspectRatio;
+			pMinHeight = b.minWidth / this.aspectRatio;
+			pMaxWidth = b.maxHeight * this.aspectRatio;
+			pMaxHeight = b.maxWidth / this.aspectRatio;
+
+			if(pMinWidth > b.minWidth) {
+				b.minWidth = pMinWidth;
+			}
+			if(pMinHeight > b.minHeight) {
+				b.minHeight = pMinHeight;
+			}
+			if(pMaxWidth < b.maxWidth) {
+				b.maxWidth = pMaxWidth;
+			}
+			if(pMaxHeight < b.maxHeight) {
+				b.maxHeight = pMaxHeight;
+			}
+		}
+		this._vBoundaries = b;
+	},
+
+	_updateCache: function(data) {
+		this.offset = this.helper.offset();
+		if (isNumber(data.left)) {
+			this.position.left = data.left;
+		}
+		if (isNumber(data.top)) {
+			this.position.top = data.top;
+		}
+		if (isNumber(data.height)) {
+			this.size.height = data.height;
+		}
+		if (isNumber(data.width)) {
+			this.size.width = data.width;
+		}
+	},
+
+	_updateRatio: function( data ) {
+
+		var cpos = this.position,
+			csize = this.size,
+			a = this.axis;
+
+		if (isNumber(data.height)) {
+			data.width = (data.height * this.aspectRatio);
+		} else if (isNumber(data.width)) {
+			data.height = (data.width / this.aspectRatio);
+		}
+
+		if (a === "sw") {
+			data.left = cpos.left + (csize.width - data.width);
+			data.top = null;
+		}
+		if (a === "nw") {
+			data.top = cpos.top + (csize.height - data.height);
+			data.left = cpos.left + (csize.width - data.width);
+		}
+
+		return data;
+	},
+
+	_respectSize: function( data ) {
+
+		var o = this._vBoundaries,
+			a = this.axis,
+			ismaxw = isNumber(data.width) && o.maxWidth && (o.maxWidth < data.width), ismaxh = isNumber(data.height) && o.maxHeight && (o.maxHeight < data.height),
+			isminw = isNumber(data.width) && o.minWidth && (o.minWidth > data.width), isminh = isNumber(data.height) && o.minHeight && (o.minHeight > data.height),
+			dw = this.originalPosition.left + this.originalSize.width,
+			dh = this.position.top + this.size.height,
+			cw = /sw|nw|w/.test(a), ch = /nw|ne|n/.test(a);
+		if (isminw) {
+			data.width = o.minWidth;
+		}
+		if (isminh) {
+			data.height = o.minHeight;
+		}
+		if (ismaxw) {
+			data.width = o.maxWidth;
+		}
+		if (ismaxh) {
+			data.height = o.maxHeight;
+		}
+
+		if (isminw && cw) {
+			data.left = dw - o.minWidth;
+		}
+		if (ismaxw && cw) {
+			data.left = dw - o.maxWidth;
+		}
+		if (isminh && ch) {
+			data.top = dh - o.minHeight;
+		}
+		if (ismaxh && ch) {
+			data.top = dh - o.maxHeight;
+		}
+
+		// fixing jump error on top/left - bug #2330
+		if (!data.width && !data.height && !data.left && data.top) {
+			data.top = null;
+		} else if (!data.width && !data.height && !data.top && data.left) {
+			data.left = null;
+		}
+
+		return data;
+	},
+
+	_proportionallyResize: function() {
+
+		if (!this._proportionallyResizeElements.length) {
+			return;
+		}
+
+		var i, j, borders, paddings, prel,
+			element = this.helper || this.element;
+
+		for ( i=0; i < this._proportionallyResizeElements.length; i++) {
+
+			prel = this._proportionallyResizeElements[i];
+
+			if (!this.borderDif) {
+				this.borderDif = [];
+				borders = [prel.css("borderTopWidth"), prel.css("borderRightWidth"), prel.css("borderBottomWidth"), prel.css("borderLeftWidth")];
+				paddings = [prel.css("paddingTop"), prel.css("paddingRight"), prel.css("paddingBottom"), prel.css("paddingLeft")];
+
+				for ( j = 0; j < borders.length; j++ ) {
+					this.borderDif[ j ] = ( parseInt( borders[ j ], 10 ) || 0 ) + ( parseInt( paddings[ j ], 10 ) || 0 );
+				}
+			}
+
+			prel.css({
+				height: (element.height() - this.borderDif[0] - this.borderDif[2]) || 0,
+				width: (element.width() - this.borderDif[1] - this.borderDif[3]) || 0
+			});
+
+		}
+
+	},
+
+	_renderProxy: function() {
+
+		var el = this.element, o = this.options;
+		this.elementOffset = el.offset();
+
+		if(this._helper) {
+
+			this.helper = this.helper || $("<div style='overflow:hidden;'></div>");
+
+			this.helper.addClass(this._helper).css({
+				width: this.element.outerWidth() - 1,
+				height: this.element.outerHeight() - 1,
+				position: "absolute",
+				left: this.elementOffset.left +"px",
+				top: this.elementOffset.top +"px",
+				zIndex: ++o.zIndex //TODO: Don't modify option
+			});
+
+			this.helper
+				.appendTo("body")
+				.disableSelection();
+
+		} else {
+			this.helper = this.element;
+		}
+
+	},
+
+	_change: {
+		e: function(event, dx) {
+			return { width: this.originalSize.width + dx };
+		},
+		w: function(event, dx) {
+			var cs = this.originalSize, sp = this.originalPosition;
+			return { left: sp.left + dx, width: cs.width - dx };
+		},
+		n: function(event, dx, dy) {
+			var cs = this.originalSize, sp = this.originalPosition;
+			return { top: sp.top + dy, height: cs.height - dy };
+		},
+		s: function(event, dx, dy) {
+			return { height: this.originalSize.height + dy };
+		},
+		se: function(event, dx, dy) {
+			return $.extend(this._change.s.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		},
+		sw: function(event, dx, dy) {
+			return $.extend(this._change.s.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		},
+		ne: function(event, dx, dy) {
+			return $.extend(this._change.n.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		},
+		nw: function(event, dx, dy) {
+			return $.extend(this._change.n.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		}
+	},
+
+	_propagate: function(n, event) {
+		$.ui.plugin.call(this, n, [event, this.ui()]);
+		(n !== "resize" && this._trigger(n, event, this.ui()));
+	},
+
+	plugins: {},
+
+	ui: function() {
+		return {
+			originalElement: this.originalElement,
+			element: this.element,
+			helper: this.helper,
+			position: this.position,
+			size: this.size,
+			originalSize: this.originalSize,
+			originalPosition: this.originalPosition
+		};
+	}
+
+});
+
+/*
+ * Resizable Extensions
+ */
+
+$.ui.plugin.add("resizable", "animate", {
+
+	stop: function( event ) {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			pr = that._proportionallyResizeElements,
+			ista = pr.length && (/textarea/i).test(pr[0].nodeName),
+			soffseth = ista && $.ui.hasScroll(pr[0], "left") /* TODO - jump height */ ? 0 : that.sizeDiff.height,
+			soffsetw = ista ? 0 : that.sizeDiff.width,
+			style = { width: (that.size.width - soffsetw), height: (that.size.height - soffseth) },
+			left = (parseInt(that.element.css("left"), 10) + (that.position.left - that.originalPosition.left)) || null,
+			top = (parseInt(that.element.css("top"), 10) + (that.position.top - that.originalPosition.top)) || null;
+
+		that.element.animate(
+			$.extend(style, top && left ? { top: top, left: left } : {}), {
+				duration: o.animateDuration,
+				easing: o.animateEasing,
+				step: function() {
+
+					var data = {
+						width: parseInt(that.element.css("width"), 10),
+						height: parseInt(that.element.css("height"), 10),
+						top: parseInt(that.element.css("top"), 10),
+						left: parseInt(that.element.css("left"), 10)
+					};
+
+					if (pr && pr.length) {
+						$(pr[0]).css({ width: data.width, height: data.height });
+					}
+
+					// propagating resize, and updating values for each animation step
+					that._updateCache(data);
+					that._propagate("resize", event);
+
+				}
+			}
+		);
+	}
+
+});
+
+$.ui.plugin.add("resizable", "containment", {
+
+	start: function() {
+		var element, p, co, ch, cw, width, height,
+			that = $(this).data("ui-resizable"),
+			o = that.options,
+			el = that.element,
+			oc = o.containment,
+			ce = (oc instanceof $) ? oc.get(0) : (/parent/.test(oc)) ? el.parent().get(0) : oc;
+
+		if (!ce) {
+			return;
+		}
+
+		that.containerElement = $(ce);
+
+		if (/document/.test(oc) || oc === document) {
+			that.containerOffset = { left: 0, top: 0 };
+			that.containerPosition = { left: 0, top: 0 };
+
+			that.parentData = {
+				element: $(document), left: 0, top: 0,
+				width: $(document).width(), height: $(document).height() || document.body.parentNode.scrollHeight
+			};
+		}
+
+		// i'm a node, so compute top, left, right, bottom
+		else {
+			element = $(ce);
+			p = [];
+			$([ "Top", "Right", "Left", "Bottom" ]).each(function(i, name) { p[i] = num(element.css("padding" + name)); });
+
+			that.containerOffset = element.offset();
+			that.containerPosition = element.position();
+			that.containerSize = { height: (element.innerHeight() - p[3]), width: (element.innerWidth() - p[1]) };
+
+			co = that.containerOffset;
+			ch = that.containerSize.height;
+			cw = that.containerSize.width;
+			width = ($.ui.hasScroll(ce, "left") ? ce.scrollWidth : cw );
+			height = ($.ui.hasScroll(ce) ? ce.scrollHeight : ch);
+
+			that.parentData = {
+				element: ce, left: co.left, top: co.top, width: width, height: height
+			};
+		}
+	},
+
+	resize: function( event ) {
+		var woset, hoset, isParent, isOffsetRelative,
+			that = $(this).data("ui-resizable"),
+			o = that.options,
+			co = that.containerOffset, cp = that.position,
+			pRatio = that._aspectRatio || event.shiftKey,
+			cop = { top:0, left:0 }, ce = that.containerElement;
+
+		if (ce[0] !== document && (/static/).test(ce.css("position"))) {
+			cop = co;
+		}
+
+		if (cp.left < (that._helper ? co.left : 0)) {
+			that.size.width = that.size.width + (that._helper ? (that.position.left - co.left) : (that.position.left - cop.left));
+			if (pRatio) {
+				that.size.height = that.size.width / that.aspectRatio;
+			}
+			that.position.left = o.helper ? co.left : 0;
+		}
+
+		if (cp.top < (that._helper ? co.top : 0)) {
+			that.size.height = that.size.height + (that._helper ? (that.position.top - co.top) : that.position.top);
+			if (pRatio) {
+				that.size.width = that.size.height * that.aspectRatio;
+			}
+			that.position.top = that._helper ? co.top : 0;
+		}
+
+		that.offset.left = that.parentData.left+that.position.left;
+		that.offset.top = that.parentData.top+that.position.top;
+
+		woset = Math.abs( (that._helper ? that.offset.left - cop.left : (that.offset.left - cop.left)) + that.sizeDiff.width );
+		hoset = Math.abs( (that._helper ? that.offset.top - cop.top : (that.offset.top - co.top)) + that.sizeDiff.height );
+
+		isParent = that.containerElement.get(0) === that.element.parent().get(0);
+		isOffsetRelative = /relative|absolute/.test(that.containerElement.css("position"));
+
+		if(isParent && isOffsetRelative) {
+			woset -= that.parentData.left;
+		}
+
+		if (woset + that.size.width >= that.parentData.width) {
+			that.size.width = that.parentData.width - woset;
+			if (pRatio) {
+				that.size.height = that.size.width / that.aspectRatio;
+			}
+		}
+
+		if (hoset + that.size.height >= that.parentData.height) {
+			that.size.height = that.parentData.height - hoset;
+			if (pRatio) {
+				that.size.width = that.size.height * that.aspectRatio;
+			}
+		}
+	},
+
+	stop: function(){
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			co = that.containerOffset,
+			cop = that.containerPosition,
+			ce = that.containerElement,
+			helper = $(that.helper),
+			ho = helper.offset(),
+			w = helper.outerWidth() - that.sizeDiff.width,
+			h = helper.outerHeight() - that.sizeDiff.height;
+
+		if (that._helper && !o.animate && (/relative/).test(ce.css("position"))) {
+			$(this).css({ left: ho.left - cop.left - co.left, width: w, height: h });
+		}
+
+		if (that._helper && !o.animate && (/static/).test(ce.css("position"))) {
+			$(this).css({ left: ho.left - cop.left - co.left, width: w, height: h });
+		}
+
+	}
+});
+
+$.ui.plugin.add("resizable", "alsoResize", {
+
+	start: function () {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			_store = function (exp) {
+				$(exp).each(function() {
+					var el = $(this);
+					el.data("ui-resizable-alsoresize", {
+						width: parseInt(el.width(), 10), height: parseInt(el.height(), 10),
+						left: parseInt(el.css("left"), 10), top: parseInt(el.css("top"), 10)
+					});
+				});
+			};
+
+		if (typeof(o.alsoResize) === "object" && !o.alsoResize.parentNode) {
+			if (o.alsoResize.length) { o.alsoResize = o.alsoResize[0]; _store(o.alsoResize); }
+			else { $.each(o.alsoResize, function (exp) { _store(exp); }); }
+		}else{
+			_store(o.alsoResize);
+		}
+	},
+
+	resize: function (event, ui) {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			os = that.originalSize,
+			op = that.originalPosition,
+			delta = {
+				height: (that.size.height - os.height) || 0, width: (that.size.width - os.width) || 0,
+				top: (that.position.top - op.top) || 0, left: (that.position.left - op.left) || 0
+			},
+
+			_alsoResize = function (exp, c) {
+				$(exp).each(function() {
+					var el = $(this), start = $(this).data("ui-resizable-alsoresize"), style = {},
+						css = c && c.length ? c : el.parents(ui.originalElement[0]).length ? ["width", "height"] : ["width", "height", "top", "left"];
+
+					$.each(css, function (i, prop) {
+						var sum = (start[prop]||0) + (delta[prop]||0);
+						if (sum && sum >= 0) {
+							style[prop] = sum || null;
+						}
+					});
+
+					el.css(style);
+				});
+			};
+
+		if (typeof(o.alsoResize) === "object" && !o.alsoResize.nodeType) {
+			$.each(o.alsoResize, function (exp, c) { _alsoResize(exp, c); });
+		}else{
+			_alsoResize(o.alsoResize);
+		}
+	},
+
+	stop: function () {
+		$(this).removeData("resizable-alsoresize");
+	}
+});
+
+$.ui.plugin.add("resizable", "ghost", {
+
+	start: function() {
+
+		var that = $(this).data("ui-resizable"), o = that.options, cs = that.size;
+
+		that.ghost = that.originalElement.clone();
+		that.ghost
+			.css({ opacity: 0.25, display: "block", position: "relative", height: cs.height, width: cs.width, margin: 0, left: 0, top: 0 })
+			.addClass("ui-resizable-ghost")
+			.addClass(typeof o.ghost === "string" ? o.ghost : "");
+
+		that.ghost.appendTo(that.helper);
+
+	},
+
+	resize: function(){
+		var that = $(this).data("ui-resizable");
+		if (that.ghost) {
+			that.ghost.css({ position: "relative", height: that.size.height, width: that.size.width });
+		}
+	},
+
+	stop: function() {
+		var that = $(this).data("ui-resizable");
+		if (that.ghost && that.helper) {
+			that.helper.get(0).removeChild(that.ghost.get(0));
+		}
+	}
+
+});
+
+$.ui.plugin.add("resizable", "grid", {
+
+	resize: function() {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			cs = that.size,
+			os = that.originalSize,
+			op = that.originalPosition,
+			a = that.axis,
+			grid = typeof o.grid === "number" ? [o.grid, o.grid] : o.grid,
+			gridX = (grid[0]||1),
+			gridY = (grid[1]||1),
+			ox = Math.round((cs.width - os.width) / gridX) * gridX,
+			oy = Math.round((cs.height - os.height) / gridY) * gridY,
+			newWidth = os.width + ox,
+			newHeight = os.height + oy,
+			isMaxWidth = o.maxWidth && (o.maxWidth < newWidth),
+			isMaxHeight = o.maxHeight && (o.maxHeight < newHeight),
+			isMinWidth = o.minWidth && (o.minWidth > newWidth),
+			isMinHeight = o.minHeight && (o.minHeight > newHeight);
+
+		o.grid = grid;
+
+		if (isMinWidth) {
+			newWidth = newWidth + gridX;
+		}
+		if (isMinHeight) {
+			newHeight = newHeight + gridY;
+		}
+		if (isMaxWidth) {
+			newWidth = newWidth - gridX;
+		}
+		if (isMaxHeight) {
+			newHeight = newHeight - gridY;
+		}
+
+		if (/^(se|s|e)$/.test(a)) {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+		} else if (/^(ne)$/.test(a)) {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+			that.position.top = op.top - oy;
+		} else if (/^(sw)$/.test(a)) {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+			that.position.left = op.left - ox;
+		} else {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+			that.position.top = op.top - oy;
+			that.position.left = op.left - ox;
+		}
+	}
+
+});
+
+})(jQuery);
+(function($, undefined) {
+
+var dataSpace = "ui-effects-";
+
+$.effects = {
+	effect: {}
+};
+
+/*!
+ * jQuery Color Animations v2.1.2
+ * https://github.com/jquery/jquery-color
+ *
+ * Copyright 2013 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * Date: Wed Jan 16 08:47:09 2013 -0600
+ */
+(function( jQuery, undefined ) {
+
+	var stepHooks = "backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor color columnRuleColor outlineColor textDecorationColor textEmphasisColor",
+
+	// plusequals test for += 100 -= 100
+	rplusequals = /^([\-+])=\s*(\d+\.?\d*)/,
+	// a set of RE's that can match strings and generate color tuples.
+	stringParsers = [{
+			re: /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
+			parse: function( execResult ) {
+				return [
+					execResult[ 1 ],
+					execResult[ 2 ],
+					execResult[ 3 ],
+					execResult[ 4 ]
+				];
+			}
+		}, {
+			re: /rgba?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
+			parse: function( execResult ) {
+				return [
+					execResult[ 1 ] * 2.55,
+					execResult[ 2 ] * 2.55,
+					execResult[ 3 ] * 2.55,
+					execResult[ 4 ]
+				];
+			}
+		}, {
+			// this regex ignores A-F because it's compared against an already lowercased string
+			re: /#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})/,
+			parse: function( execResult ) {
+				return [
+					parseInt( execResult[ 1 ], 16 ),
+					parseInt( execResult[ 2 ], 16 ),
+					parseInt( execResult[ 3 ], 16 )
+				];
+			}
+		}, {
+			// this regex ignores A-F because it's compared against an already lowercased string
+			re: /#([a-f0-9])([a-f0-9])([a-f0-9])/,
+			parse: function( execResult ) {
+				return [
+					parseInt( execResult[ 1 ] + execResult[ 1 ], 16 ),
+					parseInt( execResult[ 2 ] + execResult[ 2 ], 16 ),
+					parseInt( execResult[ 3 ] + execResult[ 3 ], 16 )
+				];
+			}
+		}, {
+			re: /hsla?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
+			space: "hsla",
+			parse: function( execResult ) {
+				return [
+					execResult[ 1 ],
+					execResult[ 2 ] / 100,
+					execResult[ 3 ] / 100,
+					execResult[ 4 ]
+				];
+			}
+		}],
+
+	// jQuery.Color( )
+	color = jQuery.Color = function( color, green, blue, alpha ) {
+		return new jQuery.Color.fn.parse( color, green, blue, alpha );
+	},
+	spaces = {
+		rgba: {
+			props: {
+				red: {
+					idx: 0,
+					type: "byte"
+				},
+				green: {
+					idx: 1,
+					type: "byte"
+				},
+				blue: {
+					idx: 2,
+					type: "byte"
+				}
+			}
+		},
+
+		hsla: {
+			props: {
+				hue: {
+					idx: 0,
+					type: "degrees"
+				},
+				saturation: {
+					idx: 1,
+					type: "percent"
+				},
+				lightness: {
+					idx: 2,
+					type: "percent"
+				}
+			}
+		}
+	},
+	propTypes = {
+		"byte": {
+			floor: true,
+			max: 255
+		},
+		"percent": {
+			max: 1
+		},
+		"degrees": {
+			mod: 360,
+			floor: true
+		}
+	},
+	support = color.support = {},
+
+	// element for support tests
+	supportElem = jQuery( "<p>" )[ 0 ],
+
+	// colors = jQuery.Color.names
+	colors,
+
+	// local aliases of functions called often
+	each = jQuery.each;
+
+// determine rgba support immediately
+supportElem.style.cssText = "background-color:rgba(1,1,1,.5)";
+support.rgba = supportElem.style.backgroundColor.indexOf( "rgba" ) > -1;
+
+// define cache name and alpha properties
+// for rgba and hsla spaces
+each( spaces, function( spaceName, space ) {
+	space.cache = "_" + spaceName;
+	space.props.alpha = {
+		idx: 3,
+		type: "percent",
+		def: 1
+	};
+});
+
+function clamp( value, prop, allowEmpty ) {
+	var type = propTypes[ prop.type ] || {};
+
+	if ( value == null ) {
+		return (allowEmpty || !prop.def) ? null : prop.def;
+	}
+
+	// ~~ is an short way of doing floor for positive numbers
+	value = type.floor ? ~~value : parseFloat( value );
+
+	// IE will pass in empty strings as value for alpha,
+	// which will hit this case
+	if ( isNaN( value ) ) {
+		return prop.def;
+	}
+
+	if ( type.mod ) {
+		// we add mod before modding to make sure that negatives values
+		// get converted properly: -10 -> 350
+		return (value + type.mod) % type.mod;
+	}
+
+	// for now all property types without mod have min and max
+	return 0 > value ? 0 : type.max < value ? type.max : value;
+}
+
+function stringParse( string ) {
+	var inst = color(),
+		rgba = inst._rgba = [];
+
+	string = string.toLowerCase();
+
+	each( stringParsers, function( i, parser ) {
+		var parsed,
+			match = parser.re.exec( string ),
+			values = match && parser.parse( match ),
+			spaceName = parser.space || "rgba";
+
+		if ( values ) {
+			parsed = inst[ spaceName ]( values );
+
+			// if this was an rgba parse the assignment might happen twice
+			// oh well....
+			inst[ spaces[ spaceName ].cache ] = parsed[ spaces[ spaceName ].cache ];
+			rgba = inst._rgba = parsed._rgba;
+
+			// exit each( stringParsers ) here because we matched
+			return false;
+		}
+	});
+
+	// Found a stringParser that handled it
+	if ( rgba.length ) {
+
+		// if this came from a parsed string, force "transparent" when alpha is 0
+		// chrome, (and maybe others) return "transparent" as rgba(0,0,0,0)
+		if ( rgba.join() === "0,0,0,0" ) {
+			jQuery.extend( rgba, colors.transparent );
+		}
+		return inst;
+	}
+
+	// named colors
+	return colors[ string ];
+}
+
+color.fn = jQuery.extend( color.prototype, {
+	parse: function( red, green, blue, alpha ) {
+		if ( red === undefined ) {
+			this._rgba = [ null, null, null, null ];
+			return this;
+		}
+		if ( red.jquery || red.nodeType ) {
+			red = jQuery( red ).css( green );
+			green = undefined;
+		}
+
+		var inst = this,
+			type = jQuery.type( red ),
+			rgba = this._rgba = [];
+
+		// more than 1 argument specified - assume ( red, green, blue, alpha )
+		if ( green !== undefined ) {
+			red = [ red, green, blue, alpha ];
+			type = "array";
+		}
+
+		if ( type === "string" ) {
+			return this.parse( stringParse( red ) || colors._default );
+		}
+
+		if ( type === "array" ) {
+			each( spaces.rgba.props, function( key, prop ) {
+				rgba[ prop.idx ] = clamp( red[ prop.idx ], prop );
+			});
+			return this;
+		}
+
+		if ( type === "object" ) {
+			if ( red instanceof color ) {
+				each( spaces, function( spaceName, space ) {
+					if ( red[ space.cache ] ) {
+						inst[ space.cache ] = red[ space.cache ].slice();
+					}
+				});
+			} else {
+				each( spaces, function( spaceName, space ) {
+					var cache = space.cache;
+					each( space.props, function( key, prop ) {
+
+						// if the cache doesn't exist, and we know how to convert
+						if ( !inst[ cache ] && space.to ) {
+
+							// if the value was null, we don't need to copy it
+							// if the key was alpha, we don't need to copy it either
+							if ( key === "alpha" || red[ key ] == null ) {
+								return;
+							}
+							inst[ cache ] = space.to( inst._rgba );
+						}
+
+						// this is the only case where we allow nulls for ALL properties.
+						// call clamp with alwaysAllowEmpty
+						inst[ cache ][ prop.idx ] = clamp( red[ key ], prop, true );
+					});
+
+					// everything defined but alpha?
+					if ( inst[ cache ] && jQuery.inArray( null, inst[ cache ].slice( 0, 3 ) ) < 0 ) {
+						// use the default of 1
+						inst[ cache ][ 3 ] = 1;
+						if ( space.from ) {
+							inst._rgba = space.from( inst[ cache ] );
+						}
+					}
+				});
+			}
+			return this;
+		}
+	},
+	is: function( compare ) {
+		var is = color( compare ),
+			same = true,
+			inst = this;
+
+		each( spaces, function( _, space ) {
+			var localCache,
+				isCache = is[ space.cache ];
+			if (isCache) {
+				localCache = inst[ space.cache ] || space.to && space.to( inst._rgba ) || [];
+				each( space.props, function( _, prop ) {
+					if ( isCache[ prop.idx ] != null ) {
+						same = ( isCache[ prop.idx ] === localCache[ prop.idx ] );
+						return same;
+					}
+				});
+			}
+			return same;
+		});
+		return same;
+	},
+	_space: function() {
+		var used = [],
+			inst = this;
+		each( spaces, function( spaceName, space ) {
+			if ( inst[ space.cache ] ) {
+				used.push( spaceName );
+			}
+		});
+		return used.pop();
+	},
+	transition: function( other, distance ) {
+		var end = color( other ),
+			spaceName = end._space(),
+			space = spaces[ spaceName ],
+			startColor = this.alpha() === 0 ? color( "transparent" ) : this,
+			start = startColor[ space.cache ] || space.to( startColor._rgba ),
+			result = start.slice();
+
+		end = end[ space.cache ];
+		each( space.props, function( key, prop ) {
+			var index = prop.idx,
+				startValue = start[ index ],
+				endValue = end[ index ],
+				type = propTypes[ prop.type ] || {};
+
+			// if null, don't override start value
+			if ( endValue === null ) {
+				return;
+			}
+			// if null - use end
+			if ( startValue === null ) {
+				result[ index ] = endValue;
+			} else {
+				if ( type.mod ) {
+					if ( endValue - startValue > type.mod / 2 ) {
+						startValue += type.mod;
+					} else if ( startValue - endValue > type.mod / 2 ) {
+						startValue -= type.mod;
+					}
+				}
+				result[ index ] = clamp( ( endValue - startValue ) * distance + startValue, prop );
+			}
+		});
+		return this[ spaceName ]( result );
+	},
+	blend: function( opaque ) {
+		// if we are already opaque - return ourself
+		if ( this._rgba[ 3 ] === 1 ) {
+			return this;
+		}
+
+		var rgb = this._rgba.slice(),
+			a = rgb.pop(),
+			blend = color( opaque )._rgba;
+
+		return color( jQuery.map( rgb, function( v, i ) {
+			return ( 1 - a ) * blend[ i ] + a * v;
+		}));
+	},
+	toRgbaString: function() {
+		var prefix = "rgba(",
+			rgba = jQuery.map( this._rgba, function( v, i ) {
+				return v == null ? ( i > 2 ? 1 : 0 ) : v;
+			});
+
+		if ( rgba[ 3 ] === 1 ) {
+			rgba.pop();
+			prefix = "rgb(";
+		}
+
+		return prefix + rgba.join() + ")";
+	},
+	toHslaString: function() {
+		var prefix = "hsla(",
+			hsla = jQuery.map( this.hsla(), function( v, i ) {
+				if ( v == null ) {
+					v = i > 2 ? 1 : 0;
+				}
+
+				// catch 1 and 2
+				if ( i && i < 3 ) {
+					v = Math.round( v * 100 ) + "%";
+				}
+				return v;
+			});
+
+		if ( hsla[ 3 ] === 1 ) {
+			hsla.pop();
+			prefix = "hsl(";
+		}
+		return prefix + hsla.join() + ")";
+	},
+	toHexString: function( includeAlpha ) {
+		var rgba = this._rgba.slice(),
+			alpha = rgba.pop();
+
+		if ( includeAlpha ) {
+			rgba.push( ~~( alpha * 255 ) );
+		}
+
+		return "#" + jQuery.map( rgba, function( v ) {
+
+			// default to 0 when nulls exist
+			v = ( v || 0 ).toString( 16 );
+			return v.length === 1 ? "0" + v : v;
+		}).join("");
+	},
+	toString: function() {
+		return this._rgba[ 3 ] === 0 ? "transparent" : this.toRgbaString();
+	}
+});
+color.fn.parse.prototype = color.fn;
+
+// hsla conversions adapted from:
+// https://code.google.com/p/maashaack/source/browse/packages/graphics/trunk/src/graphics/colors/HUE2RGB.as?r=5021
+
+function hue2rgb( p, q, h ) {
+	h = ( h + 1 ) % 1;
+	if ( h * 6 < 1 ) {
+		return p + (q - p) * h * 6;
+	}
+	if ( h * 2 < 1) {
+		return q;
+	}
+	if ( h * 3 < 2 ) {
+		return p + (q - p) * ((2/3) - h) * 6;
+	}
+	return p;
+}
+
+spaces.hsla.to = function ( rgba ) {
+	if ( rgba[ 0 ] == null || rgba[ 1 ] == null || rgba[ 2 ] == null ) {
+		return [ null, null, null, rgba[ 3 ] ];
+	}
+	var r = rgba[ 0 ] / 255,
+		g = rgba[ 1 ] / 255,
+		b = rgba[ 2 ] / 255,
+		a = rgba[ 3 ],
+		max = Math.max( r, g, b ),
+		min = Math.min( r, g, b ),
+		diff = max - min,
+		add = max + min,
+		l = add * 0.5,
+		h, s;
+
+	if ( min === max ) {
+		h = 0;
+	} else if ( r === max ) {
+		h = ( 60 * ( g - b ) / diff ) + 360;
+	} else if ( g === max ) {
+		h = ( 60 * ( b - r ) / diff ) + 120;
+	} else {
+		h = ( 60 * ( r - g ) / diff ) + 240;
+	}
+
+	// chroma (diff) == 0 means greyscale which, by definition, saturation = 0%
+	// otherwise, saturation is based on the ratio of chroma (diff) to lightness (add)
+	if ( diff === 0 ) {
+		s = 0;
+	} else if ( l <= 0.5 ) {
+		s = diff / add;
+	} else {
+		s = diff / ( 2 - add );
+	}
+	return [ Math.round(h) % 360, s, l, a == null ? 1 : a ];
+};
+
+spaces.hsla.from = function ( hsla ) {
+	if ( hsla[ 0 ] == null || hsla[ 1 ] == null || hsla[ 2 ] == null ) {
+		return [ null, null, null, hsla[ 3 ] ];
+	}
+	var h = hsla[ 0 ] / 360,
+		s = hsla[ 1 ],
+		l = hsla[ 2 ],
+		a = hsla[ 3 ],
+		q = l <= 0.5 ? l * ( 1 + s ) : l + s - l * s,
+		p = 2 * l - q;
+
+	return [
+		Math.round( hue2rgb( p, q, h + ( 1 / 3 ) ) * 255 ),
+		Math.round( hue2rgb( p, q, h ) * 255 ),
+		Math.round( hue2rgb( p, q, h - ( 1 / 3 ) ) * 255 ),
+		a
+	];
+};
+
+
+each( spaces, function( spaceName, space ) {
+	var props = space.props,
+		cache = space.cache,
+		to = space.to,
+		from = space.from;
+
+	// makes rgba() and hsla()
+	color.fn[ spaceName ] = function( value ) {
+
+		// generate a cache for this space if it doesn't exist
+		if ( to && !this[ cache ] ) {
+			this[ cache ] = to( this._rgba );
+		}
+		if ( value === undefined ) {
+			return this[ cache ].slice();
+		}
+
+		var ret,
+			type = jQuery.type( value ),
+			arr = ( type === "array" || type === "object" ) ? value : arguments,
+			local = this[ cache ].slice();
+
+		each( props, function( key, prop ) {
+			var val = arr[ type === "object" ? key : prop.idx ];
+			if ( val == null ) {
+				val = local[ prop.idx ];
+			}
+			local[ prop.idx ] = clamp( val, prop );
+		});
+
+		if ( from ) {
+			ret = color( from( local ) );
+			ret[ cache ] = local;
+			return ret;
+		} else {
+			return color( local );
+		}
+	};
+
+	// makes red() green() blue() alpha() hue() saturation() lightness()
+	each( props, function( key, prop ) {
+		// alpha is included in more than one space
+		if ( color.fn[ key ] ) {
+			return;
+		}
+		color.fn[ key ] = function( value ) {
+			var vtype = jQuery.type( value ),
+				fn = ( key === "alpha" ? ( this._hsla ? "hsla" : "rgba" ) : spaceName ),
+				local = this[ fn ](),
+				cur = local[ prop.idx ],
+				match;
+
+			if ( vtype === "undefined" ) {
+				return cur;
+			}
+
+			if ( vtype === "function" ) {
+				value = value.call( this, cur );
+				vtype = jQuery.type( value );
+			}
+			if ( value == null && prop.empty ) {
+				return this;
+			}
+			if ( vtype === "string" ) {
+				match = rplusequals.exec( value );
+				if ( match ) {
+					value = cur + parseFloat( match[ 2 ] ) * ( match[ 1 ] === "+" ? 1 : -1 );
+				}
+			}
+			local[ prop.idx ] = value;
+			return this[ fn ]( local );
+		};
+	});
+});
+
+// add cssHook and .fx.step function for each named hook.
+// accept a space separated string of properties
+color.hook = function( hook ) {
+	var hooks = hook.split( " " );
+	each( hooks, function( i, hook ) {
+		jQuery.cssHooks[ hook ] = {
+			set: function( elem, value ) {
+				var parsed, curElem,
+					backgroundColor = "";
+
+				if ( value !== "transparent" && ( jQuery.type( value ) !== "string" || ( parsed = stringParse( value ) ) ) ) {
+					value = color( parsed || value );
+					if ( !support.rgba && value._rgba[ 3 ] !== 1 ) {
+						curElem = hook === "backgroundColor" ? elem.parentNode : elem;
+						while (
+							(backgroundColor === "" || backgroundColor === "transparent") &&
+							curElem && curElem.style
+						) {
+							try {
+								backgroundColor = jQuery.css( curElem, "backgroundColor" );
+								curElem = curElem.parentNode;
+							} catch ( e ) {
+							}
+						}
+
+						value = value.blend( backgroundColor && backgroundColor !== "transparent" ?
+							backgroundColor :
+							"_default" );
+					}
+
+					value = value.toRgbaString();
+				}
+				try {
+					elem.style[ hook ] = value;
+				} catch( e ) {
+					// wrapped to prevent IE from throwing errors on "invalid" values like 'auto' or 'inherit'
+				}
+			}
+		};
+		jQuery.fx.step[ hook ] = function( fx ) {
+			if ( !fx.colorInit ) {
+				fx.start = color( fx.elem, hook );
+				fx.end = color( fx.end );
+				fx.colorInit = true;
+			}
+			jQuery.cssHooks[ hook ].set( fx.elem, fx.start.transition( fx.end, fx.pos ) );
+		};
+	});
+
+};
+
+color.hook( stepHooks );
+
+jQuery.cssHooks.borderColor = {
+	expand: function( value ) {
+		var expanded = {};
+
+		each( [ "Top", "Right", "Bottom", "Left" ], function( i, part ) {
+			expanded[ "border" + part + "Color" ] = value;
+		});
+		return expanded;
+	}
+};
+
+// Basic color names only.
+// Usage of any of the other color names requires adding yourself or including
+// jquery.color.svg-names.js.
+colors = jQuery.Color.names = {
+	// 4.1. Basic color keywords
+	aqua: "#00ffff",
+	black: "#000000",
+	blue: "#0000ff",
+	fuchsia: "#ff00ff",
+	gray: "#808080",
+	green: "#008000",
+	lime: "#00ff00",
+	maroon: "#800000",
+	navy: "#000080",
+	olive: "#808000",
+	purple: "#800080",
+	red: "#ff0000",
+	silver: "#c0c0c0",
+	teal: "#008080",
+	white: "#ffffff",
+	yellow: "#ffff00",
+
+	// 4.2.3. "transparent" color keyword
+	transparent: [ null, null, null, 0 ],
+
+	_default: "#ffffff"
+};
+
+})( jQuery );
+
+
+/******************************************************************************/
+/****************************** CLASS ANIMATIONS ******************************/
+/******************************************************************************/
+(function() {
+
+var classAnimationActions = [ "add", "remove", "toggle" ],
+	shorthandStyles = {
+		border: 1,
+		borderBottom: 1,
+		borderColor: 1,
+		borderLeft: 1,
+		borderRight: 1,
+		borderTop: 1,
+		borderWidth: 1,
+		margin: 1,
+		padding: 1
+	};
+
+$.each([ "borderLeftStyle", "borderRightStyle", "borderBottomStyle", "borderTopStyle" ], function( _, prop ) {
+	$.fx.step[ prop ] = function( fx ) {
+		if ( fx.end !== "none" && !fx.setAttr || fx.pos === 1 && !fx.setAttr ) {
+			jQuery.style( fx.elem, prop, fx.end );
+			fx.setAttr = true;
+		}
+	};
+});
+
+function getElementStyles( elem ) {
+	var key, len,
+		style = elem.ownerDocument.defaultView ?
+			elem.ownerDocument.defaultView.getComputedStyle( elem, null ) :
+			elem.currentStyle,
+		styles = {};
+
+	if ( style && style.length && style[ 0 ] && style[ style[ 0 ] ] ) {
+		len = style.length;
+		while ( len-- ) {
+			key = style[ len ];
+			if ( typeof style[ key ] === "string" ) {
+				styles[ $.camelCase( key ) ] = style[ key ];
+			}
+		}
+	// support: Opera, IE <9
+	} else {
+		for ( key in style ) {
+			if ( typeof style[ key ] === "string" ) {
+				styles[ key ] = style[ key ];
+			}
+		}
+	}
+
+	return styles;
+}
+
+
+function styleDifference( oldStyle, newStyle ) {
+	var diff = {},
+		name, value;
+
+	for ( name in newStyle ) {
+		value = newStyle[ name ];
+		if ( oldStyle[ name ] !== value ) {
+			if ( !shorthandStyles[ name ] ) {
+				if ( $.fx.step[ name ] || !isNaN( parseFloat( value ) ) ) {
+					diff[ name ] = value;
+				}
+			}
+		}
+	}
+
+	return diff;
+}
+
+// support: jQuery <1.8
+if ( !$.fn.addBack ) {
+	$.fn.addBack = function( selector ) {
+		return this.add( selector == null ?
+			this.prevObject : this.prevObject.filter( selector )
+		);
+	};
+}
+
+$.effects.animateClass = function( value, duration, easing, callback ) {
+	var o = $.speed( duration, easing, callback );
+
+	return this.queue( function() {
+		var animated = $( this ),
+			baseClass = animated.attr( "class" ) || "",
+			applyClassChange,
+			allAnimations = o.children ? animated.find( "*" ).addBack() : animated;
+
+		// map the animated objects to store the original styles.
+		allAnimations = allAnimations.map(function() {
+			var el = $( this );
+			return {
+				el: el,
+				start: getElementStyles( this )
+			};
+		});
+
+		// apply class change
+		applyClassChange = function() {
+			$.each( classAnimationActions, function(i, action) {
+				if ( value[ action ] ) {
+					animated[ action + "Class" ]( value[ action ] );
+				}
+			});
+		};
+		applyClassChange();
+
+		// map all animated objects again - calculate new styles and diff
+		allAnimations = allAnimations.map(function() {
+			this.end = getElementStyles( this.el[ 0 ] );
+			this.diff = styleDifference( this.start, this.end );
+			return this;
+		});
+
+		// apply original class
+		animated.attr( "class", baseClass );
+
+		// map all animated objects again - this time collecting a promise
+		allAnimations = allAnimations.map(function() {
+			var styleInfo = this,
+				dfd = $.Deferred(),
+				opts = $.extend({}, o, {
+					queue: false,
+					complete: function() {
+						dfd.resolve( styleInfo );
+					}
+				});
+
+			this.el.animate( this.diff, opts );
+			return dfd.promise();
+		});
+
+		// once all animations have completed:
+		$.when.apply( $, allAnimations.get() ).done(function() {
+
+			// set the final class
+			applyClassChange();
+
+			// for each animated element,
+			// clear all css properties that were animated
+			$.each( arguments, function() {
+				var el = this.el;
+				$.each( this.diff, function(key) {
+					el.css( key, "" );
+				});
+			});
+
+			// this is guarnteed to be there if you use jQuery.speed()
+			// it also handles dequeuing the next anim...
+			o.complete.call( animated[ 0 ] );
+		});
+	});
+};
+
+$.fn.extend({
+	addClass: (function( orig ) {
+		return function( classNames, speed, easing, callback ) {
+			return speed ?
+				$.effects.animateClass.call( this,
+					{ add: classNames }, speed, easing, callback ) :
+				orig.apply( this, arguments );
+		};
+	})( $.fn.addClass ),
+
+	removeClass: (function( orig ) {
+		return function( classNames, speed, easing, callback ) {
+			return arguments.length > 1 ?
+				$.effects.animateClass.call( this,
+					{ remove: classNames }, speed, easing, callback ) :
+				orig.apply( this, arguments );
+		};
+	})( $.fn.removeClass ),
+
+	toggleClass: (function( orig ) {
+		return function( classNames, force, speed, easing, callback ) {
+			if ( typeof force === "boolean" || force === undefined ) {
+				if ( !speed ) {
+					// without speed parameter
+					return orig.apply( this, arguments );
+				} else {
+					return $.effects.animateClass.call( this,
+						(force ? { add: classNames } : { remove: classNames }),
+						speed, easing, callback );
+				}
+			} else {
+				// without force parameter
+				return $.effects.animateClass.call( this,
+					{ toggle: classNames }, force, speed, easing );
+			}
+		};
+	})( $.fn.toggleClass ),
+
+	switchClass: function( remove, add, speed, easing, callback) {
+		return $.effects.animateClass.call( this, {
+			add: add,
+			remove: remove
+		}, speed, easing, callback );
+	}
+});
+
+})();
+
+/******************************************************************************/
+/*********************************** EFFECTS **********************************/
+/******************************************************************************/
+
+(function() {
+
+$.extend( $.effects, {
+	version: "1.10.3",
+
+	// Saves a set of properties in a data storage
+	save: function( element, set ) {
+		for( var i=0; i < set.length; i++ ) {
+			if ( set[ i ] !== null ) {
+				element.data( dataSpace + set[ i ], element[ 0 ].style[ set[ i ] ] );
+			}
+		}
+	},
+
+	// Restores a set of previously saved properties from a data storage
+	restore: function( element, set ) {
+		var val, i;
+		for( i=0; i < set.length; i++ ) {
+			if ( set[ i ] !== null ) {
+				val = element.data( dataSpace + set[ i ] );
+				// support: jQuery 1.6.2
+				// http://bugs.jquery.com/ticket/9917
+				// jQuery 1.6.2 incorrectly returns undefined for any falsy value.
+				// We can't differentiate between "" and 0 here, so we just assume
+				// empty string since it's likely to be a more common value...
+				if ( val === undefined ) {
+					val = "";
+				}
+				element.css( set[ i ], val );
+			}
+		}
+	},
+
+	setMode: function( el, mode ) {
+		if (mode === "toggle") {
+			mode = el.is( ":hidden" ) ? "show" : "hide";
+		}
+		return mode;
+	},
+
+	// Translates a [top,left] array into a baseline value
+	// this should be a little more flexible in the future to handle a string & hash
+	getBaseline: function( origin, original ) {
+		var y, x;
+		switch ( origin[ 0 ] ) {
+			case "top": y = 0; break;
+			case "middle": y = 0.5; break;
+			case "bottom": y = 1; break;
+			default: y = origin[ 0 ] / original.height;
+		}
+		switch ( origin[ 1 ] ) {
+			case "left": x = 0; break;
+			case "center": x = 0.5; break;
+			case "right": x = 1; break;
+			default: x = origin[ 1 ] / original.width;
+		}
+		return {
+			x: x,
+			y: y
+		};
+	},
+
+	// Wraps the element around a wrapper that copies position properties
+	createWrapper: function( element ) {
+
+		// if the element is already wrapped, return it
+		if ( element.parent().is( ".ui-effects-wrapper" )) {
+			return element.parent();
+		}
+
+		// wrap the element
+		var props = {
+				width: element.outerWidth(true),
+				height: element.outerHeight(true),
+				"float": element.css( "float" )
+			},
+			wrapper = $( "<div></div>" )
+				.addClass( "ui-effects-wrapper" )
+				.css({
+					fontSize: "100%",
+					background: "transparent",
+					border: "none",
+					margin: 0,
+					padding: 0
+				}),
+			// Store the size in case width/height are defined in % - Fixes #5245
+			size = {
+				width: element.width(),
+				height: element.height()
+			},
+			active = document.activeElement;
+
+		// support: Firefox
+		// Firefox incorrectly exposes anonymous content
+		// https://bugzilla.mozilla.org/show_bug.cgi?id=561664
+		try {
+			active.id;
+		} catch( e ) {
+			active = document.body;
+		}
+
+		element.wrap( wrapper );
+
+		// Fixes #7595 - Elements lose focus when wrapped.
+		if ( element[ 0 ] === active || $.contains( element[ 0 ], active ) ) {
+			$( active ).focus();
+		}
+
+		wrapper = element.parent(); //Hotfix for jQuery 1.4 since some change in wrap() seems to actually lose the reference to the wrapped element
+
+		// transfer positioning properties to the wrapper
+		if ( element.css( "position" ) === "static" ) {
+			wrapper.css({ position: "relative" });
+			element.css({ position: "relative" });
+		} else {
+			$.extend( props, {
+				position: element.css( "position" ),
+				zIndex: element.css( "z-index" )
+			});
+			$.each([ "top", "left", "bottom", "right" ], function(i, pos) {
+				props[ pos ] = element.css( pos );
+				if ( isNaN( parseInt( props[ pos ], 10 ) ) ) {
+					props[ pos ] = "auto";
+				}
+			});
+			element.css({
+				position: "relative",
+				top: 0,
+				left: 0,
+				right: "auto",
+				bottom: "auto"
+			});
+		}
+		element.css(size);
+
+		return wrapper.css( props ).show();
+	},
+
+	removeWrapper: function( element ) {
+		var active = document.activeElement;
+
+		if ( element.parent().is( ".ui-effects-wrapper" ) ) {
+			element.parent().replaceWith( element );
+
+			// Fixes #7595 - Elements lose focus when wrapped.
+			if ( element[ 0 ] === active || $.contains( element[ 0 ], active ) ) {
+				$( active ).focus();
+			}
+		}
+
+
+		return element;
+	},
+
+	setTransition: function( element, list, factor, value ) {
+		value = value || {};
+		$.each( list, function( i, x ) {
+			var unit = element.cssUnit( x );
+			if ( unit[ 0 ] > 0 ) {
+				value[ x ] = unit[ 0 ] * factor + unit[ 1 ];
+			}
+		});
+		return value;
+	}
+});
+
+// return an effect options object for the given parameters:
+function _normalizeArguments( effect, options, speed, callback ) {
+
+	// allow passing all options as the first parameter
+	if ( $.isPlainObject( effect ) ) {
+		options = effect;
+		effect = effect.effect;
+	}
+
+	// convert to an object
+	effect = { effect: effect };
+
+	// catch (effect, null, ...)
+	if ( options == null ) {
+		options = {};
+	}
+
+	// catch (effect, callback)
+	if ( $.isFunction( options ) ) {
+		callback = options;
+		speed = null;
+		options = {};
+	}
+
+	// catch (effect, speed, ?)
+	if ( typeof options === "number" || $.fx.speeds[ options ] ) {
+		callback = speed;
+		speed = options;
+		options = {};
+	}
+
+	// catch (effect, options, callback)
+	if ( $.isFunction( speed ) ) {
+		callback = speed;
+		speed = null;
+	}
+
+	// add options to effect
+	if ( options ) {
+		$.extend( effect, options );
+	}
+
+	speed = speed || options.duration;
+	effect.duration = $.fx.off ? 0 :
+		typeof speed === "number" ? speed :
+		speed in $.fx.speeds ? $.fx.speeds[ speed ] :
+		$.fx.speeds._default;
+
+	effect.complete = callback || options.complete;
+
+	return effect;
+}
+
+function standardAnimationOption( option ) {
+	// Valid standard speeds (nothing, number, named speed)
+	if ( !option || typeof option === "number" || $.fx.speeds[ option ] ) {
+		return true;
+	}
+
+	// Invalid strings - treat as "normal" speed
+	if ( typeof option === "string" && !$.effects.effect[ option ] ) {
+		return true;
+	}
+
+	// Complete callback
+	if ( $.isFunction( option ) ) {
+		return true;
+	}
+
+	// Options hash (but not naming an effect)
+	if ( typeof option === "object" && !option.effect ) {
+		return true;
+	}
+
+	// Didn't match any standard API
+	return false;
+}
+
+$.fn.extend({
+	effect: function( /* effect, options, speed, callback */ ) {
+		var args = _normalizeArguments.apply( this, arguments ),
+			mode = args.mode,
+			queue = args.queue,
+			effectMethod = $.effects.effect[ args.effect ];
+
+		if ( $.fx.off || !effectMethod ) {
+			// delegate to the original method (e.g., .show()) if possible
+			if ( mode ) {
+				return this[ mode ]( args.duration, args.complete );
+			} else {
+				return this.each( function() {
+					if ( args.complete ) {
+						args.complete.call( this );
+					}
+				});
+			}
+		}
+
+		function run( next ) {
+			var elem = $( this ),
+				complete = args.complete,
+				mode = args.mode;
+
+			function done() {
+				if ( $.isFunction( complete ) ) {
+					complete.call( elem[0] );
+				}
+				if ( $.isFunction( next ) ) {
+					next();
+				}
+			}
+
+			// If the element already has the correct final state, delegate to
+			// the core methods so the internal tracking of "olddisplay" works.
+			if ( elem.is( ":hidden" ) ? mode === "hide" : mode === "show" ) {
+				elem[ mode ]();
+				done();
+			} else {
+				effectMethod.call( elem[0], args, done );
+			}
+		}
+
+		return queue === false ? this.each( run ) : this.queue( queue || "fx", run );
+	},
+
+	show: (function( orig ) {
+		return function( option ) {
+			if ( standardAnimationOption( option ) ) {
+				return orig.apply( this, arguments );
+			} else {
+				var args = _normalizeArguments.apply( this, arguments );
+				args.mode = "show";
+				return this.effect.call( this, args );
+			}
+		};
+	})( $.fn.show ),
+
+	hide: (function( orig ) {
+		return function( option ) {
+			if ( standardAnimationOption( option ) ) {
+				return orig.apply( this, arguments );
+			} else {
+				var args = _normalizeArguments.apply( this, arguments );
+				args.mode = "hide";
+				return this.effect.call( this, args );
+			}
+		};
+	})( $.fn.hide ),
+
+	toggle: (function( orig ) {
+		return function( option ) {
+			if ( standardAnimationOption( option ) || typeof option === "boolean" ) {
+				return orig.apply( this, arguments );
+			} else {
+				var args = _normalizeArguments.apply( this, arguments );
+				args.mode = "toggle";
+				return this.effect.call( this, args );
+			}
+		};
+	})( $.fn.toggle ),
+
+	// helper functions
+	cssUnit: function(key) {
+		var style = this.css( key ),
+			val = [];
+
+		$.each( [ "em", "px", "%", "pt" ], function( i, unit ) {
+			if ( style.indexOf( unit ) > 0 ) {
+				val = [ parseFloat( style ), unit ];
+			}
+		});
+		return val;
+	}
+});
+
+})();
+
+/******************************************************************************/
+/*********************************** EASING ***********************************/
+/******************************************************************************/
+
+(function() {
+
+// based on easing equations from Robert Penner (http://www.robertpenner.com/easing)
+
+var baseEasings = {};
+
+$.each( [ "Quad", "Cubic", "Quart", "Quint", "Expo" ], function( i, name ) {
+	baseEasings[ name ] = function( p ) {
+		return Math.pow( p, i + 2 );
+	};
+});
+
+$.extend( baseEasings, {
+	Sine: function ( p ) {
+		return 1 - Math.cos( p * Math.PI / 2 );
+	},
+	Circ: function ( p ) {
+		return 1 - Math.sqrt( 1 - p * p );
+	},
+	Elastic: function( p ) {
+		return p === 0 || p === 1 ? p :
+			-Math.pow( 2, 8 * (p - 1) ) * Math.sin( ( (p - 1) * 80 - 7.5 ) * Math.PI / 15 );
+	},
+	Back: function( p ) {
+		return p * p * ( 3 * p - 2 );
+	},
+	Bounce: function ( p ) {
+		var pow2,
+			bounce = 4;
+
+		while ( p < ( ( pow2 = Math.pow( 2, --bounce ) ) - 1 ) / 11 ) {}
+		return 1 / Math.pow( 4, 3 - bounce ) - 7.5625 * Math.pow( ( pow2 * 3 - 2 ) / 22 - p, 2 );
+	}
+});
+
+$.each( baseEasings, function( name, easeIn ) {
+	$.easing[ "easeIn" + name ] = easeIn;
+	$.easing[ "easeOut" + name ] = function( p ) {
+		return 1 - easeIn( 1 - p );
+	};
+	$.easing[ "easeInOut" + name ] = function( p ) {
+		return p < 0.5 ?
+			easeIn( p * 2 ) / 2 :
+			1 - easeIn( p * -2 + 2 ) / 2;
+	};
+});
+
+})();
+
+})(jQuery);
+(function( $, undefined ) {
+
+$.effects.effect.slide = function( o, done ) {
+
+	// Create element
+	var el = $( this ),
+		props = [ "position", "top", "bottom", "left", "right", "width", "height" ],
+		mode = $.effects.setMode( el, o.mode || "show" ),
+		show = mode === "show",
+		direction = o.direction || "left",
+		ref = (direction === "up" || direction === "down") ? "top" : "left",
+		positiveMotion = (direction === "up" || direction === "left"),
+		distance,
+		animation = {};
+
+	// Adjust
+	$.effects.save( el, props );
+	el.show();
+	distance = o.distance || el[ ref === "top" ? "outerHeight" : "outerWidth" ]( true );
+
+	$.effects.createWrapper( el ).css({
+		overflow: "hidden"
+	});
+
+	if ( show ) {
+		el.css( ref, positiveMotion ? (isNaN(distance) ? "-" + distance : -distance) : distance );
+	}
+
+	// Animation
+	animation[ ref ] = ( show ?
+		( positiveMotion ? "+=" : "-=") :
+		( positiveMotion ? "-=" : "+=")) +
+		distance;
+
+	// Animate
+	el.animate( animation, {
+		queue: false,
+		duration: o.duration,
+		easing: o.easing,
+		complete: function() {
+			if ( mode === "hide" ) {
+				el.hide();
+			}
+			$.effects.restore( el, props );
+			$.effects.removeWrapper( el );
+			done();
+		}
+	});
+};
+
+})(jQuery);
+
+;/**
  * |-------------------|
  * | Backbone-Mediator |
  * |-------------------|
@@ -12360,13 +15637,13 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
   return Backbone;
 
-});;
-/*! X-editable - v1.0.1 
+});
+;/*! X-editable - v1.0.1 
 * In-place editing with Twitter Bootstrap, jQuery UI or pure jQuery
 * http://github.com/vitalets/x-editable
 * Copyright (c) 2012 Vitaliy Potapov; Licensed MIT */
-(function(e){var t=function(t,n){this.options=e.extend({},e.fn.editableform.defaults,n),this.$element=e(t),this.initInput()};t.prototype={constructor:t,initInput:function(){var t,n;if(typeof e.fn.editableform.types[this.options.type]!="function"){e.error("Unknown type: "+this.options.type);return}t=e.fn.editableform.types[this.options.type],n=e.fn.editableform.utils.sliceObj(this.options,Object.keys(t.defaults)),this.input=new t(n),this.value=this.input.str2value(this.options.value)},initTemplate:function(){this.$form=e(e.fn.editableform.template)},render:function(){this.$loading=e(e.fn.editableform.loading),this.$element.empty().append(this.$loading),this.showLoading(),this.initTemplate(),this.$element.triggerHandler("rendering"),e.when(this.input.render()).then(e.proxy(function(){this.$form.find("div.control-group").prepend(this.input.$input),this.$form.find("button[type=button]").click(e.proxy(this.cancel,this)),this.$element.append(this.$form),this.input.error?(this.error(this.input.error),this.$form.find("button[type=submit]").attr("disabled",!0),this.input.$input.attr("disabled",!0)):(this.error(!1),this.input.$input.removeAttr("disabled"),this.$form.find("button[type=submit]").removeAttr("disabled"),this.input.value2input(this.value),this.$form.submit(e.proxy(this.submit,this))),this.$element.triggerHandler("rendered"),this.showForm()},this))},cancel:function(){this.$element.triggerHandler("cancel")},showLoading:function(){var e,t,n,r;this.$form&&(t=this.$form.outerHeight()||0,e=this.$form.outerWidth()||0,r=this.input&&this.input.$input.outerHeight()||0,n=this.input&&this.input.$input.outerWidth()||0,(t||r)&&this.$loading.height(t>r?t:r),(e||n)&&this.$loading.width(e>n?e:n),this.$form.hide()),this.$loading.show()},showForm:function(){this.$loading.hide(),this.$form.show(),this.input.activate(),this.$element.triggerHandler("show")},error:function(t){var n=this.$form.find(".control-group"),r=this.$form.find(".editable-error-block");t===!1?(n.removeClass(e.fn.editableform.errorGroupClass),r.removeClass(e.fn.editableform.errorBlockClass).empty().hide()):(n.addClass(e.fn.editableform.errorGroupClass),r.addClass(e.fn.editableform.errorBlockClass).text(t).show())},submit:function(t){t.stopPropagation(),t.preventDefault();var n,r=this.input.input2value(),i;if(n=this.validate(r)){this.error(n),this.showForm();return}i=this.input.value2str(r);if(i==this.input.value2str(this.value)){this.cancel();return}e.when(this.save(i)).done(e.proxy(function(e){var t;if(t=this.options.success.call(this,e,r)){this.error(t),this.showForm();return}this.error(!1),this.value=r,this.$element.triggerHandler("save",{newValue:r,response:e})},this)).fail(e.proxy(function(e){this.error(typeof e=="string"?e:e.responseText||e.statusText||"Unknown error!"),this.showForm()},this))},save:function(t){var n=typeof this.options.pk=="function"?this.options.pk.call(this):this.options.pk,r=!!(typeof this.options.url=="function"||this.options.url&&(this.options.send==="always"||this.options.send==="auto"&&n)),i;if(r)return this.showLoading(),i={name:this.options.name||"",value:t,pk:n},typeof this.options.params=="function"?e.extend(i,this.options.params.call(this,i)):(this.options.params=e.fn.editableform.utils.tryParseJson(this.options.params,!0),e.extend(i,this.options.params)),typeof this.options.url=="function"?this.options.url.call(this,i):e.ajax({url:this.options.url,data:i,type:"post",dataType:"json"})},validate:function(e){e===undefined&&(e=this.value);if(typeof this.options.validate=="function")return this.options.validate.call(this,e)},option:function(e,t){this.options[e]=t}},e.fn.editableform=function(n){var r=arguments;return this.each(function(){var i=e(this),s=i.data("editableform"),o=typeof n=="object"&&n;s||i.data("editableform",s=new t(this,o)),typeof n=="string"&&s[n].apply(s,Array.prototype.slice.call(r,1))})},e.fn.editableform.Constructor=t,e.fn.editableform.defaults={type:"text",url:null,params:null,name:null,pk:null,value:null,send:"auto",validate:null,success:function(e,t){}},e.fn.editableform.template='<form class="form-inline editableform"><div class="control-group">&nbsp;<button type="submit">Ok</button>&nbsp;<button type="button">Cancel</button></div><div class="editable-error-block"></div></form>',e.fn.editableform.loading='<div class="editableform-loading"></div>',e.fn.editableform.errorGroupClass=null,e.fn.editableform.errorBlockClass="editable-error",e.fn.editableform.types={},e.fn.editableform.utils={}})(window.jQuery),function(e){e.extend(e.fn.editableform,{utils:{inherit:function(e,t){var n=function(){};n.prototype=t.prototype,e.prototype=new n,e.prototype.constructor=e,e.superclass=t.prototype},setCursorPosition:function(e,t){if(e.setSelectionRange)e.setSelectionRange(t,t);else if(e.createTextRange){var n=e.createTextRange();n.collapse(!0),n.moveEnd("character",t),n.moveStart("character",t),n.select()}},tryParseJson:function(e,t){if(typeof e=="string"&&e.length&&e.match(/^\{.*\}$/))if(t)try{e=(new Function("return "+e))()}catch(n){}finally{return e}else e=(new Function("return "+e))();return e},sliceObj:function(t,n,r){var i,s,o={};if(!e.isArray(n)||!n.length)return o;for(var u=0;u<n.length;u++){i=n[u],t.hasOwnProperty(i)&&(o[i]=t[i]);if(r===!0)continue;s=i.toLowerCase(),t.hasOwnProperty(s)&&(o[i]=t[s])}return o},getConfigData:function(t){var n={};return e.each(t.data(),function(e,t){if(typeof t!="object"||t&&typeof t=="object"&&t.constructor===Object)n[e]=t}),n}}})}(window.jQuery),function(e){var t=function(e,t){this.init(e,t)};t.prototype={containerName:null,innerCss:null,init:function(t,n){this.$element=e(t),this.options=e.extend({},e.fn.editableContainer.defaults,e.fn.editableform.utils.getConfigData(this.$element),n),this.splitOptions(),this.initContainer(),this.$element.on("destroyed",e.proxy(function(){this.destroy()},this))},splitOptions:function(){this.containerOptions={},this.formOptions={};var t=e.fn[this.containerName].defaults;for(var n in this.options)n in t?this.containerOptions[n]=this.options[n]:this.formOptions[n]=this.options[n]},initContainer:function(){this.call(this.containerOptions)},initForm:function(){return this.$form=e("<div>").editableform(this.formOptions).on({save:e.proxy(this.save,this),cancel:e.proxy(this.cancel,this),show:e.proxy(this.setPosition,this),rendering:e.proxy(this.setPosition,this),rendered:e.proxy(function(){this.$element.triggerHandler("shown")},this)}),this.$form},tip:function(){return this.container().$tip},container:function(){return this.$element.data(this.containerName)},call:function(){this.$element[this.containerName].apply(this.$element,arguments)},show:function(){this.call("show"),this.tip().addClass("editable-container"),this.initForm(),this.tip().find(this.innerCss).empty().append(this.$form),this.$form.editableform("render")},hide:function(){if(!this.tip()||!this.tip().is(":visible"))return;this.call("hide"),this.$element.triggerHandler("hidden")},toggle:function(){this.tip&&this.tip().is(":visible")?this.hide():this.show()},setPosition:function(){},cancel:function(){this.options.autohide&&this.hide(),this.$element.triggerHandler("cancel")},save:function(e,t){this.options.autohide&&this.hide(),this.$element.triggerHandler("save",t)},option:function(e,t){this.options[e]=t,e in this.containerOptions?(this.containerOptions[e]=t,this.setContainerOption(e,t)):(this.formOptions[e]=t,this.$form&&this.$form.editableform("option",e,t))},setContainerOption:function(e,t){this.call("option",e,t)},destroy:function(){this.call("destroy")}},e.fn.editableContainer=function(n){var r=arguments;return this.each(function(){var i=e(this),s="editableContainer",o=i.data(s),u=typeof n=="object"&&n;o||i.data(s,o=new t(this,u)),typeof n=="string"&&o[n].apply(o,Array.prototype.slice.call(r,1))})},e.fn.editableContainer.Constructor=t,e.fn.editableContainer.defaults={value:null,placement:"top",autohide:!0},jQuery.event.special.destroyed={remove:function(e){e.handler&&e.handler()}}}(window.jQuery),function(e){var t=function(t,n){this.$element=e(t),this.options=e.extend({},e.fn.editable.defaults,e.fn.editableform.utils.getConfigData(this.$element),n),this.init()};t.prototype={constructor:t,init:function(){var t,n=!1,r,i;this.isInit=!0;if(!e.fn.editableContainer){e.error("You must define $.fn.editableContainer via including corresponding file (e.g. editable-popover.js)");return}this.options.name=this.options.name||this.$element.attr("id");if(!this.options.name){e.error("You must define name (or id) for Editable element");return}if(typeof e.fn.editableform.types[this.options.type]!="function"){e.error("Unknown type: "+this.options.type);return}t=e.fn.editableform.types[this.options.type],this.typeOptions=e.fn.editableform.utils.sliceObj(this.options,Object.keys(t.defaults)),this.input=new t(this.typeOptions),this.options.value===undefined||this.options.value===null?(this.value=this.input.html2value(e.trim(this.$element.html())),n=!0):this.value=this.input.str2value(e.trim(this.options.value)),e(document).off("keyup.editable").on("keyup.editable",function(t){t.which===27&&e(".editable-container").find("button[type=button]").click()}),e(document).off("click.editable").on("click.editable",function(t){var n=e(t.target);if(n.is(".editable-container")||n.parents(".editable-container").length||n.parents(".ui-datepicker-header").length)return;e(".editable-container").find("button[type=button]").click()}),this.$element.addClass("editable"),this.options.toggle==="click"?(this.$element.addClass("editable-click"),this.$element.on("click.editable",e.proxy(this.click,this))):this.$element.attr("tabindex",-1),r=!n&&this.value!==null&&this.value!==undefined,r&=this.options.autotext==="always"||this.options.autotext==="auto"&&!this.$element.text().length,e.when(r?this.input.value2html(this.value,this.$element):!0).then(e.proxy(function(){this.options.disabled?this.disable():this.enable(),this.$element.triggerHandler("render",this),this.isInit=!1},this))},enable:function(){this.options.disabled=!1,this.$element.removeClass("editable-disabled"),this.handleEmpty(),this.options.toggle==="click"&&this.$element.attr("tabindex")==="-1"&&this.$element.removeAttr("tabindex")},disable:function(){this.options.disabled=!0,this.hide(),this.$element.addClass("editable-disabled"),this.handleEmpty(),this.$element.attr("tabindex",-1)},toggleDisabled:function(){this.options.disabled?this.enable():this.disable()},option:function(e,t){if(e==="disabled"){t?this.disable():this.enable();return}this.options[e]=t,this.container&&this.container.option(e,t)},handleEmpty:function(){var t="editable-empty";this.options.disabled?this.$element.hasClass(t)&&(this.$element.empty(),this.$element.removeClass(t)):e.trim(this.$element.text())===""?this.$element.addClass(t).text(this.options.emptytext):this.$element.removeClass(t)},click:function(e){e.preventDefault();if(this.options.disabled)return;e.stopPropagation(),this.toggle()},show:function(){if(this.options.disabled)return;if(!this.container){var t=e.extend({},this.options,{value:this.value,autohide:!1});this.$element.editableContainer(t),this.$element.on({save:e.proxy(this.save,this),cancel:e.proxy(this.hide,this)}),this.container=this.$element.data("editableContainer")}else if(this.container.tip().is(":visible"))return;e(".editable-container").find("button[type=button]").click(),this.container.show()},hide:function(){this.container&&this.container.hide(),this.options.enablefocus&&this.options.toggle==="click"&&this.$element.focus()},toggle:function(){this.container&&this.container.tip().is(":visible")?this.hide():this.show()},save:function(e,t){typeof this.options.url!="function"&&t.response===undefined&&this.input.value2str(this.value)!==this.input.value2str(t.newValue)?this.$element.addClass("editable-unsaved"):this.$element.removeClass("editable-unsaved"),this.hide(),this.setValue(t.newValue)},validate:function(){if(typeof this.options.validate=="function")return this.options.validate.call(this,this.value)},setValue:function(t,n){n?this.value=this.input.str2value(t):this.value=t,this.container&&this.container.option("value",this.value),e.when(this.input.value2html(this.value,this.$element)).then(e.proxy(function(){this.handleEmpty(),this.$element.triggerHandler("render",this)},this))}},e.fn.editable=function(n){var r={},i=arguments,s="editable";switch(n){case"validate":return this.each(function(){var t=e(this),n=t.data(s),i;n&&(i=n.validate())&&(r[n.options.name]=i)}),r;case"getValue":return this.each(function(){var t=e(this),n=t.data(s);n&&n.value!==undefined&&n.value!==null&&(r[n.options.name]=n.input.value2str(n.value))}),r;case"submit":var o=arguments[1]||{},u=this,a=this.editable("validate"),f;return typeof o.error!="function"&&(o.error=function(){}),e.isEmptyObject(a)?(f=this.editable("getValue"),o.data&&e.extend(f,o.data),e.ajax({type:"POST",url:o.url,data:f,dataType:"json"}).success(function(e){typeof e=="object"&&e.id?(u.editable("option","pk",e.id),u.removeClass("editable-unsaved"),typeof o.success=="function"&&o.success.apply(u,arguments)):o.error.apply(u,arguments)}).error(function(){o.error.apply(u,arguments)})):o.error.call(u,{errors:a}),this}return this.each(function(){var r=e(this),o=r.data(s),u=typeof n=="object"&&n;o||r.data(s,o=new t(this,u)),typeof n=="string"&&o[n].apply(o,Array.prototype.slice.call(i,1))})},e.fn.editable.defaults={type:"text",disabled:!1,toggle:"click",emptytext:"Empty",autotext:"auto",enablefocus:!1,value:null}}(window.jQuery),function(e){var t=function(){};t.prototype={init:function(t,n,r){this.type=t,this.options=e.extend({},r,n),this.$input=null,this.error=null},render:function(){this.$input=e(this.options.tpl),this.options.inputclass&&this.$input.addClass(this.options.inputclass),this.options.placeholder&&this.$input.attr("placeholder",this.options.placeholder)},value2html:function(t,n){var r=e("<div>").text(t).html();e(n).html(r)},html2value:function(t){return e("<div>").html(t).text()},value2str:function(e){return e},str2value:function(e){return e},value2input:function(e){this.$input.val(e)},input2value:function(){return this.$input.val()},activate:function(){this.$input.is(":visible")&&this.$input.focus()}},t.defaults={tpl:"",inputclass:"span2",name:null},e.extend(e.fn.editableform.types,{"abstract":t})}(window.jQuery),function(e){var t=function(e){this.init("text",e,t.defaults)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{activate:function(){this.$input.is(":visible")&&(e.fn.editableform.utils.setCursorPosition(this.$input.get(0),this.$input.val().length),this.$input.focus())}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:'<input type="text">',placeholder:null}),e.fn.editableform.types.text=t}(window.jQuery),function(e){var t=function(e){this.init("textarea",e,t.defaults)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{render:function(){t.superclass.render.call(this),this.$input.keydown(function(t){t.ctrlKey&&t.which===13&&e(this).closest("form").submit()})},value2html:function(t,n){var r="",i;if(t){i=t.split("\n");for(var s=0;s<i.length;s++)i[s]=e("<div>").text(i[s]).html();r=i.join("<br>")}e(n).html(r)},html2value:function(t){if(!t)return"";var n=t.split(/<br\s*\/?>/i);for(var r=0;r<n.length;r++)n[r]=e("<div>").html(n[r]).text();return n.join("\n")},activate:function(){this.$input.is(":visible")&&(e.fn.editableform.utils.setCursorPosition(this.$input.get(0),this.$input.val().length),this.$input.focus())}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:"<textarea></textarea>",inputclass:"span3",placeholder:null}),e.fn.editableform.types.textarea=t}(window.jQuery),function(e){var t=function(e){this.init("select",e,t.defaults)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{render:function(){t.superclass.render.call(this);var n=e.Deferred();return this.error=null,this.sourceData=null,this.prependData=null,this.onSourceReady(function(){this.renderOptions(),n.resolve()},function(){this.error=this.options.sourceError,n.resolve()}),n.promise()},html2value:function(e){return null},value2html:function(n,r){var i=e.Deferred();return this.onSourceReady(function(){var s,o="";if(e.isArray(this.sourceData))for(s=0;s<this.sourceData.length;s++)if(this.sourceData[s].value==n){o=this.sourceData[s].text;break}t.superclass.value2html(o,r),i.resolve()},function(){t.superclass.value2html(this.options.sourceError,r),i.resolve()}),i.promise()},onSourceReady:function(t,n){if(e.isArray(this.sourceData)){t.call(this);return}try{this.options.source=e.fn.editableform.utils.tryParseJson(this.options.source,!1)}catch(r){n.call(this);return}if(typeof this.options.source=="string"){var i=this.options.source+(this.options.name?"-"+this.options.name:""),s;e(document).data(i)||e(document).data(i,{}),s=e(document).data(i);if(s.loading===!1&&s.sourceData){this.sourceData=s.sourceData,t.call(this);return}if(s.loading===!0){s.callbacks.push(e.proxy(function(){this.sourceData=s.sourceData,t.call(this)},this)),s.err_callbacks.push(e.proxy(n,this));return}s.loading=!0,s.callbacks=[],s.err_callbacks=[],e.ajax({url:this.options.source,type:"get",cache:!1,data:{name:this.options.name},dataType:"json",success:e.proxy(function(r){s.loading=!1,this.sourceData=this.makeArray(r),e.isArray(this.sourceData)?(this.doPrepend(),s.sourceData=this.sourceData,t.call(this),e.each(s.callbacks,function(){this.call()})):(n.call(this),e.each(s.err_callbacks,function(){this.call()}))},this),error:e.proxy(function(){s.loading=!1,n.call(this),e.each(s.err_callbacks,function(){this.call()})},this)})}else this.sourceData=this.makeArray(this.options.source),e.isArray(this.sourceData)?(this.doPrepend(),t.call(this)):n.call(this)},doPrepend:function(){if(this.options.prepend===null||this.options.prepend===undefined)return;e.isArray(this.prependData)||(this.options.prepend=e.fn.editableform.utils.tryParseJson(this.options.prepend,!0),typeof this.options.prepend=="string"&&(this.options.prepend={"":this.options.prepend}),this.prependData=this.makeArray(this.options.prepend)),e.isArray(this.prependData)&&e.isArray(this.sourceData)&&(this.sourceData=this.prependData.concat(this.sourceData))},renderOptions:function(){if(!e.isArray(this.sourceData))return;for(var t=0;t<this.sourceData.length;t++)this.$input.append(e("<option>",{value:this.sourceData[t].value}).text(this.sourceData[t].text))},makeArray:function(t){var n,r,i=[],s;if(!t||typeof t=="string")return null;if(e.isArray(t)){s=function(e,t){r={value:e,text:t};if(n++>=2)return!1};for(var o=0;o<t.length;o++)typeof t[o]=="object"?(n=0,e.each(t[o],s),n===1?i.push(r):n>1&&t[o].hasOwnProperty("value")&&t[o].hasOwnProperty("text")&&i.push(t[o])):i.push({value:o,text:t[o]})}else e.each(t,function(e,t){i.push({value:e,text:t})});return i}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:"<select></select>",source:null,prepend:!1,sourceError:"Error when loading options"}),e.fn.editableform.types.select=t}(window.jQuery),function(e){e.fn.editableform.template='<form class="form-inline editableform"><div class="control-group">&nbsp;<button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i></button>&nbsp;<button type="button" class="btn clearfix"><i class="icon-ban-circle"></i></button><div style="clear:both"><span class="help-block editable-error-block"></span></div></div></form>',e.fn.editableform.errorGroupClass="error",e.fn.editableform.errorBlockClass=null}(window.jQuery),function(e){e.extend(e.fn.editableContainer.Constructor.prototype,{containerName:"editableform",innerCss:null,initContainer:function(){this.options.anim||(this.options.anim=0)},splitOptions:function(){this.containerOptions={},this.formOptions=this.options},tip:function(){return this.$form},show:function(){this.$element.hide(),this.$form&&this.$form.remove(),this.initForm(),this.tip().addClass("editable-container").addClass("editable-inline"),this.$form.insertAfter(this.$element),this.$form.show(this.options.anim),this.$form.editableform("render")},hide:function(){if(!this.tip()||!this.tip().is(":visible"))return;this.$form.hide(this.options.anim,e.proxy(function(){this.$element.show(),this.options.enablefocus&&this.$element.focus(),this.$element.triggerHandler("hidden")},this))},destroy:function(){this.tip().remove()}}),e.fn.editableContainer.defaults=e.extend({},e.fn.editableContainer.defaults,{anim:"fast",enablefocus:!1})}(window.jQuery),function(e){var t=function(n){this.init("date",n,t.defaults);var r=e.fn.editableform.utils.sliceObj(this.options,["format"]);this.options.datepicker=e.extend({},t.defaults.datepicker,r,n.datepicker),this.options.viewformat||(this.options.viewformat=this.options.datepicker.format),this.options.datepicker.language=this.options.datepicker.language||"en",this.dpg=e.fn.datepicker.DPGlobal,this.parsedFormat=this.dpg.parseFormat(this.options.datepicker.format),this.parsedViewFormat=this.dpg.parseFormat(this.options.viewformat)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{render:function(){t.superclass.render.call(this),this.$input.datepicker(this.options.datepicker)},value2html:function(e,n){var r=e?this.dpg.formatDate(e,this.parsedViewFormat,this.options.datepicker.language):"";t.superclass.value2html(r,n)},html2value:function(e){return e?this.dpg.parseDate(e,this.parsedViewFormat,this.options.datepicker.language):null},value2str:function(e){return e?this.dpg.formatDate(e,this.parsedFormat,this.options.datepicker.language):""},str2value:function(e){return e?this.dpg.parseDate(e,this.parsedFormat,this.options.datepicker.language):null},value2input:function(e){this.$input.datepicker("update",e)},input2value:function(){return this.$input.data("datepicker").date},activate:function(){}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:"<div></div>",inputclass:"editable-date well",format:"yyyy-mm-dd",viewformat:null,datepicker:{weekStart:0,startView:0,autoclose:!1}}),e.fn.editableform.types.date=t}(window.jQuery),!function(e){function t(){return new Date(Date.UTC.apply(Date,arguments))}function n(){var e=new Date;return t(e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate())}var r=function(t,n){var r=this;this.element=e(t),this.language=n.language||this.element.data("date-language")||"en",this.language=this.language in i?this.language:"en",this.format=s.parseFormat(n.format||this.element.data("date-format")||"mm/dd/yyyy"),this.isInline=!1,this.isInput=this.element.is("input"),this.component=this.element.is(".date")?this.element.find(".add-on"):!1,this.hasInput=this.component&&this.element.find("input").length,this.component&&this.component.length===0&&(this.component=!1),this.isInput?this.element.on({focus:e.proxy(this.show,this),keyup:e.proxy(this.update,this),keydown:e.proxy(this.keydown,this)}):this.component&&this.hasInput?(this.element.find("input").on({focus:e.proxy(this.show,this),keyup:e.proxy(this.update,this),keydown:e.proxy(this.keydown,this)}),this.component.on("click",e.proxy(this.show,this))):this.element.is("div")?this.isInline=!0:this.element.on("click",e.proxy(this.show,this)),this.picker=e(s.template).appendTo(this.isInline?this.element:"body").on({click:e.proxy(this.click,this),mousedown:e.proxy(this.mousedown,this)}),this.isInline?this.picker.addClass("datepicker-inline"):this.picker.addClass("dropdown-menu"),e(document).on("mousedown",function(t){e(t.target).closest(".datepicker").length==0&&r.hide()}),this.autoclose=!1,"autoclose"in n?this.autoclose=n.autoclose:"dateAutoclose"in this.element.data()&&(this.autoclose=this.element.data("date-autoclose")),this.keyboardNavigation=!0,"keyboardNavigation"in n?this.keyboardNavigation=n.keyboardNavigation:"dateKeyboardNavigation"in this.element.data()&&(this.keyboardNavigation=this.element.data("date-keyboard-navigation"));switch(n.startView||this.element.data("date-start-view")){case 2:case"decade":this.viewMode=this.startViewMode=2;break;case 1:case"year":this.viewMode=this.startViewMode=1;break;case 0:case"month":default:this.viewMode=this.startViewMode=0}this.todayBtn=n.todayBtn||this.element.data("date-today-btn")||!1,this.todayHighlight=n.todayHighlight||this.element.data("date-today-highlight")||!1,this.weekStart=(n.weekStart||this.element.data("date-weekstart")||i[this.language].weekStart||0)%7,this.weekEnd=(this.weekStart+6)%7,this.startDate=-Infinity,this.endDate=Infinity,this.setStartDate(n.startDate||this.element.data("date-startdate")),this.setEndDate(n.endDate||this.element.data("date-enddate")),this.fillDow(),this.fillMonths(),this.update(),this.showMode(),this.isInline&&this.show()};r.prototype={constructor:r,show:function(t){this.picker.show(),this.height=this.component?this.component.outerHeight():this.element.outerHeight(),this.update(),this.place(),e(window).on("resize",e.proxy(this.place,this)),t&&(t.stopPropagation(),t.preventDefault()),this.element.trigger({type:"show",date:this.date})},hide:function(t){if(this.isInline)return;this.picker.hide(),e(window).off("resize",this.place),this.viewMode=this.startViewMode,this.showMode(),this.isInput||e(document).off("mousedown",this.hide),t&&t.currentTarget.value&&this.setValue(),this.element.trigger({type:"hide",date:this.date})},getDate:function(){var e=this.getUTCDate();return new Date(e.getTime()+e.getTimezoneOffset()*6e4)},getUTCDate:function(){return this.date},setDate:function(e){this.setUTCDate(new Date(e.getTime()-e.getTimezoneOffset()*6e4))},setUTCDate:function(e){this.date=e,this.setValue()},setValue:function(){var e=this.getFormattedDate();this.isInput?this.element.prop("value",e):(this.component&&this.element.find("input").prop("value",e),this.element.data("date",e))},getFormattedDate:function(e){return e==undefined&&(e=this.format),s.formatDate(this.date,e,this.language)},setStartDate:function(e){this.startDate=e||-Infinity,this.startDate!==-Infinity&&(this.startDate=s.parseDate(this.startDate,this.format,this.language)),this.update(),this.updateNavArrows()},setEndDate:function(e){this.endDate=e||Infinity,this.endDate!==Infinity&&(this.endDate=s.parseDate(this.endDate,this.format,this.language)),this.update(),this.updateNavArrows()},place:function(){if(this.isInline)return;var t=parseInt(this.element.parents().filter(function(){return e(this).css("z-index")!="auto"}).first().css("z-index"))+10,n=this.component?this.component.offset():this.element.offset();this.picker.css({top:n.top+this.height,left:n.left,zIndex:t})},update:function(){var e,t=!1;arguments&&arguments.length&&(typeof arguments[0]=="string"||arguments[0]instanceof Date)?(e=arguments[0],t=!0):e=this.isInput?this.element.prop("value"):this.element.data("date")||this.element.find("input").prop("value"),this.date=s.parseDate(e,this.format,this.language),t&&this.setValue(),this.date<this.startDate?this.viewDate=new Date(this.startDate):this.date>this.endDate?this.viewDate=new Date(this.endDate):this.viewDate=new Date(this.date),this.fill()},fillDow:function(){var e=this.weekStart,t="<tr>";while(e<this.weekStart+7)t+='<th class="dow">'+i[this.language].daysMin[e++%7]+"</th>";t+="</tr>",this.picker.find(".datepicker-days thead").append(t)},fillMonths:function(){var e="",t=0;while(t<12)e+='<span class="month">'+i[this.language].monthsShort[t++]+"</span>";this.picker.find(".datepicker-months td").html(e)},fill:function(){var e=new Date(this.viewDate),n=e.getUTCFullYear(),r=e.getUTCMonth(),o=this.startDate!==-Infinity?this.startDate.getUTCFullYear():-Infinity,u=this.startDate!==-Infinity?this.startDate.getUTCMonth():-Infinity,a=this.endDate!==Infinity?this.endDate.getUTCFullYear():Infinity,f=this.endDate!==Infinity?this.endDate.getUTCMonth():Infinity,l=this.date.valueOf(),c=new Date;this.picker.find(".datepicker-days thead th:eq(1)").text(i[this.language].months[r]+" "+n),this.picker.find("tfoot th.today").text(i[this.language].today).toggle(this.todayBtn),this.updateNavArrows(),this.fillMonths();var h=t(n,r-1,28,0,0,0,0),p=s.getDaysInMonth(h.getUTCFullYear(),h.getUTCMonth());h.setUTCDate(p),h.setUTCDate(p-(h.getUTCDay()-this.weekStart+7)%7);var d=new Date(h);d.setUTCDate(d.getUTCDate()+42),d=d.valueOf();var v=[],m;while(h.valueOf()<d){h.getUTCDay()==this.weekStart&&v.push("<tr>"),m="";if(h.getUTCFullYear()<n||h.getUTCFullYear()==n&&h.getUTCMonth()<r)m+=" old";else if(h.getUTCFullYear()>n||h.getUTCFullYear()==n&&h.getUTCMonth()>r)m+=" new";this.todayHighlight&&h.getUTCFullYear()==c.getFullYear()&&h.getUTCMonth()==c.getMonth()&&h.getUTCDate()==c.getDate()&&(m+=" today"),h.valueOf()==l&&(m+=" active");if(h.valueOf()<this.startDate||h.valueOf()>this.endDate)m+=" disabled";v.push('<td class="day'+m+'">'+h.getUTCDate()+"</td>"),h.getUTCDay()==this.weekEnd&&v.push("</tr>"),h.setUTCDate(h.getUTCDate()+1)}this.picker.find(".datepicker-days tbody").empty().append(v.join(""));var g=this.date.getUTCFullYear(),y=this.picker.find(".datepicker-months").find("th:eq(1)").text(n).end().find("span").removeClass("active");g==n&&y.eq(this.date.getUTCMonth()).addClass("active"),(n<o||n>a)&&y.addClass("disabled"),n==o&&y.slice(0,u).addClass("disabled"),n==a&&y.slice(f+1).addClass("disabled"),v="",n=parseInt(n/10,10)*10;var b=this.picker.find(".datepicker-years").find("th:eq(1)").text(n+"-"+(n+9)).end().find("td");n-=1;for(var w=-1;w<11;w++)v+='<span class="year'+(w==-1||w==10?" old":"")+(g==n?" active":"")+(n<o||n>a?" disabled":"")+'">'+n+"</span>",n+=1;b.html(v)},updateNavArrows:function(){var e=new Date(this.viewDate),t=e.getUTCFullYear(),n=e.getUTCMonth();switch(this.viewMode){case 0:this.startDate!==-Infinity&&t<=this.startDate.getUTCFullYear()&&n<=this.startDate.getUTCMonth()?this.picker.find(".prev").css({visibility:"hidden"}):this.picker.find(".prev").css({visibility:"visible"}),this.endDate!==Infinity&&t>=this.endDate.getUTCFullYear()&&n>=this.endDate.getUTCMonth()?this.picker.find(".next").css({visibility:"hidden"}):this.picker.find(".next").css({visibility:"visible"});break;case 1:case 2:this.startDate!==-Infinity&&t<=this.startDate.getUTCFullYear()?this.picker.find(".prev").css({visibility:"hidden"}):this.picker.find(".prev").css({visibility:"visible"}),this.endDate!==Infinity&&t>=this.endDate.getUTCFullYear()?this.picker.find(".next").css({visibility:"hidden"}):this.picker.find(".next").css({visibility:"visible"})}},click:function(n){n.stopPropagation(),n.preventDefault();var r=e(n.target).closest("span, td, th");if(r.length==1)switch(r[0].nodeName.toLowerCase()){case"th":switch(r[0].className){case"switch":this.showMode(1);break;case"prev":case"next":var i=s.modes[this.viewMode].navStep*(r[0].className=="prev"?-1:1);switch(this.viewMode){case 0:this.viewDate=this.moveMonth(this.viewDate,i);break;case 1:case 2:this.viewDate=this.moveYear(this.viewDate,i)}this.fill();break;case"today":var o=new Date;o.setUTCHours(0),o.setUTCMinutes(0),o.setUTCSeconds(0),o.setUTCMilliseconds(0),this.showMode(-2);var u=this.todayBtn=="linked"?null:"view";this._setDate(o,u)}break;case"span":if(!r.is(".disabled")){this.viewDate.setUTCDate(1);if(r.is(".month")){var a=r.parent().find("span").index(r);this.viewDate.setUTCMonth(a),this.element.trigger({type:"changeMonth",date:this.viewDate})}else{var f=parseInt(r.text(),10)||0;this.viewDate.setUTCFullYear(f),this.element.trigger({type:"changeYear",date:this.viewDate})}this.showMode(-1),this.fill()}break;case"td":if(r.is(".day")&&!r.is(".disabled")){var l=parseInt(r.text(),10)||1,f=this.viewDate.getUTCFullYear(),a=this.viewDate.getUTCMonth();r.is(".old")?a==0?(a=11,f-=1):a-=1:r.is(".new")&&(a==11?(a=0,f+=1):a+=1),this._setDate(t(f,a,l,0,0,0,0))}}},_setDate:function(e,t){if(!t||t=="date")this.date=e;if(!t||t=="view")this.viewDate=e;this.fill(),this.setValue(),this.element.trigger({type:"changeDate",date:this.date});var n;this.isInput?n=this.element:this.component&&(n=this.element.find("input")),n&&(n.change(),this.autoclose&&this.hide())},moveMonth:function(e,t){if(!t)return e;var n=new Date(e.valueOf()),r=n.getUTCDate(),i=n.getUTCMonth(),s=Math.abs(t),o,u;t=t>0?1:-1;if(s==1){u=t==-1?function(){return n.getUTCMonth()==i}:function(){return n.getUTCMonth()!=o},o=i+t,n.setUTCMonth(o);if(o<0||o>11)o=(o+12)%12}else{for(var a=0;a<s;a++)n=this.moveMonth(n,t);o=n.getUTCMonth(),n.setUTCDate(r),u=function(){return o!=n.getUTCMonth()}}while(u())n.setUTCDate(--r),n.setUTCMonth(o);return n},moveYear:function(e,t){return this.moveMonth(e,t*12)},dateWithinRange:function(e){return e>=this.startDate&&e<=this.endDate},keydown:function(e){if(this.picker.is(":not(:visible)")){e.keyCode==27&&this.show();return}var t=!1,n,r,i,s,o;switch(e.keyCode){case 27:this.hide(),e.preventDefault();break;case 37:case 39:if(!this.keyboardNavigation)break;n=e.keyCode==37?-1:1,e.ctrlKey?(s=this.moveYear(this.date,n),o=this.moveYear(this.viewDate,n)):e.shiftKey?(s=this.moveMonth(this.date,n),o=this.moveMonth(this.viewDate,n)):(s=new Date(this.date),s.setUTCDate(this.date.getUTCDate()+n),o=new Date(this.viewDate),o.setUTCDate(this.viewDate.getUTCDate()+n)),this.dateWithinRange(s)&&(this.date=s,this.viewDate=o,this.setValue(),this.update(),e.preventDefault(),t=!0);break;case 38:case 40:if(!this.keyboardNavigation)break;n=e.keyCode==38?-1:1,e.ctrlKey?(s=this.moveYear(this.date,n),o=this.moveYear(this.viewDate,n)):e.shiftKey?(s=this.moveMonth(this.date,n),o=this.moveMonth(this.viewDate,n)):(s=new Date(this.date),s.setUTCDate(this.date.getUTCDate()+n*7),o=new Date(this.viewDate),o.setUTCDate(this.viewDate.getUTCDate()+n*7)),this.dateWithinRange(s)&&(this.date=s,this.viewDate=o,this.setValue(),this.update(),e.preventDefault(),t=!0);break;case 13:this.hide(),e.preventDefault();break;case 9:this.hide()}if(t){this.element.trigger({type:"changeDate",date:this.date});var u;this.isInput?u=this.element:this.component&&(u=this.element.find("input")),u&&u.change()}},showMode:function(e){e&&(this.viewMode=Math.max(0,Math.min(2,this.viewMode+e))),this.picker.find(">div").hide().filter(".datepicker-"+s.modes[this.viewMode].clsName).show(),this.updateNavArrows()}},e.fn.datepicker=function(t){var n=Array.apply(null,arguments);return n.shift(),this.each(function(){var i=e(this),s=i.data("datepicker"),o=typeof t=="object"&&t;s||i.data("datepicker",s=new r(this,e.extend({},e.fn.datepicker.defaults,o))),typeof t=="string"&&typeof s[t]=="function"&&s[t].apply(s,n)})},e.fn.datepicker.defaults={},e.fn.datepicker.Constructor=r;var i=e.fn.datepicker.dates={en:{days:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],daysShort:["Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"],daysMin:["Su","Mo","Tu","We","Th","Fr","Sa","Su"],months:["January","February","March","April","May","June","July","August","September","October","November","December"],monthsShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],today:"Today"}},s={modes:[{clsName:"days",navFnc:"Month",navStep:1},{clsName:"months",navFnc:"FullYear",navStep:1},{clsName:"years",navFnc:"FullYear",navStep:10}],isLeapYear:function(e){return e%4===0&&e%100!==0||e%400===0},getDaysInMonth:function(e,t){return[31,s.isLeapYear(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]},validParts:/dd?|mm?|MM?|yy(?:yy)?/g,nonpunctuation:/[^ -\/:-@\[-`{-~\t\n\r]+/g,parseFormat:function(e){var t=e.replace(this.validParts,"\0").split("\0"),n=e.match(this.validParts);if(!t||!t.length||!n||n.length==0)throw new Error("Invalid date format.");return{separators:t,parts:n}},parseDate:function(n,s,o){if(n instanceof Date)return n;if(/^[-+]\d+[dmwy]([\s,]+[-+]\d+[dmwy])*$/.test(n)){var u=/([-+]\d+)([dmwy])/,a=n.match(/([-+]\d+)([dmwy])/g),f,l;n=new Date;for(var c=0;c<a.length;c++){f=u.exec(a[c]),l=parseInt(f[1]);switch(f[2]){case"d":n.setUTCDate(n.getUTCDate()+l);break;case"m":n=r.prototype.moveMonth.call(r.prototype,n,l);break;case"w":n.setUTCDate(n.getUTCDate()+l*7);break;case"y":n=r.prototype.moveYear.call(r.prototype,n,l)}}return t(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),0,0,0)}var a=n&&n.match(this.nonpunctuation)||[],n=new Date,h={},p=["yyyy","yy","M","MM","m","mm","d","dd"],d={yyyy:function(e,t){return e.setUTCFullYear(t)},yy:function(e,t){return e.setUTCFullYear(2e3+t)},m:function(e,t){t-=1;while(t<0)t+=12;t%=12,e.setUTCMonth(t);while(e.getUTCMonth()!=t)e.setUTCDate(e.getUTCDate()-1);return e},d:function(e,t){return e.setUTCDate(t)}},v,m,f;d.M=d.MM=d.mm=d.m,d.dd=d.d,n=t(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),0,0,0);if(a.length==s.parts.length){for(var c=0,g=s.parts.length;c<g;c++){v=parseInt(a[c],10),f=s.parts[c];if(isNaN(v))switch(f){case"MM":m=e(i[o].months).filter(function(){var e=this.slice(0,a[c].length),t=a[c].slice(0,e.length);return e==t}),v=e.inArray(m[0],i[o].months)+1;break;case"M":m=e(i[o].monthsShort).filter(function(){var e=this.slice(0,a[c].length),t=a[c].slice(0,e.length);return e==t}),v=e.inArray(m[0],i[o].monthsShort)+1}h[f]=v}for(var c=0,y;c<p.length;c++)y=p[c],y in h&&d[y](n,h[y])}return n},formatDate:function(t,n,r){var s={d:t.getUTCDate(),m:t.getUTCMonth()+1,M:i[r].monthsShort[t.getUTCMonth()],MM:i[r].months[t.getUTCMonth()],yy:t.getUTCFullYear().toString().substring(2),yyyy:t.getUTCFullYear()};s.dd=(s.d<10?"0":"")+s.d,s.mm=(s.m<10?"0":"")+s.m;var t=[],o=e.extend([],n.separators);for(var u=0,a=n.parts.length;u<a;u++)o.length&&t.push(o.shift()),t.push(s[n.parts[u]]);return t.join("")},headTemplate:'<thead><tr><th class="prev"><i class="icon-arrow-left"/></th><th colspan="5" class="switch"></th><th class="next"><i class="icon-arrow-right"/></th></tr></thead>',contTemplate:'<tbody><tr><td colspan="7"></td></tr></tbody>',footTemplate:'<tfoot><tr><th colspan="7" class="today"></th></tr></tfoot>'};s.template='<div class="datepicker"><div class="datepicker-days"><table class=" table-condensed">'+s.headTemplate+"<tbody></tbody>"+s.footTemplate+"</table>"+"</div>"+'<div class="datepicker-months">'+'<table class="table-condensed">'+s.headTemplate+s.contTemplate+s.footTemplate+"</table>"+"</div>"+'<div class="datepicker-years">'+'<table class="table-condensed">'+s.headTemplate+s.contTemplate+s.footTemplate+"</table>"+"</div>"+"</div>",e.fn.datepicker.DPGlobal=s}(window.jQuery);;
-/* ===================================================
+(function(e){var t=function(t,n){this.options=e.extend({},e.fn.editableform.defaults,n),this.$element=e(t),this.initInput()};t.prototype={constructor:t,initInput:function(){var t,n;if(typeof e.fn.editableform.types[this.options.type]!="function"){e.error("Unknown type: "+this.options.type);return}t=e.fn.editableform.types[this.options.type],n=e.fn.editableform.utils.sliceObj(this.options,Object.keys(t.defaults)),this.input=new t(n),this.value=this.input.str2value(this.options.value)},initTemplate:function(){this.$form=e(e.fn.editableform.template)},render:function(){this.$loading=e(e.fn.editableform.loading),this.$element.empty().append(this.$loading),this.showLoading(),this.initTemplate(),this.$element.triggerHandler("rendering"),e.when(this.input.render()).then(e.proxy(function(){this.$form.find("div.control-group").prepend(this.input.$input),this.$form.find("button[type=button]").click(e.proxy(this.cancel,this)),this.$element.append(this.$form),this.input.error?(this.error(this.input.error),this.$form.find("button[type=submit]").attr("disabled",!0),this.input.$input.attr("disabled",!0)):(this.error(!1),this.input.$input.removeAttr("disabled"),this.$form.find("button[type=submit]").removeAttr("disabled"),this.input.value2input(this.value),this.$form.submit(e.proxy(this.submit,this))),this.$element.triggerHandler("rendered"),this.showForm()},this))},cancel:function(){this.$element.triggerHandler("cancel")},showLoading:function(){var e,t,n,r;this.$form&&(t=this.$form.outerHeight()||0,e=this.$form.outerWidth()||0,r=this.input&&this.input.$input.outerHeight()||0,n=this.input&&this.input.$input.outerWidth()||0,(t||r)&&this.$loading.height(t>r?t:r),(e||n)&&this.$loading.width(e>n?e:n),this.$form.hide()),this.$loading.show()},showForm:function(){this.$loading.hide(),this.$form.show(),this.input.activate(),this.$element.triggerHandler("show")},error:function(t){var n=this.$form.find(".control-group"),r=this.$form.find(".editable-error-block");t===!1?(n.removeClass(e.fn.editableform.errorGroupClass),r.removeClass(e.fn.editableform.errorBlockClass).empty().hide()):(n.addClass(e.fn.editableform.errorGroupClass),r.addClass(e.fn.editableform.errorBlockClass).text(t).show())},submit:function(t){t.stopPropagation(),t.preventDefault();var n,r=this.input.input2value(),i;if(n=this.validate(r)){this.error(n),this.showForm();return}i=this.input.value2str(r);if(i==this.input.value2str(this.value)){this.cancel();return}e.when(this.save(i)).done(e.proxy(function(e){var t;if(t=this.options.success.call(this,e,r)){this.error(t),this.showForm();return}this.error(!1),this.value=r,this.$element.triggerHandler("save",{newValue:r,response:e})},this)).fail(e.proxy(function(e){this.error(typeof e=="string"?e:e.responseText||e.statusText||"Unknown error!"),this.showForm()},this))},save:function(t){var n=typeof this.options.pk=="function"?this.options.pk.call(this):this.options.pk,r=!!(typeof this.options.url=="function"||this.options.url&&(this.options.send==="always"||this.options.send==="auto"&&n)),i;if(r)return this.showLoading(),i={name:this.options.name||"",value:t,pk:n},typeof this.options.params=="function"?e.extend(i,this.options.params.call(this,i)):(this.options.params=e.fn.editableform.utils.tryParseJson(this.options.params,!0),e.extend(i,this.options.params)),typeof this.options.url=="function"?this.options.url.call(this,i):e.ajax({url:this.options.url,data:i,type:"post",dataType:"json"})},validate:function(e){e===undefined&&(e=this.value);if(typeof this.options.validate=="function")return this.options.validate.call(this,e)},option:function(e,t){this.options[e]=t}},e.fn.editableform=function(n){var r=arguments;return this.each(function(){var i=e(this),s=i.data("editableform"),o=typeof n=="object"&&n;s||i.data("editableform",s=new t(this,o)),typeof n=="string"&&s[n].apply(s,Array.prototype.slice.call(r,1))})},e.fn.editableform.Constructor=t,e.fn.editableform.defaults={type:"text",url:null,params:null,name:null,pk:null,value:null,send:"auto",validate:null,success:function(e,t){}},e.fn.editableform.template='<form class="form-inline editableform"><div class="control-group">&nbsp;<button type="submit">Ok</button>&nbsp;<button type="button">Cancel</button></div><div class="editable-error-block"></div></form>',e.fn.editableform.loading='<div class="editableform-loading"></div>',e.fn.editableform.errorGroupClass=null,e.fn.editableform.errorBlockClass="editable-error",e.fn.editableform.types={},e.fn.editableform.utils={}})(window.jQuery),function(e){e.extend(e.fn.editableform,{utils:{inherit:function(e,t){var n=function(){};n.prototype=t.prototype,e.prototype=new n,e.prototype.constructor=e,e.superclass=t.prototype},setCursorPosition:function(e,t){if(e.setSelectionRange)e.setSelectionRange(t,t);else if(e.createTextRange){var n=e.createTextRange();n.collapse(!0),n.moveEnd("character",t),n.moveStart("character",t),n.select()}},tryParseJson:function(e,t){if(typeof e=="string"&&e.length&&e.match(/^\{.*\}$/))if(t)try{e=(new Function("return "+e))()}catch(n){}finally{return e}else e=(new Function("return "+e))();return e},sliceObj:function(t,n,r){var i,s,o={};if(!e.isArray(n)||!n.length)return o;for(var u=0;u<n.length;u++){i=n[u],t.hasOwnProperty(i)&&(o[i]=t[i]);if(r===!0)continue;s=i.toLowerCase(),t.hasOwnProperty(s)&&(o[i]=t[s])}return o},getConfigData:function(t){var n={};return e.each(t.data(),function(e,t){if(typeof t!="object"||t&&typeof t=="object"&&t.constructor===Object)n[e]=t}),n}}})}(window.jQuery),function(e){var t=function(e,t){this.init(e,t)};t.prototype={containerName:null,innerCss:null,init:function(t,n){this.$element=e(t),this.options=e.extend({},e.fn.editableContainer.defaults,e.fn.editableform.utils.getConfigData(this.$element),n),this.splitOptions(),this.initContainer(),this.$element.on("destroyed",e.proxy(function(){this.destroy()},this))},splitOptions:function(){this.containerOptions={},this.formOptions={};var t=e.fn[this.containerName].defaults;for(var n in this.options)n in t?this.containerOptions[n]=this.options[n]:this.formOptions[n]=this.options[n]},initContainer:function(){this.call(this.containerOptions)},initForm:function(){return this.$form=e("<div>").editableform(this.formOptions).on({save:e.proxy(this.save,this),cancel:e.proxy(this.cancel,this),show:e.proxy(this.setPosition,this),rendering:e.proxy(this.setPosition,this),rendered:e.proxy(function(){this.$element.triggerHandler("shown")},this)}),this.$form},tip:function(){return this.container().$tip},container:function(){return this.$element.data(this.containerName)},call:function(){this.$element[this.containerName].apply(this.$element,arguments)},show:function(){this.call("show"),this.tip().addClass("editable-container"),this.initForm(),this.tip().find(this.innerCss).empty().append(this.$form),this.$form.editableform("render")},hide:function(){if(!this.tip()||!this.tip().is(":visible"))return;this.call("hide"),this.$element.triggerHandler("hidden")},toggle:function(){this.tip&&this.tip().is(":visible")?this.hide():this.show()},setPosition:function(){},cancel:function(){this.options.autohide&&this.hide(),this.$element.triggerHandler("cancel")},save:function(e,t){this.options.autohide&&this.hide(),this.$element.triggerHandler("save",t)},option:function(e,t){this.options[e]=t,e in this.containerOptions?(this.containerOptions[e]=t,this.setContainerOption(e,t)):(this.formOptions[e]=t,this.$form&&this.$form.editableform("option",e,t))},setContainerOption:function(e,t){this.call("option",e,t)},destroy:function(){this.call("destroy")}},e.fn.editableContainer=function(n){var r=arguments;return this.each(function(){var i=e(this),s="editableContainer",o=i.data(s),u=typeof n=="object"&&n;o||i.data(s,o=new t(this,u)),typeof n=="string"&&o[n].apply(o,Array.prototype.slice.call(r,1))})},e.fn.editableContainer.Constructor=t,e.fn.editableContainer.defaults={value:null,placement:"top",autohide:!0},jQuery.event.special.destroyed={remove:function(e){e.handler&&e.handler()}}}(window.jQuery),function(e){var t=function(t,n){this.$element=e(t),this.options=e.extend({},e.fn.editable.defaults,e.fn.editableform.utils.getConfigData(this.$element),n),this.init()};t.prototype={constructor:t,init:function(){var t,n=!1,r,i;this.isInit=!0;if(!e.fn.editableContainer){e.error("You must define $.fn.editableContainer via including corresponding file (e.g. editable-popover.js)");return}this.options.name=this.options.name||this.$element.attr("id");if(!this.options.name){e.error("You must define name (or id) for Editable element");return}if(typeof e.fn.editableform.types[this.options.type]!="function"){e.error("Unknown type: "+this.options.type);return}t=e.fn.editableform.types[this.options.type],this.typeOptions=e.fn.editableform.utils.sliceObj(this.options,Object.keys(t.defaults)),this.input=new t(this.typeOptions),this.options.value===undefined||this.options.value===null?(this.value=this.input.html2value(e.trim(this.$element.html())),n=!0):this.value=this.input.str2value(e.trim(this.options.value)),e(document).off("keyup.editable").on("keyup.editable",function(t){t.which===27&&e(".editable-container").find("button[type=button]").click()}),e(document).off("click.editable").on("click.editable",function(t){var n=e(t.target);if(n.is(".editable-container")||n.parents(".editable-container").length||n.parents(".ui-datepicker-header").length)return;e(".editable-container").find("button[type=button]").click()}),this.$element.addClass("editable"),this.options.toggle==="click"?(this.$element.addClass("editable-click"),this.$element.on("click.editable",e.proxy(this.click,this))):this.$element.attr("tabindex",-1),r=!n&&this.value!==null&&this.value!==undefined,r&=this.options.autotext==="always"||this.options.autotext==="auto"&&!this.$element.text().length,e.when(r?this.input.value2html(this.value,this.$element):!0).then(e.proxy(function(){this.options.disabled?this.disable():this.enable(),this.$element.triggerHandler("render",this),this.isInit=!1},this))},enable:function(){this.options.disabled=!1,this.$element.removeClass("editable-disabled"),this.handleEmpty(),this.options.toggle==="click"&&this.$element.attr("tabindex")==="-1"&&this.$element.removeAttr("tabindex")},disable:function(){this.options.disabled=!0,this.hide(),this.$element.addClass("editable-disabled"),this.handleEmpty(),this.$element.attr("tabindex",-1)},toggleDisabled:function(){this.options.disabled?this.enable():this.disable()},option:function(e,t){if(e==="disabled"){t?this.disable():this.enable();return}this.options[e]=t,this.container&&this.container.option(e,t)},handleEmpty:function(){var t="editable-empty";this.options.disabled?this.$element.hasClass(t)&&(this.$element.empty(),this.$element.removeClass(t)):e.trim(this.$element.text())===""?this.$element.addClass(t).text(this.options.emptytext):this.$element.removeClass(t)},click:function(e){e.preventDefault();if(this.options.disabled)return;e.stopPropagation(),this.toggle()},show:function(){if(this.options.disabled)return;if(!this.container){var t=e.extend({},this.options,{value:this.value,autohide:!1});this.$element.editableContainer(t),this.$element.on({save:e.proxy(this.save,this),cancel:e.proxy(this.hide,this)}),this.container=this.$element.data("editableContainer")}else if(this.container.tip().is(":visible"))return;e(".editable-container").find("button[type=button]").click(),this.container.show()},hide:function(){this.container&&this.container.hide(),this.options.enablefocus&&this.options.toggle==="click"&&this.$element.focus()},toggle:function(){this.container&&this.container.tip().is(":visible")?this.hide():this.show()},save:function(e,t){typeof this.options.url!="function"&&t.response===undefined&&this.input.value2str(this.value)!==this.input.value2str(t.newValue)?this.$element.addClass("editable-unsaved"):this.$element.removeClass("editable-unsaved"),this.hide(),this.setValue(t.newValue)},validate:function(){if(typeof this.options.validate=="function")return this.options.validate.call(this,this.value)},setValue:function(t,n){n?this.value=this.input.str2value(t):this.value=t,this.container&&this.container.option("value",this.value),e.when(this.input.value2html(this.value,this.$element)).then(e.proxy(function(){this.handleEmpty(),this.$element.triggerHandler("render",this)},this))}},e.fn.editable=function(n){var r={},i=arguments,s="editable";switch(n){case"validate":return this.each(function(){var t=e(this),n=t.data(s),i;n&&(i=n.validate())&&(r[n.options.name]=i)}),r;case"getValue":return this.each(function(){var t=e(this),n=t.data(s);n&&n.value!==undefined&&n.value!==null&&(r[n.options.name]=n.input.value2str(n.value))}),r;case"submit":var o=arguments[1]||{},u=this,a=this.editable("validate"),f;return typeof o.error!="function"&&(o.error=function(){}),e.isEmptyObject(a)?(f=this.editable("getValue"),o.data&&e.extend(f,o.data),e.ajax({type:"POST",url:o.url,data:f,dataType:"json"}).success(function(e){typeof e=="object"&&e.id?(u.editable("option","pk",e.id),u.removeClass("editable-unsaved"),typeof o.success=="function"&&o.success.apply(u,arguments)):o.error.apply(u,arguments)}).error(function(){o.error.apply(u,arguments)})):o.error.call(u,{errors:a}),this}return this.each(function(){var r=e(this),o=r.data(s),u=typeof n=="object"&&n;o||r.data(s,o=new t(this,u)),typeof n=="string"&&o[n].apply(o,Array.prototype.slice.call(i,1))})},e.fn.editable.defaults={type:"text",disabled:!1,toggle:"click",emptytext:"Empty",autotext:"auto",enablefocus:!1,value:null}}(window.jQuery),function(e){var t=function(){};t.prototype={init:function(t,n,r){this.type=t,this.options=e.extend({},r,n),this.$input=null,this.error=null},render:function(){this.$input=e(this.options.tpl),this.options.inputclass&&this.$input.addClass(this.options.inputclass),this.options.placeholder&&this.$input.attr("placeholder",this.options.placeholder)},value2html:function(t,n){var r=e("<div>").text(t).html();e(n).html(r)},html2value:function(t){return e("<div>").html(t).text()},value2str:function(e){return e},str2value:function(e){return e},value2input:function(e){this.$input.val(e)},input2value:function(){return this.$input.val()},activate:function(){this.$input.is(":visible")&&this.$input.focus()}},t.defaults={tpl:"",inputclass:"span2",name:null},e.extend(e.fn.editableform.types,{"abstract":t})}(window.jQuery),function(e){var t=function(e){this.init("text",e,t.defaults)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{activate:function(){this.$input.is(":visible")&&(e.fn.editableform.utils.setCursorPosition(this.$input.get(0),this.$input.val().length),this.$input.focus())}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:'<input type="text">',placeholder:null}),e.fn.editableform.types.text=t}(window.jQuery),function(e){var t=function(e){this.init("textarea",e,t.defaults)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{render:function(){t.superclass.render.call(this),this.$input.keydown(function(t){t.ctrlKey&&t.which===13&&e(this).closest("form").submit()})},value2html:function(t,n){var r="",i;if(t){i=t.split("\n");for(var s=0;s<i.length;s++)i[s]=e("<div>").text(i[s]).html();r=i.join("<br>")}e(n).html(r)},html2value:function(t){if(!t)return"";var n=t.split(/<br\s*\/?>/i);for(var r=0;r<n.length;r++)n[r]=e("<div>").html(n[r]).text();return n.join("\n")},activate:function(){this.$input.is(":visible")&&(e.fn.editableform.utils.setCursorPosition(this.$input.get(0),this.$input.val().length),this.$input.focus())}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:"<textarea></textarea>",inputclass:"span3",placeholder:null}),e.fn.editableform.types.textarea=t}(window.jQuery),function(e){var t=function(e){this.init("select",e,t.defaults)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{render:function(){t.superclass.render.call(this);var n=e.Deferred();return this.error=null,this.sourceData=null,this.prependData=null,this.onSourceReady(function(){this.renderOptions(),n.resolve()},function(){this.error=this.options.sourceError,n.resolve()}),n.promise()},html2value:function(e){return null},value2html:function(n,r){var i=e.Deferred();return this.onSourceReady(function(){var s,o="";if(e.isArray(this.sourceData))for(s=0;s<this.sourceData.length;s++)if(this.sourceData[s].value==n){o=this.sourceData[s].text;break}t.superclass.value2html(o,r),i.resolve()},function(){t.superclass.value2html(this.options.sourceError,r),i.resolve()}),i.promise()},onSourceReady:function(t,n){if(e.isArray(this.sourceData)){t.call(this);return}try{this.options.source=e.fn.editableform.utils.tryParseJson(this.options.source,!1)}catch(r){n.call(this);return}if(typeof this.options.source=="string"){var i=this.options.source+(this.options.name?"-"+this.options.name:""),s;e(document).data(i)||e(document).data(i,{}),s=e(document).data(i);if(s.loading===!1&&s.sourceData){this.sourceData=s.sourceData,t.call(this);return}if(s.loading===!0){s.callbacks.push(e.proxy(function(){this.sourceData=s.sourceData,t.call(this)},this)),s.err_callbacks.push(e.proxy(n,this));return}s.loading=!0,s.callbacks=[],s.err_callbacks=[],e.ajax({url:this.options.source,type:"get",cache:!1,data:{name:this.options.name},dataType:"json",success:e.proxy(function(r){s.loading=!1,this.sourceData=this.makeArray(r),e.isArray(this.sourceData)?(this.doPrepend(),s.sourceData=this.sourceData,t.call(this),e.each(s.callbacks,function(){this.call()})):(n.call(this),e.each(s.err_callbacks,function(){this.call()}))},this),error:e.proxy(function(){s.loading=!1,n.call(this),e.each(s.err_callbacks,function(){this.call()})},this)})}else this.sourceData=this.makeArray(this.options.source),e.isArray(this.sourceData)?(this.doPrepend(),t.call(this)):n.call(this)},doPrepend:function(){if(this.options.prepend===null||this.options.prepend===undefined)return;e.isArray(this.prependData)||(this.options.prepend=e.fn.editableform.utils.tryParseJson(this.options.prepend,!0),typeof this.options.prepend=="string"&&(this.options.prepend={"":this.options.prepend}),this.prependData=this.makeArray(this.options.prepend)),e.isArray(this.prependData)&&e.isArray(this.sourceData)&&(this.sourceData=this.prependData.concat(this.sourceData))},renderOptions:function(){if(!e.isArray(this.sourceData))return;for(var t=0;t<this.sourceData.length;t++)this.$input.append(e("<option>",{value:this.sourceData[t].value}).text(this.sourceData[t].text))},makeArray:function(t){var n,r,i=[],s;if(!t||typeof t=="string")return null;if(e.isArray(t)){s=function(e,t){r={value:e,text:t};if(n++>=2)return!1};for(var o=0;o<t.length;o++)typeof t[o]=="object"?(n=0,e.each(t[o],s),n===1?i.push(r):n>1&&t[o].hasOwnProperty("value")&&t[o].hasOwnProperty("text")&&i.push(t[o])):i.push({value:o,text:t[o]})}else e.each(t,function(e,t){i.push({value:e,text:t})});return i}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:"<select></select>",source:null,prepend:!1,sourceError:"Error when loading options"}),e.fn.editableform.types.select=t}(window.jQuery),function(e){e.fn.editableform.template='<form class="form-inline editableform"><div class="control-group">&nbsp;<button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i></button>&nbsp;<button type="button" class="btn clearfix"><i class="icon-ban-circle"></i></button><div style="clear:both"><span class="help-block editable-error-block"></span></div></div></form>',e.fn.editableform.errorGroupClass="error",e.fn.editableform.errorBlockClass=null}(window.jQuery),function(e){e.extend(e.fn.editableContainer.Constructor.prototype,{containerName:"editableform",innerCss:null,initContainer:function(){this.options.anim||(this.options.anim=0)},splitOptions:function(){this.containerOptions={},this.formOptions=this.options},tip:function(){return this.$form},show:function(){this.$element.hide(),this.$form&&this.$form.remove(),this.initForm(),this.tip().addClass("editable-container").addClass("editable-inline"),this.$form.insertAfter(this.$element),this.$form.show(this.options.anim),this.$form.editableform("render")},hide:function(){if(!this.tip()||!this.tip().is(":visible"))return;this.$form.hide(this.options.anim,e.proxy(function(){this.$element.show(),this.options.enablefocus&&this.$element.focus(),this.$element.triggerHandler("hidden")},this))},destroy:function(){this.tip().remove()}}),e.fn.editableContainer.defaults=e.extend({},e.fn.editableContainer.defaults,{anim:"fast",enablefocus:!1})}(window.jQuery),function(e){var t=function(n){this.init("date",n,t.defaults);var r=e.fn.editableform.utils.sliceObj(this.options,["format"]);this.options.datepicker=e.extend({},t.defaults.datepicker,r,n.datepicker),this.options.viewformat||(this.options.viewformat=this.options.datepicker.format),this.options.datepicker.language=this.options.datepicker.language||"en",this.dpg=e.fn.datepicker.DPGlobal,this.parsedFormat=this.dpg.parseFormat(this.options.datepicker.format),this.parsedViewFormat=this.dpg.parseFormat(this.options.viewformat)};e.fn.editableform.utils.inherit(t,e.fn.editableform.types.abstract),e.extend(t.prototype,{render:function(){t.superclass.render.call(this),this.$input.datepicker(this.options.datepicker)},value2html:function(e,n){var r=e?this.dpg.formatDate(e,this.parsedViewFormat,this.options.datepicker.language):"";t.superclass.value2html(r,n)},html2value:function(e){return e?this.dpg.parseDate(e,this.parsedViewFormat,this.options.datepicker.language):null},value2str:function(e){return e?this.dpg.formatDate(e,this.parsedFormat,this.options.datepicker.language):""},str2value:function(e){return e?this.dpg.parseDate(e,this.parsedFormat,this.options.datepicker.language):null},value2input:function(e){this.$input.datepicker("update",e)},input2value:function(){return this.$input.data("datepicker").date},activate:function(){}}),t.defaults=e.extend({},e.fn.editableform.types.abstract.defaults,{tpl:"<div></div>",inputclass:"editable-date well",format:"yyyy-mm-dd",viewformat:null,datepicker:{weekStart:0,startView:0,autoclose:!1}}),e.fn.editableform.types.date=t}(window.jQuery),!function(e){function t(){return new Date(Date.UTC.apply(Date,arguments))}function n(){var e=new Date;return t(e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate())}var r=function(t,n){var r=this;this.element=e(t),this.language=n.language||this.element.data("date-language")||"en",this.language=this.language in i?this.language:"en",this.format=s.parseFormat(n.format||this.element.data("date-format")||"mm/dd/yyyy"),this.isInline=!1,this.isInput=this.element.is("input"),this.component=this.element.is(".date")?this.element.find(".add-on"):!1,this.hasInput=this.component&&this.element.find("input").length,this.component&&this.component.length===0&&(this.component=!1),this.isInput?this.element.on({focus:e.proxy(this.show,this),keyup:e.proxy(this.update,this),keydown:e.proxy(this.keydown,this)}):this.component&&this.hasInput?(this.element.find("input").on({focus:e.proxy(this.show,this),keyup:e.proxy(this.update,this),keydown:e.proxy(this.keydown,this)}),this.component.on("click",e.proxy(this.show,this))):this.element.is("div")?this.isInline=!0:this.element.on("click",e.proxy(this.show,this)),this.picker=e(s.template).appendTo(this.isInline?this.element:"body").on({click:e.proxy(this.click,this),mousedown:e.proxy(this.mousedown,this)}),this.isInline?this.picker.addClass("datepicker-inline"):this.picker.addClass("dropdown-menu"),e(document).on("mousedown",function(t){e(t.target).closest(".datepicker").length==0&&r.hide()}),this.autoclose=!1,"autoclose"in n?this.autoclose=n.autoclose:"dateAutoclose"in this.element.data()&&(this.autoclose=this.element.data("date-autoclose")),this.keyboardNavigation=!0,"keyboardNavigation"in n?this.keyboardNavigation=n.keyboardNavigation:"dateKeyboardNavigation"in this.element.data()&&(this.keyboardNavigation=this.element.data("date-keyboard-navigation"));switch(n.startView||this.element.data("date-start-view")){case 2:case"decade":this.viewMode=this.startViewMode=2;break;case 1:case"year":this.viewMode=this.startViewMode=1;break;case 0:case"month":default:this.viewMode=this.startViewMode=0}this.todayBtn=n.todayBtn||this.element.data("date-today-btn")||!1,this.todayHighlight=n.todayHighlight||this.element.data("date-today-highlight")||!1,this.weekStart=(n.weekStart||this.element.data("date-weekstart")||i[this.language].weekStart||0)%7,this.weekEnd=(this.weekStart+6)%7,this.startDate=-Infinity,this.endDate=Infinity,this.setStartDate(n.startDate||this.element.data("date-startdate")),this.setEndDate(n.endDate||this.element.data("date-enddate")),this.fillDow(),this.fillMonths(),this.update(),this.showMode(),this.isInline&&this.show()};r.prototype={constructor:r,show:function(t){this.picker.show(),this.height=this.component?this.component.outerHeight():this.element.outerHeight(),this.update(),this.place(),e(window).on("resize",e.proxy(this.place,this)),t&&(t.stopPropagation(),t.preventDefault()),this.element.trigger({type:"show",date:this.date})},hide:function(t){if(this.isInline)return;this.picker.hide(),e(window).off("resize",this.place),this.viewMode=this.startViewMode,this.showMode(),this.isInput||e(document).off("mousedown",this.hide),t&&t.currentTarget.value&&this.setValue(),this.element.trigger({type:"hide",date:this.date})},getDate:function(){var e=this.getUTCDate();return new Date(e.getTime()+e.getTimezoneOffset()*6e4)},getUTCDate:function(){return this.date},setDate:function(e){this.setUTCDate(new Date(e.getTime()-e.getTimezoneOffset()*6e4))},setUTCDate:function(e){this.date=e,this.setValue()},setValue:function(){var e=this.getFormattedDate();this.isInput?this.element.prop("value",e):(this.component&&this.element.find("input").prop("value",e),this.element.data("date",e))},getFormattedDate:function(e){return e==undefined&&(e=this.format),s.formatDate(this.date,e,this.language)},setStartDate:function(e){this.startDate=e||-Infinity,this.startDate!==-Infinity&&(this.startDate=s.parseDate(this.startDate,this.format,this.language)),this.update(),this.updateNavArrows()},setEndDate:function(e){this.endDate=e||Infinity,this.endDate!==Infinity&&(this.endDate=s.parseDate(this.endDate,this.format,this.language)),this.update(),this.updateNavArrows()},place:function(){if(this.isInline)return;var t=parseInt(this.element.parents().filter(function(){return e(this).css("z-index")!="auto"}).first().css("z-index"))+10,n=this.component?this.component.offset():this.element.offset();this.picker.css({top:n.top+this.height,left:n.left,zIndex:t})},update:function(){var e,t=!1;arguments&&arguments.length&&(typeof arguments[0]=="string"||arguments[0]instanceof Date)?(e=arguments[0],t=!0):e=this.isInput?this.element.prop("value"):this.element.data("date")||this.element.find("input").prop("value"),this.date=s.parseDate(e,this.format,this.language),t&&this.setValue(),this.date<this.startDate?this.viewDate=new Date(this.startDate):this.date>this.endDate?this.viewDate=new Date(this.endDate):this.viewDate=new Date(this.date),this.fill()},fillDow:function(){var e=this.weekStart,t="<tr>";while(e<this.weekStart+7)t+='<th class="dow">'+i[this.language].daysMin[e++%7]+"</th>";t+="</tr>",this.picker.find(".datepicker-days thead").append(t)},fillMonths:function(){var e="",t=0;while(t<12)e+='<span class="month">'+i[this.language].monthsShort[t++]+"</span>";this.picker.find(".datepicker-months td").html(e)},fill:function(){var e=new Date(this.viewDate),n=e.getUTCFullYear(),r=e.getUTCMonth(),o=this.startDate!==-Infinity?this.startDate.getUTCFullYear():-Infinity,u=this.startDate!==-Infinity?this.startDate.getUTCMonth():-Infinity,a=this.endDate!==Infinity?this.endDate.getUTCFullYear():Infinity,f=this.endDate!==Infinity?this.endDate.getUTCMonth():Infinity,l=this.date.valueOf(),c=new Date;this.picker.find(".datepicker-days thead th:eq(1)").text(i[this.language].months[r]+" "+n),this.picker.find("tfoot th.today").text(i[this.language].today).toggle(this.todayBtn),this.updateNavArrows(),this.fillMonths();var h=t(n,r-1,28,0,0,0,0),p=s.getDaysInMonth(h.getUTCFullYear(),h.getUTCMonth());h.setUTCDate(p),h.setUTCDate(p-(h.getUTCDay()-this.weekStart+7)%7);var d=new Date(h);d.setUTCDate(d.getUTCDate()+42),d=d.valueOf();var v=[],m;while(h.valueOf()<d){h.getUTCDay()==this.weekStart&&v.push("<tr>"),m="";if(h.getUTCFullYear()<n||h.getUTCFullYear()==n&&h.getUTCMonth()<r)m+=" old";else if(h.getUTCFullYear()>n||h.getUTCFullYear()==n&&h.getUTCMonth()>r)m+=" new";this.todayHighlight&&h.getUTCFullYear()==c.getFullYear()&&h.getUTCMonth()==c.getMonth()&&h.getUTCDate()==c.getDate()&&(m+=" today"),h.valueOf()==l&&(m+=" active");if(h.valueOf()<this.startDate||h.valueOf()>this.endDate)m+=" disabled";v.push('<td class="day'+m+'">'+h.getUTCDate()+"</td>"),h.getUTCDay()==this.weekEnd&&v.push("</tr>"),h.setUTCDate(h.getUTCDate()+1)}this.picker.find(".datepicker-days tbody").empty().append(v.join(""));var g=this.date.getUTCFullYear(),y=this.picker.find(".datepicker-months").find("th:eq(1)").text(n).end().find("span").removeClass("active");g==n&&y.eq(this.date.getUTCMonth()).addClass("active"),(n<o||n>a)&&y.addClass("disabled"),n==o&&y.slice(0,u).addClass("disabled"),n==a&&y.slice(f+1).addClass("disabled"),v="",n=parseInt(n/10,10)*10;var b=this.picker.find(".datepicker-years").find("th:eq(1)").text(n+"-"+(n+9)).end().find("td");n-=1;for(var w=-1;w<11;w++)v+='<span class="year'+(w==-1||w==10?" old":"")+(g==n?" active":"")+(n<o||n>a?" disabled":"")+'">'+n+"</span>",n+=1;b.html(v)},updateNavArrows:function(){var e=new Date(this.viewDate),t=e.getUTCFullYear(),n=e.getUTCMonth();switch(this.viewMode){case 0:this.startDate!==-Infinity&&t<=this.startDate.getUTCFullYear()&&n<=this.startDate.getUTCMonth()?this.picker.find(".prev").css({visibility:"hidden"}):this.picker.find(".prev").css({visibility:"visible"}),this.endDate!==Infinity&&t>=this.endDate.getUTCFullYear()&&n>=this.endDate.getUTCMonth()?this.picker.find(".next").css({visibility:"hidden"}):this.picker.find(".next").css({visibility:"visible"});break;case 1:case 2:this.startDate!==-Infinity&&t<=this.startDate.getUTCFullYear()?this.picker.find(".prev").css({visibility:"hidden"}):this.picker.find(".prev").css({visibility:"visible"}),this.endDate!==Infinity&&t>=this.endDate.getUTCFullYear()?this.picker.find(".next").css({visibility:"hidden"}):this.picker.find(".next").css({visibility:"visible"})}},click:function(n){n.stopPropagation(),n.preventDefault();var r=e(n.target).closest("span, td, th");if(r.length==1)switch(r[0].nodeName.toLowerCase()){case"th":switch(r[0].className){case"switch":this.showMode(1);break;case"prev":case"next":var i=s.modes[this.viewMode].navStep*(r[0].className=="prev"?-1:1);switch(this.viewMode){case 0:this.viewDate=this.moveMonth(this.viewDate,i);break;case 1:case 2:this.viewDate=this.moveYear(this.viewDate,i)}this.fill();break;case"today":var o=new Date;o.setUTCHours(0),o.setUTCMinutes(0),o.setUTCSeconds(0),o.setUTCMilliseconds(0),this.showMode(-2);var u=this.todayBtn=="linked"?null:"view";this._setDate(o,u)}break;case"span":if(!r.is(".disabled")){this.viewDate.setUTCDate(1);if(r.is(".month")){var a=r.parent().find("span").index(r);this.viewDate.setUTCMonth(a),this.element.trigger({type:"changeMonth",date:this.viewDate})}else{var f=parseInt(r.text(),10)||0;this.viewDate.setUTCFullYear(f),this.element.trigger({type:"changeYear",date:this.viewDate})}this.showMode(-1),this.fill()}break;case"td":if(r.is(".day")&&!r.is(".disabled")){var l=parseInt(r.text(),10)||1,f=this.viewDate.getUTCFullYear(),a=this.viewDate.getUTCMonth();r.is(".old")?a==0?(a=11,f-=1):a-=1:r.is(".new")&&(a==11?(a=0,f+=1):a+=1),this._setDate(t(f,a,l,0,0,0,0))}}},_setDate:function(e,t){if(!t||t=="date")this.date=e;if(!t||t=="view")this.viewDate=e;this.fill(),this.setValue(),this.element.trigger({type:"changeDate",date:this.date});var n;this.isInput?n=this.element:this.component&&(n=this.element.find("input")),n&&(n.change(),this.autoclose&&this.hide())},moveMonth:function(e,t){if(!t)return e;var n=new Date(e.valueOf()),r=n.getUTCDate(),i=n.getUTCMonth(),s=Math.abs(t),o,u;t=t>0?1:-1;if(s==1){u=t==-1?function(){return n.getUTCMonth()==i}:function(){return n.getUTCMonth()!=o},o=i+t,n.setUTCMonth(o);if(o<0||o>11)o=(o+12)%12}else{for(var a=0;a<s;a++)n=this.moveMonth(n,t);o=n.getUTCMonth(),n.setUTCDate(r),u=function(){return o!=n.getUTCMonth()}}while(u())n.setUTCDate(--r),n.setUTCMonth(o);return n},moveYear:function(e,t){return this.moveMonth(e,t*12)},dateWithinRange:function(e){return e>=this.startDate&&e<=this.endDate},keydown:function(e){if(this.picker.is(":not(:visible)")){e.keyCode==27&&this.show();return}var t=!1,n,r,i,s,o;switch(e.keyCode){case 27:this.hide(),e.preventDefault();break;case 37:case 39:if(!this.keyboardNavigation)break;n=e.keyCode==37?-1:1,e.ctrlKey?(s=this.moveYear(this.date,n),o=this.moveYear(this.viewDate,n)):e.shiftKey?(s=this.moveMonth(this.date,n),o=this.moveMonth(this.viewDate,n)):(s=new Date(this.date),s.setUTCDate(this.date.getUTCDate()+n),o=new Date(this.viewDate),o.setUTCDate(this.viewDate.getUTCDate()+n)),this.dateWithinRange(s)&&(this.date=s,this.viewDate=o,this.setValue(),this.update(),e.preventDefault(),t=!0);break;case 38:case 40:if(!this.keyboardNavigation)break;n=e.keyCode==38?-1:1,e.ctrlKey?(s=this.moveYear(this.date,n),o=this.moveYear(this.viewDate,n)):e.shiftKey?(s=this.moveMonth(this.date,n),o=this.moveMonth(this.viewDate,n)):(s=new Date(this.date),s.setUTCDate(this.date.getUTCDate()+n*7),o=new Date(this.viewDate),o.setUTCDate(this.viewDate.getUTCDate()+n*7)),this.dateWithinRange(s)&&(this.date=s,this.viewDate=o,this.setValue(),this.update(),e.preventDefault(),t=!0);break;case 13:this.hide(),e.preventDefault();break;case 9:this.hide()}if(t){this.element.trigger({type:"changeDate",date:this.date});var u;this.isInput?u=this.element:this.component&&(u=this.element.find("input")),u&&u.change()}},showMode:function(e){e&&(this.viewMode=Math.max(0,Math.min(2,this.viewMode+e))),this.picker.find(">div").hide().filter(".datepicker-"+s.modes[this.viewMode].clsName).show(),this.updateNavArrows()}},e.fn.datepicker=function(t){var n=Array.apply(null,arguments);return n.shift(),this.each(function(){var i=e(this),s=i.data("datepicker"),o=typeof t=="object"&&t;s||i.data("datepicker",s=new r(this,e.extend({},e.fn.datepicker.defaults,o))),typeof t=="string"&&typeof s[t]=="function"&&s[t].apply(s,n)})},e.fn.datepicker.defaults={},e.fn.datepicker.Constructor=r;var i=e.fn.datepicker.dates={en:{days:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],daysShort:["Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"],daysMin:["Su","Mo","Tu","We","Th","Fr","Sa","Su"],months:["January","February","March","April","May","June","July","August","September","October","November","December"],monthsShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],today:"Today"}},s={modes:[{clsName:"days",navFnc:"Month",navStep:1},{clsName:"months",navFnc:"FullYear",navStep:1},{clsName:"years",navFnc:"FullYear",navStep:10}],isLeapYear:function(e){return e%4===0&&e%100!==0||e%400===0},getDaysInMonth:function(e,t){return[31,s.isLeapYear(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]},validParts:/dd?|mm?|MM?|yy(?:yy)?/g,nonpunctuation:/[^ -\/:-@\[-`{-~\t\n\r]+/g,parseFormat:function(e){var t=e.replace(this.validParts,"\0").split("\0"),n=e.match(this.validParts);if(!t||!t.length||!n||n.length==0)throw new Error("Invalid date format.");return{separators:t,parts:n}},parseDate:function(n,s,o){if(n instanceof Date)return n;if(/^[-+]\d+[dmwy]([\s,]+[-+]\d+[dmwy])*$/.test(n)){var u=/([-+]\d+)([dmwy])/,a=n.match(/([-+]\d+)([dmwy])/g),f,l;n=new Date;for(var c=0;c<a.length;c++){f=u.exec(a[c]),l=parseInt(f[1]);switch(f[2]){case"d":n.setUTCDate(n.getUTCDate()+l);break;case"m":n=r.prototype.moveMonth.call(r.prototype,n,l);break;case"w":n.setUTCDate(n.getUTCDate()+l*7);break;case"y":n=r.prototype.moveYear.call(r.prototype,n,l)}}return t(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),0,0,0)}var a=n&&n.match(this.nonpunctuation)||[],n=new Date,h={},p=["yyyy","yy","M","MM","m","mm","d","dd"],d={yyyy:function(e,t){return e.setUTCFullYear(t)},yy:function(e,t){return e.setUTCFullYear(2e3+t)},m:function(e,t){t-=1;while(t<0)t+=12;t%=12,e.setUTCMonth(t);while(e.getUTCMonth()!=t)e.setUTCDate(e.getUTCDate()-1);return e},d:function(e,t){return e.setUTCDate(t)}},v,m,f;d.M=d.MM=d.mm=d.m,d.dd=d.d,n=t(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),0,0,0);if(a.length==s.parts.length){for(var c=0,g=s.parts.length;c<g;c++){v=parseInt(a[c],10),f=s.parts[c];if(isNaN(v))switch(f){case"MM":m=e(i[o].months).filter(function(){var e=this.slice(0,a[c].length),t=a[c].slice(0,e.length);return e==t}),v=e.inArray(m[0],i[o].months)+1;break;case"M":m=e(i[o].monthsShort).filter(function(){var e=this.slice(0,a[c].length),t=a[c].slice(0,e.length);return e==t}),v=e.inArray(m[0],i[o].monthsShort)+1}h[f]=v}for(var c=0,y;c<p.length;c++)y=p[c],y in h&&d[y](n,h[y])}return n},formatDate:function(t,n,r){var s={d:t.getUTCDate(),m:t.getUTCMonth()+1,M:i[r].monthsShort[t.getUTCMonth()],MM:i[r].months[t.getUTCMonth()],yy:t.getUTCFullYear().toString().substring(2),yyyy:t.getUTCFullYear()};s.dd=(s.d<10?"0":"")+s.d,s.mm=(s.m<10?"0":"")+s.m;var t=[],o=e.extend([],n.separators);for(var u=0,a=n.parts.length;u<a;u++)o.length&&t.push(o.shift()),t.push(s[n.parts[u]]);return t.join("")},headTemplate:'<thead><tr><th class="prev"><i class="icon-arrow-left"/></th><th colspan="5" class="switch"></th><th class="next"><i class="icon-arrow-right"/></th></tr></thead>',contTemplate:'<tbody><tr><td colspan="7"></td></tr></tbody>',footTemplate:'<tfoot><tr><th colspan="7" class="today"></th></tr></tfoot>'};s.template='<div class="datepicker"><div class="datepicker-days"><table class=" table-condensed">'+s.headTemplate+"<tbody></tbody>"+s.footTemplate+"</table>"+"</div>"+'<div class="datepicker-months">'+'<table class="table-condensed">'+s.headTemplate+s.contTemplate+s.footTemplate+"</table>"+"</div>"+'<div class="datepicker-years">'+'<table class="table-condensed">'+s.headTemplate+s.contTemplate+s.footTemplate+"</table>"+"</div>"+"</div>",e.fn.datepicker.DPGlobal=s}(window.jQuery);
+;/* ===================================================
  * bootstrap-transition.js v2.1.0
  * http://twitter.github.com/bootstrap/javascript.html#transitions
  * ===================================================
@@ -14392,188 +17669,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })
 
 
-}(window.jQuery);;
-
-jade = (function(exports){
-/*!
- * Jade - runtime
- * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
- * MIT Licensed
- */
-
-/**
- * Lame Array.isArray() polyfill for now.
- */
-
-if (!Array.isArray) {
-  Array.isArray = function(arr){
-    return '[object Array]' == Object.prototype.toString.call(arr);
-  };
-}
-
-/**
- * Lame Object.keys() polyfill for now.
- */
-
-if (!Object.keys) {
-  Object.keys = function(obj){
-    var arr = [];
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        arr.push(key);
-      }
-    }
-    return arr;
-  }
-}
-
-/**
- * Merge two attribute objects giving precedence
- * to values in object `b`. Classes are special-cased
- * allowing for arrays and merging/joining appropriately
- * resulting in a string.
- *
- * @param {Object} a
- * @param {Object} b
- * @return {Object} a
- * @api private
- */
-
-exports.merge = function merge(a, b) {
-  var ac = a['class'];
-  var bc = b['class'];
-
-  if (ac || bc) {
-    ac = ac || [];
-    bc = bc || [];
-    if (!Array.isArray(ac)) ac = [ac];
-    if (!Array.isArray(bc)) bc = [bc];
-    ac = ac.filter(nulls);
-    bc = bc.filter(nulls);
-    a['class'] = ac.concat(bc).join(' ');
-  }
-
-  for (var key in b) {
-    if (key != 'class') {
-      a[key] = b[key];
-    }
-  }
-
-  return a;
-};
-
-/**
- * Filter null `val`s.
- *
- * @param {Mixed} val
- * @return {Mixed}
- * @api private
- */
-
-function nulls(val) {
-  return val != null;
-}
-
-/**
- * Render the given attributes object.
- *
- * @param {Object} obj
- * @param {Object} escaped
- * @return {String}
- * @api private
- */
-
-exports.attrs = function attrs(obj, escaped){
-  var buf = []
-    , terse = obj.terse;
-
-  delete obj.terse;
-  var keys = Object.keys(obj)
-    , len = keys.length;
-
-  if (len) {
-    buf.push('');
-    for (var i = 0; i < len; ++i) {
-      var key = keys[i]
-        , val = obj[key];
-
-      if ('boolean' == typeof val || null == val) {
-        if (val) {
-          terse
-            ? buf.push(key)
-            : buf.push(key + '="' + key + '"');
-        }
-      } else if (0 == key.indexOf('data') && 'string' != typeof val) {
-        buf.push(key + "='" + JSON.stringify(val) + "'");
-      } else if ('class' == key && Array.isArray(val)) {
-        buf.push(key + '="' + exports.escape(val.join(' ')) + '"');
-      } else if (escaped && escaped[key]) {
-        buf.push(key + '="' + exports.escape(val) + '"');
-      } else {
-        buf.push(key + '="' + val + '"');
-      }
-    }
-  }
-
-  return buf.join(' ');
-};
-
-/**
- * Escape the given string of `html`.
- *
- * @param {String} html
- * @return {String}
- * @api private
- */
-
-exports.escape = function escape(html){
-  return String(html)
-    .replace(/&(?!(\w+|\#\d+);)/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-};
-
-/**
- * Re-throw the given `err` in context to the
- * the jade in `filename` at the given `lineno`.
- *
- * @param {Error} err
- * @param {String} filename
- * @param {String} lineno
- * @api private
- */
-
-exports.rethrow = function rethrow(err, filename, lineno){
-  if (!filename) throw err;
-
-  var context = 3
-    , str = require('fs').readFileSync(filename, 'utf8')
-    , lines = str.split('\n')
-    , start = Math.max(lineno - context, 0)
-    , end = Math.min(lines.length, lineno + context);
-
-  // Error context
-  var context = lines.slice(start, end).map(function(line, i){
-    var curr = i + start + 1;
-    return (curr == lineno ? '  > ' : '    ')
-      + curr
-      + '| '
-      + line;
-  }).join('\n');
-
-  // Alter exception message
-  err.path = filename;
-  err.message = (filename || 'Jade') + ':' + lineno
-    + '\n' + context + '\n\n' + err.message;
-  throw err;
-};
-
-  return exports;
-
-})({});
+}(window.jQuery);
 ;
-
 (function (global, module) {
 
   if ('undefined' == typeof module) {
@@ -15721,8 +18818,8 @@ exports.rethrow = function rethrow(err, filename, lineno){
   , 'undefined' != typeof module ? module : {}
   , 'undefined' != typeof exports ? exports : {}
 );
-;
-/*!
+
+;/*!
  * jQuery hashchange event - v1.3 - 7/21/2010
  * http://benalman.com/projects/jquery-hashchange-plugin/
  * 
@@ -16112,1344 +19209,3314 @@ exports.rethrow = function rethrow(err, filename, lineno){
   })();
   
 })(jQuery,this);
-;
-/*! jQuery UI - v1.10.3 - 2013-06-01
-* http://jqueryui.com
-* Includes: jquery.ui.effect.js, jquery.ui.effect-slide.js
-* Copyright 2013 jQuery Foundation and other contributors Licensed MIT */
 
-(function($, undefined) {
+;/*! gridster.js - v0.1.0 - 2013-06-14
+* http://gridster.net/
+* Copyright (c) 2013 ducksboard; Licensed MIT */
 
-var dataSpace = "ui-effects-";
+;(function($, window, document, undefined){
+    /**
+    * Creates objects with coordinates (x1, y1, x2, y2, cx, cy, width, height)
+    * to simulate DOM elements on the screen.
+    * Coords is used by Gridster to create a faux grid with any DOM element can
+    * collide.
+    *
+    * @class Coords
+    * @param {HTMLElement|Object} obj The jQuery HTMLElement or a object with: left,
+    * top, width and height properties.
+    * @return {Object} Coords instance.
+    * @constructor
+    */
+    function Coords(obj) {
+        if (obj[0] && $.isPlainObject(obj[0])) {
+            this.data = obj[0];
+        }else {
+            this.el = obj;
+        }
 
-$.effects = {
-	effect: {}
-};
+        this.isCoords = true;
+        this.coords = {};
+        this.init();
+        return this;
+    }
 
-/*!
- * jQuery Color Animations v2.1.2
- * https://github.com/jquery/jquery-color
- *
- * Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * Date: Wed Jan 16 08:47:09 2013 -0600
- */
-(function( jQuery, undefined ) {
 
-	var stepHooks = "backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor color columnRuleColor outlineColor textDecorationColor textEmphasisColor",
+    var fn = Coords.prototype;
 
-	// plusequals test for += 100 -= 100
-	rplusequals = /^([\-+])=\s*(\d+\.?\d*)/,
-	// a set of RE's that can match strings and generate color tuples.
-	stringParsers = [{
-			re: /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
-			parse: function( execResult ) {
-				return [
-					execResult[ 1 ],
-					execResult[ 2 ],
-					execResult[ 3 ],
-					execResult[ 4 ]
-				];
+
+    fn.init = function(){
+        this.set();
+        this.original_coords = this.get();
+    };
+
+
+    fn.set = function(update, not_update_offsets) {
+        var el = this.el;
+
+        if (el && !update) {
+            this.data = el.offset();
+            this.data.width = el.width();
+            this.data.height = el.height();
+        }
+
+        if (el && update && !not_update_offsets) {
+            var offset = el.offset();
+            this.data.top = offset.top;
+            this.data.left = offset.left;
+        }
+
+        var d = this.data;
+
+        this.coords.x1 = d.left;
+        this.coords.y1 = d.top;
+        this.coords.x2 = d.left + d.width;
+        this.coords.y2 = d.top + d.height;
+        this.coords.cx = d.left + (d.width / 2);
+        this.coords.cy = d.top + (d.height / 2);
+        this.coords.width  = d.width;
+        this.coords.height = d.height;
+        this.coords.el  = el || false ;
+
+        return this;
+    };
+
+
+    fn.update = function(data){
+        if (!data && !this.el) {
+            return this;
+        }
+
+        if (data) {
+            var new_data = $.extend({}, this.data, data);
+            this.data = new_data;
+            return this.set(true, true);
+        }
+
+        this.set(true);
+        return this;
+    };
+
+
+    fn.get = function(){
+        return this.coords;
+    };
+
+
+    //jQuery adapter
+    $.fn.coords = function() {
+        if (this.data('coords') ) {
+            return this.data('coords');
+        }
+
+        var ins = new Coords(this, arguments[0]);
+        this.data('coords', ins);
+        return ins;
+    };
+
+}(jQuery, window, document));
+
+;(function($, window, document, undefined){
+
+    var defaults = {
+        colliders_context: document.body
+        // ,on_overlap: function(collider_data){},
+        // on_overlap_start : function(collider_data){},
+        // on_overlap_stop : function(collider_data){}
+    };
+
+
+    /**
+    * Detects collisions between a DOM element against other DOM elements or
+    * Coords objects.
+    *
+    * @class Collision
+    * @uses Coords
+    * @param {HTMLElement} el The jQuery wrapped HTMLElement.
+    * @param {HTMLElement|Array} colliders Can be a jQuery collection
+    *  of HTMLElements or an Array of Coords instances.
+    * @param {Object} [options] An Object with all options you want to
+    *        overwrite:
+    *   @param {Function} [options.on_overlap_start] Executes a function the first
+    *    time each `collider ` is overlapped.
+    *   @param {Function} [options.on_overlap_stop] Executes a function when a
+    *    `collider` is no longer collided.
+    *   @param {Function} [options.on_overlap] Executes a function when the
+    * mouse is moved during the collision.
+    * @return {Object} Collision instance.
+    * @constructor
+    */
+    function Collision(el, colliders, options) {
+        this.options = $.extend(defaults, options);
+        this.$element = el;
+        this.last_colliders = [];
+        this.last_colliders_coords = [];
+        if (typeof colliders === 'string' || colliders instanceof jQuery) {
+            this.$colliders = $(colliders,
+                 this.options.colliders_context).not(this.$element);
+        }else{
+            this.colliders = $(colliders);
+        }
+
+        this.init();
+    }
+
+
+    var fn = Collision.prototype;
+
+
+    fn.init = function() {
+        this.find_collisions();
+    };
+
+
+    fn.overlaps = function(a, b) {
+        var x = false;
+        var y = false;
+
+        if ((b.x1 >= a.x1 && b.x1 <= a.x2) ||
+            (b.x2 >= a.x1 && b.x2 <= a.x2) ||
+            (a.x1 >= b.x1 && a.x2 <= b.x2)
+        ) { x = true; }
+
+        if ((b.y1 >= a.y1 && b.y1 <= a.y2) ||
+            (b.y2 >= a.y1 && b.y2 <= a.y2) ||
+            (a.y1 >= b.y1 && a.y2 <= b.y2)
+        ) { y = true; }
+
+        return (x && y);
+    };
+
+
+    fn.detect_overlapping_region = function(a, b){
+        var regionX = '';
+        var regionY = '';
+
+        if (a.y1 > b.cy && a.y1 < b.y2) { regionX = 'N'; }
+        if (a.y2 > b.y1 && a.y2 < b.cy) { regionX = 'S'; }
+        if (a.x1 > b.cx && a.x1 < b.x2) { regionY = 'W'; }
+        if (a.x2 > b.x1 && a.x2 < b.cx) { regionY = 'E'; }
+
+        return (regionX + regionY) || 'C';
+    };
+
+
+    fn.calculate_overlapped_area_coords = function(a, b){
+        var x1 = Math.max(a.x1, b.x1);
+        var y1 = Math.max(a.y1, b.y1);
+        var x2 = Math.min(a.x2, b.x2);
+        var y2 = Math.min(a.y2, b.y2);
+
+        return $({
+            left: x1,
+            top: y1,
+             width : (x2 - x1),
+            height: (y2 - y1)
+          }).coords().get();
+    };
+
+
+    fn.calculate_overlapped_area = function(coords){
+        return (coords.width * coords.height);
+    };
+
+
+    fn.manage_colliders_start_stop = function(new_colliders_coords, start_callback, stop_callback){
+        var last = this.last_colliders_coords;
+
+        for (var i = 0, il = last.length; i < il; i++) {
+            if ($.inArray(last[i], new_colliders_coords) === -1) {
+                start_callback.call(this, last[i]);
+            }
+        }
+
+        for (var j = 0, jl = new_colliders_coords.length; j < jl; j++) {
+            if ($.inArray(new_colliders_coords[j], last) === -1) {
+                stop_callback.call(this, new_colliders_coords[j]);
+            }
+
+        }
+    };
+
+
+    fn.find_collisions = function(player_data_coords){
+        var self = this;
+        var colliders_coords = [];
+        var colliders_data = [];
+        var $colliders = (this.colliders || this.$colliders);
+        var count = $colliders.length;
+        var player_coords = self.$element.coords()
+                             .update(player_data_coords || false).get();
+
+        while(count--){
+          var $collider = self.$colliders ?
+                           $($colliders[count]) : $colliders[count];
+          var $collider_coords_ins = ($collider.isCoords) ?
+                  $collider : $collider.coords();
+          var collider_coords = $collider_coords_ins.get();
+          var overlaps = self.overlaps(player_coords, collider_coords);
+
+          if (!overlaps) {
+            continue;
+          }
+
+          var region = self.detect_overlapping_region(
+              player_coords, collider_coords);
+
+            //todo: make this an option
+            if (region === 'C'){
+                var area_coords = self.calculate_overlapped_area_coords(
+                    player_coords, collider_coords);
+                var area = self.calculate_overlapped_area(area_coords);
+                var collider_data = {
+                    area: area,
+                    area_coords : area_coords,
+                    region: region,
+                    coords: collider_coords,
+                    player_coords: player_coords,
+                    el: $collider
+                };
+
+                if (self.options.on_overlap) {
+                    self.options.on_overlap.call(this, collider_data);
+                }
+                colliders_coords.push($collider_coords_ins);
+                colliders_data.push(collider_data);
+            }
+        }
+
+        if (self.options.on_overlap_stop || self.options.on_overlap_start) {
+            this.manage_colliders_start_stop(colliders_coords,
+                self.options.on_overlap_start, self.options.on_overlap_stop);
+        }
+
+        this.last_colliders_coords = colliders_coords;
+
+        return colliders_data;
+    };
+
+
+    fn.get_closest_colliders = function(player_data_coords){
+        var colliders = this.find_collisions(player_data_coords);
+
+        colliders.sort(function(a, b) {
+            /* if colliders are being overlapped by the "C" (center) region,
+             * we have to set a lower index in the array to which they are placed
+             * above in the grid. */
+            if (a.region === 'C' && b.region === 'C') {
+                if (a.coords.y1 < b.coords.y1 || a.coords.x1 < b.coords.x1) {
+                    return - 1;
+                }else{
+                    return 1;
+                }
+            }
+
+            if (a.area < b.area) {
+                return 1;
+            }
+
+            return 1;
+        });
+        return colliders;
+    };
+
+
+    //jQuery adapter
+    $.fn.collision = function(collider, options) {
+          return new Collision( this, collider, options );
+    };
+
+
+}(jQuery, window, document));
+
+;(function(window, undefined) {
+    /* Debounce and throttle functions taken from underscore.js */
+    window.debounce = function(func, wait, immediate) {
+        var timeout;
+        return function() {
+          var context = this, args = arguments;
+          var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+          };
+          if (immediate && !timeout) func.apply(context, args);
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+    };
+
+
+    window.throttle = function(func, wait) {
+        var context, args, timeout, throttling, more, result;
+        var whenDone = debounce(
+            function(){ more = throttling = false; }, wait);
+        return function() {
+          context = this; args = arguments;
+          var later = function() {
+            timeout = null;
+            if (more) func.apply(context, args);
+            whenDone();
+          };
+          if (!timeout) timeout = setTimeout(later, wait);
+          if (throttling) {
+            more = true;
+          } else {
+            result = func.apply(context, args);
+          }
+          whenDone();
+          throttling = true;
+          return result;
+        };
+    };
+
+})(window);
+
+;(function($, window, document, undefined){
+
+    var defaults = {
+        items: '.gs_w',
+        distance: 1,
+        limit: true,
+        offset_left: 0,
+        autoscroll: true,
+        ignore_dragging: ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'],
+        handle: null,
+        container_width: 0  // 0 == auto
+        // drag: function(e){},
+        // start : function(e, ui){},
+        // stop : function(e){}
+    };
+
+    var $window = $(window);
+    var isTouch = !!('ontouchstart' in window);
+    var pointer_events = {
+        start: isTouch ? 'touchstart.gridster-draggable' : 'mousedown.gridster-draggable',
+        move: isTouch ? 'touchmove.gridster-draggable' : 'mousemove.gridster-draggable',
+        end: isTouch ? 'touchend.gridster-draggable' : 'mouseup.gridster-draggable'
+    };
+
+    /**
+    * Basic drag implementation for DOM elements inside a container.
+    * Provide start/stop/drag callbacks.
+    *
+    * @class Draggable
+    * @param {HTMLElement} el The HTMLelement that contains all the widgets
+    *  to be dragged.
+    * @param {Object} [options] An Object with all options you want to
+    *        overwrite:
+    *    @param {HTMLElement|String} [options.items] Define who will
+    *     be the draggable items. Can be a CSS Selector String or a
+    *     collection of HTMLElements.
+    *    @param {Number} [options.distance] Distance in pixels after mousedown
+    *     the mouse must move before dragging should start.
+    *    @param {Boolean} [options.limit] Constrains dragging to the width of
+    *     the container
+    *    @param {offset_left} [options.offset_left] Offset added to the item
+    *     that is being dragged.
+    *    @param {Number} [options.drag] Executes a callback when the mouse is
+    *     moved during the dragging.
+    *    @param {Number} [options.start] Executes a callback when the drag
+    *     starts.
+    *    @param {Number} [options.stop] Executes a callback when the drag stops.
+    * @return {Object} Returns `el`.
+    * @constructor
+    */
+    function Draggable(el, options) {
+      this.options = $.extend({}, defaults, options);
+      this.$body = $(document.body);
+      this.$container = $(el);
+      this.$dragitems = $(this.options.items, this.$container);
+      this.is_dragging = false;
+      this.player_min_left = 0 + this.options.offset_left;
+      this.init();
+    }
+
+    var fn = Draggable.prototype;
+
+    fn.init = function() {
+        this.calculate_positions();
+        this.$container.css('position', 'relative');
+        this.disabled = false;
+        this.events();
+
+        $(window).bind('resize.gridster-draggable',
+            throttle($.proxy(this.calculate_positions, this), 200));
+    };
+
+    fn.events = function() {
+        this.$container.on('selectstart.gridster-draggable',
+            $.proxy(this.on_select_start, this));
+
+        this.$container.on(pointer_events.start, this.options.items,
+            $.proxy(this.drag_handler, this));
+
+        this.$body.on(pointer_events.end, $.proxy(function(e) {
+            this.is_dragging = false;
+            if (this.disabled) { return; }
+            this.$body.off(pointer_events.move);
+            if (this.drag_start) {
+                this.on_dragstop(e);
+            }
+        }, this));
+    };
+
+    fn.get_actual_pos = function($el) {
+        var pos = $el.position();
+        return pos;
+    };
+
+
+    fn.get_mouse_pos = function(e) {
+        if (isTouch) {
+            var oe = e.originalEvent;
+            e = oe.touches.length ? oe.touches[0] : oe.changedTouches[0];
+        }
+
+        return {
+            left: e.clientX,
+            top: e.clientY
+        };
+    };
+
+
+    fn.get_offset = function(e) {
+        e.preventDefault();
+        var mouse_actual_pos = this.get_mouse_pos(e);
+        var diff_x = Math.round(
+            mouse_actual_pos.left - this.mouse_init_pos.left);
+        var diff_y = Math.round(mouse_actual_pos.top - this.mouse_init_pos.top);
+
+        var left = Math.round(this.el_init_offset.left + diff_x - this.baseX);
+        var top = Math.round(
+            this.el_init_offset.top + diff_y - this.baseY + this.scrollOffset);
+
+        if (this.options.limit) {
+            if (left > this.player_max_left) {
+                left = this.player_max_left;
+            }else if(left < this.player_min_left) {
+                left = this.player_min_left;
+            }
+        }
+
+        return {
+            left: left,
+            top: top,
+            mouse_left: mouse_actual_pos.left,
+            mouse_top: mouse_actual_pos.top
+        };
+    };
+
+
+    fn.manage_scroll = function(offset) {
+        /* scroll document */
+        var nextScrollTop;
+        var scrollTop = $window.scrollTop();
+        var min_window_y = scrollTop;
+        var max_window_y = min_window_y + this.window_height;
+
+        var mouse_down_zone = max_window_y - 50;
+        var mouse_up_zone = min_window_y + 50;
+
+        var abs_mouse_left = offset.mouse_left;
+        var abs_mouse_top = min_window_y + offset.mouse_top;
+
+        var max_player_y = (this.doc_height - this.window_height +
+            this.player_height);
+
+        if (abs_mouse_top >= mouse_down_zone) {
+            nextScrollTop = scrollTop + 30;
+            if (nextScrollTop < max_player_y) {
+                $window.scrollTop(nextScrollTop);
+                this.scrollOffset = this.scrollOffset + 30;
+            }
+        }
+
+        if (abs_mouse_top <= mouse_up_zone) {
+            nextScrollTop = scrollTop - 30;
+            if (nextScrollTop > 0) {
+                $window.scrollTop(nextScrollTop);
+                this.scrollOffset = this.scrollOffset - 30;
+            }
+        }
+    };
+
+
+    fn.calculate_positions = function(e) {
+        this.window_height = $window.height();
+    };
+
+
+    fn.drag_handler = function(e) {
+        var node = e.target.nodeName;
+        if (this.disabled || e.which !== 1 && !isTouch) {
+            return;
+        }
+
+        if (this.ignore_drag(e)) {
+            return;
+        }
+
+        var self = this;
+        var first = true;
+        this.$player = $(e.currentTarget);
+
+        this.el_init_pos = this.get_actual_pos(this.$player);
+        this.mouse_init_pos = this.get_mouse_pos(e);
+        this.offsetY = this.mouse_init_pos.top - this.el_init_pos.top;
+
+        this.$body.on(pointer_events.move, function(mme){
+            var mouse_actual_pos = self.get_mouse_pos(mme);
+            var diff_x = Math.abs(
+                mouse_actual_pos.left - self.mouse_init_pos.left);
+            var diff_y = Math.abs(
+                mouse_actual_pos.top - self.mouse_init_pos.top);
+            if (!(diff_x > self.options.distance ||
+                diff_y > self.options.distance)
+                ) {
+                return false;
+            }
+
+            if (first) {
+                first = false;
+                self.on_dragstart.call(self, mme);
+                return false;
+            }
+
+            if (self.is_dragging === true) {
+                self.on_dragmove.call(self, mme);
+            }
+
+            return false;
+        });
+
+        if (!isTouch) { return false; }
+    };
+
+
+    fn.on_dragstart = function(e) {
+        e.preventDefault();
+        this.drag_start = true;
+        this.is_dragging = true;
+        var offset = this.$container.offset();
+        this.baseX = Math.round(offset.left);
+        this.baseY = Math.round(offset.top);
+        this.doc_height = $(document).height();
+
+        if (this.options.helper === 'clone') {
+            this.$helper = this.$player.clone()
+                .appendTo(this.$container).addClass('helper');
+            this.helper = true;
+        }else{
+            this.helper = false;
+        }
+        this.scrollOffset = 0;
+        this.el_init_offset = this.$player.offset();
+        this.player_width = this.$player.width();
+        this.player_height = this.$player.height();
+
+        var container_width = this.options.container_width || this.$container.width();
+        this.player_max_left = (container_width - this.player_width +
+            this.options.offset_left);
+
+        if (this.options.start) {
+            this.options.start.call(this.$player, e, {
+                helper: this.helper ? this.$helper : this.$player
+            });
+        }
+        return false;
+    };
+
+
+    fn.on_dragmove = function(e) {
+        var offset = this.get_offset(e);
+
+        this.options.autoscroll && this.manage_scroll(offset);
+
+        (this.helper ? this.$helper : this.$player).css({
+            'position': 'absolute',
+            'left' : offset.left,
+            'top' : offset.top
+        });
+
+        var ui = {
+            'position': {
+                'left': offset.left,
+                'top': offset.top
+            }
+        };
+
+        if (this.options.drag) {
+            this.options.drag.call(this.$player, e, ui);
+        }
+        return false;
+    };
+
+
+    fn.on_dragstop = function(e) {
+        var offset = this.get_offset(e);
+        this.drag_start = false;
+
+        var ui = {
+            'position': {
+                'left': offset.left,
+                'top': offset.top
+            }
+        };
+
+        if (this.options.stop) {
+            this.options.stop.call(this.$player, e, ui);
+        }
+
+        if (this.helper) {
+            this.$helper.remove();
+        }
+
+        return false;
+    };
+
+    fn.on_select_start = function(e) {
+        if (this.disabled) { return; }
+
+        if (this.ignore_drag(e)) {
+            return;
+        }
+
+        return false;
+    };
+
+    fn.enable = function() {
+        this.disabled = false;
+    };
+
+    fn.disable = function() {
+        this.disabled = true;
+    };
+
+
+    fn.destroy = function(){
+        this.disable();
+
+        this.$container.off('.gridster-draggable');
+        this.$body.off('.gridster-draggable');
+        $(window).off('.gridster-draggable');
+
+        $.removeData(this.$container, 'drag');
+    };
+
+    fn.ignore_drag = function(event) {
+        if (this.options.handle) {
+            return !$(event.target).is(this.options.handle);
+        }
+
+        return $.inArray(event.target.nodeName, this.options.ignore_dragging) >= 0;
+    };
+
+    //jQuery adapter
+    $.fn.drag = function ( options ) {
+        return this.each(function () {
+            if (!$.data(this, 'drag')) {
+                $.data(this, 'drag', new Draggable( this, options ));
+            }
+        });
+    };
+
+
+}(jQuery, window, document));
+
+;(function($, window, document, undefined) {
+
+    var defaults = {
+        namespace: '',
+        widget_selector: 'li',
+        widget_margins: [10, 10],
+        widget_base_dimensions: [400, 225],
+        extra_rows: 0,
+        extra_cols: 0,
+        min_cols: 1,
+        max_cols: null,
+        min_rows: 15,
+        max_size_x: 6,
+        autogenerate_stylesheet: true,
+        avoid_overlapped_widgets: true,
+        serialize_params: function($w, wgd) {
+            return {
+                col: wgd.col,
+                row: wgd.row,
+                size_x: wgd.size_x,
+                size_y: wgd.size_y
+            };
+        },
+        collision: {},
+        draggable: {
+            distance: 4
+        }
+    };
+
+    /**
+    * @class Gridster
+    * @uses Draggable
+    * @uses Collision
+    * @param {HTMLElement} el The HTMLelement that contains all the widgets.
+    * @param {Object} [options] An Object with all options you want to
+    *        overwrite:
+    *    @param {HTMLElement|String} [options.widget_selector] Define who will
+    *     be the draggable widgets. Can be a CSS Selector String or a
+    *     collection of HTMLElements
+    *    @param {Array} [options.widget_margins] Margin between widgets.
+    *     The first index for the horizontal margin (left, right) and
+    *     the second for the vertical margin (top, bottom).
+    *    @param {Array} [options.widget_base_dimensions] Base widget dimensions
+    *     in pixels. The first index for the width and the second for the
+    *     height.
+    *    @param {Number} [options.extra_cols] Add more columns in addition to
+    *     those that have been calculated.
+    *    @param {Number} [options.extra_rows] Add more rows in addition to
+    *     those that have been calculated.
+    *    @param {Number} [options.min_cols] The minimum required columns.
+    *    @param {Number} [options.max_cols] The maximum columns possible (set to null
+    *     for no maximum).
+    *    @param {Number} [options.min_rows] The minimum required rows.
+    *    @param {Number} [options.max_size_x] The maximum number of columns
+    *     that a widget can span.
+    *    @param {Boolean} [options.autogenerate_stylesheet] If true, all the
+    *     CSS required to position all widgets in their respective columns
+    *     and rows will be generated automatically and injected to the
+    *     `<head>` of the document. You can set this to false, and write
+    *     your own CSS targeting rows and cols via data-attributes like so:
+    *     `[data-col="1"] { left: 10px; }`
+    *    @param {Boolean} [options.avoid_overlapped_widgets] Avoid that widgets loaded
+    *     from the DOM can be overlapped. It is helpful if the positions were
+    *     bad stored in the database or if there was any conflict.
+    *    @param {Function} [options.serialize_params] Return the data you want
+    *     for each widget in the serialization. Two arguments are passed:
+    *     `$w`: the jQuery wrapped HTMLElement, and `wgd`: the grid
+    *     coords object (`col`, `row`, `size_x`, `size_y`).
+    *    @param {Object} [options.collision] An Object with all options for
+    *     Collision class you want to overwrite. See Collision docs for
+    *     more info.
+    *    @param {Object} [options.draggable] An Object with all options for
+    *     Draggable class you want to overwrite. See Draggable docs for more
+    *     info.
+    *
+    * @constructor
+    */
+    function Gridster(el, options) {
+        this.options = $.extend(true, defaults, options);
+        this.$el = $(el);
+        this.$wrapper = this.$el.parent();
+        this.$widgets = this.$el.children(this.options.widget_selector).addClass('gs_w');
+        this.widgets = [];
+        this.$changed = $([]);
+        this.wrapper_width = this.$wrapper.width();
+        this.min_widget_width = (this.options.widget_margins[0] * 2) +
+          this.options.widget_base_dimensions[0];
+        this.min_widget_height = (this.options.widget_margins[1] * 2) +
+          this.options.widget_base_dimensions[1];
+
+        this.$style_tags = $([]);
+
+        this.init();
+    }
+
+    Gridster.generated_stylesheets = [];
+
+    var fn = Gridster.prototype;
+
+    fn.init = function() {
+        this.generate_grid_and_stylesheet();
+        this.get_widgets_from_DOM();
+        this.set_dom_grid_height();
+        this.$wrapper.addClass('ready');
+        this.draggable();
+
+        $(window).bind('resize.gridster', throttle($.proxy(this.recalculate_faux_grid, this), 200));
+    };
+
+
+    /**
+    * Disables dragging.
+    *
+    * @method disable
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.disable = function() {
+        this.$wrapper.find('.player-revert').removeClass('player-revert');
+        this.drag_api.disable();
+        return this;
+    };
+
+
+    /**
+    * Enables dragging.
+    *
+    * @method enable
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.enable = function() {
+        this.drag_api.enable();
+        return this;
+    };
+
+
+    /**
+    * Add a new widget to the grid.
+    *
+    * @method add_widget
+    * @param {String|HTMLElement} html The string representing the HTML of the widget
+    *  or the HTMLElement.
+    * @param {Number} [size_x] The nº of rows the widget occupies horizontally.
+    * @param {Number} [size_y] The nº of columns the widget occupies vertically.
+    * @param {Number} [col] The column the widget should start in.
+    * @param {Number} [row] The row the widget should start in.
+    * @return {HTMLElement} Returns the jQuery wrapped HTMLElement representing.
+    *  the widget that was just created.
+    */
+    fn.add_widget = function(html, size_x, size_y, col, row) {
+        var pos;
+        size_x || (size_x = 1);
+        size_y || (size_y = 1);
+
+        if (!col & !row) {
+            pos = this.next_position(size_x, size_y);
+        }else{
+            pos = {
+                col: col,
+                row: row
+            };
+
+            this.empty_cells(col, row, size_x, size_y);
+        }
+
+        var $w = $(html).attr({
+                'data-col': pos.col,
+                'data-row': pos.row,
+                'data-sizex' : size_x,
+                'data-sizey' : size_y
+            }).addClass('gs_w').appendTo(this.$el).hide();
+
+        this.$widgets = this.$widgets.add($w);
+
+        this.register_widget($w);
+
+        this.add_faux_rows(pos.size_y);
+        //this.add_faux_cols(pos.size_x);
+
+        this.set_dom_grid_height();
+
+        return $w.fadeIn();
+    };
+
+
+
+     /**
+    * Change the size of a widget.
+    *
+    * @method resize_widget
+    * @param {HTMLElement} $widget The jQuery wrapped HTMLElement
+    *  representing the widget.
+    * @param {Number} size_x The number of columns that will occupy the widget.
+    * @param {Number} size_y The number of rows that will occupy the widget.
+    * @param {Function} callback Function executed when the widget is removed.
+    * @return {HTMLElement} Returns $widget.
+    */
+    fn.resize_widget = function($widget, size_x, size_y, callback) {
+        var wgd = $widget.coords().grid;
+        size_x || (size_x = wgd.size_x);
+        size_y || (size_y = wgd.size_y);
+
+        if (size_x > this.cols) {
+            size_x = this.cols;
+        }
+
+        var old_cells_occupied = this.get_cells_occupied(wgd);
+        var old_size_x = wgd.size_x;
+        var old_size_y = wgd.size_y;
+        var old_col = wgd.col;
+        var new_col = old_col;
+        var wider = size_x > old_size_x;
+        var taller = size_y > old_size_y;
+
+        if (old_col + size_x - 1 > this.cols) {
+            var diff = old_col + (size_x - 1) - this.cols;
+            var c = old_col - diff;
+            new_col = Math.max(1, c);
+        }
+
+        var new_grid_data = {
+            col: new_col,
+            row: wgd.row,
+            size_x: size_x,
+            size_y: size_y
+        };
+
+        var new_cells_occupied = this.get_cells_occupied(new_grid_data);
+
+        var empty_cols = [];
+        $.each(old_cells_occupied.cols, function(i, col) {
+            if ($.inArray(col, new_cells_occupied.cols) === -1) {
+                empty_cols.push(col);
+            }
+        });
+
+        var occupied_cols = [];
+        $.each(new_cells_occupied.cols, function(i, col) {
+            if ($.inArray(col, old_cells_occupied.cols) === -1) {
+                occupied_cols.push(col);
+            }
+        });
+
+        var empty_rows = [];
+        $.each(old_cells_occupied.rows, function(i, row) {
+            if ($.inArray(row, new_cells_occupied.rows) === -1) {
+                empty_rows.push(row);
+            }
+        });
+
+        var occupied_rows = [];
+        $.each(new_cells_occupied.rows, function(i, row) {
+            if ($.inArray(row, old_cells_occupied.rows) === -1) {
+                occupied_rows.push(row);
+            }
+        });
+
+        this.remove_from_gridmap(wgd);
+
+        if (occupied_cols.length) {
+            var cols_to_empty = [
+                new_col, wgd.row, size_x, Math.min(old_size_y, size_y), $widget
+            ];
+            this.empty_cells.apply(this, cols_to_empty);
+        }
+
+        if (occupied_rows.length) {
+            var rows_to_empty = [new_col, wgd.row, size_x, size_y, $widget];
+            this.empty_cells.apply(this, rows_to_empty);
+        }
+
+        wgd.col = new_col;
+        wgd.size_x = size_x;
+        wgd.size_y = size_y;
+        this.add_to_gridmap(new_grid_data, $widget);
+
+        //update coords instance attributes
+        $widget.data('coords').update({
+            width: (size_x * this.options.widget_base_dimensions[0] +
+                ((size_x - 1) * this.options.widget_margins[0]) * 2),
+            height: (size_y * this.options.widget_base_dimensions[1] +
+                ((size_y - 1) * this.options.widget_margins[1]) * 2)
+        });
+
+        if (size_y > old_size_y) {
+            this.add_faux_rows(size_y - old_size_y);
+        }
+
+        if (size_x > old_size_x) {
+            this.add_faux_cols(size_x - old_size_x);
+        }
+
+        $widget.attr({
+            'data-col': new_col,
+            'data-sizex': size_x,
+            'data-sizey': size_y
+        });
+
+        if (empty_cols.length) {
+            var cols_to_remove_holes = [
+                empty_cols[0], wgd.row,
+                empty_cols.length,
+                Math.min(old_size_y, size_y),
+                $widget
+            ];
+
+            this.remove_empty_cells.apply(this, cols_to_remove_holes);
+        }
+
+        if (empty_rows.length) {
+            var rows_to_remove_holes = [
+                new_col, wgd.row, size_x, size_y, $widget
+            ];
+            this.remove_empty_cells.apply(this, rows_to_remove_holes);
+        }
+
+        if (callback) {
+            callback.call(this, size_x, size_y);
+        }
+
+        return $widget;
+    };
+
+    /**
+    * Move down widgets in cells represented by the arguments col, row, size_x,
+    * size_y
+    *
+    * @method empty_cells
+    * @param {Number} col The column where the group of cells begin.
+    * @param {Number} row The row where the group of cells begin.
+    * @param {Number} size_x The number of columns that the group of cells
+    * occupy.
+    * @param {Number} size_y The number of rows that the group of cells
+    * occupy.
+    * @param {HTMLElement} $exclude Exclude widgets from being moved.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.empty_cells = function(col, row, size_x, size_y, $exclude) {
+        var $nexts = this.widgets_below({
+                col: col,
+                row: row - size_y,
+                size_x: size_x,
+                size_y: size_y
+            });
+
+        $nexts.not($exclude).each($.proxy(function(i, w) {
+            var wgd = $(w).coords().grid;
+            if (!(wgd.row <= (row + size_y - 1))) { return; }
+            var diff =  (row + size_y) - wgd.row;
+            this.move_widget_down($(w), diff);
+        }, this));
+
+        this.set_dom_grid_height();
+
+        return this;
+    };
+
+
+    /**
+    * Move up widgets below cells represented by the arguments col, row, size_x,
+    * size_y.
+    *
+    * @method remove_empty_cells
+    * @param {Number} col The column where the group of cells begin.
+    * @param {Number} row The row where the group of cells begin.
+    * @param {Number} size_x The number of columns that the group of cells
+    * occupy.
+    * @param {Number} size_y The number of rows that the group of cells
+    * occupy.
+    * @param {HTMLElement} exclude Exclude widgets from being moved.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.remove_empty_cells = function(col, row, size_x, size_y, exclude) {
+        var $nexts = this.widgets_below({
+            col: col,
+            row: row,
+            size_x: size_x,
+            size_y: size_y
+        });
+
+        $nexts.not(exclude).each($.proxy(function(i, widget) {
+            this.move_widget_up( $(widget), size_y );
+        }, this));
+
+        this.set_dom_grid_height();
+
+        return this;
+    };
+
+
+    /**
+    * Get the most left column below to add a new widget.
+    *
+    * @method next_position
+    * @param {Number} size_x The nº of rows the widget occupies horizontally.
+    * @param {Number} size_y The nº of columns the widget occupies vertically.
+    * @return {Object} Returns a grid coords object representing the future
+    *  widget coords.
+    */
+    fn.next_position = function(size_x, size_y) {
+        size_x || (size_x = 1);
+        size_y || (size_y = 1);
+        var ga = this.gridmap;
+        var cols_l = ga.length;
+        var valid_pos = [];
+        var rows_l;
+
+        for (var c = 1; c < cols_l; c++) {
+            rows_l = ga[c].length;
+            for (var r = 1; r <= rows_l; r++) {
+                var can_move_to = this.can_move_to({
+                    size_x: size_x,
+                    size_y: size_y
+                }, c, r);
+
+                if (can_move_to) {
+                    valid_pos.push({
+                        col: c,
+                        row: r,
+                        size_y: size_y,
+                        size_x: size_x
+                    });
+                }
+            }
+        }
+
+        if (valid_pos.length) {
+            return this.sort_by_row_and_col_asc(valid_pos)[0];
+        }
+        return false;
+    };
+
+
+    /**
+    * Remove a widget from the grid.
+    *
+    * @method remove_widget
+    * @param {HTMLElement} el The jQuery wrapped HTMLElement you want to remove.
+    * @param {Boolean|Function} silent If true, widgets below the removed one
+    * will not move up. If a Function is passed it will be used as callback.
+    * @param {Function} callback Function executed when the widget is removed.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.remove_widget = function(el, silent, callback) {
+        var $el = el instanceof jQuery ? el : $(el);
+        var wgd = $el.coords().grid;
+
+        // if silent is a function assume it's a callback
+        if ($.isFunction(silent)) {
+            callback = silent;
+            silent = false;
+        }
+
+        this.cells_occupied_by_placeholder = {};
+        this.$widgets = this.$widgets.not($el);
+
+        var $nexts = this.widgets_below($el);
+
+        this.remove_from_gridmap(wgd);
+
+        $el.fadeOut($.proxy(function() {
+            $el.remove();
+
+            if (!silent) {
+                $nexts.each($.proxy(function(i, widget) {
+                    this.move_widget_up( $(widget), wgd.size_y );
+                }, this));
+            }
+
+            this.set_dom_grid_height();
+
+            if (callback) {
+                callback.call(this, el);
+            }
+        }, this));
+    };
+
+
+    /**
+    * Remove all widgets from the grid.
+    *
+    * @method remove_all_widgets
+    * @param {Function} callback Function executed for each widget removed.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.remove_all_widgets = function(callback) {
+        this.$widgets.each($.proxy(function(i, el){
+              this.remove_widget(el, true, callback);
+        }, this));
+
+        return this;
+    };
+
+
+    /**
+    * Returns a serialized array of the widgets in the grid.
+    *
+    * @method serialize
+    * @param {HTMLElement} [$widgets] The collection of jQuery wrapped
+    *  HTMLElements you want to serialize. If no argument is passed all widgets
+    *  will be serialized.
+    * @return {Array} Returns an Array of Objects with the data specified in
+    *  the serialize_params option.
+    */
+    fn.serialize = function($widgets) {
+        $widgets || ($widgets = this.$widgets);
+        var result = [];
+        $widgets.each($.proxy(function(i, widget) {
+            result.push(this.options.serialize_params(
+                $(widget), $(widget).coords().grid ) );
+        }, this));
+
+        return result;
+    };
+
+
+    /**
+    * Returns a serialized array of the widgets that have changed their
+    *  position.
+    *
+    * @method serialize_changed
+    * @return {Array} Returns an Array of Objects with the data specified in
+    *  the serialize_params option.
+    */
+    fn.serialize_changed = function() {
+        return this.serialize(this.$changed);
+    };
+
+
+    /**
+    * Creates the grid coords object representing the widget a add it to the
+    * mapped array of positions.
+    *
+    * @method register_widget
+    * @return {Array} Returns the instance of the Gridster class.
+    */
+    fn.register_widget = function($el) {
+
+        var wgd = {
+            'col': parseInt($el.attr('data-col'), 10),
+            'row': parseInt($el.attr('data-row'), 10),
+            'size_x': parseInt($el.attr('data-sizex'), 10),
+            'size_y': parseInt($el.attr('data-sizey'), 10),
+            'el': $el
+        };
+
+        if (this.options.avoid_overlapped_widgets &&
+            !this.can_move_to(
+             {size_x: wgd.size_x, size_y: wgd.size_y}, wgd.col, wgd.row)
+        ) {
+            wgd = this.next_position(wgd.size_x, wgd.size_y);
+            wgd.el = $el;
+            $el.attr({
+                'data-col': wgd.col,
+                'data-row': wgd.row,
+                'data-sizex': wgd.size_x,
+                'data-sizey': wgd.size_y
+            });
+        }
+
+        // attach Coord object to player data-coord attribute
+        $el.data('coords', $el.coords());
+
+        // Extend Coord object with grid position info
+        $el.data('coords').grid = wgd;
+
+        this.add_to_gridmap(wgd, $el);
+
+        return this;
+    };
+
+
+    /**
+    * Update in the mapped array of positions the value of cells represented by
+    * the grid coords object passed in the `grid_data` param.
+    *
+    * @param {Object} grid_data The grid coords object representing the cells
+    *  to update in the mapped array.
+    * @param {HTMLElement|Boolean} value Pass `false` or the jQuery wrapped
+    *  HTMLElement, depends if you want to delete an existing position or add
+    *  a new one.
+    * @method update_widget_position
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.update_widget_position = function(grid_data, value) {
+        this.for_each_cell_occupied(grid_data, function(col, row) {
+            if (!this.gridmap[col]) { return this; }
+            this.gridmap[col][row] = value;
+        });
+        return this;
+    };
+
+
+    /**
+    * Remove a widget from the mapped array of positions.
+    *
+    * @method remove_from_gridmap
+    * @param {Object} grid_data The grid coords object representing the cells
+    *  to update in the mapped array.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.remove_from_gridmap = function(grid_data) {
+        return this.update_widget_position(grid_data, false);
+    };
+
+
+    /**
+    * Add a widget to the mapped array of positions.
+    *
+    * @method add_to_gridmap
+    * @param {Object} grid_data The grid coords object representing the cells
+    *  to update in the mapped array.
+    * @param {HTMLElement|Boolean} value The value to set in the specified
+    *  position .
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.add_to_gridmap = function(grid_data, value) {
+        this.update_widget_position(grid_data, value || grid_data.el);
+
+        if (grid_data.el) {
+            var $widgets = this.widgets_below(grid_data.el);
+            $widgets.each($.proxy(function(i, widget) {
+                this.move_widget_up( $(widget));
+            }, this));
+        }
+    };
+
+
+    /**
+    * Make widgets draggable.
+    *
+    * @uses Draggable
+    * @method draggable
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.draggable = function() {
+        var self = this;
+        var draggable_options = $.extend(true, {}, this.options.draggable, {
+            offset_left: this.options.widget_margins[0],
+            container_width: this.container_width,
+            start: function(event, ui) {
+                self.$widgets.filter('.player-revert')
+                    .removeClass('player-revert');
+
+                self.$player = $(this);
+                self.$helper = self.options.draggable.helper === 'clone' ?
+                    $(ui.helper) : self.$player;
+                self.helper = !self.$helper.is(self.$player);
+
+                self.on_start_drag.call(self, event, ui);
+                self.$el.trigger('gridster:dragstart');
+            },
+            stop: function(event, ui) {
+                self.on_stop_drag.call(self, event, ui);
+                self.$el.trigger('gridster:dragstop');
+            },
+            drag: throttle(function(event, ui) {
+                self.on_drag.call(self, event, ui);
+                self.$el.trigger('gridster:drag');
+            }, 60)
+          });
+
+        this.drag_api = this.$el.drag(draggable_options).data('drag');
+        return this;
+    };
+
+
+    /**
+    * This function is executed when the player begins to be dragged.
+    *
+    * @method on_start_drag
+    * @param {Event} event The original browser event
+    * @param {Object} ui A prepared ui object.
+    */
+    fn.on_start_drag = function(event, ui) {
+
+        this.$helper.add(this.$player).add(this.$wrapper).addClass('dragging');
+
+        this.$player.addClass('player');
+        this.player_grid_data = this.$player.coords().grid;
+        this.placeholder_grid_data = $.extend({}, this.player_grid_data);
+
+        //set new grid height along the dragging period
+        this.$el.css('height', this.$el.height() +
+          (this.player_grid_data.size_y * this.min_widget_height));
+
+        var colliders = this.faux_grid;
+        var coords = this.$player.data('coords').coords;
+
+        this.cells_occupied_by_player = this.get_cells_occupied(
+            this.player_grid_data);
+        this.cells_occupied_by_placeholder = this.get_cells_occupied(
+            this.placeholder_grid_data);
+
+        this.last_cols = [];
+        this.last_rows = [];
+
+
+        // see jquery.collision.js
+        this.collision_api = this.$helper.collision(
+            colliders, this.options.collision);
+
+        this.$preview_holder = $('<li />', {
+              'class': 'preview-holder',
+              'data-row': this.$player.attr('data-row'),
+              'data-col': this.$player.attr('data-col'),
+              css: {
+                  width: coords.width,
+                  height: coords.height
+              }
+        }).appendTo(this.$el);
+
+        if (this.options.draggable.start) {
+          this.options.draggable.start.call(this, event, ui);
+        }
+    };
+
+
+    /**
+    * This function is executed when the player is being dragged.
+    *
+    * @method on_drag
+    * @param {Event} event The original browser event
+    * @param {Object} ui A prepared ui object.
+    */
+    fn.on_drag = function(event, ui) {
+        //break if dragstop has been fired
+        if (this.$player === null) {
+            return false;
+        }
+
+        var abs_offset = {
+            left: ui.position.left + this.baseX,
+            top: ui.position.top + this.baseY
+        };
+
+        this.colliders_data = this.collision_api.get_closest_colliders(
+            abs_offset);
+
+        this.on_overlapped_column_change(
+            this.on_start_overlapping_column,
+            this.on_stop_overlapping_column
+        );
+
+        this.on_overlapped_row_change(
+            this.on_start_overlapping_row,
+            this.on_stop_overlapping_row
+        );
+
+        if (this.helper && this.$player) {
+            this.$player.css({
+                'left': ui.position.left,
+                'top': ui.position.top
+            });
+        }
+
+        if (this.options.draggable.drag) {
+            this.options.draggable.drag.call(this, event, ui);
+        }
+    };
+
+    /**
+    * This function is executed when the player stops being dragged.
+    *
+    * @method on_stop_drag
+    * @param {Event} event The original browser event
+    * @param {Object} ui A prepared ui object.
+    */
+    fn.on_stop_drag = function(event, ui) {
+        this.$helper.add(this.$player).add(this.$wrapper)
+            .removeClass('dragging');
+
+        ui.position.left = ui.position.left + this.baseX;
+        ui.position.top = ui.position.top + this.baseY;
+        this.colliders_data = this.collision_api.get_closest_colliders(ui.position);
+
+        this.on_overlapped_column_change(
+            this.on_start_overlapping_column,
+            this.on_stop_overlapping_column
+        );
+
+        this.on_overlapped_row_change(
+            this.on_start_overlapping_row,
+            this.on_stop_overlapping_row
+        );
+
+        this.$player.addClass('player-revert').removeClass('player')
+            .attr({
+                'data-col': this.placeholder_grid_data.col,
+                'data-row': this.placeholder_grid_data.row
+            }).css({
+                'left': '',
+                'top': ''
+            });
+
+        this.$changed = this.$changed.add(this.$player);
+
+        this.cells_occupied_by_player = this.get_cells_occupied(
+            this.placeholder_grid_data);
+        this.set_cells_player_occupies(
+            this.placeholder_grid_data.col, this.placeholder_grid_data.row);
+
+        this.$player.coords().grid.row = this.placeholder_grid_data.row;
+        this.$player.coords().grid.col = this.placeholder_grid_data.col;
+
+        if (this.options.draggable.stop) {
+          this.options.draggable.stop.call(this, event, ui);
+        }
+
+        this.$preview_holder.remove();
+
+        this.$player = null;
+        this.$helper = null;
+        this.placeholder_grid_data = {};
+        this.player_grid_data = {};
+        this.cells_occupied_by_placeholder = {};
+        this.cells_occupied_by_player = {};
+
+        this.set_dom_grid_height();
+    };
+
+
+    /**
+    * Executes the callbacks passed as arguments when a column begins to be
+    * overlapped or stops being overlapped.
+    *
+    * @param {Function} start_callback Function executed when a new column
+    *  begins to be overlapped. The column is passed as first argument.
+    * @param {Function} stop_callback Function executed when a column stops
+    *  being overlapped. The column is passed as first argument.
+    * @method on_overlapped_column_change
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.on_overlapped_column_change = function(start_callback, stop_callback) {
+        if (!this.colliders_data.length) {
+            return this;
+        }
+        var cols = this.get_targeted_columns(
+            this.colliders_data[0].el.data.col);
+
+        var last_n_cols = this.last_cols.length;
+        var n_cols = cols.length;
+        var i;
+
+        for (i = 0; i < n_cols; i++) {
+            if ($.inArray(cols[i], this.last_cols) === -1) {
+                (start_callback || $.noop).call(this, cols[i]);
+            }
+        }
+
+        for (i = 0; i< last_n_cols; i++) {
+            if ($.inArray(this.last_cols[i], cols) === -1) {
+                (stop_callback || $.noop).call(this, this.last_cols[i]);
+            }
+        }
+
+        this.last_cols = cols;
+
+        return this;
+    };
+
+
+    /**
+    * Executes the callbacks passed as arguments when a row starts to be
+    * overlapped or stops being overlapped.
+    *
+    * @param {Function} start_callback Function executed when a new row begins
+    *  to be overlapped. The row is passed as first argument.
+    * @param {Function} end_callback Function executed when a row stops being
+    *  overlapped. The row is passed as first argument.
+    * @method on_overlapped_row_change
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.on_overlapped_row_change = function(start_callback, end_callback) {
+        if (!this.colliders_data.length) {
+            return this;
+        }
+        var rows = this.get_targeted_rows(this.colliders_data[0].el.data.row);
+        var last_n_rows = this.last_rows.length;
+        var n_rows = rows.length;
+        var i;
+
+        for (i = 0; i < n_rows; i++) {
+            if ($.inArray(rows[i], this.last_rows) === -1) {
+                (start_callback || $.noop).call(this, rows[i]);
+            }
+        }
+
+        for (i = 0; i < last_n_rows; i++) {
+            if ($.inArray(this.last_rows[i], rows) === -1) {
+                (end_callback || $.noop).call(this, this.last_rows[i]);
+            }
+        }
+
+        this.last_rows = rows;
+    };
+
+
+    /**
+    * Sets the current position of the player
+    *
+    * @param {Number} col
+    * @param {Number} row
+    * @param {Boolean} no_player
+    * @method set_player
+    * @return {object}
+    */
+    fn.set_player = function(col, row, no_player) {
+        var self = this;
+        if (!no_player) {
+            this.empty_cells_player_occupies();
+        }
+        var cell = !no_player ? self.colliders_data[0].el.data : {col: col};
+        var to_col = cell.col;
+        var to_row = row || cell.row;
+
+        this.player_grid_data = {
+            col: to_col,
+            row: to_row,
+            size_y : this.player_grid_data.size_y,
+            size_x : this.player_grid_data.size_x
+        };
+
+        this.cells_occupied_by_player = this.get_cells_occupied(
+            this.player_grid_data);
+
+        var $overlapped_widgets = this.get_widgets_overlapped(
+            this.player_grid_data);
+
+        var constraints = this.widgets_constraints($overlapped_widgets);
+
+        this.manage_movements(constraints.can_go_up, to_col, to_row);
+        this.manage_movements(constraints.can_not_go_up, to_col, to_row);
+
+        /* if there is not widgets overlapping in the new player position,
+         * update the new placeholder position. */
+        if (!$overlapped_widgets.length) {
+            var pp = this.can_go_player_up(this.player_grid_data);
+            if (pp !== false) {
+                to_row = pp;
+            }
+            this.set_placeholder(to_col, to_row);
+        }
+
+        return {
+            col: to_col,
+            row: to_row
+        };
+    };
+
+
+    /**
+    * See which of the widgets in the $widgets param collection can go to
+    * a upper row and which not.
+    *
+    * @method widgets_contraints
+    * @param {jQuery} $widgets A jQuery wrapped collection of
+    * HTMLElements.
+    * @return {object} Returns a literal Object with two keys: `can_go_up` &
+    * `can_not_go_up`. Each contains a set of HTMLElements.
+    */
+    fn.widgets_constraints = function($widgets) {
+        var $widgets_can_go_up = $([]);
+        var $widgets_can_not_go_up;
+        var wgd_can_go_up = [];
+        var wgd_can_not_go_up = [];
+
+        $widgets.each($.proxy(function(i, w) {
+            var $w = $(w);
+            var wgd = $w.coords().grid;
+            if (this.can_go_widget_up(wgd)) {
+                $widgets_can_go_up = $widgets_can_go_up.add($w);
+                wgd_can_go_up.push(wgd);
+            }else{
+                wgd_can_not_go_up.push(wgd);
+            }
+        }, this));
+
+        $widgets_can_not_go_up = $widgets.not($widgets_can_go_up);
+
+        return {
+            can_go_up: this.sort_by_row_asc(wgd_can_go_up),
+            can_not_go_up: this.sort_by_row_desc(wgd_can_not_go_up)
+        };
+    };
+
+
+    /**
+    * Sorts an Array of grid coords objects (representing the grid coords of
+    * each widget) in ascending way.
+    *
+    * @method sort_by_row_asc
+    * @param {Array} widgets Array of grid coords objects
+    * @return {Array} Returns the array sorted.
+    */
+    fn.sort_by_row_asc = function(widgets) {
+        widgets = widgets.sort(function(a, b) {
+            if (!a.row) {
+                a = $(a).coords().grid;
+                b = $(b).coords().grid;
+            }
+
+           if (a.row > b.row) {
+               return 1;
+           }
+           return -1;
+        });
+
+        return widgets;
+    };
+
+
+    /**
+    * Sorts an Array of grid coords objects (representing the grid coords of
+    * each widget) placing first the empty cells upper left.
+    *
+    * @method sort_by_row_and_col_asc
+    * @param {Array} widgets Array of grid coords objects
+    * @return {Array} Returns the array sorted.
+    */
+    fn.sort_by_row_and_col_asc = function(widgets) {
+        widgets = widgets.sort(function(a, b) {
+           if (a.row > b.row || a.row === b.row && a.col > b.col) {
+               return 1;
+           }
+           return -1;
+        });
+
+        return widgets;
+    };
+
+
+    /**
+    * Sorts an Array of grid coords objects by column (representing the grid
+    * coords of each widget) in ascending way.
+    *
+    * @method sort_by_col_asc
+    * @param {Array} widgets Array of grid coords objects
+    * @return {Array} Returns the array sorted.
+    */
+    fn.sort_by_col_asc = function(widgets) {
+        widgets = widgets.sort(function(a, b) {
+           if (a.col > b.col) {
+               return 1;
+           }
+           return -1;
+        });
+
+        return widgets;
+    };
+
+
+    /**
+    * Sorts an Array of grid coords objects (representing the grid coords of
+    * each widget) in descending way.
+    *
+    * @method sort_by_row_desc
+    * @param {Array} widgets Array of grid coords objects
+    * @return {Array} Returns the array sorted.
+    */
+    fn.sort_by_row_desc = function(widgets) {
+        widgets = widgets.sort(function(a, b) {
+            if (a.row + a.size_y < b.row + b.size_y) {
+                return 1;
+            }
+           return -1;
+        });
+        return widgets;
+    };
+
+
+    /**
+    * Sorts an Array of grid coords objects (representing the grid coords of
+    * each widget) in descending way.
+    *
+    * @method manage_movements
+    * @param {jQuery} $widgets A jQuery collection of HTMLElements
+    *  representing the widgets you want to move.
+    * @param {Number} to_col The column to which we want to move the widgets.
+    * @param {Number} to_row The row to which we want to move the widgets.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.manage_movements = function($widgets, to_col, to_row) {
+        $.each($widgets, $.proxy(function(i, w) {
+            var wgd = w;
+            var $w = wgd.el;
+
+            var can_go_widget_up = this.can_go_widget_up(wgd);
+
+            if (can_go_widget_up) {
+                //target CAN go up
+                //so move widget up
+                this.move_widget_to($w, can_go_widget_up);
+                this.set_placeholder(to_col, can_go_widget_up + wgd.size_y);
+
+            } else {
+                //target can't go up
+                var can_go_player_up = this.can_go_player_up(
+                    this.player_grid_data);
+
+                if (!can_go_player_up) {
+                    // target can't go up
+                    // player cant't go up
+                    // so we need to move widget down to a position that dont
+                    // overlaps player
+                    var y = (to_row + this.player_grid_data.size_y) - wgd.row;
+
+                    this.move_widget_down($w, y);
+                    this.set_placeholder(to_col, to_row);
+                }
+            }
+        }, this));
+
+        return this;
+    };
+
+    /**
+    * Determines if there is a widget in the row and col given. Or if the
+    * HTMLElement passed as first argument is the player.
+    *
+    * @method is_player
+    * @param {Number|HTMLElement} col_or_el A jQuery wrapped collection of
+    * HTMLElements.
+    * @param {Number} [row] The column to which we want to move the widgets.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_player = function(col_or_el, row) {
+        if (row && !this.gridmap[col_or_el]) { return false; }
+        var $w = row ? this.gridmap[col_or_el][row] : col_or_el;
+        return $w && ($w.is(this.$player) || $w.is(this.$helper));
+    };
+
+
+    /**
+    * Determines if the widget that is being dragged is currently over the row
+    * and col given.
+    *
+    * @method is_player_in
+    * @param {Number} col The column to check.
+    * @param {Number} row The row to check.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_player_in = function(col, row) {
+        var c = this.cells_occupied_by_player || {};
+        return $.inArray(col, c.cols) >= 0 && $.inArray(row, c.rows) >= 0;
+    };
+
+
+    /**
+    * Determines if the placeholder is currently over the row and col given.
+    *
+    * @method is_placeholder_in
+    * @param {Number} col The column to check.
+    * @param {Number} row The row to check.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_placeholder_in = function(col, row) {
+        var c = this.cells_occupied_by_placeholder || {};
+        return this.is_placeholder_in_col(col) && $.inArray(row, c.rows) >= 0;
+    };
+
+
+    /**
+    * Determines if the placeholder is currently over the column given.
+    *
+    * @method is_placeholder_in_col
+    * @param {Number} col The column to check.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_placeholder_in_col = function(col) {
+        var c = this.cells_occupied_by_placeholder || [];
+        return $.inArray(col, c.cols) >= 0;
+    };
+
+
+    /**
+    * Determines if the cell represented by col and row params is empty.
+    *
+    * @method is_empty
+    * @param {Number} col The column to check.
+    * @param {Number} row The row to check.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_empty = function(col, row) {
+        if (typeof this.gridmap[col] !== 'undefined') {
+			if(typeof this.gridmap[col][row] !== 'undefined' &&
+				 this.gridmap[col][row] === false
+			) {
+				return true;
 			}
-		}, {
-			re: /rgba?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
-			parse: function( execResult ) {
-				return [
-					execResult[ 1 ] * 2.55,
-					execResult[ 2 ] * 2.55,
-					execResult[ 3 ] * 2.55,
-					execResult[ 4 ]
-				];
-			}
-		}, {
-			// this regex ignores A-F because it's compared against an already lowercased string
-			re: /#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})/,
-			parse: function( execResult ) {
-				return [
-					parseInt( execResult[ 1 ], 16 ),
-					parseInt( execResult[ 2 ], 16 ),
-					parseInt( execResult[ 3 ], 16 )
-				];
-			}
-		}, {
-			// this regex ignores A-F because it's compared against an already lowercased string
-			re: /#([a-f0-9])([a-f0-9])([a-f0-9])/,
-			parse: function( execResult ) {
-				return [
-					parseInt( execResult[ 1 ] + execResult[ 1 ], 16 ),
-					parseInt( execResult[ 2 ] + execResult[ 2 ], 16 ),
-					parseInt( execResult[ 3 ] + execResult[ 3 ], 16 )
-				];
-			}
-		}, {
-			re: /hsla?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
-			space: "hsla",
-			parse: function( execResult ) {
-				return [
-					execResult[ 1 ],
-					execResult[ 2 ] / 100,
-					execResult[ 3 ] / 100,
-					execResult[ 4 ]
-				];
-			}
-		}],
-
-	// jQuery.Color( )
-	color = jQuery.Color = function( color, green, blue, alpha ) {
-		return new jQuery.Color.fn.parse( color, green, blue, alpha );
-	},
-	spaces = {
-		rgba: {
-			props: {
-				red: {
-					idx: 0,
-					type: "byte"
-				},
-				green: {
-					idx: 1,
-					type: "byte"
-				},
-				blue: {
-					idx: 2,
-					type: "byte"
-				}
-			}
-		},
-
-		hsla: {
-			props: {
-				hue: {
-					idx: 0,
-					type: "degrees"
-				},
-				saturation: {
-					idx: 1,
-					type: "percent"
-				},
-				lightness: {
-					idx: 2,
-					type: "percent"
-				}
-			}
-		}
-	},
-	propTypes = {
-		"byte": {
-			floor: true,
-			max: 255
-		},
-		"percent": {
-			max: 1
-		},
-		"degrees": {
-			mod: 360,
-			floor: true
-		}
-	},
-	support = color.support = {},
-
-	// element for support tests
-	supportElem = jQuery( "<p>" )[ 0 ],
-
-	// colors = jQuery.Color.names
-	colors,
-
-	// local aliases of functions called often
-	each = jQuery.each;
-
-// determine rgba support immediately
-supportElem.style.cssText = "background-color:rgba(1,1,1,.5)";
-support.rgba = supportElem.style.backgroundColor.indexOf( "rgba" ) > -1;
-
-// define cache name and alpha properties
-// for rgba and hsla spaces
-each( spaces, function( spaceName, space ) {
-	space.cache = "_" + spaceName;
-	space.props.alpha = {
-		idx: 3,
-		type: "percent",
-		def: 1
-	};
-});
-
-function clamp( value, prop, allowEmpty ) {
-	var type = propTypes[ prop.type ] || {};
-
-	if ( value == null ) {
-		return (allowEmpty || !prop.def) ? null : prop.def;
-	}
-
-	// ~~ is an short way of doing floor for positive numbers
-	value = type.floor ? ~~value : parseFloat( value );
-
-	// IE will pass in empty strings as value for alpha,
-	// which will hit this case
-	if ( isNaN( value ) ) {
-		return prop.def;
-	}
-
-	if ( type.mod ) {
-		// we add mod before modding to make sure that negatives values
-		// get converted properly: -10 -> 350
-		return (value + type.mod) % type.mod;
-	}
-
-	// for now all property types without mod have min and max
-	return 0 > value ? 0 : type.max < value ? type.max : value;
-}
-
-function stringParse( string ) {
-	var inst = color(),
-		rgba = inst._rgba = [];
-
-	string = string.toLowerCase();
-
-	each( stringParsers, function( i, parser ) {
-		var parsed,
-			match = parser.re.exec( string ),
-			values = match && parser.parse( match ),
-			spaceName = parser.space || "rgba";
-
-		if ( values ) {
-			parsed = inst[ spaceName ]( values );
-
-			// if this was an rgba parse the assignment might happen twice
-			// oh well....
-			inst[ spaces[ spaceName ].cache ] = parsed[ spaces[ spaceName ].cache ];
-			rgba = inst._rgba = parsed._rgba;
-
-			// exit each( stringParsers ) here because we matched
 			return false;
 		}
-	});
-
-	// Found a stringParser that handled it
-	if ( rgba.length ) {
-
-		// if this came from a parsed string, force "transparent" when alpha is 0
-		// chrome, (and maybe others) return "transparent" as rgba(0,0,0,0)
-		if ( rgba.join() === "0,0,0,0" ) {
-			jQuery.extend( rgba, colors.transparent );
-		}
-		return inst;
-	}
-
-	// named colors
-	return colors[ string ];
-}
-
-color.fn = jQuery.extend( color.prototype, {
-	parse: function( red, green, blue, alpha ) {
-		if ( red === undefined ) {
-			this._rgba = [ null, null, null, null ];
-			return this;
-		}
-		if ( red.jquery || red.nodeType ) {
-			red = jQuery( red ).css( green );
-			green = undefined;
-		}
-
-		var inst = this,
-			type = jQuery.type( red ),
-			rgba = this._rgba = [];
-
-		// more than 1 argument specified - assume ( red, green, blue, alpha )
-		if ( green !== undefined ) {
-			red = [ red, green, blue, alpha ];
-			type = "array";
-		}
-
-		if ( type === "string" ) {
-			return this.parse( stringParse( red ) || colors._default );
-		}
-
-		if ( type === "array" ) {
-			each( spaces.rgba.props, function( key, prop ) {
-				rgba[ prop.idx ] = clamp( red[ prop.idx ], prop );
-			});
-			return this;
-		}
-
-		if ( type === "object" ) {
-			if ( red instanceof color ) {
-				each( spaces, function( spaceName, space ) {
-					if ( red[ space.cache ] ) {
-						inst[ space.cache ] = red[ space.cache ].slice();
-					}
-				});
-			} else {
-				each( spaces, function( spaceName, space ) {
-					var cache = space.cache;
-					each( space.props, function( key, prop ) {
-
-						// if the cache doesn't exist, and we know how to convert
-						if ( !inst[ cache ] && space.to ) {
-
-							// if the value was null, we don't need to copy it
-							// if the key was alpha, we don't need to copy it either
-							if ( key === "alpha" || red[ key ] == null ) {
-								return;
-							}
-							inst[ cache ] = space.to( inst._rgba );
-						}
-
-						// this is the only case where we allow nulls for ALL properties.
-						// call clamp with alwaysAllowEmpty
-						inst[ cache ][ prop.idx ] = clamp( red[ key ], prop, true );
-					});
-
-					// everything defined but alpha?
-					if ( inst[ cache ] && jQuery.inArray( null, inst[ cache ].slice( 0, 3 ) ) < 0 ) {
-						// use the default of 1
-						inst[ cache ][ 3 ] = 1;
-						if ( space.from ) {
-							inst._rgba = space.from( inst[ cache ] );
-						}
-					}
-				});
-			}
-			return this;
-		}
-	},
-	is: function( compare ) {
-		var is = color( compare ),
-			same = true,
-			inst = this;
-
-		each( spaces, function( _, space ) {
-			var localCache,
-				isCache = is[ space.cache ];
-			if (isCache) {
-				localCache = inst[ space.cache ] || space.to && space.to( inst._rgba ) || [];
-				each( space.props, function( _, prop ) {
-					if ( isCache[ prop.idx ] != null ) {
-						same = ( isCache[ prop.idx ] === localCache[ prop.idx ] );
-						return same;
-					}
-				});
-			}
-			return same;
-		});
-		return same;
-	},
-	_space: function() {
-		var used = [],
-			inst = this;
-		each( spaces, function( spaceName, space ) {
-			if ( inst[ space.cache ] ) {
-				used.push( spaceName );
-			}
-		});
-		return used.pop();
-	},
-	transition: function( other, distance ) {
-		var end = color( other ),
-			spaceName = end._space(),
-			space = spaces[ spaceName ],
-			startColor = this.alpha() === 0 ? color( "transparent" ) : this,
-			start = startColor[ space.cache ] || space.to( startColor._rgba ),
-			result = start.slice();
-
-		end = end[ space.cache ];
-		each( space.props, function( key, prop ) {
-			var index = prop.idx,
-				startValue = start[ index ],
-				endValue = end[ index ],
-				type = propTypes[ prop.type ] || {};
-
-			// if null, don't override start value
-			if ( endValue === null ) {
-				return;
-			}
-			// if null - use end
-			if ( startValue === null ) {
-				result[ index ] = endValue;
-			} else {
-				if ( type.mod ) {
-					if ( endValue - startValue > type.mod / 2 ) {
-						startValue += type.mod;
-					} else if ( startValue - endValue > type.mod / 2 ) {
-						startValue -= type.mod;
-					}
-				}
-				result[ index ] = clamp( ( endValue - startValue ) * distance + startValue, prop );
-			}
-		});
-		return this[ spaceName ]( result );
-	},
-	blend: function( opaque ) {
-		// if we are already opaque - return ourself
-		if ( this._rgba[ 3 ] === 1 ) {
-			return this;
-		}
-
-		var rgb = this._rgba.slice(),
-			a = rgb.pop(),
-			blend = color( opaque )._rgba;
-
-		return color( jQuery.map( rgb, function( v, i ) {
-			return ( 1 - a ) * blend[ i ] + a * v;
-		}));
-	},
-	toRgbaString: function() {
-		var prefix = "rgba(",
-			rgba = jQuery.map( this._rgba, function( v, i ) {
-				return v == null ? ( i > 2 ? 1 : 0 ) : v;
-			});
-
-		if ( rgba[ 3 ] === 1 ) {
-			rgba.pop();
-			prefix = "rgb(";
-		}
-
-		return prefix + rgba.join() + ")";
-	},
-	toHslaString: function() {
-		var prefix = "hsla(",
-			hsla = jQuery.map( this.hsla(), function( v, i ) {
-				if ( v == null ) {
-					v = i > 2 ? 1 : 0;
-				}
-
-				// catch 1 and 2
-				if ( i && i < 3 ) {
-					v = Math.round( v * 100 ) + "%";
-				}
-				return v;
-			});
-
-		if ( hsla[ 3 ] === 1 ) {
-			hsla.pop();
-			prefix = "hsl(";
-		}
-		return prefix + hsla.join() + ")";
-	},
-	toHexString: function( includeAlpha ) {
-		var rgba = this._rgba.slice(),
-			alpha = rgba.pop();
-
-		if ( includeAlpha ) {
-			rgba.push( ~~( alpha * 255 ) );
-		}
-
-		return "#" + jQuery.map( rgba, function( v ) {
-
-			// default to 0 when nulls exist
-			v = ( v || 0 ).toString( 16 );
-			return v.length === 1 ? "0" + v : v;
-		}).join("");
-	},
-	toString: function() {
-		return this._rgba[ 3 ] === 0 ? "transparent" : this.toRgbaString();
-	}
-});
-color.fn.parse.prototype = color.fn;
-
-// hsla conversions adapted from:
-// https://code.google.com/p/maashaack/source/browse/packages/graphics/trunk/src/graphics/colors/HUE2RGB.as?r=5021
-
-function hue2rgb( p, q, h ) {
-	h = ( h + 1 ) % 1;
-	if ( h * 6 < 1 ) {
-		return p + (q - p) * h * 6;
-	}
-	if ( h * 2 < 1) {
-		return q;
-	}
-	if ( h * 3 < 2 ) {
-		return p + (q - p) * ((2/3) - h) * 6;
-	}
-	return p;
-}
-
-spaces.hsla.to = function ( rgba ) {
-	if ( rgba[ 0 ] == null || rgba[ 1 ] == null || rgba[ 2 ] == null ) {
-		return [ null, null, null, rgba[ 3 ] ];
-	}
-	var r = rgba[ 0 ] / 255,
-		g = rgba[ 1 ] / 255,
-		b = rgba[ 2 ] / 255,
-		a = rgba[ 3 ],
-		max = Math.max( r, g, b ),
-		min = Math.min( r, g, b ),
-		diff = max - min,
-		add = max + min,
-		l = add * 0.5,
-		h, s;
-
-	if ( min === max ) {
-		h = 0;
-	} else if ( r === max ) {
-		h = ( 60 * ( g - b ) / diff ) + 360;
-	} else if ( g === max ) {
-		h = ( 60 * ( b - r ) / diff ) + 120;
-	} else {
-		h = ( 60 * ( r - g ) / diff ) + 240;
-	}
-
-	// chroma (diff) == 0 means greyscale which, by definition, saturation = 0%
-	// otherwise, saturation is based on the ratio of chroma (diff) to lightness (add)
-	if ( diff === 0 ) {
-		s = 0;
-	} else if ( l <= 0.5 ) {
-		s = diff / add;
-	} else {
-		s = diff / ( 2 - add );
-	}
-	return [ Math.round(h) % 360, s, l, a == null ? 1 : a ];
-};
-
-spaces.hsla.from = function ( hsla ) {
-	if ( hsla[ 0 ] == null || hsla[ 1 ] == null || hsla[ 2 ] == null ) {
-		return [ null, null, null, hsla[ 3 ] ];
-	}
-	var h = hsla[ 0 ] / 360,
-		s = hsla[ 1 ],
-		l = hsla[ 2 ],
-		a = hsla[ 3 ],
-		q = l <= 0.5 ? l * ( 1 + s ) : l + s - l * s,
-		p = 2 * l - q;
-
-	return [
-		Math.round( hue2rgb( p, q, h + ( 1 / 3 ) ) * 255 ),
-		Math.round( hue2rgb( p, q, h ) * 255 ),
-		Math.round( hue2rgb( p, q, h - ( 1 / 3 ) ) * 255 ),
-		a
-	];
-};
-
-
-each( spaces, function( spaceName, space ) {
-	var props = space.props,
-		cache = space.cache,
-		to = space.to,
-		from = space.from;
-
-	// makes rgba() and hsla()
-	color.fn[ spaceName ] = function( value ) {
-
-		// generate a cache for this space if it doesn't exist
-		if ( to && !this[ cache ] ) {
-			this[ cache ] = to( this._rgba );
-		}
-		if ( value === undefined ) {
-			return this[ cache ].slice();
-		}
-
-		var ret,
-			type = jQuery.type( value ),
-			arr = ( type === "array" || type === "object" ) ? value : arguments,
-			local = this[ cache ].slice();
-
-		each( props, function( key, prop ) {
-			var val = arr[ type === "object" ? key : prop.idx ];
-			if ( val == null ) {
-				val = local[ prop.idx ];
-			}
-			local[ prop.idx ] = clamp( val, prop );
-		});
-
-		if ( from ) {
-			ret = color( from( local ) );
-			ret[ cache ] = local;
-			return ret;
-		} else {
-			return color( local );
-		}
-	};
-
-	// makes red() green() blue() alpha() hue() saturation() lightness()
-	each( props, function( key, prop ) {
-		// alpha is included in more than one space
-		if ( color.fn[ key ] ) {
-			return;
-		}
-		color.fn[ key ] = function( value ) {
-			var vtype = jQuery.type( value ),
-				fn = ( key === "alpha" ? ( this._hsla ? "hsla" : "rgba" ) : spaceName ),
-				local = this[ fn ](),
-				cur = local[ prop.idx ],
-				match;
-
-			if ( vtype === "undefined" ) {
-				return cur;
-			}
-
-			if ( vtype === "function" ) {
-				value = value.call( this, cur );
-				vtype = jQuery.type( value );
-			}
-			if ( value == null && prop.empty ) {
-				return this;
-			}
-			if ( vtype === "string" ) {
-				match = rplusequals.exec( value );
-				if ( match ) {
-					value = cur + parseFloat( match[ 2 ] ) * ( match[ 1 ] === "+" ? 1 : -1 );
-				}
-			}
-			local[ prop.idx ] = value;
-			return this[ fn ]( local );
-		};
-	});
-});
-
-// add cssHook and .fx.step function for each named hook.
-// accept a space separated string of properties
-color.hook = function( hook ) {
-	var hooks = hook.split( " " );
-	each( hooks, function( i, hook ) {
-		jQuery.cssHooks[ hook ] = {
-			set: function( elem, value ) {
-				var parsed, curElem,
-					backgroundColor = "";
-
-				if ( value !== "transparent" && ( jQuery.type( value ) !== "string" || ( parsed = stringParse( value ) ) ) ) {
-					value = color( parsed || value );
-					if ( !support.rgba && value._rgba[ 3 ] !== 1 ) {
-						curElem = hook === "backgroundColor" ? elem.parentNode : elem;
-						while (
-							(backgroundColor === "" || backgroundColor === "transparent") &&
-							curElem && curElem.style
-						) {
-							try {
-								backgroundColor = jQuery.css( curElem, "backgroundColor" );
-								curElem = curElem.parentNode;
-							} catch ( e ) {
-							}
-						}
-
-						value = value.blend( backgroundColor && backgroundColor !== "transparent" ?
-							backgroundColor :
-							"_default" );
-					}
-
-					value = value.toRgbaString();
-				}
-				try {
-					elem.style[ hook ] = value;
-				} catch( e ) {
-					// wrapped to prevent IE from throwing errors on "invalid" values like 'auto' or 'inherit'
-				}
-			}
-		};
-		jQuery.fx.step[ hook ] = function( fx ) {
-			if ( !fx.colorInit ) {
-				fx.start = color( fx.elem, hook );
-				fx.end = color( fx.end );
-				fx.colorInit = true;
-			}
-			jQuery.cssHooks[ hook ].set( fx.elem, fx.start.transition( fx.end, fx.pos ) );
-		};
-	});
-
-};
-
-color.hook( stepHooks );
-
-jQuery.cssHooks.borderColor = {
-	expand: function( value ) {
-		var expanded = {};
-
-		each( [ "Top", "Right", "Bottom", "Left" ], function( i, part ) {
-			expanded[ "border" + part + "Color" ] = value;
-		});
-		return expanded;
-	}
-};
-
-// Basic color names only.
-// Usage of any of the other color names requires adding yourself or including
-// jquery.color.svg-names.js.
-colors = jQuery.Color.names = {
-	// 4.1. Basic color keywords
-	aqua: "#00ffff",
-	black: "#000000",
-	blue: "#0000ff",
-	fuchsia: "#ff00ff",
-	gray: "#808080",
-	green: "#008000",
-	lime: "#00ff00",
-	maroon: "#800000",
-	navy: "#000080",
-	olive: "#808000",
-	purple: "#800080",
-	red: "#ff0000",
-	silver: "#c0c0c0",
-	teal: "#008080",
-	white: "#ffffff",
-	yellow: "#ffff00",
-
-	// 4.2.3. "transparent" color keyword
-	transparent: [ null, null, null, 0 ],
-
-	_default: "#ffffff"
-};
-
-})( jQuery );
-
-
-/******************************************************************************/
-/****************************** CLASS ANIMATIONS ******************************/
-/******************************************************************************/
-(function() {
-
-var classAnimationActions = [ "add", "remove", "toggle" ],
-	shorthandStyles = {
-		border: 1,
-		borderBottom: 1,
-		borderColor: 1,
-		borderLeft: 1,
-		borderRight: 1,
-		borderTop: 1,
-		borderWidth: 1,
-		margin: 1,
-		padding: 1
-	};
-
-$.each([ "borderLeftStyle", "borderRightStyle", "borderBottomStyle", "borderTopStyle" ], function( _, prop ) {
-	$.fx.step[ prop ] = function( fx ) {
-		if ( fx.end !== "none" && !fx.setAttr || fx.pos === 1 && !fx.setAttr ) {
-			jQuery.style( fx.elem, prop, fx.end );
-			fx.setAttr = true;
-		}
-	};
-});
-
-function getElementStyles( elem ) {
-	var key, len,
-		style = elem.ownerDocument.defaultView ?
-			elem.ownerDocument.defaultView.getComputedStyle( elem, null ) :
-			elem.currentStyle,
-		styles = {};
-
-	if ( style && style.length && style[ 0 ] && style[ style[ 0 ] ] ) {
-		len = style.length;
-		while ( len-- ) {
-			key = style[ len ];
-			if ( typeof style[ key ] === "string" ) {
-				styles[ $.camelCase( key ) ] = style[ key ];
-			}
-		}
-	// support: Opera, IE <9
-	} else {
-		for ( key in style ) {
-			if ( typeof style[ key ] === "string" ) {
-				styles[ key ] = style[ key ];
-			}
-		}
-	}
-
-	return styles;
-}
-
-
-function styleDifference( oldStyle, newStyle ) {
-	var diff = {},
-		name, value;
-
-	for ( name in newStyle ) {
-		value = newStyle[ name ];
-		if ( oldStyle[ name ] !== value ) {
-			if ( !shorthandStyles[ name ] ) {
-				if ( $.fx.step[ name ] || !isNaN( parseFloat( value ) ) ) {
-					diff[ name ] = value;
-				}
-			}
-		}
-	}
-
-	return diff;
-}
-
-// support: jQuery <1.8
-if ( !$.fn.addBack ) {
-	$.fn.addBack = function( selector ) {
-		return this.add( selector == null ?
-			this.prevObject : this.prevObject.filter( selector )
-		);
-	};
-}
-
-$.effects.animateClass = function( value, duration, easing, callback ) {
-	var o = $.speed( duration, easing, callback );
-
-	return this.queue( function() {
-		var animated = $( this ),
-			baseClass = animated.attr( "class" ) || "",
-			applyClassChange,
-			allAnimations = o.children ? animated.find( "*" ).addBack() : animated;
-
-		// map the animated objects to store the original styles.
-		allAnimations = allAnimations.map(function() {
-			var el = $( this );
-			return {
-				el: el,
-				start: getElementStyles( this )
-			};
-		});
-
-		// apply class change
-		applyClassChange = function() {
-			$.each( classAnimationActions, function(i, action) {
-				if ( value[ action ] ) {
-					animated[ action + "Class" ]( value[ action ] );
-				}
-			});
-		};
-		applyClassChange();
-
-		// map all animated objects again - calculate new styles and diff
-		allAnimations = allAnimations.map(function() {
-			this.end = getElementStyles( this.el[ 0 ] );
-			this.diff = styleDifference( this.start, this.end );
-			return this;
-		});
-
-		// apply original class
-		animated.attr( "class", baseClass );
-
-		// map all animated objects again - this time collecting a promise
-		allAnimations = allAnimations.map(function() {
-			var styleInfo = this,
-				dfd = $.Deferred(),
-				opts = $.extend({}, o, {
-					queue: false,
-					complete: function() {
-						dfd.resolve( styleInfo );
-					}
-				});
-
-			this.el.animate( this.diff, opts );
-			return dfd.promise();
-		});
-
-		// once all animations have completed:
-		$.when.apply( $, allAnimations.get() ).done(function() {
-
-			// set the final class
-			applyClassChange();
-
-			// for each animated element,
-			// clear all css properties that were animated
-			$.each( arguments, function() {
-				var el = this.el;
-				$.each( this.diff, function(key) {
-					el.css( key, "" );
-				});
-			});
-
-			// this is guarnteed to be there if you use jQuery.speed()
-			// it also handles dequeuing the next anim...
-			o.complete.call( animated[ 0 ] );
-		});
-	});
-};
-
-$.fn.extend({
-	addClass: (function( orig ) {
-		return function( classNames, speed, easing, callback ) {
-			return speed ?
-				$.effects.animateClass.call( this,
-					{ add: classNames }, speed, easing, callback ) :
-				orig.apply( this, arguments );
-		};
-	})( $.fn.addClass ),
-
-	removeClass: (function( orig ) {
-		return function( classNames, speed, easing, callback ) {
-			return arguments.length > 1 ?
-				$.effects.animateClass.call( this,
-					{ remove: classNames }, speed, easing, callback ) :
-				orig.apply( this, arguments );
-		};
-	})( $.fn.removeClass ),
-
-	toggleClass: (function( orig ) {
-		return function( classNames, force, speed, easing, callback ) {
-			if ( typeof force === "boolean" || force === undefined ) {
-				if ( !speed ) {
-					// without speed parameter
-					return orig.apply( this, arguments );
-				} else {
-					return $.effects.animateClass.call( this,
-						(force ? { add: classNames } : { remove: classNames }),
-						speed, easing, callback );
-				}
-			} else {
-				// without force parameter
-				return $.effects.animateClass.call( this,
-					{ toggle: classNames }, force, speed, easing );
-			}
-		};
-	})( $.fn.toggleClass ),
-
-	switchClass: function( remove, add, speed, easing, callback) {
-		return $.effects.animateClass.call( this, {
-			add: add,
-			remove: remove
-		}, speed, easing, callback );
-	}
-});
-
-})();
-
-/******************************************************************************/
-/*********************************** EFFECTS **********************************/
-/******************************************************************************/
-
-(function() {
-
-$.extend( $.effects, {
-	version: "1.10.3",
-
-	// Saves a set of properties in a data storage
-	save: function( element, set ) {
-		for( var i=0; i < set.length; i++ ) {
-			if ( set[ i ] !== null ) {
-				element.data( dataSpace + set[ i ], element[ 0 ].style[ set[ i ] ] );
-			}
-		}
-	},
-
-	// Restores a set of previously saved properties from a data storage
-	restore: function( element, set ) {
-		var val, i;
-		for( i=0; i < set.length; i++ ) {
-			if ( set[ i ] !== null ) {
-				val = element.data( dataSpace + set[ i ] );
-				// support: jQuery 1.6.2
-				// http://bugs.jquery.com/ticket/9917
-				// jQuery 1.6.2 incorrectly returns undefined for any falsy value.
-				// We can't differentiate between "" and 0 here, so we just assume
-				// empty string since it's likely to be a more common value...
-				if ( val === undefined ) {
-					val = "";
-				}
-				element.css( set[ i ], val );
-			}
-		}
-	},
-
-	setMode: function( el, mode ) {
-		if (mode === "toggle") {
-			mode = el.is( ":hidden" ) ? "show" : "hide";
-		}
-		return mode;
-	},
-
-	// Translates a [top,left] array into a baseline value
-	// this should be a little more flexible in the future to handle a string & hash
-	getBaseline: function( origin, original ) {
-		var y, x;
-		switch ( origin[ 0 ] ) {
-			case "top": y = 0; break;
-			case "middle": y = 0.5; break;
-			case "bottom": y = 1; break;
-			default: y = origin[ 0 ] / original.height;
-		}
-		switch ( origin[ 1 ] ) {
-			case "left": x = 0; break;
-			case "center": x = 0.5; break;
-			case "right": x = 1; break;
-			default: x = origin[ 1 ] / original.width;
-		}
-		return {
-			x: x,
-			y: y
-		};
-	},
-
-	// Wraps the element around a wrapper that copies position properties
-	createWrapper: function( element ) {
-
-		// if the element is already wrapped, return it
-		if ( element.parent().is( ".ui-effects-wrapper" )) {
-			return element.parent();
-		}
-
-		// wrap the element
-		var props = {
-				width: element.outerWidth(true),
-				height: element.outerHeight(true),
-				"float": element.css( "float" )
-			},
-			wrapper = $( "<div></div>" )
-				.addClass( "ui-effects-wrapper" )
-				.css({
-					fontSize: "100%",
-					background: "transparent",
-					border: "none",
-					margin: 0,
-					padding: 0
-				}),
-			// Store the size in case width/height are defined in % - Fixes #5245
-			size = {
-				width: element.width(),
-				height: element.height()
-			},
-			active = document.activeElement;
-
-		// support: Firefox
-		// Firefox incorrectly exposes anonymous content
-		// https://bugzilla.mozilla.org/show_bug.cgi?id=561664
-		try {
-			active.id;
-		} catch( e ) {
-			active = document.body;
-		}
-
-		element.wrap( wrapper );
-
-		// Fixes #7595 - Elements lose focus when wrapped.
-		if ( element[ 0 ] === active || $.contains( element[ 0 ], active ) ) {
-			$( active ).focus();
-		}
-
-		wrapper = element.parent(); //Hotfix for jQuery 1.4 since some change in wrap() seems to actually lose the reference to the wrapped element
-
-		// transfer positioning properties to the wrapper
-		if ( element.css( "position" ) === "static" ) {
-			wrapper.css({ position: "relative" });
-			element.css({ position: "relative" });
-		} else {
-			$.extend( props, {
-				position: element.css( "position" ),
-				zIndex: element.css( "z-index" )
-			});
-			$.each([ "top", "left", "bottom", "right" ], function(i, pos) {
-				props[ pos ] = element.css( pos );
-				if ( isNaN( parseInt( props[ pos ], 10 ) ) ) {
-					props[ pos ] = "auto";
-				}
-			});
-			element.css({
-				position: "relative",
-				top: 0,
-				left: 0,
-				right: "auto",
-				bottom: "auto"
-			});
-		}
-		element.css(size);
-
-		return wrapper.css( props ).show();
-	},
-
-	removeWrapper: function( element ) {
-		var active = document.activeElement;
-
-		if ( element.parent().is( ".ui-effects-wrapper" ) ) {
-			element.parent().replaceWith( element );
-
-			// Fixes #7595 - Elements lose focus when wrapped.
-			if ( element[ 0 ] === active || $.contains( element[ 0 ], active ) ) {
-				$( active ).focus();
-			}
-		}
-
-
-		return element;
-	},
-
-	setTransition: function( element, list, factor, value ) {
-		value = value || {};
-		$.each( list, function( i, x ) {
-			var unit = element.cssUnit( x );
-			if ( unit[ 0 ] > 0 ) {
-				value[ x ] = unit[ 0 ] * factor + unit[ 1 ];
-			}
-		});
-		return value;
-	}
-});
-
-// return an effect options object for the given parameters:
-function _normalizeArguments( effect, options, speed, callback ) {
-
-	// allow passing all options as the first parameter
-	if ( $.isPlainObject( effect ) ) {
-		options = effect;
-		effect = effect.effect;
-	}
-
-	// convert to an object
-	effect = { effect: effect };
-
-	// catch (effect, null, ...)
-	if ( options == null ) {
-		options = {};
-	}
-
-	// catch (effect, callback)
-	if ( $.isFunction( options ) ) {
-		callback = options;
-		speed = null;
-		options = {};
-	}
-
-	// catch (effect, speed, ?)
-	if ( typeof options === "number" || $.fx.speeds[ options ] ) {
-		callback = speed;
-		speed = options;
-		options = {};
-	}
-
-	// catch (effect, options, callback)
-	if ( $.isFunction( speed ) ) {
-		callback = speed;
-		speed = null;
-	}
-
-	// add options to effect
-	if ( options ) {
-		$.extend( effect, options );
-	}
-
-	speed = speed || options.duration;
-	effect.duration = $.fx.off ? 0 :
-		typeof speed === "number" ? speed :
-		speed in $.fx.speeds ? $.fx.speeds[ speed ] :
-		$.fx.speeds._default;
-
-	effect.complete = callback || options.complete;
-
-	return effect;
-}
-
-function standardAnimationOption( option ) {
-	// Valid standard speeds (nothing, number, named speed)
-	if ( !option || typeof option === "number" || $.fx.speeds[ option ] ) {
 		return true;
-	}
+    };
 
-	// Invalid strings - treat as "normal" speed
-	if ( typeof option === "string" && !$.effects.effect[ option ] ) {
-		return true;
-	}
 
-	// Complete callback
-	if ( $.isFunction( option ) ) {
-		return true;
-	}
+    /**
+    * Determines if the cell represented by col and row params is occupied.
+    *
+    * @method is_occupied
+    * @param {Number} col The column to check.
+    * @param {Number} row The row to check.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_occupied = function(col, row) {
+        if (!this.gridmap[col]) {
+            return false;
+        }
 
-	// Options hash (but not naming an effect)
-	if ( typeof option === "object" && !option.effect ) {
-		return true;
-	}
+        if (this.gridmap[col][row]) {
+            return true;
+        }
+        return false;
+    };
 
-	// Didn't match any standard API
-	return false;
-}
 
-$.fn.extend({
-	effect: function( /* effect, options, speed, callback */ ) {
-		var args = _normalizeArguments.apply( this, arguments ),
-			mode = args.mode,
-			queue = args.queue,
-			effectMethod = $.effects.effect[ args.effect ];
+    /**
+    * Determines if there is a widget in the cell represented by col/row params.
+    *
+    * @method is_widget
+    * @param {Number} col The column to check.
+    * @param {Number} row The row to check.
+    * @return {Boolean|HTMLElement} Returns false if there is no widget,
+    * else returns the jQuery HTMLElement
+    */
+    fn.is_widget = function(col, row) {
+        var cell = this.gridmap[col];
+        if (!cell) {
+            return false;
+        }
 
-		if ( $.fx.off || !effectMethod ) {
-			// delegate to the original method (e.g., .show()) if possible
-			if ( mode ) {
-				return this[ mode ]( args.duration, args.complete );
-			} else {
-				return this.each( function() {
-					if ( args.complete ) {
-						args.complete.call( this );
-					}
-				});
-			}
-		}
+        cell = cell[row];
 
-		function run( next ) {
-			var elem = $( this ),
-				complete = args.complete,
-				mode = args.mode;
+        if (cell) {
+            return cell;
+        }
 
-			function done() {
-				if ( $.isFunction( complete ) ) {
-					complete.call( elem[0] );
-				}
-				if ( $.isFunction( next ) ) {
-					next();
-				}
-			}
+        return false;
+    };
 
-			// If the element already has the correct final state, delegate to
-			// the core methods so the internal tracking of "olddisplay" works.
-			if ( elem.is( ":hidden" ) ? mode === "hide" : mode === "show" ) {
-				elem[ mode ]();
-				done();
-			} else {
-				effectMethod.call( elem[0], args, done );
-			}
-		}
 
-		return queue === false ? this.each( run ) : this.queue( queue || "fx", run );
-	},
+    /**
+    * Determines if there is a widget in the cell represented by col/row
+    * params and if this is under the widget that is being dragged.
+    *
+    * @method is_widget_under_player
+    * @param {Number} col The column to check.
+    * @param {Number} row The row to check.
+    * @return {Boolean} Returns true or false.
+    */
+    fn.is_widget_under_player = function(col, row) {
+        if (this.is_widget(col, row)) {
+            return this.is_player_in(col, row);
+        }
+        return false;
+    };
 
-	show: (function( orig ) {
-		return function( option ) {
-			if ( standardAnimationOption( option ) ) {
-				return orig.apply( this, arguments );
-			} else {
-				var args = _normalizeArguments.apply( this, arguments );
-				args.mode = "show";
-				return this.effect.call( this, args );
-			}
-		};
-	})( $.fn.show ),
 
-	hide: (function( orig ) {
-		return function( option ) {
-			if ( standardAnimationOption( option ) ) {
-				return orig.apply( this, arguments );
-			} else {
-				var args = _normalizeArguments.apply( this, arguments );
-				args.mode = "hide";
-				return this.effect.call( this, args );
-			}
-		};
-	})( $.fn.hide ),
+    /**
+    * Get widgets overlapping with the player or with the object passed
+    * representing the grid cells.
+    *
+    * @method get_widgets_under_player
+    * @return {HTMLElement} Returns a jQuery collection of HTMLElements
+    */
+    fn.get_widgets_under_player = function(cells) {
+        cells || (cells = this.cells_occupied_by_player || {cols: [], rows: []});
+        var $widgets = $([]);
 
-	toggle: (function( orig ) {
-		return function( option ) {
-			if ( standardAnimationOption( option ) || typeof option === "boolean" ) {
-				return orig.apply( this, arguments );
-			} else {
-				var args = _normalizeArguments.apply( this, arguments );
-				args.mode = "toggle";
-				return this.effect.call( this, args );
-			}
-		};
-	})( $.fn.toggle ),
+        $.each(cells.cols, $.proxy(function(i, col) {
+            $.each(cells.rows, $.proxy(function(i, row) {
+                if(this.is_widget(col, row)) {
+                    $widgets = $widgets.add(this.gridmap[col][row]);
+                }
+            }, this));
+        }, this));
 
-	// helper functions
-	cssUnit: function(key) {
-		var style = this.css( key ),
-			val = [];
+        return $widgets;
+    };
 
-		$.each( [ "em", "px", "%", "pt" ], function( i, unit ) {
-			if ( style.indexOf( unit ) > 0 ) {
-				val = [ parseFloat( style ), unit ];
-			}
-		});
-		return val;
-	}
-});
 
-})();
+    /**
+    * Put placeholder at the row and column specified.
+    *
+    * @method set_placeholder
+    * @param {Number} col The column to which we want to move the
+    *  placeholder.
+    * @param {Number} row The row to which we want to move the
+    *  placeholder.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.set_placeholder = function(col, row) {
+        var phgd = $.extend({}, this.placeholder_grid_data);
+        var $nexts = this.widgets_below({
+                col: phgd.col,
+                row: phgd.row,
+                size_y: phgd.size_y,
+                size_x: phgd.size_x
+            });
 
-/******************************************************************************/
-/*********************************** EASING ***********************************/
-/******************************************************************************/
+        // Prevents widgets go out of the grid
+        var right_col = (col + phgd.size_x - 1);
+        if (right_col > this.cols) {
+            col = col - (right_col - col);
+        }
 
-(function() {
+        var moved_down = this.placeholder_grid_data.row < row;
+        var changed_column = this.placeholder_grid_data.col !== col;
 
-// based on easing equations from Robert Penner (http://www.robertpenner.com/easing)
+        this.placeholder_grid_data.col = col;
+        this.placeholder_grid_data.row = row;
 
-var baseEasings = {};
+        this.cells_occupied_by_placeholder = this.get_cells_occupied(
+            this.placeholder_grid_data);
 
-$.each( [ "Quad", "Cubic", "Quart", "Quint", "Expo" ], function( i, name ) {
-	baseEasings[ name ] = function( p ) {
-		return Math.pow( p, i + 2 );
-	};
-});
+        this.$preview_holder.attr({
+            'data-row' : row,
+            'data-col' : col
+        });
 
-$.extend( baseEasings, {
-	Sine: function ( p ) {
-		return 1 - Math.cos( p * Math.PI / 2 );
-	},
-	Circ: function ( p ) {
-		return 1 - Math.sqrt( 1 - p * p );
-	},
-	Elastic: function( p ) {
-		return p === 0 || p === 1 ? p :
-			-Math.pow( 2, 8 * (p - 1) ) * Math.sin( ( (p - 1) * 80 - 7.5 ) * Math.PI / 15 );
-	},
-	Back: function( p ) {
-		return p * p * ( 3 * p - 2 );
-	},
-	Bounce: function ( p ) {
-		var pow2,
-			bounce = 4;
+        if (moved_down || changed_column) {
+            $nexts.each($.proxy(function(i, widget) {
+                this.move_widget_up(
+                 $(widget), this.placeholder_grid_data.col - col + phgd.size_y);
+            }, this));
+        }
 
-		while ( p < ( ( pow2 = Math.pow( 2, --bounce ) ) - 1 ) / 11 ) {}
-		return 1 / Math.pow( 4, 3 - bounce ) - 7.5625 * Math.pow( ( pow2 * 3 - 2 ) / 22 - p, 2 );
-	}
-});
 
-$.each( baseEasings, function( name, easeIn ) {
-	$.easing[ "easeIn" + name ] = easeIn;
-	$.easing[ "easeOut" + name ] = function( p ) {
-		return 1 - easeIn( 1 - p );
-	};
-	$.easing[ "easeInOut" + name ] = function( p ) {
-		return p < 0.5 ?
-			easeIn( p * 2 ) / 2 :
-			1 - easeIn( p * -2 + 2 ) / 2;
-	};
-});
+        var $widgets_under_ph = this.get_widgets_under_player(this.cells_occupied_by_placeholder);
+        if ($widgets_under_ph.length) {
+            $widgets_under_ph.each($.proxy(function(i, widget) {
+                var $w = $(widget);
+                this.move_widget_down(
+                 $w, row + phgd.size_y - $w.data('coords').grid.row);
+            }, this));
+        }
 
-})();
+    };
 
-})(jQuery);
-(function( $, undefined ) {
 
-$.effects.effect.slide = function( o, done ) {
+    /**
+    * Determines whether the player can move to a position above.
+    *
+    * @method can_go_player_up
+    * @param {Object} widget_grid_data The actual grid coords object of the
+    *  player.
+    * @return {Number|Boolean} If the player can be moved to an upper row
+    *  returns the row number, else returns false.
+    */
+    fn.can_go_player_up = function(widget_grid_data) {
+        var p_bottom_row = widget_grid_data.row + widget_grid_data.size_y - 1;
+        var result = true;
+        var upper_rows = [];
+        var min_row = 10000;
+        var $widgets_under_player = this.get_widgets_under_player();
 
-	// Create element
-	var el = $( this ),
-		props = [ "position", "top", "bottom", "left", "right", "width", "height" ],
-		mode = $.effects.setMode( el, o.mode || "show" ),
-		show = mode === "show",
-		direction = o.direction || "left",
-		ref = (direction === "up" || direction === "down") ? "top" : "left",
-		positiveMotion = (direction === "up" || direction === "left"),
-		distance,
-		animation = {};
+        /* generate an array with columns as index and array with upper rows
+         * empty as value */
+        this.for_each_column_occupied(widget_grid_data, function(tcol) {
+            var grid_col = this.gridmap[tcol];
+            var r = p_bottom_row + 1;
+            upper_rows[tcol] = [];
 
-	// Adjust
-	$.effects.save( el, props );
-	el.show();
-	distance = o.distance || el[ ref === "top" ? "outerHeight" : "outerWidth" ]( true );
+            while (--r > 0) {
+                if (this.is_empty(tcol, r) || this.is_player(tcol, r) ||
+                    this.is_widget(tcol, r) &&
+                    grid_col[r].is($widgets_under_player)
+                ) {
+                    upper_rows[tcol].push(r);
+                    min_row = r < min_row ? r : min_row;
+                }else{
+                    break;
+                }
+            }
 
-	$.effects.createWrapper( el ).css({
-		overflow: "hidden"
-	});
+            if (upper_rows[tcol].length === 0) {
+                result = false;
+                return true; //break
+            }
 
-	if ( show ) {
-		el.css( ref, positiveMotion ? (isNaN(distance) ? "-" + distance : -distance) : distance );
-	}
+            upper_rows[tcol].sort(function(a, b) {
+                return a - b;
+            });
+        });
 
-	// Animation
-	animation[ ref ] = ( show ?
-		( positiveMotion ? "+=" : "-=") :
-		( positiveMotion ? "-=" : "+=")) +
-		distance;
+        if (!result) { return false; }
 
-	// Animate
-	el.animate( animation, {
-		queue: false,
-		duration: o.duration,
-		easing: o.easing,
-		complete: function() {
-			if ( mode === "hide" ) {
-				el.hide();
-			}
-			$.effects.restore( el, props );
-			$.effects.removeWrapper( el );
-			done();
-		}
-	});
-};
+        return this.get_valid_rows(widget_grid_data, upper_rows, min_row);
+    };
 
-})(jQuery);
-;
-/*! nanoScrollerJS - v0.7.3 - 2013
+
+    /**
+    * Determines whether a widget can move to a position above.
+    *
+    * @method can_go_widget_up
+    * @param {Object} widget_grid_data The actual grid coords object of the
+    *  widget we want to check.
+    * @return {Number|Boolean} If the widget can be moved to an upper row
+    *  returns the row number, else returns false.
+    */
+    fn.can_go_widget_up = function(widget_grid_data) {
+        var p_bottom_row = widget_grid_data.row + widget_grid_data.size_y - 1;
+        var result = true;
+        var upper_rows = [];
+        var min_row = 10000;
+
+        /* generate an array with columns as index and array with topmost rows
+         * empty as value */
+        this.for_each_column_occupied(widget_grid_data, function(tcol) {
+            var grid_col = this.gridmap[tcol];
+            upper_rows[tcol] = [];
+
+            var r = p_bottom_row + 1;
+            // iterate over each row
+            while (--r > 0) {
+                if (this.is_widget(tcol, r) && !this.is_player_in(tcol, r)) {
+                    if (!grid_col[r].is(widget_grid_data.el)) {
+                        break;
+                    }
+                }
+
+                if (!this.is_player(tcol, r) &&
+                    !this.is_placeholder_in(tcol, r) &&
+                    !this.is_player_in(tcol, r)) {
+                    upper_rows[tcol].push(r);
+                }
+
+                if (r < min_row) {
+                    min_row = r;
+                }
+            }
+
+            if (upper_rows[tcol].length === 0) {
+                result = false;
+                return true; //break
+            }
+
+            upper_rows[tcol].sort(function(a, b) {
+                return a - b;
+            });
+        });
+
+        if (!result) { return false; }
+
+        return this.get_valid_rows(widget_grid_data, upper_rows, min_row);
+    };
+
+
+    /**
+    * Search a valid row for the widget represented by `widget_grid_data' in
+    * the `upper_rows` array. Iteration starts from row specified in `min_row`.
+    *
+    * @method get_valid_rows
+    * @param {Object} widget_grid_data The actual grid coords object of the
+    *  player.
+    * @param {Array} upper_rows An array with columns as index and arrays
+    *  of valid rows as values.
+    * @param {Number} min_row The upper row from which the iteration will start.
+    * @return {Number|Boolean} Returns the upper row valid from the `upper_rows`
+    *  for the widget in question.
+    */
+    fn.get_valid_rows = function(widget_grid_data, upper_rows, min_row) {
+        var p_top_row = widget_grid_data.row;
+        var p_bottom_row = widget_grid_data.row + widget_grid_data.size_y - 1;
+        var size_y = widget_grid_data.size_y;
+        var r = min_row - 1;
+        var valid_rows = [];
+
+        while (++r <= p_bottom_row ) {
+            var common = true;
+            $.each(upper_rows, function(col, rows) {
+                if ($.isArray(rows) && $.inArray(r, rows) === -1) {
+                    common = false;
+                }
+            });
+
+            if (common === true) {
+                valid_rows.push(r);
+                if (valid_rows.length === size_y) {
+                    break;
+                }
+            }
+        }
+
+        var new_row = false;
+        if (size_y === 1) {
+            if (valid_rows[0] !== p_top_row) {
+                new_row = valid_rows[0] || false;
+            }
+        }else{
+            if (valid_rows[0] !== p_top_row) {
+                new_row = this.get_consecutive_numbers_index(
+                    valid_rows, size_y);
+            }
+        }
+
+        return new_row;
+    };
+
+
+    fn.get_consecutive_numbers_index = function(arr, size_y) {
+        var max = arr.length;
+        var result = [];
+        var first = true;
+        var prev = -1; // or null?
+
+        for (var i=0; i < max; i++) {
+            if (first || arr[i] === prev + 1) {
+                result.push(i);
+                if (result.length === size_y) {
+                    break;
+                }
+                first = false;
+            }else{
+                result = [];
+                first = true;
+            }
+
+            prev = arr[i];
+        }
+
+        return result.length >= size_y ? arr[result[0]] : false;
+    };
+
+
+    /**
+    * Get widgets overlapping with the player.
+    *
+    * @method get_widgets_overlapped
+    * @return {jQuery} Returns a jQuery collection of HTMLElements.
+    */
+    fn.get_widgets_overlapped = function() {
+        var $w;
+        var $widgets = $([]);
+        var used = [];
+        var rows_from_bottom = this.cells_occupied_by_player.rows.slice(0);
+        rows_from_bottom.reverse();
+
+        $.each(this.cells_occupied_by_player.cols, $.proxy(function(i, col) {
+            $.each(rows_from_bottom, $.proxy(function(i, row) {
+                // if there is a widget in the player position
+                if (!this.gridmap[col]) { return true; } //next iteration
+                var $w = this.gridmap[col][row];
+                if (this.is_occupied(col, row) && !this.is_player($w) &&
+                    $.inArray($w, used) === -1
+                ) {
+                    $widgets = $widgets.add($w);
+                    used.push($w);
+                }
+
+            }, this));
+        }, this));
+
+        return $widgets;
+    };
+
+
+    /**
+    * This callback is executed when the player begins to collide with a column.
+    *
+    * @method on_start_overlapping_column
+    * @param {Number} col The collided column.
+    * @return {jQuery} Returns a jQuery collection of HTMLElements.
+    */
+    fn.on_start_overlapping_column = function(col) {
+        this.set_player(col, false);
+    };
+
+
+    /**
+    * A callback executed when the player begins to collide with a row.
+    *
+    * @method on_start_overlapping_row
+    * @param {Number} row The collided row.
+    * @return {jQuery} Returns a jQuery collection of HTMLElements.
+    */
+    fn.on_start_overlapping_row = function(row) {
+        this.set_player(false, row);
+    };
+
+
+    /**
+    * A callback executed when the the player ends to collide with a column.
+    *
+    * @method on_stop_overlapping_column
+    * @param {Number} col The collided row.
+    * @return {jQuery} Returns a jQuery collection of HTMLElements.
+    */
+    fn.on_stop_overlapping_column = function(col) {
+        this.set_player(col, false);
+
+        var self = this;
+        this.for_each_widget_below(col, this.cells_occupied_by_player.rows[0],
+            function(tcol, trow) {
+                self.move_widget_up(this, self.player_grid_data.size_y);
+        });
+    };
+
+
+    /**
+    * This callback is executed when the player ends to collide with a row.
+    *
+    * @method on_stop_overlapping_row
+    * @param {Number} row The collided row.
+    * @return {jQuery} Returns a jQuery collection of HTMLElements.
+    */
+    fn.on_stop_overlapping_row = function(row) {
+        this.set_player(false, row);
+
+        var self = this;
+        var cols = this.cells_occupied_by_player.cols;
+        for (var c = 0, cl = cols.length; c < cl; c++) {
+            this.for_each_widget_below(cols[c], row, function(tcol, trow) {
+                self.move_widget_up(this, self.player_grid_data.size_y);
+            });
+        }
+    };
+
+
+    /**
+    * Move a widget to a specific row. The cell or cells must be empty.
+    * If the widget has widgets below, all of these widgets will be moved also
+    * if they can.
+    *
+    * @method move_widget_to
+    * @param {HTMLElement} $widget The jQuery wrapped HTMLElement of the
+    * widget is going to be moved.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.move_widget_to = function($widget, row) {
+        var self = this;
+        var widget_grid_data = $widget.coords().grid;
+        var diff = row - widget_grid_data.row;
+        var $next_widgets = this.widgets_below($widget);
+
+        var can_move_to_new_cell = this.can_move_to(
+            widget_grid_data, widget_grid_data.col, row, $widget);
+
+        if (can_move_to_new_cell === false) {
+            return false;
+        }
+
+        this.remove_from_gridmap(widget_grid_data);
+        widget_grid_data.row = row;
+        this.add_to_gridmap(widget_grid_data);
+        $widget.attr('data-row', row);
+        this.$changed = this.$changed.add($widget);
+
+
+        $next_widgets.each(function(i, widget) {
+            var $w = $(widget);
+            var wgd = $w.coords().grid;
+            var can_go_up = self.can_go_widget_up(wgd);
+            if (can_go_up && can_go_up !== wgd.row) {
+                self.move_widget_to($w, can_go_up);
+            }
+        });
+
+        return this;
+    };
+
+
+    /**
+    * Move up the specified widget and all below it.
+    *
+    * @method move_widget_up
+    * @param {HTMLElement} $widget The widget you want to move.
+    * @param {Number} [y_units] The number of cells that the widget has to move.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.move_widget_up = function($widget, y_units) {
+        var el_grid_data = $widget.coords().grid;
+        var actual_row = el_grid_data.row;
+        var moved = [];
+        var can_go_up = true;
+        y_units || (y_units = 1);
+
+        if (!this.can_go_up($widget)) { return false; } //break;
+
+        this.for_each_column_occupied(el_grid_data, function(col) {
+            // can_go_up
+            if ($.inArray($widget, moved) === -1) {
+                var widget_grid_data = $widget.coords().grid;
+                var next_row = actual_row - y_units;
+                next_row = this.can_go_up_to_row(
+                    widget_grid_data, col, next_row);
+
+                if (!next_row) {
+                    return true;
+                }
+
+                var $next_widgets = this.widgets_below($widget);
+
+                this.remove_from_gridmap(widget_grid_data);
+                widget_grid_data.row = next_row;
+                this.add_to_gridmap(widget_grid_data);
+                $widget.attr('data-row', widget_grid_data.row);
+                this.$changed = this.$changed.add($widget);
+
+                moved.push($widget);
+
+                $next_widgets.each($.proxy(function(i, widget) {
+                    this.move_widget_up($(widget), y_units);
+                }, this));
+            }
+        });
+
+    };
+
+
+    /**
+    * Move down the specified widget and all below it.
+    *
+    * @method move_widget_down
+    * @param {jQuery} $widget The jQuery object representing the widget
+    *  you want to move.
+    * @param {Number} y_units The number of cells that the widget has to move.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.move_widget_down = function($widget, y_units) {
+        var el_grid_data = $widget.coords().grid;
+        var actual_row = el_grid_data.row;
+        var moved = [];
+        var y_diff = y_units;
+
+        if (!$widget) { return false; }
+
+        if ($.inArray($widget, moved) === -1) {
+
+            var widget_grid_data = $widget.coords().grid;
+            var next_row = actual_row + y_units;
+            var $next_widgets = this.widgets_below($widget);
+
+            this.remove_from_gridmap(widget_grid_data);
+
+            $next_widgets.each($.proxy(function(i, widget) {
+                var $w = $(widget);
+                var wd = $w.coords().grid;
+                var tmp_y = this.displacement_diff(
+                             wd, widget_grid_data, y_diff);
+
+                if (tmp_y > 0) {
+                    this.move_widget_down($w, tmp_y);
+                }
+            }, this));
+
+            widget_grid_data.row = next_row;
+            this.update_widget_position(widget_grid_data, $widget);
+            $widget.attr('data-row', widget_grid_data.row);
+            this.$changed = this.$changed.add($widget);
+
+            moved.push($widget);
+        }
+    };
+
+
+    /**
+    * Check if the widget can move to the specified row, else returns the
+    * upper row possible.
+    *
+    * @method can_go_up_to_row
+    * @param {Number} widget_grid_data The current grid coords object of the
+    *  widget.
+    * @param {Number} col The target column.
+    * @param {Number} row The target row.
+    * @return {Boolean|Number} Returns the row number if the widget can move
+    *  to the target position, else returns false.
+    */
+    fn.can_go_up_to_row = function(widget_grid_data, col, row) {
+        var ga = this.gridmap;
+        var result = true;
+        var urc = []; // upper_rows_in_columns
+        var actual_row = widget_grid_data.row;
+        var r;
+
+        /* generate an array with columns as index and array with
+         * upper rows empty in the column */
+        this.for_each_column_occupied(widget_grid_data, function(tcol) {
+            var grid_col = ga[tcol];
+            urc[tcol] = [];
+
+            r = actual_row;
+            while (r--) {
+                if (this.is_empty(tcol, r) &&
+                    !this.is_placeholder_in(tcol, r)
+                ) {
+                    urc[tcol].push(r);
+                }else{
+                    break;
+                }
+            }
+
+            if (!urc[tcol].length) {
+                result = false;
+                return true;
+            }
+
+        });
+
+        if (!result) { return false; }
+
+        /* get common rows starting from upper position in all the columns
+         * that widget occupies */
+        r = row;
+        for (r = 1; r < actual_row; r++) {
+            var common = true;
+
+            for (var uc = 0, ucl = urc.length; uc < ucl; uc++) {
+                if (urc[uc] && $.inArray(r, urc[uc]) === -1) {
+                    common = false;
+                }
+            }
+
+            if (common === true) {
+                result = r;
+                break;
+            }
+        }
+
+        return result;
+    };
+
+
+    fn.displacement_diff = function(widget_grid_data, parent_bgd, y_units) {
+        var actual_row = widget_grid_data.row;
+        var diffs = [];
+        var parent_max_y = parent_bgd.row + parent_bgd.size_y;
+
+        this.for_each_column_occupied(widget_grid_data, function(col) {
+            var temp_y_units = 0;
+
+            for (var r = parent_max_y; r < actual_row; r++) {
+                if (this.is_empty(col, r)) {
+                    temp_y_units = temp_y_units + 1;
+                }
+            }
+
+            diffs.push(temp_y_units);
+        });
+
+        var max_diff = Math.max.apply(Math, diffs);
+        y_units = (y_units - max_diff);
+
+        return y_units > 0 ? y_units : 0;
+    };
+
+
+    /**
+    * Get widgets below a widget.
+    *
+    * @method widgets_below
+    * @param {HTMLElement} $el The jQuery wrapped HTMLElement.
+    * @return {jQuery} A jQuery collection of HTMLElements.
+    */
+    fn.widgets_below = function($el) {
+        var el_grid_data = $.isPlainObject($el) ? $el : $el.coords().grid;
+        var self = this;
+        var ga = this.gridmap;
+        var next_row = el_grid_data.row + el_grid_data.size_y - 1;
+        var $nexts = $([]);
+
+        this.for_each_column_occupied(el_grid_data, function(col) {
+            self.for_each_widget_below(col, next_row, function(tcol, trow) {
+                if (!self.is_player(this) && $.inArray(this, $nexts) === -1) {
+                    $nexts = $nexts.add(this);
+                    return true; // break
+                }
+            });
+        });
+
+        return this.sort_by_row_asc($nexts);
+    };
+
+
+    /**
+    * Update the array of mapped positions with the new player position.
+    *
+    * @method set_cells_player_occupies
+    * @param {Number} col The new player col.
+    * @param {Number} col The new player row.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.set_cells_player_occupies = function(col, row) {
+        this.remove_from_gridmap(this.placeholder_grid_data);
+        this.placeholder_grid_data.col = col;
+        this.placeholder_grid_data.row = row;
+        this.add_to_gridmap(this.placeholder_grid_data, this.$player);
+        return this;
+    };
+
+
+    /**
+    * Remove from the array of mapped positions the reference to the player.
+    *
+    * @method empty_cells_player_occupies
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.empty_cells_player_occupies = function() {
+        this.remove_from_gridmap(this.placeholder_grid_data);
+        return this;
+    };
+
+
+    fn.can_go_up = function($el) {
+        var el_grid_data = $el.coords().grid;
+        var initial_row = el_grid_data.row;
+        var prev_row = initial_row - 1;
+        var ga = this.gridmap;
+        var upper_rows_by_column = [];
+
+        var result = true;
+        if (initial_row === 1) { return false; }
+
+        this.for_each_column_occupied(el_grid_data, function(col) {
+            var $w = this.is_widget(col, prev_row);
+
+            if (this.is_occupied(col, prev_row) ||
+                this.is_player(col, prev_row) ||
+                this.is_placeholder_in(col, prev_row) ||
+                this.is_player_in(col, prev_row)
+            ) {
+                result = false;
+                return true; //break
+            }
+        });
+
+        return result;
+    };
+
+
+
+    /**
+    * Check if it's possible to move a widget to a specific col/row. It takes
+    * into account the dimensions (`size_y` and `size_x` attrs. of the grid
+    *  coords object) the widget occupies.
+    *
+    * @method can_move_to
+    * @param {Object} widget_grid_data The grid coords object that represents
+    *  the widget.
+    * @param {Object} col The col to check.
+    * @param {Object} row The row to check.
+    * @param {Number} [max_row] The max row allowed.
+    * @return {Boolean} Returns true if all cells are empty, else return false.
+    */
+    fn.can_move_to = function(widget_grid_data, col, row, max_row) {
+        var ga = this.gridmap;
+        var $w = widget_grid_data.el;
+        var future_wd = {
+            size_y: widget_grid_data.size_y,
+            size_x: widget_grid_data.size_x,
+            col: col,
+            row: row
+        };
+        var result = true;
+
+        //Prevents widgets go out of the grid
+        var right_col = col + widget_grid_data.size_x - 1;
+        if (right_col > this.cols) {
+            return false;
+        }
+
+        if (max_row && max_row < row + widget_grid_data.size_y - 1) {
+            return false;
+        }
+
+        this.for_each_cell_occupied(future_wd, function(tcol, trow) {
+            var $tw = this.is_widget(tcol, trow);
+            if ($tw && (!widget_grid_data.el || $tw.is($w))) {
+                result = false;
+            }
+        });
+
+        return result;
+    };
+
+
+    /**
+    * Given the leftmost column returns all columns that are overlapping
+    *  with the player.
+    *
+    * @method get_targeted_columns
+    * @param {Number} [from_col] The leftmost column.
+    * @return {Array} Returns an array with column numbers.
+    */
+    fn.get_targeted_columns = function(from_col) {
+        var max = (from_col || this.player_grid_data.col) +
+            (this.player_grid_data.size_x - 1);
+        var cols = [];
+        for (var col = from_col; col <= max; col++) {
+            cols.push(col);
+        }
+        return cols;
+    };
+
+
+    /**
+    * Given the upper row returns all rows that are overlapping with the player.
+    *
+    * @method get_targeted_rows
+    * @param {Number} [from_row] The upper row.
+    * @return {Array} Returns an array with row numbers.
+    */
+    fn.get_targeted_rows = function(from_row) {
+        var max = (from_row || this.player_grid_data.row) +
+            (this.player_grid_data.size_y - 1);
+        var rows = [];
+        for (var row = from_row; row <= max; row++) {
+            rows.push(row);
+        }
+        return rows;
+    };
+
+    /**
+    * Get all columns and rows that a widget occupies.
+    *
+    * @method get_cells_occupied
+    * @param {Object} el_grid_data The grid coords object of the widget.
+    * @return {Object} Returns an object like `{ cols: [], rows: []}`.
+    */
+    fn.get_cells_occupied = function(el_grid_data) {
+        var cells = { cols: [], rows: []};
+        var i;
+        if (arguments[1] instanceof jQuery) {
+            el_grid_data = arguments[1].coords().grid;
+        }
+
+        for (i = 0; i < el_grid_data.size_x; i++) {
+            var col = el_grid_data.col + i;
+            cells.cols.push(col);
+        }
+
+        for (i = 0; i < el_grid_data.size_y; i++) {
+            var row = el_grid_data.row + i;
+            cells.rows.push(row);
+        }
+
+        return cells;
+    };
+
+
+    /**
+    * Iterate over the cells occupied by a widget executing a function for
+    * each one.
+    *
+    * @method for_each_cell_occupied
+    * @param {Object} el_grid_data The grid coords object that represents the
+    *  widget.
+    * @param {Function} callback The function to execute on each column
+    *  iteration. Column and row are passed as arguments.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.for_each_cell_occupied = function(grid_data, callback) {
+        this.for_each_column_occupied(grid_data, function(col) {
+            this.for_each_row_occupied(grid_data, function(row) {
+                callback.call(this, col, row);
+            });
+        });
+        return this;
+    };
+
+
+    /**
+    * Iterate over the columns occupied by a widget executing a function for
+    * each one.
+    *
+    * @method for_each_column_occupied
+    * @param {Object} el_grid_data The grid coords object that represents
+    *  the widget.
+    * @param {Function} callback The function to execute on each column
+    *  iteration. The column number is passed as first argument.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.for_each_column_occupied = function(el_grid_data, callback) {
+        for (var i = 0; i < el_grid_data.size_x; i++) {
+            var col = el_grid_data.col + i;
+            callback.call(this, col, el_grid_data);
+        }
+    };
+
+
+    /**
+    * Iterate over the rows occupied by a widget executing a function for
+    * each one.
+    *
+    * @method for_each_row_occupied
+    * @param {Object} el_grid_data The grid coords object that represents
+    *  the widget.
+    * @param {Function} callback The function to execute on each column
+    *  iteration. The row number is passed as first argument.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.for_each_row_occupied = function(el_grid_data, callback) {
+        for (var i = 0; i < el_grid_data.size_y; i++) {
+            var row = el_grid_data.row + i;
+            callback.call(this, row, el_grid_data);
+        }
+    };
+
+
+
+    fn._traversing_widgets = function(type, direction, col, row, callback) {
+        var ga = this.gridmap;
+        if (!ga[col]) { return; }
+
+        var cr, max;
+        var action = type + '/' + direction;
+        if (arguments[2] instanceof jQuery) {
+            var el_grid_data = arguments[2].coords().grid;
+            col = el_grid_data.col;
+            row = el_grid_data.row;
+            callback = arguments[3];
+        }
+        var matched = [];
+        var trow = row;
+
+
+        var methods = {
+            'for_each/above': function() {
+                while (trow--) {
+                    if (trow > 0 && this.is_widget(col, trow) &&
+                        $.inArray(ga[col][trow], matched) === -1
+                    ) {
+                        cr = callback.call(ga[col][trow], col, trow);
+                        matched.push(ga[col][trow]);
+                        if (cr) { break; }
+                    }
+                }
+            },
+            'for_each/below': function() {
+                for (trow = row + 1, max = ga[col].length; trow < max; trow++) {
+                    if (this.is_widget(col, trow) &&
+                        $.inArray(ga[col][trow], matched) === -1
+                    ) {
+                        cr = callback.call(ga[col][trow], col, trow);
+                        matched.push(ga[col][trow]);
+                        if (cr) { break; }
+                    }
+                }
+            }
+        };
+
+        if (methods[action]) {
+            methods[action].call(this);
+        }
+    };
+
+
+    /**
+    * Iterate over each widget above the column and row specified.
+    *
+    * @method for_each_widget_above
+    * @param {Number} col The column to start iterating.
+    * @param {Number} row The row to start iterating.
+    * @param {Function} callback The function to execute on each widget
+    *  iteration. The value of `this` inside the function is the jQuery
+    *  wrapped HTMLElement.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.for_each_widget_above = function(col, row, callback) {
+        this._traversing_widgets('for_each', 'above', col, row, callback);
+        return this;
+    };
+
+
+    /**
+    * Iterate over each widget below the column and row specified.
+    *
+    * @method for_each_widget_below
+    * @param {Number} col The column to start iterating.
+    * @param {Number} row The row to start iterating.
+    * @param {Function} callback The function to execute on each widget
+    *  iteration. The value of `this` inside the function is the jQuery wrapped
+    *  HTMLElement.
+    * @return {Class} Returns the instance of the Gridster Class.
+    */
+    fn.for_each_widget_below = function(col, row, callback) {
+        this._traversing_widgets('for_each', 'below', col, row, callback);
+        return this;
+    };
+
+
+    /**
+    * Returns the highest occupied cell in the grid.
+    *
+    * @method get_highest_occupied_cell
+    * @return {Object} Returns an object with `col` and `row` numbers.
+    */
+    fn.get_highest_occupied_cell = function() {
+        var r;
+        var gm = this.gridmap;
+        var rows = [];
+        var row_in_col = [];
+        for (var c = gm.length - 1; c >= 1; c--) {
+            for (r = gm[c].length - 1; r >= 1; r--) {
+                if (this.is_widget(c, r)) {
+                    rows.push(r);
+                    row_in_col[r] = c;
+                    break;
+                }
+            }
+        }
+
+        var highest_row = Math.max.apply(Math, rows);
+
+        this.highest_occupied_cell = {
+            col: row_in_col[highest_row],
+            row: highest_row
+        };
+
+        return this.highest_occupied_cell;
+    };
+
+
+    fn.get_widgets_from = function(col, row) {
+        var ga = this.gridmap;
+        var $widgets = $();
+
+        if (col) {
+            $widgets = $widgets.add(
+                this.$widgets.filter(function() {
+                    var tcol = $(this).attr('data-col');
+                    return (tcol === col || tcol > col);
+                })
+            );
+        }
+
+        if (row) {
+            $widgets = $widgets.add(
+                this.$widgets.filter(function() {
+                    var trow = $(this).attr('data-row');
+                    return (trow === row || trow > row);
+                })
+            );
+        }
+
+        return $widgets;
+    };
+
+
+    /**
+    * Set the current height of the parent grid.
+    *
+    * @method set_dom_grid_height
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.set_dom_grid_height = function() {
+        var r = this.get_highest_occupied_cell().row;
+        this.$el.css('height', r * this.min_widget_height);
+        return this;
+    };
+
+
+    /**
+    * It generates the neccessary styles to position the widgets.
+    *
+    * @method generate_stylesheet
+    * @param {Number} rows Number of columns.
+    * @param {Number} cols Number of rows.
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.generate_stylesheet = function(opts) {
+        var styles = '';
+        var max_size_x = this.options.max_size_x;
+        var max_rows = 0;
+        var max_cols = 0;
+        var i;
+        var rules;
+
+        opts || (opts = {});
+        opts.cols || (opts.cols = this.cols);
+        opts.rows || (opts.rows = this.rows);
+        opts.namespace || (opts.namespace = this.options.namespace);
+        opts.widget_base_dimensions ||
+            (opts.widget_base_dimensions = this.options.widget_base_dimensions);
+        opts.widget_margins ||
+            (opts.widget_margins = this.options.widget_margins);
+        opts.min_widget_width = (opts.widget_margins[0] * 2) +
+            opts.widget_base_dimensions[0];
+        opts.min_widget_height = (opts.widget_margins[1] * 2) +
+            opts.widget_base_dimensions[1];
+
+        // don't duplicate stylesheets for the same configuration
+        var serialized_opts = $.param(opts);
+        if ($.inArray(serialized_opts, Gridster.generated_stylesheets) >= 0) {
+            return false;
+        }
+
+        Gridster.generated_stylesheets.push(serialized_opts);
+
+        /* generate CSS styles for cols */
+        for (i = opts.cols; i >= 0; i--) {
+            styles += (opts.namespace + ' [data-col="'+ (i + 1) + '"] { left:' +
+                ((i * opts.widget_base_dimensions[0]) +
+                (i * opts.widget_margins[0]) +
+                ((i + 1) * opts.widget_margins[0])) + 'px;} ');
+        }
+
+        /* generate CSS styles for rows */
+        for (i = opts.rows; i >= 0; i--) {
+            styles += (opts.namespace + ' [data-row="' + (i + 1) + '"] { top:' +
+                ((i * opts.widget_base_dimensions[1]) +
+                (i * opts.widget_margins[1]) +
+                ((i + 1) * opts.widget_margins[1]) ) + 'px;} ');
+        }
+
+        for (var y = 1; y <= opts.rows; y++) {
+            styles += (opts.namespace + ' [data-sizey="' + y + '"] { height:' +
+                (y * opts.widget_base_dimensions[1] +
+                (y - 1) * (opts.widget_margins[1] * 2)) + 'px;}');
+        }
+
+        for (var x = 1; x <= max_size_x; x++) {
+            styles += (opts.namespace + ' [data-sizex="' + x + '"] { width:' +
+                (x * opts.widget_base_dimensions[0] +
+                (x - 1) * (opts.widget_margins[0] * 2)) + 'px;}');
+        }
+
+        return this.add_style_tag(styles);
+    };
+
+
+    /**
+    * Injects the given CSS as string to the head of the document.
+    *
+    * @method add_style_tag
+    * @param {String} css The styles to apply.
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.add_style_tag = function(css) {
+      var d = document;
+      var tag = d.createElement('style');
+
+      d.getElementsByTagName('head')[0].appendChild(tag);
+      tag.setAttribute('type', 'text/css');
+
+      if (tag.styleSheet) {
+        tag.styleSheet.cssText = css;
+      }else{
+        tag.appendChild(document.createTextNode(css));
+      }
+
+      this.$style_tags = this.$style_tags.add(tag);
+
+      return this;
+    };
+
+
+    /**
+    * Remove the style tag with the associated id from the head of the document
+    *
+    * @method  remove_style_tag
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.remove_style_tags = function() {
+        this.$style_tags.remove();
+    };
+
+
+    /**
+    * Generates a faux grid to collide with it when a widget is dragged and
+    * detect row or column that we want to go.
+    *
+    * @method generate_faux_grid
+    * @param {Number} rows Number of columns.
+    * @param {Number} cols Number of rows.
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.generate_faux_grid = function(rows, cols) {
+        this.faux_grid = [];
+        this.gridmap = [];
+        var col;
+        var row;
+        for (col = cols; col > 0; col--) {
+            this.gridmap[col] = [];
+            for (row = rows; row > 0; row--) {
+                this.add_faux_cell(row, col);
+            }
+        }
+        return this;
+    };
+
+
+    /**
+    * Add cell to the faux grid.
+    *
+    * @method add_faux_cell
+    * @param {Number} row The row for the new faux cell.
+    * @param {Number} col The col for the new faux cell.
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.add_faux_cell = function(row, col) {
+        var coords = $({
+                        left: this.baseX + ((col - 1) * this.min_widget_width),
+                        top: this.baseY + (row -1) * this.min_widget_height,
+                        width: this.min_widget_width,
+                        height: this.min_widget_height,
+                        col: col,
+                        row: row,
+                        original_col: col,
+                        original_row: row
+                    }).coords();
+
+        if (!$.isArray(this.gridmap[col])) {
+            this.gridmap[col] = [];
+        }
+
+        this.gridmap[col][row] = false;
+        this.faux_grid.push(coords);
+
+        return this;
+    };
+
+
+    /**
+    * Add rows to the faux grid.
+    *
+    * @method add_faux_rows
+    * @param {Number} rows The number of rows you want to add to the faux grid.
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.add_faux_rows = function(rows) {
+        var actual_rows = this.rows;
+        var max_rows = actual_rows + (rows || 1);
+
+        for (var r = max_rows; r > actual_rows; r--) {
+            for (var c = this.cols; c >= 1; c--) {
+                this.add_faux_cell(r, c);
+            }
+        }
+
+        this.rows = max_rows;
+
+        if (this.options.autogenerate_stylesheet) {
+            this.generate_stylesheet();
+        }
+
+        return this;
+    };
+
+     /**
+    * Add cols to the faux grid.
+    *
+    * @method add_faux_cols
+    * @param {Number} cols The number of cols you want to add to the faux grid.
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.add_faux_cols = function(cols) {
+        var actual_cols = this.cols;
+        var max_cols = actual_cols + (cols || 1);
+
+        for (var c = actual_cols; c < max_cols; c++) {
+            for (var r = this.rows; r >= 1; r--) {
+                this.add_faux_cell(r, c);
+            }
+        }
+
+        this.cols = max_cols;
+
+        if (this.options.autogenerate_stylesheet) {
+            this.generate_stylesheet();
+        }
+
+        return this;
+    };
+
+
+    /**
+    * Recalculates the offsets for the faux grid. You need to use it when
+    * the browser is resized.
+    *
+    * @method recalculate_faux_grid
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.recalculate_faux_grid = function() {
+        var aw = this.$wrapper.width();
+        this.baseX = ($(window).width() - aw) / 2;
+        this.baseY = this.$wrapper.offset().top;
+
+        $.each(this.faux_grid, $.proxy(function(i, coords) {
+            this.faux_grid[i] = coords.update({
+                left: this.baseX + (coords.data.col -1) * this.min_widget_width,
+                top: this.baseY + (coords.data.row -1) * this.min_widget_height
+            });
+
+        }, this));
+
+        return this;
+    };
+
+
+    /**
+    * Get all widgets in the DOM and register them.
+    *
+    * @method get_widgets_from_DOM
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.get_widgets_from_DOM = function() {
+        this.$widgets.each($.proxy(function(i, widget) {
+            this.register_widget($(widget));
+        }, this));
+        return this;
+    };
+
+
+    /**
+    * Calculate columns and rows to be set based on the configuration
+    *  parameters, grid dimensions, etc ...
+    *
+    * @method generate_grid_and_stylesheet
+    * @return {Object} Returns the instance of the Gridster class.
+    */
+    fn.generate_grid_and_stylesheet = function() {
+        var aw = this.$wrapper.width();
+        var ah = this.$wrapper.height();
+        var max_cols = this.options.max_cols;
+
+        var cols = Math.floor(aw / this.min_widget_width) +
+                   this.options.extra_cols;
+
+        var actual_cols = this.$widgets.map(function() {
+            return $(this).attr('data-col');
+        }).get();
+
+        //needed to pass tests with phantomjs
+        actual_cols.length || (actual_cols = [0]);
+
+        var min_cols = Math.max.apply(Math, actual_cols);
+
+        // get all rows that could be occupied by the current widgets
+        var max_rows = this.options.extra_rows;
+        this.$widgets.each(function(i, w) {
+            max_rows += (+$(w).attr('data-sizey'));
+        });
+
+        this.cols = Math.max(min_cols, cols, this.options.min_cols);
+
+        if (max_cols && max_cols >= min_cols && max_cols < this.cols) {
+            this.cols = max_cols;
+        }
+
+        this.rows = Math.max(max_rows, this.options.min_rows);
+
+        this.baseX = ($(window).width() - aw) / 2;
+        this.baseY = this.$wrapper.offset().top;
+
+        // left and right gutters not included
+        this.container_width = (this.cols *
+            this.options.widget_base_dimensions[0]) + ((this.cols - 1) * 2 *
+            this.options.widget_margins[0]);
+
+        if (this.options.autogenerate_stylesheet) {
+            this.generate_stylesheet();
+        }
+
+        return this.generate_faux_grid(this.rows, this.cols);
+    };
+
+    /**
+     * Destroy this gridster by removing any sign of its presence, making it easy to avoid memory leaks
+     *
+     * @method destroy
+     * @return {undefined}
+     */
+    fn.destroy = function(){
+        // remove bound callback on window resize
+        $(window).unbind('.gridster');
+
+        if (this.drag_api) {
+            this.drag_api.destroy();
+        }
+
+        this.remove_style_tags();
+
+        // lastly, remove gridster element
+        // this will additionally cause any data associated to this element to be removed, including this
+        // very gridster instance
+        this.$el.remove();
+
+        return this;
+    };
+
+
+    //jQuery adapter
+    $.fn.gridster = function(options) {
+     return this.each(function() {
+       if (!$(this).data('gridster')) {
+         $(this).data('gridster', new Gridster( this, options ));
+       }
+     });
+    };
+
+    $.Gridster = fn;
+
+}(jQuery, window, document));
+
+;/*! nanoScrollerJS - v0.7.3 - 2013
 * http://jamesflorentino.github.com/nanoScrollerJS/
 * Copyright (c) 2013 James Florentino; Licensed MIT */
 (function($, window, document) {
@@ -18261,8 +23328,8 @@ $.effects.effect.slide = function( o, done ) {
 /*
 //@ sourceMappingURL=jquery.nanoscroller.js.map
 */
-;
-/* jquery.nicescroll
+
+;/* jquery.nicescroll
 -- version 3.4.0
 -- copyright 2011-12-13 InuYaksa*2013
 -- licensed under the MIT
@@ -21417,8 +26484,8 @@ $.effects.effect.slide = function( o, done ) {
   }
   
 })( jQuery );
-  ;
-;(function(){
+  
+;;(function(){
 
 
 // CommonJS require()
@@ -24643,8 +29710,8 @@ window.mocha = require('mocha');
     return runner.run();
   };
 })();
-})();;
-//     (c) 2012 Airbnb, Inc.
+})();
+;//     (c) 2012 Airbnb, Inc.
 //
 //     polyglot.js may be freely distributed under the terms of the BSD
 //     license. For all licensing information, details, and documention:
@@ -24897,8 +29964,8 @@ window.mocha = require('mocha');
 
 }(this);
 
-;
-//fgnass.github.com/spin.js#v1.2.5
+
+;//fgnass.github.com/spin.js#v1.2.5
 (function(window, document, undefined) {
 
 /**
@@ -25204,4 +30271,186 @@ window.mocha = require('mocha');
   window.Spinner = Spinner;
 
 })(window, document);
+
 ;
+jade = (function(exports){
+/*!
+ * Jade - runtime
+ * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
+ * MIT Licensed
+ */
+
+/**
+ * Lame Array.isArray() polyfill for now.
+ */
+
+if (!Array.isArray) {
+  Array.isArray = function(arr){
+    return '[object Array]' == Object.prototype.toString.call(arr);
+  };
+}
+
+/**
+ * Lame Object.keys() polyfill for now.
+ */
+
+if (!Object.keys) {
+  Object.keys = function(obj){
+    var arr = [];
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        arr.push(key);
+      }
+    }
+    return arr;
+  }
+}
+
+/**
+ * Merge two attribute objects giving precedence
+ * to values in object `b`. Classes are special-cased
+ * allowing for arrays and merging/joining appropriately
+ * resulting in a string.
+ *
+ * @param {Object} a
+ * @param {Object} b
+ * @return {Object} a
+ * @api private
+ */
+
+exports.merge = function merge(a, b) {
+  var ac = a['class'];
+  var bc = b['class'];
+
+  if (ac || bc) {
+    ac = ac || [];
+    bc = bc || [];
+    if (!Array.isArray(ac)) ac = [ac];
+    if (!Array.isArray(bc)) bc = [bc];
+    ac = ac.filter(nulls);
+    bc = bc.filter(nulls);
+    a['class'] = ac.concat(bc).join(' ');
+  }
+
+  for (var key in b) {
+    if (key != 'class') {
+      a[key] = b[key];
+    }
+  }
+
+  return a;
+};
+
+/**
+ * Filter null `val`s.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function nulls(val) {
+  return val != null;
+}
+
+/**
+ * Render the given attributes object.
+ *
+ * @param {Object} obj
+ * @param {Object} escaped
+ * @return {String}
+ * @api private
+ */
+
+exports.attrs = function attrs(obj, escaped){
+  var buf = []
+    , terse = obj.terse;
+
+  delete obj.terse;
+  var keys = Object.keys(obj)
+    , len = keys.length;
+
+  if (len) {
+    buf.push('');
+    for (var i = 0; i < len; ++i) {
+      var key = keys[i]
+        , val = obj[key];
+
+      if ('boolean' == typeof val || null == val) {
+        if (val) {
+          terse
+            ? buf.push(key)
+            : buf.push(key + '="' + key + '"');
+        }
+      } else if (0 == key.indexOf('data') && 'string' != typeof val) {
+        buf.push(key + "='" + JSON.stringify(val) + "'");
+      } else if ('class' == key && Array.isArray(val)) {
+        buf.push(key + '="' + exports.escape(val.join(' ')) + '"');
+      } else if (escaped && escaped[key]) {
+        buf.push(key + '="' + exports.escape(val) + '"');
+      } else {
+        buf.push(key + '="' + val + '"');
+      }
+    }
+  }
+
+  return buf.join(' ');
+};
+
+/**
+ * Escape the given string of `html`.
+ *
+ * @param {String} html
+ * @return {String}
+ * @api private
+ */
+
+exports.escape = function escape(html){
+  return String(html)
+    .replace(/&(?!(\w+|\#\d+);)/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+};
+
+/**
+ * Re-throw the given `err` in context to the
+ * the jade in `filename` at the given `lineno`.
+ *
+ * @param {Error} err
+ * @param {String} filename
+ * @param {String} lineno
+ * @api private
+ */
+
+exports.rethrow = function rethrow(err, filename, lineno){
+  if (!filename) throw err;
+
+  var context = 3
+    , str = require('fs').readFileSync(filename, 'utf8')
+    , lines = str.split('\n')
+    , start = Math.max(lineno - context, 0)
+    , end = Math.min(lines.length, lineno + context);
+
+  // Error context
+  var context = lines.slice(start, end).map(function(line, i){
+    var curr = i + start + 1;
+    return (curr == lineno ? '  > ' : '    ')
+      + curr
+      + '| '
+      + line;
+  }).join('\n');
+
+  // Alter exception message
+  err.path = filename;
+  err.message = (filename || 'Jade') + ':' + lineno
+    + '\n' + context + '\n\n' + err.message;
+  throw err;
+};
+
+  return exports;
+
+})({});
+
+;
+//@ sourceMappingURL=vendor.js.map
