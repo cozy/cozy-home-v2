@@ -17,9 +17,12 @@ module.exports = class ApplicationsListView extends ViewCollection
     constructor: (apps) ->
         @apps = apps
         @state = 'view'
+        @isLoading = true
         super collection: apps
 
     initialize: =>
+        @listenTo @collection, 'request', => @isLoading = true
+        @listenTo @collection, 'reset', => @isLoading = false
         super
         # onWindowResize when the user is done resizing
         $(window).on 'resize', _.debounce @onWindowResize, 300
@@ -41,7 +44,8 @@ module.exports = class ApplicationsListView extends ViewCollection
             @view.enable() for cid, view of @views
 
     checkIfEmpty: ->
-        @$("#no-app-message").toggle @apps.size() is 0
+        displayHelp = @apps.size() is 0 and not @isLoading
+        @$("#no-app-message").toggle displayHelp
         # and app.mainView.marketView.installedApps is 0
 
     computeGridDims: () ->
