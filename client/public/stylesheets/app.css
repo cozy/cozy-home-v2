@@ -1227,22 +1227,7 @@ body {
   bottom: 10px;
   right: 10px;
 }
-#app-list .application-inner {
-  position: relative;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-}
 .application {
-  width: 130px;
-  text-align: center;
-  padding: 6px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 0;
   cursor: pointer;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1250,54 +1235,53 @@ body {
   -ms-transition: all 0.3s;
   transition: all 0.3s;
   background: #f7f4f0;
+  position: relative;
 }
-.application img.icon {
+.application .application-inner {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.application .application-inner.widget {
+  max-height: 100000px;
+}
+.application .application-inner img {
+  width: auto;
+  height: 80%;
+  display: block;
+  margin: 0px auto -5px auto;
+  text-align: center;
   max-width: 100px;
+  max-height: 100px;
 }
-.application img.stopped {
+.application .application-inner img.stopped {
   opacity: 0.5;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   filter: alpha(opacity=50);
 }
-.application p {
+.application .application-inner p {
   margin: 0;
   font-family: main;
   color: textcolor;
 }
-.application .app-title {
+.application .application-inner .app-title {
+  font-size: 0.8em;
+  height: 20%;
+  max-height: 20px;
+  text-align: center;
   font-family: styled;
   text-transform: uppercase;
-  font-size: 14px;
   color: #363a46;
   text-decoration: none;
 }
-.application .app-title:hover {
+.application .application-inner .app-title:hover {
   color: #ff850a;
 }
-.application .state-label {
+.application .application-inner .state-label {
   font-size: 18px;
   font-weight: normal;
   color: #f00;
-}
-.application a:hover {
-  text-decoration: none;
-}
-.application .btn {
-  font-size: 12px;
-}
-.application .application-outer {
-  display: none;
-  padding-top: 20px;
-}
-.application .application-outer p {
-  margin: 0;
-  padding: 0;
-}
-.application .application-outer label {
-  margin: 0px;
-}
-.application .application-outer .app-stoppable {
-  margin: 0px;
 }
 .application:hover {
   background: #f1e2cf;
@@ -1308,9 +1292,6 @@ body {
 .application:active {
   -webkit-box-shadow: none;
   box-shadow: none;
-}
-.application.broken a {
-  cursor: default;
 }
 .application.broken .broken-notifier {
   display: block;
@@ -1872,27 +1853,6 @@ body {
 @media (max-width: 640px) {
   #account-view input {
     max-width: 215px;
-  }
-  .application {
-    width: 80px;
-  }
-  .application .app-title {
-    font-size: 0.8em;
-  }
-  .application .btn {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-  .application .btn-group .btn {
-    display: block;
-    position: static;
-    margin-left: 5px;
-    margin-right: 5px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-  }
-  .application img {
-    width: 60px;
   }
   #home-content {
     padding: 5px 60px 5px 5px;

@@ -371,6 +371,10 @@ exports.BrunchApplication = (function() {
         this.container_width = options.width;
         this.options.container_width = options.width;
       }
+      if (options.colsNb) {
+        this.options.min_cols = options.colsNb;
+        this.options.max_cols = options.colsNb;
+      }
       if (options.widget_margins) {
         this.options.widget_margins = options.widget_margins;
       }
@@ -964,7 +968,11 @@ module.exports = {
   "You will find here some links to assistance resources.": "You will find here some links to assistance resources.",
   "The first place to find help is:": "The first place to find help is:",
   "removed": "removed",
-  "Required permissions": "Required Permissions"
+  "Required permissions": "Required Permissions",
+  "finish layout edition": "Finish Layout Edition",
+  "use widget": "Use widget",
+  "use icon": "Use icon",
+  "change layout": "Change the layout"
 };
 
 });
@@ -1093,7 +1101,11 @@ module.exports = {
   "You will find here some links to assistance resources.": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
   "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
   "removed": "supprimée",
-  "Required permissions": "Permissions requises"
+  "Required permissions": "Permissions requises",
+  "finish layout edition": "Valider la nouvelle disposition",
+  "use widget": "Mode widget",
+  "use icon": "Mode icone",
+  "change layout": "Modifier la disposition"
 };
 
 });
@@ -1539,7 +1551,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
 var __val__ = t('&nbsp;MB (RAM)')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="change-layout mt2"><div class="line"><img src="img/changelayout.png"/></div><div class="line"><a href="#home/edit">Change the layout</a></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
+buf.push('</span></div></div><div class="change-layout mt2"><div class="line"><img src="img/changelayout.png"/></div><div class="line"><a href="#home/edit">');
+var __val__ = t('change layout')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
 var __val__ = t('Manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4></div></div></div>');
@@ -1599,7 +1614,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w600"><a href="#home" class="btn btn-large">');
-var __val__ = t('Finish Layout Edition')
+var __val__ = t('finish layout edition')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('Welcome to your Cozy!')
@@ -1662,7 +1677,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<button class="btn use-widget">');
-var __val__ = t('Use widget')
+var __val__ = t('use widget')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><div class="application-inner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div>');
 }
@@ -2563,6 +2578,8 @@ module.exports = ApplicationsListView = (function(_super) {
 
     this.doResize = __bind(this.doResize, this);
 
+    this.resizeGridster = __bind(this.resizeGridster, this);
+
     this.onWindowResize = __bind(this.onWindowResize, this);
 
     this.afterRender = __bind(this.afterRender, this);
@@ -2570,12 +2587,20 @@ module.exports = ApplicationsListView = (function(_super) {
     this.initialize = __bind(this.initialize, this);
     this.apps = apps;
     this.state = 'view';
+    this.isLoading = true;
     ApplicationsListView.__super__.constructor.call(this, {
       collection: apps
     });
   }
 
   ApplicationsListView.prototype.initialize = function() {
+    var _this = this;
+    this.listenTo(this.collection, 'request', function() {
+      return _this.isLoading = true;
+    });
+    this.listenTo(this.collection, 'reset', function() {
+      return _this.isLoading = false;
+    });
     ApplicationsListView.__super__.initialize.apply(this, arguments);
     return $(window).on('resize', _.debounce(this.onWindowResize, 300));
   };
@@ -2606,7 +2631,9 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.checkIfEmpty = function() {
-    return this.$("#no-app-message").toggle(this.apps.size() === 0);
+    var displayHelp;
+    displayHelp = this.apps.size() === 0 && !this.isLoading;
+    return this.$("#no-app-message").toggle(displayHelp);
   };
 
   ApplicationsListView.prototype.computeGridDims = function() {
@@ -2620,9 +2647,13 @@ module.exports = ApplicationsListView = (function(_super) {
     grid_margin = 12;
     smallest_step = 130 + 2 * grid_margin;
     colsNb = Math.floor(width / smallest_step);
-    if (colsNb > 3) {
-      colsNb = colsNb - colsNb % 2;
+    if (colsNb < 3) {
+      colsNb = 3;
     }
+    if ((5 <= colsNb && colsNb <= 7)) {
+      colsNb = 6;
+    }
+    colsNb = colsNb - colsNb % 3;
     grid_step = width / colsNb;
     grid_size = grid_step - 2 * grid_margin;
     return {
@@ -2699,23 +2730,31 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.onWindowResize = function() {
-    var oldNb, _ref, _ref1;
+    var oldNb, _ref;
     oldNb = this.colsNb;
     _ref = this.computeGridDims(), this.colsNb = _ref.colsNb, this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    if ((_ref1 = this.gridster) != null) {
-      _ref1.resize_widget_dimensions({
-        width: this.colsNb * this.grid_step,
-        styles_for: {
-          cols: 16,
-          rows: 16
-        },
-        widget_margins: [this.grid_margin, this.grid_margin],
-        widget_base_dimensions: [this.grid_size, this.grid_size]
-      });
-    }
-    if (oldNb !== this.colsNb) {
+    if (oldNb === this.colsNb) {
+      return this.resizeGridster();
+    } else {
+      this.onReset([]);
+      this.gridster.$widgets = $([]);
+      this.resizeGridster();
       return this.onReset(this.collection);
     }
+  };
+
+  ApplicationsListView.prototype.resizeGridster = function() {
+    var _ref;
+    return (_ref = this.gridster) != null ? _ref.resize_widget_dimensions({
+      width: this.colsNb * this.grid_step,
+      colsNb: this.colsNb,
+      styles_for: {
+        cols: 16,
+        rows: 16
+      },
+      widget_margins: [this.grid_margin, this.grid_margin],
+      widget_base_dimensions: [this.grid_size, this.grid_size]
+    }) : void 0;
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
@@ -2724,8 +2763,8 @@ module.exports = ApplicationsListView = (function(_super) {
     pos = view.model.getHomePosition(this.colsNb);
     if (pos == null) {
       pos = {
-        col: 1,
-        row: 1,
+        col: 0,
+        row: 0,
         sizex: 1,
         sizey: 1
       };
@@ -2756,6 +2795,7 @@ module.exports = ApplicationsListView = (function(_super) {
       }
     });
     this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
+    this.gridster.resize_widget(view.$el, pos.sizex, pos.sizey);
     if (this.state === 'view') {
       return view.enable();
     } else {
@@ -2837,7 +2877,7 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.events = {
-    "click .application-inner": "onAppClicked",
+    "mouseup .application-inner": "onAppClicked",
     'click .use-widget': 'onUseWidgetClicked'
   };
 
@@ -2924,7 +2964,8 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onAppClicked = function(event) {
-    var errormsg, msg;
+    var errormsg, msg,
+      _this = this;
     event.preventDefault();
     if (!this.enabled) {
       return null;
@@ -2938,12 +2979,14 @@ module.exports = ApplicationRow = (function(_super) {
         }
         return alert(msg);
       case 'installed':
-        return this.launchApp();
+        return this.launchApp(event);
       case 'installing':
         return alert(t('this app is being installed. Wait a little'));
       case 'stopped':
         return this.model.start({
-          success: this.launchApp
+          success: function() {
+            return _this.launchApp(event);
+          }
         });
     }
   };
@@ -2955,19 +2998,21 @@ module.exports = ApplicationRow = (function(_super) {
     }
     widgetUrl = this.model.get('widget');
     if (widget) {
-      this.$('.use-widget').text(t('Use icon'));
+      this.$('.use-widget').text(t('use icon'));
       this.icon.detach();
       this.stateLabel.detach();
       this.title.detach();
-      return this.$('.application-inner').html(WidgetTemplate({
+      this.$('.application-inner').html(WidgetTemplate({
         url: widgetUrl
       }));
+      return this.$('.application-inner').addClass('widget');
     } else {
-      this.$('.use-widget').text(t('Use widget'));
+      this.$('.use-widget').text(t('use widget'));
       this.$('.application-inner').empty();
       this.$('.application-inner').append(this.icon);
       this.$('.application-inner').append(this.title);
-      return this.$('.application-inner').append(this.stateLabel);
+      this.$('.application-inner').append(this.stateLabel);
+      return this.$('.application-inner').removeClass('widget');
     }
   };
 
@@ -2990,8 +3035,12 @@ module.exports = ApplicationRow = (function(_super) {
   */
 
 
-  ApplicationRow.prototype.launchApp = function() {
-    return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
+  ApplicationRow.prototype.launchApp = function(e) {
+    if (e.which === 2 || e.ctrlKey || e.metaKey) {
+      return window.open("apps/" + this.model.id + "/", "_blank");
+    } else if (e.which === 1) {
+      return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
+    }
   };
 
   return ApplicationRow;
@@ -3181,7 +3230,6 @@ module.exports = HomeView = (function(_super) {
     this.$('#app-frames').find('iframe').hide();
     frame.show();
     this.selectedApp = slug;
-    frame.prop('contentWindow').location.hash = hash || '';
     name = this.apps.get(slug).get('name');
     if (!(name != null)) {
       name = '';
@@ -3189,7 +3237,13 @@ module.exports = HomeView = (function(_super) {
     window.document.title = "Cozy - " + name;
     $("#current-application").html(name);
     this.changeFavicon("/apps/" + slug + "/favicon.ico");
-    return this.resetLayoutSizes();
+    this.resetLayoutSizes();
+    if (hash) {
+      if (hash === '#') {
+        hash = '';
+      }
+      return frame.prop('contentWindow').location.hash = hash;
+    }
   };
 
   HomeView.prototype.createApplicationIframe = function(slug, hash) {
