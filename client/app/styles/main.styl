@@ -363,18 +363,21 @@ body
 
     .application-inner
         overflow hidden
-        position relative
         width 100%
-        height 100%
+        position absolute
+        top 5%
+        bottom 0px
 
         &.widget
-            max-height: 100000px
+            height 100%
+            top 0px
+            bottom 0px
 
         img
             width auto
-            height 80%
+            height 75%
             display block
-            margin 0px auto -5px auto
+            margin 0px auto 2% auto
             text-align center
             max-width: 100px
             max-height: 100px
@@ -388,7 +391,6 @@ body
             color textcolor
 
         .app-title
-            font-size: 0.8em
             // line-height: 20%
             height 20%
             max-height 20px
@@ -420,7 +422,6 @@ body
     &.broken
         .broken-notifier
             display: block
-
 
 .app-tools
     width: 50%
@@ -979,6 +980,14 @@ body
 
 
 @media (max-width: 500px)
+
+
+    .application .application-inner
+        img
+            margin-bottom: -5px
+
+        .app-title
+            font-size: 0.8em
 
     #market-view
         #your-app
