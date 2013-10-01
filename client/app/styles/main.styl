@@ -354,80 +354,74 @@ body
         bottom 10px
         right 10px
 
-    .application-inner
-        position relative
-        box-sizing border-box
-        width 100%
-        height 100%
 
 .application
-    width: 130px
-    text-align: center
-    padding: 6px
-    box-sizing border-box
-    border: 0
     cursor: pointer
     transition: all 0.3s
     background: lightgrey
+    position relative
 
-    img.icon
-        max-width: 100px
+    .application-inner
+        overflow hidden
+        position relative
+        width 100%
+        height 100%
 
-    img.stopped
-        opacity 0.5
+        &.widget
+            max-height: 100000px
 
-    p
-        margin: 0
-        font-family: main
-        color textcolor
+        img
+            width auto
+            height 80%
+            display block
+            margin 0px auto -5px auto
+            text-align center
 
-    .app-title
-        font-family: styled
-        text-transform: uppercase
-        font-size: 14px
-        color: darkblue
-        text-decoration: none
+            &.icon
+                max-width: 100px
+                max-height: 100px
 
-    .app-title:hover
-        color: orange
-
-    .state-label
-        font-size: 18px
-        font-weight: normal
-        color: red
-
-    a:hover
-        text-decoration: none
-
-    .btn
-        font-size: 12px
-
-    .application-outer
-        display:none
-        padding-top 20px
+            &.stopped
+                opacity 0.5
 
         p
             margin: 0
-            padding: 0
-        label
-            margin 0px
-        .app-stoppable
-            margin 0px
+            font-family: main
+            color textcolor
 
-.application:hover
-    background: orangewhite - 10%
+        .app-title
+            font-size: 0.8em
+            // line-height: 20%
+            height 20%
+            max-height 20px
 
-    .app-title
-        color: orange - 50%
+            text-align center
+            font-family: styled
+            text-transform: uppercase
+            // font-size: 14px
+            color: darkblue
+            text-decoration: none
 
-.application:active
-    box-shadow none
+            &:hover
+                color: orange
 
-.application.broken
-    a
-        cursor: default
-    .broken-notifier
-        display: block
+        .state-label
+            font-size: 18px
+            font-weight: normal
+            color: red
+
+
+    &:hover
+        background: orangewhite - 10%
+        .app-title
+            color: orange - 50%
+
+    &:active
+        box-shadow none
+
+    &.broken
+        .broken-notifier
+            display: block
 
 
 .app-tools
@@ -938,26 +932,17 @@ body
         input
             max-width: 215px
 
-    .application
-        width: 80px
+        // .btn
+        //     margin-left: 5px
+        //     margin-right: 5px
 
-        .app-title
-            font-size: 0.8em
-
-        .btn
-            margin-left: 5px
-            margin-right: 5px
-
-        .btn-group
-            .btn
-                display: block
-                position: static
-                margin-left: 5px
-                margin-right: 5px
-                border-radius: 3px
-
-        img
-            width: 60px
+        // .btn-group
+        //     .btn
+        //         display: block
+        //         position: static
+        //         margin-left: 5px
+        //         margin-right: 5px
+        //         border-radius: 3px
 
     #home-content
         padding 5px 60px 5px 5px

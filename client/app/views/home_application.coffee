@@ -95,12 +95,14 @@ module.exports = class ApplicationRow extends BaseView
             @stateLabel.detach()
             @title.detach()
             @$('.application-inner').html WidgetTemplate url: widgetUrl
+            @$('.application-inner').addClass 'widget'
         else
             @$('.use-widget').text t 'use widget'
             @$('.application-inner').empty()
             @$('.application-inner').append @icon
             @$('.application-inner').append @title
             @$('.application-inner').append @stateLabel
+            @$('.application-inner').removeClass 'widget'
 
     canUseWidget: () => @model.has 'widget'
 

@@ -58,7 +58,12 @@ module.exports = class ApplicationsListView extends ViewCollection
         smallest_step = 130 + 2*grid_margin
 
         colsNb = Math.floor width / smallest_step
-        colsNb = colsNb - colsNb % 2 if colsNb > 3 # 1,2,3,4,6,8,...
+        console.log "base", colsNb
+        colsNb = 3 if colsNb < 3
+        colsNb = 6 if 5 <= colsNb <= 7
+        colsNb = colsNb - colsNb % 3
+        # colsNb in [3, 6, 9, 12]
+        console.log colsNb
         grid_step = width / colsNb
         grid_size = grid_step - 2 * grid_margin
         return {colsNb, grid_size, grid_margin, grid_step}
