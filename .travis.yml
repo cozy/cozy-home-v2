@@ -10,8 +10,8 @@ before_install:
     - git clone git://github.com/mycozycloud/cozy-data-system.git
     - cd cozy-data-system
     - npm install forever coffee-script -g
-    - pwd
     - npm install
+    - pwd
     - forever --start server.js
     - ps aux | grep coffee
     - sleep 5
