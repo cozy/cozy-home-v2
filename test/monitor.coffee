@@ -6,13 +6,15 @@ TESTPORT = 8889
 
 describe "Get sys data", ->
 
-    before helpers.clearDb
     before helpers.init TESTPORT
+    before helpers.clearDb
     before ->
         @client = helpers.getClient TESTPORT, @
 
     after ->
         @app.server.close()
+
+    after helpers.clearDb
 
     it "When I load sys data", (done) ->
         @client.get "api/sys-data", done

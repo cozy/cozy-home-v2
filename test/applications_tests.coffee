@@ -41,8 +41,8 @@ stopTestServers = ->
 
 describe "Applications install", ->
 
-    before helpers.clearDb
     before helpers.init TESTPORT
+    before helpers.clearDb
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.createApp "Noty plus", "noty-plus", 0, "installed"
     before startTestServers

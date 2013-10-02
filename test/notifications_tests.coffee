@@ -6,8 +6,8 @@ TESTPORT = 8889
 
 describe 'External Notification API', ->
 
-    before helpers.clearDb
     before helpers.init TESTPORT
+    before helpers.clearDb
     before ->
         @client = helpers.getClient TESTPORT, @
 
@@ -93,6 +93,8 @@ describe 'Home Client Notification API', ->
 
     after ->
         @app.server.close()
+
+    after helpers.clearDb
 
     # all not tested because used above
 
