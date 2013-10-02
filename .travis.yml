@@ -13,7 +13,8 @@ before_install:
     - npm install
     - pwd
     - forever --start server.js
-    - ps aux | grep coffee
+    - ps aux | grep server.js
+    - netstat -plung | grep 9101
     - sleep 5
     - curl http://localhost:9101/
     - cd ..
