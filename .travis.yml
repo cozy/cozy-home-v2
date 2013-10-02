@@ -8,12 +8,12 @@ env:
         - NODE_ENV=test
 before_install:
     - git clone git://github.com/mycozycloud/cozy-data-system.git
-    - cd cozy-data-system 
-    - npm install
+    - cd cozy-data-system
+    - npm install forever coffee-script -g
     - pwd
-    - start-stop-daemon --start --chdir /home/travis/build/mycozycloud/cozy-home/cozy-data-system/ --exec /home/travis/build/mycozycloud/cozy-home/cozy-data-system/server.js -b
+    - npm install
+    - forever --start server.js
     - ps aux | grep coffee
-    - sleep 3
+    - sleep 5
     - curl http://localhost:9101/
-    - npm install coffee-script -g
     - cd ..

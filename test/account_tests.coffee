@@ -11,12 +11,15 @@ TESTPASS = 'password'
 
 describe 'Modify account failure', ->
 
-    before helpers.init TESTPORT
     before helpers.clearDb
+    before helpers.init TESTPORT
     before helpers.createUser TESTMAIL, TESTPASS
     before ->
         @client = helpers.getClient TESTPORT, @
         @dataClient = helpers.getClient 9101, @
+
+    after ->
+        @app.server.close()
 
     it "When I send a request to log in", (done) ->
         @dataClient.post 'accounts/password/', password: TESTPASS , done

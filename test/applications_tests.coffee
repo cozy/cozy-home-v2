@@ -4,7 +4,7 @@ helpers = require('./helpers')
 
 TESTMAIL = "test@test.com"
 TESTPASS = "password"
-TESTPORT = 8888
+TESTPORT = 8889
 TESTAPP =
     name: "My App",
     description: "description",
@@ -29,6 +29,9 @@ startTestServers = ->
     @proxy = helpers.fakeServer msg: "ok", 200
     @proxy.listen 9104
 
+    @fakeApp = helpers.fakeServer this_should_be_an: 'icon', 200
+    @fakeApp.listen 8001
+
 stopTestServers = ->
     @haibu.close()
     @proxy.close()
@@ -38,8 +41,8 @@ stopTestServers = ->
 
 describe "Applications install", ->
 
-    before helpers.init TESTPORT
     before helpers.clearDb
+    before helpers.init TESTPORT
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.createApp "Noty plus", "noty-plus", 0, "installed"
     before startTestServers

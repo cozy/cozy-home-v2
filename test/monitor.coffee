@@ -6,6 +6,7 @@ TESTPORT = 8889
 
 describe "Get sys data", ->
 
+    before helpers.clearDb
     before helpers.init TESTPORT
     before ->
         @client = helpers.getClient TESTPORT, @

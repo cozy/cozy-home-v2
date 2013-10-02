@@ -1,14 +1,13 @@
 should = require('chai').Should()
 expect = require('chai').expect
-compoundInitiator = require('../server')
 helpers = require('./helpers')
 
 TESTPORT = 8889
 
 describe 'External Notification API', ->
 
-    before helpers.init TESTPORT
     before helpers.clearDb
+    before helpers.init TESTPORT
     before ->
         @client = helpers.getClient TESTPORT, @
 
@@ -45,7 +44,6 @@ describe 'External Notification API', ->
             @client.get 'api/notifications', done
 
         it "with proper resources ", ->
-            console.log @body[1]
             expect(@body).to.be.an 'array'
             expect(@body).to.have.length 3
             expect(@body[1]).to.have.deep.property 'resource.url', '/apps/todos/#3615'
