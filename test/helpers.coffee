@@ -18,7 +18,6 @@ helpers = {}
 # will create @app in context
 # usage : before helpers.init port
 _init = (ctx, port, done) ->
-    console.log process.env
     params = name: 'Cozy Home', port: port
     americano.start params, (app, server) =>
         app.server = server
