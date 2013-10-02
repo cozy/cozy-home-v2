@@ -21,8 +21,6 @@ _init = (ctx, port, done) ->
     params = name: 'Cozy Home', port: port
     americano.start params, (app, server) =>
         app.server = server
-        ctrler = require('../server/controllers/applications').loadApplication
-        app.param 'slug', ctrler
         ctx.app = app
         done()
 

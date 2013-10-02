@@ -16,13 +16,8 @@ americano.start name: 'Cozy Home', port: port, (app, server) ->
     if process.env.NODE_ENV isnt "test"
         initProxy()
 
-    # Don't why this one doesn't work with the Americano route file.
-    ctrler = require('./server/controllers/applications').loadApplication
-    app.param 'slug', ctrler
-
     setupRealtime app
     setupChecking()
-
 
     callback app if callback?
 
