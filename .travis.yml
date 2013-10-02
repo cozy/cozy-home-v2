@@ -19,3 +19,5 @@ before_install:
     - cat forever-ds.log
     - curl http://localhost:9101/
     - cd ..
+    - export NAME=home
+    - export TOKEN=token
