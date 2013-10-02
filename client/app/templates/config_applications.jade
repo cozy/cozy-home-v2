@@ -14,12 +14,19 @@
                             span.total 0
                             span= t('&nbsp;GB (Hard Drive)')
                     .memory-free.mt2
-                        .line 
+                        .line
                             img(src="img/ram.png")
-                        .lien
+                        .line
                             span.amount 0
                             span &nbsp;/&nbsp;
                             span.total 0&nbsp;
                             span= t('&nbsp;MB (RAM)')
+
+                    .change-layout.mt2
+                        .line
+                            img(src="img/changelayout.png")
+                        .line
+                            a(href="#home/edit")= t('change layout')
+
         .mod.w66.left
             h4.mb3= t('Manage your applications')

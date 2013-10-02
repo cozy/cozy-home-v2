@@ -2,7 +2,7 @@
 @import '_base'
 @import '_help'
 
-* 
+*
     outline: none
 
 .home-body
@@ -19,6 +19,7 @@ body
 
 #home-menu
     position: fixed
+    z-index: 50
     right: 0
 
     .menu-btn
@@ -316,80 +317,111 @@ body
 
 /** Applications */
 
+#home-edit-close
+    text-align center
+    a
+        display block
+        margin auto
+        padding 10px
+        font-weight normal
+
+
 #app-list
     text-align: center
-    margin: 40px 0
+    margin-bottom: 40px 0
+
+    .preview-holder
+        padding 10px
+        display: block
+        list-style-type: none
+        background-color: orange
+
+    .widget-iframe, .widget-mask
+        position absolute
+        top 0px
+        left 0px
+        width 100%
+        height 100%
+
+    .widget-mask
+        z-index 10
+        background grey
+        opacity 0.2
+
+    .use-widget
+        z-index 20
+        position absolute
+        bottom 10px
+        right 10px
+
 
 .application
-    width: 130px
-    margin: 6px
-    display: inline-block
-    text-align: center
-    padding: 10px
-    border: 0
     cursor: pointer
     transition: all 0.3s
     background: lightgrey
+    position relative
 
-    img
-        max-width: 100px
+    .application-inner
+        overflow hidden
+        width 100%
+        position absolute
+        top 5%
+        bottom 0px
 
-    img.stopped
-        opacity 0.5
+        &.widget
+            height 100%
+            top 0px
+            bottom 0px
 
-    p
-        margin: 0
-        font-family: main
-        color textcolor
+        img
+            width auto
+            height 75%
+            display block
+            margin 0px auto 2% auto
+            text-align center
+            max-width: 100px
+            max-height: 100px
 
-    .app-title
-        font-family: styled
-        text-transform: uppercase
-        font-size: 14px
-        color: darkblue
-        text-decoration: none
-
-    .app-title:hover
-        color: orange
-
-    .state-label
-        font-size: 18px
-        font-weight: normal
-        color: red
-
-    a:hover
-        text-decoration: none
-
-    .btn
-        font-size: 12px
-
-    .application-outer
-        display:none
-        padding-top 20px
+            &.stopped
+                opacity 0.5
 
         p
             margin: 0
-            padding: 0
-        label
-            margin 0px
-        .app-stoppable
-            margin 0px
+            font-family: main
+            color textcolor
 
-.application:hover
-    background: orangewhite - 10%
+        .app-title
+            // line-height: 20%
+            height 20%
+            max-height 20px
 
-    .app-title
-        color: orange - 50%
+            text-align center
+            font-family: styled
+            text-transform: uppercase
+            // font-size: 14px
+            color: darkblue
+            text-decoration: none
 
-.application:active
-    box-shadow none
+            &:hover
+                color: orange
 
-.application.broken
-    a
-        cursor: default
-    .broken-notifier
-        display: block
+        .state-label
+            font-size: 18px
+            font-weight: normal
+            color: red
 
+
+    &:hover
+        background: orangewhite - 10%
+        .app-title
+            color: orange - 50%
+
+    &:active
+        box-shadow none
+
+    &.broken
+        .broken-notifier
+            display: block
 
 .app-tools
     width: 50%
@@ -421,7 +453,7 @@ body
         padding-left 20px
         padding-right 20px
 
-    img 
+    img
         width: 32px
         margin-right: 10px
 
@@ -460,7 +492,7 @@ body
         margin-bottom: 10px
 
     .input
-        .btn 
+        .btn
             height: 60px
             width: 60px
             margin-left: 10px
@@ -506,7 +538,7 @@ body
         margin-top: 2px
         margin-right: 10px
 
-    .btn 
+    .btn
         height: 60px
 
     .error
@@ -629,7 +661,7 @@ body
 
     strong
         text-transform: lowercase
-    
+
     .mod
         margin-left: 5px
 
@@ -655,6 +687,17 @@ body
     .buttons
         display: block
 
+#config-applications-view
+    .change-layout img
+        margin-left 5px
+        margin-bottom 7px
+        width 60px
+    .change-layout a
+        color black
+        font-family styled
+        font-weight normal
+        &:hover
+            color orange
 
 // modals
 
@@ -667,7 +710,7 @@ body
 .md-open
     overflow: hidden
 
-.md-modal 
+.md-modal
     position: fixed
     top: 50%
     left: 50%
@@ -695,8 +738,8 @@ body
     transform: translateX(0)
     opacity: 1
     transition: all 0.3s
- 
-.md-overlay 
+
+.md-overlay
     position: fixed
     width: 100%
     height: 100%
@@ -780,7 +823,7 @@ body
 @media (max-width: 800px)
     .md-content
         overflow: auto
-    .md-modal 
+    .md-modal
         position: absolute
         top: 0
         left: 0
@@ -793,7 +836,7 @@ body
         margin: 0
         padding: 0
 
-    .section-title 
+    .section-title
         display: none
 
     .home-body
@@ -893,32 +936,38 @@ body
             .buttons
                 display: block
 
+        .change-layout, .disk-space, .memory-free
+            img
+                width 32px
+                margin 0px
+                margin-right 5px
+        .sys-infos .line
+            display inline-block
+            clear none
+        .sys-infos div
+            // clear both
+            // height 37px
+            margin-top 5px
+        h4
+            margin-bottom 20px
+
 @media (max-width: 640px)
 
     #account-view
         input
             max-width: 215px
 
-    .application
-        width: 80px
+        // .btn
+        //     margin-left: 5px
+        //     margin-right: 5px
 
-        .app-title
-            font-size: 0.8em
-
-        .btn
-            margin-left: 5px
-            margin-right: 5px
-
-        .btn-group
-            .btn
-                display: block
-                position: static
-                margin-left: 5px
-                margin-right: 5px
-                border-radius: 3px
-
-        img
-            width: 60px
+        // .btn-group
+        //     .btn
+        //         display: block
+        //         position: static
+        //         margin-left: 5px
+        //         margin-right: 5px
+        //         border-radius: 3px
 
     #home-content
         padding 5px 60px 5px 5px
@@ -957,6 +1006,14 @@ body
 
 
 @media (max-width: 500px)
+
+
+    .application .application-inner
+        img
+            margin-bottom: -5px
+
+        .app-title
+            font-size: 0.8em
 
     #market-view
         #your-app
