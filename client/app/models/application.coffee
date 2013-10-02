@@ -80,3 +80,14 @@ module.exports = class Application extends Backbone.Model
     getMetaData: (callbacks) ->
         @prepareCallbacks callbacks
         client.post "/api/applications/getMetaData", @toJSON(), callbacks
+
+    getHomePosition: (cols) ->
+        pos = @get 'homeposition'
+        return pos?[cols]
+
+    saveHomePosition: (cols, obj, options = {}) ->
+        pos = @get('homeposition') or {}
+        pos[cols] = obj
+        options['patch'] = true
+        options['type'] = 'PUT'
+        @save homeposition: pos, options

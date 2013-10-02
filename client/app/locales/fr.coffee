@@ -160,3 +160,7 @@ module.exports =
     "The first place to find help is:":"Le premier endroit où trouver de l'aide est:"
     "removed":"supprimée"
     "Required permissions":"Permissions requises"
+    "finish layout edition": "Valider la nouvelle disposition"
+    "use widget": "Mode widget"
+    "use icon": "Mode icone"
+    "change layout": "Modifier la disposition"
