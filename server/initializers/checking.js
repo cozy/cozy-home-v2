@@ -16,8 +16,9 @@ updatePermissions = function(app) {
       console.log(err);
     }
     return manifest.getPermissions(function(docTypes) {
-      app.permissions = docTypes;
-      return app.save(function(err) {
+      return app.updateAttributes({
+        permissions: docTypes
+      }, function(err) {
         if (err) {
           return console.log(err);
         }
