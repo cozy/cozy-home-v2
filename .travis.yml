@@ -14,7 +14,7 @@ before_install:
     - pwd
     - forever start server.js -o forever-ds.log
     - ps aux | grep server.js
-    - netstat -plunt | grep 9101
+    - sudo netstat -plunt
     - sleep 5
     - cat forever-ds.log
     - curl http://localhost:9101/
