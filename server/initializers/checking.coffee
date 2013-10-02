@@ -8,8 +8,7 @@ updatePermissions = (app) =>
     manifest.download app, (err) =>
         if err then console.log err
         manifest.getPermissions (docTypes) ->
-            app.permissions = docTypes
-            app.save (err) ->
+            app.updateAttributes permissions: docTypes, (err) ->
                 if err then console.log err
 
 module.exports = () ->
