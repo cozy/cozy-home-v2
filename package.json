@@ -19,6 +19,7 @@
   { "mocha":            "= 1.9.0"
   , "request":          "= 2.11.4"
   , "chai":             "= 1.7.0"
+  , "coffee-script":    "latest"
   }
 , "scripts":
   { "test": "cake tests"
