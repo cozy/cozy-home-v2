@@ -1573,6 +1573,19 @@ body {
 .config-application:hover .buttons {
   display: block;
 }
+#config-applications-view .change-layout img {
+  margin-left: 5px;
+  margin-bottom: 7px;
+  width: 60px;
+}
+#config-applications-view .change-layout a {
+  color: #000;
+  font-family: styled;
+  font-weight: normal;
+}
+#config-applications-view .change-layout a:hover {
+  color: #ff850a;
+}
 .application .permissionsLine p {
   text-shadow: none;
   color: #999;
@@ -1850,6 +1863,23 @@ body {
   }
   #config-applications-view .config-applications .buttons {
     display: block;
+  }
+  #config-applications-view .change-layout img,
+  #config-applications-view .disk-space img,
+  #config-applications-view .memory-free img {
+    width: 32px;
+    margin: 0px;
+    margin-right: 5px;
+  }
+  #config-applications-view .sys-infos .line {
+    display: inline-block;
+    clear: none;
+  }
+  #config-applications-view .sys-infos div {
+    margin-top: 5px;
+  }
+  #config-applications-view h4 {
+    margin-bottom: 20px;
   }
 }
 @media (max-width: 640px) {

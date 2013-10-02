@@ -687,6 +687,17 @@ body
     .buttons
         display: block
 
+#config-applications-view
+    .change-layout img
+        margin-left 5px
+        margin-bottom 7px
+        width 60px
+    .change-layout a
+        color black
+        font-family styled
+        font-weight normal
+        &:hover
+            color orange
 
 // modals
 
@@ -924,6 +935,21 @@ body
         .config-applications
             .buttons
                 display: block
+
+        .change-layout, .disk-space, .memory-free
+            img
+                width 32px
+                margin 0px
+                margin-right 5px
+        .sys-infos .line
+            display inline-block
+            clear none
+        .sys-infos div
+            // clear both
+            // height 37px
+            margin-top 5px
+        h4
+            margin-bottom 20px
 
 @media (max-width: 640px)
 
