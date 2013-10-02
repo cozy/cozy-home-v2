@@ -35,198 +35,200 @@ startTestServers = ->
 stopTestServers = ->
     @haibu.close()
     @proxy.close()
-    @app.server.close()
+    @fakeApp.close()
 
 
+describe "Applications management", ->
 
-describe "Applications install", ->
-
-    before helpers.init TESTPORT
-    before helpers.clearDb
+    before helpers.setup TESTPORT
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.createApp "Noty plus", "noty-plus", 0, "installed"
     before startTestServers
-    before ->
-        @client = helpers.getClient TESTPORT, @
-
-
-    describe "GET /api/applications Get all applications", ->
-
-        it "When I send a request to retrieve all applications", (done) ->
-            @client.get "api/applications", done
-
-        it "Then I got expected application in a list", ->
-            @response.statusCode.should.equal 200
-            expect(@body).to.have.property('rows').with.length 1
-            expect(@body.rows[0].name).to.equal "Noty plus"
-
-    describe "POST /api/applications/install Install a new application", ->
-
-        before resetTestServers
-
-        it "When I send a request to install an application", (done) ->
-            this.timeout 10000
-            @client.post "api/applications/install", TESTAPP,  done
-
-        it "Then it sends me back my app with an id and a state", ->
-            @response.statusCode.should.equal 201
-            expect(@body.success).to.be.ok
-            expect(@body).to.have.property 'app'
-            expect(@body.app.state).to.equal 'installing'
-            expect(@body.app.slug).to.equal 'my-app'
-
-        it "After some time, ...", (done) ->
-            setTimeout done, 1000
-
-        it "And haibu have been requested to install this app", ->
-            request = @haibu.lastCall().request
-
-            request.url.should.equal "/drones/my-app/start"
-            request.method.should.equal "POST"
-
-            body = @haibu.lastCall().body
-            should.exist body.start.user
-            should.exist body.start.name
-            should.exist body.start.repository
-            should.exist body.start.scripts
-
-        it "And the proxy have been requested to update its routes", ->
-             @proxy.lastCall().request.url.should.equal "/routes/reset"
-
-        it "When I send a request to retrieve all applications", (done) ->
-            @client.get "api/applications", done
-
-        it "Then I get my new application in the list", ->
-            expect(@body).to.have.property('rows').with.length 2
-            expect(@body.rows[0].name).to.equal "My App"
-
-    describe "Install a new application with specific branch", ->
-
-        before resetTestServers
-
-        it "When I install an application on branch mybranch", (done) ->
-            @client.post "api/applications/install", TESTAPPBRANCH, done
-
-        it "Then it sends me back my app with correct branch", ->
-            @response.statusCode.should.equal 201
-            expect(@body?.app?.branch).to.equal "mybranch"
-
-        it "After some time, ...", (done) ->
-            setTimeout done, 1000
-
-        it "And haibu have been requested with correct branch", ->
-            body = @haibu.lastCall().body
-            body.start.repository.branch.should.equal "mybranch"
-
-        it "When I send a request to retrieve all applications", (done) ->
-            @client.get "api/applications", done
-
-        it "The branch is still there", ->
-            expect(@body).to.have.property('rows').with.length 3
-            expect(@body.rows[1].branch).to.equal "mybranch"
-
-
-describe "Application update", ->
-
-    before resetTestServers
-
-    describe "UPDATE /api/applications/:slug/update Update an app", ->
-
-        it "When I send a request to update an application", (done) ->
-            @client.put "api/applications/my-app/update", {}, done
-
-        it "Then it sends me a success response", ->
-            console.log @body
-            #@response.statusCode.should.equal 200
-            #expect(@body.success).to.be.ok
-
-describe "Application stop", ->
-
-    before resetTestServers
-
-    describe "POST /api/applications/:slug/stop Stop an app", ->
-
-        it "When I send a request to stop an application", (done) ->
-            @client.post "api/applications/my-app/stop", {}, done
-
-        it "Then it sends me a success response with the updated app", ->
-            @response.statusCode.should.equal 200
-            expect(@body.success).to.be.ok
-            expect(@body.app.state).to.equal 'stopped'
-
-        it "And haibu have been requested to stop this app", ->
-            request = @haibu.lastCall().request
-            request.url.should.equal "/drones/my-app/stop"
-            request.method.should.equal "POST"
-
-        it "And the proxy have been requested to update its routes", ->
-            @proxy.lastCall().request.url.should.equal "/routes/reset"
-
-describe "Application start", ->
-
-    before resetTestServers
-
-    describe "POST /api/applications/:slug/start Start an app", ->
-
-        it "When I send a request to stop an application", (done) ->
-            @client.post "api/applications/my-app/start", {}, done
-
-        it "Then it sends me a success response with the updated app", ->
-            @response.statusCode.should.equal 200
-            expect(@body.success).to.be.ok
-            expect(@body.app.state).to.equal 'installed'
-
-        it "And haibu have been requested to start this app", ->
-            request = @haibu.lastCall().request
-            request.url.should.equal "/drones/my-app/start"
-            request.method.should.equal "POST"
-
-        it "And the proxy have been requested to update its routes", ->
-            @proxy.lastCall().request.url.should.equal "/routes/reset"
-
-describe "Application uninstallation", ->
-
-    before resetTestServers
-
-    describe "DELETE /api/applications/:slug/uninstall Remove an app", ->
-
-        it "When I send a request to uninstall an application", (done) ->
-            @client.del "api/applications/my-app/uninstall", done
-
-        it "Then it sends me a success response", ->
-            @response.statusCode.should.equal 200
-            expect(@body.success).to.be.ok
-
-        it "And haibu have been requested to clean this app", ->
-            request = @haibu.lastCall().request
-            request.url.should.equal "/drones/my-app/clean"
-            request.method.should.equal "POST"
-
-        it "And the proxy have been requested to update its routes", ->
-            @proxy.lastCall().request.url.should.equal "/routes/reset"
-
-    describe "GET /api/applications Check if app removed", ->
-
-        before resetTestServers
-
-        it "When I send a request to retrieve all applications", (done) ->
-            @client.get "api/applications", done
-
-        it "Then I do not see my application in the list", ->
-            expect(@body).to.have.property('rows').with.length 2
-            expect(@body.rows[0].branch).to.not.equal "My App"
-
-
-describe "Users", ->
-
-    before resetTestServers
+    before -> @client = helpers.getClient TESTPORT, @
     after stopTestServers
+    after helpers.takeDown
 
-    describe "GET /api/users Get all users", ->
-        it "When I send a request to retrieve all users", (done) ->
-            @client.get "api/users", done
 
-        it "Then I got expected users in a list", ->
-            @response.statusCode.should.equal 200
-            expect(@body).to.have.property('rows').with.length 1
-            expect(@body.rows[0].email).to.equal TESTMAIL
+    describe "Applications install", ->
+
+
+
+        describe "GET /api/applications Get all applications", ->
+
+            it "When I send a request to retrieve all applications", (done) ->
+                @client.get "api/applications", done
+
+            it "Then I got expected application in a list", ->
+                @response.statusCode.should.equal 200
+                expect(@body).to.have.property('rows').with.length 1
+                expect(@body.rows[0].name).to.equal "Noty plus"
+
+        describe "POST /api/applications/install Install a new application", ->
+
+            before resetTestServers
+
+            it "When I send a request to install an application", (done) ->
+                this.timeout 10000
+                @client.post "api/applications/install", TESTAPP,  done
+
+            it "Then it sends me back my app with an id and a state", ->
+                @response.statusCode.should.equal 201
+                expect(@body.success).to.be.ok
+                expect(@body).to.have.property 'app'
+                expect(@body.app.state).to.equal 'installing'
+                expect(@body.app.slug).to.equal 'my-app'
+
+            it "After some time, ...", (done) ->
+                setTimeout done, 1000
+
+            it "And haibu have been requested to install this app", ->
+                request = @haibu.lastCall().request
+
+                request.url.should.equal "/drones/my-app/start"
+                request.method.should.equal "POST"
+
+                body = @haibu.lastCall().body
+                should.exist body.start.user
+                should.exist body.start.name
+                should.exist body.start.repository
+                should.exist body.start.scripts
+
+            it "And the proxy have been requested to update its routes", ->
+                 @proxy.lastCall().request.url.should.equal "/routes/reset"
+
+            it "When I send a request to retrieve all applications", (done) ->
+                @client.get "api/applications", done
+
+            it "Then I get my new application in the list", ->
+                expect(@body).to.have.property('rows').with.length 2
+                expect(@body.rows[0].name).to.equal "My App"
+
+        describe "Install a new application with specific branch", ->
+
+            before resetTestServers
+
+            it "When I install an application on branch mybranch", (done) ->
+                @client.post "api/applications/install", TESTAPPBRANCH, done
+
+            it "Then it sends me back my app with correct branch", ->
+                @response.statusCode.should.equal 201
+                expect(@body?.app?.branch).to.equal "mybranch"
+
+            it "After some time, ...", (done) ->
+                setTimeout done, 1000
+
+            it "And haibu have been requested with correct branch", ->
+                body = @haibu.lastCall().body
+                body.start.repository.branch.should.equal "mybranch"
+
+            it "When I send a request to retrieve all applications", (done) ->
+                @client.get "api/applications", done
+
+            it "The branch is still there", ->
+                expect(@body).to.have.property('rows').with.length 3
+                expect(@body.rows[1].branch).to.equal "mybranch"
+
+
+    describe "Application update", ->
+
+        before resetTestServers
+
+        describe "UPDATE /api/applications/:slug/update Update an app", ->
+
+            it "When I send a request to update an application", (done) ->
+                @client.put "api/applications/my-app/update", {}, done
+
+            it "Then it sends me a success response", ->
+                console.log @body
+                #@response.statusCode.should.equal 200
+                #expect(@body.success).to.be.ok
+
+    describe "Application stop", ->
+
+        before resetTestServers
+
+        describe "POST /api/applications/:slug/stop Stop an app", ->
+
+            it "When I send a request to stop an application", (done) ->
+                @client.post "api/applications/my-app/stop", {}, done
+
+            it "Then it sends me a success response with the updated app", ->
+                @response.statusCode.should.equal 200
+                expect(@body.success).to.be.ok
+                expect(@body.app.state).to.equal 'stopped'
+
+            it "And haibu have been requested to stop this app", ->
+                request = @haibu.lastCall().request
+                request.url.should.equal "/drones/my-app/stop"
+                request.method.should.equal "POST"
+
+            it "And the proxy have been requested to update its routes", ->
+                @proxy.lastCall().request.url.should.equal "/routes/reset"
+
+    describe "Application start", ->
+
+        before resetTestServers
+
+        describe "POST /api/applications/:slug/start Start an app", ->
+
+            it "When I send a request to stop an application", (done) ->
+                @client.post "api/applications/my-app/start", {}, done
+
+            it "Then it sends me a success response with the updated app", ->
+                @response.statusCode.should.equal 200
+                expect(@body.success).to.be.ok
+                expect(@body.app.state).to.equal 'installed'
+
+            it "And haibu have been requested to start this app", ->
+                request = @haibu.lastCall().request
+                request.url.should.equal "/drones/my-app/start"
+                request.method.should.equal "POST"
+
+            it "And the proxy have been requested to update its routes", ->
+                @proxy.lastCall().request.url.should.equal "/routes/reset"
+
+    describe "Application uninstallation", ->
+
+        before resetTestServers
+
+        describe "DELETE /api/applications/:slug/uninstall Remove an app", ->
+
+            it "When I send a request to uninstall an application", (done) ->
+                @client.del "api/applications/my-app/uninstall", done
+
+            it "Then it sends me a success response", ->
+                @response.statusCode.should.equal 200
+                expect(@body.success).to.be.ok
+
+            it "And haibu have been requested to clean this app", ->
+                request = @haibu.lastCall().request
+                request.url.should.equal "/drones/my-app/clean"
+                request.method.should.equal "POST"
+
+            it "And the proxy have been requested to update its routes", ->
+                @proxy.lastCall().request.url.should.equal "/routes/reset"
+
+        describe "GET /api/applications Check if app removed", ->
+
+            before resetTestServers
+
+            it "When I send a request to retrieve all applications", (done) ->
+                @client.get "api/applications", done
+
+            it "Then I do not see my application in the list", ->
+                expect(@body).to.have.property('rows').with.length 2
+                expect(@body.rows[0].branch).to.not.equal "My App"
+
+
+    describe "Users", ->
+
+        before resetTestServers
+
+        describe "GET /api/users Get all users", ->
+            it "When I send a request to retrieve all users", (done) ->
+                @client.get "api/users", done
+
+            it "Then I got expected users in a list", ->
+                @response.statusCode.should.equal 200
+                expect(@body).to.have.property('rows').with.length 1
+                expect(@body.rows[0].email).to.equal TESTMAIL

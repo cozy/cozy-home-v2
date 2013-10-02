@@ -1,7 +1,6 @@
 bcrypt = require 'bcrypt'
 should = require('chai').Should()
 helpers = require './helpers'
-americano = require 'americano'
 
 User = require '../server/models/user'
 
@@ -11,17 +10,13 @@ TESTPASS = 'password'
 
 describe 'Modify account failure', ->
 
-    before helpers.init TESTPORT
-    before helpers.clearDb
+    before helpers.setup TESTPORT
     before helpers.createUser TESTMAIL, TESTPASS
     before ->
         @client = helpers.getClient TESTPORT, @
         @dataClient = helpers.getClient 9101, @
 
-    after ->
-        @app.server.close()
-
-    after helpers.clearDb
+    after helpers.takeDown
 
     it "When I send a request to log in", (done) ->
         @dataClient.post 'accounts/password/', password: TESTPASS , done

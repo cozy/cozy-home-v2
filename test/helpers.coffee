@@ -8,7 +8,6 @@ Application = require '../server/models/application'
 CozyInstance = require '../server/models/cozyinstance'
 Notification = require '../server/models/notification'
 User = require '../server/models/user'
-Adapter = require '../server/lib/adapter'
 
 process.env.NAME = "home"
 process.env.TOKEN = "token"
@@ -18,21 +17,17 @@ helpers = {}
 # init the compound application
 # will create @app in context
 # usage : before helpers.init port
-helpers.init = (port) ->
-    (done) ->
-        @timeout 3000
-        params = name: 'Cozy Home', port: port
-        americano.start params, (app, server) =>
-            app.server = server
-            ctrler = require('../server/controllers/applications').loadApplication
-            app.param 'slug', ctrler
-            @app = app
-
-            setTimeout done, 2000 # wait 2s for defineRequests
+_init = (ctx, port, done) ->
+    params = name: 'Cozy Home', port: port
+    americano.start params, (app, server) =>
+        app.server = server
+        ctrler = require('../server/controllers/applications').loadApplication
+        app.param 'slug', ctrler
+        ctx.app = app
+        done()
 
 # This function remove everythin from the db
-helpers.clearDb = (callback) ->
-    this.timeout 5000
+_clearDb = (callback) ->
     User.destroyAll (err) ->
         return callback err if err
         Application.destroyAll (err) ->
@@ -41,6 +36,18 @@ helpers.clearDb = (callback) ->
                 return callback err if err
                 Notification.destroyAll (err) ->
                     callback err
+
+helpers.setup = (port) ->
+    (done) ->
+        @timeout 5000
+        _init this, port, (err) =>
+            return done err if err
+            _clearDb done
+
+helpers.takeDown = (done) ->
+    @app.server.close()
+    _clearDb done
+
 
 # function factory for creating user
 helpers.createUser = (email, password) -> (callback) ->
