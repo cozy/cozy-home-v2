@@ -7,12 +7,10 @@ env:
     global:
         - NODE_ENV=test
 before_install:
-    - git clone git://github.com/aenario/cozy-data-system.git
+    - git clone git://github.com/mycozycloud/cozy-data-system.git
     - cd cozy-data-system
-    - git checkout omaster
     - npm install forever coffee-script -g
     - npm install
-    - curl -X DELETE http://localhost:5984/cozy
     - pwd
     - forever start -o forever-ds.log server.js
     - ps aux | grep server.js
