@@ -3,8 +3,8 @@
 , "engine": { "node": "*" }
 , "main": "server.js"
 , "dependencies":
-  { "americano":        "0.2.8"
-  , "americano-cozy":   "0.1.2"
+  { "americano":        "0.2.10"
+  , "americano-cozy":   "0.1.3"
   , "cozy-slug":        "*"
   , "bcrypt":           "= 0.7.4"
   , "async":            "= 0.1.22"
@@ -19,6 +19,7 @@
   { "mocha":            "= 1.9.0"
   , "request":          "= 2.11.4"
   , "chai":             "= 1.7.0"
+  , "coffee-script":    "latest"
   }
 , "scripts":
   { "test": "cake tests"
