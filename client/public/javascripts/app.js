@@ -929,7 +929,7 @@ window.require.register("locales/fr", function(exports, require, module) {
     "Installing": "Installation en cours",
     "remove": "enlever",
     "update": "m.à.j.",
-    "started": "Démarrée",
+    "started": "démarrée",
     "Notifications": "Notifications",
     "Questions and help forum": "Forum d'aide",
     "Sign out": "Sortir",
