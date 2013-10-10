@@ -19,5 +19,17 @@ americano.start name: 'Cozy Home', port: port, (app, server) ->
     setupRealtime app
     setupChecking()
 
+    if process.env.NODE_ENV is "production"
+        format = '[:date] :method :url :status :response-time ms'
+        env = process.env.NODE_ENV
+        fs.mkdirSync 'log' unless fs.existsSync './log'
+        logFile = fs.createWriteStream "./log/production.log", flags: 'w'
+        @app.use express.logger
+            stream: logFile
+            format: '[:date] :method :url :status :response-time ms'
+
+        console.log = (text) ->
+            logFile.write(text + '\n')
+
     callback app if callback?
 
