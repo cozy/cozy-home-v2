@@ -22,7 +22,7 @@ americano.start({
   name: 'Cozy Home',
   port: port
 }, function(app, server) {
-  var ctrler, env, format, logFile;
+  var ctrler;
   app.server = server;
   if (process.env.NODE_ENV !== "test") {
     initProxy();
@@ -31,23 +31,6 @@ americano.start({
   app.param('slug', ctrler);
   setupRealtime(app);
   setupChecking();
-  if (process.env.NODE_ENV === "production") {
-    format = '[:date] :method :url :status :response-time ms';
-    env = process.env.NODE_ENV;
-    if (!fs.existsSync('./log')) {
-      fs.mkdirSync('log');
-    }
-    logFile = fs.createWriteStream("./log/production.log", {
-      flags: 'w'
-    });
-    this.app.use(express.logger({
-      stream: logFile,
-      format: '[:date] :method :url :status :response-time ms'
-    }));
-    console.log = function(text) {
-      return logFile.write(text + '\n');
-    };
-  }
   if (typeof callback !== "undefined" && callback !== null) {
     return callback(app);
   }

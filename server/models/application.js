@@ -14,10 +14,8 @@ module.exports = Application = americano.getModel('Application', {
     "default": false
   },
   date: {
-    type: {
-      name: String,
-      "default": Date.now
-    }
+    type: Date,
+    "default": Date.now
   },
   icon: String,
   git: String,
