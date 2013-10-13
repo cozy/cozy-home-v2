@@ -911,6 +911,10 @@ window.require.register("locales/en", function(exports, require, module) {
     "Visit the project website and learn to build your app:": "Visit the project website and learn to build your app:",
     "your own application": "your own application",
     "install": "install",
+    "installed": "installed",
+    "updated": "updated",
+    "updating": "updating",
+    "update error": "An error occured while updating the application",
     "broken": "broken",
     "start this app": "start this app",
     "stopped": "stopped",
@@ -1044,6 +1048,10 @@ window.require.register("locales/fr", function(exports, require, module) {
     "your own application": "votre propre application",
     "install": "installation",
     "broken": "cassée",
+    "installed": "installée",
+    "updated": "m.à.j",
+    "updating": "m.à.j en cours",
+    "update error": "Une erreur est survenue pendant la mise à jour",
     "start this app": "démarrer cette application",
     "stopped": "stoppée",
     "retry to install": "réessai d'installation",
@@ -2174,6 +2182,7 @@ window.require.register("views/config_application", function(exports, require, m
         case 'installed':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
+          this.stateLabel.show().text(t('installed'));
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('update'));
           this.appStoppable.show();
@@ -2224,6 +2233,7 @@ window.require.register("views/config_application", function(exports, require, m
       event.preventDefault();
       this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
       this.removeButton.spin(true);
+      this.stateLabel.html(t('removing'));
       return this.model.uninstall({
         success: function() {
           _this.remove();
@@ -2253,7 +2263,8 @@ window.require.register("views/config_application", function(exports, require, m
           return _this.popover.remove();
         }
       });
-      return this.$el.append(this.popover.$el);
+      this.$el.append(this.popover.$el);
+      return $(window).trigger('resize');
     };
 
     ApplicationRow.prototype.onStartStopClicked = function(event) {
@@ -2306,21 +2317,20 @@ window.require.register("views/config_application", function(exports, require, m
         alert(t('Cannot update application while an application is installing'));
         return false;
       }
-      this.updateButton.displayRed(t("installing"));
       Backbone.Mediator.pub('app-state-changed', true);
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.updateButton.spin(false);
-      this.updateButton.spin(true);
+      this.updateButton.spin('small');
+      this.stateLabel.html(t('updating'));
       return this.model.updateApp({
         success: function() {
           _this.updateButton.displayGreen(t("updated"));
+          _this.stateLabel.html(t('started'));
           return Backbone.Mediator.pub('app-state-changed', true);
         },
         error: function(jqXHR) {
-          var error;
-          error = JSON.parse(jqXHR.responseText);
-          alert(error.message);
-          _this.updateButton.displayRed(t("failed"));
+          alert(t('update error'));
+          _this.stateLabel.html(t('broken'));
+          _this.updateButton.displayRed(t("update failed"));
           return Backbone.Mediator.pub('app-state-changed', true);
         }
       });

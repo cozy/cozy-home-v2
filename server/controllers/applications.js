@@ -126,18 +126,16 @@ module.exports = {
     var manifest;
     manifest = new Manifest();
     return manifest.download(req.body, function(err) {
+      var app;
       if (err) {
         next(err);
       }
-      return manifest.getPermissions(function(docTypes) {
-        var app;
-        app = {
-          permissions: docTypes
-        };
-        return res.send({
-          success: true,
-          app: app
-        });
+      app = {
+        permissions: manifest.getPermissions()
+      };
+      return res.send({
+        success: true,
+        app: app
       });
     });
   },
@@ -145,18 +143,16 @@ module.exports = {
     var manifest;
     manifest = new Manifest();
     return manifest.download(req.body, function(err) {
+      var app;
       if (err) {
         next(err);
       }
-      return manifest.getDescription(function(description) {
-        var app;
-        app = {
-          description: description
-        };
-        return res.send({
-          success: true,
-          app: app
-        });
+      app = {
+        description: manifest.getDescription()
+      };
+      return res.send({
+        success: true,
+        app: app
       });
     });
   },
@@ -164,15 +160,15 @@ module.exports = {
     var manifest;
     manifest = new Manifest();
     return manifest.download(req.body, function(err) {
+      var metaData;
       if (err) {
         next(err);
       }
-      return manifest.getMetaData(function(metaData) {
-        return res.send({
-          success: true,
-          app: metaData
-        }, 200);
-      });
+      metaData = manifest.getMetaData();
+      return res.send({
+        success: true,
+        app: metaData
+      }, 200);
     });
   },
   read: function(req, res, next) {
@@ -242,61 +238,57 @@ module.exports = {
         if (err) {
           return send_error(res, err);
         }
-        return manifest.getPermissions(function(docTypes) {
-          req.body.permissions = docTypes;
-          return manifest.getWidget(function(widget) {
-            req.body.widget = widget;
-            return Application.create(req.body, function(err, appli) {
-              var infos, manager;
-              if (err) {
-                return send_error(res, err);
-              }
-              res.send({
-                success: true,
-                app: appli
-              }, 201);
-              infos = JSON.stringify(appli);
-              console.info("attempt to install app " + infos);
-              manager = new AppManager();
-              return manager.installApp(appli, function(err, result) {
-                var msg;
+        req.body.permissions = manifest.getPermissions();
+        req.body.widget = manifest.getWidget();
+        return Application.create(req.body, function(err, appli) {
+          var infos, manager;
+          if (err) {
+            return send_error(res, err);
+          }
+          res.send({
+            success: true,
+            app: appli
+          }, 201);
+          infos = JSON.stringify(appli);
+          console.info("attempt to install app " + infos);
+          manager = new AppManager();
+          return manager.installApp(appli, function(err, result) {
+            var msg;
+            if (err) {
+              mark_broken(res, appli, err);
+              send_error_socket(err);
+              return;
+            }
+            if (result.drone != null) {
+              appli.state = "installed";
+              appli.port = result.drone.port;
+              msg = "install succeeded on port " + appli.port;
+              console.info(msg);
+              saveIcon(appli, function(err) {
                 if (err) {
-                  mark_broken(res, appli, err);
-                  send_error_socket(err);
-                  return;
-                }
-                if (result.drone != null) {
-                  appli.state = "installed";
-                  appli.port = result.drone.port;
-                  msg = "install succeeded on port " + appli.port;
-                  console.info(msg);
-                  saveIcon(appli, function(err) {
-                    if (err) {
-                      return console.log(err.stack);
-                    } else {
-                      return console.info('icon attached');
-                    }
-                  });
-                  return appli.save(function(err) {
-                    if (err) {
-                      return send_error_socket(err);
-                    }
-                    console.info('saved port in db', appli.port);
-                    return manager.resetProxy(function(err) {
-                      if (err) {
-                        return send_error_socket(err);
-                      }
-                      return console.info('proxy reset', appli.port);
-                    });
-                  });
+                  return console.log(err.stack);
                 } else {
-                  err = new Error("Controller has no " + ("informations about " + appli.name));
+                  return console.info('icon attached');
+                }
+              });
+              return appli.save(function(err) {
+                if (err) {
+                  return send_error_socket(err);
+                }
+                console.info('saved port in db', appli.port);
+                return manager.resetProxy(function(err) {
                   if (err) {
                     return send_error_socket(err);
                   }
-                }
+                  return console.info('proxy reset', appli.port);
+                });
               });
-            });
+            } else {
+              err = new Error("Controller has no " + ("informations about " + appli.name));
+              if (err) {
+                return send_error_socket(err);
+              }
+            }
           });
         });
       });
@@ -344,30 +336,26 @@ module.exports = {
         if (err) {
           return send_error(res, err);
         }
-        return manifest.getPermissions(function(docTypes) {
-          req.application.permissions = docTypes;
-          return manifest.getWidget(function(widget) {
-            req.application.widget = widget;
-            return req.application.save(function(err) {
-              saveIcon(req.application, function(err) {
-                if (err) {
-                  return console.log(err.stack);
-                } else {
-                  return console.info('icon attached');
-                }
-              });
-              if (err) {
-                return send_error(res, err);
-              }
-              return manager.resetProxy(function(err) {
-                if (err) {
-                  return mark_broken(res, req.application, err);
-                }
-                return res.send({
-                  success: true,
-                  msg: 'Application succesfuly updated'
-                });
-              });
+        req.application.permissions = manifest.getPermissions();
+        req.application.widget = manifest.getWidget();
+        return req.application.save(function(err) {
+          saveIcon(req.application, function(err) {
+            if (err) {
+              return console.log(err.stack);
+            } else {
+              return console.info('icon attached');
+            }
+          });
+          if (err) {
+            return send_error(res, err);
+          }
+          return manager.resetProxy(function(err) {
+            if (err) {
+              return mark_broken(res, req.application, err);
+            }
+            return res.send({
+              success: true,
+              msg: 'Application succesfuly updated'
             });
           });
         });
