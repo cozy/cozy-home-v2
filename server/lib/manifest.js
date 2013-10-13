@@ -31,31 +31,31 @@ exports.Manifest = (function() {
     });
   };
 
-  Manifest.prototype.getPermissions = function(callback) {
+  Manifest.prototype.getPermissions = function() {
     if (this.config["cozy-permissions"] != null) {
-      return callback(this.config["cozy-permissions"]);
+      return this.config["cozy-permissions"];
     } else {
-      return callback({});
+      return {};
     }
   };
 
-  Manifest.prototype.getWidget = function(callback) {
+  Manifest.prototype.getWidget = function() {
     if (this.config['cozy-widget'] != null) {
-      return callback(this.config["cozy-widget"]);
+      return this.config["cozy-widget"];
     } else {
-      return callback(null);
+      return null;
     }
   };
 
-  Manifest.prototype.getDescription = function(callback) {
+  Manifest.prototype.getDescription = function() {
     if (this.config['description'] != null) {
-      return callback(this.config["description"]);
+      return this.config["description"];
     } else {
-      return callback(null);
+      return null;
     }
   };
 
-  Manifest.prototype.getMetaData = function(callback) {
+  Manifest.prototype.getMetaData = function() {
     var metaData;
     metaData = {};
     if (this.config.description != null) {
@@ -72,7 +72,7 @@ exports.Manifest = (function() {
     if (this.config['cozy-permissions'] != null) {
       metaData.permissions = this.config['cozy-permissions'];
     }
-    return callback(metaData);
+    return metaData;
   };
 
   return Manifest;

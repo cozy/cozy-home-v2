@@ -92,26 +92,24 @@ module.exports =
         manifest = new Manifest()
         manifest.download req.body, (err) ->
             if err then next err
-            manifest.getPermissions (docTypes) ->
-                app = permissions: docTypes
-                res.send success: true, app: app
+            app = permissions: manifest.getPermissions()
+            res.send success: true, app: app
 
 
     getDescription: (req, res, next) ->
         manifest = new Manifest()
         manifest.download req.body, (err) ->
             if err then next err
-            manifest.getDescription (description) ->
-                app = description: description
-                res.send success: true, app: app
+            app = description: manifest.getDescription()
+            res.send success: true, app: app
 
 
     getMetaData: (req, res, next) ->
         manifest = new Manifest()
         manifest.download req.body, (err) ->
             if err then next err
-            manifest.getMetaData (metaData) ->
-                res.send success: true, app: metaData, 200
+            metaData = manifest.getMetaData()
+            res.send success: true, app: metaData, 200
 
 
     read: (req, res, next) ->
@@ -168,47 +166,46 @@ module.exports =
             manifest = new Manifest()
             manifest.download req.body, (err) ->
                 return send_error res, err if err
-                manifest.getPermissions (docTypes) ->
-                    req.body.permissions = docTypes
-                    manifest.getWidget (widget) ->
-                        req.body.widget = widget
+                req.body.permissions = manifest.getPermissions()
+                req.body.widget = manifest.getWidget()
 
-                        Application.create req.body, (err, appli) ->
-                            return send_error res, err if err
+                Application.create req.body, (err, appli) ->
+                    return send_error res, err if err
 
-                            res.send success: true, app: appli, 201
+                    res.send success: true, app: appli, 201
 
-                            infos = JSON.stringify appli
-                            console.info "attempt to install app #{infos}"
-                            manager = new AppManager()
-                            manager.installApp appli, (err, result) ->
+                    infos = JSON.stringify appli
+                    console.info "attempt to install app #{infos}"
+                    manager = new AppManager()
+                    manager.installApp appli, (err, result) ->
 
-                                if err
-                                    mark_broken res, appli, err
-                                    send_error_socket err
-                                    return
+                        if err
+                            mark_broken res, appli, err
+                            send_error_socket err
+                            return
 
-                                if result.drone?
-                                    appli.state = "installed"
-                                    appli.port = result.drone.port
+                        if result.drone?
+                            appli.state = "installed"
+                            appli.port = result.drone.port
 
-                                    msg = "install succeeded on port #{appli.port}"
-                                    console.info msg
+                            msg = "install succeeded on port #{appli.port}"
+                            console.info msg
 
-                                    saveIcon appli, (err) ->
-                                        if err then console.log err.stack
-                                        else console.info 'icon attached'
+                            saveIcon appli, (err) ->
+                                if err then console.log err.stack
+                                else console.info 'icon attached'
 
-                                    appli.save (err) ->
-                                        return send_error_socket err if err
-                                        console.info 'saved port in db', appli.port
-                                        manager.resetProxy (err) ->
-                                            return send_error_socket err if err
-                                            console.info 'proxy reset', appli.port
-                                else
-                                    err = new Error "Controller has no " + \
-                                                    "informations about #{appli.name}"
+                            appli.save (err) ->
+                                return send_error_socket err if err
+                                console.info 'saved port in db', appli.port
+                                manager.resetProxy (err) ->
                                     return send_error_socket err if err
+                                    console.info 'proxy reset', appli.port
+
+                        else
+                            err = new Error "Controller has no " + \
+                                            "informations about #{appli.name}"
+                            return send_error_socket err if err
 
 
     # Remove app from 3 places :
@@ -248,25 +245,22 @@ module.exports =
             manifest = new Manifest()
             manifest.download req.application, (err) =>
                 return send_error res, err if err
-                manifest.getPermissions (docTypes) ->
-                    req.application.permissions = docTypes
-                    manifest.getWidget (widget) ->
-                        req.application.widget = widget
+                req.application.permissions = manifest.getPermissions()
+                req.application.widget = manifest.getWidget()
+                req.application.save (err) ->
 
-                        req.application.save (err) ->
+                    saveIcon req.application, (err) ->
+                        if err then console.log err.stack
+                        else console.info 'icon attached'
 
-                            saveIcon req.application, (err) ->
-                                if err then console.log err.stack
-                                else console.info 'icon attached'
+                    return send_error res, err if err
 
-                            return send_error res, err if err
+                    manager.resetProxy (err) ->
+                        return mark_broken res, req.application, err if err
 
-                            manager.resetProxy (err) ->
-                                return mark_broken res, req.application, err if err
-
-                                res.send
-                                    success: true
-                                    msg: 'Application succesfuly updated'
+                        res.send
+                            success: true
+                            msg: 'Application succesfuly updated'
 
 
     start: (req, res, next) ->
