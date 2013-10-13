@@ -17,23 +17,25 @@ class exports.Manifest
             @config = body
             callback null
 
-    getPermissions: (callback) =>
+    getPermissions: =>
         if @config["cozy-permissions"]?
-            callback @config["cozy-permissions"]
-        else 
-            callback {}
+            return @config["cozy-permissions"]
+        else
+            return {}
 
-    getWidget: (callback) =>
+    getWidget: =>
         if @config['cozy-widget']?
-            callback @config["cozy-widget"]
-        else callback null
+            return @config["cozy-widget"]
+        else
+            return null
 
-    getDescription: (callback) =>
+    getDescription: =>
         if @config['description']?
-            callback @config["description"]
-        else callback null
+            return  @config["description"]
+        else
+            return null
 
-    getMetaData: (callback) =>
+    getMetaData: =>
         metaData = {}
 
         if @config.description?
@@ -49,4 +51,5 @@ class exports.Manifest
 
         if @config['cozy-permissions']?
             metaData.permissions = @config['cozy-permissions']
-        callback metaData
+
+        return metaData

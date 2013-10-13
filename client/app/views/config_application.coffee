@@ -49,6 +49,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'installed'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
+                @stateLabel.show().text t 'installed'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'update'
                 @appStoppable.show()
@@ -85,6 +86,7 @@ module.exports = class ApplicationRow extends BaseView
         event.preventDefault()
         @removeButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @removeButton.spin true
+        @stateLabel.html t 'removing'
         @model.uninstall
             success: =>
                 @remove()
@@ -106,6 +108,7 @@ module.exports = class ApplicationRow extends BaseView
             cancel: (application) =>
                 @popover.remove()
         @$el.append @popover.$el
+        $(window).trigger 'resize'
 
     onStartStopClicked: (event) =>
         event.preventDefault()
@@ -142,17 +145,17 @@ module.exports = class ApplicationRow extends BaseView
         if app.mainView.marketView.isInstalling()
             alert t 'Cannot update application while an application is installing'
             return false
-        @updateButton.displayRed t "installing"
         Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @updateButton.spin false
-        @updateButton.spin true
+        @updateButton.spin 'small'
+        @stateLabel.html t 'updating'
         @model.updateApp
             success: =>
                 @updateButton.displayGreen t "updated"
+                @stateLabel.html t 'started'
                 Backbone.Mediator.pub 'app-state-changed', true
             error: (jqXHR) =>
-                error = JSON.parse(jqXHR.responseText)
-                alert error.message
-                @updateButton.displayRed t "failed"
+                alert t 'update error'
+                @stateLabel.html t 'broken'
+                @updateButton.displayRed t "update failed"
                 Backbone.Mediator.pub 'app-state-changed', true
