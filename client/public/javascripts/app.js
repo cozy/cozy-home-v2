@@ -2182,7 +2182,7 @@ window.require.register("views/config_application", function(exports, require, m
         case 'installed':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
-          this.stateLabel.show().text(t('installed'));
+          this.stateLabel.show().text(t('started'));
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.displayGrey(t('update'));
           this.appStoppable.show();
@@ -2202,6 +2202,7 @@ window.require.register("views/config_application", function(exports, require, m
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.addClass('stopped');
+          this.stateLabel.show().text(t('stopped'));
           this.removeButton.displayGrey(t('remove'));
           this.updateButton.hide();
           this.appStoppable.hide();
