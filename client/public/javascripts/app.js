@@ -130,7 +130,7 @@ window.require.register("collections/application", function(exports, require, mo
         }, {
           icon: "img/agenda-icon.png",
           name: "calendar",
-          slug: "agenda",
+          slug: "calendar",
           git: "https://github.com/mycozycloud/cozy-agenda.git",
           comment: "official application",
           description: "Set up reminders and let cozy be your assistant"
