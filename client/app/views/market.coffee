@@ -155,7 +155,7 @@ module.exports = class MarketView extends BaseView
 
         [git, proto, domain, path, branch] = parsed
         path = path.replace '.git', ''
-        parts = path.split("/")
+        parts = path.split "/"
         name = parts[parts.length - 1]
         name = name.replace /-|_/g, " "
         name = name.replace 'cozy ', ''
