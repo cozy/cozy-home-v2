@@ -49,7 +49,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'installed'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
-                @stateLabel.show().text t 'installed'
+                @stateLabel.show().text t 'started'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'update'
                 @appStoppable.show()
@@ -67,6 +67,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'stopped'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.addClass 'stopped'
+                @stateLabel.show().text t 'stopped'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.hide()
                 @appStoppable.hide()
