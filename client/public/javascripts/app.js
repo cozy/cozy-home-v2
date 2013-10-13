@@ -2424,7 +2424,7 @@ window.require.register("views/config_applications", function(exports, require, 
     };
 
     ConfigApplicationsView.prototype.displayMemory = function(amount, total) {
-      this.memoryFree.find('.amount').html(Math.floor(amount / 1000));
+      this.memoryFree.find('.amount').html(Math.floor((total - amount) / 1000));
       return this.memoryFree.find('.total').html(Math.floor(total / 1000));
     };
 
