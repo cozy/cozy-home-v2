@@ -30,11 +30,11 @@ updatePermissions = function(app) {
 module.exports = function() {
   var _this = this;
   return Application.all(function(err, apps) {
-    var app, _i, _len, _results;
+    var app, _i, _len, _ref, _results;
     _results = [];
     for (_i = 0, _len = apps.length; _i < _len; _i++) {
       app = apps[_i];
-      if (app.permissions.toString() === fakePermission.toString()) {
+      if (((_ref = app.permissions) != null ? _ref.toString() : void 0) === fakePermission.toString()) {
         _results.push(updatePermissions(app));
       } else {
         _results.push(void 0);

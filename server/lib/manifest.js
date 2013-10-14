@@ -15,19 +15,25 @@ exports.Manifest = (function() {
   Manifest.prototype.download = function(app, callback) {
     var client, path,
       _this = this;
-    path = app.git.substring(19, app.git.length - 4);
+    this.basePath = app.git.substring(19, app.git.length - 4);
     client = request.newClient("https://raw.github.com/");
     if (app.branch != null) {
-      path = path + '/' + app.branch;
+      path = this.basePath + '/' + app.branch;
     } else {
-      path = path + '/master';
+      path = this.basePath + '/master';
     }
     return client.get(path + '/package.json', function(err, res, body) {
+      var clientStars;
       if (err) {
         callback(err);
       }
       _this.config = body;
-      return callback(null);
+      clientStars = request.newClient("https://api.github.com/");
+      path = "repos/" + _this.basePath + "/stargazers";
+      return clientStars.get(path, function(err, res, body) {
+        _this.config.stars = body.length;
+        return callback(null);
+      });
     });
   };
 
@@ -56,8 +62,9 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getMetaData = function() {
-    var metaData;
+    var metaData, path;
     metaData = {};
+    path = this.basePath + '/master/package.json';
     if (this.config.description != null) {
       metaData.description = this.config.description;
     }
@@ -71,6 +78,9 @@ exports.Manifest = (function() {
     }
     if (this.config['cozy-permissions'] != null) {
       metaData.permissions = this.config['cozy-permissions'];
+    }
+    if (this.config.stars != null) {
+      metaData.stars = this.config.stars;
     }
     return metaData;
   };
