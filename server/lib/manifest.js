@@ -62,18 +62,9 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getMetaData = function() {
-    var getStars, metaData, path;
+    var metaData, path;
     metaData = {};
     path = this.basePath + '/master/package.json';
-    getStars = function(callback) {
-      var clientStars;
-      clientStars = request.newClient("https://api.github.com/");
-      path = "repos/" + this.basePath + "/stargazers";
-      return clientStars.get(path, function(err, res, body) {
-        metaData.stars = body.length;
-        return callback(metaData);
-      });
-    };
     if (this.config.description != null) {
       metaData.description = this.config.description;
     }

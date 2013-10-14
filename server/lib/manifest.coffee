@@ -43,13 +43,6 @@ class exports.Manifest
         metaData = {}
         path = @basePath + '/master/package.json'
 
-        getStars = (callback) ->
-            clientStars = request.newClient "https://api.github.com/"
-            path = "repos/#{@basePath}/stargazers"
-            clientStars.get path, (err, res, body) ->
-                metaData.stars = body.length
-                callback metaData
-
         if @config.description?
             metaData.description = @config.description
 
