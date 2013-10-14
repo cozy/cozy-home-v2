@@ -22,13 +22,10 @@ americano.start({
   name: 'Cozy Home',
   port: port
 }, function(app, server) {
-  var ctrler;
   app.server = server;
   if (process.env.NODE_ENV !== "test") {
     initProxy();
   }
-  ctrler = require('./server/controllers/applications').loadApplication;
-  app.param('slug', ctrler);
   setupRealtime(app);
   setupChecking();
   if (typeof callback !== "undefined" && callback !== null) {

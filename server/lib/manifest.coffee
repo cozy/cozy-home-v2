@@ -4,18 +4,22 @@ request = require 'request-json'
 class exports.Manifest
 
     download: (app, callback) ->
-        path = (app.git).substring(19, (app.git.length - 4))
+        @basePath = (app.git).substring(19, (app.git.length - 4))
 
         client = request.newClient "https://raw.github.com/"
         if app.branch?
-            path = path + '/' + app.branch
+            path = @basePath + '/' + app.branch
         else
-            path = path + '/master'
+            path = @basePath + '/master'
 
         client.get path + '/package.json', (err, res, body) =>
             callback err if err
             @config = body
-            callback null
+            clientStars = request.newClient "https://api.github.com/"
+            path = "repos/#{@basePath}/stargazers"
+            clientStars.get path, (err, res, body) =>
+                @config.stars = body.length
+                callback null
 
     getPermissions: =>
         if @config["cozy-permissions"]?
@@ -37,6 +41,14 @@ class exports.Manifest
 
     getMetaData: =>
         metaData = {}
+        path = @basePath + '/master/package.json'
+
+        getStars = (callback) ->
+            clientStars = request.newClient "https://api.github.com/"
+            path = "repos/#{@basePath}/stargazers"
+            clientStars.get path, (err, res, body) ->
+                metaData.stars = body.length
+                callback metaData
 
         if @config.description?
             metaData.description = @config.description
@@ -51,5 +63,8 @@ class exports.Manifest
 
         if @config['cozy-permissions']?
             metaData.permissions = @config['cozy-permissions']
+
+        if @config.stars?
+            metaData.stars = @config.stars
 
         return metaData

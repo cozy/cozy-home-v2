@@ -14,6 +14,6 @@ updatePermissions = (app) =>
 module.exports = () ->
     Application.all (err, apps) =>
         for app in apps
-            if app.permissions.toString() is fakePermission.toString()
+            if app.permissions?.toString() is fakePermission.toString()
                 updatePermissions app
 
