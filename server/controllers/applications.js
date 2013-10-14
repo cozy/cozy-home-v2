@@ -198,17 +198,15 @@ module.exports = {
   updatestoppable: function(req, res, next) {
     return Application.find(req.params.id, function(err, app) {
       var changes;
-
       if (err) {
         return send_error(res, err);
       } else if (app === null) {
         return send_error(res, new Error('Application not found'), 404);
       } else {
         changes = {
-          homeposition: req.body.homeposition,
-          isStoppable: req.body.isStoppable
+          homeposition: req.body.homeposition || app.homeposition,
+          isStoppable: req.body.isStoppable || app.isStoppable
         };
-        console.log("CHANGES", changes);
         return app.updateAttributes(changes, function(err, app) {
           if (err) {
             return send_error(res, err);
