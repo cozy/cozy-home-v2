@@ -140,9 +140,11 @@ module.exports =
             else if app is null
                 send_error res, new Error('Application not found'), 404
             else
+                Stoppable = req.body.isStoppable
+                Stoppable = if Stoppable? then Stoppable else app.isStoppable
                 changes =
                     homeposition: req.body.homeposition or app.homeposition
-                    isStoppable: req.body.isStoppable or app.isStoppable
+                    isStoppable: Stoppable
                 app.updateAttributes changes, (err, app) ->
                     return send_error res, err if err
                     res.send app

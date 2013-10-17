@@ -75,6 +75,7 @@ exports.Manifest = (function() {
       metaData.displayName = this.config['cozy-displayName'];
     } else {
       metaData.displayName = this.config.name.replace('cozy-', '');
+      metaData.displayName = metaData.displayName.replace('-', ' ');
     }
     if (this.config['cozy-permissions'] != null) {
       metaData.permissions = this.config['cozy-permissions'];
