@@ -158,7 +158,7 @@ window.require.register("collections/application", function(exports, require, mo
         }, {
           icon: "img/botmanager-icon.png",
           name: "irc bot",
-          slug: "irc-botmanager",
+          slug: "irc-bot",
           git: "https://github.com/jsilvestre/cozy-irc-botmanager.git",
           comment: "community contribution",
           description: "A friendly bot to help you manage an IRC channel"
@@ -1649,7 +1649,7 @@ window.require.register("templates/home_application", function(exports, require,
   buf.push('<button class="btn use-widget">');
   var __val__ = t('use widget')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button><div class="application-inner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.name) == null ? '' : interp) + '</p></div>');
+  buf.push('</button><div class="application-inner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div>');
   }
   return buf.join("");
   };

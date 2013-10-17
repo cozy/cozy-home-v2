@@ -56,7 +56,7 @@ module.exports = class ApplicationCollection extends BaseCollection
             ,
                 icon:"img/botmanager-icon.png"
                 name:"irc bot"
-                slug:"irc-botmanager"
+                slug:"irc-bot"
                 git:"https://github.com/jsilvestre/cozy-irc-botmanager.git"
                 comment:"community contribution"
                 description:"A friendly bot to help you manage an IRC channel"
