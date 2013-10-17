@@ -53,6 +53,7 @@ class exports.Manifest
             metaData.displayName = @config['cozy-displayName']
         else
             metaData.displayName = @config.name.replace 'cozy-', ''
+            metaData.displayName = metaData.displayName.replace '-', ' '
 
         if @config['cozy-permissions']?
             metaData.permissions = @config['cozy-permissions']
