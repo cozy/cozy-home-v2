@@ -165,7 +165,7 @@ module.exports =
 
             if apps.length > 0 or req.body.slug is "proxy" or
                     req.body.slug is "home" or req.body.slug is "data-system"
-                err = new Error "There is already an app with similar name"
+                err = new Error "already similarly named app"
                 return send_error res, err, 400
 
             manifest = new Manifest()
