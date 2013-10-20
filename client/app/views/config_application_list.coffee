@@ -18,5 +18,5 @@ module.exports = class ApplicationsListView extends ViewCollection
         @appList = @$ "#app-list"
 
     #displayNoAppMessage: ->
-        #@$el.append t 'There is no application installed.'
+        #@$el.append t 'no application installed'
 

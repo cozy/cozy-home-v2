@@ -87,30 +87,30 @@ module.exports = class HomeView extends BaseView
     displayApplicationsList: =>
         @displayView @applicationListView
         @applicationListView.setMode 'view'
-        window.document.title = t "Cozy - Home"
+        window.document.title = t "cozy home title"
 
     displayApplicationsListEdit: =>
         @displayView @applicationListView
         @applicationListView.setMode 'edit'
-        window.document.title = t "Cozy - Home"
+        window.document.title = t "cozy home title"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView
-        window.document.title = t "Cozy - App Store"
+        window.document.title = t "cozy app store title"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView
-        window.document.title = t 'Cozy - Account'
+        window.document.title = t 'cozy account title'
 
     displayHelp: =>
         @displayView @helpView
-        window.document.title = t "Cozy - Help"
+        window.document.title = t "cozy help title"
 
     displayConfigApplications: =>
         @displayView @configApplications
-        window.document.title = t "Cozy - Applications configuration"
+        window.document.title = t "cozy applications title"
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app

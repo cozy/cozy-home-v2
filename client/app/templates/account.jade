@@ -1,33 +1,33 @@
 //.section-title.darkbg.bigger config
 
 
-h4.pa2.w600.biggest.darkbg.center= t(' Your parameters')
+h4.pa2.w600.biggest.darkbg.center= t('your parameters')
 #account-form.lightgrey.w600.pa2
     .input
-        p= t('I need your email to send you alerts or for password recovering')
+        p= t('alerts and password recovery email')
         input#account-email-field
         button.btn= t('save')
     .input
-        p= t('Your timezone is required to display dates properly')
+        p= t('your timezone is required')
         select#account-timezone-field
         button.btn= t('save')
     .input
-        p= t('The domain name is used to build urls send via email to you or your contacts')
+        p= t('domain name for urls and email')
         input#account-domain-field
         button.btn= t('save')
 
     .input
         p= t('Chose the language you want I use to speak with you:')
         select#account-locale-field
-            option(value="fr")= t('French')
-            option(value="en")= t('English')
+            option(value="fr")= t('french')
+            option(value="en")= t('english')
         button.btn= t('save')
 
     p
-        button#change-password-button.btn= t('Change password')
+        button#change-password-button.btn= t('change password')
 
     #change-password-form
-        p= t('Change password procedure')
+        p= t('change password procedure')
         p
             label= t('input your current password')
         input#account-password0-field(type="password", placeholder="#{t('current password')}")

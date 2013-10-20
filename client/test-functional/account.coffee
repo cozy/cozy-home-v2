@@ -9,7 +9,7 @@ newEmail = "newtest@mycozylcoud.com"
 password = "password"
 newPassword = "newpassword"
 
-describe "Account", ->
+describe "account", ->
 
     before (done) ->
         app.listen 3000
@@ -40,7 +40,7 @@ describe "Account", ->
             @browser.val("#account-email-field").should.be.equal email
 
 
-    describe "Change password", ->
+    describe "change password", ->
         it "When I change email / password form", ->
             @browser.fill("#account-email-field", newEmail)
             @browser.fill("#account-password1-field", newPassword)
