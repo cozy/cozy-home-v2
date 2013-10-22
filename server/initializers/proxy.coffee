@@ -4,6 +4,18 @@ Application = require '../models/application'
 client = request.newClient 'http://localhost:9104/'
 haibuClient =  request.newClient 'http://localhost:9002/'
 
+updateRoutes = (occurence)->
+    if occurence < 10
+        resetRoutes()
+        setTimeout () =>
+            updateRoutes(occurence + 1)
+        , 30000
+    else if occurence < 15
+        resetRoutes()
+        setTimeout () =>
+            updateRoutes(occurence + 1)
+        , 60000
+
 # Grab all application informations listed in the database and compare
 # them to informations stored inside haibu. If port is different
 # application port is updated in data system.
@@ -45,4 +57,4 @@ resetProxy = ->
             console.info 'Something went wrong while reseting proxy.'
 
 module.exports = ->
-    resetRoutes()
+    updateRoutes(0)
