@@ -12,30 +12,30 @@
   .line
     p.bigger.pa2= t('you have no apps')
         a(href="#account")= t('configure')
-        = t ('install your first app')
+        = ' ' + t ('install your first app')
         a(href="#applications")= t('app store')
         |.
     p.mt2.pa2
         =t ('menu description')
     p
         img(src="/img/home-black.png")
-        strong=t('home')
+        strong= t('home') + ': '
         = t('where you reach applications')
     p
         img(src="/img/config-apps.png")
-        strong=t('app management')
+        strong=t('app management') + ': '
         = t('There you can manage the state of your applications: start it, stop it, remove it...')
     p
         img(src="/img/apps.png")
-        strong= t('app store')
+        strong= t('app store') + ': '
         = t('app store contains applications')
     p
         img(src="/img/configuration.png")
-        strong=t('configuration')
+        strong=t('configuration') + ': '
         = t('set cozy parameters here')
     p
         img(src="/img/help.png")
-        strong=t('assistance')
+        strong=t('assistance') + ': '
         = t('links to resources')
 
 #app-list.gridster

@@ -1078,7 +1078,7 @@ module.exports = {
   "confirm update": "confirmez la mise à jour",
   "no specific permissions needed": "Cette applicatiion n'a pas besoin d'informations spécifiques",
   "menu description": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.",
-  "install your first app": "votre Cozy puis installer votre première application via&nbsp;",
+  "install your first app": "votre Cozy puis installer votre première application via l'",
   "where you reach applications": "C'est ici que vous pouvez accéder à toutes vos applications.",
   "app management": "Gestion des applications",
   "There you can manage the state of your applications: start it, stop it, remove it...": "Ici tu peux gérer l'état de tes applications: démarre, arrête et supprime les...",
@@ -1612,7 +1612,7 @@ buf.push('<a href="#account">');
 var __val__ = t('configure')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>');
-var __val__ = t ('install your first app')
+var __val__ = ' ' + t ('install your first app')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('<a href="#applications">');
 var __val__ = t('app store')
@@ -1621,31 +1621,31 @@ buf.push('</a>.</p><p class="mt2 pa2">');
 var __val__ = t ('menu description')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p><img src="/img/home-black.png"/><strong>');
-var __val__ = t('home')
+var __val__ = t('home') + ': '
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</strong>');
 var __val__ = t('where you reach applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p><img src="/img/config-apps.png"/><strong>');
-var __val__ = t('app management')
+var __val__ = t('app management') + ': '
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</strong>');
 var __val__ = t('There you can manage the state of your applications: start it, stop it, remove it...')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p><img src="/img/apps.png"/><strong>');
-var __val__ = t('app store')
+var __val__ = t('app store') + ': '
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</strong>');
 var __val__ = t('app store contains applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p><img src="/img/configuration.png"/><strong>');
-var __val__ = t('configuration')
+var __val__ = t('configuration') + ': '
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</strong>');
 var __val__ = t('set cozy parameters here')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p><img src="/img/help.png"/><strong>');
-var __val__ = t('assistance')
+var __val__ = t('assistance') + ': '
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</strong>');
 var __val__ = t('links to resources')

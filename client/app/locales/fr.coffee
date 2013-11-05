@@ -143,7 +143,7 @@ module.exports =
     dans la suite un petit guide décrivant les sections de votre Cozy. Elles
     peuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.
     """
-    "install your first app":"votre Cozy puis installer votre première application via&nbsp;"
+    "install your first app":"votre Cozy puis installer votre première application via l'"
     "where you reach applications":"C'est ici que vous pouvez accéder à toutes vos applications."
     "app management":"Gestion des applications"
     "There you can manage the state of your applications: start it, stop it, remove it...":"Ici tu peux gérer l'état de tes applications: démarre, arrête et supprime les..."
