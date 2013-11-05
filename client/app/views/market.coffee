@@ -73,7 +73,7 @@ module.exports = class MarketView extends BaseView
 
     onInstallClicked: (event) =>
         if @isInstalling()
-            alert t "application-is-installing"
+            alert t "application is installing"
         else
             data = git: @$("#app-git-field").val()
 
@@ -87,7 +87,7 @@ module.exports = class MarketView extends BaseView
     # parse git url before install application
     parsedGit: (app) ->
         if @isInstalling()
-            alert t "application-is-installing"
+            alert t "application is installing"
         else
             parsed = @parseGitUrl app.git
             if parsed.error

@@ -24,6 +24,6 @@ module.exports = class ApplicationRow extends BaseView
 
     onInstallClicked: =>
         if @marketView.isInstalling()
-            alert t "application-is-installing"
+            alert t "application is installing"
         else
             @marketView.showDescription this, @installButton
