@@ -1606,7 +1606,7 @@ buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" 
 var __val__ = t('welcome to your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><div class="line"><p class="bigger pa2">');
-var __val__ = t('you have no apps')
+var __val__ = t('you have no apps') + ' '
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('<a href="#account">');
 var __val__ = t('configure')
