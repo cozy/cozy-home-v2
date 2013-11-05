@@ -8,34 +8,34 @@
   .darkbg#start-title.clearfix
     a(href="http://cozy.io")
         img.logo(src="img/happycloud.png")
-    p.biggest= t('Welcome to your Cozy!')
+    p.biggest= t('welcome to your cozy')
   .line
-    p.bigger.pa2= t('You have no application installed. You should ')
-        a(href="#account")= t('configure ')
-        = t ('your Cozy then install your first application via the&nbsp;')
+    p.bigger.pa2= t('you have no apps')
+        a(href="#account")= t('configure')
+        = t ('install your first app')
         a(href="#applications")= t('app store')
         |.
     p.mt2.pa2
-        =t ('menu-descrtiption')
+        =t ('menu description')
     p
         img(src="/img/home-black.png")
-        strong=t('Home ')
-        = t('It is the place from where you can reach your applications')
+        strong=t('home')
+        = t('where you reach applications')
     p
         img(src="/img/config-apps.png")
-        strong=t('App management ')
+        strong=t('app management')
         = t('There you can manage the state of your applications: start it, stop it, remove it...')
     p
         img(src="/img/apps.png")
-        strong= t('App store ')
-        = t('In the app store, you will find new applications to install on your Cozy.')
+        strong= t('app store')
+        = t('app store contains applications')
     p
         img(src="/img/configuration.png")
-        strong=t('Configuration ')
-        = t('To work properly your Cozy requires several parameters. Set them in this section.')
+        strong=t('configuration')
+        = t('set cozy parameters here')
     p
         img(src="/img/help.png")
-        strong=t('Assistance ')
-        = t('You will find here some links to assistance resources.')
+        strong=t('assistance')
+        = t('links to resources')
 
 #app-list.gridster

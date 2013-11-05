@@ -230,7 +230,7 @@ module.exports = {
         return send_error(res, err);
       }
       if (apps.length > 0 || req.body.slug === "proxy" || req.body.slug === "home" || req.body.slug === "data-system") {
-        err = new Error("There is already an app with similar name");
+        err = new Error("already similarly named app");
         return send_error(res, err, 400);
       }
       manifest = new Manifest();

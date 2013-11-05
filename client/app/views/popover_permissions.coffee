@@ -38,7 +38,7 @@ module.exports = class PopoverPermissionsView extends BaseView
         @body.hide()
         @body.html ''
         if Object.keys(@model.get("permissions")).length is 0
-            permissionsDiv = $ "<div class='permissionsLine'> <strong>#{t('This application does not need specific permissions')} </strong> </div>"
+            permissionsDiv = $ "<div class='permissionsLine'> <strong>#{t('no specific permissions needed')} </strong> </div>"
             @body.append permissionsDiv
         else
             for docType, permission of @model.get("permissions")
