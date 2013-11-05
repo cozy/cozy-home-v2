@@ -4,7 +4,7 @@ helpers = require('./helpers')
 TESTPORT = 8889
 
 
-describe 'notifications', ->
+describe 'Notifications', ->
     before helpers.setup TESTPORT
     before -> @client = helpers.getClient TESTPORT, @
     after helpers.takeDown
