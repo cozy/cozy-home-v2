@@ -1,34 +1,36 @@
+# Deprecated, won't be used with cozy-notifications-helper >0.3.3
+
 Notification = require '../models/notification'
 
 module.exports =
     all: (req, res, next) ->
         Notification.all (err, notifs) =>
             if err then next err
-            else res.send notifs
+            else res.send 200, notifs
 
     deleteAll: (req, res, next) ->
         Notification.destroyAll (err) ->
             if err then next err
-            else res.send 204, ''
+            else res.send 204, success: true
 
     show: (req, res, next) ->
         Notification.find req.params.id, (err, notif) =>
             if err then next err
             else if not notif
-                res.send 404, 'Notification not found'
+                res.send 404, error: 'Notification not found'
             else
-                res.send notif
+                res.send 200, notif
 
     delete: (req, res, next) ->
         Notification.find req.params.id, (err, notif) =>
             if err then next err
             else if not notif
-                res.send 404, 'Notification not found'
+                res.send 404, error: 'Notification not found'
             else
                 notif.destroy (err) ->
                     if err then next err
                     else
-                        res.send 204, 'Notification deleted'
+                        res.send 204, success: true
 
     create: (req, res, next) ->
         attributes = req.body
@@ -41,11 +43,11 @@ module.exports =
         Notification.create attributes, (err, notif) =>
             if err then next err
             else
-                res.send success: 'Notification created', 201
+                res.send 201, success: 'Notification created'
 
     updateOrCreate: (req, res, next) ->
         if not req.params.app or not req.params.ref
-            return res.send 'Wrong usage', 500
+            return res.send 500, error: 'Wrong usage'
 
         attributes = req.body
         attributes.type = 'persistent'
@@ -69,7 +71,7 @@ module.exports =
                 notifs[0].updateAttributes attributes, (err, notif) ->
                     if err then next err
                     else
-                        res.send notif
+                        res.send 200, notif
 
     destroy: (req, res, next) ->
         params = key: [req.params.app, req.params.ref]
@@ -77,9 +79,9 @@ module.exports =
         Notification.request 'byApps', params, (err, notifs) =>
             if err then next err
             else if not notifs or notifs.length is 0
-                res.send success: 'Does not exist', 204
+                res.send 204, success: true
             else
                 notifs[0].destroy (err) ->
                     if err then next err
                     else
-                        res.send success: 'Deleted', 204
+                        res.send 204, success: true
