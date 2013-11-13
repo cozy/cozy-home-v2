@@ -24,7 +24,10 @@
     "Romain Foucault",
     "Jim Lehmer",
     "Frank Rousseau",
-    "Joseph Silvestre"
+    "Joseph Silvestre",
+    "irdan",
+    "Steve Phillips",
+    "Borjan Tchakaloff"
   ],
   "devDependencies": {
     "mocha": "= 1.9.0",
