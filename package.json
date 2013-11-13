@@ -1,6 +1,6 @@
 {
   "name": "cozy-home",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engine": {
     "node": "*"
   },
@@ -18,6 +18,17 @@
     "cozy-notifications-helper": "= 0.0.3",
     "jugglingdb-cozy-adapter": "0.3.14"
   },
+  "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
+  "contributors": [
+    "Zoe Bellot",
+    "Romain Foucault",
+    "Jim Lehmer",
+    "Frank Rousseau",
+    "Joseph Silvestre",
+    "irdan",
+    "Steve Phillips",
+    "Borjan Tchakaloff"
+  ],
   "devDependencies": {
     "mocha": "= 1.9.0",
     "request": "= 2.11.4",
