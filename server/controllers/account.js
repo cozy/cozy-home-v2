@@ -131,10 +131,11 @@ module.exports = {
     });
   },
   updateInstance: function(req, res, next) {
-    var domain, locale;
+    var domain, helpUrl, locale;
     domain = req.body.domain;
     locale = req.body.locale;
-    if ((domain != null) || (locale != null)) {
+    helpUrl = req.body.helpUrl;
+    if ((domain != null) || (locale != null) || helpUrl) {
       return CozyInstance.all(function(err, instances) {
         var data;
         if (err) {
@@ -142,7 +143,8 @@ module.exports = {
         } else if (instances.length === 0) {
           data = {
             domain: domain,
-            locale: locale
+            locale: locale,
+            helpUrl: helpUrl
           };
           return CozyInstance.create(data, function(err, instance) {
             if (err) {

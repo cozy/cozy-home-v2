@@ -10,7 +10,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return res.send(notifs);
+        return res.send(200, notifs);
       }
     });
   },
@@ -19,7 +19,9 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return res.send(204, '');
+        return res.send(204, {
+          success: true
+        });
       }
     });
   },
@@ -29,9 +31,11 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (!notif) {
-        return res.send(404, 'Notification not found');
+        return res.send(404, {
+          error: 'Notification not found'
+        });
       } else {
-        return res.send(notif);
+        return res.send(200, notif);
       }
     });
   },
@@ -41,13 +45,17 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (!notif) {
-        return res.send(404, 'Notification not found');
+        return res.send(404, {
+          error: 'Notification not found'
+        });
       } else {
         return notif.destroy(function(err) {
           if (err) {
             return next(err);
           } else {
-            return res.send(204, 'Notification deleted');
+            return res.send(204, {
+              success: true
+            });
           }
         });
       }
@@ -68,9 +76,9 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return res.send({
+        return res.send(201, {
           success: 'Notification created'
-        }, 201);
+        });
       }
     });
   },
@@ -78,7 +86,9 @@ module.exports = {
     var attributes, params,
       _this = this;
     if (!req.params.app || !req.params.ref) {
-      return res.send('Wrong usage', 500);
+      return res.send(500, {
+        error: 'Wrong usage'
+      });
     }
     attributes = req.body;
     attributes.type = 'persistent';
@@ -109,7 +119,7 @@ module.exports = {
           if (err) {
             return next(err);
           } else {
-            return res.send(notif);
+            return res.send(200, notif);
           }
         });
       }
@@ -125,17 +135,17 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (!notifs || notifs.length === 0) {
-        return res.send({
-          success: 'Does not exist'
-        }, 204);
+        return res.send(204, {
+          success: true
+        });
       } else {
         return notifs[0].destroy(function(err) {
           if (err) {
             return next(err);
           } else {
-            return res.send({
-              success: 'Deleted'
-            }, 204);
+            return res.send(204, {
+              success: true
+            });
           }
         });
       }
