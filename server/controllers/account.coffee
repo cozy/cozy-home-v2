@@ -114,7 +114,7 @@ module.exports =
                         else
                             res.send success: true, msg: 'Instance updated.'
                 else
-                    data = domain: domain, locale: locale
+                    data = domain: domain, locale: locale, helpUrl: helpUrl
                     instances[0].updateAttributes data, ->
                         res.send success: true, msg: 'Instance updated.'
         else
