@@ -1,3 +1,6 @@
+request = require 'request-json'
+client = request.newClient 'http://localhost:9103'
+
 User = require './server/models/user'
 CozyInstance = require './server/models/cozyinstance'
 Application = require './server/models/application'
@@ -50,39 +53,25 @@ runCmd = ->
 
         when 'set_help_url'
             url = process.argv[3]
-            CozyInstance.all (err, instances) ->
-                if err
-                    console.log err
-                else if instances.length is 0
-                    console.log "No instance found"
-                    process.exit 1
-                else
-                    instance = instances[0]
-                    instance.helpUrl = url
-                    instance.save (err) ->
-                        if err then console.log err
-                        else console.log "Help url name set with #{url}"
-                        process.exit 0
+
+            client.post 'api/instance', helpUrl: url, (err, res, body) ->
+                if err then console.log err
+                else if res.statusCode isnt 200
+                    console.log 'Something went wrong while changing help url'
+                    console.log body
+                else console.log "Help url name set with #{url}"
+                process.exit 0
             break
 
         when 'setdomain'
             domain = process.argv[3]
-            CozyInstance.all (err, instances) ->
-                if err
-                    console.log err
-                    process.exit 1
-                else if instances.length is 0
-                    CozyInstance.create domain: domain, (err) ->
-                        if err then console.log err
-                        else console.log "Domain name set with #{domain}"
-                        process.exit 0
-                else
-                    instance = instances[0]
-                    instance.domain = domain
-                    instance.save (err) ->
-                        if err then console.log err
-                        else console.log "Domain name set with #{domain}"
-                        process.exit 0
+            client.post 'api/instance', domain: domain, (err, res, body) ->
+                if err then console.log err
+                else if res.statusCode isnt 200
+                    console.log 'Something went wrong while changing domain'
+                    console.log body
+                else console.log "Domain name set with #{domain}"
+                process.exit 0
             break
 
         when 'getdomain'

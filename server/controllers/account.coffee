@@ -99,12 +99,16 @@ module.exports =
     updateInstance: (req, res, next) ->
         domain = req.body.domain
         locale = req.body.locale
+        helpUrl = req.body.helpUrl
 
-        if domain? or locale?
+        if domain? or locale? or helpUrl
             CozyInstance.all (err, instances) ->
                 if err then next err
                 else if instances.length is 0
-                    data = domain: domain, locale: locale
+                    data =
+                        domain: domain
+                        locale: locale
+                        helpUrl: helpUrl
                     CozyInstance.create data, (err, instance) ->
                         if err then next err
                         else
