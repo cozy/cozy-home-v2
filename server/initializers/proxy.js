@@ -50,17 +50,23 @@ resetRoutes = function() {
   return Application.all(function(err, installedApps) {
     var appDict, installedApp, _i, _len;
     appDict = {};
+    console.log(installedApps.length);
     if (installedApps !== void 0) {
       for (_i = 0, _len = installedApps.length; _i < _len; _i++) {
         installedApp = installedApps[_i];
         if (installedApp.name !== "") {
-          appDict[installedApp.name] = installedApp;
+          appDict[installedApp.slug] = installedApp;
         } else {
           installedApp.destroy();
         }
       }
     }
     return haibuClient.running(function(err, res, apps) {
+      var app, _j, _len1;
+      for (_j = 0, _len1 = apps.length; _j < _len1; _j++) {
+        app = apps[_j];
+        console.log(app.name);
+      }
       return updateApps(apps, appDict, resetProxy);
     });
   });
@@ -71,6 +77,10 @@ updateApps = function(apps, appDict, callback) {
   if ((apps != null) && apps.length > 0) {
     app = apps.pop();
     installedApp = appDict[app.name];
+    console.log("checking");
+    console.log(app);
+    console.log(app.slug);
+    console.log(installedApp != null ? installedApp.name : void 0);
     if ((installedApp != null) && installedApp.port !== app.port) {
       return installedApp.updateAttributes({
         port: app.port
