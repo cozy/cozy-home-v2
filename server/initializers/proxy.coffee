@@ -1,10 +1,29 @@
 request = require 'request-json'
 Application = require '../models/application'
+ControllerClient = require("cozy-clients").ControllerClient
 
 client = request.newClient 'http://localhost:9104/'
-haibuClient =  request.newClient 'http://localhost:9002/'
 
-updateRoutes = (occurence)->
+
+getAuthController: ->
+    if process.env.NODE_ENV is 'production'
+        try
+            token = fs.readFileSync '/etc/cozy/controller.token', 'utf8'
+            token = token.split('\n')[0]
+            return token
+        catch err
+            console.log err.message
+            console.log err.stack
+            return null
+    else
+        return ""
+
+haibuClient =  new ControllerClient
+    token: getAuthController()
+
+
+
+updateRoutes = (occurence) ->
     if occurence < 10
         resetRoutes()
         setTimeout () =>
@@ -29,7 +48,7 @@ resetRoutes = ->
                 else
                     installedApp.destroy()
 
-        haibuClient.get 'drones/running', (err, res, apps) ->
+        haibuClient.running (err, res, apps) ->
             updateApps apps, appDict, resetProxy
 
 # Recursive function that compare haibu port to port stored for each

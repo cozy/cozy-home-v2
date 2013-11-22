@@ -159,7 +159,8 @@ module.exports = {
         } else {
           data = {
             domain: domain,
-            locale: locale
+            locale: locale,
+            helpUrl: helpUrl
           };
           return instances[0].updateAttributes(data, function() {
             return res.send({
