@@ -1,3 +1,4 @@
+fs = require 'fs'
 request = require 'request-json'
 Application = require '../models/application'
 ControllerClient = require("cozy-clients").ControllerClient
@@ -44,7 +45,7 @@ resetRoutes = ->
         if installedApps isnt undefined
             for installedApp in installedApps
                 if installedApp.name isnt ""
-                    appDict[installedApp.name] = installedApp
+                    appDict[installedApp.slug] = installedApp
                 else
                     installedApp.destroy()
 
