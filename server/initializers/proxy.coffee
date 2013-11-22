@@ -5,7 +5,7 @@ ControllerClient = require("cozy-clients").ControllerClient
 client = request.newClient 'http://localhost:9104/'
 
 
-getAuthController: ->
+getAuthController = ->
     if process.env.NODE_ENV is 'production'
         try
             token = fs.readFileSync '/etc/cozy/controller.token', 'utf8'
