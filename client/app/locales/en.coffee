@@ -81,6 +81,10 @@ module.exports =
     "hard drive gigabytes":"&nbsp;GB (Hard Drive)"
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Manage your applications"
+    "manage your devices":"Manage your devices"
+    "synchronised data": "Synchronised data"
+    "file": "File"
+    "folder": "Folder"
     "no application installed":"There is no application installed."
 
     "your parameters":" Your parameters"

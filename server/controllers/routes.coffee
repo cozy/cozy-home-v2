@@ -1,6 +1,7 @@
 monitor = require './monitor'
 account = require './account'
 applications = require './applications'
+devices = require './devices'
 notifications = require './notifications'
 
 module.exports =
@@ -20,6 +21,9 @@ module.exports =
     'api/applications/:slug/stop': post: applications.stop
     'api/applications/:slug/uninstall': del: applications.uninstall
     'api/applications/:slug/update': put: applications.update
+
+
+    'api/devices': get: devices.devices
 
     'api/sys-data': get: monitor.sysData
 

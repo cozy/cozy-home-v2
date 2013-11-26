@@ -1569,6 +1569,47 @@ body {
 .config-application:hover .buttons {
   display: block;
 }
+.config-device {
+  background: #f7f4f0;
+  padding: 10px;
+  margin-bottom: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.config-device strong {
+  text-transform: lowercase;
+}
+.config-device .mod {
+  margin-left: 5px;
+}
+.config-device .mod.left {
+  margin: 0;
+}
+.config-device .smaller {
+  font-family: main;
+}
+.config-device .md-header {
+  background: transparent;
+}
+.config-device .md-footer {
+  padding: 0;
+}
+.config-device .md-footer .btn {
+  font-weight: normal;
+}
+.config-device .buttons {
+  display: none;
+}
+.config-device:hover .buttons {
+  display: block;
+}
+.config-device:hover .dataLine {
+  text-shadow: none;
+}
+.config-device:hover .docTypeLine {
+  text-shadow: none;
+  margin-left: 25px;
+}
 #config-applications-view .change-layout img {
   margin-left: 5px;
   margin-bottom: 7px;

@@ -232,6 +232,32 @@ window.require.register("collections/application", function(exports, require, mo
   })(BaseCollection);
   
 });
+window.require.register("collections/device", function(exports, require, module) {
+  var BaseCollection, Device, DeviceCollection,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseCollection = require('lib/base_collection');
+
+  Device = require('models/device');
+
+  module.exports = DeviceCollection = (function(_super) {
+
+    __extends(DeviceCollection, _super);
+
+    function DeviceCollection() {
+      return DeviceCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    DeviceCollection.prototype.model = Device;
+
+    DeviceCollection.prototype.url = 'api/devices/';
+
+    return DeviceCollection;
+
+  })(BaseCollection);
+  
+});
 window.require.register("collections/notifications", function(exports, require, module) {
   var BaseCollection, Notification, NotificationCollection,
     __hasProp = {}.hasOwnProperty,
@@ -902,6 +928,10 @@ window.require.register("locales/en", function(exports, require, module) {
     "hard drive gigabytes": "&nbsp;GB (Hard Drive)",
     "memory megabytes": "&nbsp;MB (RAM)",
     "manage your applications": "Manage your applications",
+    "manage your devices": "Manage your devices",
+    "synchronised data": "Synchronised data",
+    "file": "File",
+    "folder": "Folder",
     "no application installed": "There is no application installed.",
     "your parameters": " Your parameters",
     "alerts and password recovery email": "I need your email to send you alerts or for password recovering",
@@ -1026,6 +1056,10 @@ window.require.register("locales/fr", function(exports, require, module) {
     "hard drive gigabytes": "&nbsp;Go (Disque Dur)",
     "memory megabytes": "&nbsp;Mo (RAM)",
     "manage your applications": "Gérez vos applications",
+    "manage your devices": "Gérez vos devices",
+    "file": "Fichier",
+    "fodler": "Dossier",
+    "synchronised data": "Données synchronisées",
     "no application installed": "Il n'y a pas d'applications installées.",
     "save": "sauver",
     "your parameters": " Vos paramètres",
@@ -1233,6 +1267,28 @@ window.require.register("models/application", function(exports, require, module)
     };
 
     return Application;
+
+  })(Backbone.Model);
+  
+});
+window.require.register("models/device", function(exports, require, module) {
+  var BaseModel, Device,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require('lib/base_model').BaseModel;
+
+  module.exports = Device = (function(_super) {
+
+    __extends(Device, _super);
+
+    function Device() {
+      return Device.__super__.constructor.apply(this, arguments);
+    }
+
+    Device.prototype.urlRoot = 'api/devices/';
+
+    return Device;
 
   })(Backbone.Model);
   
@@ -1520,10 +1576,40 @@ window.require.register("templates/config_applications", function(exports, requi
   buf.push('</span></div></div><div class="change-layout mt2"><div class="line"><img src="img/changelayout.png"/></div><div class="line"><a href="#home/edit">');
   var __val__ = t('change layout')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
+  buf.push('</a></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
   var __val__ = t('manage your applications')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div></div>');
+  buf.push('</div></div><div class="mod w66 left"><div class="title-device h4 mb3">');
+  var __val__ = t('manage your devices')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_device", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span><span class="state-label">');
+  var __val__ = t('synchronised')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div><div class="buttons"><div class="mod center"><span class="doctype-label">');
+  var __val__ = t('')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_device_list", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
   }
   return buf.join("");
   };
@@ -2374,7 +2460,7 @@ window.require.register("views/config_application_list", function(exports, requi
   
 });
 window.require.register("views/config_applications", function(exports, require, module) {
-  var BaseView, ConfigApplicationList, request,
+  var BaseView, ConfigApplicationList, ConfigDeviceList, request,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2384,6 +2470,8 @@ window.require.register("views/config_applications", function(exports, require, 
   BaseView = require('lib/base_view');
 
   ConfigApplicationList = require('./config_application_list');
+
+  ConfigDeviceList = require('./config_device_list');
 
   module.exports = exports.ConfigApplicationsView = (function(_super) {
 
@@ -2397,8 +2485,9 @@ window.require.register("views/config_applications", function(exports, require, 
       'app-state-changed': 'onAppStateChanged'
     };
 
-    function ConfigApplicationsView(apps) {
+    function ConfigApplicationsView(apps, devices) {
       this.apps = apps;
+      this.devices = devices;
       this.fetch = __bind(this.fetch, this);
 
       ConfigApplicationsView.__super__.constructor.call(this);
@@ -2409,7 +2498,9 @@ window.require.register("views/config_applications", function(exports, require, 
       this.diskSpace = this.$('.disk-space');
       this.fetch();
       this.applicationList = new ConfigApplicationList(this.apps);
-      return this.$el.find('.w66').append(this.applicationList.$el);
+      this.deviceList = new ConfigDeviceList(this.devices);
+      this.$el.find('.title-app').append(this.applicationList.$el);
+      return this.$el.find('.title-device').append(this.deviceList.$el);
     };
 
     ConfigApplicationsView.prototype.fetch = function() {
@@ -2443,6 +2534,108 @@ window.require.register("views/config_applications", function(exports, require, 
     return ConfigApplicationsView;
 
   })(BaseView);
+  
+});
+window.require.register("views/config_device", function(exports, require, module) {
+  var BaseView, ColorButton, DeviceRow,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  ColorButton = require('widgets/install_button');
+
+  module.exports = DeviceRow = (function(_super) {
+
+    __extends(DeviceRow, _super);
+
+    DeviceRow.prototype.className = "line config-device clearfix";
+
+    DeviceRow.prototype.tagName = "div";
+
+    DeviceRow.prototype.template = require('templates/config_device');
+
+    DeviceRow.prototype.getRenderData = function() {
+      return {
+        device: this.model.attributes
+      };
+    };
+
+    /* Constructor
+    */
+
+
+    function DeviceRow(options) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.id = "device-btn-" + options.model.id;
+      DeviceRow.__super__.constructor.apply(this, arguments);
+    }
+
+    DeviceRow.prototype.afterRender = function() {
+      var deviceDiv, docType, _i, _len, _ref;
+      this.removeButton = new ColorButton(this.$(".remove-device"));
+      this.docType = this.$('.doctype-label');
+      this.docType.hide();
+      this.docType.html('');
+      if (this.model.get("configuration").length === 0) {
+        deviceDiv = $("<div class='docTypeLine'> <strong>" + (t('no specific data synchronised')) + " </strong> </div>");
+        this.docType.append(deviceDiv);
+      } else {
+        deviceDiv = $("<div class='dataLine'> <strong> " + (t('synchronised data')) + "    : </strong> </div>");
+        this.docType.append(deviceDiv);
+        _ref = Object.keys(this.model.get("configuration"));
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          docType = _ref[_i];
+          deviceDiv = $("<div class='docTypeLine'> <strong> " + docType + ": </strong> " + (this.model.get('configuration')[docType]) + " </div>");
+          this.docType.append(deviceDiv);
+        }
+      }
+      return this.docType.slideDown();
+    };
+
+    return DeviceRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_device_list", function(exports, require, module) {
+  var DeviceRow, DevicesListView, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  DeviceRow = require('views/config_device');
+
+  module.exports = DevicesListView = (function(_super) {
+
+    __extends(DevicesListView, _super);
+
+    DevicesListView.prototype.id = 'config-device-list';
+
+    DevicesListView.prototype.tagName = 'div';
+
+    DevicesListView.prototype.template = require('templates/config_device_list');
+
+    DevicesListView.prototype.itemView = require('views/config_device');
+
+    function DevicesListView(devices) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.devices = devices;
+      DevicesListView.__super__.constructor.call(this, {
+        collection: devices
+      });
+    }
+
+    DevicesListView.prototype.afterRender = function() {
+      return this.deviceList = this.$("#device-list");
+    };
+
+    return DevicesListView;
+
+  })(ViewCollection);
   
 });
 window.require.register("views/help", function(exports, require, module) {
@@ -2995,7 +3188,7 @@ window.require.register("views/home_application", function(exports, require, mod
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3005,6 +3198,8 @@ window.require.register("views/main", function(exports, require, module) {
   appIframeTemplate = require('templates/application_iframe');
 
   AppCollection = require('collections/application');
+
+  DeviceCollection = require('collections/device');
 
   NavbarView = require('views/navbar');
 
@@ -3053,14 +3248,16 @@ window.require.register("views/main", function(exports, require, module) {
 
       this.afterRender = __bind(this.afterRender, this);
       this.apps = new AppCollection();
+      this.devices = new DeviceCollection();
       socketListener.watch(this.apps);
+      socketListener.watch(this.devices);
       HomeView.__super__.constructor.apply(this, arguments);
     }
 
     HomeView.prototype.afterRender = function() {
       this.navbar = new NavbarView(this.apps);
       this.applicationListView = new ApplicationsListView(this.apps);
-      this.configApplications = new ConfigApplicationsView(this.apps);
+      this.configApplications = new ConfigApplicationsView(this.apps, this.devices);
       this.accountView = new AccountView();
       this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
@@ -3071,6 +3268,9 @@ window.require.register("views/main", function(exports, require, module) {
       this.favicon2 = this.$('fav2');
       $(window).resize(this.resetLayoutSizes);
       this.apps.fetch({
+        reset: true
+      });
+      this.devices.fetch({
         reset: true
       });
       return this.resetLayoutSizes();

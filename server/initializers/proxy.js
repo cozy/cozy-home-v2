@@ -98,5 +98,5 @@ resetProxy = function() {
 };
 
 module.exports = function() {
-  return updateRoutes(0);
+  return resetRoutes();
 };
