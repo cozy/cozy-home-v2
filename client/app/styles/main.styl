@@ -203,10 +203,34 @@ body
     transition: all 0.3s
     margin-top: 0
     padding-top: 0
+    position: relative
 
     img
         padding: 0
         margin: 0
+
+    #notifications-counter
+        height 20px
+        top 5px
+        right -5px
+        line-height 20px
+        padding 0 3px
+        text-align center
+        border none
+        background #d9534f
+        color #fff
+        position absolute
+        font-size 15px
+        border-radius 10px
+        opacity 0.5
+        transition all 0.3s
+
+        &:empty
+            padding 0
+
+    &:hover
+        #notifications-counter
+            opacity 1
 
 
 .active
