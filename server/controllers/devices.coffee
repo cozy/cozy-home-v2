@@ -1,9 +1,6 @@
 request = require("request-json")
 fs = require('fs')
 Device = require '../models/device'
-# Helpers
-
-
 
 module.exports =
 
