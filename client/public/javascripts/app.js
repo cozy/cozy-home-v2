@@ -1803,7 +1803,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><img src="img/notification-white.png"/></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  buf.push('<a id="notifications-toggle"><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
   var __val__ = t('you have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li><li id="dismiss-all" class="btn">');
@@ -3884,8 +3884,7 @@ window.require.register("views/notifications_view", function(exports, require, m
       if (!this.initializing) {
         this.sound.play();
       }
-      this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
-      return this.$('#notifications-toggle').addClass('opaque');
+      return this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
     };
 
     NotificationsView.prototype.afterRender = function() {
@@ -3952,8 +3951,7 @@ window.require.register("views/notifications_view", function(exports, require, m
           return _this.dismissButton.css('color', '#333');
         }
       });
-      this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
-      return this.$('#notifications-toggle').removeClass('opaque');
+      return this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {

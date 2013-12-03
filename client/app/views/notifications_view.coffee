@@ -27,7 +27,6 @@ module.exports = class NotificationsView extends ViewCollection
         # when window is not visible
         @sound.play() unless @initializing
         @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
-        @$('#notifications-toggle').addClass 'opaque'
 
     afterRender: =>
         @counter    = @$ '#notifications-counter'
@@ -82,7 +81,6 @@ module.exports = class NotificationsView extends ViewCollection
                 @dismissButton.spin()
                 @dismissButton.css 'color', '#333'
         @$('#notifications-toggle img').attr 'src', 'img/notification-white.png'
-        @$('#notifications-toggle').removeClass 'opaque'
 
     hideNotifList: (event) =>
         @notifList.slideUp 100
