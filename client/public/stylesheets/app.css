@@ -1304,9 +1304,6 @@ body {
   color: #363a46;
   text-decoration: none;
 }
-.application .application-inner .app-title:hover {
-  color: #ff850a;
-}
 .application .application-inner .state-label {
   font-size: 18px;
   font-weight: normal;
