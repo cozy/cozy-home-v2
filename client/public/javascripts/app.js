@@ -195,7 +195,7 @@ window.require.register("collections/application", function(exports, require, mo
           icon: "img/owm.png",
           name: "OWM",
           slug: "owm",
-          git: "https://github.com/piour/piour-cozy-owm.git",
+          git: "https://github.com/Piour/piour-cozy-owm.git",
           comment: "community contribution",
           description: "Write your tasks, order them and execute them efficiently."
         }, {
