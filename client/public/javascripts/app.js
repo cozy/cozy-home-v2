@@ -963,7 +963,7 @@ window.require.register("locales/en", function(exports, require, module) {
     "use widget": "Use widget",
     "use icon": "Use icon",
     "change layout": "Change the layout",
-    "introduction market": "BLABLA\nWelcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers."
+    "introduction market": "Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers."
   };
   
 });

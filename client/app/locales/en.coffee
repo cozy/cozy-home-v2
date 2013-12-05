@@ -142,7 +142,6 @@ module.exports =
     "change layout": "Change the layout"
 
     "introduction market": """
-        BLABLA
         Welcome to the Cozy App Store. This is the place to customize your Cozy
         by adding applications.
         From there you can install the application you built or chose among the
