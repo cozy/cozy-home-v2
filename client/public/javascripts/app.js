@@ -149,6 +149,13 @@ window.require.register("collections/application", function(exports, require, mo
           comment: "community contribution",
           description: "An audio player to always keep your music with you"
         }, {
+          icon: "img/files-icon.png",
+          name: "files",
+          slug: "files",
+          git: "https://github.com/mycozycloud/cozy-files.git",
+          comment: "community contribution",
+          description: "Store your files and search into them."
+        }, {
           icon: "img/feeds-icon.png",
           name: "feeds",
           slug: "feeds",
