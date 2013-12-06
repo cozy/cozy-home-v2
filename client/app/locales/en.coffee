@@ -140,3 +140,10 @@ module.exports =
     "use widget": "Use widget"
     "use icon": "Use icon"
     "change layout": "Change the layout"
+
+    "introduction market": """
+        Welcome to the Cozy App Store. This is the place to customize your Cozy
+        by adding applications.
+        From there you can install the application you built or chose among the
+        applications provided by Cozy Cloud and other developers.
+    """

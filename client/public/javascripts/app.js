@@ -962,7 +962,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "finish layout edition": "Finish Layout Edition",
     "use widget": "Use widget",
     "use icon": "Use icon",
-    "change layout": "Change the layout"
+    "change layout": "Change the layout",
+    "introduction market": "Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers."
   };
   
 });
@@ -1087,7 +1088,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "finish layout edition": "Valider la nouvelle disposition",
     "use widget": "Mode widget",
     "use icon": "Mode icone",
-    "change layout": "Modifier la disposition"
+    "change layout": "Modifier la disposition",
+    "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créé ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs."
   };
   
 });
@@ -1698,10 +1700,10 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the \napplications provided by Cozy Cloud and other developers.</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
   var __val__ = t('install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('&nbsp;<a href="https://cozycloud.cc/make/" target="_blank">');
+  buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
   var __val__ = t('your own application')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');

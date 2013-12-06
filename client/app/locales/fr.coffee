@@ -157,3 +157,10 @@ module.exports =
     "use widget": "Mode widget"
     "use icon": "Mode icone"
     "change layout": "Modifier la disposition"
+
+    "introduction market": """
+        Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez
+        personnaliser votre Cozy en y ajoutant des applications.
+        Vous pouvez installer l'application que vous avez créé ou choisir parmi
+        celles proposées par Cozycloud ou d'autres développeurs.
+    """
