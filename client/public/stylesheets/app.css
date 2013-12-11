@@ -1747,8 +1747,15 @@ body {
   position: absolute;
 }
 .md-body {
+  background: #f7f4f0;
   padding: 20px;
   color: #363a46;
+}
+.md-body.loading {
+  text-align: center;
+}
+.md-body .spinner {
+  display: inline-block;
 }
 .md-body p {
   margin-top: 0;

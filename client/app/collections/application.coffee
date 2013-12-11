@@ -95,13 +95,6 @@ module.exports = class ApplicationCollection extends BaseCollection
                     comment: "community contribution"
                     description: "Browse your bank accounts records and get daily reports from them."
                ,
-                    icon:"img/botmanager-icon.png"
-                    name:"irc bot"
-                    slug:"irc-bot"
-                    git:"https://github.com/jsilvestre/cozy-irc-botmanager.git"
-                    comment:"community contribution"
-                    description:"A friendly bot to help you manage an IRC channel"
-               ,
                     icon: "img/kyou.png"
                     name: "kyou"
                     slug: "kyou"
