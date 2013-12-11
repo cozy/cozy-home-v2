@@ -21,6 +21,8 @@ module.exports = class ApplicationRow extends BaseView
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
         if @app.get('comment') is 'official application'
             @$el.addClass 'official'
+        else if @app.get('comment') is 'fing application'
+            @$el.addClass 'fing'
 
     onInstallClicked: =>
         if @marketView.isInstalling()

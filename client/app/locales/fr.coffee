@@ -22,6 +22,7 @@ module.exports =
     "your app"                 : "Votre Application !"
     "community contribution"    : "Developpeur Indépendant"
     "official application"      : "Application Officielle"
+    "fing application"          : "Application MesInfos"
     "application description"   : "Description de l'Application"
     "downloading description"   : "Téléchargement de la description…"
     "downloading permissions"   : "Téléchargement des permissions…"
