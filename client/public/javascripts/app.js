@@ -380,7 +380,7 @@ window.require.register("helpers", function(exports, require, module) {
             left: 50
           }
         };
-        if (Spinner) {
+        if (typeof Spinner !== "undefined" && Spinner !== null) {
           return this.each(function() {
             var $this, spinner;
             $this = $(this);
@@ -399,9 +399,7 @@ window.require.register("helpers", function(exports, require, module) {
                   opts.color = color;
                 }
               }
-              spinner = new Spinner($.extend({
-                color: $this.css("color")
-              }, opts));
+              spinner = new Spinner(opts);
               spinner.spin(this);
               return $this.data("spinner", spinner);
             }
@@ -4089,9 +4087,10 @@ window.require.register("views/popover_description", function(exports, require, 
       this.body = this.$(".md-body");
       this.header = this.$(".md-header h3");
       this.header.html(this.model.get('name'));
-      this.body.spin('small');
+      this.body.spin('large');
+      this.body.addClass('loading');
       renderDesc = function() {
-        _this.body.spin();
+        _this.body.removeClass('loading');
         return _this.renderDescription();
       };
       this.model.getMetaData({
@@ -4106,7 +4105,6 @@ window.require.register("views/popover_description", function(exports, require, 
 
     PopoverDescriptionView.prototype.renderDescription = function() {
       var description, docType, permission, permissionsDiv, _ref;
-      this.body.hide();
       this.body.html("");
       this.$('.repo-stars').html(this.model.get('stars'));
       description = this.model.get("description");
@@ -4123,7 +4121,17 @@ window.require.register("views/popover_description", function(exports, require, 
           this.body.append(permissionsDiv);
         }
       }
-      return this.body.slideDown();
+      this.handleContentHeight();
+      this.body.slideDown();
+      return this.body.niceScroll();
+    };
+
+    PopoverDescriptionView.prototype.handleContentHeight = function() {
+      var _this = this;
+      this.body.css('max-height', "" + ($(window).height() / 2) + "px");
+      return $(window).on('resize', function() {
+        return _this.body.css('max-height', "" + ($(window).height() / 2) + "px");
+      });
     };
 
     PopoverDescriptionView.prototype.show = function() {
@@ -4138,6 +4146,7 @@ window.require.register("views/popover_description", function(exports, require, 
 
     PopoverDescriptionView.prototype.hide = function() {
       var _this = this;
+      this.body.getNiceScroll().hide();
       $('.md-content').fadeOut(function() {
         _this.overlay.removeClass('md-show');
         _this.$el.removeClass('md-show');

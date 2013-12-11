@@ -23,19 +23,21 @@ module.exports = class PopoverDescriptionView extends BaseView
         @header = @$ ".md-header h3"
         @header.html @model.get 'name'
 
-        @body.spin 'small'
+        @body.spin 'large'
+        @body.addClass 'loading'
         renderDesc = =>
-            @body.spin()
+            @body.removeClass 'loading'
             @renderDescription()
         @model.getMetaData
             success: renderDesc
             error: renderDesc
+
         @overlay = $ '.md-overlay'
         @overlay.click =>
             @hide()
 
     renderDescription: =>
-        @body.hide()
+
         @body.html ""
 
         @$('.repo-stars').html @model.get('stars')
@@ -51,7 +53,15 @@ module.exports = class PopoverDescriptionView extends BaseView
             for docType, permission of @model.get("permissions")
                 permissionsDiv = $ "<div class='permissionsLine'> <strong> #{docType} </strong> <p> #{permission.description} </p> </div>"
                 @body.append permissionsDiv
+
+        @handleContentHeight()
         @body.slideDown()
+        @body.niceScroll() # must be done in the end to avoid weird render
+
+    handleContentHeight: ->
+        @body.css 'max-height', "#{$(window).height() / 2}px"
+        $(window).on 'resize', =>
+            @body.css 'max-height', "#{$(window).height() / 2}px"
 
 
     show: =>
@@ -63,6 +73,7 @@ module.exports = class PopoverDescriptionView extends BaseView
         , 300
 
     hide: =>
+        @body.getNiceScroll().hide()
         $('.md-content').fadeOut =>
             @overlay.removeClass 'md-show'
             @$el.removeClass 'md-show'
