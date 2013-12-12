@@ -144,6 +144,13 @@ module.exports = class ApplicationCollection extends BaseCollection
                     git: "https://github.com/aenario/cozy-webdav.git"
                     comment: "official application"
                     description: "Synchronize your contacts and your agenda with Cozy"
+               ,
+                    icon: "img/databrowser-icon.png"
+                    name: "Databrowser"
+                    slug: "databrowser"
+                    git: "https://github.com/n-a-n/cozy-databrowser.git"
+                    comment: "community contribution"
+                    description: "Browse and visualize all your data."
             ]
 
             if isUserFing? and isUserFing
