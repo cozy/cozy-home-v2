@@ -98,6 +98,8 @@ module.exports = class ApplicationRow extends BaseView
 
     onUpdateClicked: (event) =>
         event.preventDefault()
+        if @popover?
+            @popover.destroy()
         @showPopover()
 
     showPopover: () ->

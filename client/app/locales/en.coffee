@@ -148,3 +148,6 @@ module.exports =
         From there you can install the application you built or chose among the
         applications provided by Cozy Cloud and other developers.
     """
+
+    "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later."
+    "please wait data retrieval": "Please wait while data are being retrieved..."
