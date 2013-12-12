@@ -41,8 +41,8 @@ module.exports = class ColorButton
     isGreen: ->
         @button.hasClass "btn-green"
 
-    spin: (toggle) ->
-        if toggle then @button.spin "small"
+    spin: (toggle, color) ->
+        if toggle then @button.spin "small", color
         else @button.spin false
 
     isHidden: ->
