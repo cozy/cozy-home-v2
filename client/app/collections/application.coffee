@@ -179,7 +179,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                         icon:"img/mesconsos-icon.png"
                         name:"MesConsos"
                         slug:"mesconsos"
-                        git:"https://github.com/gjacquart/MesConso.git"
+                        git:"https://github.com/jacquarg/MesConso.git"
                         comment: "fing application"
                         description: "Visualisez simplement vos consommations Intermarché et Orange."
                 ]
