@@ -122,7 +122,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                     slug: "owm"
                     git: "https://github.com/Piour/piour-cozy-owm.git"
                     comment: "community contribution"
-                    description: "Write your tasks, order them and execute them efficiently."
+                    description: "What is the weather like in your city? Check it out within your Cozy!"
                ,
                     icon:"img/photos-icon.png"
                     name:"photos"
