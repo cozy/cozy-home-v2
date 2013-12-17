@@ -89,7 +89,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                     description:"Aggregate your feeds and save your favorite links in bookmarks."
                ,
                     icon: "img/pfm.png"
-                    name: "pfm"
+                    name: "MesComptes"
                     slug: "pfm"
                     git: "https://github.com/seeker89/cozy-pfm.git"
                     comment: "community contribution"
@@ -122,7 +122,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                     slug: "owm"
                     git: "https://github.com/Piour/piour-cozy-owm.git"
                     comment: "community contribution"
-                    description: "Write your tasks, order them and execute them efficiently."
+                    description: "What is the weather like in your city? Check it out within your Cozy!"
                ,
                     icon:"img/photos-icon.png"
                     name:"photos"
@@ -144,6 +144,13 @@ module.exports = class ApplicationCollection extends BaseCollection
                     git: "https://github.com/aenario/cozy-webdav.git"
                     comment: "official application"
                     description: "Synchronize your contacts and your agenda with Cozy"
+               ,
+                    icon: "img/databrowser-icon.png"
+                    name: "Databrowser"
+                    slug: "databrowser"
+                    git: "https://github.com/n-a-n/cozy-databrowser.git"
+                    comment: "community contribution"
+                    description: "Browse and visualize all your data."
             ]
 
             if isUserFing? and isUserFing
@@ -172,7 +179,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                         icon:"img/mesconsos-icon.png"
                         name:"MesConsos"
                         slug:"mesconsos"
-                        git:"https://github.com/gjacquart/MesConso.git"
+                        git:"https://github.com/jacquarg/MesConso.git"
                         comment: "fing application"
                         description: "Visualisez simplement vos consommations Intermarché et Orange."
                 ]

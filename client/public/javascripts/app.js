@@ -193,7 +193,7 @@ window.require.register("collections/application", function(exports, require, mo
             description: "Aggregate your feeds and save your favorite links in bookmarks."
           }, {
             icon: "img/pfm.png",
-            name: "pfm",
+            name: "MesComptes",
             slug: "pfm",
             git: "https://github.com/seeker89/cozy-pfm.git",
             comment: "community contribution",
@@ -226,7 +226,7 @@ window.require.register("collections/application", function(exports, require, mo
             slug: "owm",
             git: "https://github.com/Piour/piour-cozy-owm.git",
             comment: "community contribution",
-            description: "Write your tasks, order them and execute them efficiently."
+            description: "What is the weather like in your city? Check it out within your Cozy!"
           }, {
             icon: "img/photos-icon.png",
             name: "photos",
@@ -248,6 +248,13 @@ window.require.register("collections/application", function(exports, require, mo
             git: "https://github.com/aenario/cozy-webdav.git",
             comment: "official application",
             description: "Synchronize your contacts and your agenda with Cozy"
+          }, {
+            icon: "img/databrowser-icon.png",
+            name: "Databrowser",
+            slug: "databrowser",
+            git: "https://github.com/n-a-n/cozy-databrowser.git",
+            comment: "community contribution",
+            description: "Browse and visualize all your data."
           }
         ];
         if ((isUserFing != null) && isUserFing) {
@@ -277,7 +284,7 @@ window.require.register("collections/application", function(exports, require, mo
               icon: "img/mesconsos-icon.png",
               name: "MesConsos",
               slug: "mesconsos",
-              git: "https://github.com/gjacquart/MesConso.git",
+              git: "https://github.com/jacquarg/MesConso.git",
               comment: "fing application",
               description: "Visualisez simplement vos consommations Intermarché et Orange."
             }
@@ -364,6 +371,12 @@ window.require.register("helpers", function(exports, require, module) {
             length: 1,
             width: 2,
             radius: 4
+          },
+          medium: {
+            lines: 10,
+            length: 4,
+            width: 3,
+            radius: 6
           },
           large: {
             lines: 10,
@@ -1020,7 +1033,9 @@ window.require.register("locales/en", function(exports, require, module) {
     "use widget": "Use widget",
     "use icon": "Use icon",
     "change layout": "Change the layout",
-    "introduction market": "Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers."
+    "introduction market": "Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers.",
+    "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later.",
+    "please wait data retrieval": "Please wait while data are being retrieved..."
   };
   
 });
@@ -1147,7 +1162,9 @@ window.require.register("locales/fr", function(exports, require, module) {
     "use widget": "Mode widget",
     "use icon": "Mode icone",
     "change layout": "Modifier la disposition",
-    "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créé ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs."
+    "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créé ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs.",
+    "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
+    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées..."
   };
   
 });
@@ -1543,12 +1560,12 @@ window.require.register("templates/config_application", function(exports, requir
   }
   else
   {
-  buf.push('<span class="state-label"> \n' + escape((interp = app.state) == null ? '' : interp) + '</span>');
+  buf.push('<span class="state-label">' + escape((interp = app.state) == null ? '' : interp) + '</span>');
   }
-  buf.push('</div><div class="buttons"><div class="mod right"><button class="btn remove-app">');
+  buf.push('</div><div class="buttons right"><div class="mod right"><button class="btn remove-app">');
   var __val__ = t('remove')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></div><div class="mod right"> <button class="btn update-app">');
+  buf.push('</button></div><div class="mod right"><button class="btn update-app">');
   var __val__ = t('update')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
@@ -2292,7 +2309,7 @@ window.require.register("views/config_application", function(exports, require, m
       var _this = this;
       event.preventDefault();
       this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.removeButton.spin(true);
+      this.removeButton.spin(true, '#ffffff');
       this.stateLabel.html(t('removing'));
       return this.model.uninstall({
         success: function() {
@@ -2308,6 +2325,9 @@ window.require.register("views/config_application", function(exports, require, m
 
     ApplicationRow.prototype.onUpdateClicked = function(event) {
       event.preventDefault();
+      if (this.popover != null) {
+        this.popover.destroy();
+      }
       return this.showPopover();
     };
 
@@ -2331,7 +2351,7 @@ window.require.register("views/config_application", function(exports, require, m
       var _this = this;
       event.preventDefault();
       this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.startStopBtn.spin(true);
+      this.startStopBtn.spin(true, '#ffffff');
       if (this.model.isRunning()) {
         return this.model.stop({
           success: function() {
@@ -2379,7 +2399,7 @@ window.require.register("views/config_application", function(exports, require, m
       }
       Backbone.Mediator.pub('app-state-changed', true);
       this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-      this.updateButton.spin('small');
+      this.updateButton.spin('small', '#ffffff');
       this.stateLabel.html(t('updating'));
       return this.model.updateApp({
         success: function() {
@@ -4081,21 +4101,24 @@ window.require.register("views/popover_description", function(exports, require, 
     };
 
     PopoverDescriptionView.prototype.afterRender = function() {
-      var renderDesc,
-        _this = this;
+      var _this = this;
       this.model.set("description", "");
       this.body = this.$(".md-body");
       this.header = this.$(".md-header h3");
       this.header.html(this.model.get('name'));
-      this.body.spin('large');
       this.body.addClass('loading');
-      renderDesc = function() {
-        _this.body.removeClass('loading');
-        return _this.renderDescription();
-      };
+      this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
+      this.body.find('.spinner-container').spin('medium');
       this.model.getMetaData({
-        success: renderDesc,
-        error: renderDesc
+        success: function() {
+          _this.body.removeClass('loading');
+          return _this.renderDescription();
+        },
+        error: function() {
+          _this.body.removeClass('loading');
+          _this.body.addClass('error');
+          return _this.body.html(t('error connectivity issue'));
+        }
       });
       this.overlay = $('.md-overlay');
       return this.overlay.click(function() {
@@ -4215,14 +4238,21 @@ window.require.register("views/popover_permissions", function(exports, require, 
       var _this = this;
       this.model.set("permissions", "");
       this.body = this.$(".md-body");
-      this.body.spin('small');
+      this.body.addClass('loading');
+      this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
+      this.body.find('.spinner-container').spin('medium');
       this.model.getPermissions({
         success: function(data) {
+          _this.body.removeClass('loading');
           if (!_this.model.hasChanged("permissions")) {
             return _this.confirmCallback(_this.model);
           }
         },
-        error: function() {}
+        error: function() {
+          _this.body.removeClass('loading');
+          _this.body.addClass('error');
+          return _this.body.html(t('error connectivity issue'));
+        }
       });
       return this.listenTo(this.model, "change:permissions", this.renderPermissions);
     };
@@ -4317,9 +4347,9 @@ window.require.register("widgets/install_button", function(exports, require, mod
       return this.button.hasClass("btn-green");
     };
 
-    ColorButton.prototype.spin = function(toggle) {
+    ColorButton.prototype.spin = function(toggle, color) {
       if (toggle) {
-        return this.button.spin("small");
+        return this.button.spin("small", color);
       } else {
         return this.button.spin(false);
       }

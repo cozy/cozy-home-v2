@@ -23,14 +23,17 @@ module.exports = class PopoverDescriptionView extends BaseView
         @header = @$ ".md-header h3"
         @header.html @model.get 'name'
 
-        @body.spin 'large'
         @body.addClass 'loading'
-        renderDesc = =>
-            @body.removeClass 'loading'
-            @renderDescription()
+        @body.html t('please wait data retrieval') + '<div class="spinner-container" />'
+        @body.find('.spinner-container').spin 'medium'
         @model.getMetaData
-            success: renderDesc
-            error: renderDesc
+            success: =>
+                @body.removeClass 'loading'
+                @renderDescription()
+            error: =>
+                @body.removeClass 'loading'
+                @body.addClass 'error'
+                @body.html t 'error connectivity issue'
 
         @overlay = $ '.md-overlay'
         @overlay.click =>

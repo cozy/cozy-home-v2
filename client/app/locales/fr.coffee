@@ -165,3 +165,6 @@ module.exports =
         Vous pouvez installer l'application que vous avez créé ou choisir parmi
         celles proposées par Cozycloud ou d'autres développeurs.
     """
+
+    "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
+    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées..."
