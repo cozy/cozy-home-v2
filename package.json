@@ -6,8 +6,8 @@
   },
   "main": "server.js",
   "dependencies": {
-    "americano": "0.2.10",
-    "americano-cozy": "0.1.4",
+    "americano": "0.3.0",
+    "americano-cozy": "0.2.0",
     "cozy-slug": "*",
     "bcrypt": "= 0.7.4",
     "async": "= 0.1.22",
