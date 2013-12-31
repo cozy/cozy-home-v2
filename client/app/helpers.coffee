@@ -19,6 +19,12 @@ class exports.BrunchApplication
                     width: 2
                     radius: 4
 
+                medium:
+                    lines: 10
+                    length: 4
+                    width: 3
+                    radius: 6
+
                 large:
                     lines: 10
                     length: 8
@@ -33,7 +39,7 @@ class exports.BrunchApplication
                     top: 30
                     left: 50
 
-            if Spinner
+            if Spinner?
                 @each ->
                     $this = $(this)
                     spinner = $this.data("spinner")
@@ -47,7 +53,8 @@ class exports.BrunchApplication
                             else
                                 opts = {}
                             opts.color = color    if color
-                        spinner = new Spinner($.extend(color: $this.css("color"), opts))
+
+                        spinner = new Spinner opts
                         spinner.spin(this)
                         $this.data "spinner", spinner
 

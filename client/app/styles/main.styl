@@ -672,12 +672,18 @@ body
 .cozy-app.official:hover
     background: lightgreyblue - 5%
 
+.cozy-app.fing
+    background: lightgreyred
+
+    &:hover
+        background: lightgreyred - 5%
+
 
 // Config application
 
 .config-application
     background: lightgrey
-    padding: 10px
+    padding 10px 10px 0 10px
     margin-bottom: 5px
     border-radius: 5px
 
@@ -686,6 +692,7 @@ body
 
     .mod
         margin-left: 5px
+        display inline-block
 
     .mod.left
         margin: 0
@@ -707,7 +714,7 @@ body
 
 .config-application:hover
     .buttons
-        display: block
+        display: inline-block
 
 #config-applications-view
     .change-layout img
@@ -811,8 +818,18 @@ body
         position: absolute
 
 .md-body
+
+    background: lightgrey
     padding: 20px
     color: darkblue
+
+    &.loading
+        text-align center
+    &.error
+        color red
+
+    .spinner
+        display inline-block
 
     p
         margin-top: 0
@@ -957,6 +974,7 @@ body
         .config-applications
             .buttons
                 display: block
+
 
         .change-layout, .disk-space, .memory-free
             img
