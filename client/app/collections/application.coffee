@@ -46,13 +46,6 @@ module.exports = class ApplicationCollection extends BaseCollection
         @isUserFing (isUserFing) =>
 
             apps = [
-                    icon:"img/bookmarks-icon.png"
-                    name:"bookmarks"
-                    slug:"bookmarks"
-                    git:"https://github.com/Piour/cozy-bookmarks.git"
-                    comment: "community contribution"
-                    description:"Manage your bookmarks easily"
-               ,
                     icon:"img/agenda-icon.png"
                     name:"calendar"
                     slug:"calendar"
@@ -62,10 +55,45 @@ module.exports = class ApplicationCollection extends BaseCollection
                ,
                     icon:"img/contacts-icon.png"
                     name:"contacts"
-                    slug:"contacts"
+                    Slug:"contacts"
                     git:"https://github.com/mycozycloud/cozy-contacts.git"
                     comment:"official application"
                     description:"Manage your contacts with custom informations"
+               ,
+                    icon:"img/files-icon.png"
+                    name:"files"
+                    slug:"files"
+                    git:"https://github.com/mycozycloud/cozy-files.git"
+                    comment:"official application"
+                    description:"Your online filesystem."
+               ,
+                    icon:"img/notes-icon.png"
+                    name:"notes"
+                    slug:"notes"
+                    git:"https://github.com/mycozycloud/cozy-notes.git"
+                    comment:"official application"
+                    description:"Organize and store your notes efficiently."
+               ,
+                    icon:"img/todos-icon.png"
+                    name:"todos"
+                    slug:"todos"
+                    git:"https://github.com/mycozycloud/cozy-todos.git"
+                    comment:"official application"
+                    description:"Write your tasks, order them and execute them efficiently."
+               ,
+                    icon: "img/webdav.png"
+                    name: "webdav"
+                    slug: "webdav"
+                    git: "https://github.com/aenario/cozy-webdav.git"
+                    comment: "official application"
+                    description: "Synchronize your contacts and your agenda with Cozy"
+               ,
+                    icon:"img/bookmarks-icon.png"
+                    name:"bookmarks"
+                    slug:"bookmarks"
+                    git:"https://github.com/Piour/cozy-bookmarks.git"
+                    comment: "community contribution"
+                    description:"Manage your bookmarks easily"
                ,
                     icon: "img/cozy-music.png"
                     name: "cozic"
@@ -73,13 +101,6 @@ module.exports = class ApplicationCollection extends BaseCollection
                     git: "https://github.com/rdubigny/cozy-music.git"
                     comment: "community contribution"
                     description: "An audio player to always keep your music with you"
-               ,
-                    icon:"img/files-icon.png"
-                    name:"files"
-                    slug:"files"
-                    git:"https://github.com/mycozycloud/cozy-files.git"
-                    comment:"community contribution"
-                    description:"Store your files and search into them."
                ,
                     icon:"img/feeds-icon.png"
                     name:"feeds"
@@ -103,19 +124,19 @@ module.exports = class ApplicationCollection extends BaseCollection
                     description: "Quantify your for a better knowledge of yourself"
                     website: "http://frankrousseau.github.io/kyou"
                ,
+                    icon: "img/konnectors.png"
+                    name: "konnectors"
+                    slug: "konnectors"
+                    git: "https://github.com/frankrousseau/konnectors.git"
+                    comment: "community contribution"
+                    description: "Import data from external services (Twitter, Jawbone...)"
+               ,
                     icon:"img/nirc-icon.png"
                     name:"nirc"
                     slug:"nirc"
                     git:"https://github.com/frankrousseau/cozy-nirc.git"
                     comment:"community contribution"
                     description:"Access to your favorite IRC channel from your Cozy"
-               ,
-                    icon:"img/notes-icon.png"
-                    name:"notes"
-                    slug:"notes"
-                    git:"https://github.com/mycozycloud/cozy-notes.git"
-                    comment:"official application"
-                    description:"Organize and store your notes efficiently."
                ,
                     icon: "img/owm.png"
                     name: "OWM"
@@ -131,22 +152,8 @@ module.exports = class ApplicationCollection extends BaseCollection
                     comment:"official application"
                     description:"Share photos with your friends."
                ,
-                    icon:"img/todos-icon.png"
-                    name:"todos"
-                    slug:"todos"
-                    git:"https://github.com/mycozycloud/cozy-todos.git"
-                    comment:"official application"
-                    description:"Write your tasks, order them and execute them efficiently."
-               ,
-                    icon: "img/webdav.png"
-                    name: "webdav"
-                    slug: "webdav"
-                    git: "https://github.com/aenario/cozy-webdav.git"
-                    comment: "official application"
-                    description: "Synchronize your contacts and your agenda with Cozy"
-               ,
                     icon: "img/databrowser-icon.png"
-                    name: "Databrowser"
+                    name: "databrowser"
                     slug: "databrowser"
                     git: "https://github.com/n-a-n/cozy-databrowser.git"
                     comment: "community contribution"
@@ -186,5 +193,5 @@ module.exports = class ApplicationCollection extends BaseCollection
                 apps = apps.concat fingApps
 
             @reset apps
-            @sort()
+            #@sort()
             callback null, apps  if callback?
