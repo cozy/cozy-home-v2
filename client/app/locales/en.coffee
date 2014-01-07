@@ -22,6 +22,7 @@ module.exports =
     "your app"                 : "your app!"
     "community contribution"    : "community contribution"
     "official application"      : "official application"
+    "fing application"          : "FING application"
     "application description"   : "Application Description"
     "downloading description"   : "Downloading description ..."
     "downloading permissions"   : "Download permissions ..."
@@ -144,3 +145,13 @@ module.exports =
     "use widget": "Use widget"
     "use icon": "Use icon"
     "change layout": "Change the layout"
+
+    "introduction market": """
+        Welcome to the Cozy App Store. This is the place to customize your Cozy
+        by adding applications.
+        From there you can install the application you built or chose among the
+        applications provided by Cozy Cloud and other developers.
+    """
+
+    "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later."
+    "please wait data retrieval": "Please wait while data are being retrieved..."

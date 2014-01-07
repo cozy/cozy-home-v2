@@ -22,6 +22,7 @@ module.exports =
     "your app"                 : "Votre Application !"
     "community contribution"    : "Developpeur Indépendant"
     "official application"      : "Application Officielle"
+    "fing application"          : "Application MesInfos"
     "application description"   : "Description de l'Application"
     "downloading description"   : "Téléchargement de la description…"
     "downloading permissions"   : "Téléchargement des permissions…"
@@ -161,3 +162,13 @@ module.exports =
     "use widget": "Mode widget"
     "use icon": "Mode icone"
     "change layout": "Modifier la disposition"
+
+    "introduction market": """
+        Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez
+        personnaliser votre Cozy en y ajoutant des applications.
+        Vous pouvez installer l'application que vous avez créé ou choisir parmi
+        celles proposées par Cozycloud ou d'autres développeurs.
+    """
+
+    "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
+    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées..."

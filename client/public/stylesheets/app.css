@@ -826,11 +826,6 @@ select:focus {
   padding: 5px;
   margin-right: 5px;
 }
-.opaque {
-  opacity: 1 !important;
-  -ms-filter: none;
-  filter: none;
-}
 input[type=checkbox] {
   margin-top: 8px;
   width: 15px;
@@ -1061,7 +1056,7 @@ body {
   cursor: pointer;
   margin-left: 10px;
   padding-left: 5px;
-  padding-right: 5px;
+  padding-right: 10px;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1069,10 +1064,46 @@ body {
   transition: all 0.3s;
   margin-top: 0;
   padding-top: 0;
+  position: relative;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: alpha(opacity=50);
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
 }
 #notifications-toggle img {
   padding: 0;
   margin: 0;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+#notifications-toggle #notifications-counter {
+  height: 20px;
+  top: 5px;
+  right: 2px;
+  line-height: 20px;
+  padding: 0 3px;
+  text-align: center;
+  border: none;
+  background: #d9534f;
+  color: #fff;
+  position: absolute;
+  font-size: 15px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  border: 2px solid #363a46;
+}
+#notifications-toggle #notifications-counter:empty {
+  padding: 0;
+}
+#notifications-toggle:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 .active #notifications-toggle {
   background: rgba(20,20,22,0.3);
@@ -1272,9 +1303,6 @@ body {
   text-transform: uppercase;
   color: #363a46;
   text-decoration: none;
-}
-.application .application-inner .app-title:hover {
-  color: #ff850a;
 }
 .application .application-inner .state-label {
   font-size: 18px;
@@ -1535,9 +1563,15 @@ body {
 .cozy-app.official:hover {
   background: #e0e8ef;
 }
+.cozy-app.fing {
+  background: #f0fcfc;
+}
+.cozy-app.fing:hover {
+  background: #dbf8f8;
+}
 .config-application {
   background: #f7f4f0;
-  padding: 10px;
+  padding: 10px 10px 0 10px;
   margin-bottom: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -1547,6 +1581,7 @@ body {
 }
 .config-application .mod {
   margin-left: 5px;
+  display: inline-block;
 }
 .config-application .mod.left {
   margin: 0;
@@ -1567,7 +1602,7 @@ body {
   display: none;
 }
 .config-application:hover .buttons {
-  display: block;
+  display: inline-block;
 }
 .config-device {
   background: #f7f4f0;
@@ -1754,8 +1789,18 @@ body {
   position: absolute;
 }
 .md-body {
+  background: #f7f4f0;
   padding: 20px;
   color: #363a46;
+}
+.md-body.loading {
+  text-align: center;
+}
+.md-body.error {
+  color: #f00;
+}
+.md-body .spinner {
+  display: inline-block;
 }
 .md-body p {
   margin-top: 0;

@@ -5,13 +5,13 @@
         if app.state === 'installed'
             span.state-label= t('running')
         else
-            span.state-label 
+            span.state-label
                 | #{app.state}
-        
-    .buttons
+
+    .buttons.right
         .mod.right
             button.btn.remove-app= t('remove')
-        .mod.right 
+        .mod.right
             button.btn.update-app= t('update')
         .mod.right
             button.btn.btn-large.start-stop-btn= t('stop this app')
@@ -20,5 +20,5 @@
                   type="checkbox",
                   title="always on",
                   checked="checked",
-                  name="app-stoppable") 
+                  name="app-stoppable")
             label(for="app-stoppable") auto stop

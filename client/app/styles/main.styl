@@ -199,14 +199,39 @@ body
     cursor: pointer
     margin-left: 10px
     padding-left: 5px
-    padding-right: 5px
+    padding-right: 10px
     transition: all 0.3s
     margin-top: 0
     padding-top: 0
+    position: relative
+    opacity 0.5
+    transition all 0.3s
 
     img
         padding: 0
         margin: 0
+        opacity 1
+
+    #notifications-counter
+        height 20px
+        top 5px
+        right 2px
+        line-height 20px
+        padding 0 3px
+        text-align center
+        border none
+        background #d9534f
+        color #fff
+        position absolute
+        font-size 15px
+        border-radius 10px
+        border 2px solid #363a46
+
+        &:empty
+            padding 0
+
+    &:hover
+        opacity 1
 
 
 .active
@@ -401,9 +426,6 @@ body
             // font-size: 14px
             color: darkblue
             text-decoration: none
-
-            &:hover
-                color: orange
 
         .state-label
             font-size: 18px
@@ -650,12 +672,18 @@ body
 .cozy-app.official:hover
     background: lightgreyblue - 5%
 
+.cozy-app.fing
+    background: lightgreyred
+
+    &:hover
+        background: lightgreyred - 5%
+
 
 // Config application
 
 .config-application
     background: lightgrey
-    padding: 10px
+    padding 10px 10px 0 10px
     margin-bottom: 5px
     border-radius: 5px
 
@@ -664,6 +692,7 @@ body
 
     .mod
         margin-left: 5px
+        display inline-block
 
     .mod.left
         margin: 0
@@ -685,7 +714,7 @@ body
 
 .config-application:hover
     .buttons
-        display: block
+        display: inline-block
 
 // Config device
 
@@ -830,8 +859,18 @@ body
         position: absolute
 
 .md-body
+
+    background: lightgrey
     padding: 20px
     color: darkblue
+
+    &.loading
+        text-align center
+    &.error
+        color red
+
+    .spinner
+        display inline-block
 
     p
         margin-top: 0
@@ -976,6 +1015,7 @@ body
         .config-applications
             .buttons
                 display: block
+
 
         .change-layout, .disk-space, .memory-free
             img

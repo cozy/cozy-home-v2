@@ -26,12 +26,18 @@ module.exports = class PopoverPermissionsView extends BaseView
     afterRender: () ->
         @model.set "permissions", ""
         @body = @$ ".md-body"
-        @body.spin 'small'
+        @body.addClass 'loading'
+        @body.html t('please wait data retrieval') + '<div class="spinner-container" />'
+        @body.find('.spinner-container').spin 'medium'
         @model.getPermissions
             success: (data) =>
+                @body.removeClass 'loading'
                 if not @model.hasChanged("permissions")
                     @confirmCallback(@model)
             error: () =>
+                @body.removeClass 'loading'
+                @body.addClass 'error'
+                @body.html t 'error connectivity issue'
         @listenTo @model, "change:permissions", @renderPermissions
 
     renderPermissions: () =>
