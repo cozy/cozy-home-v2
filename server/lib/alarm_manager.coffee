@@ -13,12 +13,15 @@ module.exports = class AlarmManager
     constructor: (@timezone, @Alarm, @notificationhelper) ->
         @fetchAlarms()
 
+    # retrieve alarms from DS and call addAlarmCounters for
+    # each one
     fetchAlarms: () =>
         @dailytimer = setTimeout @fetchAlarms, oneDay
         # We load the alarms for the next 24h
         @Alarm.all (err, alarms) =>
             @addAlarmCounters alarm for alarm in alarms
 
+    # cancel all timeouts for a given id
     clearTimeouts: (id) ->
         if @timeouts[id]?
             clearTimeout timeout for timeout in @timeouts[id]
@@ -38,6 +41,8 @@ module.exports = class AlarmManager
             when "alarm.delete"
                 @clearTimeouts id
 
+    # find all notifications for a DS's alarm object
+    # and call addAlarmCounter for each one
     addAlarmCounters: (alarm) ->
         @clearTimeouts alarm._id
         now = new tDate()
@@ -63,6 +68,9 @@ module.exports = class AlarmManager
         for occurence in occurences
             @addAlarmCounter alarm, occurence
 
+
+    # setup a timeout to call handleNotification at
+    # triggerDate
     addAlarmCounter: (alarm, triggerDate) ->
 
         now = new tDate()
@@ -76,6 +84,9 @@ module.exports = class AlarmManager
             @timeouts[alarm._id] ?= []
             @timeouts[alarm._id].push setTimeout (=> @handleNotification alarm) , delta
 
+
+    # immediately create the Notification object
+    # and/or send Email for a given alarm
     handleNotification = (alarm) =>
 
         if alarm.action in ['DISPLAY', 'BOTH']
