@@ -1973,7 +1973,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  buf.push('<a id="notifications-toggle"><span class="backcolor"></span><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
   var __val__ = t('you have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li><li id="dismiss-all" class="btn">');

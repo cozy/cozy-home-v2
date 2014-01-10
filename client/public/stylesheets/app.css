@@ -1065,9 +1065,6 @@ body {
   margin-top: 0;
   padding-top: 0;
   position: relative;
-  opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
-  filter: alpha(opacity=50);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1100,7 +1097,30 @@ body {
 #notifications-toggle #notifications-counter:empty {
   padding: 0;
 }
+#notifications-toggle .backcolor {
+  position: absolute;
+  top: 15px;
+  left: 12px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  z-index: -1;
+  display: block;
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  filter: alpha(opacity=0);
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+}
 #notifications-toggle:hover {
+  background: rgba(220,220,222,0.3);
+}
+#notifications-toggle:hover .backcolor {
   opacity: 1;
   -ms-filter: none;
   filter: none;
@@ -1111,6 +1131,9 @@ body {
   cursor: pointer;
   -webkit-box-shadow: inset 2px 2px 2px #000;
   box-shadow: inset 2px 2px 2px #000;
+}
+.active #notifications-toggle .backcolor {
+  display: none;
 }
 #notifications-container {
   position: relative;
