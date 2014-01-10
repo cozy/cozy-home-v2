@@ -2577,6 +2577,9 @@ window.require.register("views/config_applications", function(exports, require, 
       this.devices = devices;
       this.fetch = __bind(this.fetch, this);
 
+      this.displayDevices = __bind(this.displayDevices, this);
+
+      this.listenTo(this.devices, 'reset', this.displayDevices);
       ConfigApplicationsView.__super__.constructor.call(this);
     }
 
@@ -2586,8 +2589,14 @@ window.require.register("views/config_applications", function(exports, require, 
       this.fetch();
       this.applicationList = new ConfigApplicationList(this.apps);
       this.deviceList = new ConfigDeviceList(this.devices);
-      this.$el.find('.title-app').append(this.applicationList.$el);
-      return this.$el.find('.title-device').append(this.deviceList.$el);
+      return this.$el.find('.title-app').append(this.applicationList.$el);
+    };
+
+    ConfigApplicationsView.prototype.displayDevices = function() {
+      if (!(this.devices.length === 0)) {
+        this.$el.find('.title-device').show();
+        return this.$el.find('.title-device').append(this.deviceList.$el);
+      }
     };
 
     ConfigApplicationsView.prototype.fetch = function() {
@@ -3333,9 +3342,15 @@ window.require.register("views/main", function(exports, require, module) {
 
       this.logout = __bind(this.logout, this);
 
+      this.testapps = __bind(this.testapps, this);
+
+      this.test = __bind(this.test, this);
+
       this.afterRender = __bind(this.afterRender, this);
       this.apps = new AppCollection();
+      this.listenTo(this.apps, 'reset', this.testapps);
       this.devices = new DeviceCollection();
+      this.listenTo(this.devices, 'reset', this.test);
       socketListener.watch(this.apps);
       socketListener.watch(this.devices);
       HomeView.__super__.constructor.apply(this, arguments);
@@ -3361,6 +3376,14 @@ window.require.register("views/main", function(exports, require, module) {
         reset: true
       });
       return this.resetLayoutSizes();
+    };
+
+    HomeView.prototype.test = function() {
+      return console.log('got devices', this.devices.length);
+    };
+
+    HomeView.prototype.testapps = function() {
+      return console.log('got apps', this.apps.length);
     };
 
     /* Functions

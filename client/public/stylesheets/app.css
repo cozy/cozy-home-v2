@@ -1604,6 +1604,9 @@ body {
 .config-application:hover .buttons {
   display: inline-block;
 }
+.title-device {
+  display: none;
+}
 .config-device {
   background: #f7f4f0;
   padding: 10px;

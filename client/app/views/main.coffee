@@ -21,7 +21,9 @@ module.exports = class HomeView extends BaseView
 
     constructor: ->
         @apps = new AppCollection()
+        @listenTo @apps, 'reset', @testapps
         @devices = new DeviceCollection()
+        @listenTo @devices, 'reset', @test
         socketListener.watch @apps
         socketListener.watch @devices
         super
@@ -45,6 +47,12 @@ module.exports = class HomeView extends BaseView
         @apps.fetch reset: true
         @devices.fetch reset: true
         @resetLayoutSizes()
+
+    test: =>
+        console.log('got devices', @devices.length)
+
+    testapps: =>
+        console.log('got apps', @apps.length)
 
 
     ### Functions ###
