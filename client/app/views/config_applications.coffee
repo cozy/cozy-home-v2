@@ -11,6 +11,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         'app-state-changed': 'onAppStateChanged'
 
     constructor: (@apps, @devices) ->
+        @listenTo @devices, 'reset', @displayDevices
         super()
 
     afterRender: ->
@@ -20,7 +21,12 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @applicationList = new ConfigApplicationList @apps
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
-        @$el.find('.title-device').append @deviceList.$el
+
+    displayDevices: =>
+        if not(@devices.length is 0)
+            @$el.find('.title-device').show()
+            @$el.find('.title-device').append @deviceList.$el
+
 
     fetch: =>
         @$('.amount').html "--"
