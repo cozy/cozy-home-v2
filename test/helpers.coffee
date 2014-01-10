@@ -5,9 +5,11 @@ americano = require 'americano'
 
 # Bring models in context
 Application = require '../server/models/application'
+Alarm = require '../server/models/alarm'
 CozyInstance = require '../server/models/cozyinstance'
 Notification = require '../server/models/notification'
 User = require '../server/models/user'
+time = require 'time'
 
 process.env.NAME = "home"
 process.env.TOKEN = "token"
@@ -33,7 +35,9 @@ _clearDb = (callback) ->
             CozyInstance.destroyAll (err) ->
                 return callback err if err
                 Notification.destroyAll (err) ->
-                    callback err
+                    return callback err if err
+                    Alarm.destroyAll (err) ->
+                        callback err
 
 helpers.setup = (port) ->
     (done) ->
@@ -46,6 +50,9 @@ helpers.takeDown = (done) ->
     @app.server.close()
     _clearDb done
 
+helpers.wait = (ms) -> (done) ->
+    @timeout ms + 1000
+    setTimeout done, ms
 
 # function factory for creating user
 helpers.createUser = (email, password) -> (callback) ->

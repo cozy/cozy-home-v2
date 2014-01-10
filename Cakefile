@@ -40,10 +40,12 @@ task 'tests:file', 'run test through mocha for a given file', (options) ->
     command = "mocha #{file} --reporter spec "
     command += "--compilers coffee:coffee-script --colors"
     exec command, (err, stdout, stderr) ->
+        console.log stdout
         if err
             console.log "Running mocha caught exception: \n" + err
             process.exit 1
-        console.log stdout
+        else
+            process.exit 0
 
 task "lint", "Run coffeelint on backend files", ->
     process.env.TZ = "Europe/Paris"
