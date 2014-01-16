@@ -81,6 +81,10 @@ module.exports =
     "hard drive gigabytes":"&nbsp;Go (Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
     "manage your applications":"Gérez vos applications"
+    "manage your devices":"Gérez vos devices"
+    "file": "Fichier"
+    "fodler": "Dossier"
+    "synchronised data": "Données synchronisées"
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
 
