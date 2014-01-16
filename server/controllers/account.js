@@ -30,7 +30,7 @@ module.exports = {
         }
       }
       if (data.timezone || data.email || data.password) {
-        return user.updateAttributes(data, function(err) {
+        return adapter.updateUser(user, data, function(err) {
           return cb(err, null);
         });
       } else {

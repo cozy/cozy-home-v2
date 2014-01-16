@@ -62,7 +62,6 @@
 /*.gridster .player {
   opacity:0;
 }*/
-
 /*
 * www.KNACSS.com V2.7b (2013-08) @author: Raphael Goetter, Alsacreations
 * Licence CC-BY http://creativecommons.org/licenses/by/3.0/fr/ 
@@ -521,7 +520,6 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
 /* @import url(my-styles.css); */
 
 
-
 /** initial setup **/
 .nano {
   position : relative;
@@ -577,7 +575,6 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
   visibility : visible\9; /* Target only IE7 and IE8 with this hack */
   opacity    : 0.99;
 }
-
 .ui-widget-overlay {
     position: fixed;
     top: 0;
@@ -652,8 +649,7 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
     height: 9px;
     right: -5px;
     top: -5px;
-}
-@font-face {
+}@font-face {
   font-family: styled;
   src: url("/fonts/maven-pro-light-200.otf");
 }
@@ -1631,6 +1627,50 @@ body {
 .config-application:hover .buttons {
   display: inline-block;
 }
+.title-device {
+  display: none;
+}
+.config-device {
+  background: #f7f4f0;
+  padding: 10px;
+  margin-bottom: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.config-device strong {
+  text-transform: lowercase;
+}
+.config-device .mod {
+  margin-left: 5px;
+}
+.config-device .mod.left {
+  margin: 0;
+}
+.config-device .smaller {
+  font-family: main;
+}
+.config-device .md-header {
+  background: transparent;
+}
+.config-device .md-footer {
+  padding: 0;
+}
+.config-device .md-footer .btn {
+  font-weight: normal;
+}
+.config-device .buttons {
+  display: none;
+}
+.config-device:hover .buttons {
+  display: block;
+}
+.config-device:hover .dataLine {
+  text-shadow: none;
+}
+.config-device:hover .docTypeLine {
+  text-shadow: none;
+  margin-left: 25px;
+}
 #config-applications-view .change-layout img {
   margin-left: 5px;
   margin-bottom: 7px;
@@ -2027,6 +2067,3 @@ body {
     margin-bottom: 10px;
   }
 }
-
-
-/*@ sourceMappingURL=app.css.map*/

@@ -32,3 +32,19 @@ module.exports = class Adapter
         # Update password
         client.post "accounts/password/", password: pwd, (err, res, body) =>
             callback err
+
+
+    updateUser: (user, data, callback) ->
+
+        # Authentication required by the Data System
+        if process.env.NODE_ENV is "production" or
+                process.env.NODE_ENV is "test"
+
+            name = process.env.NAME
+            token = process.env.TOKEN
+            client.setBasicAuth name, token
+
+        # Update password
+        client.put "user/merge/#{user.id}", password: data.password, (err, res, body) =>
+            callback err
+

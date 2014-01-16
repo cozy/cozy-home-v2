@@ -27,7 +27,7 @@ module.exports =
                     return cb null, errors
 
             if data.timezone or data.email or data.password
-                user.updateAttributes data, (err) ->
+                adapter.updateUser user, data, (err) ->
                     cb err, null
             else
                 cb null
