@@ -71,7 +71,7 @@ module.exports = AlarmManager = (function() {
           }
         });
       case "alarm.delete":
-        return this.clearTimeouts(id);
+        return this.clearTimeouts(msg);
     }
   };
 
