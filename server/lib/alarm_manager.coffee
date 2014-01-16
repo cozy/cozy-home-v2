@@ -39,7 +39,7 @@ module.exports = class AlarmManager
                     @addAlarmCounters alarm if alarm
 
             when "alarm.delete"
-                @clearTimeouts id
+                @clearTimeouts msg
 
     # find all notifications for a DS's alarm object
     # and call addAlarmCounter for each one
