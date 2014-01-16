@@ -51,13 +51,14 @@ helpers.takeDown = (done) ->
 helpers.createUser = (email, password) -> (callback) ->
     salt = bcrypt.genSaltSync(10)
     hash = bcrypt.hashSync(password, salt)
-    user = new User
+    user = 
         email: email
         owner: true
         password: hash
         activated: true
-
-    user.save callback
+        docType: 'User'
+    dbClient = new Client('http://localhost:9101/')
+    dbClient.post '/user/', user, callback
 
 # function factory for creating application
 helpers.createApp = (name, slug, index, state) -> (callback) ->
