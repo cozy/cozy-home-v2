@@ -3581,7 +3581,7 @@ window.require.register("views/market", function(exports, require, module) {
 
   slugify = require('helpers').slugify;
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
 
   module.exports = MarketView = (function(_super) {
 
@@ -3773,9 +3773,10 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.parseGitUrl = function(url) {
-      var branch, domain, error, git, name, out, parsed, parts, path, proto, slug;
+      var branch, domain, error, git, name, out, parsed, parts, path, port, proto, slug;
       url = url.replace('git@github.com:', 'https://github.com/');
       url = url.replace('git://', 'https://');
+      console.debug(REPOREGEX);
       parsed = REPOREGEX.exec(url);
       if (parsed == null) {
         error = {
@@ -3784,14 +3785,18 @@ window.require.register("views/market", function(exports, require, module) {
         };
         return error;
       }
-      git = parsed[0], proto = parsed[1], domain = parsed[2], path = parsed[3], branch = parsed[4];
+      console.log(parsed);
+      git = parsed[0], proto = parsed[1], domain = parsed[2], port = parsed[3], path = parsed[4], branch = parsed[5];
       path = path.replace('.git', '');
       parts = path.split("/");
       name = parts[parts.length - 1];
       name = name.replace(/-|_/g, " ");
       name = name.replace('cozy ', '');
       slug = slugify(name);
-      git = proto + domain + path + '.git';
+      if (port == null) {
+        port = "";
+      }
+      git = proto + domain + port + path + '.git';
       if (branch != null) {
         branch = branch.substring(1);
       }
