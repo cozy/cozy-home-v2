@@ -1248,7 +1248,8 @@ body {
 }
 #app-list {
   text-align: center;
-  margin-bottom: 40px 0;
+  margin: auto;
+  margin-bottom: 40px;
 }
 #app-list .preview-holder {
   padding: 10px;

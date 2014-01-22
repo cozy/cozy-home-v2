@@ -55,7 +55,7 @@ module.exports = class ApplicationsListView extends ViewCollection
         else width = width - 65
 
         grid_margin = 12
-        smallest_step = 130 + 2*grid_margin
+        smallest_step = 130 + 2 * grid_margin
 
         colsNb = Math.floor width / smallest_step
         colsNb = 3 if colsNb < 3
@@ -63,7 +63,13 @@ module.exports = class ApplicationsListView extends ViewCollection
         colsNb = colsNb - colsNb % 3
         # colsNb in [3, 6, 9, 12]
         grid_step = width / colsNb
+
+        # limit the grid cell size
+        max_grid_step = 150
+        grid_step = max_grid_step if grid_step > max_grid_step
+
         grid_size = grid_step - 2 * grid_margin
+
         return {colsNb, grid_size, grid_margin, grid_step}
 
     setMode: (mode) ->
@@ -98,9 +104,9 @@ module.exports = class ApplicationsListView extends ViewCollection
 
         @gridster = @appList.data('gridster')
         @gridster.set_dom_grid_height()
+        @appList.width @colsNb * @grid_step
 
         @gridster.generate_stylesheet cols: 16, rows: 16
-
 
     onWindowResize: =>
         oldNb = @colsNb
@@ -121,7 +127,6 @@ module.exports = class ApplicationsListView extends ViewCollection
             styles_for: cols: 16, rows: 16
             widget_margins: [@grid_margin, @grid_margin]
             widget_base_dimensions: [@grid_size, @grid_size]
-
 
     appendView: (view) ->
         pos = view.model.getHomePosition @colsNb

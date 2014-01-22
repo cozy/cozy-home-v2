@@ -2873,7 +2873,7 @@ window.require.register("views/home", function(exports, require, module) {
     };
 
     ApplicationsListView.prototype.computeGridDims = function() {
-      var colsNb, grid_margin, grid_size, grid_step, smallest_step, width;
+      var colsNb, grid_margin, grid_size, grid_step, max_grid_step, smallest_step, width;
       width = $(window).width();
       if (width > 640) {
         width = width - 100;
@@ -2891,6 +2891,10 @@ window.require.register("views/home", function(exports, require, module) {
       }
       colsNb = colsNb - colsNb % 3;
       grid_step = width / colsNb;
+      max_grid_step = 150;
+      if (grid_step > max_grid_step) {
+        grid_step = max_grid_step;
+      }
       grid_size = grid_step - 2 * grid_margin;
       return {
         colsNb: colsNb,
@@ -2959,6 +2963,7 @@ window.require.register("views/home", function(exports, require, module) {
       });
       this.gridster = this.appList.data('gridster');
       this.gridster.set_dom_grid_height();
+      this.appList.width(this.colsNb * this.grid_step);
       return this.gridster.generate_stylesheet({
         cols: 16,
         rows: 16
