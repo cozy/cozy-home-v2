@@ -22,4 +22,8 @@ before_install:
     - export NAME=home
     - export TOKEN=token
 
+after_failure:
+    - cat cozy-data-system/forever-ds.log
+
+
 # Trigger a new travis
