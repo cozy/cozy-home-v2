@@ -3,7 +3,7 @@ module.exports = class MainRouter extends Backbone.Router
 
     routes :
         "home": "applicationList"
-        "home/edit": "applicationListEdit"
+        "customize": "applicationListEdit"
         "applications": "market"
         "config-applications": "configApplications"
         "account": "account"
@@ -23,20 +23,26 @@ module.exports = class MainRouter extends Backbone.Router
                 when 'goto' then @navigate "apps/#{intent.params}", true
                 else console.log "WEIRD INTENT", intent
 
-
     selectIcon: (index) ->
-        $('.menu-btn').removeClass 'active'
-        $($('.menu-btn').get(index)).addClass 'active'
+        unless index is -1
+            $('.menu-btn.active').removeClass 'active'
+            $($('.menu-btn').get(index)).addClass 'active'
+        else # no active button
+            $('.menu-btn.active').removeClass 'active'
+
+        # dirty trick to prevent the custom menu to stay when doing:
+        # custom view => random view => display application list
+        app.mainView.applicationListView.setMode 'view' if index isnt 2
 
     ## Route behaviors
 
     applicationList: ->
         app.mainView.displayApplicationsList()
-        @selectIcon 0
+        @selectIcon -1 # no highlighted button
 
     applicationListEdit: ->
         app.mainView.displayApplicationsListEdit()
-        @selectIcon 0
+        @selectIcon 2
 
     configApplications: ->
         app.mainView.displayConfigApplications()
@@ -48,7 +54,7 @@ module.exports = class MainRouter extends Backbone.Router
 
     market: ->
         app.mainView.displayMarket()
-        @selectIcon 2
+        @selectIcon 0
 
     account: ->
         app.mainView.displayAccount()
