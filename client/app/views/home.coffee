@@ -208,6 +208,8 @@ module.exports = class ApplicationsListView extends ViewCollection
             view = @views[model.cid]
             oldpos = model.getHomePosition @colsNb
             continue if _.isEqual oldpos, newpos
-
             # this object have changed
+
+            # don't forget the widget informatoin
+            newpos.useWidget = oldpos?.useWidget or false
             view.model.saveHomePosition @colsNb, newpos

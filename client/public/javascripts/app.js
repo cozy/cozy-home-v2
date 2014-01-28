@@ -1542,23 +1542,23 @@ window.require.register("models/user", function(exports, require, module) {
   
 });
 window.require.register("models/user_preference", function(exports, require, module) {
-  var BaseModel, Device,
+  var BaseModel, UserPreference,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   BaseModel = require('lib/base_model').BaseModel;
 
-  module.exports = Device = (function(_super) {
+  module.exports = UserPreference = (function(_super) {
 
-    __extends(Device, _super);
+    __extends(UserPreference, _super);
 
-    function Device() {
-      return Device.__super__.constructor.apply(this, arguments);
+    function UserPreference() {
+      return UserPreference.__super__.constructor.apply(this, arguments);
     }
 
-    Device.prototype.urlRoot = 'api/preference/';
+    UserPreference.prototype.urlRoot = 'api/preference/';
 
-    return Device;
+    return UserPreference;
 
   })(Backbone.Model);
   
@@ -3244,6 +3244,7 @@ window.require.register("views/home", function(exports, require, module) {
         if (_.isEqual(oldpos, newpos)) {
           continue;
         }
+        newpos.useWidget = (oldpos != null ? oldpos.useWidget : void 0) || false;
         _results.push(view.model.saveHomePosition(this.colsNb, newpos));
       }
       return _results;
@@ -3355,7 +3356,7 @@ window.require.register("views/home_application", function(exports, require, mod
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
           this.stateLabel.hide();
-          useWidget = (_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0;
+          useWidget = (_ref = this.model.getHomePosition(this.getNbCols())) != null ? _ref.useWidget : void 0;
           if (this.canUseWidget() && useWidget) {
             return this.setUseWidget(true);
           }
@@ -3428,13 +3429,22 @@ window.require.register("views/home_application", function(exports, require, mod
       return this.model.has('widget');
     };
 
+    ApplicationRow.prototype.getNbCols = function() {
+      return window.app.mainView.applicationListView.colsNb;
+    };
+
     ApplicationRow.prototype.onUseWidgetClicked = function() {
-      var useWidget, _ref,
+      var homePosition, nbCols,
         _this = this;
-      useWidget = !((_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0);
-      return this.model.saveHomePosition('useWidget', useWidget, {
+      nbCols = this.getNbCols();
+      homePosition = this.model.getHomePosition(nbCols);
+      if (homePosition.useWidget == null) {
+        homePosition.useWidget = false;
+      }
+      homePosition.useWidget = !homePosition.useWidget;
+      return this.model.saveHomePosition(nbCols, homePosition, {
         success: function() {
-          return _this.setUseWidget(useWidget);
+          return _this.setUseWidget(homePosition.useWidget);
         }
       });
     };
