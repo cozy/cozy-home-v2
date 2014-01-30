@@ -13,9 +13,11 @@ module.exports = class ApplicationsListView extends ViewCollection
             @gridster.disable()
         'mouseleave .ui-resizable-handle': =>
             @gridster.enable() if @state is 'edit'
+        'click #reset-custom': => @colorpicker.reset()
 
-    constructor: (apps) ->
+    constructor: (apps, userPreference) ->
         @apps = apps
+        @userPreference = userPreference
         @state = 'view'
         @isLoading = true
         super collection: apps
@@ -23,6 +25,9 @@ module.exports = class ApplicationsListView extends ViewCollection
     initialize: =>
         @listenTo @collection, 'request', => @isLoading = true
         @listenTo @collection, 'reset', => @isLoading = false
+        @listenTo @userPreference, 'change', (userPreference) =>
+            @colorpicker.setCurrentColors userPreference
+            @colorpicker.injectCss()
         super
         # onWindowResize when the user is done resizing
         $(window).on 'resize', _.debounce @onWindowResize, 300
@@ -31,10 +36,27 @@ module.exports = class ApplicationsListView extends ViewCollection
         @appList = @$ "#app-list"
         @closeEditBtn = @$ '#home-edit-close'
 
+        ColorPickerHandler = require '../lib/color_picker_handler'
+        @colorpicker = new ColorPickerHandler
+            targetFields: @$ '.colorpicked'
+            colorPicker: @$ '#colorpicker'
+
         @$("#no-app-message").hide()
         $(".menu-btn a").click (event) =>
             $(".menu-btn").removeClass 'active'
             $(event.target).closest('.menu-btn').addClass 'active'
+
+        @closeEditBtn.find('a#save-custom.btn').click (event) =>
+
+            bgColor = @colorpicker.currentColors.background
+            btnColor = @colorpicker.currentColors.button
+            btnHoverColor = @colorpicker.currentColors.buttonHover
+
+            @userPreference.set
+                backgroundColor: bgColor
+                buttonColor: btnColor
+                buttonHoverColor: btnHoverColor
+            @userPreference.save()
 
         @initGridster()
         super
@@ -54,8 +76,8 @@ module.exports = class ApplicationsListView extends ViewCollection
         if width > 640 then width = width - 100
         else width = width - 65
 
-        grid_margin = 12
-        smallest_step = 130 + 2*grid_margin
+        grid_margin = 8
+        smallest_step = 150 + 2 * grid_margin
 
         colsNb = Math.floor width / smallest_step
         colsNb = 3 if colsNb < 3
@@ -63,14 +85,21 @@ module.exports = class ApplicationsListView extends ViewCollection
         colsNb = colsNb - colsNb % 3
         # colsNb in [3, 6, 9, 12]
         grid_step = width / colsNb
+
+        # limit the grid cell size
+        max_grid_step = 150
+        grid_step = max_grid_step if grid_step > max_grid_step
+
         grid_size = grid_step - 2 * grid_margin
+
         return {colsNb, grid_size, grid_margin, grid_step}
 
     setMode: (mode) ->
         @state = mode
+
         if @state is 'edit'
             @gridster?.enable()
-            @closeEditBtn.show()
+            @closeEditBtn.slideDown()
             view.disable() for cid, view of @views
         else
             @gridster?.disable()
@@ -98,9 +127,9 @@ module.exports = class ApplicationsListView extends ViewCollection
 
         @gridster = @appList.data('gridster')
         @gridster.set_dom_grid_height()
+        @appList.width @colsNb * @grid_step
 
         @gridster.generate_stylesheet cols: 16, rows: 16
-
 
     onWindowResize: =>
         oldNb = @colsNb
@@ -121,7 +150,6 @@ module.exports = class ApplicationsListView extends ViewCollection
             styles_for: cols: 16, rows: 16
             widget_margins: [@grid_margin, @grid_margin]
             widget_base_dimensions: [@grid_size, @grid_size]
-
 
     appendView: (view) ->
         pos = view.model.getHomePosition @colsNb
@@ -180,6 +208,8 @@ module.exports = class ApplicationsListView extends ViewCollection
             view = @views[model.cid]
             oldpos = model.getHomePosition @colsNb
             continue if _.isEqual oldpos, newpos
-
             # this object have changed
+
+            # don't forget the widget informatoin
+            newpos.useWidget = oldpos?.useWidget or false
             view.model.saveHomePosition @colsNb, newpos
