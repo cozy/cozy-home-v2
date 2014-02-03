@@ -100,8 +100,10 @@ module.exports = class ApplicationsListView extends ViewCollection
         if @state is 'edit'
             @gridster?.enable()
             @closeEditBtn.slideDown()
+            @colorpicker.enable()
             view.disable() for cid, view of @views
         else
+            @colorpicker.disable()
             @gridster?.disable()
             @closeEditBtn.slideUp()
             view.enable() for cid, view of @views
