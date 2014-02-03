@@ -66,8 +66,12 @@ module.exports = class ColorPickerHandler extends Backbone.View
 
             @injectCss()
 
+        @enable()
+
+    disable: -> $(window).off 'click'
+
+    enable: ->
         # close the picker when the user clicks anywhere in the page
-        #$()
         $(window).click (event) =>
 
             unless event.target is $('.h-marker.marker')[0] \
