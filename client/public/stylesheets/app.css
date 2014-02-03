@@ -49,6 +49,7 @@
   background: url(/img/marker.png) no-repeat;
 }
 
+
 /*! gridster.js - v0.1.0 - 2013-06-14
 * http://gridster.net/
 * Copyright (c) 2013 ducksboard; Licensed MIT */
@@ -113,6 +114,7 @@
 /*.gridster .player {
   opacity:0;
 }*/
+
 /*
 * www.KNACSS.com V2.7b (2013-08) @author: Raphael Goetter, Alsacreations
 * Licence CC-BY http://creativecommons.org/licenses/by/3.0/fr/ 
@@ -571,6 +573,7 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
 /* @import url(my-styles.css); */
 
 
+
 /** initial setup **/
 .nano {
   position : relative;
@@ -626,6 +629,7 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
   visibility : visible\9; /* Target only IE7 and IE8 with this hack */
   opacity    : 0.99;
 }
+
 .ui-widget-overlay {
     position: fixed;
     top: 0;
@@ -700,7 +704,8 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
     height: 9px;
     right: -5px;
     top: -5px;
-}@font-face {
+}
+@font-face {
   font-family: styled;
   src: url("/fonts/maven-pro-light-200.otf");
 }
@@ -786,7 +791,6 @@ select:focus {
   max-width: 800px;
   margin: auto;
 }
-.tooltip-inner a:hover,
 .tooltip-inner a:hover {
   color: textcolor;
   text-decoration: none;
@@ -803,7 +807,6 @@ select:focus {
 .mt6 {
   margin-top: 60px;
 }
-.spacer,
 .spacer {
   clear: both;
 }
@@ -921,7 +924,7 @@ body {
   z-index: 50;
   height: 52px;
   opacity: 0.3;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
   margin: 0;
   padding: 0;
@@ -974,7 +977,7 @@ body {
   margin-left: 15px;
   margin-top: 8px;
   opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1029,7 +1032,7 @@ body {
 #menu-applications-toggle #current-application {
   font-weight: normal;
   opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
 #menu-applications-toggle #current-application:active {
@@ -1066,7 +1069,7 @@ body {
   height: 100%;
   background-color: #f00;
   opacity: 0.001;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   top: 40px;
   left: 0px;
@@ -1160,7 +1163,7 @@ body {
   width: 20px;
   height: 20px;
   opacity: 0;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1209,7 +1212,7 @@ body {
   height: 100%;
   background-color: #f00;
   opacity: 0.001;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   top: 40px;
   left: 0px;
@@ -1259,7 +1262,7 @@ body {
   line-height: 20px;
   padding: 5px;
   opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
 #notifications-container #notifications .notification a.doaction {
@@ -1341,7 +1344,7 @@ body {
   z-index: 10;
   background: #808080;
   opacity: 0.7;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
   filter: alpha(opacity=70);
 }
 #app-list .use-widget {
@@ -1397,7 +1400,7 @@ body {
 }
 .application .application-inner img.stopped {
   opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
 .application .application-inner p {
@@ -1450,7 +1453,7 @@ body {
   z-index: 10;
   background: #808080;
   opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
 .application.ui-resizable:not(.ui-resizable-disabled) .bottom-handle,
@@ -1703,7 +1706,7 @@ body {
 .cozy-app .img-btn {
   width: 24px;
   opacity: 0.3;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
   margin: 10px 5px;
   display: none;
@@ -1870,7 +1873,7 @@ body {
   -ms-transform: translateX(20%);
   transform: translateX(20%);
   opacity: 0;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   -webkit-transition: all 3s;
   -moz-transition: all 3s;
@@ -1912,7 +1915,7 @@ body {
   left: 0;
   z-index: 1000;
   opacity: 0;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   background: rgba(143,140,140,0.8);
   -webkit-transition: all 0.6s;
@@ -1945,7 +1948,7 @@ body {
 .md-header a {
   color: #fff;
   opacity: 0.7;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
   filter: alpha(opacity=70);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -2219,3 +2222,6 @@ body {
     margin-bottom: 10px;
   }
 }
+
+
+/*# sourceMappingURL=app.css.map*/
