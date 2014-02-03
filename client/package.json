@@ -20,7 +20,7 @@
     "coffee-script-brunch": "1.7.3",
     "css-brunch": "1.7.0",
     "stylus-brunch": "1.8.0",
-    "jade-brunch": "1.8.0",
+    "jade-brunch": "1.5.1",
     "uglify-js-brunch": "1.7.6",
     "clean-css-brunch": "1.7.1"
   },

@@ -573,76 +573,6 @@ exports.locales = {
 exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Maceio", "America/Managua", "America/Manaus", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montreal", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Vostok", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Canada/Atlantic", "Canada/Central", "Canada/Eastern", "Canada/Mountain", "Canada/Newfoundland", "Canada/Pacific", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/Simferopol", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zaporozhye", "Europe/Zurich", "GMT", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Ponape", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Truk", "Pacific/Wake", "Pacific/Wallis", "US/Alaska", "US/Arizona", "US/Central", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific", "UTC"];
 });
 
-;require.register("initialize", function(exports, require, module) {
-var BrunchApplication, MainRouter, MainView, _ref,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-BrunchApplication = require('./helpers').BrunchApplication;
-
-MainRouter = require('routers/main_router');
-
-MainView = require('views/main');
-
-exports.Application = (function(_super) {
-  __extends(Application, _super);
-
-  function Application() {
-    _ref = Application.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  Application.prototype.initialize = function() {
-    var _this = this;
-    this.initializeJQueryExtensions();
-    return $.ajax('/api/instances/').done(function(instances) {
-      var _ref1, _ref2;
-      _this.instance = instances != null ? (_ref1 = instances.rows) != null ? _ref1[0] : void 0 : void 0;
-      _this.locale = ((_ref2 = _this.instance) != null ? _ref2.locale : void 0) || 'en';
-      return _this.initialize2();
-    }).fail(function() {
-      _this.locale = 'en';
-      return _this.initialize2();
-    });
-  };
-
-  Application.prototype.initialize2 = function() {
-    var err, locales, pathToSocketIO, socket, url;
-    try {
-      locales = require('locales/' + this.locale);
-    } catch (_error) {
-      err = _error;
-      locales = require('locales/en');
-    }
-    window.app = this;
-    this.polyglot = new Polyglot();
-    this.polyglot.extend(locales);
-    window.t = this.polyglot.t.bind(this.polyglot);
-    this.routers = {};
-    this.mainView = new MainView();
-    this.routers.main = new MainRouter();
-    Backbone.history.start();
-    if (Backbone.history.getFragment() === '') {
-      this.routers.main.navigate('home', true);
-    }
-    url = window.location.origin;
-    pathToSocketIO = "" + (window.location.pathname.substring(1)) + "socket.io";
-    socket = io.connect(url, {
-      resource: pathToSocketIO
-    });
-    return socket.on('installerror', function(err) {
-      console.log("An error occured while attempting to install app");
-      return console.log(err);
-    });
-  };
-
-  return Application;
-
-})(BrunchApplication);
-
-new exports.Application;
-});
-
 ;require.register("lib/base_collection", function(exports, require, module) {
 var BaseCollection, _ref,
   __hasProp = {}.hasOwnProperty,
@@ -1665,431 +1595,532 @@ module.exports = MainRouter = (function(_super) {
 });
 
 ;require.register("templates/account", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<!--.section-title.darkbg.bigger config--><h4 class=\"pa2 w600 biggest darkbg center\">" + (jade.escape(null == (jade.interp = t('your parameters')) ? "" : jade.interp)) + "</h4><div id=\"account-form\" class=\"lightgrey w600 pa2\"><div class=\"input\"><p>" + (jade.escape(null == (jade.interp = t('alerts and password recovery email')) ? "" : jade.interp)) + "</p><input id=\"account-email-field\"/><button class=\"btn\">" + (jade.escape(null == (jade.interp = t('save')) ? "" : jade.interp)) + "</button></div><div class=\"input\"><p>" + (jade.escape(null == (jade.interp = t('your timezone is required')) ? "" : jade.interp)) + "</p><select id=\"account-timezone-field\"></select><button class=\"btn\">" + (jade.escape(null == (jade.interp = t('save')) ? "" : jade.interp)) + "</button></div><div class=\"input\"><p>" + (jade.escape(null == (jade.interp = t('domain name for urls and email')) ? "" : jade.interp)) + "</p><input id=\"account-domain-field\"/><button class=\"btn\">" + (jade.escape(null == (jade.interp = t('save')) ? "" : jade.interp)) + "</button></div><div class=\"input\"><p>" + (jade.escape(null == (jade.interp = t('Chose the language you want I use to speak with you:')) ? "" : jade.interp)) + "</p><select id=\"account-locale-field\"><option value=\"fr\">" + (jade.escape(null == (jade.interp = t('french')) ? "" : jade.interp)) + "</option><option value=\"en\">" + (jade.escape(null == (jade.interp = t('english')) ? "" : jade.interp)) + "</option></select><button class=\"btn\">" + (jade.escape(null == (jade.interp = t('save')) ? "" : jade.interp)) + "</button></div><p><button id=\"change-password-button\" class=\"btn\">" + (jade.escape(null == (jade.interp = t('change password')) ? "" : jade.interp)) + "</button></p><div id=\"change-password-form\"><p>" + (jade.escape(null == (jade.interp = t('change password procedure')) ? "" : jade.interp)) + "</p><p><label>" + (jade.escape(null == (jade.interp = t('input your current password')) ? "" : jade.interp)) + "</label></p><input id=\"account-password0-field\" type=\"password\"" + (jade.attr("placeholder", "" + (t('current password')) + "", true, false)) + "/><p><label>" + (jade.escape(null == (jade.interp = t('enter a new password')) ? "" : jade.interp)) + "</label></p><input id=\"account-password1-field\" type=\"password\"" + (jade.attr("placeholder", "" + (t('new password')) + "", true, false)) + "/><p><label>" + (jade.escape(null == (jade.interp = t('confirm your new password')) ? "" : jade.interp)) + "</label></p><input id=\"account-password2-field\" type=\"password\"" + (jade.attr("placeholder", "" + (t('new password')) + "", true, false)) + "/><p><button id=\"account-form-button\" class=\"btn\">" + (jade.escape(null == (jade.interp = t('save your new password')) ? "" : jade.interp)) + "</button><p class=\"loading-indicator\">&nbsp;</p><div id=\"account-info\" class=\"alert main-alert alert-success hide\"><div id=\"account-info-text\"></div></div><div id=\"account-error\" class=\"alert alert-error main-alert hide\"><div id=\"account-form-error-text\"></div></div></p></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">');
+var __val__ = t('your parameters')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+var __val__ = t('alerts and password recovery email')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><input id="account-email-field"/><button class="btn">');
+var __val__ = t('save')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="input"><p>');
+var __val__ = t('your timezone is required')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
+var __val__ = t('save')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="input"><p>');
+var __val__ = t('domain name for urls and email')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><input id="account-domain-field"/><button class="btn">');
+var __val__ = t('save')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="input"><p>');
+var __val__ = t('Chose the language you want I use to speak with you:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><select id="account-locale-field"><option value="fr">');
+var __val__ = t('french')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option><option value="en">');
+var __val__ = t('english')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option></select><button class="btn">');
+var __val__ = t('save')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><p><button id="change-password-button" class="btn">');
+var __val__ = t('change password')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p><div id="change-password-form"><p>');
+var __val__ = t('change password procedure')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><label>');
+var __val__ = t('input your current password')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</label></p><input');
+buf.push(attrs({ 'id':('account-password0-field'), 'type':("password"), 'placeholder':("" + (t('current password')) + "") }, {"type":true,"placeholder":true}));
+buf.push('/><p><label>');
+var __val__ = t('enter a new password')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</label></p><input');
+buf.push(attrs({ 'id':('account-password1-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+buf.push('/><p><label>');
+var __val__ = t('confirm your new password')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</label></p><input');
+buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
+buf.push('/><p><button id="account-form-button" class="btn">');
+var __val__ = t('save your new password')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/application_iframe", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),id = locals_.id,hash = locals_.hash;
-buf.push("<iframe" + (jade.attr("src", "apps/" + (id) + "/#" + (hash) + "", true, false)) + (jade.attr("id", "" + (id) + "-frame", true, false)) + "></iframe>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<iframe');
+buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
+buf.push('></iframe>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/config_application", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),app = locals_.app,t = locals_.t;
-buf.push("<div class=\"clearfix\"><div class=\"mod\"><strong>" + (jade.escape((jade.interp = app.name) == null ? '' : jade.interp)) + "</strong><span>&nbsp;-&nbsp;</span>");
+with (locals || {}) {
+var interp;
+buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
 if ( app.state === 'installed')
 {
-buf.push("<span class=\"state-label\">" + (jade.escape(null == (jade.interp = t('running')) ? "" : jade.interp)) + "</span>");
+buf.push('<span class="state-label">');
+var __val__ = t('running')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span>');
 }
 else
 {
-buf.push("<span class=\"state-label\">" + (jade.escape((jade.interp = app.state) == null ? '' : jade.interp)) + "</span>");
+buf.push('<span class="state-label">' + escape((interp = app.state) == null ? '' : interp) + '</span>');
 }
-buf.push("</div><div class=\"buttons right\"><div class=\"mod right\"><button class=\"btn remove-app\">" + (jade.escape(null == (jade.interp = t('remove')) ? "" : jade.interp)) + "</button></div><div class=\"mod right\"><button class=\"btn update-app\">" + (jade.escape(null == (jade.interp = t('update')) ? "" : jade.interp)) + "</button></div><div class=\"mod right\"><button class=\"btn btn-large start-stop-btn\">" + (jade.escape(null == (jade.interp = t('stop this app')) ? "" : jade.interp)) + "</button></div><div class=\"mod right smaller\"><input type=\"checkbox\" title=\"always on\" checked=\"checked\" name=\"app-stoppable\" class=\"app-stoppable\"/><label for=\"app-stoppable\">auto stop</label></div></div></div>");;return buf.join("");
+buf.push('</div><div class="buttons right"><div class="mod right"><button class="btn remove-app">');
+var __val__ = t('remove')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="mod right"><button class="btn update-app">');
+var __val__ = t('update')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
+var __val__ = t('stop this app')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div></div>');
+}
+return buf.join("");
 };
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
-}
 });
 
 ;require.register("templates/config_application_list", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-
-;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/config_applications", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<!--.section-title.darkbg.bigger apps--><div class=\"txt-center\"><div class=\"line w800\"><div class=\"mod w33 left\"><div class=\"sys-infos line\"><div class=\"mod center-txt\"><h4>" + (jade.escape(null == (jade.interp = t('hardware consumption')) ? "" : jade.interp)) + "</h4><div class=\"disk-space mt2\"><div class=\"line\"><img src=\"img/hard-drive.png\"/></div><div class=\"line\"><span class=\"amount\">0</span><span>&nbsp;/&nbsp;</span><span class=\"total\">0</span><span>" + (jade.escape(null == (jade.interp = t('hard drive gigabytes')) ? "" : jade.interp)) + "</span></div></div><div class=\"memory-free mt2\"><div class=\"line\"><img src=\"img/ram.png\"/></div><div class=\"line\"><span class=\"amount\">0</span><span>&nbsp;/&nbsp;</span><span class=\"total\">0&nbsp;</span><span>" + (jade.escape(null == (jade.interp = t('memory megabytes')) ? "" : jade.interp)) + "</span></div></div></div></div></div><div class=\"mod w66 left\"><div class=\"title-app h4 mb3\">" + (jade.escape(null == (jade.interp = t('manage your applications')) ? "" : jade.interp)) + "</div></div><div class=\"mod w66 left\"><div class=\"title-device h4 mb3\">" + (jade.escape(null == (jade.interp = t('manage your devices')) ? "" : jade.interp)) + "</div></div></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>');
+var __val__ = t('hardware consumption')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>');
+var __val__ = t('hard drive gigabytes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
+var __val__ = t('memory megabytes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
+var __val__ = t('manage your applications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div><div class="mod w66 left"><div class="title-device h4 mb3">');
+var __val__ = t('manage your devices')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/config_device", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),device = locals_.device,t = locals_.t;
-buf.push("<div class=\"clearfix\"><div class=\"mod\"><strong>" + (jade.escape((jade.interp = device.login) == null ? '' : jade.interp)) + "</strong><span>&nbsp;-&nbsp;</span><span class=\"state-label\">" + (jade.escape(null == (jade.interp = t('synchronised')) ? "" : jade.interp)) + "</span></div><div class=\"buttons\"><div class=\"mod center\"><span class=\"doctype-label\">" + (jade.escape(null == (jade.interp = t('')) ? "" : jade.interp)) + "</span></div></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span><span class="state-label">');
+var __val__ = t('synchronised')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div><div class="buttons"><div class="mod center"><span class="doctype-label">');
+var __val__ = t('')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/config_device_list", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-
-;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/help", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<!--.section-title.darkbg.bigger help--><div class=\"line w600 lightgrey\"><h4 class=\"help-text darkbg pa2\">" + (jade.escape(null == (jade.interp = t('do you want assistance')) ? "" : jade.interp)) + "</h4><div class=\"line pa2\"><p class=\"help-text mt2\">" + (jade.escape(null == (jade.interp = t('Write an email to our support team at:')) ? "" : jade.interp)) + "</p><P class=\"help-text\"><a href=\"mailto:support@cozycloud.cc\">support@cozycloud.cc</a></P><p class=\"help-text\">" + (jade.escape(null == (jade.interp = t('Register and post on our forum: ')) ? "" : jade.interp)) + "</p><P class=\"help-text\"><a href=\"https://forum.cozycloud.cc/\">https://forum.cozycloud.cc/</a></P><p class=\"help-text\">" + (jade.escape(null == (jade.interp = t('Ask your question on Twitter: ')) ? "" : jade.interp)) + "</p><P class=\"help-text\"><a href=\"https://twitter.com/mycozycloud\">@mycozycloud</a></P><p class=\"help-text\">" + (jade.escape(null == (jade.interp = t('Visit the project website and learn to build your app:')) ? "" : jade.interp)) + "</p><P class=\"help-text\"><a href=\"http://cozy.io\">cozy.io</a></P></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">');
+var __val__ = t('do you want assistance')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="line pa2"><p class="help-text mt2">');
+var __val__ = t('Write an email to our support team at:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
+var __val__ = t('Register and post on our forum: ')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">');
+var __val__ = t('Ask your question on Twitter: ')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
+var __val__ = t('Visit the project website and learn to build your app:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/help_url", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t,helpUrl = locals_.helpUrl;
-buf.push("<div class=\"line\"><p class=\"help-text mt2\">" + (jade.escape(null == (jade.interp = t('The first place to find help is:')) ? "" : jade.interp)) + "</p><p class=\"help-text\"><a" + (jade.attr("href", "" + (helpUrl) + "", true, false)) + ">" + (jade.escape((jade.interp = helpUrl) == null ? '' : jade.interp)) + "</a></p></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="line"><p class="help-text mt2">');
+var __val__ = t('The first place to find help is:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="help-text"><a');
+buf.push(attrs({ 'href':("" + (helpUrl) + "") }, {"href":true}));
+buf.push('>' + escape((interp = helpUrl) == null ? '' : interp) + '</a></p></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/home", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<!-- .section-title.darkbg.bigger home--><div id=\"home-edit-close\" class=\"w800\"><label>Background color</label><input name=\"background-color\" class=\"colorpicked\"/><label>Tile color</label><input name=\"button-color\" class=\"colorpicked\"/><label>Tile color on hover</label><input name=\"button-hover-color\" class=\"colorpicked\"/><div id=\"colorpicker\"></div><a id=\"save-custom\" href=\"#home\" class=\"btn\">" + (jade.escape(null == (jade.interp = t('finish layout edition')) ? "" : jade.interp)) + "</a>&nbsp;<a id=\"reset-custom\" class=\"btn\">" + (jade.escape(null == (jade.interp = t('reset customization')) ? "" : jade.interp)) + "</a></div><div id=\"no-app-message\" class=\"w600\"><div id=\"start-title\" class=\"darkbg clearfix\"><a href=\"http://cozy.io\"><img src=\"img/happycloud.png\" class=\"logo\"/></a><p class=\"biggest\">" + (jade.escape(null == (jade.interp = t('welcome to your cozy')) ? "" : jade.interp)) + "</p></div><div class=\"line\"><p class=\"bigger pa2\">" + (jade.escape(null == (jade.interp = t('you have no apps') + ' ') ? "" : jade.interp)) + "<a href=\"#account\">" + (jade.escape(null == (jade.interp = t('configure')) ? "" : jade.interp)) + "</a>" + (jade.escape(null == (jade.interp = ' ' + t ('install your first app')) ? "" : jade.interp)) + "<a href=\"#applications\">" + (jade.escape(null == (jade.interp = t('app store')) ? "" : jade.interp)) + "</a>.</p><p class=\"mt2 pa2\">" + (jade.escape(null == (jade.interp = t ('menu description')) ? "" : jade.interp)) + "</p><p><img src=\"/img/home-black.png\"/><strong>" + (jade.escape(null == (jade.interp = t('home') + ': ') ? "" : jade.interp)) + "</strong>" + (jade.escape(null == (jade.interp = t('where you reach applications')) ? "" : jade.interp)) + "</p><p><img src=\"/img/config-apps.png\"/><strong>" + (jade.escape(null == (jade.interp = t('app management') + ': ') ? "" : jade.interp)) + "</strong>" + (jade.escape(null == (jade.interp = t('There you can manage the state of your applications: start it, stop it, remove it...')) ? "" : jade.interp)) + "</p><p><img src=\"/img/apps.png\"/><strong>" + (jade.escape(null == (jade.interp = t('app store') + ': ') ? "" : jade.interp)) + "</strong>" + (jade.escape(null == (jade.interp = t('app store contains applications')) ? "" : jade.interp)) + "</p><p><img src=\"/img/configuration.png\"/><strong>" + (jade.escape(null == (jade.interp = t('configuration') + ': ') ? "" : jade.interp)) + "</strong>" + (jade.escape(null == (jade.interp = t('set cozy parameters here')) ? "" : jade.interp)) + "</p><p><img src=\"/img/help.png\"/><strong>" + (jade.escape(null == (jade.interp = t('assistance') + ': ') ? "" : jade.interp)) + "</strong>" + (jade.escape(null == (jade.interp = t('links to resources')) ? "" : jade.interp)) + "</p></div></div><div id=\"app-list\" class=\"gridster\"></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w800"><label>Background color</label><input name="background-color" class="colorpicked"/><label>Tile color</label><input name="button-color" class="colorpicked"/><label>Tile color on hover</label><input name="button-hover-color" class="colorpicked"/><div id="colorpicker"></div><a id="save-custom" href="#home" class="btn">');
+var __val__ = t('finish layout edition')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>&nbsp;<a id="reset-custom" class="btn">');
+var __val__ = t('reset customization')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+var __val__ = t('welcome to your cozy')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div><div class="line"><p class="bigger pa2">');
+var __val__ = t('you have no apps') + ' '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('<a href="#account">');
+var __val__ = t('configure')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>');
+var __val__ = ' ' + t ('install your first app')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('<a href="#applications">');
+var __val__ = t('app store')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>.</p><p class="mt2 pa2">');
+var __val__ = t ('menu description')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><img src="/img/home-black.png"/><strong>');
+var __val__ = t('home') + ': '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</strong>');
+var __val__ = t('where you reach applications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><img src="/img/config-apps.png"/><strong>');
+var __val__ = t('app management') + ': '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</strong>');
+var __val__ = t('There you can manage the state of your applications: start it, stop it, remove it...')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><img src="/img/apps.png"/><strong>');
+var __val__ = t('app store') + ': '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</strong>');
+var __val__ = t('app store contains applications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><img src="/img/configuration.png"/><strong>');
+var __val__ = t('configuration') + ': '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</strong>');
+var __val__ = t('set cozy parameters here')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><img src="/img/help.png"/><strong>');
+var __val__ = t('assistance') + ': '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</strong>');
+var __val__ = t('links to resources')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div></div><div id="app-list" class="gridster"></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/home_application", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t,app = locals_.app;
-buf.push("<div class=\"mask\"></div><div class=\"bottom-handle\"></div><div class=\"bottom-right-handle\"></div><div class=\"right-handle\"></div><button class=\"btn use-widget\">" + (jade.escape(null == (jade.interp = t('use widget')) ? "" : jade.interp)) + "</button><div class=\"application-inner\"><div class=\"vertical-aligner\"><img src=\"\" class=\"icon\"/><p class=\"app-title\">" + (jade.escape((jade.interp = app.displayName) == null ? '' : jade.interp)) + "</p></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="mask"></div><div class="bottom-handle"></div><div class="bottom-right-handle"></div><div class="right-handle"></div><button class="btn use-widget">');
+var __val__ = t('use widget')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/home_application_widget", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),url = locals_.url;
-buf.push("<div class=\"widget-mask\"></div><iframe" + (jade.attr("src", "" + (url) + "", true, false)) + " class=\"widget-iframe\"></iframe>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="widget-mask"></div><iframe');
+buf.push(attrs({ 'src':("" + (url) + ""), "class": ("widget-iframe") }, {"class":true,"src":true}));
+buf.push('></iframe>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/layout", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<header id=\"header\" class=\"navbar\"></header><div class=\"home-body\"><div id=\"app-frames\"></div><div id=\"content\"><div id=\"home-menu\" class=\"mt3\"><div class=\"txtright menu-btn\"><a href=\"#applications\"><span>" + (jade.escape(null == (jade.interp = t('choose your apps')) ? "" : jade.interp)) + "</span><img src=\"img/store.png\"/></a></div><div class=\"txtright menu-btn\"><a href=\"#config-applications\"><span>" + (jade.escape(null == (jade.interp = t('manage your apps')) ? "" : jade.interp)) + "</span><img src=\"img/config-apps.png\"/></a></div><div class=\"txtright menu-btn\"><a href=\"#customize\"><span>" + (jade.escape(null == (jade.interp = t('customize your cozy')) ? "" : jade.interp)) + "</span><img src=\"img/apps.png\"/></a></div><div class=\"txtright menu-btn\"><a href=\"#account\"><span>" + (jade.escape(null == (jade.interp = t('configure your cozy')) ? "" : jade.interp)) + "</span><img src=\"img/configuration.png\"/></a></div><div class=\"txtright menu-btn\"><a href=\"#help\"><span>" + (jade.escape(null == (jade.interp = t('ask for assistance')) ? "" : jade.interp)) + "</span><img src=\"img/help.png\"/></a></div></div><div id=\"home-content\"></div></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#applications"><span>');
+var __val__ = t('choose your apps')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
+var __val__ = t('manage your apps')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#customize"><span>');
+var __val__ = t('customize your cozy')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+var __val__ = t('configure your cozy')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
+var __val__ = t('ask for assistance')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/market", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<!--.section-title.darkbg.bigger app store--><p class=\"mt2\">" + (jade.escape((jade.interp = t('introduction market')) == null ? '' : jade.interp)) + "</p><div id=\"app-market-list\"><div id=\"your-app\" class=\"clearfix\"><div class=\"text\"><p>" + (jade.escape(null == (jade.interp = t('install')) ? "" : jade.interp)) + "&nbsp;<a href=\"http://cozy.io/hack/getting-started/\" target=\"_blank\">" + (jade.escape(null == (jade.interp = t('your own application')) ? "" : jade.interp)) + "</a></p><p><input type=\"text\" id=\"app-git-field\" placeholder=\"https://github.com/username/repository.git@branch\" class=\"span3\"/><button class=\"btn app-install-button\">" + (jade.escape(null == (jade.interp = t('install')) ? "" : jade.interp)) + "</button></p><div class=\"error alert-error\"></div><div class=\"info alert\"></div></div></div><div id=\"market-applications-list\" class=\"clearfix\"><div id=\"no-app-message\">" + (jade.escape(null == (jade.interp = t('installed everything')) ? "" : jade.interp)) + "</div></div></div><div class=\"md-overlay\"></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
+var __val__ = t('install')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
+var __val__ = t('your own application')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
+var __val__ = t('install')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
+var __val__ = t('installed everything')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div></div><div class="md-overlay"></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/market_application", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),app = locals_.app,undefined = locals_.undefined,t = locals_.t;
-buf.push("<div class=\"right\"><a" + (jade.attr("href", "" + (app.git) + "", true, false)) + "><img src=\"img/git.png\" class=\"img-btn\"/></a>");
+with (locals || {}) {
+var interp;
+buf.push('<div class="right"><a');
+buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+buf.push('><img src="img/git.png" class="img-btn"/></a>');
 if ( app.website !== undefined)
 {
-buf.push("<a" + (jade.attr("href", "" + (app.website) + "", true, false)) + "><img src=\"img/link.png\" class=\"img-btn\"/></a>");
+buf.push('<a');
+buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+buf.push('><img src="img/link.png" class="img-btn"/></a>');
 }
-buf.push("</div><div class=\"app-img left\"><img" + (jade.attr("src", "" + (app.icon) + "", true, false)) + "/></div><div class=\"app-text\"><h3>" + (jade.escape((jade.interp = app.name) == null ? '' : jade.interp)) + "</h3><span class=\"comment\">" + (jade.escape(null == (jade.interp = t(app.comment)) ? "" : jade.interp)) + "</span><p class=\"par2\">" + (jade.escape((jade.interp = app.description) == null ? '' : jade.interp)) + "</p></div>");;return buf.join("");
+buf.push('</div><div class="app-img left"><img');
+buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
+buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+var __val__ = t(app.comment)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+}
+return buf.join("");
 };
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
-}
 });
 
 ;require.register("templates/menu_application", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),model = locals_.model;
-buf.push("<a" + (jade.attr("href", "#apps/" + (model.slug) + "/", true, false)) + ">" + (jade.escape((jade.interp = model.displayName) == null ? '' : jade.interp)) + "</a>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<a');
+buf.push(attrs({ 'href':("#apps/" + (model.slug) + "/") }, {"href":true}));
+buf.push('>' + escape((interp = model.displayName) == null ? '' : interp) + '</a>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/menu_applications", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-
-buf.push("<a id=\"menu-applications-toggle\"><span id=\"current-application\"></span></a><div class=\"clickcatcher\"></div><div id=\"menu-applications\"><div id=\"home-btn\" class=\"menu-application\"></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/navbar", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<div class=\"navbar clearfix\"><a href=\"#home\" class=\"left\"><img src=\"img/happycloud-small.png\"/></a><div id=\"menu-applications-container\" class=\"left\"></div><a id=\"logout-button\" href=\"#logout\" class=\"right\"><span>" + (jade.escape(null == (jade.interp = t('logout')) ? "" : jade.interp)) + "</span><img src=\"img/logout-white.png\"/></a><div id=\"notifications-container\" class=\"right\"></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><div id="menu-applications-container" class="left"></div><a id="logout-button" href="#logout" class="right"><span>');
+var __val__ = t('logout')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><img src="img/logout-white.png"/></a><div id="notifications-container" class="right"></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/navbar_app_btn", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),app = locals_.app;
-buf.push("<li class=\"app-button\"><a" + (jade.attr("id", "" + (app.slug) + "", true, false)) + (jade.attr("href", "#apps/" + (app.slug) + "", true, false)) + "><img" + (jade.attr("src", "/apps/" + (app.slug) + "/favicon.ico", true, false)) + "/></a></li>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<li class="app-button"><a');
+buf.push(attrs({ 'id':("" + (app.slug) + ""), 'href':("#apps/" + (app.slug) + "") }, {"id":true,"href":true}));
+buf.push('><img');
+buf.push(attrs({ 'src':("/apps/" + (app.slug) + "/favicon.ico") }, {"src":true}));
+buf.push('/></a></li>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/notification", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),model = locals_.model;
-buf.push("<a class=\"doaction\">" + (jade.escape((jade.interp = model.text) == null ? '' : jade.interp)) + "</a><a class=\"dismiss\">&times;</a>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<a class="doaction">' + escape((interp = model.text) == null ? '' : interp) + '</a><a class="dismiss">&times;</a>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/notifications", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<a id=\"notifications-toggle\"><span class=\"backcolor\"></span><img src=\"img/notification-white.png\"/><span id=\"notifications-counter\"></span></a><audio id=\"notification-sound\" src=\"sounds/notification.wav\" preload=\"preload\"></audio><div id=\"clickcatcher\"></div><ul id=\"notifications\"><li id=\"no-notif-msg\">" + (jade.escape(null == (jade.interp = t('you have no notifications')) ? "" : jade.interp)) + "</li><li id=\"dismiss-all\" class=\"btn\">" + (jade.escape(null == (jade.interp = t('dismiss all')) ? "" : jade.interp)) + "</li></ul>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<a id="notifications-toggle"><span class="backcolor"></span><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+var __val__ = t('you have no notifications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li><li id="dismiss-all" class="btn">');
+var __val__ = t('dismiss all')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li></ul>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/popover_description", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),model = locals_.model,t = locals_.t;
-buf.push("<div class=\"md-content\"><div class=\"md-header clearfix\"><div class=\"line\"><h3 class=\"left\">" + (jade.escape((jade.interp = model.name) == null ? '' : jade.interp)) + "</h3><div class=\"right\"><a" + (jade.attr("href", "" + (model.git) + "", true, false)) + " class=\"repo-stars\">&nbsp;</a><a" + (jade.attr("href", "" + (model.git) + "", true, false)) + "><img src=\"img/star-white.png\"/></a></div></div></div><div class=\"md-body\"></div><div class=\"md-footer clearfix\"><button id=\"confirmbtn\" class=\"btn right\">" + (jade.escape(null == (jade.interp = t('install')) ? "" : jade.interp)) + "</button><button id=\"cancelbtn\" class=\"btn light-btn right\">" + (jade.escape(null == (jade.interp = t('cancel')) ? "" : jade.interp)) + "</button></div></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
+buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
+buf.push('>&nbsp;</a><a');
+buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
+buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
+var __val__ = t('install')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
+var __val__ = t('cancel')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("templates/popover_permissions", function(exports, require, module) {
-var __templateData = function template(locals) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
-var jade_mixins = {};
-var locals_ = (locals || {}),t = locals_.t;
-buf.push("<div class=\"md-header mt2\">" + (jade.escape(null == (jade.interp = t('Once updated, this application will require the following permissions:')) ? "" : jade.interp)) + "</div><div class=\"md-body\"><div>&nbsp;</div></div><div class=\"md-footer mt2\"><a id=\"confirmbtn\" class=\"btn right\">" + (jade.escape(null == (jade.interp = t('confirm update')) ? "" : jade.interp)) + "</a><a id=\"cancelbtn\" class=\"btn light-btn right\">" + (jade.escape(null == (jade.interp = t('cancel')) ? "" : jade.interp)) + "</a></div>");;return buf.join("");
-};
-if (typeof define === 'function' && define.amd) {
-  define([], function() {
-    return __templateData;
-  });
-} else if (typeof module === 'object' && module && module.exports) {
-  module.exports = __templateData;
-} else {
-  __templateData;
+with (locals || {}) {
+var interp;
+buf.push('<div class="md-header mt2">');
+var __val__ = t('Once updated, this application will require the following permissions:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
+var __val__ = t('confirm update')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a><a id="cancelbtn" class="btn light-btn right">');
+var __val__ = t('cancel')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div>');
 }
+return buf.join("");
+};
 });
 
 ;require.register("views/account", function(exports, require, module) {
