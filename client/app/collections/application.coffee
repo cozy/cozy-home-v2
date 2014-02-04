@@ -17,16 +17,16 @@ module.exports = class ApplicationCollection extends BaseCollection
             return app if idorslug is app.get 'id'
 
     # Critera: alphabetical order (case insensitive)
-    comparator: (app1, app2) ->
-        app1 = app1.get('name').toLowerCase()
-        app2 = app2.get('name').toLowerCase()
+    #comparator: (app1, app2) ->
+        #app1 = app1.get('name').toLowerCase()
+        #app2 = app2.get('name').toLowerCase()
 
-        if app1 < app2
-            return -1
-        else if app1 is app2
-            return 0
-        else
-            return 1
+        #if app1 < app2
+            #return -1
+        #else if app1 is app2
+            #return 0
+        #else
+            #return 1
 
     # Specific to the MesInfos project, must be removed when it's done
     isUserFing: (callback) ->
@@ -66,6 +66,13 @@ module.exports = class ApplicationCollection extends BaseCollection
                     git:"https://github.com/mycozycloud/cozy-files.git"
                     comment:"official application"
                     description:"Your online filesystem."
+               ,
+                    icon:"img/photos-icon.png"
+                    name:"photos"
+                    slug:"photos"
+                    git:"https://github.com/mycozycloud/cozy-photos.git"
+                    comment:"official application"
+                    description:"Share photos with your friends."
                ,
                     icon:"img/notes-icon.png"
                     name:"notes"
@@ -124,7 +131,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                     description: "Quantify your for a better knowledge of yourself"
                     website: "http://frankrousseau.github.io/kyou"
                ,
-                    icon: "img/konnectors.png"
+                    icon: "img/konnectors-icon.png"
                     name: "konnectors"
                     slug: "konnectors"
                     git: "https://github.com/frankrousseau/konnectors.git"
@@ -144,13 +151,6 @@ module.exports = class ApplicationCollection extends BaseCollection
                     git: "https://github.com/Piour/piour-cozy-owm.git"
                     comment: "community contribution"
                     description: "What is the weather like in your city? Check it out within your Cozy!"
-               ,
-                    icon:"img/photos-icon.png"
-                    name:"photos"
-                    slug:"photos"
-                    git:"https://github.com/mycozycloud/cozy-photos.git"
-                    comment:"official application"
-                    description:"Share photos with your friends."
                ,
                     icon: "img/databrowser-icon.png"
                     name: "databrowser"
