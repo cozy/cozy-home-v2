@@ -787,8 +787,6 @@ window.require.register("lib/color_picker_handler", function(exports, require, m
           _this.currentColors.button = color;
         } else if (inputName === "button-hover-color") {
           _this.currentColors.buttonHover = color;
-        } else {
-          console.log("wrong field");
         }
         return _this.injectCss();
       });
@@ -862,7 +860,6 @@ window.require.register("lib/request", function(exports, require, module) {
         }
       },
       error: function(data) {
-        console.log(data);
         if (data != null) {
           data = JSON.parse(data.responseText);
           if ((data.msg != null) && (callback != null)) {
@@ -1103,7 +1100,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "welcome to app store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
     "installed everything": "You have already installed everything !",
     "already similarly named app": "There is already an app with similar name.",
-    "customize your cozy": "Customize your Cozy",
+    "your app list": "Access to your apps",
+    "customize your cozy": "Customize your layout",
     "manage your apps": "Manage your app",
     "choose your apps": "Choose your apps",
     "configure your cozy": "Configure your cozy",
@@ -1237,7 +1235,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "welcome to app store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed everything": "Vous avez déjà tout installé !",
     "already similarly named app": "Il y a déjà une application installée avec un nom similaire.",
-    "customize your cozy": "Personnalisez votre Cozy",
+    "your app list": "Accéder à vos apps",
+    "customize your cozy": "Personnalisez la mise en page",
     "manage your apps": "Gérez vos apps",
     "choose your apps": "Choisissez vos apps",
     "configure your cozy": "Configurez votre cozy",
@@ -1617,39 +1616,39 @@ window.require.register("routers/main_router", function(exports, require, module
       } else {
         $('.menu-btn.active').removeClass('active');
       }
-      if (index !== 2) {
+      if (index !== 3) {
         return app.mainView.applicationListView.setMode('view');
       }
     };
 
     MainRouter.prototype.applicationList = function() {
       app.mainView.displayApplicationsList();
-      return this.selectIcon(-1);
+      return this.selectIcon(0);
     };
 
     MainRouter.prototype.applicationListEdit = function() {
       app.mainView.displayApplicationsListEdit();
-      return this.selectIcon(2);
+      return this.selectIcon(3);
     };
 
     MainRouter.prototype.configApplications = function() {
       app.mainView.displayConfigApplications();
-      return this.selectIcon(1);
+      return this.selectIcon(2);
     };
 
     MainRouter.prototype.help = function() {
       app.mainView.displayHelp();
-      return this.selectIcon(4);
+      return this.selectIcon(5);
     };
 
     MainRouter.prototype.market = function() {
       app.mainView.displayMarket();
-      return this.selectIcon(0);
+      return this.selectIcon(1);
     };
 
     MainRouter.prototype.account = function() {
       app.mainView.displayAccount();
-      return this.selectIcon(3);
+      return this.selectIcon(4);
     };
 
     MainRouter.prototype.application = function(slug, hash) {
@@ -1981,16 +1980,19 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#applications"><span>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>');
+  var __val__ = t('your app list')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
   var __val__ = t('choose your apps')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
   var __val__ = t('manage your apps')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#customize"><span>');
+  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#customize"><span>');
   var __val__ = t('customize your cozy')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
   var __val__ = t('configure your cozy')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
@@ -3984,7 +3986,6 @@ window.require.register("views/market", function(exports, require, module) {
         };
         return error;
       }
-      console.log(parsed);
       git = parsed[0], proto = parsed[1], domain = parsed[2], port = parsed[3], path = parsed[4], branch = parsed[5];
       path = path.replace('.git', '');
       parts = path.split("/");

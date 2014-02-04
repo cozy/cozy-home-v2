@@ -153,7 +153,6 @@ module.exports = class MarketView extends BaseView
                 error: true
                 msg: t "Git url should be of form https://.../my-repo.git"
             return error
-        console.log parsed
         [git, proto, domain, port, path, branch] = parsed
         path = path.replace '.git', ''
         parts = path.split "/"

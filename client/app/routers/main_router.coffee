@@ -32,33 +32,33 @@ module.exports = class MainRouter extends Backbone.Router
 
         # dirty trick to prevent the custom menu to stay when doing:
         # custom view => random view => display application list
-        app.mainView.applicationListView.setMode 'view' if index isnt 2
+        app.mainView.applicationListView.setMode 'view' if index isnt 3
 
     ## Route behaviors
 
     applicationList: ->
         app.mainView.displayApplicationsList()
-        @selectIcon -1 # no highlighted button
+        @selectIcon 0 # no highlighted button
 
     applicationListEdit: ->
         app.mainView.displayApplicationsListEdit()
-        @selectIcon 2
+        @selectIcon 3
 
     configApplications: ->
         app.mainView.displayConfigApplications()
-        @selectIcon 1
+        @selectIcon 2
 
     help: ->
         app.mainView.displayHelp()
-        @selectIcon 4
+        @selectIcon 5
 
     market: ->
         app.mainView.displayMarket()
-        @selectIcon 0
+        @selectIcon 1
 
     account: ->
         app.mainView.displayAccount()
-        @selectIcon 3
+        @selectIcon 4
 
     application: (slug, hash) ->
         app.mainView.displayApplication slug, hash

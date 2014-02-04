@@ -65,7 +65,8 @@ module.exports =
         """
 
 
-    "customize your cozy":"Personnalisez votre Cozy"
+    "your app list": "Accéder à vos apps"
+    "customize your cozy":"Personnalisez la mise en page"
     "manage your apps":"Gérez vos apps"
     "choose your apps":"Choisissez vos apps"
     "configure your cozy":"Configurez votre cozy"
