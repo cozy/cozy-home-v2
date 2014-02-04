@@ -219,7 +219,7 @@ window.require.register("collections/application", function(exports, require, mo
             description: "Aggregate your feeds and save your favorite links in bookmarks."
           }, {
             icon: "img/pfm.png",
-            name: "pfm",
+            name: "mes comptes",
             displayName: "Mes Comptes",
             slug: "pfm",
             git: "https://github.com/seeker89/cozy-pfm.git",
@@ -4417,7 +4417,8 @@ window.require.register("views/notifications_view", function(exports, require, m
       if (!this.initializing) {
         this.sound.play();
       }
-      return this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
+      this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
+      return this.$('#notifications-toggle').addClass('highlight');
     };
 
     NotificationsView.prototype.afterRender = function() {
@@ -4448,8 +4449,9 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.$('#dismiss-all').toggle(newCount !== 0);
       if (newCount === 0) {
         newCount = "";
+        this.counter.html(newCount);
+        return this.counter.hide();
       }
-      return this.counter.html(newCount);
     };
 
     NotificationsView.prototype.windowClicked = function() {
@@ -4484,7 +4486,8 @@ window.require.register("views/notifications_view", function(exports, require, m
           return _this.dismissButton.css('color', '#333');
         }
       });
-      return this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
+      this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
+      return this.$('#notifications-toggle').removeClass('highlight');
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {

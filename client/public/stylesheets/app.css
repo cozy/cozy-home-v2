@@ -1106,6 +1106,8 @@ body {
   width: 60px;
   cursor: pointer;
   margin-left: 10px;
+  margin-top: 0;
+  padding-top: 0;
   padding-left: 5px;
   padding-right: 10px;
   -webkit-transition: all 0.3s;
@@ -1113,8 +1115,6 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
-  margin-top: 0;
-  padding-top: 0;
   position: relative;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1125,9 +1125,6 @@ body {
 #notifications-toggle img {
   padding: 0;
   margin: 0;
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
 }
 #notifications-toggle #notifications-counter {
   height: 20px;
@@ -1171,7 +1168,7 @@ body {
 #notifications-toggle:hover {
   background: rgba(220,220,222,0.3);
 }
-#notifications-toggle:hover .backcolor {
+#notifications-toggle.highlight img {
   opacity: 1;
   -ms-filter: none;
   filter: none;

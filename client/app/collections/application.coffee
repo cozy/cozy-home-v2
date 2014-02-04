@@ -127,7 +127,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                     description:"Aggregate your feeds and save your favorite links in bookmarks."
                ,
                     icon: "img/pfm.png"
-                    name: "pfm"
+                    name: "mes comptes"
                     displayName:"Mes Comptes"
                     slug: "pfm"
                     git: "https://github.com/seeker89/cozy-pfm.git"
