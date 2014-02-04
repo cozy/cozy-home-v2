@@ -2007,7 +2007,10 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
+  var __val__ = t('installed everything')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div></div><div class="md-overlay"></div><div class="mt2 mb2"><div id="your-app" class="clearfix"><div class="text"><p>');
   var __val__ = t('install')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
@@ -2016,10 +2019,7 @@ window.require.register("templates/market", function(exports, require, module) {
   buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
   var __val__ = t('install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
-  var __val__ = t('installed everything')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div></div><div class="md-overlay"></div>');
+  buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div>');
   }
   return buf.join("");
   };

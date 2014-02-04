@@ -1,6 +1,10 @@
 //.section-title.darkbg.bigger app store
 p.mt2 #{t('introduction market')}
 #app-market-list
+    #market-applications-list.clearfix
+        #no-app-message= t('installed everything')
+.md-overlay
+.mt2.mb2
     #your-app.clearfix
         .text
             p
@@ -15,8 +19,3 @@ p.mt2 #{t('introduction market')}
 
             .error.alert-error
             .info.alert
-
-    #market-applications-list.clearfix
-        #no-app-message= t('installed everything')
-
-.md-overlay
