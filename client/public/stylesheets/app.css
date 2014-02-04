@@ -1388,7 +1388,7 @@ body {
 }
 .application .application-inner img {
   width: auto;
-  height: 75%;
+  height: 70%;
   display: block;
   margin: 0px auto 2% auto;
   text-align: center;
@@ -1411,6 +1411,7 @@ body {
   text-align: center;
   font-family: styled;
   text-transform: uppercase;
+  font-size: 15px;
   color: #363a46;
   text-decoration: none;
 }
