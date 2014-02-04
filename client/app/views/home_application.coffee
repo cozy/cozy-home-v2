@@ -39,6 +39,7 @@ module.exports = class ApplicationRow extends BaseView
 
     afterRender: =>
         @icon = @$ 'img'
+        @spinner = @$ '.spinner'
         @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
 
@@ -53,9 +54,13 @@ module.exports = class ApplicationRow extends BaseView
 
         switch @model.get 'state'
             when 'broken'
+                @spinner.hide()
+                @icon.show()
                 @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
             when 'installed'
+                @spinner.hide()
+                @icon.show()
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
@@ -63,12 +68,14 @@ module.exports = class ApplicationRow extends BaseView
                 @setUseWidget true if @canUseWidget() and useWidget
 
             when 'installing'
-                @icon.attr 'src', "img/installing.gif"
-                @icon.removeClass 'stopped'
+                @icon.hide()
+                @spinner.show()
                 @stateLabel.show().text 'installing'
             when 'stopped'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.addClass 'stopped'
+                @spinner.hide()
+                @icon.show()
                 @stateLabel.hide()
 
     onAppClicked: (event) =>
