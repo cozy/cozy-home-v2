@@ -140,6 +140,7 @@ window.require.register("collections/application", function(exports, require, mo
           {
             icon: "img/agenda-icon.png",
             name: "calendar",
+            displayName: "Calendar",
             slug: "calendar",
             git: "https://github.com/mycozycloud/cozy-agenda.git",
             comment: "official application",
@@ -147,13 +148,15 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/contacts-icon.png",
             name: "contacts",
-            Slug: "contacts",
+            displayName: "Contacts",
+            slug: "contacts",
             git: "https://github.com/mycozycloud/cozy-contacts.git",
             comment: "official application",
             description: "Manage your contacts with custom informations"
           }, {
             icon: "img/files-icon.png",
             name: "files",
+            displayName: "Files",
             slug: "files",
             git: "https://github.com/mycozycloud/cozy-files.git",
             comment: "official application",
@@ -161,6 +164,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/photos-icon.png",
             name: "photos",
+            displayName: "Photos",
             slug: "photos",
             git: "https://github.com/mycozycloud/cozy-photos.git",
             comment: "official application",
@@ -168,6 +172,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/notes-icon.png",
             name: "notes",
+            displayName: "Note",
             slug: "notes",
             git: "https://github.com/mycozycloud/cozy-notes.git",
             comment: "official application",
@@ -175,6 +180,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/todos-icon.png",
             name: "todos",
+            displayName: "Todos",
             slug: "todos",
             git: "https://github.com/mycozycloud/cozy-todos.git",
             comment: "official application",
@@ -182,6 +188,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/webdav.png",
             name: "webdav",
+            displayName: "Webdav",
             slug: "webdav",
             git: "https://github.com/aenario/cozy-webdav.git",
             comment: "official application",
@@ -189,6 +196,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/bookmarks-icon.png",
             name: "bookmarks",
+            displayName: "Bookmarks",
             slug: "bookmarks",
             git: "https://github.com/Piour/cozy-bookmarks.git",
             comment: "community contribution",
@@ -196,6 +204,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/cozy-music.png",
             name: "cozic",
+            displayName: "Cozic",
             slug: "cozic",
             git: "https://github.com/rdubigny/cozy-music.git",
             comment: "community contribution",
@@ -203,13 +212,15 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/feeds-icon.png",
             name: "feeds",
+            displayName: "Feeds",
             slug: "feeds",
             git: "https://github.com/Piour/cozy-feeds.git",
             comment: "community contribution",
             description: "Aggregate your feeds and save your favorite links in bookmarks."
           }, {
             icon: "img/pfm.png",
-            name: "MesComptes",
+            name: "pfm",
+            displayName: "Mes Comptes",
             slug: "pfm",
             git: "https://github.com/seeker89/cozy-pfm.git",
             comment: "community contribution",
@@ -217,6 +228,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/kyou.png",
             name: "kyou",
+            displayName: "KYou",
             slug: "kyou",
             git: "https://github.com/frankrousseau/kyou.git",
             comment: "community contribution",
@@ -225,6 +237,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/konnectors-icon.png",
             name: "konnectors",
+            displayName: "Konnectors",
             slug: "konnectors",
             git: "https://github.com/frankrousseau/konnectors.git",
             comment: "community contribution",
@@ -232,13 +245,15 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/nirc-icon.png",
             name: "nirc",
+            displayName: "nIRC",
             slug: "nirc",
             git: "https://github.com/frankrousseau/cozy-nirc.git",
             comment: "community contribution",
             description: "Access to your favorite IRC channel from your Cozy"
           }, {
             icon: "img/owm.png",
-            name: "OWM",
+            name: "owm",
+            displayName: "OWM",
             slug: "owm",
             git: "https://github.com/Piour/piour-cozy-owm.git",
             comment: "community contribution",
@@ -246,6 +261,7 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/databrowser-icon.png",
             name: "databrowser",
+            displayName: "Toutes mes données",
             slug: "databrowser",
             git: "https://github.com/n-a-n/cozy-databrowser.git",
             comment: "community contribution",
