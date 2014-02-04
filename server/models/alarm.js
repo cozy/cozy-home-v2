@@ -9,6 +9,7 @@ module.exports = Alarm = americano.getModel('Alarm', {
     "default": 'DISPLAY'
   },
   trigg: String,
+  rrule: String,
   description: String,
   related: {
     type: String,

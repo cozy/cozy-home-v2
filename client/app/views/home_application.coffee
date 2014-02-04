@@ -64,7 +64,7 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
-                useWidget = @model.get('homeposition')?.useWidget
+                useWidget = @model.getHomePosition(@getNbCols())?.useWidget
                 @setUseWidget true if @canUseWidget() and useWidget
 
             when 'installing'
@@ -113,10 +113,19 @@ module.exports = class ApplicationRow extends BaseView
 
     canUseWidget: () => @model.has 'widget'
 
+    getNbCols: ->
+        return window.app.mainView.applicationListView.colsNb
+
     onUseWidgetClicked: () =>
-        useWidget = not @model.get('homeposition')?.useWidget
-        @model.saveHomePosition 'useWidget', useWidget,
-            success: => @setUseWidget useWidget
+        nbCols = @getNbCols()
+        homePosition = @model.getHomePosition nbCols
+
+         # set default value if it doesn't exist
+        homePosition.useWidget = false unless homePosition.useWidget?
+
+        homePosition.useWidget = not homePosition.useWidget
+        @model.saveHomePosition nbCols, homePosition,
+            success: => @setUseWidget homePosition.useWidget
 
     ### Functions ###
 

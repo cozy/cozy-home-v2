@@ -204,7 +204,6 @@ body
     margin-top: 0
     padding-top: 0
     position: relative
-    opacity 0.5
     transition all 0.3s
 
     img
@@ -230,8 +229,24 @@ body
         &:empty
             padding 0
 
+    .backcolor
+        position absolute
+        top 15px
+        left 12px
+        border-radius 10px
+        z-index -1
+        display block
+        background-color white
+        width 20px
+        height 20px
+        opacity 0
+        transition all 0.3s
+
     &:hover
-        opacity 1
+        background: rgba(220, 220, 222, 0.3)
+
+        .backcolor
+            opacity 1
 
 
 .active
@@ -243,6 +258,8 @@ body
         margin-top: 0
         cursor: pointer
         box-shadow: inset 2px 2px 2px #000
+        .backcolor
+            display none
 
 
 #notifications-container
@@ -344,16 +361,38 @@ body
 
 #home-edit-close
     text-align center
+    margin-bottom 10px
     a
-        display block
+        display inline-block
         margin auto
-        padding 10px
+        padding 5px
         font-weight normal
+        margin-top 10px
+
+    #colorpicker
+        width 195px
+        height 195px
+        display none
+        position absolute
+        z-index 100000000000
+
+    .colorpicked
+        width 20px
+        height 30px
+        padding 2px
+        color #fff
+        font-size 12px
+        font-weight bold
+        font-family "Helvetica"
+        border 1px solid #000
+        margin 0 15px 0 5px
+        cursor pointer
 
 
 #app-list
     text-align: center
-    margin-bottom: 40px 0
+    margin auto
+    margin-bottom: 40px
 
     .preview-holder
         padding 10px
@@ -386,12 +425,26 @@ body
     background: lightgrey
     position relative
 
+    .mask
+    .bottom-handle
+    .bottom-right-handle
+    .right-hanldle
+        display none
+
     .application-inner
         overflow hidden
         width 100%
+        height 100%
         position absolute
-        top 5%
+        top 0
         bottom 0px
+        display table
+
+        .vertical-aligner
+            display table-cell
+            height 100%
+            width 100%
+            vertical-align middle
 
         &.widget
             height 100%
@@ -431,6 +484,60 @@ body
             font-size: 18px
             font-weight: normal
             color: red
+
+    // resize mode
+    &.ui-resizable:not(.ui-resizable-disabled)
+        cursor move
+        border 5px solid blue //#f7f4f0 - 15%
+
+        .ui-resizable-e
+            width 20px
+            right -10px
+            cursor col-resize
+
+        .ui-resizable-s
+            height 20px
+            bottom -10px
+            cursor row-resize
+
+        .ui-resizable-se
+            width 20px
+            height 20px
+            right -10px
+            bottom -10px
+            cursor nwse-resize
+
+        .mask
+            display block
+            position absolute
+            top 0px
+            left 0px
+            width 100%
+            height 100%
+            z-index 10
+            background grey
+            opacity 0.5
+
+        .bottom-handle
+        .bottom-right-handle
+        .right-handle
+            display block
+            position absolute
+            z-index 10
+            width 10px
+            height 10px
+            background blue
+            border 1px solid #fff
+
+        .bottom-handle
+            bottom -7.5px // border + height/2
+            left 50%
+        .bottom-right-handle
+            bottom -7.5px
+            right -7.5px
+        .right-handle
+            top 50%
+            right -7.5px
 
 
     &:hover
@@ -731,6 +838,13 @@ body
 
 
 // Config application
+.title-app a.subtitle
+    display inline-block
+    font-family styled
+    font-size 15px
+
+#config-application-list
+    margin-top 10px
 
 .config-application
     background: lightgrey
@@ -766,6 +880,50 @@ body
 .config-application:hover
     .buttons
         display: inline-block
+
+// Config device
+
+.title-device
+    display:none
+
+.config-device
+    background: lightgrey
+    padding: 10px
+    margin-bottom: 5px
+    border-radius: 5px
+
+    strong
+        text-transform: lowercase
+
+    .mod
+        margin-left: 5px
+
+    .mod.left
+        margin: 0
+
+    .smaller
+        font-family: main
+
+    .md-header
+        background: transparent
+
+    .md-footer
+        padding: 0
+
+        .btn
+            font-weight: normal
+
+    .buttons
+        display: none
+
+.config-device:hover
+    .buttons
+        display: block
+    .dataLine
+        text-shadow: none
+    .docTypeLine
+        text-shadow: none
+        margin-left: 25px
 
 #config-applications-view
     .change-layout img

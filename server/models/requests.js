@@ -29,5 +29,8 @@ module.exports = {
   },
   application: {
     all: allSlug
+  },
+  user_preference: {
+    all: americano.defaultRequests.all
   }
 };

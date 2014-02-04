@@ -5,7 +5,6 @@ ControllerClient = require("cozy-clients").ControllerClient
 
 client = request.newClient 'http://localhost:9104/'
 
-
 getAuthController = ->
     if process.env.NODE_ENV is 'production'
         try
@@ -77,4 +76,4 @@ resetProxy = ->
             console.info 'Something went wrong while reseting proxy.'
 
 module.exports = ->
-    updateRoutes(0)
+    resetRoutes()

@@ -1,6 +1,7 @@
 BaseView = require 'lib/base_view'
 appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
+DeviceCollection = require 'collections/device'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 HelpView = require 'views/help'
@@ -8,6 +9,7 @@ ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
 socketListener = require('lib/socket_listener')
+UserPreference = require '../models/user_preference'
 
 User = require 'models/user'
 
@@ -20,13 +22,19 @@ module.exports = class HomeView extends BaseView
 
     constructor: ->
         @apps = new AppCollection()
+        @listenTo @apps, 'reset', @testapps
+        @devices = new DeviceCollection()
+        @listenTo @devices, 'reset', @test
         socketListener.watch @apps
+        socketListener.watch @devices
+
+        @userPreference = new UserPreference()
         super
 
     afterRender: =>
         @navbar = new NavbarView @apps
-        @applicationListView = new ApplicationsListView @apps
-        @configApplications = new ConfigApplicationsView @apps
+        @applicationListView = new ApplicationsListView @apps, @userPreference
+        @configApplications = new ConfigApplicationsView @apps, @devices
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
@@ -40,7 +48,15 @@ module.exports = class HomeView extends BaseView
 
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
+        @devices.fetch reset: true
+        @userPreference.fetch()
         @resetLayoutSizes()
+
+    test: =>
+        console.log('got devices', @devices.length)
+
+    testapps: =>
+        console.log('got apps', @apps.length)
 
 
     ### Functions ###

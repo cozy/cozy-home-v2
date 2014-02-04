@@ -38,6 +38,21 @@ module.exports = Adapter = (function() {
     });
   };
 
+  Adapter.prototype.updateUser = function(user, data, callback) {
+    var name, token,
+      _this = this;
+    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
+      name = process.env.NAME;
+      token = process.env.TOKEN;
+      client.setBasicAuth(name, token);
+    }
+    return client.put("user/merge/" + user.id, {
+      password: data.password
+    }, function(err, res, body) {
+      return callback(err);
+    });
+  };
+
   return Adapter;
 
 })();

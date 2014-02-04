@@ -1,6 +1,7 @@
 request = require 'lib/request'
 BaseView = require 'lib/base_view'
 ConfigApplicationList = require './config_application_list'
+ConfigDeviceList = require './config_device_list'
 
 module.exports = class exports.ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
@@ -9,7 +10,8 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     subscriptions:
         'app-state-changed': 'onAppStateChanged'
 
-    constructor: (@apps) ->
+    constructor: (@apps, @devices) ->
+        @listenTo @devices, 'reset', @displayDevices
         super()
 
     afterRender: ->
@@ -17,7 +19,14 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @diskSpace = @$ '.disk-space'
         @fetch()
         @applicationList = new ConfigApplicationList @apps
-        @$el.find('.w66').append @applicationList.$el
+        @deviceList = new ConfigDeviceList @devices
+        @$el.find('.title-app').append @applicationList.$el
+
+    displayDevices: =>
+        if not(@devices.length is 0)
+            @$el.find('.title-device').show()
+            @$el.find('.title-device').append @deviceList.$el
+
 
     fetch: =>
         @$('.amount').html "--"

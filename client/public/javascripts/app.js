@@ -298,6 +298,32 @@ window.require.register("collections/application", function(exports, require, mo
   })(BaseCollection);
   
 });
+window.require.register("collections/device", function(exports, require, module) {
+  var BaseCollection, Device, DeviceCollection,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseCollection = require('lib/base_collection');
+
+  Device = require('models/device');
+
+  module.exports = DeviceCollection = (function(_super) {
+
+    __extends(DeviceCollection, _super);
+
+    function DeviceCollection() {
+      return DeviceCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    DeviceCollection.prototype.model = Device;
+
+    DeviceCollection.prototype.url = 'api/devices/';
+
+    return DeviceCollection;
+
+  })(BaseCollection);
+  
+});
 window.require.register("collections/notifications", function(exports, require, module) {
   var BaseCollection, Notification, NotificationCollection,
     __hasProp = {}.hasOwnProperty,
@@ -700,6 +726,127 @@ window.require.register("lib/base_view", function(exports, require, module) {
   })(Backbone.View);
   
 });
+window.require.register("lib/color_picker_handler", function(exports, require, module) {
+  var ColorPickerHandler,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  module.exports = ColorPickerHandler = (function(_super) {
+
+    __extends(ColorPickerHandler, _super);
+
+    ColorPickerHandler.prototype.currentSelectedField = null;
+
+    function ColorPickerHandler(options) {
+      this.targetFields = options.targetFields;
+      this.colorPicker = options.colorPicker;
+      ColorPickerHandler.__super__.constructor.call(this);
+    }
+
+    ColorPickerHandler.prototype.initialize = function() {
+      var _this = this;
+      this.targetFields.focus(function() {
+        return this.blur();
+      });
+      this.defaultColors = {
+        background: '#fcf9f5',
+        button: '#f7f4f0',
+        buttonHover: '#f1e2cf',
+        invertedColor: '#000'
+      };
+      this.reset();
+      this.targetFields.click(function(event) {
+        var currentColor, farb, hexColor, offset, rgb;
+        event.stopPropagation();
+        if (_this.currentSelectedField === event.currentTarget) {
+          _this.colorPicker.hide();
+          $('.application').removeClass('ui-resizable-disabled');
+          return _this.currentSelectedField = null;
+        } else {
+          farb = $.farbtastic(_this.colorPicker);
+          currentColor = $(event.currentTarget).css('background-color');
+          rgb = currentColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+          hexColor = farb.pack([rgb[1] / 255, rgb[2] / 255, rgb[3] / 255]);
+          _this.colorPicker.show();
+          $('.application').addClass('ui-resizable-disabled');
+          _this.currentSelectedField = event.target;
+          offset = $(event.target).offset();
+          offset.top = 5;
+          offset.left += 25;
+          _this.colorPicker.offset(offset);
+          return farb.setColor(hexColor);
+        }
+      });
+      this.colorPicker.farbtastic(function(color) {
+        var inputName;
+        inputName = $(_this.currentSelectedField).attr('name');
+        if (inputName === "background-color") {
+          _this.currentColors.background = color;
+          _this.currentColors.invertedColor = _this.getInvertedColor(color);
+        } else if (inputName === "button-color") {
+          _this.currentColors.button = color;
+        } else if (inputName === "button-hover-color") {
+          _this.currentColors.buttonHover = color;
+        } else {
+          console.log("wrong field");
+        }
+        return _this.injectCss();
+      });
+      return this.enable();
+    };
+
+    ColorPickerHandler.prototype.disable = function() {
+      return $(window).off('click');
+    };
+
+    ColorPickerHandler.prototype.enable = function() {
+      var _this = this;
+      return $(window).click(function(event) {
+        if (!(event.target === $('.h-marker.marker')[0] || event.target === $('.wheel')[0])) {
+          _this.currentSelectedField = null;
+          $('.application').removeClass('ui-resizable-disabled');
+          return _this.colorPicker.hide();
+        }
+      });
+    };
+
+    ColorPickerHandler.prototype.getInvertedColor = function(color) {
+      var a, colors, farb, invertedColor;
+      farb = $.farbtastic(this.colorPicker);
+      colors = farb.unpack(color);
+      a = 1 - (0.299 * colors[0] + 0.587 * colors[1] + 0.114 * colors[2]);
+      invertedColor = a < 0.5 ? '#000' : '#fff';
+      return invertedColor;
+    };
+
+    ColorPickerHandler.prototype.reset = function() {
+      this.currentColors = _.clone(this.defaultColors);
+      return this.injectCss();
+    };
+
+    ColorPickerHandler.prototype.setCurrentColors = function(userPreference) {
+      var backgroundColor;
+      backgroundColor = userPreference.get('backgroundColor') || this.defaultColors.background;
+      return this.currentColors = {
+        background: backgroundColor,
+        button: userPreference.get('buttonColor') || this.defaultColors.background,
+        buttonHover: userPreference.get('buttonHoverColor') || this.defaultColors.background,
+        invertedColor: this.getInvertedColor(backgroundColor)
+      };
+    };
+
+    ColorPickerHandler.prototype.injectCss = function() {
+      var css;
+      css = "body, input[name=\"background-color\"] {\n    background-color: " + this.currentColors.background + ";\n}\n\n.application, input[name=\"button-color\"] {\n    background-color: " + this.currentColors.button + "\n}\n.application:hover,\n#home-menu .menu-btn:hover,\ninput[name=\"button-hover-color\"] {\n    background-color: " + this.currentColors.buttonHover + "\n}\ninput[name=\"background-color\"],\ninput[name=\"button-color\"],\ninput[name=\"button-hover-color\"] {\n    border: 1px solid " + this.currentColors.invertedColor + " !important\n}";
+      $('head style#cozy-custom-style').remove();
+      return $('head').append($("<style id='cozy-custom-style'>" + css + "</style>"));
+    };
+
+    return ColorPickerHandler;
+
+  })(Backbone.View);
+  
+});
 window.require.register("lib/request", function(exports, require, module) {
   
   exports.request = function(type, url, data, callback) {
@@ -956,11 +1103,11 @@ window.require.register("locales/en", function(exports, require, module) {
     "welcome to app store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
     "installed everything": "You have already installed everything !",
     "already similarly named app": "There is already an app with similar name.",
-    "your cozy home": "your cozy home",
-    "manage your apps": "manage your app",
-    "choose your apps": "choose your apps",
-    "configure your cozy": "configure your cozy",
-    "ask for assistance": "ask for assistance",
+    "customize your cozy": "Customize your Cozy",
+    "manage your apps": "Manage your app",
+    "choose your apps": "Choose your apps",
+    "configure your cozy": "Configure your cozy",
+    "ask for assistance": "Ask for assistance",
     "logout": "logout",
     "welcome to your cozy": "Welcome to your Cozy!",
     "you have no apps": "You have no application installed. You should",
@@ -973,6 +1120,10 @@ window.require.register("locales/en", function(exports, require, module) {
     "hard drive gigabytes": "&nbsp;GB (Hard Drive)",
     "memory megabytes": "&nbsp;MB (RAM)",
     "manage your applications": "Manage your applications",
+    "manage your devices": "Manage your devices",
+    "synchronised data": "Synchronised data",
+    "file": "File",
+    "folder": "Folder",
     "no application installed": "There is no application installed.",
     "your parameters": " Your parameters",
     "alerts and password recovery email": "I need your email to send you alerts or for password recovering",
@@ -1023,7 +1174,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "The first place to find help is:": "The first place to find help is:",
     "removed": "removed",
     "required permissions": "Required Permissions",
-    "finish layout edition": "Finish Layout Edition",
+    "finish layout edition": "Save",
+    "reset customization": "Reset",
     "use widget": "Use widget",
     "use icon": "Use icon",
     "change layout": "Change the layout",
@@ -1085,11 +1237,11 @@ window.require.register("locales/fr", function(exports, require, module) {
     "welcome to app store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed everything": "Vous avez déjà tout installé !",
     "already similarly named app": "Il y a déjà une application installée avec un nom similaire.",
-    "your cozy home": "votre accueil Cozy",
-    "manage your apps": "gérer vos apps",
-    "choose your apps": "choisissez vos apps",
-    "configure your cozy": "configurer votre cozy",
-    "ask for assistance": "demandez de l'aide",
+    "customize your cozy": "Personnalisez votre Cozy",
+    "manage your apps": "Gérez vos apps",
+    "choose your apps": "Choisissez vos apps",
+    "configure your cozy": "Configurez votre cozy",
+    "ask for assistance": "Demandez de l'aide",
     "logout": "déconnexion",
     "welcome to your cozy": "Bienvenue sur votre Cozy!",
     "you have no apps": "Vous n'avez pas d'applications installées vous devriez",
@@ -1101,6 +1253,10 @@ window.require.register("locales/fr", function(exports, require, module) {
     "hard drive gigabytes": "&nbsp;Go (Disque Dur)",
     "memory megabytes": "&nbsp;Mo (RAM)",
     "manage your applications": "Gérez vos applications",
+    "manage your devices": "Gérez vos devices",
+    "file": "Fichier",
+    "fodler": "Dossier",
+    "synchronised data": "Données synchronisées",
     "no application installed": "Il n'y a pas d'applications installées.",
     "save": "sauver",
     "your parameters": " Vos paramètres",
@@ -1152,7 +1308,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
     "removed": "supprimée",
     "required permissions": "Permissions requises",
-    "finish layout edition": "Valider la nouvelle disposition",
+    "finish layout edition": "Enregistrer",
+    "reset customization": "Remise à zéro",
     "use widget": "Mode widget",
     "use icon": "Mode icone",
     "change layout": "Modifier la disposition",
@@ -1315,6 +1472,28 @@ window.require.register("models/application", function(exports, require, module)
   })(Backbone.Model);
   
 });
+window.require.register("models/device", function(exports, require, module) {
+  var BaseModel, Device,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require('lib/base_model').BaseModel;
+
+  module.exports = Device = (function(_super) {
+
+    __extends(Device, _super);
+
+    function Device() {
+      return Device.__super__.constructor.apply(this, arguments);
+    }
+
+    Device.prototype.urlRoot = 'api/devices/';
+
+    return Device;
+
+  })(Backbone.Model);
+  
+});
 window.require.register("models/notification", function(exports, require, module) {
   var BaseModel, Notification,
     __hasProp = {}.hasOwnProperty,
@@ -1365,6 +1544,28 @@ window.require.register("models/user", function(exports, require, module) {
   })(BaseModel);
   
 });
+window.require.register("models/user_preference", function(exports, require, module) {
+  var BaseModel, UserPreference,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require('lib/base_model').BaseModel;
+
+  module.exports = UserPreference = (function(_super) {
+
+    __extends(UserPreference, _super);
+
+    function UserPreference() {
+      return UserPreference.__super__.constructor.apply(this, arguments);
+    }
+
+    UserPreference.prototype.urlRoot = 'api/preference/';
+
+    return UserPreference;
+
+  })(Backbone.Model);
+  
+});
 window.require.register("routers/main_router", function(exports, require, module) {
   var MainRouter,
     __hasProp = {}.hasOwnProperty,
@@ -1380,7 +1581,7 @@ window.require.register("routers/main_router", function(exports, require, module
 
     MainRouter.prototype.routes = {
       "home": "applicationList",
-      "home/edit": "applicationListEdit",
+      "customize": "applicationListEdit",
       "applications": "market",
       "config-applications": "configApplications",
       "account": "account",
@@ -1410,18 +1611,25 @@ window.require.register("routers/main_router", function(exports, require, module
     };
 
     MainRouter.prototype.selectIcon = function(index) {
-      $('.menu-btn').removeClass('active');
-      return $($('.menu-btn').get(index)).addClass('active');
+      if (index !== -1) {
+        $('.menu-btn.active').removeClass('active');
+        $($('.menu-btn').get(index)).addClass('active');
+      } else {
+        $('.menu-btn.active').removeClass('active');
+      }
+      if (index !== 2) {
+        return app.mainView.applicationListView.setMode('view');
+      }
     };
 
     MainRouter.prototype.applicationList = function() {
       app.mainView.displayApplicationsList();
-      return this.selectIcon(0);
+      return this.selectIcon(-1);
     };
 
     MainRouter.prototype.applicationListEdit = function() {
       app.mainView.displayApplicationsListEdit();
-      return this.selectIcon(0);
+      return this.selectIcon(2);
     };
 
     MainRouter.prototype.configApplications = function() {
@@ -1436,7 +1644,7 @@ window.require.register("routers/main_router", function(exports, require, module
 
     MainRouter.prototype.market = function() {
       app.mainView.displayMarket();
-      return this.selectIcon(2);
+      return this.selectIcon(0);
     };
 
     MainRouter.prototype.account = function() {
@@ -1595,13 +1803,40 @@ window.require.register("templates/config_applications", function(exports, requi
   buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
   var __val__ = t('memory megabytes')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></div></div><div class="change-layout mt2"><div class="line"><img src="img/changelayout.png"/></div><div class="line"><a href="#home/edit">');
-  var __val__ = t('change layout')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></div></div></div></div></div><div class="mod w66 left"><h4 class="mb3">');
+  buf.push('</span></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
   var __val__ = t('manage your applications')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</h4></div></div></div>');
+  buf.push('</div></div><div class="mod w66 left"><div class="title-device h4 mb3">');
+  var __val__ = t('manage your devices')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_device", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
+  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span><span class="state-label">');
+  var __val__ = t('synchronised')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div><div class="buttons"><div class="mod center"><span class="doctype-label">');
+  var __val__ = t('')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span></div></div></div>');
+  }
+  return buf.join("");
+  };
+});
+window.require.register("templates/config_device_list", function(exports, require, module) {
+  module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+  attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+  var buf = [];
+  with (locals || {}) {
+  var interp;
   }
   return buf.join("");
   };
@@ -1654,8 +1889,11 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w600"><a href="#home" class="btn btn-large">');
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w800"><label>Background color</label><input name="background-color" class="colorpicked"/><label>Tile color</label><input name="button-color" class="colorpicked"/><label>Tile color on hover</label><input name="button-hover-color" class="colorpicked"/><div id="colorpicker"></div><a id="save-custom" href="#home" class="btn">');
   var __val__ = t('finish layout edition')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a>&nbsp;<a id="reset-custom" class="btn">');
+  var __val__ = t('reset customization')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
   var __val__ = t('welcome to your cozy')
@@ -1716,10 +1954,10 @@ window.require.register("templates/home_application", function(exports, require,
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<button class="btn use-widget">');
+  buf.push('<div class="mask"></div><div class="bottom-handle"></div><div class="bottom-right-handle"></div><div class="right-handle"></div><button class="btn use-widget">');
   var __val__ = t('use widget')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button><div class="application-inner"><img src="" class="icon"/><div class="spinner"><div class="cube1"></div><div class="cube2"></div></div><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div>');
+  buf.push('</button><div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
   }
   return buf.join("");
   };
@@ -1743,16 +1981,16 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>');
-  var __val__ = t('your cozy home')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
-  var __val__ = t('manage your apps')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#applications"><span>');
   var __val__ = t('choose your apps')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+  buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
+  var __val__ = t('manage your apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#customize"><span>');
+  var __val__ = t('customize your cozy')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
   var __val__ = t('configure your cozy')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
@@ -1881,7 +2119,7 @@ window.require.register("templates/notifications", function(exports, require, mo
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<a id="notifications-toggle"><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
+  buf.push('<a id="notifications-toggle"><span class="backcolor"></span><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
   var __val__ = t('you have no notifications')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</li><li id="dismiss-all" class="btn">');
@@ -2455,7 +2693,7 @@ window.require.register("views/config_application_list", function(exports, requi
   
 });
 window.require.register("views/config_applications", function(exports, require, module) {
-  var BaseView, ConfigApplicationList, request,
+  var BaseView, ConfigApplicationList, ConfigDeviceList, request,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2465,6 +2703,8 @@ window.require.register("views/config_applications", function(exports, require, 
   BaseView = require('lib/base_view');
 
   ConfigApplicationList = require('./config_application_list');
+
+  ConfigDeviceList = require('./config_device_list');
 
   module.exports = exports.ConfigApplicationsView = (function(_super) {
 
@@ -2478,10 +2718,14 @@ window.require.register("views/config_applications", function(exports, require, 
       'app-state-changed': 'onAppStateChanged'
     };
 
-    function ConfigApplicationsView(apps) {
+    function ConfigApplicationsView(apps, devices) {
       this.apps = apps;
+      this.devices = devices;
       this.fetch = __bind(this.fetch, this);
 
+      this.displayDevices = __bind(this.displayDevices, this);
+
+      this.listenTo(this.devices, 'reset', this.displayDevices);
       ConfigApplicationsView.__super__.constructor.call(this);
     }
 
@@ -2490,7 +2734,15 @@ window.require.register("views/config_applications", function(exports, require, 
       this.diskSpace = this.$('.disk-space');
       this.fetch();
       this.applicationList = new ConfigApplicationList(this.apps);
-      return this.$el.find('.w66').append(this.applicationList.$el);
+      this.deviceList = new ConfigDeviceList(this.devices);
+      return this.$el.find('.title-app').append(this.applicationList.$el);
+    };
+
+    ConfigApplicationsView.prototype.displayDevices = function() {
+      if (!(this.devices.length === 0)) {
+        this.$el.find('.title-device').show();
+        return this.$el.find('.title-device').append(this.deviceList.$el);
+      }
     };
 
     ConfigApplicationsView.prototype.fetch = function() {
@@ -2524,6 +2776,108 @@ window.require.register("views/config_applications", function(exports, require, 
     return ConfigApplicationsView;
 
   })(BaseView);
+  
+});
+window.require.register("views/config_device", function(exports, require, module) {
+  var BaseView, ColorButton, DeviceRow,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseView = require('lib/base_view');
+
+  ColorButton = require('widgets/install_button');
+
+  module.exports = DeviceRow = (function(_super) {
+
+    __extends(DeviceRow, _super);
+
+    DeviceRow.prototype.className = "line config-device clearfix";
+
+    DeviceRow.prototype.tagName = "div";
+
+    DeviceRow.prototype.template = require('templates/config_device');
+
+    DeviceRow.prototype.getRenderData = function() {
+      return {
+        device: this.model.attributes
+      };
+    };
+
+    /* Constructor
+    */
+
+
+    function DeviceRow(options) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.id = "device-btn-" + options.model.id;
+      DeviceRow.__super__.constructor.apply(this, arguments);
+    }
+
+    DeviceRow.prototype.afterRender = function() {
+      var deviceDiv, docType, _i, _len, _ref;
+      this.removeButton = new ColorButton(this.$(".remove-device"));
+      this.docType = this.$('.doctype-label');
+      this.docType.hide();
+      this.docType.html('');
+      if (this.model.get("configuration").length === 0) {
+        deviceDiv = $("<div class='docTypeLine'> <strong>" + (t('no specific data synchronised')) + " </strong> </div>");
+        this.docType.append(deviceDiv);
+      } else {
+        deviceDiv = $("<div class='dataLine'> <strong> " + (t('synchronised data')) + "    : </strong> </div>");
+        this.docType.append(deviceDiv);
+        _ref = Object.keys(this.model.get("configuration"));
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          docType = _ref[_i];
+          deviceDiv = $("<div class='docTypeLine'> <strong> " + docType + ": </strong> " + (this.model.get('configuration')[docType]) + " </div>");
+          this.docType.append(deviceDiv);
+        }
+      }
+      return this.docType.slideDown();
+    };
+
+    return DeviceRow;
+
+  })(BaseView);
+  
+});
+window.require.register("views/config_device_list", function(exports, require, module) {
+  var DeviceRow, DevicesListView, ViewCollection,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ViewCollection = require('lib/view_collection');
+
+  DeviceRow = require('views/config_device');
+
+  module.exports = DevicesListView = (function(_super) {
+
+    __extends(DevicesListView, _super);
+
+    DevicesListView.prototype.id = 'config-device-list';
+
+    DevicesListView.prototype.tagName = 'div';
+
+    DevicesListView.prototype.template = require('templates/config_device_list');
+
+    DevicesListView.prototype.itemView = require('views/config_device');
+
+    function DevicesListView(devices) {
+      this.afterRender = __bind(this.afterRender, this);
+      this.devices = devices;
+      DevicesListView.__super__.constructor.call(this, {
+        collection: devices
+      });
+    }
+
+    DevicesListView.prototype.afterRender = function() {
+      return this.deviceList = this.$("#device-list");
+    };
+
+    return DevicesListView;
+
+  })(ViewCollection);
   
 });
 window.require.register("views/help", function(exports, require, module) {
@@ -2597,11 +2951,14 @@ window.require.register("views/home", function(exports, require, module) {
           if (_this.state === 'edit') {
             return _this.gridster.enable();
           }
+        },
+        'click #reset-custom': function() {
+          return _this.colorpicker.reset();
         }
       };
     };
 
-    function ApplicationsListView(apps) {
+    function ApplicationsListView(apps, userPreference) {
       this.saveChanges = __bind(this.saveChanges, this);
 
       this.doResize = __bind(this.doResize, this);
@@ -2614,6 +2971,7 @@ window.require.register("views/home", function(exports, require, module) {
 
       this.initialize = __bind(this.initialize, this);
       this.apps = apps;
+      this.userPreference = userPreference;
       this.state = 'view';
       this.isLoading = true;
       ApplicationsListView.__super__.constructor.call(this, {
@@ -2629,19 +2987,40 @@ window.require.register("views/home", function(exports, require, module) {
       this.listenTo(this.collection, 'reset', function() {
         return _this.isLoading = false;
       });
+      this.listenTo(this.userPreference, 'change', function(userPreference) {
+        _this.colorpicker.setCurrentColors(userPreference);
+        return _this.colorpicker.injectCss();
+      });
       ApplicationsListView.__super__.initialize.apply(this, arguments);
       return $(window).on('resize', _.debounce(this.onWindowResize, 300));
     };
 
     ApplicationsListView.prototype.afterRender = function() {
-      var cid, view, _ref, _results,
+      var ColorPickerHandler, cid, view, _ref, _results,
         _this = this;
       this.appList = this.$("#app-list");
       this.closeEditBtn = this.$('#home-edit-close');
+      ColorPickerHandler = require('../lib/color_picker_handler');
+      this.colorpicker = new ColorPickerHandler({
+        targetFields: this.$('.colorpicked'),
+        colorPicker: this.$('#colorpicker')
+      });
       this.$("#no-app-message").hide();
       $(".menu-btn a").click(function(event) {
         $(".menu-btn").removeClass('active');
         return $(event.target).closest('.menu-btn').addClass('active');
+      });
+      this.closeEditBtn.find('a#save-custom.btn').click(function(event) {
+        var bgColor, btnColor, btnHoverColor;
+        bgColor = _this.colorpicker.currentColors.background;
+        btnColor = _this.colorpicker.currentColors.button;
+        btnHoverColor = _this.colorpicker.currentColors.buttonHover;
+        _this.userPreference.set({
+          backgroundColor: bgColor,
+          buttonColor: btnColor,
+          buttonHoverColor: btnHoverColor
+        });
+        return _this.userPreference.save();
       });
       this.initGridster();
       ApplicationsListView.__super__.afterRender.apply(this, arguments);
@@ -2665,15 +3044,15 @@ window.require.register("views/home", function(exports, require, module) {
     };
 
     ApplicationsListView.prototype.computeGridDims = function() {
-      var colsNb, grid_margin, grid_size, grid_step, smallest_step, width;
+      var colsNb, grid_margin, grid_size, grid_step, max_grid_step, smallest_step, width;
       width = $(window).width();
       if (width > 640) {
         width = width - 100;
       } else {
         width = width - 65;
       }
-      grid_margin = 12;
-      smallest_step = 130 + 2 * grid_margin;
+      grid_margin = 8;
+      smallest_step = 150 + 2 * grid_margin;
       colsNb = Math.floor(width / smallest_step);
       if (colsNb < 3) {
         colsNb = 3;
@@ -2683,6 +3062,10 @@ window.require.register("views/home", function(exports, require, module) {
       }
       colsNb = colsNb - colsNb % 3;
       grid_step = width / colsNb;
+      max_grid_step = 150;
+      if (grid_step > max_grid_step) {
+        grid_step = max_grid_step;
+      }
       grid_size = grid_step - 2 * grid_margin;
       return {
         colsNb: colsNb,
@@ -2699,7 +3082,8 @@ window.require.register("views/home", function(exports, require, module) {
         if ((_ref = this.gridster) != null) {
           _ref.enable();
         }
-        this.closeEditBtn.show();
+        this.closeEditBtn.slideDown();
+        this.colorpicker.enable();
         _ref1 = this.views;
         _results = [];
         for (cid in _ref1) {
@@ -2708,6 +3092,7 @@ window.require.register("views/home", function(exports, require, module) {
         }
         return _results;
       } else {
+        this.colorpicker.disable();
         if ((_ref2 = this.gridster) != null) {
           _ref2.disable();
         }
@@ -2751,6 +3136,7 @@ window.require.register("views/home", function(exports, require, module) {
       });
       this.gridster = this.appList.data('gridster');
       this.gridster.set_dom_grid_height();
+      this.appList.width(this.colsNb * this.grid_step);
       return this.gridster.generate_stylesheet({
         cols: 16,
         rows: 16
@@ -2863,6 +3249,7 @@ window.require.register("views/home", function(exports, require, module) {
         if (_.isEqual(oldpos, newpos)) {
           continue;
         }
+        newpos.useWidget = (oldpos != null ? oldpos.useWidget : void 0) || false;
         _results.push(view.model.saveHomePosition(this.colsNb, newpos));
       }
       return _results;
@@ -2979,7 +3366,7 @@ window.require.register("views/home_application", function(exports, require, mod
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
           this.stateLabel.hide();
-          useWidget = (_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0;
+          useWidget = (_ref = this.model.getHomePosition(this.getNbCols())) != null ? _ref.useWidget : void 0;
           if (this.canUseWidget() && useWidget) {
             return this.setUseWidget(true);
           }
@@ -3054,13 +3441,22 @@ window.require.register("views/home_application", function(exports, require, mod
       return this.model.has('widget');
     };
 
+    ApplicationRow.prototype.getNbCols = function() {
+      return window.app.mainView.applicationListView.colsNb;
+    };
+
     ApplicationRow.prototype.onUseWidgetClicked = function() {
-      var useWidget, _ref,
+      var homePosition, nbCols,
         _this = this;
-      useWidget = !((_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0);
-      return this.model.saveHomePosition('useWidget', useWidget, {
+      nbCols = this.getNbCols();
+      homePosition = this.model.getHomePosition(nbCols);
+      if (homePosition.useWidget == null) {
+        homePosition.useWidget = false;
+      }
+      homePosition.useWidget = !homePosition.useWidget;
+      return this.model.saveHomePosition(nbCols, homePosition, {
         success: function() {
-          return _this.setUseWidget(useWidget);
+          return _this.setUseWidget(homePosition.useWidget);
         }
       });
     };
@@ -3083,7 +3479,7 @@ window.require.register("views/home_application", function(exports, require, mod
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, User, UserPreference, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3093,6 +3489,8 @@ window.require.register("views/main", function(exports, require, module) {
   appIframeTemplate = require('templates/application_iframe');
 
   AppCollection = require('collections/application');
+
+  DeviceCollection = require('collections/device');
 
   NavbarView = require('views/navbar');
 
@@ -3107,6 +3505,8 @@ window.require.register("views/main", function(exports, require, module) {
   ApplicationsListView = require('views/home');
 
   socketListener = require('lib/socket_listener');
+
+  UserPreference = require('../models/user_preference');
 
   User = require('models/user');
 
@@ -3139,16 +3539,25 @@ window.require.register("views/main", function(exports, require, module) {
 
       this.logout = __bind(this.logout, this);
 
+      this.testapps = __bind(this.testapps, this);
+
+      this.test = __bind(this.test, this);
+
       this.afterRender = __bind(this.afterRender, this);
       this.apps = new AppCollection();
+      this.listenTo(this.apps, 'reset', this.testapps);
+      this.devices = new DeviceCollection();
+      this.listenTo(this.devices, 'reset', this.test);
       socketListener.watch(this.apps);
+      socketListener.watch(this.devices);
+      this.userPreference = new UserPreference();
       HomeView.__super__.constructor.apply(this, arguments);
     }
 
     HomeView.prototype.afterRender = function() {
       this.navbar = new NavbarView(this.apps);
-      this.applicationListView = new ApplicationsListView(this.apps);
-      this.configApplications = new ConfigApplicationsView(this.apps);
+      this.applicationListView = new ApplicationsListView(this.apps, this.userPreference);
+      this.configApplications = new ConfigApplicationsView(this.apps, this.devices);
       this.accountView = new AccountView();
       this.helpView = new HelpView();
       this.marketView = new MarketView(this.apps);
@@ -3161,7 +3570,19 @@ window.require.register("views/main", function(exports, require, module) {
       this.apps.fetch({
         reset: true
       });
+      this.devices.fetch({
+        reset: true
+      });
+      this.userPreference.fetch();
       return this.resetLayoutSizes();
+    };
+
+    HomeView.prototype.test = function() {
+      return console.log('got devices', this.devices.length);
+    };
+
+    HomeView.prototype.testapps = function() {
+      return console.log('got apps', this.apps.length);
     };
 
     /* Functions
@@ -3359,7 +3780,7 @@ window.require.register("views/market", function(exports, require, module) {
 
   slugify = require('helpers').slugify;
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
 
   module.exports = MarketView = (function(_super) {
 
@@ -3551,9 +3972,10 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.parseGitUrl = function(url) {
-      var branch, domain, error, git, name, out, parsed, parts, path, proto, slug;
+      var branch, domain, error, git, name, out, parsed, parts, path, port, proto, slug;
       url = url.replace('git@github.com:', 'https://github.com/');
       url = url.replace('git://', 'https://');
+      console.debug(REPOREGEX);
       parsed = REPOREGEX.exec(url);
       if (parsed == null) {
         error = {
@@ -3562,14 +3984,18 @@ window.require.register("views/market", function(exports, require, module) {
         };
         return error;
       }
-      git = parsed[0], proto = parsed[1], domain = parsed[2], path = parsed[3], branch = parsed[4];
+      console.log(parsed);
+      git = parsed[0], proto = parsed[1], domain = parsed[2], port = parsed[3], path = parsed[4], branch = parsed[5];
       path = path.replace('.git', '');
       parts = path.split("/");
       name = parts[parts.length - 1];
       name = name.replace(/-|_/g, " ");
       name = name.replace('cozy ', '');
       slug = slugify(name);
-      git = proto + domain + path + '.git';
+      if (port == null) {
+        port = "";
+      }
+      git = proto + domain + port + path + '.git';
       if (branch != null) {
         branch = branch.substring(1);
       }

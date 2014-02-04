@@ -16,3 +16,5 @@ module.exports =
         byApps: byApps
     application:
         all: allSlug
+    user_preference:
+        all: americano.defaultRequests.all

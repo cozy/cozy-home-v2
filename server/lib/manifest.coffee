@@ -1,25 +1,32 @@
 request = require 'request-json'
 
-# Class to facilitate application' permissions management
+# Class to facilitate applications' permissions management
 class exports.Manifest
 
     download: (app, callback) ->
-        @basePath = (app.git).substring(19, (app.git.length - 4))
 
-        client = request.newClient "https://raw.github.com/"
-        if app.branch?
-            path = @basePath + '/' + app.branch
-        else
-            path = @basePath + '/master'
+        # we can be smarter here
+        providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
+        providerName = providerName[0]
 
-        client.get path + '/package.json', (err, res, body) =>
-            callback err if err
-            @config = body
-            clientStars = request.newClient "https://api.github.com/"
-            path = "repos/#{@basePath}/stargazers"
-            clientStars.get path, (err, res, body) =>
-                @config.stars = body.length
-                callback null
+        # This could be moved to a separate factory class...
+        if providerName is "gitlab.cozycloud.cc"
+            Provider = require('./git_providers').CozyGitlabProvider
+        else # fallback to github
+            Provider = require('./git_providers').GithubProvider
+
+        provider = new Provider app
+        provider.getManifest (err, data) =>
+            if err?
+                callback err
+            else
+                @config = data
+                provider.getStars (err, stars) =>
+                    if err?
+                        callback err
+                    else
+                        @config.stars = stars
+                        callback null
 
     getPermissions: =>
         if @config["cozy-permissions"]?
@@ -41,7 +48,6 @@ class exports.Manifest
 
     getMetaData: =>
         metaData = {}
-        path = @basePath + '/master/package.json'
 
         if @config.description?
             metaData.description = @config.description
