@@ -1752,7 +1752,7 @@ window.require.register("templates/config_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
   if ( app.state === 'installed')
   {
   buf.push('<span class="state-label">');
@@ -2041,7 +2041,7 @@ window.require.register("templates/market_application", function(exports, requir
   }
   buf.push('</div><div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
