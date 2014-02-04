@@ -4552,7 +4552,7 @@ window.require.register("views/popover_description", function(exports, require, 
       this.header.html(this.model.get('name'));
       this.body.addClass('loading');
       this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
-      this.body.find('.spinner-container').spin('medium');
+      this.body.find('.spinner-container').spin('small');
       this.model.getMetaData({
         success: function() {
           _this.body.removeClass('loading');
