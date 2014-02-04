@@ -22,7 +22,7 @@ task 'tests', 'run tests through mocha', ->
 runTests = (fileList) ->
     console.log "Run tests with Mocha for #{fileList.join(" ")}"
     command = "mocha #{fileList.join(" ")} --reporter spec "
-    command += "--compilers coffee:coffee-script --colors"
+    command += "--compilers coffee:coffee-script/register --colors"
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err
@@ -38,7 +38,7 @@ task 'tests:file', 'run test through mocha for a given file', (options) ->
     file = options.file
     console.log "Run tests with Mocha for #{file}"
     command = "mocha #{file} --reporter spec "
-    command += "--compilers coffee:coffee-script --colors"
+    command += "--compilers coffee:coffee-script/register --colors"
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err
