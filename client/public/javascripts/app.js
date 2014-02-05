@@ -4506,8 +4506,8 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.dismissAll = function() {
       var _this = this;
-      this.dismissButton.spin('small');
       this.dismissButton.css('color', 'transparent');
+      this.dismissButton.spin('small');
       this.collection.removeAll({
         success: function() {
           _this.dismissButton.spin();
