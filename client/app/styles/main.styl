@@ -1206,9 +1206,16 @@ body
 
 @media (max-width: 500px)
 
+    .home-icon
+    .customize-icon
+    .help-icon
+
+        display: none
 
     .application .application-inner
         img
+            width: 70%
+            height: 50%
             margin-bottom: -5px
 
         .app-title
@@ -1242,8 +1249,10 @@ body
                 width: 50px
 
     #notifications-container
+        display: none
+
         #notifications
-            left: -50px
+            left: -180px
             width: 310px
 
             .notification
@@ -1255,3 +1264,12 @@ body
             .mod.left
                 width: 100%
                 margin-bottom: 10px
+
+    #content
+        #home-menu
+            .menu-btn:hover
+                background: none
+                background-color: transparent
+
+                span
+                    display: none

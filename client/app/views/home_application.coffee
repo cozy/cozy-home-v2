@@ -24,13 +24,13 @@ module.exports = class ApplicationRow extends BaseView
         @enabled = true
         super
 
-    enable: () ->
+    enable: ->
         @enabled = true
         @$el.resizable 'disable'
         @$('.widget-mask').hide()
         @$('.use-widget').hide()
 
-    disable: () ->
+    disable: ->
         @enabled = false
         @$el.resizable('enable') if @$el.resizable 'widget'
         if @canUseWidget()
@@ -132,7 +132,8 @@ module.exports = class ApplicationRow extends BaseView
     ### Functions ###
 
     launchApp: (e) =>
-        if e.which is 2 or e.ctrlKey or e.metaKey # ctrl or middle click
+        # if ctrl or middle click or small device
+        if e.which is 2 or e.ctrlKey or e.metaKey or $(window).width() <= 500
             window.open "apps/#{@model.id}/", "_blank"
         else if e.which is 1 # left click
             window.app.routers.main.navigate "apps/#{@model.id}/", true

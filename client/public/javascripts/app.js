@@ -1996,7 +1996,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>');
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn home-icon"><a href="#home"><span>');
   var __val__ = t('your app list')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
@@ -2005,13 +2005,13 @@ window.require.register("templates/layout", function(exports, require, module) {
   buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
   var __val__ = t('manage your apps')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#customize"><span>');
+  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn customize-icon"><a href="#customize"><span>');
   var __val__ = t('customize your cozy')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
   var __val__ = t('configure your cozy')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
+  buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn help-icon"><a href="#help"><span>');
   var __val__ = t('ask for assistance')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
@@ -3488,7 +3488,7 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     ApplicationRow.prototype.launchApp = function(e) {
-      if (e.which === 2 || e.ctrlKey || e.metaKey) {
+      if (e.which === 2 || e.ctrlKey || e.metaKey || $(window).width() <= 500) {
         return window.open("apps/" + this.model.id + "/", "_blank");
       } else if (e.which === 1) {
         return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);

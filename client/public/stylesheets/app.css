@@ -2176,7 +2176,14 @@ body {
   }
 }
 @media (max-width: 500px) {
+  .home-icon,
+  .customize-icon,
+  .help-icon {
+    display: none;
+  }
   .application .application-inner img {
+    width: 70%;
+    height: 50%;
     margin-bottom: -5px;
   }
   .application .application-inner .app-title {
@@ -2206,8 +2213,11 @@ body {
     margin: 0;
     width: 50px;
   }
+  #notifications-container {
+    display: none;
+  }
   #notifications-container #notifications {
-    left: -50px;
+    left: -180px;
     width: 310px;
   }
   #notifications-container #notifications .notification a.doaction {
@@ -2216,5 +2226,12 @@ body {
   #config-applications-view .config-application .mod.left {
     width: 100%;
     margin-bottom: 10px;
+  }
+  #content #home-menu .menu-btn:hover {
+    background: none;
+    background-color: transparent;
+  }
+  #content #home-menu .menu-btn:hover span {
+    display: none;
   }
 }
