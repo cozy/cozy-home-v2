@@ -3383,8 +3383,9 @@ window.require.register("views/home_application", function(exports, require, mod
           return this.stateLabel.show().text(t('broken'));
         case 'installed':
           this.hideSpinner();
-          this.icon.show();
           this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.hide();
+          this.icon.show();
           this.icon.removeClass('stopped');
           this.stateLabel.hide();
           useWidget = (_ref = this.model.getHomePosition(this.getNbCols())) != null ? _ref.useWidget : void 0;

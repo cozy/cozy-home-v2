@@ -60,8 +60,9 @@ module.exports = class ApplicationRow extends BaseView
 
             when 'installed'
                 @hideSpinner()
-                @icon.show()
                 @icon.attr 'src', "api/applications/#{app.id}.png"
+                @icon.hide()
+                @icon.show()
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
                 useWidget = @model.getHomePosition(@getNbCols())?.useWidget

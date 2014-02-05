@@ -20,7 +20,7 @@ module.exports = Application = americano.getModel 'Application',
     _attachments: Object
 
 Application.all = (params, callback) ->
-    Application.request "all", params, callback
+    Application.request "bySlug", params, callback
 
 Application.destroyAll = (params, callback) ->
     Application.requestDestroy "all", params, callback

@@ -30,7 +30,7 @@ module.exports = Application = americano.getModel('Application', {
 });
 
 Application.all = function(params, callback) {
-  return Application.request("all", params, callback);
+  return Application.request("bySlug", params, callback);
 };
 
 Application.destroyAll = function(params, callback) {
