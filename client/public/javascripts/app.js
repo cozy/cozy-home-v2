@@ -3318,6 +3318,10 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     function ApplicationRow(options) {
+      this.showSpinner = __bind(this.showSpinner, this);
+
+      this.generateSpinner = __bind(this.generateSpinner, this);
+
       this.launchApp = __bind(this.launchApp, this);
 
       this.onUseWidgetClicked = __bind(this.onUseWidgetClicked, this);
@@ -3356,7 +3360,6 @@ window.require.register("views/home_application", function(exports, require, mod
 
     ApplicationRow.prototype.afterRender = function() {
       this.icon = this.$('img');
-      this.spinner = this.$('.spinner');
       this.stateLabel = this.$('.state-label');
       this.title = this.$('.app-title');
       this.listenTo(this.model, 'change', this.onAppChanged);
@@ -3374,12 +3377,12 @@ window.require.register("views/home_application", function(exports, require, mod
       }
       switch (this.model.get('state')) {
         case 'broken':
-          this.spinner.hide();
+          this.hideSpinner();
           this.icon.show();
           this.icon.attr('src', "img/broken.png");
           return this.stateLabel.show().text(t('broken'));
         case 'installed':
-          this.spinner.hide();
+          this.hideSpinner();
           this.icon.show();
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.removeClass('stopped');
@@ -3391,12 +3394,12 @@ window.require.register("views/home_application", function(exports, require, mod
           break;
         case 'installing':
           this.icon.hide();
-          this.spinner.show();
+          this.showSpinner();
           return this.stateLabel.show().text('installing');
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.addClass('stopped');
-          this.spinner.hide();
+          this.hideSpinner();
           this.icon.show();
           return this.stateLabel.hide();
       }
@@ -3489,6 +3492,35 @@ window.require.register("views/home_application", function(exports, require, mod
       } else if (e.which === 1) {
         return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
       }
+    };
+
+    ApplicationRow.prototype.generateSpinner = function() {
+      this.spinner = new Sonic({
+        width: 40,
+        height: 40,
+        padding: 20,
+        strokeColor: '#363a46',
+        pointDistance: .002,
+        stepsPerFrame: 15,
+        trailLength: .7,
+        step: 'fader',
+        setup: function() {
+          return this._.lineWidth = 5;
+        },
+        path: [['arc', 20, 20, 20, 0, 360]]
+      });
+      return this.spinner.play();
+    };
+
+    ApplicationRow.prototype.showSpinner = function() {
+      if (!this.spinner) {
+        this.generateSpinner();
+      }
+      return this.$('.vertical-aligner').prepend(this.spinner.canvas);
+    };
+
+    ApplicationRow.prototype.hideSpinner = function() {
+      return this.$('.vertical-aligner canvas').remove();
     };
 
     return ApplicationRow;

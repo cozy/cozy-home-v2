@@ -39,7 +39,6 @@ module.exports = class ApplicationRow extends BaseView
 
     afterRender: =>
         @icon = @$ 'img'
-        @spinner = @$ '.spinner'
         @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
 
@@ -54,12 +53,13 @@ module.exports = class ApplicationRow extends BaseView
 
         switch @model.get 'state'
             when 'broken'
-                @spinner.hide()
+                @hideSpinner()
                 @icon.show()
                 @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
+
             when 'installed'
-                @spinner.hide()
+                @hideSpinner()
                 @icon.show()
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.removeClass 'stopped'
@@ -69,12 +69,13 @@ module.exports = class ApplicationRow extends BaseView
 
             when 'installing'
                 @icon.hide()
-                @spinner.show()
+                @showSpinner()
                 @stateLabel.show().text 'installing'
+
             when 'stopped'
                 @icon.attr 'src', "api/applications/#{app.id}.png"
                 @icon.addClass 'stopped'
-                @spinner.hide()
+                @hideSpinner()
                 @icon.show()
                 @stateLabel.hide()
 
@@ -134,3 +135,35 @@ module.exports = class ApplicationRow extends BaseView
             window.open "apps/#{@model.id}/", "_blank"
         else if e.which is 1 # left click
             window.app.routers.main.navigate "apps/#{@model.id}/", true
+
+    # Spinner stuff
+    generateSpinner: =>
+        @spinner = new Sonic
+            width: 40
+            height: 40
+            padding: 20
+
+            strokeColor: '#363a46'
+
+            pointDistance: .002
+            stepsPerFrame: 15
+            trailLength: .7
+
+            step: 'fader'
+
+            setup: ->
+                this._.lineWidth = 5
+            path: [
+                ['arc', 20, 20, 20, 0, 360]
+            ]
+        @spinner.play()
+
+
+    showSpinner: =>
+        @generateSpinner() if not @spinner
+        @$('.vertical-aligner').prepend @spinner.canvas
+
+    hideSpinner: ->
+        @$('.vertical-aligner canvas').remove()
+
+
