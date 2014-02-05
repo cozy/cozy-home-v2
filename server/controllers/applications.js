@@ -172,6 +172,7 @@ module.exports = {
     });
   },
   read: function(req, res, next) {
+    console.log(req.params.id);
     return Application.find(req.params.id, function(err, app) {
       if (err) {
         return send_error(res, err);
