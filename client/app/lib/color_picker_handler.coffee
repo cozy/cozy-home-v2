@@ -61,8 +61,6 @@ module.exports = class ColorPickerHandler extends Backbone.View
                 @currentColors.button = color
             else if inputName is "button-hover-color"
                 @currentColors.buttonHover = color
-            else
-                console.log "wrong field"
 
             @injectCss()
 

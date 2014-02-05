@@ -11,7 +11,6 @@ exports.request = (type, url, data, callback) ->
         success: (data) ->
             callback null, data if callback?
         error: (data) ->
-            console.log data
             if data?
                 data = JSON.parse data.responseText
                 if data.msg? and callback?
