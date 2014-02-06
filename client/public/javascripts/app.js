@@ -2015,7 +2015,7 @@ window.require.register("templates/layout", function(exports, require, module) {
   var __val__ = t('ask for assistance')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/help.png"/></a></div><div class="txtright menu-btn logout-menu-icon"><a href="#logout"><span>');
-  var __val__ = t('logout')
+  var __val__ = t('Sign out')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><img src="img/logout-black.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
@@ -3803,8 +3803,16 @@ window.require.register("views/main", function(exports, require, module) {
 
 
     HomeView.prototype.resetLayoutSizes = function() {
-      this.frames.height($(window).height() - 48);
-      return this.content.height($(window).height() - 48);
+      if ($.browser.webkit) {
+        this.frames.height($(window).height() - 50);
+      } else {
+        this.frames.height($(window).height() - 40);
+      }
+      if ($(window).width() > 500) {
+        return this.content.height($(window).height() - 48);
+      } else {
+        return this.content.height($(window).height());
+      }
     };
 
     return HomeView;
