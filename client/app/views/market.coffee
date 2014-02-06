@@ -107,12 +107,17 @@ module.exports = class MarketView extends BaseView
             confirm: (application) =>
                 $('#no-app-message').hide()
                 @popover.hide()
+                @appList.show()
                 @hideApplication appWidget, =>
                     @runInstallation appWidget.app
             cancel: (application) =>
                 @popover.hide()
+                @appList.show()
         @$el.append @popover.$el
         @popover.show()
+
+        if $(window).width() <= 500
+            @appList.hide()
 
 
     hideApplication: (appWidget, callback) =>

@@ -4,7 +4,7 @@ header#header.navbar
   #app-frames
   #content
     #home-menu.mt3
-        .txtright.menu-btn
+        .txtright.menu-btn.home-icon
             a(href="#home")
                 span= t('your app list')
                 img(src="img/home-black.png")
@@ -16,7 +16,7 @@ header#header.navbar
             a(href="#config-applications")
                 span= t('manage your apps')
                 img(src="img/apps.png")
-        .txtright.menu-btn
+        .txtright.menu-btn.customize-icon
             a(href="#customize")
                 span= t('customize your cozy')
                 img(src="img/config-apps.png")
@@ -24,8 +24,12 @@ header#header.navbar
             a(href="#account")
                 span= t('configure your cozy')
                 img(src="img/configuration.png")
-        .txtright.menu-btn
+        .txtright.menu-btn.help-icon
             a(href="#help")
                 span= t('ask for assistance')
                 img(src="img/help.png")
+        .txtright.menu-btn.logout-menu-icon
+            a(href="#logout")
+                span= t('logout')
+                img(src="img/logout-black.png")
     #home-content

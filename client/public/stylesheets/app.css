@@ -917,6 +917,9 @@ body {
   z-index: 50;
   right: 0;
 }
+#home-menu .logout-menu-icon {
+  display: none;
+}
 #home-menu .menu-btn {
   z-index: 50;
   height: 52px;
@@ -1356,6 +1359,7 @@ body {
   transition: all 0.3s;
   background: #f7f4f0;
   position: relative;
+  overflow: hidden;
 }
 .application .mask,
 .application .bottom-handle,
@@ -1365,15 +1369,10 @@ body {
 }
 .application .application-inner {
   overflow: hidden;
-  width: 100%;
+  max-width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  bottom: 0px;
-  display: table;
 }
 .application .application-inner .vertical-aligner {
-  display: table-cell;
   height: 100%;
   width: 100%;
   vertical-align: middle;
@@ -1788,9 +1787,7 @@ body {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-.config-device strong {
-  text-transform: lowercase;
-}
+.config-device strong,
 .config-device .mod {
   margin-left: 5px;
 }
@@ -1856,18 +1853,8 @@ body {
   -moz-backface-visibility: hidden;
   -ms-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -o-transform: translateX(-50%) translateY(-50%);
-  -ms-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
 }
 .md-modal .md-content {
-  -webkit-transform: translateX(20%);
-  -moz-transform: translateX(20%);
-  -o-transform: translateX(20%);
-  -ms-transform: translateX(20%);
-  transform: translateX(20%);
   opacity: 0;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   filter: alpha(opacity=0);
@@ -1888,11 +1875,6 @@ body {
   transition: all 0.3s;
 }
 .md-show.md-content {
-  -webkit-transform: translateX(0);
-  -moz-transform: translateX(0);
-  -o-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
   opacity: 1;
   -ms-filter: none;
   filter: none;
@@ -2011,22 +1993,18 @@ body {
     overflow: auto;
   }
   .md-modal {
-    position: absolute;
-    top: 0;
+    position: fixed;
+    top: 45px;
     left: 0;
+    bottom: 0;
     width: 100%;
-    height: 100%;
+    height: 90%;
     z-index: 2000;
     visibility: hidden;
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transform: translateX(0) translateY(0);
-    -moz-transform: translateX(0) translateY(0);
-    -o-transform: translateX(0) translateY(0);
-    -ms-transform: translateX(0) translateY(0);
-    transform: translateX(0) translateY(0);
     margin: 0;
     padding: 0;
   }
@@ -2176,6 +2154,23 @@ body {
   }
 }
 @media (max-width: 500px) {
+  header#header {
+    display: none;
+  }
+  div.home-body {
+    padding-top: 0;
+    height: 100%;
+  }
+  .md-modal {
+    top: 0;
+  }
+  #home-menu .logout-menu-icon {
+    display: inline;
+  }
+  .customize-icon,
+  .help-icon {
+    display: none;
+  }
   .application .application-inner img {
     margin-bottom: -5px;
   }
@@ -2206,8 +2201,11 @@ body {
     margin: 0;
     width: 50px;
   }
+  #notifications-container {
+    display: none;
+  }
   #notifications-container #notifications {
-    left: -50px;
+    left: -180px;
     width: 310px;
   }
   #notifications-container #notifications .notification a.doaction {
@@ -2216,5 +2214,12 @@ body {
   #config-applications-view .config-application .mod.left {
     width: 100%;
     margin-bottom: 10px;
+  }
+  #content #home-menu .menu-btn:hover {
+    background: none;
+    background-color: transparent;
+  }
+  #content #home-menu .menu-btn:hover span {
+    display: none;
   }
 }
