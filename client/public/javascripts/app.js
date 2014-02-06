@@ -2014,7 +2014,10 @@ window.require.register("templates/layout", function(exports, require, module) {
   buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn help-icon"><a href="#help"><span>');
   var __val__ = t('ask for assistance')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
+  buf.push('</span><img src="img/help.png"/></a></div><div class="txtright menu-btn logout-menu-icon"><a href="#logout"><span>');
+  var __val__ = t('logout')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/logout-black.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -3974,16 +3977,21 @@ window.require.register("views/market", function(exports, require, module) {
         confirm: function(application) {
           $('#no-app-message').hide();
           _this.popover.hide();
+          _this.appList.show();
           return _this.hideApplication(appWidget, function() {
             return _this.runInstallation(appWidget.app);
           });
         },
         cancel: function(application) {
-          return _this.popover.hide();
+          _this.popover.hide();
+          return _this.appList.show();
         }
       });
       this.$el.append(this.popover.$el);
-      return this.popover.show();
+      this.popover.show();
+      if ($(window).width() <= 500) {
+        return this.appList.hide();
+      }
     };
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
