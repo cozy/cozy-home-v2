@@ -1853,8 +1853,18 @@ body {
   -moz-backface-visibility: hidden;
   -ms-backface-visibility: hidden;
   backface-visibility: hidden;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
 }
 .md-modal .md-content {
+  -webkit-transform: translateX(20%);
+  -moz-transform: translateX(20%);
+  -o-transform: translateX(20%);
+  -ms-transform: translateX(20%);
+  transform: translateX(20%);
   opacity: 0;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   filter: alpha(opacity=0);
@@ -1875,6 +1885,11 @@ body {
   transition: all 0.3s;
 }
 .md-show.md-content {
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
   opacity: 1;
   -ms-filter: none;
   filter: none;
