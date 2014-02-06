@@ -113,8 +113,6 @@ module.exports =
 
 
     read: (req, res, next) ->
-        console.log req.params.id
-
         Application.find req.params.id, (err, app) ->
             if err then send_error res, err
             else if app is null
