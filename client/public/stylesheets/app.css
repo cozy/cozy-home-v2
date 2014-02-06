@@ -1371,6 +1371,7 @@ body {
   overflow: hidden;
   max-width: 100%;
   height: 100%;
+  padding-top: 5px;
 }
 .application .application-inner .vertical-aligner {
   height: 100%;
@@ -1383,8 +1384,7 @@ body {
   bottom: 0px;
 }
 .application .application-inner img {
-  width: auto;
-  height: 70%;
+  width: 70%;
   display: block;
   margin: 0px auto 2% auto;
   text-align: center;
