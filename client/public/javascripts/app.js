@@ -2786,7 +2786,7 @@ window.require.register("views/config_applications", function(exports, require, 
     };
 
     ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
-      this.diskSpace.find('.amount').html(amount / 10);
+      this.diskSpace.find('.amount').html(amount);
       return this.diskSpace.find('.total').html(total);
     };
 
