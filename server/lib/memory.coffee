@@ -13,9 +13,9 @@ class exports.MemoryManager
             lineData = line.split(' ')
 
             if lineData.length > 5 and lineData[5] is '/'
-                freeSpace = lineData[2].substring(0, lineData[2].length - 1)
+                freeSpace = lineData[4].substring(0, lineData[2].length - 1)
                 totalSpace = lineData[1].substring(0, lineData[1].length - 1)
-                usedSpace = lineData[4].substring(0, lineData[4].length - 1)
+                usedSpace = lineData[2].substring(0, lineData[4].length - 1)
 
                 data.totalDiskSpace = totalSpace
                 data.freeDiskSpace = freeSpace
