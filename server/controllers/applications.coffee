@@ -183,7 +183,6 @@ module.exports =
                     console.info "attempt to install app #{infos}"
                     manager = new AppManager()
                     manager.installApp appli, (err, result) ->
-
                         if err
                             mark_broken res, appli, err
                             send_error_socket err
@@ -269,22 +268,29 @@ module.exports =
 
 
     start: (req, res, next) ->
+        stop = false
+        setTimeout () ->
+            if not stop
+                stop = true
+                return mark_broken res, req.application, {stack : "Timeout", message: "Timeout"}
+        , 45000
         manager = new AppManager
         manager.start req.application, (err, result) ->
             return mark_broken res, req.application, err if err
+            if not stop
+                stop = true
+                req.application.state = "installed"
+                req.application.port = result.drone.port
+                req.application.save (err) ->
+                    return send_error res, err if err
 
-            req.application.state = "installed"
-            req.application.port = result.drone.port
-            req.application.save (err) ->
-                return send_error res, err if err
+                    manager.resetProxy (err) ->
+                        return mark_broken res, req.application, err if err
 
-                manager.resetProxy (err) ->
-                    return mark_broken res, req.application, err if err
-
-                    res.send
-                        success: true
-                        msg: 'Application running'
-                        app: req.application
+                        res.send
+                            success: true
+                            msg: 'Application running'
+                            app: req.application
 
 
     stop: (req, res, next) ->
