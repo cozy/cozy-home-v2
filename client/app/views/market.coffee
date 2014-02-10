@@ -10,9 +10,10 @@ slugify = require('helpers').slugify
 REPOREGEX =  /// ^
     (https?://)?                   #protocol
     ([\da-z\.-]+\.[a-z\.]{2,6})    #domain
+    (:[0-9]{1,5})?                 #optional domain's port
     ([/\w \.-]*)*                  #path to repo
     (?:\.git)?                     #.git extension
-    (@[\da-zA-Z/-]+)?                 #branch
+    (@[\da-zA-Z/-]+)?              #branch
      $ ///
 
 module.exports = class MarketView extends BaseView
@@ -106,12 +107,17 @@ module.exports = class MarketView extends BaseView
             confirm: (application) =>
                 $('#no-app-message').hide()
                 @popover.hide()
+                @appList.show()
                 @hideApplication appWidget, =>
                     @runInstallation appWidget.app
             cancel: (application) =>
                 @popover.hide()
+                @appList.show()
         @$el.append @popover.$el
         @popover.show()
+
+        if $(window).width() <= 500
+            @appList.hide()
 
 
     hideApplication: (appWidget, callback) =>
@@ -145,14 +151,14 @@ module.exports = class MarketView extends BaseView
     parseGitUrl: (url) ->
         url = url.replace 'git@github.com:', 'https://github.com/'
         url = url.replace 'git://', 'https://'
+        console.debug REPOREGEX
         parsed = REPOREGEX.exec url
         unless parsed?
             error =
                 error: true
                 msg: t "Git url should be of form https://.../my-repo.git"
             return error
-
-        [git, proto, domain, path, branch] = parsed
+        [git, proto, domain, port, path, branch] = parsed
         path = path.replace '.git', ''
         parts = path.split "/"
         name = parts[parts.length - 1]
@@ -160,8 +166,8 @@ module.exports = class MarketView extends BaseView
         name = name.replace 'cozy ', ''
 
         slug = slugify(name)
-
-        git = proto + domain + path + '.git'
+        port = "" unless port?
+        git = proto + domain + port + path + '.git'
         branch = branch.substring(1) if branch?
 
         out = git:git, name:name, slug:slug

@@ -22,6 +22,9 @@ body
     z-index: 50
     right: 0
 
+    .logout-menu-icon
+        display: none
+
     .menu-btn
         z-index: 50
         height: 52px
@@ -167,7 +170,7 @@ body
         position: absolute
         left: 5px
         top: 48px
-        width: 420px
+        width: 220px
         z-index: 50
         margin: 0
         list-style-type: none
@@ -198,18 +201,17 @@ body
     width: 60px
     cursor: pointer
     margin-left: 10px
+    margin-top: 0
+    padding-top: 0
     padding-left: 5px
     padding-right: 10px
     transition: all 0.3s
-    margin-top: 0
-    padding-top: 0
     position: relative
-    transition all 0.3s
+    transition: all 0.3s
 
     img
         padding: 0
         margin: 0
-        opacity 1
 
     #notifications-counter
         height 20px
@@ -245,9 +247,9 @@ body
     &:hover
         background: rgba(220, 220, 222, 0.3)
 
-        .backcolor
-            opacity 1
-
+#notifications-toggle.highlight
+    img 
+        opacity: 1
 
 .active
     #notifications-toggle
@@ -361,16 +363,38 @@ body
 
 #home-edit-close
     text-align center
+    margin-bottom 10px
     a
-        display block
+        display inline-block
         margin auto
-        padding 10px
+        padding 5px
         font-weight normal
+        margin-top 10px
+
+    #colorpicker
+        width 195px
+        height 195px
+        display none
+        position absolute
+        z-index 100000000000
+
+    .colorpicked
+        width 20px
+        height 30px
+        padding 2px
+        color #fff
+        font-size 12px
+        font-weight bold
+        font-family "Helvetica"
+        border 1px solid #000
+        margin 0 15px 0 5px
+        cursor pointer
 
 
 #app-list
     text-align: center
-    margin-bottom: 40px 0
+    margin auto
+    margin-bottom: 40px
 
     .preview-holder
         padding 10px
@@ -402,13 +426,24 @@ body
     transition: all 0.3s
     background: lightgrey
     position relative
+    overflow: hidden
+
+    .mask
+    .bottom-handle
+    .bottom-right-handle
+    .right-hanldle
+        display none
 
     .application-inner
         overflow hidden
-        width 100%
-        position absolute
-        top 5%
-        bottom 0px
+        max-width 100%
+        height 100%
+        padding-top: 5px
+
+        .vertical-aligner
+            height 100%
+            width 100%
+            vertical-align middle
 
         &.widget
             height 100%
@@ -416,8 +451,7 @@ body
             bottom 0px
 
         img
-            width auto
-            height 75%
+            width 70%
             display block
             margin 0px auto 2% auto
             text-align center
@@ -440,7 +474,7 @@ body
             text-align center
             font-family: styled
             text-transform: uppercase
-            // font-size: 14px
+            font-size: 15px
             color: darkblue
             text-decoration: none
 
@@ -448,6 +482,60 @@ body
             font-size: 18px
             font-weight: normal
             color: red
+
+    // resize mode
+    &.ui-resizable:not(.ui-resizable-disabled)
+        cursor move
+        border 5px solid blue //#f7f4f0 - 15%
+
+        .ui-resizable-e
+            width 20px
+            right -10px
+            cursor col-resize
+
+        .ui-resizable-s
+            height 20px
+            bottom -10px
+            cursor row-resize
+
+        .ui-resizable-se
+            width 20px
+            height 20px
+            right -10px
+            bottom -10px
+            cursor nwse-resize
+
+        .mask
+            display block
+            position absolute
+            top 0px
+            left 0px
+            width 100%
+            height 100%
+            z-index 10
+            background grey
+            opacity 0.5
+
+        .bottom-handle
+        .bottom-right-handle
+        .right-handle
+            display block
+            position absolute
+            z-index 10
+            width 10px
+            height 10px
+            background blue
+            border 1px solid #fff
+
+        .bottom-handle
+            bottom -7.5px // border + height/2
+            left 50%
+        .bottom-right-handle
+            bottom -7.5px
+            right -7.5px
+        .right-handle
+            top 50%
+            right -7.5px
 
 
     &:hover
@@ -461,6 +549,7 @@ body
     &.broken
         .broken-notifier
             display: block
+
 
 .app-tools
     width: 50%
@@ -697,6 +786,13 @@ body
 
 
 // Config application
+.title-app a.subtitle
+    display inline-block
+    font-family styled
+    font-size 15px
+
+#config-application-list
+    margin-top 10px
 
 .config-application
     background: lightgrey
@@ -706,6 +802,7 @@ body
 
     strong
         text-transform: lowercase
+        font-size: 20px
 
     .mod
         margin-left: 5px
@@ -736,8 +833,8 @@ body
 // Config device
 
 .title-device
-    display:none 
-    
+    display:none
+
 .config-device
     background: lightgrey
     padding: 10px
@@ -745,8 +842,6 @@ body
     border-radius: 5px
 
     strong
-        text-transform: lowercase
-
     .mod
         margin-left: 5px
 
@@ -772,7 +867,7 @@ body
     .buttons
         display: block
     .dataLine
-        text-shadow: none   
+        text-shadow: none
     .docTypeLine
         text-shadow: none
         margin-left: 25px
@@ -924,15 +1019,16 @@ body
     .md-content
         overflow: auto
     .md-modal
-        position: absolute
-        top: 0
+        position: fixed
+        top: 45px
         left: 0
+        bottom: 0
         width: 100%
-        height: 100%
+        height: 90%
         z-index: 2000
         visibility: hidden
         backface-visibility: hidden
-        transform: translateX(0) translateY(0)
+        //transform: translateX(0) translateY(0)
         margin: 0
         padding: 0
 
@@ -1108,6 +1204,23 @@ body
 
 @media (max-width: 500px)
 
+    header#header
+        display: none
+
+    div.home-body
+        padding-top: 0
+        height: 100%
+
+    .md-modal
+        top: 0
+
+    #home-menu
+        .logout-menu-icon
+            display: inline
+
+    .customize-icon
+    .help-icon
+        display: none
 
     .application .application-inner
         img
@@ -1144,8 +1257,10 @@ body
                 width: 50px
 
     #notifications-container
+        display: none
+
         #notifications
-            left: -50px
+            left: -180px
             width: 310px
 
             .notification
@@ -1157,3 +1272,12 @@ body
             .mod.left
                 width: 100%
                 margin-bottom: 10px
+
+    #content
+        #home-menu
+            .menu-btn:hover
+                background: none
+                background-color: transparent
+
+                span
+                    display: none

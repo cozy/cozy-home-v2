@@ -9,6 +9,7 @@ ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
 socketListener = require('lib/socket_listener')
+UserPreference = require '../models/user_preference'
 
 User = require 'models/user'
 
@@ -26,11 +27,13 @@ module.exports = class HomeView extends BaseView
         @listenTo @devices, 'reset', @test
         socketListener.watch @apps
         socketListener.watch @devices
+
+        @userPreference = new UserPreference()
         super
 
     afterRender: =>
         @navbar = new NavbarView @apps
-        @applicationListView = new ApplicationsListView @apps
+        @applicationListView = new ApplicationsListView @apps, @userPreference
         @configApplications = new ConfigApplicationsView @apps, @devices
         @accountView = new AccountView()
         @helpView = new HelpView()
@@ -46,6 +49,7 @@ module.exports = class HomeView extends BaseView
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
         @devices.fetch reset: true
+        @userPreference.fetch()
         @resetLayoutSizes()
 
     test: =>
@@ -182,5 +186,12 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        @frames.height $(window).height() - 48
-        @content.height $(window).height() - 48
+        if $.browser.webkit
+            @frames.height $(window).height() - 50
+        else
+            @frames.height $(window).height() - 40
+
+        if $(window).width() > 500
+            @content.height $(window).height() - 48
+        else
+            @content.height $(window).height()

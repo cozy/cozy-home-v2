@@ -18988,6 +18988,351 @@ exports.rethrow = function rethrow(err, filename, lineno){
   , 'undefined' != typeof exports ? exports : {}
 );
 ;
+/**
+ * Farbtastic Color Picker 1.2
+ * © 2008 Steven Wittens
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+jQuery.fn.farbtastic = function (callback) {
+  $.farbtastic(this, callback);
+  return this;
+};
+
+jQuery.farbtastic = function (container, callback) {
+  var container = $(container).get(0);
+  return container.farbtastic || (container.farbtastic = new jQuery._farbtastic(container, callback));
+}
+
+jQuery._farbtastic = function (container, callback) {
+  // Store farbtastic object
+  var fb = this;
+
+  // Insert markup
+  $(container).html('<div class="farbtastic"><div class="color"></div><div class="wheel"></div><div class="overlay"></div><div class="h-marker marker"></div><div class="sl-marker marker"></div></div>');
+  var e = $('.farbtastic', container);
+  fb.wheel = $('.wheel', container).get(0);
+  // Dimensions
+  fb.radius = 84;
+  fb.square = 100;
+  fb.width = 194;
+
+  // Fix background PNGs in IE6
+  if (navigator.appVersion.match(/MSIE [0-6]\./)) {
+    $('*', e).each(function () {
+      if (this.currentStyle.backgroundImage != 'none') {
+        var image = this.currentStyle.backgroundImage;
+        image = this.currentStyle.backgroundImage.substring(5, image.length - 2);
+        $(this).css({
+          'backgroundImage': 'none',
+          'filter': "progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src='" + image + "')"
+        });
+      }
+    });
+  }
+
+  /**
+   * Link to the given element(s) or callback.
+   */
+  fb.linkTo = function (callback) {
+    // Unbind previous nodes
+    if (typeof fb.callback == 'object') {
+      $(fb.callback).unbind('keyup', fb.updateValue);
+    }
+
+    // Reset color
+    fb.color = null;
+
+    // Bind callback or elements
+    if (typeof callback == 'function') {
+      fb.callback = callback;
+    }
+    else if (typeof callback == 'object' || typeof callback == 'string') {
+      fb.callback = $(callback);
+      fb.callback.bind('keyup', fb.updateValue);
+      if (fb.callback.get(0).value) {
+        fb.setColor(fb.callback.get(0).value);
+      }
+    }
+    return this;
+  }
+  fb.updateValue = function (event) {
+    if (this.value && this.value != fb.color) {
+      fb.setColor(this.value);
+    }
+  }
+
+  /**
+   * Change color with HTML syntax #123456
+   */
+  fb.setColor = function (color) {
+    var unpack = fb.unpack(color);
+    if (fb.color != color && unpack) {
+      fb.color = color;
+      fb.rgb = unpack;
+      fb.hsl = fb.RGBToHSL(fb.rgb);
+      fb.updateDisplay();
+    }
+    return this;
+  }
+
+  /**
+   * Change color with HSL triplet [0..1, 0..1, 0..1]
+   */
+  fb.setHSL = function (hsl) {
+    fb.hsl = hsl;
+    fb.rgb = fb.HSLToRGB(hsl);
+    fb.color = fb.pack(fb.rgb);
+    fb.updateDisplay();
+    return this;
+  }
+
+  /////////////////////////////////////////////////////
+
+  /**
+   * Retrieve the coordinates of the given event relative to the center
+   * of the widget.
+   */
+  fb.widgetCoords = function (event) {
+    var x, y;
+    var el = event.target || event.srcElement;
+    var reference = fb.wheel;
+
+    if (typeof event.offsetX != 'undefined') {
+      // Use offset coordinates and find common offsetParent
+      var pos = { x: event.offsetX, y: event.offsetY };
+
+      // Send the coordinates upwards through the offsetParent chain.
+      var e = el;
+      while (e) {
+        e.mouseX = pos.x;
+        e.mouseY = pos.y;
+        pos.x += e.offsetLeft;
+        pos.y += e.offsetTop;
+        e = e.offsetParent;
+      }
+
+      // Look for the coordinates starting from the wheel widget.
+      var e = reference;
+      var offset = { x: 0, y: 0 }
+      while (e) {
+        if (typeof e.mouseX != 'undefined') {
+          x = e.mouseX - offset.x;
+          y = e.mouseY - offset.y;
+          break;
+        }
+        offset.x += e.offsetLeft;
+        offset.y += e.offsetTop;
+        e = e.offsetParent;
+      }
+
+      // Reset stored coordinates
+      e = el;
+      while (e) {
+        e.mouseX = undefined;
+        e.mouseY = undefined;
+        e = e.offsetParent;
+      }
+    }
+    else {
+      // Use absolute coordinates
+      var pos = fb.absolutePosition(reference);
+      x = (event.pageX || 0*(event.clientX + $('html').get(0).scrollLeft)) - pos.x;
+      y = (event.pageY || 0*(event.clientY + $('html').get(0).scrollTop)) - pos.y;
+    }
+    // Subtract distance to middle
+    return { x: x - fb.width / 2, y: y - fb.width / 2 };
+  }
+
+  /**
+   * Mousedown handler
+   */
+  fb.mousedown = function (event) {
+    // Capture mouse
+    if (!document.dragging) {
+      $(document).bind('mousemove', fb.mousemove).bind('mouseup', fb.mouseup);
+      document.dragging = true;
+    }
+
+    // Check which area is being dragged
+    var pos = fb.widgetCoords(event);
+    fb.circleDrag = Math.max(Math.abs(pos.x), Math.abs(pos.y)) * 2 > fb.square;
+
+    // Process
+    fb.mousemove(event);
+    return false;
+  }
+
+  /**
+   * Mousemove handler
+   */
+  fb.mousemove = function (event) {
+    // Get coordinates relative to color picker center
+    var pos = fb.widgetCoords(event);
+
+    // Set new HSL parameters
+    if (fb.circleDrag) {
+      var hue = Math.atan2(pos.x, -pos.y) / 6.28;
+      if (hue < 0) hue += 1;
+      fb.setHSL([hue, fb.hsl[1], fb.hsl[2]]);
+    }
+    else {
+      var sat = Math.max(0, Math.min(1, -(pos.x / fb.square) + .5));
+      var lum = Math.max(0, Math.min(1, -(pos.y / fb.square) + .5));
+      fb.setHSL([fb.hsl[0], sat, lum]);
+    }
+    return false;
+  }
+
+  /**
+   * Mouseup handler
+   */
+  fb.mouseup = function () {
+    // Uncapture mouse
+    $(document).unbind('mousemove', fb.mousemove);
+    $(document).unbind('mouseup', fb.mouseup);
+    document.dragging = false;
+  }
+
+  /**
+   * Update the markers and styles
+   */
+  fb.updateDisplay = function () {
+    // Markers
+    var angle = fb.hsl[0] * 6.28;
+    $('.h-marker', e).css({
+      left: Math.round(Math.sin(angle) * fb.radius + fb.width / 2) + 'px',
+      top: Math.round(-Math.cos(angle) * fb.radius + fb.width / 2) + 'px'
+    });
+
+    $('.sl-marker', e).css({
+      left: Math.round(fb.square * (.5 - fb.hsl[1]) + fb.width / 2) + 'px',
+      top: Math.round(fb.square * (.5 - fb.hsl[2]) + fb.width / 2) + 'px'
+    });
+
+    // Saturation/Luminance gradient
+    $('.color', e).css('backgroundColor', fb.pack(fb.HSLToRGB([fb.hsl[0], 1, 0.5])));
+
+    // Linked elements or callback
+    if (typeof fb.callback == 'object') {
+      // Set background/foreground color
+      $(fb.callback).css({
+        backgroundColor: fb.color,
+        color: fb.hsl[2] > 0.5 ? '#000' : '#fff'
+      });
+
+      // Change linked value
+      $(fb.callback).each(function() {
+        if (this.value && this.value != fb.color) {
+          this.value = fb.color;
+        }
+      });
+    }
+    else if (typeof fb.callback == 'function') {
+      fb.callback.call(fb, fb.color);
+    }
+  }
+
+  /**
+   * Get absolute position of element
+   */
+  fb.absolutePosition = function (el) {
+    var r = { x: el.offsetLeft, y: el.offsetTop };
+    // Resolve relative to offsetParent
+    if (el.offsetParent) {
+      var tmp = fb.absolutePosition(el.offsetParent);
+      r.x += tmp.x;
+      r.y += tmp.y;
+    }
+    return r;
+  };
+
+  /* Various color utility functions */
+  fb.pack = function (rgb) {
+    var r = Math.round(rgb[0] * 255);
+    var g = Math.round(rgb[1] * 255);
+    var b = Math.round(rgb[2] * 255);
+    return '#' + (r < 16 ? '0' : '') + r.toString(16) +
+           (g < 16 ? '0' : '') + g.toString(16) +
+           (b < 16 ? '0' : '') + b.toString(16);
+  }
+
+  fb.unpack = function (color) {
+    if (color.length == 7) {
+      return [parseInt('0x' + color.substring(1, 3)) / 255,
+        parseInt('0x' + color.substring(3, 5)) / 255,
+        parseInt('0x' + color.substring(5, 7)) / 255];
+    }
+    else if (color.length == 4) {
+      return [parseInt('0x' + color.substring(1, 2)) / 15,
+        parseInt('0x' + color.substring(2, 3)) / 15,
+        parseInt('0x' + color.substring(3, 4)) / 15];
+    }
+  }
+
+  fb.HSLToRGB = function (hsl) {
+    var m1, m2, r, g, b;
+    var h = hsl[0], s = hsl[1], l = hsl[2];
+    m2 = (l <= 0.5) ? l * (s + 1) : l + s - l*s;
+    m1 = l * 2 - m2;
+    return [this.hueToRGB(m1, m2, h+0.33333),
+        this.hueToRGB(m1, m2, h),
+        this.hueToRGB(m1, m2, h-0.33333)];
+  }
+
+  fb.hueToRGB = function (m1, m2, h) {
+    h = (h < 0) ? h + 1 : ((h > 1) ? h - 1 : h);
+    if (h * 6 < 1) return m1 + (m2 - m1) * h * 6;
+    if (h * 2 < 1) return m2;
+    if (h * 3 < 2) return m1 + (m2 - m1) * (0.66666 - h) * 6;
+    return m1;
+  }
+
+  fb.RGBToHSL = function (rgb) {
+    var min, max, delta, h, s, l;
+    var r = rgb[0], g = rgb[1], b = rgb[2];
+    min = Math.min(r, Math.min(g, b));
+    max = Math.max(r, Math.max(g, b));
+    delta = max - min;
+    l = (min + max) / 2;
+    s = 0;
+    if (l > 0 && l < 1) {
+      s = delta / (l < 0.5 ? (2 * l) : (2 - 2 * l));
+    }
+    h = 0;
+    if (delta > 0) {
+      if (max == r && max != g) h += (g - b) / delta;
+      if (max == g && max != b) h += (2 + (b - r) / delta);
+      if (max == b && max != r) h += (4 + (r - g) / delta);
+      h /= 6;
+    }
+    return [h, s, l];
+  }
+
+  // Install mousedown handler (the others are set on the document on-demand)
+  $('*', e).mousedown(fb.mousedown);
+
+    // Init color
+  fb.setColor('#000000');
+
+  // Set linked elements/callback
+  if (callback) {
+    fb.linkTo(callback);
+  }
+};
 /*!
  * jQuery hashchange event - v1.3 - 7/21/2010
  * http://benalman.com/projects/jquery-hashchange-plugin/
@@ -30133,6 +30478,372 @@ window.mocha = require('mocha');
 
 }(this);
 
+;
+/*
+ * Sonic 0.2
+ * --
+ * https://github.com/padolsey/Sonic
+ * --
+ * This program is free software. It comes without any warranty, to
+ * the extent permitted by applicable law. You can redistribute it
+ * and/or modify it under the terms of the Do What The Fuck You Want
+ * To Public License, Version 2, as published by Sam Hocevar. See
+ * http://sam.zoy.org/wtfpl/COPYING for more details. */ 
+
+(function(){
+
+	var emptyFn = function(){};
+
+	function Sonic(d) {
+
+		this.converter = d.converter;
+
+		this.data = d.path || d.data;
+		this.imageData = [];
+
+		this.multiplier = d.multiplier || 1;
+		this.padding = d.padding || 0;
+
+		this.fps = d.fps || 25;
+
+		this.stepsPerFrame = ~~d.stepsPerFrame || 1;
+		this.trailLength = d.trailLength || 1;
+		this.pointDistance = d.pointDistance || .05;
+
+		this.domClass = d.domClass || 'sonic';
+
+		this.backgroundColor = d.backgroundColor || 'rgba(0,0,0,0)';
+		this.fillColor = d.fillColor;
+		this.strokeColor = d.strokeColor;
+
+		this.stepMethod = typeof d.step == 'string' ?
+			stepMethods[d.step] :
+			d.step || stepMethods.square;
+
+		this._setup = d.setup || emptyFn;
+		this._teardown = d.teardown || emptyFn;
+		this._preStep = d.preStep || emptyFn;
+
+		this.pixelRatio = d.pixelRatio || null;
+
+		this.width = d.width;
+		this.height = d.height;
+
+		this.fullWidth = this.width + 2 * this.padding;
+		this.fullHeight = this.height + 2 * this.padding;
+
+		this.domClass = d.domClass || 'sonic';
+
+		this.setup();
+
+	}
+
+	var argTypes = Sonic.argTypes = {
+		DIM: 1,
+		DEGREE: 2,
+		RADIUS: 3,
+		OTHER: 0
+	};
+
+	var argSignatures = Sonic.argSignatures = {
+		arc: [1, 1, 3, 2, 2, 0],
+		bezier: [1, 1, 1, 1, 1, 1, 1, 1],
+		line: [1,1,1,1]
+	};
+
+	var pathMethods = Sonic.pathMethods = {
+		bezier: function(t, p0x, p0y, p1x, p1y, c0x, c0y, c1x, c1y) {
+			
+		    t = 1-t;
+
+		    var i = 1-t,
+		        x = t*t,
+		        y = i*i,
+		        a = x*t,
+		        b = 3 * x * i,
+		        c = 3 * t * y,
+		        d = y * i;
+
+		    return [
+		        a * p0x + b * c0x + c * c1x + d * p1x,
+		        a * p0y + b * c0y + c * c1y + d * p1y
+		    ]
+
+		},
+		arc: function(t, cx, cy, radius, start, end) {
+
+		    var point = (end - start) * t + start;
+
+		    var ret = [
+		        (Math.cos(point) * radius) + cx,
+		        (Math.sin(point) * radius) + cy
+		    ];
+
+		    ret.angle = point;
+		    ret.t = t;
+
+		    return ret;
+
+		},
+		line: function(t, sx, sy, ex, ey) {
+			return [
+				(ex - sx) * t + sx,
+				(ey - sy) * t + sy
+			]
+		}
+	};
+
+	var stepMethods = Sonic.stepMethods = {
+		
+		square: function(point, i, f, color, alpha) {
+			this._.fillRect(point.x - 3, point.y - 3, 6, 6);
+		},
+
+		fader: function(point, i, f, color, alpha) {
+
+			this._.beginPath();
+
+			if (this._last) {
+				this._.moveTo(this._last.x, this._last.y);
+			}
+
+			this._.lineTo(point.x, point.y);
+			this._.closePath();
+			this._.stroke();
+
+			this._last = point;
+
+		}
+
+	}
+
+	Sonic.prototype = {
+
+		calculatePixelRatio: function(){
+
+			var devicePixelRatio = window.devicePixelRatio || 1;
+			var backingStoreRatio = this._.webkitBackingStorePixelRatio
+					|| this._.mozBackingStorePixelRatio
+					|| this._.msBackingStorePixelRatio
+					|| this._.oBackingStorePixelRatio
+					|| this._.backingStorePixelRatio
+					|| 1;
+
+			return devicePixelRatio / backingStoreRatio;
+		},
+
+		setup: function() {
+
+			var args,
+				type,
+				method,
+				value,
+				data = this.data;
+
+			this.canvas = document.createElement('canvas');
+			this._ = this.canvas.getContext('2d');
+
+			if(this.pixelRatio == null){
+				this.pixelRatio = this.calculatePixelRatio();
+			}
+
+			this.canvas.className = this.domClass;
+
+			if(this.pixelRatio != 1){
+
+				this.canvas.style.height = this.fullHeight + 'px';
+				this.canvas.style.width = this.fullWidth + 'px';
+
+				this.fullHeight *= this.pixelRatio;
+				this.fullWidth  *= this.pixelRatio;
+
+				this.canvas.height = this.fullHeight;
+				this.canvas.width = this.fullWidth;
+
+				this._.scale(this.pixelRatio, this.pixelRatio);
+
+			}   else{
+
+				this.canvas.height = this.fullHeight;
+				this.canvas.width = this.fullWidth;
+
+			}
+
+			this.points = [];
+
+			for (var i = -1, l = data.length; ++i < l;) {
+
+				args = data[i].slice(1);
+				method = data[i][0];
+
+				if (method in argSignatures) for (var a = -1, al = args.length; ++a < al;) {
+
+					type = argSignatures[method][a];
+					value = args[a];
+
+					switch (type) {
+						case argTypes.RADIUS:
+							value *= this.multiplier;
+							break;
+						case argTypes.DIM:
+							value *= this.multiplier;
+							value += this.padding;
+							break;
+						case argTypes.DEGREE:
+							value *= Math.PI/180;
+							break;
+					};
+
+					args[a] = value;
+
+				}
+
+				args.unshift(0);
+
+				for (var r, pd = this.pointDistance, t = pd; t <= 1; t += pd) {
+					
+					// Avoid crap like 0.15000000000000002
+					t = Math.round(t*1/pd) / (1/pd);
+
+					args[0] = t;
+
+					r = pathMethods[method].apply(null, args);
+
+					this.points.push({
+						x: r[0],
+						y: r[1],
+						progress: t
+					});
+
+				}
+
+			}
+
+			this.frame = 0;
+
+			if (this.converter && this.converter.setup) {
+				this.converter.setup(this);
+			}
+
+		},
+
+		prep: function(frame) {
+
+			if (frame in this.imageData) {
+				return;
+			}
+
+			this._.clearRect(0, 0, this.fullWidth, this.fullHeight);
+			this._.fillStyle = this.backgroundColor;
+			this._.fillRect(0, 0, this.fullWidth, this.fullHeight);
+
+			var points = this.points,
+				pointsLength = points.length,
+				pd = this.pointDistance,
+				point,
+				index,
+				frameD;
+
+			this._setup();
+
+			for (var i = -1, l = pointsLength*this.trailLength; ++i < l && !this.stopped;) {
+
+				index = frame + i;
+
+				point = points[index] || points[index - pointsLength];
+
+				if (!point) continue;
+
+				this.alpha = Math.round(1000*(i/(l-1)))/1000;
+
+				this._.globalAlpha = this.alpha;
+
+				if (this.fillColor) {
+					this._.fillStyle = this.fillColor;
+				}
+				if (this.strokeColor) {
+					this._.strokeStyle = this.strokeColor;
+				}
+
+				frameD = frame/(this.points.length-1);
+				indexD = i/(l-1);
+
+				this._preStep(point, indexD, frameD);
+				this.stepMethod(point, indexD, frameD);
+
+			} 
+
+			this._teardown();
+
+			this.imageData[frame] = (
+				this._.getImageData(0, 0, this.fullWidth, this.fullWidth)
+			);
+
+			return true;
+
+		},
+
+		draw: function() {
+			
+			if (!this.prep(this.frame)) {
+
+				this._.clearRect(0, 0, this.fullWidth, this.fullWidth);
+
+				this._.putImageData(
+					this.imageData[this.frame],
+					0, 0
+				);
+
+			}
+
+			if (this.converter && this.converter.step) {
+				this.converter.step(this);
+			}
+
+			if (!this.iterateFrame()) {
+				if (this.converter && this.converter.teardown) {
+					this.converter.teardown(this);
+					this.converter = null;
+				}
+			}
+
+		},
+
+		iterateFrame: function() {
+			
+			this.frame += this.stepsPerFrame;
+			
+			if (this.frame >= this.points.length) {
+				this.frame = 0;
+				return false;
+			}
+
+			return true;
+
+		},
+
+		play: function() {
+
+			this.stopped = false;
+
+			var hoc = this;
+
+			this.timer = setInterval(function(){
+				hoc.draw();
+			}, 1000 / this.fps);
+
+		},
+		stop: function() {
+
+			this.stopped = true;
+			this.timer && clearInterval(this.timer);
+
+		}
+	};
+
+	window.Sonic = Sonic;
+
+}());
 ;
 //fgnass.github.com/spin.js#v1.3.2
 

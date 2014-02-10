@@ -27,6 +27,7 @@ module.exports = class NotificationsView extends ViewCollection
         # when window is not visible
         @sound.play() unless @initializing
         @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
+        @$('#notifications-toggle').addClass 'highlight'
 
     afterRender: =>
         @counter    = @$ '#notifications-counter'
@@ -52,9 +53,10 @@ module.exports = class NotificationsView extends ViewCollection
         newCount = @collection.length
         @$('#no-notif-msg').toggle(newCount is 0)
         @$('#dismiss-all').toggle(newCount isnt 0)
-        newCount = "" if newCount is 0 #hide 0 counter
-        @counter.html newCount
-
+        if newCount is 0 #hide 0 counter
+            newCount = ""
+            @counter.html newCount
+            @counter.hide()
 
     windowClicked: =>
         if event? and @$el.has($(event.target)).length is 0
@@ -71,8 +73,8 @@ module.exports = class NotificationsView extends ViewCollection
             @clickcatcher.show()
 
     dismissAll: () ->
-        @dismissButton.spin 'small'
         @dismissButton.css 'color', 'transparent'
+        @dismissButton.spin 'small'
         @collection.removeAll
             success: =>
                 @dismissButton.spin()
@@ -81,6 +83,7 @@ module.exports = class NotificationsView extends ViewCollection
                 @dismissButton.spin()
                 @dismissButton.css 'color', '#333'
         @$('#notifications-toggle img').attr 'src', 'img/notification-white.png'
+        @$('#notifications-toggle').removeClass 'highlight'
 
     hideNotifList: (event) =>
         @notifList.slideUp 100

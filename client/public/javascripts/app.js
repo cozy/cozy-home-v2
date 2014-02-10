@@ -117,18 +117,6 @@ window.require.register("collections/application", function(exports, require, mo
       }
     };
 
-    ApplicationCollection.prototype.comparator = function(app1, app2) {
-      app1 = app1.get('name').toLowerCase();
-      app2 = app2.get('name').toLowerCase();
-      if (app1 < app2) {
-        return -1;
-      } else if (app1 === app2) {
-        return 0;
-      } else {
-        return 1;
-      }
-    };
-
     ApplicationCollection.prototype.isUserFing = function(callback) {
       var isUserFing;
       isUserFing = null;
@@ -150,15 +138,9 @@ window.require.register("collections/application", function(exports, require, mo
         var apps, fingApps;
         apps = [
           {
-            icon: "img/bookmarks-icon.png",
-            name: "bookmarks",
-            slug: "bookmarks",
-            git: "https://github.com/Piour/cozy-bookmarks.git",
-            comment: "community contribution",
-            description: "Manage your bookmarks easily"
-          }, {
             icon: "img/agenda-icon.png",
             name: "calendar",
+            displayName: "Calendar",
             slug: "calendar",
             git: "https://github.com/mycozycloud/cozy-agenda.git",
             comment: "official application",
@@ -166,77 +148,39 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/contacts-icon.png",
             name: "contacts",
+            displayName: "Contacts",
             slug: "contacts",
             git: "https://github.com/mycozycloud/cozy-contacts.git",
             comment: "official application",
             description: "Manage your contacts with custom informations"
           }, {
-            icon: "img/cozy-music.png",
-            name: "cozic",
-            slug: "cozic",
-            git: "https://github.com/rdubigny/cozy-music.git",
-            comment: "community contribution",
-            description: "An audio player to always keep your music with you"
-          }, {
             icon: "img/files-icon.png",
             name: "files",
+            displayName: "Files",
             slug: "files",
             git: "https://github.com/mycozycloud/cozy-files.git",
-            comment: "community contribution",
-            description: "Store your files and search into them."
-          }, {
-            icon: "img/feeds-icon.png",
-            name: "feeds",
-            slug: "feeds",
-            git: "https://github.com/Piour/cozy-feeds.git",
-            comment: "community contribution",
-            description: "Aggregate your feeds and save your favorite links in bookmarks."
-          }, {
-            icon: "img/pfm.png",
-            name: "MesComptes",
-            slug: "pfm",
-            git: "https://github.com/seeker89/cozy-pfm.git",
-            comment: "community contribution",
-            description: "Browse your bank accounts records and get daily reports from them."
-          }, {
-            icon: "img/kyou.png",
-            name: "kyou",
-            slug: "kyou",
-            git: "https://github.com/frankrousseau/kyou.git",
-            comment: "community contribution",
-            description: "Quantify your for a better knowledge of yourself",
-            website: "http://frankrousseau.github.io/kyou"
-          }, {
-            icon: "img/nirc-icon.png",
-            name: "nirc",
-            slug: "nirc",
-            git: "https://github.com/frankrousseau/cozy-nirc.git",
-            comment: "community contribution",
-            description: "Access to your favorite IRC channel from your Cozy"
-          }, {
-            icon: "img/notes-icon.png",
-            name: "notes",
-            slug: "notes",
-            git: "https://github.com/mycozycloud/cozy-notes.git",
             comment: "official application",
-            description: "Organize and store your notes efficiently."
-          }, {
-            icon: "img/owm.png",
-            name: "OWM",
-            slug: "owm",
-            git: "https://github.com/Piour/piour-cozy-owm.git",
-            comment: "community contribution",
-            description: "What is the weather like in your city? Check it out within your Cozy!"
+            description: "Your online filesystem."
           }, {
             icon: "img/photos-icon.png",
             name: "photos",
+            displayName: "Photos",
             slug: "photos",
             git: "https://github.com/mycozycloud/cozy-photos.git",
             comment: "official application",
             description: "Share photos with your friends."
           }, {
+            icon: "img/notes-icon.png",
+            name: "notes",
+            displayName: "Note",
+            slug: "notes",
+            git: "https://github.com/mycozycloud/cozy-notes.git",
+            comment: "official application",
+            description: "Organize and store your notes efficiently."
+          }, {
             icon: "img/todos-icon.png",
             name: "todos",
+            displayName: "Todos",
             slug: "todos",
             git: "https://github.com/mycozycloud/cozy-todos.git",
             comment: "official application",
@@ -244,13 +188,80 @@ window.require.register("collections/application", function(exports, require, mo
           }, {
             icon: "img/webdav.png",
             name: "webdav",
+            displayName: "Webdav",
             slug: "webdav",
             git: "https://github.com/aenario/cozy-webdav.git",
             comment: "official application",
             description: "Synchronize your contacts and your agenda with Cozy"
           }, {
+            icon: "img/bookmarks-icon.png",
+            name: "bookmarks",
+            displayName: "Bookmarks",
+            slug: "bookmarks",
+            git: "https://github.com/Piour/cozy-bookmarks.git",
+            comment: "community contribution",
+            description: "Manage your bookmarks easily"
+          }, {
+            icon: "img/cozy-music.png",
+            name: "cozic",
+            displayName: "Cozic",
+            slug: "cozic",
+            git: "https://github.com/rdubigny/cozy-music.git",
+            comment: "community contribution",
+            description: "An audio player to always keep your music with you"
+          }, {
+            icon: "img/feeds-icon.png",
+            name: "feeds",
+            displayName: "Feeds",
+            slug: "feeds",
+            git: "https://github.com/Piour/cozy-feeds.git",
+            comment: "community contribution",
+            description: "Aggregate your feeds and save your favorite links in bookmarks."
+          }, {
+            icon: "img/pfm.png",
+            name: "mes comptes",
+            displayName: "Mes Comptes",
+            slug: "pfm",
+            git: "https://github.com/seeker89/cozy-pfm.git",
+            comment: "community contribution",
+            description: "Browse your bank accounts records and get daily reports from them."
+          }, {
+            icon: "img/kyou.png",
+            name: "kyou",
+            displayName: "KYou",
+            slug: "kyou",
+            git: "https://github.com/frankrousseau/kyou.git",
+            comment: "community contribution",
+            description: "Quantify your for a better knowledge of yourself",
+            website: "http://frankrousseau.github.io/kyou"
+          }, {
+            icon: "img/konnectors-icon.png",
+            name: "konnectors",
+            displayName: "Konnectors",
+            slug: "konnectors",
+            git: "https://github.com/frankrousseau/konnectors.git",
+            comment: "community contribution",
+            description: "Import data from external services (Twitter, Jawbone...)"
+          }, {
+            icon: "img/nirc-icon.png",
+            name: "nirc",
+            displayName: "nIRC",
+            slug: "nirc",
+            git: "https://github.com/frankrousseau/cozy-nirc.git",
+            comment: "community contribution",
+            description: "Access to your favorite IRC channel from your Cozy"
+          }, {
+            icon: "img/owm.png",
+            name: "owm",
+            displayName: "OWM",
+            slug: "owm",
+            git: "https://github.com/Piour/piour-cozy-owm.git",
+            comment: "community contribution",
+            description: "What is the weather like in your city? Check it out within your Cozy!"
+          }, {
             icon: "img/databrowser-icon.png",
-            name: "Databrowser",
+            name: "databrowser",
+            displayName: "Toutes mes données",
             slug: "databrowser",
             git: "https://github.com/n-a-n/cozy-databrowser.git",
             comment: "community contribution",
@@ -292,7 +303,6 @@ window.require.register("collections/application", function(exports, require, mo
           apps = apps.concat(fingApps);
         }
         _this.reset(apps);
-        _this.sort();
         if (callback != null) {
           return callback(null, apps);
         }
@@ -732,6 +742,125 @@ window.require.register("lib/base_view", function(exports, require, module) {
   })(Backbone.View);
   
 });
+window.require.register("lib/color_picker_handler", function(exports, require, module) {
+  var ColorPickerHandler,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  module.exports = ColorPickerHandler = (function(_super) {
+
+    __extends(ColorPickerHandler, _super);
+
+    ColorPickerHandler.prototype.currentSelectedField = null;
+
+    function ColorPickerHandler(options) {
+      this.targetFields = options.targetFields;
+      this.colorPicker = options.colorPicker;
+      ColorPickerHandler.__super__.constructor.call(this);
+    }
+
+    ColorPickerHandler.prototype.initialize = function() {
+      var _this = this;
+      this.targetFields.focus(function() {
+        return this.blur();
+      });
+      this.defaultColors = {
+        background: '#fcf9f5',
+        button: '#f7f4f0',
+        buttonHover: '#f1e2cf',
+        invertedColor: '#000'
+      };
+      this.reset();
+      this.targetFields.click(function(event) {
+        var currentColor, farb, hexColor, offset, rgb;
+        event.stopPropagation();
+        if (_this.currentSelectedField === event.currentTarget) {
+          _this.colorPicker.hide();
+          $('.application').removeClass('ui-resizable-disabled');
+          return _this.currentSelectedField = null;
+        } else {
+          farb = $.farbtastic(_this.colorPicker);
+          currentColor = $(event.currentTarget).css('background-color');
+          rgb = currentColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+          hexColor = farb.pack([rgb[1] / 255, rgb[2] / 255, rgb[3] / 255]);
+          _this.colorPicker.show();
+          $('.application').addClass('ui-resizable-disabled');
+          _this.currentSelectedField = event.target;
+          offset = $(event.target).offset();
+          offset.top = 5;
+          offset.left += 25;
+          _this.colorPicker.offset(offset);
+          return farb.setColor(hexColor);
+        }
+      });
+      this.colorPicker.farbtastic(function(color) {
+        var inputName;
+        inputName = $(_this.currentSelectedField).attr('name');
+        if (inputName === "background-color") {
+          _this.currentColors.background = color;
+          _this.currentColors.invertedColor = _this.getInvertedColor(color);
+        } else if (inputName === "button-color") {
+          _this.currentColors.button = color;
+        } else if (inputName === "button-hover-color") {
+          _this.currentColors.buttonHover = color;
+        }
+        return _this.injectCss();
+      });
+      return this.enable();
+    };
+
+    ColorPickerHandler.prototype.disable = function() {
+      return $(window).off('click');
+    };
+
+    ColorPickerHandler.prototype.enable = function() {
+      var _this = this;
+      return $(window).click(function(event) {
+        if (!(event.target === $('.h-marker.marker')[0] || event.target === $('.wheel')[0])) {
+          _this.currentSelectedField = null;
+          $('.application').removeClass('ui-resizable-disabled');
+          return _this.colorPicker.hide();
+        }
+      });
+    };
+
+    ColorPickerHandler.prototype.getInvertedColor = function(color) {
+      var a, colors, farb, invertedColor;
+      farb = $.farbtastic(this.colorPicker);
+      colors = farb.unpack(color);
+      a = 1 - (0.299 * colors[0] + 0.587 * colors[1] + 0.114 * colors[2]);
+      invertedColor = a < 0.5 ? '#000' : '#fff';
+      return invertedColor;
+    };
+
+    ColorPickerHandler.prototype.reset = function() {
+      this.currentColors = _.clone(this.defaultColors);
+      return this.injectCss();
+    };
+
+    ColorPickerHandler.prototype.setCurrentColors = function(userPreference) {
+      var backgroundColor;
+      backgroundColor = userPreference.get('backgroundColor') || this.defaultColors.background;
+      return this.currentColors = {
+        background: backgroundColor,
+        button: userPreference.get('buttonColor') || this.defaultColors.background,
+        buttonHover: userPreference.get('buttonHoverColor') || this.defaultColors.background,
+        invertedColor: this.getInvertedColor(backgroundColor)
+      };
+    };
+
+    ColorPickerHandler.prototype.injectCss = function() {
+      var css;
+      css = "body, input[name=\"background-color\"] {\n    background-color: " + this.currentColors.background + ";\n}\n\n.application, input[name=\"button-color\"] {\n    background-color: " + this.currentColors.button + "\n}\n.application:hover,\n#home-menu .menu-btn:hover,\ninput[name=\"button-hover-color\"] {\n    background-color: " + this.currentColors.buttonHover + "\n}\ninput[name=\"background-color\"],\ninput[name=\"button-color\"],\ninput[name=\"button-hover-color\"] {\n    border: 1px solid " + this.currentColors.invertedColor + " !important\n}";
+      $('head style#cozy-custom-style').remove();
+      return $('head').append($("<style id='cozy-custom-style'>" + css + "</style>"));
+    };
+
+    return ColorPickerHandler;
+
+  })(Backbone.View);
+  
+});
 window.require.register("lib/request", function(exports, require, module) {
   
   exports.request = function(type, url, data, callback) {
@@ -747,7 +876,6 @@ window.require.register("lib/request", function(exports, require, module) {
         }
       },
       error: function(data) {
-        console.log(data);
         if (data != null) {
           data = JSON.parse(data.responseText);
           if ((data.msg != null) && (callback != null)) {
@@ -988,11 +1116,12 @@ window.require.register("locales/en", function(exports, require, module) {
     "welcome to app store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
     "installed everything": "You have already installed everything !",
     "already similarly named app": "There is already an app with similar name.",
-    "your cozy home": "your cozy home",
-    "manage your apps": "manage your app",
-    "choose your apps": "choose your apps",
-    "configure your cozy": "configure your cozy",
-    "ask for assistance": "ask for assistance",
+    "your app list": "Access to your apps",
+    "customize your cozy": "Customize your layout",
+    "manage your apps": "Manage your app",
+    "choose your apps": "Choose your apps",
+    "configure your cozy": "Configure your cozy",
+    "ask for assistance": "Ask for assistance",
     "logout": "logout",
     "welcome to your cozy": "Welcome to your Cozy!",
     "you have no apps": "You have no application installed. You should",
@@ -1059,7 +1188,8 @@ window.require.register("locales/en", function(exports, require, module) {
     "The first place to find help is:": "The first place to find help is:",
     "removed": "removed",
     "required permissions": "Required Permissions",
-    "finish layout edition": "Finish Layout Edition",
+    "finish layout edition": "Save",
+    "reset customization": "Reset",
     "use widget": "Use widget",
     "use icon": "Use icon",
     "change layout": "Change the layout",
@@ -1121,11 +1251,12 @@ window.require.register("locales/fr", function(exports, require, module) {
     "welcome to app store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
     "installed everything": "Vous avez déjà tout installé !",
     "already similarly named app": "Il y a déjà une application installée avec un nom similaire.",
-    "your cozy home": "votre accueil Cozy",
-    "manage your apps": "gérer vos apps",
-    "choose your apps": "choisissez vos apps",
-    "configure your cozy": "configurer votre cozy",
-    "ask for assistance": "demandez de l'aide",
+    "your app list": "Accéder à vos apps",
+    "customize your cozy": "Personnalisez la mise en page",
+    "manage your apps": "Gérez vos apps",
+    "choose your apps": "Choisissez vos apps",
+    "configure your cozy": "Configurez votre cozy",
+    "ask for assistance": "Demandez de l'aide",
     "logout": "déconnexion",
     "welcome to your cozy": "Bienvenue sur votre Cozy!",
     "you have no apps": "Vous n'avez pas d'applications installées vous devriez",
@@ -1192,7 +1323,8 @@ window.require.register("locales/fr", function(exports, require, module) {
     "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
     "removed": "supprimée",
     "required permissions": "Permissions requises",
-    "finish layout edition": "Valider la nouvelle disposition",
+    "finish layout edition": "Enregistrer",
+    "reset customization": "Remise à zéro",
     "use widget": "Mode widget",
     "use icon": "Mode icone",
     "change layout": "Modifier la disposition",
@@ -1427,6 +1559,28 @@ window.require.register("models/user", function(exports, require, module) {
   })(BaseModel);
   
 });
+window.require.register("models/user_preference", function(exports, require, module) {
+  var BaseModel, UserPreference,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  BaseModel = require('lib/base_model').BaseModel;
+
+  module.exports = UserPreference = (function(_super) {
+
+    __extends(UserPreference, _super);
+
+    function UserPreference() {
+      return UserPreference.__super__.constructor.apply(this, arguments);
+    }
+
+    UserPreference.prototype.urlRoot = 'api/preference/';
+
+    return UserPreference;
+
+  })(Backbone.Model);
+  
+});
 window.require.register("routers/main_router", function(exports, require, module) {
   var MainRouter,
     __hasProp = {}.hasOwnProperty,
@@ -1442,7 +1596,7 @@ window.require.register("routers/main_router", function(exports, require, module
 
     MainRouter.prototype.routes = {
       "home": "applicationList",
-      "home/edit": "applicationListEdit",
+      "customize": "applicationListEdit",
       "applications": "market",
       "config-applications": "configApplications",
       "account": "account",
@@ -1472,8 +1626,15 @@ window.require.register("routers/main_router", function(exports, require, module
     };
 
     MainRouter.prototype.selectIcon = function(index) {
-      $('.menu-btn').removeClass('active');
-      return $($('.menu-btn').get(index)).addClass('active');
+      if (index !== -1) {
+        $('.menu-btn.active').removeClass('active');
+        $($('.menu-btn').get(index)).addClass('active');
+      } else {
+        $('.menu-btn.active').removeClass('active');
+      }
+      if (index !== 3) {
+        return app.mainView.applicationListView.setMode('view');
+      }
     };
 
     MainRouter.prototype.applicationList = function() {
@@ -1483,27 +1644,27 @@ window.require.register("routers/main_router", function(exports, require, module
 
     MainRouter.prototype.applicationListEdit = function() {
       app.mainView.displayApplicationsListEdit();
-      return this.selectIcon(0);
+      return this.selectIcon(3);
     };
 
     MainRouter.prototype.configApplications = function() {
       app.mainView.displayConfigApplications();
-      return this.selectIcon(1);
+      return this.selectIcon(2);
     };
 
     MainRouter.prototype.help = function() {
       app.mainView.displayHelp();
-      return this.selectIcon(4);
+      return this.selectIcon(5);
     };
 
     MainRouter.prototype.market = function() {
       app.mainView.displayMarket();
-      return this.selectIcon(2);
+      return this.selectIcon(1);
     };
 
     MainRouter.prototype.account = function() {
       app.mainView.displayAccount();
-      return this.selectIcon(3);
+      return this.selectIcon(4);
     };
 
     MainRouter.prototype.application = function(slug, hash) {
@@ -1606,7 +1767,7 @@ window.require.register("templates/config_application", function(exports, requir
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.name) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+  buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
   if ( app.state === 'installed')
   {
   buf.push('<span class="state-label">');
@@ -1657,10 +1818,7 @@ window.require.register("templates/config_applications", function(exports, requi
   buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
   var __val__ = t('memory megabytes')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span></div></div><div class="change-layout mt2"><div class="line"><img src="img/changelayout.png"/></div><div class="line"><a href="#home/edit">');
-  var __val__ = t('change layout')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</a></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
+  buf.push('</span></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
   var __val__ = t('manage your applications')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</div></div><div class="mod w66 left"><div class="title-device h4 mb3">');
@@ -1713,7 +1871,7 @@ window.require.register("templates/help", function(exports, require, module) {
   buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
   var __val__ = t('Register and post on our forum: ')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</p><P class="help-text"> <a href="https://forum.cozycloud.cc/">https://forum.cozycloud.cc/</a></P><p class="help-text">');
+  buf.push('</p><P class="help-text"> <a href="https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud"> \ngroups.google.com/forum/?fromgroups#!forum/cozy-cloud</a></P><p class="help-text">');
   var __val__ = t('Ask your question on Twitter: ')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
@@ -1746,8 +1904,11 @@ window.require.register("templates/home", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w600"><a href="#home" class="btn btn-large">');
+  buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w800"><label>Background color</label><input name="background-color" class="colorpicked"/><label>Tile color</label><input name="button-color" class="colorpicked"/><label>Tile color on hover</label><input name="button-hover-color" class="colorpicked"/><div id="colorpicker"></div><a id="save-custom" href="#home" class="btn">');
   var __val__ = t('finish layout edition')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</a>&nbsp;<a id="reset-custom" class="btn">');
+  var __val__ = t('reset customization')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
   var __val__ = t('welcome to your cozy')
@@ -1808,10 +1969,10 @@ window.require.register("templates/home_application", function(exports, require,
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<button class="btn use-widget">');
+  buf.push('<div class="mask"></div><div class="bottom-handle"></div><div class="bottom-right-handle"></div><div class="right-handle"></div><button class="btn use-widget">');
   var __val__ = t('use widget')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button><div class="application-inner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div>');
+  buf.push('</button><div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
   }
   return buf.join("");
   };
@@ -1835,22 +1996,28 @@ window.require.register("templates/layout", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn"><a href="#home"><span>');
-  var __val__ = t('your cozy home')
+  buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn home-icon"><a href="#home"><span>');
+  var __val__ = t('your app list')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
-  var __val__ = t('manage your apps')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
+  buf.push('</span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
   var __val__ = t('choose your apps')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+  buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
+  var __val__ = t('manage your apps')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn customize-icon"><a href="#customize"><span>');
+  var __val__ = t('customize your cozy')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
   var __val__ = t('configure your cozy')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn"><a href="#help"><span>');
+  buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn help-icon"><a href="#help"><span>');
   var __val__ = t('ask for assistance')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</span><img src="img/help.png"/></a></div></div><div id="home-content"></div></div></div>');
+  buf.push('</span><img src="img/help.png"/></a></div><div class="txtright menu-btn logout-menu-icon"><a href="#logout"><span>');
+  var __val__ = t('Sign out')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</span><img src="img/logout-black.png"/></a></div></div><div id="home-content"></div></div></div>');
   }
   return buf.join("");
   };
@@ -1861,7 +2028,10 @@ window.require.register("templates/market", function(exports, require, module) {
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="your-app" class="clearfix"><div class="text"><p>');
+  buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
+  var __val__ = t('installed everything')
+  buf.push(escape(null == __val__ ? "" : __val__));
+  buf.push('</div></div></div><div class="md-overlay"></div><div class="mt2 mb2"><div id="your-app" class="clearfix"><div class="text"><p>');
   var __val__ = t('install')
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
@@ -1870,10 +2040,7 @@ window.require.register("templates/market", function(exports, require, module) {
   buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
   var __val__ = t('install')
   buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
-  var __val__ = t('installed everything')
-  buf.push(escape(null == __val__ ? "" : __val__));
-  buf.push('</div></div></div><div class="md-overlay"></div>');
+  buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div>');
   }
   return buf.join("");
   };
@@ -1895,7 +2062,7 @@ window.require.register("templates/market_application", function(exports, requir
   }
   buf.push('</div><div class="app-img left"><img');
   buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
-  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.name) == null ? '' : interp) + '</h3><span class="comment">');
+  buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
   var __val__ = t(app.comment)
   buf.push(escape(null == __val__ ? "" : __val__));
   buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
@@ -2619,7 +2786,7 @@ window.require.register("views/config_applications", function(exports, require, 
     };
 
     ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
-      this.diskSpace.find('.amount').html(amount / 10);
+      this.diskSpace.find('.amount').html(amount);
       return this.diskSpace.find('.total').html(total);
     };
 
@@ -2805,11 +2972,14 @@ window.require.register("views/home", function(exports, require, module) {
           if (_this.state === 'edit') {
             return _this.gridster.enable();
           }
+        },
+        'click #reset-custom': function() {
+          return _this.colorpicker.reset();
         }
       };
     };
 
-    function ApplicationsListView(apps) {
+    function ApplicationsListView(apps, userPreference) {
       this.saveChanges = __bind(this.saveChanges, this);
 
       this.doResize = __bind(this.doResize, this);
@@ -2822,6 +2992,7 @@ window.require.register("views/home", function(exports, require, module) {
 
       this.initialize = __bind(this.initialize, this);
       this.apps = apps;
+      this.userPreference = userPreference;
       this.state = 'view';
       this.isLoading = true;
       ApplicationsListView.__super__.constructor.call(this, {
@@ -2837,19 +3008,40 @@ window.require.register("views/home", function(exports, require, module) {
       this.listenTo(this.collection, 'reset', function() {
         return _this.isLoading = false;
       });
+      this.listenTo(this.userPreference, 'change', function(userPreference) {
+        _this.colorpicker.setCurrentColors(userPreference);
+        return _this.colorpicker.injectCss();
+      });
       ApplicationsListView.__super__.initialize.apply(this, arguments);
       return $(window).on('resize', _.debounce(this.onWindowResize, 300));
     };
 
     ApplicationsListView.prototype.afterRender = function() {
-      var cid, view, _ref, _results,
+      var ColorPickerHandler, cid, view, _ref, _results,
         _this = this;
       this.appList = this.$("#app-list");
       this.closeEditBtn = this.$('#home-edit-close');
+      ColorPickerHandler = require('../lib/color_picker_handler');
+      this.colorpicker = new ColorPickerHandler({
+        targetFields: this.$('.colorpicked'),
+        colorPicker: this.$('#colorpicker')
+      });
       this.$("#no-app-message").hide();
       $(".menu-btn a").click(function(event) {
         $(".menu-btn").removeClass('active');
         return $(event.target).closest('.menu-btn').addClass('active');
+      });
+      this.closeEditBtn.find('a#save-custom.btn').click(function(event) {
+        var bgColor, btnColor, btnHoverColor;
+        bgColor = _this.colorpicker.currentColors.background;
+        btnColor = _this.colorpicker.currentColors.button;
+        btnHoverColor = _this.colorpicker.currentColors.buttonHover;
+        _this.userPreference.set({
+          backgroundColor: bgColor,
+          buttonColor: btnColor,
+          buttonHoverColor: btnHoverColor
+        });
+        return _this.userPreference.save();
       });
       this.initGridster();
       ApplicationsListView.__super__.afterRender.apply(this, arguments);
@@ -2873,15 +3065,15 @@ window.require.register("views/home", function(exports, require, module) {
     };
 
     ApplicationsListView.prototype.computeGridDims = function() {
-      var colsNb, grid_margin, grid_size, grid_step, smallest_step, width;
+      var colsNb, grid_margin, grid_size, grid_step, max_grid_step, smallest_step, width;
       width = $(window).width();
       if (width > 640) {
         width = width - 100;
       } else {
         width = width - 65;
       }
-      grid_margin = 12;
-      smallest_step = 130 + 2 * grid_margin;
+      grid_margin = 8;
+      smallest_step = 150 + 2 * grid_margin;
       colsNb = Math.floor(width / smallest_step);
       if (colsNb < 3) {
         colsNb = 3;
@@ -2891,6 +3083,10 @@ window.require.register("views/home", function(exports, require, module) {
       }
       colsNb = colsNb - colsNb % 3;
       grid_step = width / colsNb;
+      max_grid_step = 150;
+      if (grid_step > max_grid_step) {
+        grid_step = max_grid_step;
+      }
       grid_size = grid_step - 2 * grid_margin;
       return {
         colsNb: colsNb,
@@ -2907,7 +3103,8 @@ window.require.register("views/home", function(exports, require, module) {
         if ((_ref = this.gridster) != null) {
           _ref.enable();
         }
-        this.closeEditBtn.show();
+        this.closeEditBtn.slideDown();
+        this.colorpicker.enable();
         _ref1 = this.views;
         _results = [];
         for (cid in _ref1) {
@@ -2916,6 +3113,7 @@ window.require.register("views/home", function(exports, require, module) {
         }
         return _results;
       } else {
+        this.colorpicker.disable();
         if ((_ref2 = this.gridster) != null) {
           _ref2.disable();
         }
@@ -2959,6 +3157,7 @@ window.require.register("views/home", function(exports, require, module) {
       });
       this.gridster = this.appList.data('gridster');
       this.gridster.set_dom_grid_height();
+      this.appList.width(this.colsNb * this.grid_step);
       return this.gridster.generate_stylesheet({
         cols: 16,
         rows: 16
@@ -3071,6 +3270,7 @@ window.require.register("views/home", function(exports, require, module) {
         if (_.isEqual(oldpos, newpos)) {
           continue;
         }
+        newpos.useWidget = (oldpos != null ? oldpos.useWidget : void 0) || false;
         _results.push(view.model.saveHomePosition(this.colsNb, newpos));
       }
       return _results;
@@ -3121,6 +3321,10 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     function ApplicationRow(options) {
+      this.showSpinner = __bind(this.showSpinner, this);
+
+      this.generateSpinner = __bind(this.generateSpinner, this);
+
       this.launchApp = __bind(this.launchApp, this);
 
       this.onUseWidgetClicked = __bind(this.onUseWidgetClicked, this);
@@ -3176,24 +3380,31 @@ window.require.register("views/home_application", function(exports, require, mod
       }
       switch (this.model.get('state')) {
         case 'broken':
+          this.hideSpinner();
+          this.icon.show();
           this.icon.attr('src', "img/broken.png");
           return this.stateLabel.show().text(t('broken'));
         case 'installed':
+          this.hideSpinner();
           this.icon.attr('src', "api/applications/" + app.id + ".png");
+          this.icon.hide();
+          this.icon.show();
           this.icon.removeClass('stopped');
           this.stateLabel.hide();
-          useWidget = (_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0;
+          useWidget = (_ref = this.model.getHomePosition(this.getNbCols())) != null ? _ref.useWidget : void 0;
           if (this.canUseWidget() && useWidget) {
             return this.setUseWidget(true);
           }
           break;
         case 'installing':
-          this.icon.attr('src', "img/installing.gif");
-          this.icon.removeClass('stopped');
+          this.icon.hide();
+          this.showSpinner();
           return this.stateLabel.show().text('installing');
         case 'stopped':
           this.icon.attr('src', "api/applications/" + app.id + ".png");
           this.icon.addClass('stopped');
+          this.hideSpinner();
+          this.icon.show();
           return this.stateLabel.hide();
       }
     };
@@ -3255,13 +3466,22 @@ window.require.register("views/home_application", function(exports, require, mod
       return this.model.has('widget');
     };
 
+    ApplicationRow.prototype.getNbCols = function() {
+      return window.app.mainView.applicationListView.colsNb;
+    };
+
     ApplicationRow.prototype.onUseWidgetClicked = function() {
-      var useWidget, _ref,
+      var homePosition, nbCols,
         _this = this;
-      useWidget = !((_ref = this.model.get('homeposition')) != null ? _ref.useWidget : void 0);
-      return this.model.saveHomePosition('useWidget', useWidget, {
+      nbCols = this.getNbCols();
+      homePosition = this.model.getHomePosition(nbCols);
+      if (homePosition.useWidget == null) {
+        homePosition.useWidget = false;
+      }
+      homePosition.useWidget = !homePosition.useWidget;
+      return this.model.saveHomePosition(nbCols, homePosition, {
         success: function() {
-          return _this.setUseWidget(useWidget);
+          return _this.setUseWidget(homePosition.useWidget);
         }
       });
     };
@@ -3271,11 +3491,40 @@ window.require.register("views/home_application", function(exports, require, mod
 
 
     ApplicationRow.prototype.launchApp = function(e) {
-      if (e.which === 2 || e.ctrlKey || e.metaKey) {
+      if (e.which === 2 || e.ctrlKey || e.metaKey || $(window).width() <= 500) {
         return window.open("apps/" + this.model.id + "/", "_blank");
       } else if (e.which === 1) {
         return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
       }
+    };
+
+    ApplicationRow.prototype.generateSpinner = function() {
+      this.spinner = new Sonic({
+        width: 40,
+        height: 40,
+        padding: 20,
+        strokeColor: '#363a46',
+        pointDistance: .002,
+        stepsPerFrame: 15,
+        trailLength: .7,
+        step: 'fader',
+        setup: function() {
+          return this._.lineWidth = 5;
+        },
+        path: [['arc', 20, 20, 20, 0, 360]]
+      });
+      return this.spinner.play();
+    };
+
+    ApplicationRow.prototype.showSpinner = function() {
+      if (!this.spinner) {
+        this.generateSpinner();
+      }
+      return this.$('.vertical-aligner').prepend(this.spinner.canvas);
+    };
+
+    ApplicationRow.prototype.hideSpinner = function() {
+      return this.$('.vertical-aligner canvas').remove();
     };
 
     return ApplicationRow;
@@ -3284,7 +3533,7 @@ window.require.register("views/home_application", function(exports, require, mod
   
 });
 window.require.register("views/main", function(exports, require, module) {
-  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, User, appIframeTemplate, socketListener,
+  var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, User, UserPreference, appIframeTemplate, socketListener,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3310,6 +3559,8 @@ window.require.register("views/main", function(exports, require, module) {
   ApplicationsListView = require('views/home');
 
   socketListener = require('lib/socket_listener');
+
+  UserPreference = require('../models/user_preference');
 
   User = require('models/user');
 
@@ -3353,12 +3604,13 @@ window.require.register("views/main", function(exports, require, module) {
       this.listenTo(this.devices, 'reset', this.test);
       socketListener.watch(this.apps);
       socketListener.watch(this.devices);
+      this.userPreference = new UserPreference();
       HomeView.__super__.constructor.apply(this, arguments);
     }
 
     HomeView.prototype.afterRender = function() {
       this.navbar = new NavbarView(this.apps);
-      this.applicationListView = new ApplicationsListView(this.apps);
+      this.applicationListView = new ApplicationsListView(this.apps, this.userPreference);
       this.configApplications = new ConfigApplicationsView(this.apps, this.devices);
       this.accountView = new AccountView();
       this.helpView = new HelpView();
@@ -3375,6 +3627,7 @@ window.require.register("views/main", function(exports, require, module) {
       this.devices.fetch({
         reset: true
       });
+      this.userPreference.fetch();
       return this.resetLayoutSizes();
     };
 
@@ -3550,8 +3803,16 @@ window.require.register("views/main", function(exports, require, module) {
 
 
     HomeView.prototype.resetLayoutSizes = function() {
-      this.frames.height($(window).height() - 48);
-      return this.content.height($(window).height() - 48);
+      if ($.browser.webkit) {
+        this.frames.height($(window).height() - 50);
+      } else {
+        this.frames.height($(window).height() - 40);
+      }
+      if ($(window).width() > 500) {
+        return this.content.height($(window).height() - 48);
+      } else {
+        return this.content.height($(window).height());
+      }
     };
 
     return HomeView;
@@ -3581,7 +3842,7 @@ window.require.register("views/market", function(exports, require, module) {
 
   slugify = require('helpers').slugify;
 
-  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
+  REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
 
   module.exports = MarketView = (function(_super) {
 
@@ -3724,16 +3985,21 @@ window.require.register("views/market", function(exports, require, module) {
         confirm: function(application) {
           $('#no-app-message').hide();
           _this.popover.hide();
+          _this.appList.show();
           return _this.hideApplication(appWidget, function() {
             return _this.runInstallation(appWidget.app);
           });
         },
         cancel: function(application) {
-          return _this.popover.hide();
+          _this.popover.hide();
+          return _this.appList.show();
         }
       });
       this.$el.append(this.popover.$el);
-      return this.popover.show();
+      this.popover.show();
+      if ($(window).width() <= 500) {
+        return this.appList.hide();
+      }
     };
 
     MarketView.prototype.hideApplication = function(appWidget, callback) {
@@ -3773,9 +4039,10 @@ window.require.register("views/market", function(exports, require, module) {
     };
 
     MarketView.prototype.parseGitUrl = function(url) {
-      var branch, domain, error, git, name, out, parsed, parts, path, proto, slug;
+      var branch, domain, error, git, name, out, parsed, parts, path, port, proto, slug;
       url = url.replace('git@github.com:', 'https://github.com/');
       url = url.replace('git://', 'https://');
+      console.debug(REPOREGEX);
       parsed = REPOREGEX.exec(url);
       if (parsed == null) {
         error = {
@@ -3784,14 +4051,17 @@ window.require.register("views/market", function(exports, require, module) {
         };
         return error;
       }
-      git = parsed[0], proto = parsed[1], domain = parsed[2], path = parsed[3], branch = parsed[4];
+      git = parsed[0], proto = parsed[1], domain = parsed[2], port = parsed[3], path = parsed[4], branch = parsed[5];
       path = path.replace('.git', '');
       parts = path.split("/");
       name = parts[parts.length - 1];
       name = name.replace(/-|_/g, " ");
       name = name.replace('cozy ', '');
       slug = slugify(name);
-      git = proto + domain + path + '.git';
+      if (port == null) {
+        port = "";
+      }
+      git = proto + domain + port + path + '.git';
       if (branch != null) {
         branch = branch.substring(1);
       }
@@ -4196,7 +4466,8 @@ window.require.register("views/notifications_view", function(exports, require, m
       if (!this.initializing) {
         this.sound.play();
       }
-      return this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
+      this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
+      return this.$('#notifications-toggle').addClass('highlight');
     };
 
     NotificationsView.prototype.afterRender = function() {
@@ -4227,8 +4498,9 @@ window.require.register("views/notifications_view", function(exports, require, m
       this.$('#dismiss-all').toggle(newCount !== 0);
       if (newCount === 0) {
         newCount = "";
+        this.counter.html(newCount);
+        return this.counter.hide();
       }
-      return this.counter.html(newCount);
     };
 
     NotificationsView.prototype.windowClicked = function() {
@@ -4251,8 +4523,8 @@ window.require.register("views/notifications_view", function(exports, require, m
 
     NotificationsView.prototype.dismissAll = function() {
       var _this = this;
-      this.dismissButton.spin('small');
       this.dismissButton.css('color', 'transparent');
+      this.dismissButton.spin('small');
       this.collection.removeAll({
         success: function() {
           _this.dismissButton.spin();
@@ -4263,7 +4535,8 @@ window.require.register("views/notifications_view", function(exports, require, m
           return _this.dismissButton.css('color', '#333');
         }
       });
-      return this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
+      this.$('#notifications-toggle img').attr('src', 'img/notification-white.png');
+      return this.$('#notifications-toggle').removeClass('highlight');
     };
 
     NotificationsView.prototype.hideNotifList = function(event) {
@@ -4331,7 +4604,7 @@ window.require.register("views/popover_description", function(exports, require, 
       this.header.html(this.model.get('name'));
       this.body.addClass('loading');
       this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
-      this.body.find('.spinner-container').spin('medium');
+      this.body.find('.spinner-container').spin('small');
       this.model.getMetaData({
         success: function() {
           _this.body.removeClass('loading');

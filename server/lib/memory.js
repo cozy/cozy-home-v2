@@ -19,9 +19,9 @@ exports.MemoryManager = (function() {
       line = line.replace(/[\s]+/g, ' ');
       lineData = line.split(' ');
       if (lineData.length > 5 && lineData[5] === '/') {
-        freeSpace = lineData[2].substring(0, lineData[2].length - 1);
+        freeSpace = lineData[3].substring(0, lineData[3].length - 1);
         totalSpace = lineData[1].substring(0, lineData[1].length - 1);
-        usedSpace = lineData[4].substring(0, lineData[4].length - 1);
+        usedSpace = lineData[2].substring(0, lineData[2].length - 1);
         data.totalDiskSpace = totalSpace;
         data.freeDiskSpace = freeSpace;
         data.usedDiskSpace = usedSpace;

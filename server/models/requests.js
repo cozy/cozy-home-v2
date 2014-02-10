@@ -28,6 +28,10 @@ module.exports = {
     byApps: byApps
   },
   application: {
-    all: allSlug
+    all: americano.defaultRequests.all,
+    bySlug: allSlug
+  },
+  user_preference: {
+    all: americano.defaultRequests.all
   }
 };

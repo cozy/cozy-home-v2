@@ -13,27 +13,30 @@ exports.Manifest = (function() {
   }
 
   Manifest.prototype.download = function(app, callback) {
-    var client, path,
+    var Provider, provider, providerName,
       _this = this;
-    this.basePath = app.git.substring(19, app.git.length - 4);
-    client = request.newClient("https://raw.github.com/");
-    if (app.branch != null) {
-      path = this.basePath + '/' + app.branch;
+    providerName = app.git.match(/(github\.com|gitlab\.cozycloud\.cc)/);
+    providerName = providerName[0];
+    if (providerName === "gitlab.cozycloud.cc") {
+      Provider = require('./git_providers').CozyGitlabProvider;
     } else {
-      path = this.basePath + '/master';
+      Provider = require('./git_providers').GithubProvider;
     }
-    return client.get(path + '/package.json', function(err, res, body) {
-      var clientStars;
-      if (err) {
-        callback(err);
+    provider = new Provider(app);
+    return provider.getManifest(function(err, data) {
+      if (err != null) {
+        return callback(err);
+      } else {
+        _this.config = data;
+        return provider.getStars(function(err, stars) {
+          if (err != null) {
+            return callback(err);
+          } else {
+            _this.config.stars = stars;
+            return callback(null);
+          }
+        });
       }
-      _this.config = body;
-      clientStars = request.newClient("https://api.github.com/");
-      path = "repos/" + _this.basePath + "/stargazers";
-      return clientStars.get(path, function(err, res, body) {
-        _this.config.stars = body.length;
-        return callback(null);
-      });
     });
   };
 
@@ -62,9 +65,8 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getMetaData = function() {
-    var metaData, path;
+    var metaData;
     metaData = {};
-    path = this.basePath + '/master/package.json';
     if (this.config.description != null) {
       metaData.description = this.config.description;
     }

@@ -1,3 +1,54 @@
+/**
+ * Farbtastic Color Picker 1.2
+ * © 2008 Steven Wittens
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+.farbtastic {
+  position: relative;
+}
+.farbtastic * {
+  position: absolute;
+  cursor: crosshair;
+}
+.farbtastic, .farbtastic .wheel {
+  width: 195px;
+  height: 195px;
+}
+.farbtastic .color, .farbtastic .overlay {
+  top: 47px;
+  left: 47px;
+  width: 101px;
+  height: 101px;
+}
+.farbtastic .wheel {
+  background: url(/img/wheel.png) no-repeat;
+  width: 195px;
+  height: 195px;
+}
+.farbtastic .overlay {
+  background: url(/img/mask.png) no-repeat;
+}
+.farbtastic .marker {
+  width: 17px;
+  height: 17px;
+  margin: -8px 0 0 -8px;
+  overflow: hidden;
+  background: url(/img/marker.png) no-repeat;
+}
+
 /*! gridster.js - v0.1.0 - 2013-06-14
 * http://gridster.net/
 * Copyright (c) 2013 ducksboard; Licensed MIT */
@@ -866,6 +917,9 @@ body {
   z-index: 50;
   right: 0;
 }
+#home-menu .logout-menu-icon {
+  display: none;
+}
 #home-menu .menu-btn {
   z-index: 50;
   height: 52px;
@@ -1026,7 +1080,7 @@ body {
   position: absolute;
   left: 5px;
   top: 48px;
-  width: 420px;
+  width: 220px;
   z-index: 50;
   margin: 0;
   list-style-type: none;
@@ -1055,6 +1109,8 @@ body {
   width: 60px;
   cursor: pointer;
   margin-left: 10px;
+  margin-top: 0;
+  padding-top: 0;
   padding-left: 5px;
   padding-right: 10px;
   -webkit-transition: all 0.3s;
@@ -1062,8 +1118,6 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
-  margin-top: 0;
-  padding-top: 0;
   position: relative;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1074,9 +1128,6 @@ body {
 #notifications-toggle img {
   padding: 0;
   margin: 0;
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
 }
 #notifications-toggle #notifications-counter {
   height: 20px;
@@ -1120,7 +1171,7 @@ body {
 #notifications-toggle:hover {
   background: rgba(220,220,222,0.3);
 }
-#notifications-toggle:hover .backcolor {
+#notifications-toggle.highlight img {
   opacity: 1;
   -ms-filter: none;
   filter: none;
@@ -1239,16 +1290,38 @@ body {
 /** Applications */
 #home-edit-close {
   text-align: center;
+  margin-bottom: 10px;
 }
 #home-edit-close a {
-  display: block;
+  display: inline-block;
   margin: auto;
-  padding: 10px;
+  padding: 5px;
   font-weight: normal;
+  margin-top: 10px;
+}
+#home-edit-close #colorpicker {
+  width: 195px;
+  height: 195px;
+  display: none;
+  position: absolute;
+  z-index: 100000000000;
+}
+#home-edit-close .colorpicked {
+  width: 20px;
+  height: 30px;
+  padding: 2px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  font-family: "Helvetica";
+  border: 1px solid #000;
+  margin: 0 15px 0 5px;
+  cursor: pointer;
 }
 #app-list {
   text-align: center;
-  margin-bottom: 40px 0;
+  margin: auto;
+  margin-bottom: 40px;
 }
 #app-list .preview-holder {
   padding: 10px;
@@ -1286,13 +1359,24 @@ body {
   transition: all 0.3s;
   background: #f7f4f0;
   position: relative;
+  overflow: hidden;
+}
+.application .mask,
+.application .bottom-handle,
+.application .bottom-right-handle,
+.application .right-hanldle {
+  display: none;
 }
 .application .application-inner {
   overflow: hidden;
+  max-width: 100%;
+  height: 100%;
+  padding-top: 5px;
+}
+.application .application-inner .vertical-aligner {
+  height: 100%;
   width: 100%;
-  position: absolute;
-  top: 5%;
-  bottom: 0px;
+  vertical-align: middle;
 }
 .application .application-inner.widget {
   height: 100%;
@@ -1300,8 +1384,7 @@ body {
   bottom: 0px;
 }
 .application .application-inner img {
-  width: auto;
-  height: 75%;
+  width: 70%;
   display: block;
   margin: 0px auto 2% auto;
   text-align: center;
@@ -1324,6 +1407,7 @@ body {
   text-align: center;
   font-family: styled;
   text-transform: uppercase;
+  font-size: 15px;
   color: #363a46;
   text-decoration: none;
 }
@@ -1331,6 +1415,63 @@ body {
   font-size: 18px;
   font-weight: normal;
   color: #f00;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) {
+  cursor: move;
+  border: 5px solid #15a7c7;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .ui-resizable-e {
+  width: 20px;
+  right: -10px;
+  cursor: col-resize;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .ui-resizable-s {
+  height: 20px;
+  bottom: -10px;
+  cursor: row-resize;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .ui-resizable-se {
+  width: 20px;
+  height: 20px;
+  right: -10px;
+  bottom: -10px;
+  cursor: nwse-resize;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .mask {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: #808080;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: alpha(opacity=50);
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .bottom-handle,
+.application.ui-resizable:not(.ui-resizable-disabled) .bottom-right-handle,
+.application.ui-resizable:not(.ui-resizable-disabled) .right-handle {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  width: 10px;
+  height: 10px;
+  background: #15a7c7;
+  border: 1px solid #fff;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .bottom-handle {
+  bottom: -7.5px;
+  left: 50%;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .bottom-right-handle {
+  bottom: -7.5px;
+  right: -7.5px;
+}
+.application.ui-resizable:not(.ui-resizable-disabled) .right-handle {
+  top: 50%;
+  right: -7.5px;
 }
 .application:hover {
   background: #f1e2cf;
@@ -1592,6 +1733,14 @@ body {
 .cozy-app.fing:hover {
   background: #dbf8f8;
 }
+.title-app a.subtitle {
+  display: inline-block;
+  font-family: styled;
+  font-size: 15px;
+}
+#config-application-list {
+  margin-top: 10px;
+}
 .config-application {
   background: #f7f4f0;
   padding: 10px 10px 0 10px;
@@ -1601,6 +1750,7 @@ body {
 }
 .config-application strong {
   text-transform: lowercase;
+  font-size: 20px;
 }
 .config-application .mod {
   margin-left: 5px;
@@ -1637,9 +1787,7 @@ body {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-.config-device strong {
-  text-transform: lowercase;
-}
+.config-device strong,
 .config-device .mod {
   margin-left: 5px;
 }
@@ -1860,22 +2008,18 @@ body {
     overflow: auto;
   }
   .md-modal {
-    position: absolute;
-    top: 0;
+    position: fixed;
+    top: 45px;
     left: 0;
+    bottom: 0;
     width: 100%;
-    height: 100%;
+    height: 90%;
     z-index: 2000;
     visibility: hidden;
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transform: translateX(0) translateY(0);
-    -moz-transform: translateX(0) translateY(0);
-    -o-transform: translateX(0) translateY(0);
-    -ms-transform: translateX(0) translateY(0);
-    transform: translateX(0) translateY(0);
     margin: 0;
     padding: 0;
   }
@@ -2025,6 +2169,23 @@ body {
   }
 }
 @media (max-width: 500px) {
+  header#header {
+    display: none;
+  }
+  div.home-body {
+    padding-top: 0;
+    height: 100%;
+  }
+  .md-modal {
+    top: 0;
+  }
+  #home-menu .logout-menu-icon {
+    display: inline;
+  }
+  .customize-icon,
+  .help-icon {
+    display: none;
+  }
   .application .application-inner img {
     margin-bottom: -5px;
   }
@@ -2055,8 +2216,11 @@ body {
     margin: 0;
     width: 50px;
   }
+  #notifications-container {
+    display: none;
+  }
   #notifications-container #notifications {
-    left: -50px;
+    left: -180px;
     width: 310px;
   }
   #notifications-container #notifications .notification a.doaction {
@@ -2065,5 +2229,12 @@ body {
   #config-applications-view .config-application .mod.left {
     width: 100%;
     margin-bottom: 10px;
+  }
+  #content #home-menu .menu-btn:hover {
+    background: none;
+    background-color: transparent;
+  }
+  #content #home-menu .menu-btn:hover span {
+    display: none;
   }
 }
