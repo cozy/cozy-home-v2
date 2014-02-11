@@ -1,6 +1,6 @@
 {
   "name": "cozy-home",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "engine": {
     "node": "*"
   },
