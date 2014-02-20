@@ -269,6 +269,9 @@ module.exports =
 
     start: (req, res, next) ->
         stop = false
+        # If controller is too slow, client receives a timeout
+        # Below timeout allows to catch timeout error before client
+        # If there is a timeout, application is consider like broken
         setTimeout () ->
             if not stop
                 stop = true
