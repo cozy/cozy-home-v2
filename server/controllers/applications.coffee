@@ -10,7 +10,6 @@ Application = require '../models/application'
 # at the same time. We store there the ID of apps which are already started.
 # IDs are the keys, values are all equal to true.
 startedApplications = {}
-stoppedInstallations = {}
 
 # Helpers
 
@@ -275,16 +274,17 @@ module.exports =
 
     # Start a stopped application.
     start: (req, res, next) ->
-
+        # If controller is too slow, client receives a timeout
+        # Below timeout allows to catch timeout error before client
+        # If there is a timeout, application is consider like broken
         setTimeout () ->
-            unless stoppedStartings[req.application.id]?
+            if startedApplications[req.application.id]?
+                delete startedApplications[req.application.id]
                 return mark_broken res, req.application,
                     stack: "Installation timeout",
                     message: "Installation timeout"
 
-            delete stoppedStartings[req.application.id]
-            delete startedApplications[req.application.id]
-        , 45000
+        , 45 * 1000
 
 
         unless startedApplications[req.application.id]?
@@ -292,26 +292,28 @@ module.exports =
 
             manager = new AppManager
             manager.start req.application, (err, result) ->
-                return mark_broken res, req.application, err if err
+                if err
+                    delete startedApplications[req.application.id]
+                    return mark_broken res, req.application, err
 
-                unless stoppedStartings[req.application.id]?
-                    stoppedStartings[req.application.id] = true
-                    req.application.state = "installed"
-                    req.application.port = result.drone.port
-                    req.application.save (err) ->
-                        return send_error res, err if err
+                req.application.state = "installed"
+                req.application.port = result.drone.port
+                req.application.save (err) ->
+                    if err
+                        delete startedApplications[req.application.id]
+                        return mark_broken res, req.application, err
 
-                        manager.resetProxy (err) ->
-                            return mark_broken res, req.application, err if err
+                    manager.resetProxy (err) ->
+                        delete startedApplications[req.application.id]
 
-                            delete startedApplications[req.application.id]
+                        if err
+                            mark_broken res, req.application, err
+                        else
                             res.send
                                 success: true
                                 msg: 'Application running'
                                 app: req.application
 
-                # Else it means the starting never ends. So, it does nothing
-                # until the timeout is fired.
         else
             res.send
                 error: true
