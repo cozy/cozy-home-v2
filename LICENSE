@@ -1,7 +1,7 @@
 COZY CLOUD LESSER GENERAL PUBLIC LICENSE
 
 
-This version of the COZY CLOUD Lesser General Public License incorporates the
+This version of the Cozy Cloud Lesser General Public License incorporates the
 terms and conditions of version 3 of the GNU General Public License,
 supplemented by the additional permissions listed below.
 
@@ -15,6 +15,10 @@ publicly accessible server, gives the public access to the source code of the
 modified version.
 
 0. Additional Definitions.
+
+As used herein, “this License” refers to the Cozy Cloud Lesser General
+Public License, and the “GNU GPL” refers to version 3 of the GNU General Public
+License.
 
 “The Library” refers to a covered work governed by this License, other than an
 Application or a Combined Work as defined below.
@@ -80,7 +84,7 @@ modifications, if you also do each of the following:
     a) Give prominent notice with each copy of the Combined Work that the
     Library is used in it and that the Library and its use are covered by this
     License.  
-    b) Accompany the Combined Work with a copy of the COZY CLOUD GPL
+    b) Accompany the Combined Work with a copy of the GNU GPL
     and this license document.
     c) For a Combined Work that displays copyright notices during execution,
     include the copyright notice for the Library among these notices, as well
@@ -123,7 +127,7 @@ library under terms of your choice, if you do both of the following:
     that part of it is a work based on the Library, and explaining where to
     find the accompanying uncombined form of the same work.
 
-7. Remote Network Interaction; Use with the COZY CLOUD General Public License.
+6. Remote Network Interaction; Use with the COZY CLOUD General Public License.
 
 Notwithstanding any other provision of this License, if you modify the Program,
 your modified version must prominently offer all users interacting with it
