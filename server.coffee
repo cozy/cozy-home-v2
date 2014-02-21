@@ -1,26 +1,31 @@
-americano = require 'americano'
-request = require 'request-json'
-initProxy = require './server/initializers/proxy'
-setupRealtime = require './server/initializers/realtime'
-setupChecking = require './server/initializers/checking'
-
-
 process.on 'uncaughtException', (err) ->
     console.error err
     console.error err.stack
 
-options =
-    name: 'Cozy Home'
-    port: process.env.PORT or 9103
-    host: process.env.HOST or "127.0.0.1"
-    root: __dirname
+application = module.exports = (callback) ->
+    americano = require 'americano'
+    request = require 'request-json'
+    initProxy = require './server/initializers/proxy'
+    setupRealtime = require './server/initializers/realtime'
+    setupChecking = require './server/initializers/checking'
 
-americano.start options, (app, server) ->
-    app.server = server
+    options =
+        name: 'Cozy Home'
+        port: process.env.PORT or 9103
+        host: process.env.HOST or "127.0.0.1"
+        root: __dirname
 
-    if process.env.NODE_ENV isnt "test"
-        initProxy()
+    americano.start options, (app, server) ->
+        app.server = server
 
-    setupRealtime app
-    setupChecking()
+        if process.env.NODE_ENV isnt "test"
+            initProxy()
+
+        setupRealtime app
+        setupChecking()
+
+        callback app, server if callback?
+
+if not module.parent
+    application()
 

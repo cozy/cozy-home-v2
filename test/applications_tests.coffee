@@ -1,6 +1,6 @@
 should = require('chai').Should()
 expect = require('chai').expect
-helpers = require('./helpers')
+helpers = require './helpers'
 
 TESTMAIL = "test@test.com"
 TESTPASS = "password"
