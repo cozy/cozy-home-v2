@@ -9,8 +9,13 @@ process.on 'uncaughtException', (err) ->
     console.error err
     console.error err.stack
 
-port = process.env.PORT || 9103
-americano.start name: 'Cozy Home', port: port, (app, server) ->
+options =
+    name: 'Cozy Home'
+    port: process.env.PORT or 9103
+    host: process.env.HOST or "127.0.0.1"
+    root: __dirname
+
+americano.start options, (app, server) ->
     app.server = server
 
     if process.env.NODE_ENV isnt "test"
@@ -18,6 +23,4 @@ americano.start name: 'Cozy Home', port: port, (app, server) ->
 
     setupRealtime app
     setupChecking()
-
-    callback app if callback?
 
