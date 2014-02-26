@@ -6,18 +6,19 @@
   },
   "main": "server.js",
   "dependencies": {
-    "americano": "0.3.0",
-    "americano-cozy": "0.2.0",
+    "americano": "0.3.1",
+    "americano-cozy": "0.2.2",
     "cozy-slug": "*",
-    "bcrypt": "= 0.7.4",
-    "async": "= 0.1.22",
-    "cozy-clients": "= 0.8.5",
-    "request-json": "= 0.4.3",
-    "time": "0.9.2",
-    "rrule": "2.0.0",
-    "cozy-realtime-adapter": "= 0.11.2",
-    "cozy-notifications-helper": "= 0.0.3",
-    "jugglingdb-cozy-adapter": "0.3.14"
+    "bcrypt": "0.7.7",
+    "async": "0.2.10",
+    "cozy-clients": "0.8.5",
+    "request-json": "0.4.6",
+    "time": "0.10.0",
+    "rrule": "2.0.1",
+    "cozy-realtime-adapter": "0.11.2",
+    "cozy-notifications-helper": "1.0.2",
+    "jugglingdb-cozy-adapter": "0.4.5",
+    "printit": "0.1.3"
   },
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
   "contributors": [
@@ -31,13 +32,13 @@
     "Borjan Tchakaloff"
   ],
   "devDependencies": {
-    "mocha": "= 1.9.0",
-    "request": "= 2.11.4",
-    "chai": "= 1.7.0",
+    "mocha": "1.17.1",
+    "request": "2.34.0",
+    "chai": "1.9.0",
     "coffee-script": "latest"
   },
   "scripts": {
-    "test": "cake tests",
-    "start": "node server.js"
+    "test": "cake --use-js tests",
+    "start": "node build/server.js"
   }
 }

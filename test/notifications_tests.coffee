@@ -1,5 +1,5 @@
 expect = require('chai').expect
-helpers = require('./helpers')
+helpers = require './helpers'
 
 TESTPORT = 8889
 

@@ -1,69 +1,84 @@
-fs = require 'fs'
 {exec} = require 'child_process'
+fs     = require 'fs'
+logger = require('printit')
+            date: false
+            prefix: 'cake'
 
-# Grab test files
-walk = (dir, fileList) ->
+option '-f', '--file [FILE*]' , 'List of test files to run'
+option '-d', '--dir [DIR*]' , 'Directory of test files to run'
+option '-e' , '--env [ENV]', 'Run tests with NODE_ENV=ENV. Default is test'
+option '' , '--use-js', 'If enabled, tests will run with the built files'
+
+options =  # defaults, will be overwritten by command line options
+    file        : no
+    dir         : no
+
+# Grab test files of a directory recursively
+walk = (dir, excludeElements = []) ->
+    fileList = []
     list = fs.readdirSync dir
     if list
         for file in list
-            filename = dir + '/' + file
-            stat = fs.statSync filename
-            if stat and stat.isDirectory()
-                walk filename, fileList
-            else if filename.substr(-6) is "coffee"
-                fileList.push filename
-    fileList
+            if file and file not in excludeElements
+                filename = "#{dir}/#{file}"
+                stat = fs.statSync filename
+                if stat and stat.isDirectory()
+                    fileList2 = walk filename, excludeElements
+                    fileList = fileList.concat fileList2
+                else if filename.substr(-6) is "coffee"
+                    fileList.push filename
+    return fileList
 
-testFiles = walk "test", []
+taskDetails = '(default: ./tests, use -f or -d to specify files and directory)'
+task 'tests', "Run tests #{taskDetails}", (opts) ->
+    logger.options.prefix = 'cake:tests'
+    files = []
+    options = opts
 
-task 'tests', 'run tests through mocha', ->
-    runTests testFiles
+    if options.dir
+        dirList   = options.dir
+        files = walk(dir, files) for dir in dirList
+    if options.file
+        files  = files.concat options.file
+    unless options.dir or options.file
+        files = walk "test"
 
-runTests = (fileList) ->
-    console.log "Run tests with Mocha for #{fileList.join(" ")}"
-    command = "mocha #{fileList.join(" ")} --reporter spec "
-    command += "--compilers coffee:coffee-script/register --colors"
+    env = if options['env'] then "NODE_ENV=#{options.env}" else "NODE_ENV=test"
+    env += " USE_JS=true" if options['use-js']? and options['use-js']
+    logger.info "Running tests with #{env}..."
+    command = "#{env} mocha " + files.join(" ") + " --reporter spec --colors "
+    command += "--compilers coffee:coffee-script/register"
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err
-            console.log "Running mocha caught exception: \n" + err
+            logger.error "Running mocha caught exception:\n" + err
             process.exit 1
         else
+            logger.info "Tests succeeded!"
             process.exit 0
 
 
-option '-f', '--file [FILE]', 'test file to run'
-
-task 'tests:file', 'run test through mocha for a given file', (options) ->
-    file = options.file
-    console.log "Run tests with Mocha for #{file}"
-    command = "mocha #{file} --reporter spec "
-    command += "--compilers coffee:coffee-script/register --colors"
-    exec command, (err, stdout, stderr) ->
-        console.log stdout
-        if err
-            console.log "Running mocha caught exception: \n" + err
-            process.exit 1
-        else
-            process.exit 0
-
-task "lint", "Run coffeelint on backend files", ->
+task "lint", "Run Coffeelint", ->
     process.env.TZ = "Europe/Paris"
-    command = "coffeelint -f coffeelint.json -r server.coffee server/"
+    command = "coffeelint "
+    command += " -f coffeelint.json -r server/"
+    logger.options.prefix = 'cake:lint'
+    logger.info 'Start linting...'
     exec command, (err, stdout, stderr) ->
-        console.log err
-        console.log stdout
-
-
-task 'convert', 'convert from coffee to JS', ->
-    files = walk "server", []
-    console.log "Convert to JS..."
-    command = "coffee -cb server.coffee #{files.join ' '} "
-    exec command, (err, stdout, stderr) ->
-        console.log stdout
         if err
-            console.log "Running convertion caught exception: \n" + err
+            logger.error err
+        else
+            console.log stdout
+
+task 'build', 'Build CoffeeScript to Javascript', ->
+    logger.options.prefix = 'cake:build'
+    logger.info "Start compilation..."
+    command = "coffee -cb --output build/server server && " + \
+              "coffee -cb --output build/ server.coffee"
+    exec command, (err, stdout, stderr) ->
+        if err
+            logger.error "An error has occurred while compiling:\n" + err
             process.exit 1
         else
-            console.log "Convertion succeeded."
+            logger.info "Compilation succeeded."
             process.exit 0

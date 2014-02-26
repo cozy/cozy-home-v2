@@ -2,7 +2,7 @@ bcrypt = require 'bcrypt'
 should = require('chai').Should()
 helpers = require './helpers'
 
-User = require '../server/models/user'
+User = require "#{helpers.prefix}server/models/user"
 
 TESTPORT = 8889
 TESTMAIL = 'test@test.com'
