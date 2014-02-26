@@ -10,8 +10,8 @@ TESTPASS = 'password'
 
 describe 'Modify account failure', ->
 
-    before helpers.setup TESTPORT
     before helpers.createUser TESTMAIL, TESTPASS
+    before helpers.setup TESTPORT
     before ->
         @client = helpers.getClient TESTPORT, @
         @dataClient = helpers.getClient 9101, @
