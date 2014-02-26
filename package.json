@@ -38,7 +38,7 @@
     "coffee-script": "latest"
   },
   "scripts": {
-    "test": "cake tests",
+    "test": "cake --use-js tests",
     "start": "node build/server.js"
   }
 }
