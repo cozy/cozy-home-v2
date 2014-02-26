@@ -11,8 +11,8 @@ TESTPASS = 'password'
 
 describe 'Alarm manager handles alarms', ->
 
-    before helpers.setup TESTPORT
     before helpers.createUser TESTMAIL, TESTPASS
+    before helpers.setup TESTPORT
     before (done) ->
         setupRealtime @app
         @client = helpers.getClient TESTPORT, @
