@@ -44,7 +44,6 @@ module.exports = class ApplicationCollection extends BaseCollection
     # callback(err, apps)
     fetchFromMarket: (callback) =>
         @isUserFing (isUserFing) =>
-
             apps = [
                     icon:"img/agenda-icon.png"
                     name:"calendar"
@@ -205,6 +204,20 @@ module.exports = class ApplicationCollection extends BaseCollection
                         git:"https://github.com/jacquarg/MesConso.git"
                         comment: "fing application"
                         description: "Visualisez simplement vos consommations Intermarché et Orange."
+                    ,
+                        icon:"img/mappingmylife-icon.png"
+                        name:"Mapping My Life"
+                        slug:"mappingmylife"
+                        git:"https://gitlab.cozycloud.cc:8586/gjacquart/mappingmylife.git"
+                        comment: "fing application"
+                        description: "Mapping my life permet de visualiser vos déplacements grâce à la géolocalisation de votre téléphone Orange. L’application permet également de visualiser les lieux desquels vous avez passé des appels ou envoyé des SMS depuis votre mobile Orange."
+                    ,
+                        icon:"img/mesinfosnutritionnelles-icon.png"
+                        name:"Mes Infos Nutritionnelles"
+                        slug:"mes-infos-nutritionnelles"
+                        git:"https://github.com/pdelorme/mes-infos-nutritionnelles.git"
+                        comment: "fing application"
+                        description: "Application MesInfos de suivi nutritionnel, basé sur les tickets de caisse."
                 ]
                 apps = apps.concat fingApps
 
