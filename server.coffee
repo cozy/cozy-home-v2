@@ -21,10 +21,9 @@ application = module.exports = (callback) ->
         if process.env.NODE_ENV isnt "test"
             initProxy()
 
-        setupRealtime app
-        setupChecking()
-
-        callback app, server if callback?
+        setupRealtime app, ->
+            setupChecking()
+            callback app, server if callback?
 
 if not module.parent
     application()

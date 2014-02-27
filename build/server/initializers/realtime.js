@@ -59,7 +59,7 @@ applicationTimeout = [];
 
 notifhelper = new NotificationsHelper('home');
 
-module.exports = function(app) {
+module.exports = function(app, callback) {
   var realtime;
   realtime = RealtimeAdapter(app, ['notification.*', 'application.*']);
   realtime.on('application.update', function(event, id) {
@@ -104,12 +104,13 @@ module.exports = function(app) {
   return User.all(function(err, users) {
     var alarmManager, timezone;
     if ((err != null) || users.length === 0) {
-      return console.info("Internal server error. Can't retrieve users or no user exists.");
+      console.info("Internal server error. Can't retrieve users or no user exists.");
     } else {
       timezone = users[0].timezone;
       alarmManager = new AlarmManager(timezone, Alarm, notifhelper);
       app.alarmManager = alarmManager;
-      return realtime.on('alarm.*', alarmManager.handleAlarm);
+      realtime.on('alarm.*', alarmManager.handleAlarm);
     }
+    return callback();
   });
 };
