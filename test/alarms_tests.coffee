@@ -2,8 +2,8 @@ time = require 'time'
 should = require('chai').Should()
 helpers = require './helpers'
 
-Alarm = require '../server/models/alarm'
-setupRealtime = require '../server/initializers/realtime'
+Alarm = require "#{helpers.prefix}server/models/alarm"
+setupRealtime = require "#{helpers.prefix}server/initializers/realtime"
 
 TESTPORT = 8889
 TESTMAIL = 'test@test.com'

@@ -1,27 +1,33 @@
-bcrypt = require('bcrypt')
-http = require('http')
+bcrypt = require 'bcrypt'
+http = require 'http'
 Client = require('request-json').JsonClient
-americano = require 'americano'
+
+helpers = {}
+
+if process.env.USE_JS
+    helpers.prefix = '../build/'
+else
+    helpers.prefix = '../'
 
 # Bring models in context
-Application = require '../server/models/application'
-Alarm = require '../server/models/alarm'
-CozyInstance = require '../server/models/cozyinstance'
-Notification = require '../server/models/notification'
-User = require '../server/models/user'
+Application = require "#{helpers.prefix}server/models/application"
+Alarm = require "#{helpers.prefix}server/models/alarm"
+CozyInstance = require "#{helpers.prefix}server/models/cozyinstance"
+Notification = require "#{helpers.prefix}server/models/notification"
+User = require "#{helpers.prefix}server/models/user"
 time = require 'time'
 
 process.env.NAME = "home"
 process.env.TOKEN = "token"
 
-helpers = {}
+initializeApplication = require "#{helpers.prefix}server"
 
 # init the compound application
 # will create @app in context
 # usage : before helpers.init port
 _init = (ctx, port, done) ->
-    params = name: 'Cozy Home', port: port
-    americano.start params, (app, server) =>
+    process.env.PORT = port
+    initializeApplication (app, server) ->
         app.server = server
         ctx.app = app
         done()
@@ -41,14 +47,13 @@ _clearDb = (callback) ->
 
 helpers.setup = (port) ->
     (done) ->
-        @timeout 5000
+        @timeout 10000
         _init this, port, (err) =>
             return done err if err
             _clearDb done
 
 helpers.takeDown = (done) ->
-    @app.server.close()
-    _clearDb done
+    @app.server.close -> _clearDb done
 
 helpers.wait = (ms) -> (done) ->
     @timeout ms + 1000
@@ -58,7 +63,7 @@ helpers.wait = (ms) -> (done) ->
 helpers.createUser = (email, password) -> (callback) ->
     salt = bcrypt.genSaltSync(10)
     hash = bcrypt.hashSync(password, salt)
-    user = 
+    user =
         email: email
         owner: true
         password: hash

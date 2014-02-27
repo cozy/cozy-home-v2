@@ -1,5 +1,5 @@
 should = require('chai').Should()
-helpers = require('./helpers')
+helpers = require './helpers'
 
 TESTPORT = 8889
 
