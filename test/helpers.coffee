@@ -53,6 +53,7 @@ helpers.setup = (port) ->
             _clearDb done
 
 helpers.takeDown = (done) ->
+    @timeout 10000
     @app.server.close -> _clearDb done
 
 helpers.wait = (ms) -> (done) ->

@@ -3,7 +3,6 @@ should = require('chai').Should()
 helpers = require './helpers'
 
 Alarm = require "#{helpers.prefix}server/models/alarm"
-setupRealtime = require "#{helpers.prefix}server/initializers/realtime"
 
 TESTPORT = 8889
 TESTMAIL = 'test@test.com'
@@ -13,12 +12,9 @@ describe 'Alarm manager handles alarms', ->
 
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.setup TESTPORT
-    before (done) ->
-        setupRealtime @app
+    before ->
         @client = helpers.getClient TESTPORT, @
         @dataClient = helpers.getClient 9101, @
-        @dataClient.post 'accounts/password/', password: TESTPASS , done
-
 
     before helpers.wait 2000
     before ->

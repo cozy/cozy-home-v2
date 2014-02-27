@@ -40,8 +40,8 @@ stopTestServers = ->
 
 describe "Applications management", ->
 
-    before helpers.createUser TESTMAIL, TESTPASS
     before helpers.setup TESTPORT
+    before helpers.createUser TESTMAIL, TESTPASS
     before helpers.createApp "Noty plus", "noty-plus", 0, "installed"
     before startTestServers
     before -> @client = helpers.getClient TESTPORT, @
