@@ -70,6 +70,7 @@ helpers.createUser = (email, password) -> (callback) ->
         activated: true
         docType: 'User'
     dbClient = new Client('http://localhost:9101/')
+    dbClient.setBasicAuth "proxy", "token"
     dbClient.post '/user/', user, callback
 
 # function factory for creating application
