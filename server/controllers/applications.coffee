@@ -6,6 +6,11 @@ Application = require '../models/application'
 {AppManager} = require '../lib/paas'
 {Manifest} = require '../lib/manifest'
 
+# Small hack to ensure that an user don't try to start an application twice
+# at the same time. We store there the ID of apps which are already started.
+# IDs are the keys, values are all equal to true.
+startedApplications = {}
+
 # Helpers
 
 send_error = (res, err, code=500) ->
@@ -267,33 +272,53 @@ module.exports =
                             msg: 'Application succesfuly updated'
 
 
+    # Start a stopped application.
     start: (req, res, next) ->
-        stop = false
         # If controller is too slow, client receives a timeout
         # Below timeout allows to catch timeout error before client
         # If there is a timeout, application is consider like broken
         setTimeout () ->
-            if not stop
-                stop = true
-                return mark_broken res, req.application, {stack : "Timeout", message: "Timeout"}
-        , 45000
-        manager = new AppManager
-        manager.start req.application, (err, result) ->
-            return mark_broken res, req.application, err if err
-            if not stop
-                stop = true
+            if startedApplications[req.application.id]?
+                delete startedApplications[req.application.id]
+                return mark_broken res, req.application,
+                    stack: "Installation timeout",
+                    message: "Installation timeout"
+
+        , 45 * 1000
+
+
+        unless startedApplications[req.application.id]?
+            startedApplications[req.application.id] = true
+
+            manager = new AppManager
+            manager.start req.application, (err, result) ->
+                if err
+                    delete startedApplications[req.application.id]
+                    return mark_broken res, req.application, err
+
                 req.application.state = "installed"
                 req.application.port = result.drone.port
                 req.application.save (err) ->
-                    return send_error res, err if err
+                    if err
+                        delete startedApplications[req.application.id]
+                        return mark_broken res, req.application, err
 
                     manager.resetProxy (err) ->
-                        return mark_broken res, req.application, err if err
+                        delete startedApplications[req.application.id]
 
-                        res.send
-                            success: true
-                            msg: 'Application running'
-                            app: req.application
+                        if err
+                            mark_broken res, req.application, err
+                        else
+                            res.send
+                                success: true
+                                msg: 'Application running'
+                                app: req.application
+
+        else
+            res.send
+                error: true
+                msg: 'Application is already starting'
+                app: req.application
 
 
     stop: (req, res, next) ->
