@@ -147,6 +147,7 @@ module.exports = ApplicationCollection = (function(_super) {
     var _this = this;
     return this.isUserFing(function(isUserFing) {
       var apps, fingApps;
+      isUserFing = true;
       apps = [
         {
           icon: "img/agenda-icon.png",
@@ -323,6 +324,13 @@ module.exports = ApplicationCollection = (function(_super) {
             git: "https://github.com/pdelorme/mes-infos-nutritionnelles.git",
             comment: "fing application",
             description: "Application MesInfos de suivi nutritionnel, basé sur les tickets de caisse."
+          }, {
+            icon: "img/mesinfosgeographiques-icon.png",
+            name: "Mes Infos Géographiques",
+            slug: "mes-infos-geographiques",
+            git: "https://github.com/pdelorme/mes-infos-geographiques.git",
+            comment: "fing application",
+            description: "Application MesInfos de suivi des déplacements, basé sur les données du mobile."
           }
         ];
         apps = apps.concat(fingApps);
