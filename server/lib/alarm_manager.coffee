@@ -87,7 +87,7 @@ module.exports = class AlarmManager
 
     # immediately create the Notification object
     # and/or send Email for a given alarm
-    handleNotification = (alarm) =>
+    handleNotification: (alarm) =>
 
         if alarm.action in ['DISPLAY', 'BOTH']
             resource = if alarm.related? then alarm.related

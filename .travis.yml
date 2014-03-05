@@ -12,14 +12,15 @@ before_install:
     - npm install forever coffee-script -g
     - npm install
     - pwd
-    - forever start -o forever-ds.log server.js
+    - NAME=data-system TOKEN=token forever start -o forever-ds.log build/server.js
+    - sleep 5
     - ps aux | grep server.js
     - sudo netstat -plunt
-    - sleep 5
     - cat forever-ds.log
     - curl http://localhost:9101/
     - cd ..
     - export NAME=home
     - export TOKEN=token
 
-# Trigger a new travis
+after_failure:
+    - cat cozy-data-system/forever-ds.log
