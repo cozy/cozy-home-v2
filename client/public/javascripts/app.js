@@ -147,7 +147,6 @@ module.exports = ApplicationCollection = (function(_super) {
     var _this = this;
     return this.isUserFing(function(isUserFing) {
       var apps, fingApps;
-      isUserFing = true;
       apps = [
         {
           icon: "img/agenda-icon.png",

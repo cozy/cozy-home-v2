@@ -44,7 +44,6 @@ module.exports = class ApplicationCollection extends BaseCollection
     # callback(err, apps)
     fetchFromMarket: (callback) =>
         @isUserFing (isUserFing) =>
-            isUserFing = true
             apps = [
                     icon:"img/agenda-icon.png"
                     name:"calendar"
