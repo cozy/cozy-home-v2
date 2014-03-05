@@ -34,7 +34,7 @@ applicationTimeout = []
 notifhelper = new NotificationsHelper 'home'
 
 
-module.exports = (app) ->
+module.exports = (app, callback) ->
 
     realtime = RealtimeAdapter app, ['notification.*', 'application.*']
 
@@ -71,3 +71,4 @@ module.exports = (app) ->
             alarmManager = new AlarmManager timezone, Alarm, notifhelper
             app.alarmManager = alarmManager
             realtime.on 'alarm.*', alarmManager.handleAlarm
+        callback()

@@ -69,7 +69,7 @@ module.exports = {
         next(err);
       }
       if (users.length === 0) {
-        res.send(400, {
+        return res.send(400, {
           error: "No user registered"
         });
       }

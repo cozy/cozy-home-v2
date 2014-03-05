@@ -13,8 +13,6 @@ RRule = require('rrule').RRule;
 oneDay = 24 * 60 * 60 * 1000;
 
 module.exports = AlarmManager = (function() {
-  var handleNotification;
-
   AlarmManager.prototype.dailytimer = null;
 
   AlarmManager.prototype.timeouts = {};
@@ -23,6 +21,7 @@ module.exports = AlarmManager = (function() {
     this.timezone = timezone;
     this.Alarm = Alarm;
     this.notificationhelper = notificationhelper;
+    this.handleNotification = __bind(this.handleNotification, this);
     this.handleAlarm = __bind(this.handleAlarm, this);
     this.fetchAlarms = __bind(this.fetchAlarms, this);
     this.fetchAlarms();
@@ -129,14 +128,14 @@ module.exports = AlarmManager = (function() {
     }
   };
 
-  handleNotification = function(alarm) {
+  AlarmManager.prototype.handleNotification = function(alarm) {
     var data, resource, _ref, _ref1;
     if ((_ref = alarm.action) === 'DISPLAY' || _ref === 'BOTH') {
       resource = alarm.related != null ? alarm.related : {
         app: 'calendar',
         url: "/#list"
       };
-      return AlarmManager.notificationhelper.createTemporary({
+      return this.notificationhelper.createTemporary({
         text: "Reminder: " + alarm.description,
         resource: resource
       });

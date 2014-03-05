@@ -53,6 +53,7 @@ helpers.setup = (port) ->
             _clearDb done
 
 helpers.takeDown = (done) ->
+    @timeout 10000
     @app.server.close -> _clearDb done
 
 helpers.wait = (ms) -> (done) ->
@@ -70,6 +71,7 @@ helpers.createUser = (email, password) -> (callback) ->
         activated: true
         docType: 'User'
     dbClient = new Client('http://localhost:9101/')
+    dbClient.setBasicAuth "proxy", "token"
     dbClient.post '/user/', user, callback
 
 # function factory for creating application

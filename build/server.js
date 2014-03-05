@@ -24,11 +24,12 @@ application = module.exports = function(callback) {
     if (process.env.NODE_ENV !== "test") {
       initProxy();
     }
-    setupRealtime(app);
-    setupChecking();
-    if (callback != null) {
-      return callback(app, server);
-    }
+    return setupRealtime(app, function() {
+      setupChecking();
+      if (callback != null) {
+        return callback(app, server);
+      }
+    });
   });
 };
 
