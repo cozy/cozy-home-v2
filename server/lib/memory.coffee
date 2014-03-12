@@ -5,14 +5,16 @@ ControllerClient = require("cozy-clients").ControllerClient
 
 freeMemCmd = "free | grep cache: | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
 
+
+# Utilities to get memory consumption and disk usage.
 class exports.MemoryManager
 
     constructor: ->
         @controllerClient = new ControllerClient
             token: @_getAuthController()
 
-
     # Get token from token file if in production mode.
+    # TODO: this method should be integrated to the controller client.
     _getAuthController: ->
         if process.env.NODE_ENV is 'production'
             try
@@ -27,6 +29,8 @@ class exports.MemoryManager
             return ""
 
 
+    # Crappy method to extract result from a df command, should be rewritter
+    # with the one located in the controller.
     _extractDataFromDfResult: (resp) ->
         data = {}
         lines = resp.split('\n')
@@ -44,6 +48,8 @@ class exports.MemoryManager
                 data.usedDiskSpace = usedSpace
         data
 
+    # Return memory information from a complex free command (remove useless
+    # information)
     getMemoryInfos: (callback) ->
         data = totalMem: os.totalmem() / (1024)
         exec freeMemCmd, (err, resp) ->
@@ -55,6 +61,10 @@ class exports.MemoryManager
                 data.freeMem = line
                 callback null, data
 
+    # Try to get disk infos from the Cozy controller (it can access to the
+    # couch configuration file and guess on which fs it is located). If it
+    # fails it tries to make a 'df -h' itself and guess that couch is located
+    # in the / fs
     getDiskInfos: (callback) ->
         @controllerClient.client.get 'diskinfo', (err, res, body) ->
             if err or res.statusCode isnt 200
@@ -64,6 +74,7 @@ class exports.MemoryManager
             else
                 callback null, body
 
+    # Return true if there is at least 60MB of memory free.
     isEnoughMemory: (callback) ->
         @getMemoryInfos (err, data) =>
             if err then callback err
