@@ -1,9 +1,31 @@
 os = require 'os'
 exec = require('child_process').exec
 
+ControllerClient = require("cozy-clients").ControllerClient
+
 freeMemCmd = "free | grep cache: | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
 
 class exports.MemoryManager
+
+    constructor: ->
+        @controllerClient = new ControllerClient
+            token: @_getAuthController()
+
+
+    # Get token from token file if in production mode.
+    _getAuthController: ->
+        if process.env.NODE_ENV is 'production'
+            try
+                token = fs.readFileSync '/etc/cozy/controller.token', 'utf8'
+                token = token.split('\n')[0]
+                return token
+            catch err
+                console.log err.message
+                console.log err.stack
+                return null
+        else
+            return ""
+
 
     _extractDataFromDfResult: (resp) ->
         data = {}
@@ -34,9 +56,13 @@ class exports.MemoryManager
                 callback null, data
 
     getDiskInfos: (callback) ->
-        exec 'df -h', (err, resp) =>
-            if err then callback err
-            else callback null, @_extractDataFromDfResult(resp)
+        @controllerClient.client.get 'diskinfo', (err, res, body) ->
+            if err or res.statusCode isnt 200
+                exec 'df -h', (err, resp) =>
+                    if err then callback err
+                    else callback null, @_extractDataFromDfResult(resp)
+            else
+                callback null, body
 
     isEnoughMemory: (callback) ->
         @getMemoryInfos (err, data) =>
