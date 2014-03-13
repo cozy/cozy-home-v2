@@ -1,7 +1,9 @@
-# Cozy Home
+# [Cozy](http://cozy.io) Home
 
-Cozy Home manages applications installed on your Cozy platform. It is the
-entry point to all your cozy apps.
+Cozy Home is your dashboard to access and manage all your Cozy apps. It allows
+you to install, update and remove any app. 
+It provides you too a tile page on which you can organize all your application
+launchers and widgets.
 
 ## Install
 
@@ -47,7 +49,11 @@ To run tests type the following command into the Cozy Home folder:
 
 by [iconmonstr](http://iconmonstr.com/)
 
-## Cozy makes your webapps smarter and more respectful
+## License
+
+Cozy Home is developed by Cozy Cloud and distributed under the AGPL v3 license.
+
+## What is Cozy?
 
 ![Cozy Logo](https://raw.github.com/mycozycloud/cozy-setup/gh-pages/assets/images/happycloud.png)
 
@@ -66,9 +72,4 @@ You can reach the Cozy community via various support:
 * Post on our [Forum](https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud)
 * Post issues on the [Github repos](https://github.com/mycozycloud/)
 * Via [Twitter](http://twitter.com/mycozycloud)
-
-## License
-
-Cozy is developed by Cozy Cloud under the AGPL v3 license (see each module for
-exceptions).
 
