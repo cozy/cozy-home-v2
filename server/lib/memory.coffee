@@ -66,7 +66,7 @@ class exports.MemoryManager
     # fails it tries to make a 'df -h' itself and guess that couch is located
     # in the / fs
     getDiskInfos: (callback) ->
-        @controllerClient.client.get 'diskinfo', (err, res, body) ->
+        @controllerClient.client.get 'diskinfo', (err, res, body) =>
             if err or res.statusCode isnt 200
                 exec 'df -h', (err, resp) =>
                     if err then callback err

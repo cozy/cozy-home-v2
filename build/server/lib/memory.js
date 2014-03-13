@@ -73,21 +73,21 @@ exports.MemoryManager = (function() {
   };
 
   MemoryManager.prototype.getDiskInfos = function(callback) {
-    return this.controllerClient.client.get('diskinfo', function(err, res, body) {
-      if (err || res.statusCode !== 200) {
-        return exec('df -h', (function(_this) {
-          return function(err, resp) {
+    return this.controllerClient.client.get('diskinfo', (function(_this) {
+      return function(err, res, body) {
+        if (err || res.statusCode !== 200) {
+          return exec('df -h', function(err, resp) {
             if (err) {
               return callback(err);
             } else {
               return callback(null, _this._extractDataFromDfResult(resp));
             }
-          };
-        })(this));
-      } else {
-        return callback(null, body);
-      }
-    });
+          });
+        } else {
+          return callback(null, body);
+        }
+      };
+    })(this));
   };
 
   MemoryManager.prototype.isEnoughMemory = function(callback) {
