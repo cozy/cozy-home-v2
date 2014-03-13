@@ -61,7 +61,8 @@ module.exports =
 
         User.all (err, users) ->
             next err if err
-            res.send 400, error: "No user registered" if users.length is 0
+            if users.length is 0
+                return res.send 400, error: "No user registered"
 
             user = users[0]
             data = {}
