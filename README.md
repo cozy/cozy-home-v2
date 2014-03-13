@@ -3,22 +3,72 @@
 Cozy Home manages applications installed on your Cozy platform. It is the
 entry point to all your cozy apps.
 
+## Install
+
+We assume here that the Cozy platform is correctly [installed](https://raw.github.com/mycozycloud/cozy-setup/gh-pages/assets/images/happycloud.png)
+ on your server.
+
+Type this command to install the home application:
+
+    cozy-monitor install home
+
+## Contribution
+
+You can contribute to the Cozy Home in many ways:
+
+* Pick up an [issue](https://github.com/mycozycloud/cozy-home/issues?state=open) and solve it.
+* Translate it in [a new language](https://github.com/mycozycloud/cozy-home/tree/master/client/app/locales).
+* Add the capability to backup the Cozy (replicate it to another Cozy instance 
+  from) from the User Interface.
+
+## Hack
+
+To be hacked, the Cozy Home dev environment requires that a CouchDB instance
+and a Cozy Data System instance are running. Then you can start the Cozy Home
+this way:
+
+    git clone https://github.com/mycozycloud/cozy-home.git
+    node server.js
+
+Each modification requires a new build, here is how to run a build:
+
+    cake build
+
+## Tests
+
 ![Build
 Status](https://travis-ci.org/mycozycloud/cozy-home.png?branch=master)
 
-# About Cozy
+To run tests type the following command into the Cozy Home folder:
 
-Cozy Home is part of the Cozy platform. Cozy is the personal
-server for everyone. It allows you to install your every day web applications 
-easily on your server, a single place you control. This means you can manage 
-efficiently your data while protecting your privacy without technical skills.
-
-More informations and hosting services on:
-http://cozycloud.cc
-
-# Cozy on IRC
-Feel free to check out our IRC channel (#cozycloud on irc.freenode.org) if you have any technical issues/inquiries or simply to speak about Cozy cloud in general.
+    cake tests
 
 ## Icons
 
 by [iconmonstr](http://iconmonstr.com/)
+
+## Cozy makes your webapps smarter and more respectful
+
+![Cozy Logo](https://raw.github.com/mycozycloud/cozy-setup/gh-pages/assets/images/happycloud.png)
+
+[Cozy](http://cozy.io) is a platform that brings all your web services in the
+same private space.  With it, your web apps and your devices can share data
+easily, providing you
+with a new experience. You can install Cozy on your own hardware where no one
+profiles you. You install only the applications you want. You can build your
+own one too.
+
+## Community 
+
+You can reach the Cozy community via various support:
+
+* IRC #cozycloud on irc.freenode.net
+* Post on our [Forum](https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud)
+* Post issues on the [Github repos](https://github.com/mycozycloud/)
+* Via [Twitter](http://twitter.com/mycozycloud)
+
+## License
+
+Cozy is developed by Cozy Cloud under the AGPL v3 license (see each module for
+exceptions).
+
