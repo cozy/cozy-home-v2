@@ -330,6 +330,20 @@ module.exports = ApplicationCollection = (function(_super) {
             git: "https://github.com/pdelorme/mes-infos-geographiques.git",
             comment: "fing application",
             description: "Application MesInfos de suivi des déplacements, basé sur les données du mobile."
+          }, {
+            icon: "img/purchease-icon.png",
+            name: "Mes courses avec PurchEase",
+            slug: "mes-courses-avec-purchease",
+            git: "https://gitlab.cozycloud.cc:8586/gjacquart/mes-courses-avec-purchease.git",
+            comment: "fing application",
+            description: "PurchEase analyse vos tickets de caisse et vous rend l'information aux travers de ses applications Skerou (listes de courses) et FidMarques (votre fidélité aux marques enfin récompensée)."
+          }, {
+            icon: "img/moi-icon.png",
+            name: "Moi",
+            slug: "mesinfos-moi",
+            git: "https://github.com/jacquarg/MoiMois.git",
+            comment: "fing application",
+            description: "Des nouvelles fraîches sur vous ? Feuilletez le magazine qui vous raconte votre propre histoire. Découvrez les gros titres du moment, les petits rien de votre quotidien ..."
           }
         ];
         apps = apps.concat(fingApps);
