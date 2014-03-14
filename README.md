@@ -61,15 +61,13 @@ Cozy Home is developed by Cozy Cloud and distributed under the AGPL v3 license.
 same private space.  With it, your web apps and your devices can share data
 easily, providing you
 with a new experience. You can install Cozy on your own hardware where no one
-profiles you. You install only the applications you want. You can build your
-own one too.
+profiles you. 
 
 ## Community 
 
-You can reach the Cozy community via various support:
+You can reach the Cozy Community by:
 
-* IRC #cozycloud on irc.freenode.net
-* Post on our [Forum](https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud)
-* Post issues on the [Github repos](https://github.com/mycozycloud/)
-* Via [Twitter](http://twitter.com/mycozycloud)
-
+* Chatting with us on IRC #cozycloud on irc.freenode.net
+* Posting on our [Forum](https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud)
+* Posting issues on the [Github repos](https://github.com/mycozycloud/)
+* Mentioning us on [Twitter](http://twitter.com/mycozycloud)
