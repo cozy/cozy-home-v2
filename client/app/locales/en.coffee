@@ -5,6 +5,7 @@ module.exports =
     "email"                     : "Email"
     "timezone"                  : "Timezone"
     "domain"                    : "Domain"
+    "no domain set"             : "no.domain.set"
     "locale"                    : "Locale"
     "change password"           : "Change password"
     "input your current password" : "input your current password"

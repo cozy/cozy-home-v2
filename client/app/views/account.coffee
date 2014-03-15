@@ -119,7 +119,7 @@ module.exports = class exports.AccountView extends BaseView
 
         $.get "api/instances/", (data) =>
             instance = data.rows?[0]
-            domain = instance?.domain or t('no.domain.set')
+            domain = instance?.domain or t('no domain set')
             locale = instance?.locale or 'en'
 
             saveDomain = @getSaveFunction 'domain', @domainField, 'instance'
