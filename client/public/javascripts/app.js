@@ -1112,6 +1112,7 @@ module.exports = {
   "email": "Email",
   "timezone": "Timezone",
   "domain": "Domain",
+  "no domain set": "no.domain.set",
   "locale": "Locale",
   "change password": "Change password",
   "input your current password": "input your current password",
@@ -1246,6 +1247,7 @@ module.exports = {
   "email": "Email",
   "timezone": "Fuseau horaire",
   "domain": "Nom de domaine",
+  "no domain set": "pas.de.domaine.défini",
   "locale": "Langue",
   "change password": "Changer de mot de passe",
   "input your current password": "Mot de passe actuel",
@@ -2064,7 +2066,7 @@ buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtrigh
 var __val__ = t('ask for assistance')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><img src="img/help.png"/></a></div><div class="txtright menu-btn logout-menu-icon"><a href="#logout"><span>');
-var __val__ = t('Sign out')
+var __val__ = t('sign out')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><img src="img/logout-black.png"/></a></div></div><div id="home-content"></div></div></div>');
 }
@@ -2409,7 +2411,7 @@ module.exports = exports.AccountView = (function(_super) {
     return $.get("api/instances/", function(data) {
       var domain, instance, locale, saveDomain, saveLocale, _ref;
       instance = (_ref = data.rows) != null ? _ref[0] : void 0;
-      domain = (instance != null ? instance.domain : void 0) || t('no.domain.set');
+      domain = (instance != null ? instance.domain : void 0) || t('no domain set');
       locale = (instance != null ? instance.locale : void 0) || 'en';
       saveDomain = _this.getSaveFunction('domain', _this.domainField, 'instance');
       _this.domainField.on('keyup', function(event) {
