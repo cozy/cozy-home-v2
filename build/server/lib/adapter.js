@@ -47,9 +47,7 @@ module.exports = Adapter = (function() {
       token = process.env.TOKEN;
       client.setBasicAuth(name, token);
     }
-    return client.put("user/merge/" + user.id, {
-      password: data.password
-    }, (function(_this) {
+    return client.put("user/merge/" + user.id, data, (function(_this) {
       return function(err, res, body) {
         return callback(err);
       };

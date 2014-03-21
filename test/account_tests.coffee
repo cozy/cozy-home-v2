@@ -77,28 +77,34 @@ describe 'Modify account failure', ->
         @response.statusCode.should.equal 400
 
 
-#describe 'Modify account success', ->
+describe 'Modify account success', ->
 
+    before helpers.setup TESTPORT
+    before helpers.createUser TESTMAIL, TESTPASS
+    before ->
+        @client = helpers.getClient TESTPORT, @
+        @dataClient = helpers.getClient 9101, @
 
-    #it 'And I change my account with right data', (done) ->
-        #data =
-            #email: 'test@test.fr'
-            #password0: TESTPASS
-            #password1: 'password2'
-            #password2: 'password2'
-        #@client.post 'api/user', data, done
+    after helpers.takeDown
 
-    #it 'Then success response is returned.', ->
-        #@response.statusCode.should.equal 200
+    it 'When I change my account with right data', (done) ->
+        data =
+            email: 'test@test.fr'
+            password0: TESTPASS
+            password1: 'password2'
+            password2: 'password2'
+        @client.post 'api/user', data, done
 
+    it 'Then success response should be returned.', ->
+        @response.statusCode.should.equal 200
 
-    #it 'And user data should be updated', (done) ->
-        #User.all (err, users) ->
-            #user = users[0]
-            #user.email.should.equal 'test@test.fr'
-            #bcrypt.compare 'password2', user.password,  (err, res) ->
-                #res.should.be.ok
-                #done()
+    it 'And user data should be updated', (done) ->
+        User.all (err, users) ->
+            user = users[0]
+            user.email.should.equal 'test@test.fr'
+            bcrypt.compare 'password2', user.password,  (err, res) ->
+                res.should.be.ok
+                done()
 
 
 #describe 'Modify domain success', ->

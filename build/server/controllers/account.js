@@ -23,6 +23,9 @@ module.exports = {
       if (body.timezone != null) {
         data.timezone = body.timezone;
       }
+      if (body.public_name != null) {
+        data.public_name = body.public_name;
+      }
       if ((body.email != null) && body.email.length > 0) {
         if (EMAILREGEX.test(body.email)) {
           data.email = body.email;
@@ -31,7 +34,7 @@ module.exports = {
           return cb(null, errors);
         }
       }
-      if (data.timezone || data.email || data.password) {
+      if (data.timezone || data.email || data.password || data.public_name) {
         return adapter.updateUser(user, data, function(err) {
           return cb(err, null);
         });

@@ -95,8 +95,9 @@ module.exports =
         J'ai besoin de votre email pour la récupération de mot de passe ou
         pour vous envoyer des alertes.
     """
+    "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous."
     "your timezone is required":"""
-        Votre timezone est require pour vous afficher les dates correctements.
+        Votre timezone est requise pour vous afficher les dates correctements.
     """
     "domain name for urls and email":"""
         Le nom de domaine est utilisé pour construire les urls
@@ -113,9 +114,9 @@ module.exports =
     "confirm your new password":"confirmez votre nouveau mot de passe"
     "save your new password":"sauvegarder votre nouveau mot de passe"
     "do you want assistance":"Est-ce que vous cherchez de l'aide ?"
-    "Write an email to our support team at:":"Ecrivez un email à notre équipe support:"
-    "Register and post on our forum: ":"Postez un message sur notre forum: "
-    "Ask your question on Twitter: ":"Posez votre question sur Twitter: "
+    "Write an email to our support team at:":"Ecrivez un email à notre équipe support :"
+    "Register and post on our forum: ":"Postez un message sur notre forum : "
+    "Ask your question on Twitter: ":"Posez votre question sur Twitter : "
     "Visit the project website and learn to build your app:":"""
         Visitez le site du projet et apprenez à construire des applications.
     """

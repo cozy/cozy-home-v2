@@ -239,6 +239,13 @@ module.exports = class ApplicationCollection extends BaseCollection
                         git: "https://github.com/jacquarg/MoiMois.git"
                         comment: "fing application"
                         description: "Des nouvelles fraîches sur vous ? Feuilletez le magazine qui vous raconte votre propre histoire. Découvrez les gros titres du moment, les petits rien de votre quotidien ..."
+                    ,
+                        icon: "img/rbi-icon.png"
+                        name: "Mon Relevé Malin"
+                        slug: "mon-releve-malin"
+                        git: "https://github.com/n-a-n/rbi.git"
+                        comment: "fing application"
+                        description: "Mon Relevé Malin complète l'application Mes Comptes, en proposant une gestion de budget simple et semi-automatisée. L'interface claire et ergonomique de Mon Relevé Malin incite à naviguer dans l'historique de ses relevés de comptes, où les mouvements sont catégorisés, et peuvent être augmentés par le croisement avec les données d'Intermarché et d'Orange."
                 ]
                 apps = apps.concat fingApps
 

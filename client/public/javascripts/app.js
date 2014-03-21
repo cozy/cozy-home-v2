@@ -344,6 +344,13 @@ module.exports = ApplicationCollection = (function(_super) {
             git: "https://github.com/jacquarg/MoiMois.git",
             comment: "fing application",
             description: "Des nouvelles fraîches sur vous ? Feuilletez le magazine qui vous raconte votre propre histoire. Découvrez les gros titres du moment, les petits rien de votre quotidien ..."
+          }, {
+            icon: "img/rbi-icon.png",
+            name: "Mon Relevé Malin",
+            slug: "mon-releve-malin",
+            git: "https://github.com/n-a-n/rbi.git",
+            comment: "fing application",
+            description: "Mon Relevé Malin complète l'application Mes Comptes, en proposant une gestion de budget simple et semi-automatisée. L'interface claire et ergonomique de Mon Relevé Malin incite à naviguer dans l'historique de ses relevés de comptes, où les mouvements sont catégorisés, et peuvent être augmentés par le croisement avec les données d'Intermarché et d'Orange."
           }
         ];
         apps = apps.concat(fingApps);
@@ -1181,6 +1188,7 @@ module.exports = {
   "no application installed": "There is no application installed.",
   "your parameters": " Your parameters",
   "alerts and password recovery email": "I need your email to send you alerts or for password recovering",
+  "public name description": "Your public name will be used by your Cozy and its apps to communicate with you.",
   "your timezone is required": "Your timezone is required to display dates properly",
   "domain name for urls and email": "The domain name is used to build urls send via email to you or your contacts",
   "save": "save",
@@ -1316,7 +1324,8 @@ module.exports = {
   "save": "sauver",
   "your parameters": " Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
-  "your timezone is required": "Votre timezone est require pour vous afficher les dates correctements.",
+  "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
+  "your timezone is required": "Votre timezone est requise pour vous afficher les dates correctements.",
   "domain name for urls and email": "Le nom de domaine est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
   "french": "Français",
@@ -1327,9 +1336,9 @@ module.exports = {
   "confirm your new password": "confirmez votre nouveau mot de passe",
   "save your new password": "sauvegarder votre nouveau mot de passe",
   "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
-  "Write an email to our support team at:": "Ecrivez un email à notre équipe support:",
-  "Register and post on our forum: ": "Postez un message sur notre forum: ",
-  "Ask your question on Twitter: ": "Posez votre question sur Twitter: ",
+  "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
+  "Register and post on our forum: ": "Postez un message sur notre forum : ",
+  "Ask your question on Twitter: ": "Posez votre question sur Twitter : ",
   "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
   "your own application": "votre propre application",
   "broken": "cassée",
@@ -1732,6 +1741,12 @@ buf.push('</h4><div id="account-form" class="lightgrey w600 pa2"><div class="inp
 var __val__ = t('alerts and password recovery email')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><input id="account-email-field"/><button class="btn">');
+var __val__ = t('save')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="input"><p>');
+var __val__ = t('public name description')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div><div class="input"><p>');
@@ -2395,14 +2410,22 @@ module.exports = exports.AccountView = (function(_super) {
   AccountView.prototype.fetchData = function() {
     var _this = this;
     $.get("api/users/", function(data) {
-      var saveEmail, saveTimezone, timezoneData;
+      var saveEmail, savePublicName, saveTimezone, timezoneData, userData;
       timezoneData = [];
-      _this.emailField.val(data.rows[0].email);
-      _this.timezoneField.val(data.rows[0].timezone);
+      userData = data.rows[0];
+      _this.emailField.val(userData.email);
+      _this.publicNameField.val(userData.public_name);
+      _this.timezoneField.val(userData.timezone);
       saveEmail = _this.getSaveFunction('email', _this.emailField, 'user');
       _this.emailField.on('keyup', function(event) {
         if (event.keyCode === 13 || event.which === 13) {
           return saveEmail();
+        }
+      });
+      savePublicName = _this.getSaveFunction('public_name', _this.publicNameField, 'user');
+      _this.emailField.on('keyup', function(event) {
+        if (event.keyCode === 13 || event.which === 13) {
+          return savePublicName();
         }
       });
       saveTimezone = _this.getSaveFunction('timezone', _this.timezoneField, 'user');
@@ -2451,6 +2474,7 @@ module.exports = exports.AccountView = (function(_super) {
     var timezone, _i, _len,
       _this = this;
     this.emailField = this.$('#account-email-field');
+    this.publicNameField = this.$('#account-public-name-field');
     this.timezoneField = this.$('#account-timezone-field');
     this.domainField = this.$('#account-domain-field');
     this.localeField = this.$('#account-locale-field');

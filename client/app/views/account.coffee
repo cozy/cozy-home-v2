@@ -107,12 +107,19 @@ module.exports = class exports.AccountView extends BaseView
         $.get "api/users/", (data) =>
             timezoneData = []
 
-            @emailField.val data.rows[0].email
-            @timezoneField.val data.rows[0].timezone
+            userData = data.rows[0]
+            @emailField.val userData.email
+            @publicNameField.val userData.public_name
+            @timezoneField.val userData.timezone
 
             saveEmail = @getSaveFunction 'email', @emailField, 'user'
-            @emailField.on 'keyup', (event) =>
+            @emailField.on 'keyup', (event) ->
                 saveEmail() if event.keyCode is 13 or event.which is 13
+
+            savePublicName = @getSaveFunction 'public_name', \
+                                            @publicNameField, 'user'
+            @emailField.on 'keyup', (event) ->
+                savePublicName() if event.keyCode is 13 or event.which is 13
 
             saveTimezone = @getSaveFunction 'timezone', @timezoneField, 'user'
             @timezoneField.change saveTimezone
@@ -151,6 +158,7 @@ module.exports = class exports.AccountView extends BaseView
     afterRender: ->
         # app.views.home.selectNavButton app.views.home.accountButton
         @emailField = @$ '#account-email-field'
+        @publicNameField = @$ '#account-public-name-field'
         @timezoneField = @$ '#account-timezone-field'
         @domainField = @$ '#account-domain-field'
         @localeField = @$ '#account-locale-field'

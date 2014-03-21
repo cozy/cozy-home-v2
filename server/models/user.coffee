@@ -2,6 +2,7 @@ americano = require('americano-cozy')
 
 module.exports = User = americano.getModel 'User',
     email: String
+    public_name: String
     timezone: {type: String, default: "Europe/Paris"}
     password: String
     owner: {type: Boolean, default: false}
