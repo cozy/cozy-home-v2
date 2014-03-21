@@ -20,6 +20,9 @@ module.exports =
                 #TODO CHECK TIMEZONE VALIDITY
                 data.timezone = body.timezone
 
+            if body.public_name?
+                data.public_name = body.public_name
+
             if body.email? and body.email.length > 0
                 if EMAILREGEX.test body.email
                     data.email = body.email
@@ -27,7 +30,7 @@ module.exports =
                     errors = ["Given email is not a proper email"]
                     return cb null, errors
 
-            if data.timezone or data.email or data.password
+            if data.timezone or data.email or data.password or data.public_name
                 adapter.updateUser user, data, (err) ->
                     cb err, null
             else

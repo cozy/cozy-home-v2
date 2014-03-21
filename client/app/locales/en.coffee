@@ -92,6 +92,7 @@ module.exports =
 
     "your parameters":" Your parameters"
     "alerts and password recovery email":"I need your email to send you alerts or for password recovering"
+    "public name description": "Your public name will be used by your Cozy and its apps to communicate with you."
     "your timezone is required":"Your timezone is required to display dates properly"
     "domain name for urls and email":"The domain name is used to build urls send via email to you or your contacts"
     "save":"save"

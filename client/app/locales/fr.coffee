@@ -95,6 +95,7 @@ module.exports =
         J'ai besoin de votre email pour la récupération de mot de passe ou
         pour vous envoyer des alertes.
     """
+    "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous."
     "your timezone is required":"""
         Votre timezone est requise pour vous afficher les dates correctements.
     """
