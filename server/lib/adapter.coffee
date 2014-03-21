@@ -45,6 +45,6 @@ module.exports = class Adapter
             client.setBasicAuth name, token
 
         # Update password
-        client.put "user/merge/#{user.id}", password: data.password, (err, res, body) =>
+        client.put "user/merge/#{user.id}", data, (err, res, body) =>
             callback err
 
