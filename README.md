@@ -1,7 +1,7 @@
 # [Cozy](http://cozy.io) Home
 
 Cozy Home is your dashboard to access and manage all your Cozy apps. It allows
-you to install, update and remove any app. 
+you to install, update and remove any app.
 It provides you too a tile page on which you can organize all your application
 launchers and widgets.
 
@@ -20,7 +20,7 @@ You can contribute to the Cozy Home in many ways:
 
 * Pick up an [issue](https://github.com/mycozycloud/cozy-home/issues?state=open) and solve it.
 * Translate it in [a new language](https://github.com/mycozycloud/cozy-home/tree/master/client/app/locales).
-* Add the capability to backup the Cozy (replicate it to another Cozy instance 
+* Add the capability to backup the Cozy (replicate it to another Cozy instance
   from) from the User Interface.
 
 ## Hack
@@ -45,6 +45,8 @@ To run tests type the following command into the Cozy Home folder:
 
     cake tests
 
+In order to run the tests, you must only have the Data System started.
+
 ## Icons
 
 by [iconmonstr](http://iconmonstr.com/)
@@ -61,9 +63,9 @@ Cozy Home is developed by Cozy Cloud and distributed under the AGPL v3 license.
 same private space.  With it, your web apps and your devices can share data
 easily, providing you
 with a new experience. You can install Cozy on your own hardware where no one
-profiles you. 
+profiles you.
 
-## Community 
+## Community
 
 You can reach the Cozy Community by:
 

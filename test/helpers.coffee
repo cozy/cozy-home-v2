@@ -47,7 +47,7 @@ _clearDb = (callback) ->
 
 helpers.setup = (port) ->
     (done) ->
-        @timeout 10000
+        @timeout 15000
         _init this, port, (err) =>
             return done err if err
             _clearDb done
