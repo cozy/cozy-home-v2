@@ -1316,7 +1316,12 @@ module.exports = {
   "save": "sauver",
   "your parameters": " Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
+<<<<<<< HEAD
   "your timezone is required": "Votre timezone est require pour vous afficher les dates correctements.",
+=======
+  "public name": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
+  "your timezone is required": "Votre timezone est requise pour vous afficher les dates correctements.",
+>>>>>>> 887c16c... Fixed: a typo in french
   "domain name for urls and email": "Le nom de domaine est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
   "french": "Français",

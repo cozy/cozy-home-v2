@@ -96,7 +96,7 @@ module.exports =
         pour vous envoyer des alertes.
     """
     "your timezone is required":"""
-        Votre timezone est require pour vous afficher les dates correctements.
+        Votre timezone est requise pour vous afficher les dates correctements.
     """
     "domain name for urls and email":"""
         Le nom de domaine est utilisé pour construire les urls
