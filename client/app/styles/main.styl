@@ -729,7 +729,6 @@ body
     transition: all 0.3s
     text-align: left
 
-
     h3
         margin-top: 30px
         margin-bottom: 0
@@ -779,9 +778,17 @@ body
 
 .cozy-app.fing
     background: lightgreyred
-
     &:hover
         background: lightgreyred - 5%
+
+    h3
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+
+    .app-text p
+        height 80px
+        overflow hidden
 
 
 // Config application
