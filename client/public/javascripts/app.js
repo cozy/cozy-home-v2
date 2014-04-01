@@ -284,6 +284,7 @@ module.exports = ApplicationCollection = (function(_super) {
           {
             icon: "img/collecteur-mesinfos-icon.png",
             name: "Collecteur MesInfos",
+            displayName: "Collecteur MesInfos",
             slug: "collecteur-mesinfos",
             git: "https://github.com/jsilvestre/cozy-data-integrator.git",
             comment: "fing application",
@@ -291,6 +292,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/actuforum-icon.png",
             name: "ActuForum",
+            displayName: "ActuForum",
             slug: "actuforum",
             git: "https://github.com/jsilvestre/cozy-actuforum.git",
             comment: "fing application",
@@ -298,6 +300,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/privowny-icon.png",
             name: "Privowny",
+            displayName: "Privowny",
             slug: "privowny",
             git: "https://github.com/jsilvestre/cozy-privowny.git",
             comment: "fing application",
@@ -305,6 +308,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/mesconsos-icon.png",
             name: "MesConsos",
+            displayName: "MesConsos",
             slug: "mesconsos",
             git: "https://github.com/jacquarg/MesConso.git",
             comment: "fing application",
@@ -312,6 +316,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/mappingmylife-icon.png",
             name: "Mapping My Life",
+            displayName: "Mapping My Life",
             slug: "mappingmylife",
             git: "https://gitlab.cozycloud.cc:8586/gjacquart/mappingmylife.git",
             comment: "fing application",
@@ -319,6 +324,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/mesinfosnutritionnelles-icon.png",
             name: "Mes Infos Nutritionnelles",
+            displayName: "Mes Infos Nutritionnelles",
             slug: "mes-infos-nutritionnelles",
             git: "https://github.com/pdelorme/mes-infos-nutritionnelles.git",
             comment: "fing application",
@@ -326,6 +332,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/mesinfosgeographiques-icon.png",
             name: "Mes Infos Géographiques",
+            displayName: "Mes Infos Géographiques",
             slug: "mes-infos-geographiques",
             git: "https://github.com/pdelorme/mes-infos-geographiques.git",
             comment: "fing application",
@@ -333,6 +340,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/purchease-icon.png",
             name: "Mes courses avec PurchEase",
+            displayName: "Mes courses avec PurchEase",
             slug: "mes-courses-avec-purchease",
             git: "https://gitlab.cozycloud.cc:8586/gjacquart/mes-courses-avec-purchease.git",
             comment: "fing application",
@@ -340,6 +348,7 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/moi-icon.png",
             name: "Moi",
+            displayName: "Moi",
             slug: "mesinfos-moi",
             git: "https://github.com/jacquarg/MoiMois.git",
             comment: "fing application",
@@ -347,10 +356,43 @@ module.exports = ApplicationCollection = (function(_super) {
           }, {
             icon: "img/rbi-icon.png",
             name: "Mon Relevé Malin",
+            displayName: "Mon Relevé Malin",
             slug: "mon-releve-malin",
             git: "https://github.com/n-a-n/rbi.git",
             comment: "fing application",
             description: "Mon Relevé Malin complète l'application Mes Comptes, en proposant une gestion de budget simple et semi-automatisée. L'interface claire et ergonomique de Mon Relevé Malin incite à naviguer dans l'historique de ses relevés de comptes, où les mouvements sont catégorisés, et peuvent être augmentés par le croisement avec les données d'Intermarché et d'Orange."
+          }, {
+            icon: "img/aliventaire-icon.png",
+            name: "Aliventaire",
+            displayName: "Aliventaire",
+            slug: "aliventaire",
+            git: "https://github.com/pierrerousseau/aliventaire.git",
+            comment: "fing application",
+            description: "Choisissez vos recettes à préparer sans avoir peur d'oublier d'acheter un ingrédient !"
+          }, {
+            icon: "img/begreen-icon.png",
+            name: "BeGreen - Vivez mieux, vivez sain",
+            displayName: "BeGreen - Vivez mieux, vivez sain",
+            slug: "begreen",
+            git: "https://github.com/pierreburgy/BeGreen.git",
+            comment: "fing application",
+            description: "Mesurez en temps réel vos émissions de CO2."
+          }, {
+            icon: "img/mes1001choses-icon.png",
+            name: "Mes1001Choses",
+            displayName: "Mes1001Choses",
+            slug: "mes1001choses",
+            git: "https://github.com/OlivierDouangvichith/Mes1001Choses.git",
+            comment: "fing application",
+            description: "L'application mobile Mes1001Choses, disponible pour Smartphone iOS et Android, permet de mieux se connaître pour élargir ses horizons. Elle vous révèle vos routines (géographiques, comportementales, …) et vous permet de les évaluer"
+          }, {
+            icon: "img/piggybank-icon.png",
+            name: "PiggyBank",
+            displayName: "PiggyBank",
+            slug: "piggybank",
+            git: "https://github.com/Lacroute/piggybank.git",
+            comment: "fing application",
+            description: "Piggy bank vous permet de réaliser vos envies d'achats sans vous mettre en danger financièrement. Grâce au calcul de votre enveloppe journalière, adaptez vos dépenses de manière à concrétiser vos envies les plus folles !"
           }
         ];
         apps = apps.concat(fingApps);
