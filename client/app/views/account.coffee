@@ -23,6 +23,16 @@ module.exports = class exports.AccountView extends BaseView
         @changePasswordForm.fadeOut =>
             @changePasswordButton.fadeIn()
 
+    onBackupClicked: =>
+        @backupButton.fadeOut =>
+            @backupForm.fadeIn =>
+                @targetUrlField.focus()
+                $(window).trigger 'resize'
+
+    closeBackupForm: =>
+        @backupForm.fadeOut =>
+            @backupButton.fadeIn()
+
     # When data are submited, it sends a request to backend to save them.
     # If an error occurs, message is displayed.
     onNewPasswordSubmit: (event) =>
@@ -57,6 +67,28 @@ module.exports = class exports.AccountView extends BaseView
             @accountSubmitButton.css 'color', 'white'
             @accountSubmitButton.spin()
 
+
+    onBackupSubmit: ->
+        $('#backup-form .loading-indicator').spin 'small'
+        @backupInfo.hide()
+        @backupError.hide()
+        params =
+            targetUrl: @targetUrlField.val()
+            targetPassword: @targetPasswordField.val()
+        request.post 'api/remotecozy', params, (err, data) =>
+            if data?.success
+                @backupInfo.html t 'backup new remote success'
+                @backupInfo.show()
+                setTimeout =>
+                    @backupForm.fadeOut()
+                    @targetUrlField.val ''
+                    @targetPasswordField.val ''
+                    @backupButton.show()
+                , 2500
+            else
+                @backupError.html err.message
+                @backupError.show()
+            $('#backup-form .loading-indicator').spin()
 
     ### Functions ###
     displayErrors: (msgs) =>
@@ -152,6 +184,29 @@ module.exports = class exports.AccountView extends BaseView
                 if event.keyCode is 13 or event.which is 13
                     @onNewPasswordSubmit()
 
+        @renderRemoteList()
+
+    # quick and dirty to validate the first version of the feature
+    renderRemoteList: ->
+        listSelector = @$ '#remote-backup-list ul'
+        $.get 'api/remotecozy', (remotes) ->
+            for remote in remotes
+                button = '<button class="btn">' + t('backup trigger') + '</button>'
+                remoteSelector = $("<li>#{remote.url} #{button}</li>")
+                remoteSelector.data 'id', remote.id
+                remoteSelector.appendTo listSelector
+
+            listSelector.find('li button').on 'click', ->
+                button = $(@)
+                id = button.parent().data 'id'
+                button.html "&nbsp;&nbsp;&nbsp;"
+                button.spin 'small'
+                $.post("api/remotecozy/backup/#{id}")
+                .fail ->
+                    alert t 'backup process error'
+                .always ->
+                    button.spin()
+                    button.html t('backup trigger')
 
     ### Configuration ###
 
@@ -172,6 +227,17 @@ module.exports = class exports.AccountView extends BaseView
         @changePasswordButton = @$ '#change-password-button'
         @changePasswordButton.click @onChangePasswordClicked
         @accountSubmitButton = @$ '#account-form-button'
+
+        @backupForm = @$ '#backup-form'
+        @targetUrlField = @$ '#account-target-url-field'
+        @targetPasswordField = @$ '#account-target-password-field'
+        @backupInfo = @$ '#backup-info'
+        @backupError = @$ '#backup-error'
+        @backupForm.hide()
+        @backupButton = @$ '#backup-button'
+        @backupButton.click @onBackupClicked
+        @backupSubmitButton = @$ '#backup-form-button'
+        @backupSubmitButton.click => @onBackupSubmit()
 
         @accountSubmitButton.click (event) =>
             event.preventDefault()

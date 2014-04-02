@@ -3,6 +3,7 @@ account = require './account'
 applications = require './applications'
 devices = require './devices'
 notifications = require './notifications'
+backup = require './backup'
 
 module.exports =
     'slug': param: applications.loadApplication
@@ -36,6 +37,12 @@ module.exports =
         post: account.setUserPreference
     'api/preference/:id':
         put: account.setUserPreference
+
+    'api/remotecozy':
+        get: backup.list
+        post: backup.create
+    'api/remotecozy/:id': del: [backup.fetch, backup.delete]
+    'api/remotecozy/backup/:id': post: [backup.fetch, backup.process]
 
     'api/notifications':
         get: notifications.all

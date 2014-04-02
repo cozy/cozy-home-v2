@@ -53,3 +53,26 @@ h4.pa2.w600.biggest.darkbg.center= t('your parameters')
 
             #account-error.alert.alert-error.main-alert.hide
                     #account-form-error-text
+
+h4.pa2.w600.biggest.darkbg.center= t('backup list title')
+#remote-backup-list.lightgrey.w600.pa2
+    ul
+
+    p
+        button#backup-button.btn= t('backup add remote')
+
+    #backup-form
+        p= t('backup procedure')
+        p
+            label= t('backup input url')
+        input#account-target-url-field(type="text", placeholder="#{t('backup input url placeholder')}")
+        p
+            label= t('backup input password')
+        input#account-target-password-field(type="password", placeholder="#{t('backup input password placeholder')}")
+        p
+            button#backup-form-button(class="btn")= t('backup add remote button')
+            p.loading-indicator &nbsp;
+
+            #backup-info.alert.main-alert.alert-success.hide
+
+            #backup-error.alert.alert-error.main-alert.hide
