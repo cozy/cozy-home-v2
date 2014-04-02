@@ -145,4 +145,3 @@ module.exports =
                 preferences[0].updateAttributes req.body, (err) ->
                     next err if err?
                     res.send success: true
-

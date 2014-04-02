@@ -19,3 +19,5 @@ module.exports =
         bySlug: allSlug
     user_preference:
         all: americano.defaultRequests.all
+    remotecozy:
+        all: americano.defaultRequests.all

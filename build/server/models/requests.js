@@ -33,5 +33,8 @@ module.exports = {
   },
   user_preference: {
     all: americano.defaultRequests.all
+  },
+  remotecozy: {
+    all: americano.defaultRequests.all
   }
 };
