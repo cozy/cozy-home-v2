@@ -1242,6 +1242,17 @@ module.exports = {
   "new password": "new password",
   "confirm your new password": "confirm your new password",
   "save your new password": "save your new password",
+  "backup list title": "Your remote backups",
+  "backup add remote": "Add a new remote backup",
+  "backup procedure": "Enter the address of a remote Cozy of yours along with its password (that will not be stored) in order to backup this Cozy.",
+  "backup input url": "A remote Cozy URL:",
+  "backup input url placeholder": "https://myremotecozy.mydomain.tld",
+  "backup input password": "The remote Cozy's password:",
+  "backup input password placeholder": "this password will not be stored",
+  "backup add remote button": "Add",
+  "backup trigger": "Trigger the backup",
+  "backup new remote success": "New Cozy backup successfully added.",
+  "backup process error": "An error occurred while backing up your Cozy",
   "do you want assistance": "Do you look for assistance?",
   "Write an email to our support team at:": "Write an email to our support team at:",
   "Register and post on our forum: ": "Register and post on our forum: ",
@@ -1377,6 +1388,17 @@ module.exports = {
   "new password": "nouveau mot de passe",
   "confirm your new password": "confirmez votre nouveau mot de passe",
   "save your new password": "sauvegarder votre nouveau mot de passe",
+  "backup list title": "Vos Cozy de sauvegarde",
+  "backup add remote": "Ajouter un nouveau Cozy de sauvegarde",
+  "backup procedure": "Entrez l'adresse d'un de vos Cozy de sauvegarde et son mot de passe (qui ne sera pas stocké) pour proécéder à une sauvegarde.",
+  "backup input url": "L'adresse d'un Cozy de sauvegarde :",
+  "backup input url placeholder": "https://autrecozy.mondomaine.tld",
+  "backup input password": "Le mot de passe du Cozy de sauvegarde :",
+  "backup input password placeholder": "ce mot de passe ne sera pas stocké",
+  "backup add remote button": "Ajouter",
+  "backup trigger": "Déclencher la sauvegarde",
+  "backup new remote success": "Le nouveau Cozy de sauvegarde a été ajouté avec succès.",
+  "backup process error": "Une erreur est survenbue lors de la sauvegarde de votre Cozy.",
   "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
   "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
   "Register and post on our forum: ": "Postez un message sur notre forum : ",
@@ -1839,7 +1861,29 @@ buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeho
 buf.push('/><p><button id="account-form-button" class="btn">');
 var __val__ = t('save your new password')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
+buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div><h4 class="pa2 w600 biggest darkbg center">');
+var __val__ = t('backup list title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div id="remote-backup-list" class="lightgrey w600 pa2"><ul></ul><p><button id="backup-button" class="btn">');
+var __val__ = t('backup add remote')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p><div id="backup-form"><p>');
+var __val__ = t('backup procedure')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p><label>');
+var __val__ = t('backup input url')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</label></p><input');
+buf.push(attrs({ 'id':('account-target-url-field'), 'type':("text"), 'placeholder':("" + (t('backup input url placeholder')) + "") }, {"type":true,"placeholder":true}));
+buf.push('/><p><label>');
+var __val__ = t('backup input password')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</label></p><input');
+buf.push(attrs({ 'id':('account-target-password-field'), 'type':("password"), 'placeholder':("" + (t('backup input password placeholder')) + "") }, {"type":true,"placeholder":true}));
+buf.push('/><p><button id="backup-form-button" class="btn">');
+var __val__ = t('backup add remote button')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="backup-info" class="alert main-alert alert-success hide"></div><div id="backup-error" class="alert alert-error main-alert hide"></div></p></div></div>');
 }
 return buf.join("");
 };
@@ -2338,6 +2382,8 @@ module.exports = exports.AccountView = (function(_super) {
   function AccountView() {
     this.displayErrors = __bind(this.displayErrors, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
+    this.closeBackupForm = __bind(this.closeBackupForm, this);
+    this.onBackupClicked = __bind(this.onBackupClicked, this);
     this.closePasswordForm = __bind(this.closePasswordForm, this);
     this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);
     AccountView.__super__.constructor.call(this);
@@ -2357,6 +2403,23 @@ module.exports = exports.AccountView = (function(_super) {
     var _this = this;
     return this.changePasswordForm.fadeOut(function() {
       return _this.changePasswordButton.fadeIn();
+    });
+  };
+
+  AccountView.prototype.onBackupClicked = function() {
+    var _this = this;
+    return this.backupButton.fadeOut(function() {
+      return _this.backupForm.fadeIn(function() {
+        _this.targetUrlField.focus();
+        return $(window).trigger('resize');
+      });
+    });
+  };
+
+  AccountView.prototype.closeBackupForm = function() {
+    var _this = this;
+    return this.backupForm.fadeOut(function() {
+      return _this.backupButton.fadeIn();
     });
   };
 
@@ -2395,6 +2458,34 @@ module.exports = exports.AccountView = (function(_super) {
       }
       _this.accountSubmitButton.css('color', 'white');
       return _this.accountSubmitButton.spin();
+    });
+  };
+
+  AccountView.prototype.onBackupSubmit = function() {
+    var params,
+      _this = this;
+    $('#backup-form .loading-indicator').spin('small');
+    this.backupInfo.hide();
+    this.backupError.hide();
+    params = {
+      targetUrl: this.targetUrlField.val(),
+      targetPassword: this.targetPasswordField.val()
+    };
+    return request.post('api/remotecozy', params, function(err, data) {
+      if (data != null ? data.success : void 0) {
+        _this.backupInfo.html(t('backup new remote success'));
+        _this.backupInfo.show();
+        setTimeout(function() {
+          _this.backupForm.fadeOut();
+          _this.targetUrlField.val('');
+          _this.targetPasswordField.val('');
+          return _this.backupButton.show();
+        }, 2500);
+      } else {
+        _this.backupError.html(err.message);
+        _this.backupError.show();
+      }
+      return $('#backup-form .loading-indicator').spin();
     });
   };
 
@@ -2473,7 +2564,7 @@ module.exports = exports.AccountView = (function(_super) {
       saveTimezone = _this.getSaveFunction('timezone', _this.timezoneField, 'user');
       return _this.timezoneField.change(saveTimezone);
     });
-    return $.get("api/instances/", function(data) {
+    $.get("api/instances/", function(data) {
       var domain, instance, locale, saveDomain, saveLocale, _ref;
       instance = (_ref = data.rows) != null ? _ref[0] : void 0;
       domain = (instance != null ? instance.domain : void 0) || t('no domain set');
@@ -2507,6 +2598,35 @@ module.exports = exports.AccountView = (function(_super) {
         }
       });
     });
+    return this.renderRemoteList();
+  };
+
+  AccountView.prototype.renderRemoteList = function() {
+    var listSelector;
+    listSelector = this.$('#remote-backup-list ul');
+    return $.get('api/remotecozy', function(remotes) {
+      var button, remote, remoteSelector, _i, _len;
+      for (_i = 0, _len = remotes.length; _i < _len; _i++) {
+        remote = remotes[_i];
+        button = '<button class="btn">' + t('backup trigger') + '</button>';
+        remoteSelector = $("<li>" + remote.url + " " + button + "</li>");
+        remoteSelector.data('id', remote.id);
+        remoteSelector.appendTo(listSelector);
+      }
+      return listSelector.find('li button').on('click', function() {
+        var id;
+        button = $(this);
+        id = button.parent().data('id');
+        button.html("&nbsp;&nbsp;&nbsp;");
+        button.spin('small');
+        return $.post("api/remotecozy/backup/" + id).fail(function() {
+          return alert(t('backup process error'));
+        }).always(function() {
+          button.spin();
+          return button.html(t('backup trigger'));
+        });
+      });
+    });
   };
 
   /* Configuration*/
@@ -2529,6 +2649,18 @@ module.exports = exports.AccountView = (function(_super) {
     this.changePasswordButton = this.$('#change-password-button');
     this.changePasswordButton.click(this.onChangePasswordClicked);
     this.accountSubmitButton = this.$('#account-form-button');
+    this.backupForm = this.$('#backup-form');
+    this.targetUrlField = this.$('#account-target-url-field');
+    this.targetPasswordField = this.$('#account-target-password-field');
+    this.backupInfo = this.$('#backup-info');
+    this.backupError = this.$('#backup-error');
+    this.backupForm.hide();
+    this.backupButton = this.$('#backup-button');
+    this.backupButton.click(this.onBackupClicked);
+    this.backupSubmitButton = this.$('#backup-form-button');
+    this.backupSubmitButton.click(function() {
+      return _this.onBackupSubmit();
+    });
     this.accountSubmitButton.click(function(event) {
       event.preventDefault();
       return _this.onNewPasswordSubmit();
