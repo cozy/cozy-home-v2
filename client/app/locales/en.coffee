@@ -68,7 +68,7 @@ module.exports =
 
     "your app list": "Access to your apps"
     "customize your cozy": "Customize your layout"
-    "manage your apps":"Manage your app"
+    "manage your apps":"Manage your apps"
     "choose your apps":"Choose your apps"
     "configure your cozy":"Configure your cozy"
     "ask for assistance":"Ask for assistance"

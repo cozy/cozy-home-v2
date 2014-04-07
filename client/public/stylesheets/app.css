@@ -1285,7 +1285,7 @@ body {
   -ms-transition: background-color 3s;
   transition: background-color 3s;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
   #menu-applications-toggle span {
     padding-top: 10px;
   }
