@@ -3686,9 +3686,13 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installing':
         return alert(t('this app is being installed. Wait a little'));
       case 'stopped':
+        this.icon.hide();
+        this.showSpinner();
         return this.model.start({
           success: function() {
-            return _this.launchApp(event);
+            _this.launchApp(event);
+            _this.hideSpinner();
+            return _this.icon.show();
           }
         });
     }
