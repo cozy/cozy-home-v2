@@ -409,6 +409,22 @@ module.exports = ApplicationCollection = (function(_super) {
             git: "https://github.com/maxlath/mes-objets.git",
             comment: "fing application",
             description: "Une application pour vous aider à réunir les informations disponibles sur vos objets."
+          }, {
+            icon: "img/empreinte-icon.png",
+            name: "Empreinte de mouvement",
+            displayName: "Empreinte de mouvement",
+            slug: "empreinte",
+            git: "https://github.com/jacquarg/mesinfos-empreinte.git",
+            comment: "fing application",
+            description: "Découvrez votre empreinte de mouvement ! Explorez comment vos données numériques se matérialisent à travers un objet tangible, définissant votre empreinte de mouvement, générée par vos mouvements physiques dans la ville."
+          }, {
+            icon: "img/care-icon.png",
+            name: "CARE",
+            displayName: "CARE",
+            slug: "care",
+            git: "https://github.com/tomformont/datadesigngit.git",
+            comment: "fing application",
+            description: "Care est un service permettant la visualisation et comparaison de la consommation alimentaire d’un ménage."
           }
         ];
         apps = apps.concat(fingApps);
