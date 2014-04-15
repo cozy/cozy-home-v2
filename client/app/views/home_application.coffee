@@ -94,7 +94,12 @@ module.exports = class ApplicationRow extends BaseView
             when 'installing'
                 alert t 'this app is being installed. Wait a little'
             when 'stopped'
-                @model.start success: => @launchApp(event)
+                @icon.hide()
+                @showSpinner()
+                @model.start success: =>
+                    @launchApp(event)
+                    @hideSpinner()
+                    @icon.show()
 
     setUseWidget: (widget = true) =>
         widgetUrl = @model.get 'widget'
