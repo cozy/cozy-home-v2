@@ -393,6 +393,22 @@ module.exports = ApplicationCollection = (function(_super) {
             git: "https://github.com/Lacroute/piggybank.git",
             comment: "fing application",
             description: "Piggy bank vous permet de réaliser vos envies d'achats sans vous mettre en danger financièrement. Grâce au calcul de votre enveloppe journalière, adaptez vos dépenses de manière à concrétiser vos envies les plus folles !"
+          }, {
+            icon: "img/semanticsearch-icon.png",
+            name: "SemanticSearch",
+            displayName: "SemanticSearch",
+            slug: "mesinfos-semanticsearch",
+            git: "https://github.com/aenaena/mesinfos-semanticsearch.git",
+            comment: "fing application",
+            description: "MesInfos Semantic Search vous permet d'explorer vos données personnelles grâce à des requêtes en langage naturel, dans une interface enrichie par les données du Linked Open Data. Semantic Search vous permet de trouver l'information que vous cherchez sans avoir à affiner une recherche avec de nombreux paramètres. Exemple de requête possible : \"Qui ai-je appelé à Paris en mars ?\""
+          }, {
+            icon: "img/mesobjets-icon.png",
+            name: "Mes Objets",
+            displayName: "Mes Objets",
+            slug: "mes-objets",
+            git: "https://github.com/maxlath/mes-objets.git",
+            comment: "fing application",
+            description: "Une application pour vous aider à réunir les informations disponibles sur vos objets."
           }
         ];
         apps = apps.concat(fingApps);
