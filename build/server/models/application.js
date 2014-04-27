@@ -26,6 +26,11 @@ module.exports = Application = americano.getModel('Application', {
   password: String,
   homeposition: Object,
   widget: String,
+  version: String,
+  needsUpdate: {
+    type: Boolean,
+    "default": false
+  },
   _attachments: Object
 });
 
