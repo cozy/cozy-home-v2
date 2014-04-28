@@ -1,6 +1,7 @@
 request = require("request-json")
 fs = require('fs')
 slugify = require 'cozy-slug'
+printit = require 'printit'
 
 Application = require '../models/application'
 {AppManager} = require '../lib/paas'
@@ -77,58 +78,6 @@ saveIcon = (appli, callback = ->) ->
 
 # Check for updates
 UpdateNotifier = new NotificationsHelper 'home'
-CheckForUpdate = (app) ->
-
-    log = (t) ->
-        console.log "[UpdateNotifier][#{app.name}] #{t}"
-        return
-
-    setFlag = () =>
-        log "Needs an update."
-        app.needsUpdate = true
-        app.save (ers) ->
-            if ers
-                console.error "Error when setting the needsUpdate flag for #{app.name}: #{ers}"
-                return
-            UpdateNotifier.createTemporary
-                text: "A new version of #{app.name} has been released!"
-                resource: {app: 'home'}
-        return
-
-    # abort early if the app already has the set flag
-    if app.needsUpdate
-        return
-
-    log 'Checking for an update...'
-    # Retrieve manifest
-    manifest = new Manifest()
-    manifest.download app, (erm) ->
-        if erm
-            console.error "Error when downloading manifest of #{app.name}: #{erm}"
-            return
-
-        # Maybe set the needsUpdate flag
-        repoVersion = manifest.getVersion()
-        if not repoVersion?
-            log "repo's package file doesn't have a version field, aborting check."
-            return
-
-        if not app.version?
-            # if the app has not version but the version on the repo has one, we
-            # set the needsUpdate flag, in doubt. In the worst case, the app
-            # on the cozy has the same version, but there's no way we can
-            # figure out
-            # TODO using git hashes could prevent this situation.
-            setFlag()
-            return
-
-        if app.version != repoVersion
-            setFlag()
-            return
-
-        log "no need for an update (#{app.version} vs #{repoVersion})"
-        return
-
 setInterval () ->
     console.log '[UpdateNotifier] Checking for updates...'
     Application.all (err, apps) ->
@@ -136,9 +85,23 @@ setInterval () ->
             console.error "Error when checking apps versions: #{err}"
             return
         for app in apps
-            CheckForUpdate app
-        true
-    true
+            (() => # captures app
+                updateLogger = printit
+                    prefix: "UpdateNotifier - #{app.name}"
+
+                updateLogger.info "checking for an update..."
+                app.checkForUpdate (eru, setUpdate) =>
+                    if eru?
+                        updateLogger.error eru
+                        return
+                    if setUpdate
+                        updateLogger.info "needs an update."
+                        UpdateNotifier.createTemporary
+                            text: "A new version of #{app.name} has been released!"
+                            resource: {app: 'home'}
+            )()
+        return
+    return
 , TIME_BETWEEN_UPDATE_CHECKS
 
 
