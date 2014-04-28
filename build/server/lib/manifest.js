@@ -8,6 +8,7 @@ exports.Manifest = (function() {
   function Manifest() {
     this.getMetaData = __bind(this.getMetaData, this);
     this.getDescription = __bind(this.getDescription, this);
+    this.getVersion = __bind(this.getVersion, this);
     this.getWidget = __bind(this.getWidget, this);
     this.getPermissions = __bind(this.getPermissions, this);
   }
@@ -55,6 +56,10 @@ exports.Manifest = (function() {
     } else {
       return null;
     }
+  };
+
+  Manifest.prototype.getVersion = function() {
+    return this.config.version || "0.0.0";
   };
 
   Manifest.prototype.getDescription = function() {

@@ -1,10 +1,15 @@
 request = require("request-json")
 fs = require('fs')
 slugify = require 'cozy-slug'
+printit = require 'printit'
 
 Application = require '../models/application'
 {AppManager} = require '../lib/paas'
 {Manifest} = require '../lib/manifest'
+NotificationsHelper = require 'cozy-notifications-helper'
+
+# Time (in ms) between two checks for updates, for all apps
+TIME_BETWEEN_UPDATE_CHECKS = 1000 * 60 * 60 * 24 # once a day
 
 # Small hack to ensure that an user don't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -70,6 +75,34 @@ saveIcon = (appli, callback = ->) ->
                 callback null
     else
         callback new Error 'Appli cannot be reached'
+
+# Check for updates
+UpdateNotifier = new NotificationsHelper 'home'
+setInterval () ->
+    console.log '[UpdateNotifier] Checking for updates...'
+    Application.all (err, apps) ->
+        if err
+            console.error "Error when checking apps versions: #{err}"
+            return
+        for app in apps
+            (() => # captures app
+                updateLogger = printit
+                    prefix: "UpdateNotifier - #{app.name}"
+
+                updateLogger.info "checking for an update..."
+                app.checkForUpdate (eru, setUpdate) =>
+                    if eru?
+                        updateLogger.error eru
+                        return
+                    if setUpdate
+                        updateLogger.info "needs an update."
+                        UpdateNotifier.createTemporary
+                            text: "A new version of #{app.name} has been released!"
+                            resource: {app: 'home'}
+            )()
+        return
+    return
+, TIME_BETWEEN_UPDATE_CHECKS
 
 
 module.exports =
@@ -178,6 +211,7 @@ module.exports =
                 return send_error res, err if err
                 req.body.permissions = manifest.getPermissions()
                 req.body.widget = manifest.getWidget()
+                req.body.version = manifest.getVersion()
 
                 Application.create req.body, (err, appli) ->
                     return send_error res, err if err
@@ -256,6 +290,8 @@ module.exports =
                 return send_error res, err if err
                 req.application.permissions = manifest.getPermissions()
                 req.application.widget = manifest.getWidget()
+                req.application.version = manifest.getVersion()
+                req.application.needsUpdate = false
                 req.application.save (err) ->
 
                     saveIcon req.application, (err) ->
