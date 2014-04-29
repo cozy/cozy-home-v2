@@ -11,14 +11,14 @@ NotificationsHelper = require 'cozy-notifications-helper'
 # Time (in ms) between two checks for updates, for all apps
 TIME_BETWEEN_UPDATE_CHECKS = 1000 * 60 * 60 * 24 # once a day
 
-# Small hack to ensure that an user don't try to start an application twice
+# Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
 # IDs are the keys, values are all equal to true.
 startedApplications = {}
 
 # Helpers
 
-send_error = (res, err, code=500) ->
+sendError = (res, err, code=500) ->
     err ?=
         stack:   null
         message: "Server error occured"
@@ -32,12 +32,12 @@ send_error = (res, err, code=500) ->
         message: err.message
         stack: err.stack
 
-send_error_socket = (err) ->
+sendErrorSocket = (err) ->
     console.log "Sending error through socket"
     console.log err.stack
     #compound.io.sockets.emit 'installerror', err.stack
 
-mark_broken = (res, app, err) ->
+markBroken = (res, app, err) ->
     console.log "Marking app #{app.name} as broken because"
     console.log err.stack
 
@@ -45,7 +45,7 @@ mark_broken = (res, app, err) ->
     app.password = null
     app.errormsg = err.message
     app.save (saveErr) ->
-        return send_error res, saveErr if saveErr
+        return sendError res, saveErr if saveErr
 
         res.send
             app: app
@@ -152,9 +152,9 @@ module.exports =
 
     read: (req, res, next) ->
         Application.find req.params.id, (err, app) ->
-            if err then send_error res, err
+            if err then sendError res, err
             else if app is null
-                send_error res, new Error('Application not found'), 404
+                sendError res, new Error('Application not found'), 404
             else
                 res.send app
 
@@ -174,9 +174,9 @@ module.exports =
     updatestoppable: (req, res, next) ->
         Application.find req.params.id, (err, app) ->
             if err
-                send_error res, err
+                sendError res, err
             else if app is null
-                send_error res, new Error('Application not found'), 404
+                sendError res, new Error('Application not found'), 404
             else
                 Stoppable = req.body.isStoppable
                 Stoppable = if Stoppable? then Stoppable else app.isStoppable
@@ -184,7 +184,7 @@ module.exports =
                     homeposition: req.body.homeposition or app.homeposition
                     isStoppable: Stoppable
                 app.updateAttributes changes, (err, app) ->
-                    return send_error res, err if err
+                    return sendError res, err if err
                     res.send app
 
 
@@ -199,22 +199,22 @@ module.exports =
         req.body.password = randomString 32
 
         Application.all key: req.body.slug, (err, apps) ->
-            return send_error res, err if err
+            return sendError res, err if err
 
             if apps.length > 0 or req.body.slug is "proxy" or
                     req.body.slug is "home" or req.body.slug is "data-system"
                 err = new Error "already similarly named app"
-                return send_error res, err, 400
+                return sendError res, err, 400
 
             manifest = new Manifest()
             manifest.download req.body, (err) ->
-                return send_error res, err if err
+                return sendError res, err if err
                 req.body.permissions = manifest.getPermissions()
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
 
                 Application.create req.body, (err, appli) ->
-                    return send_error res, err if err
+                    return sendError res, err if err
 
                     res.send success: true, app: appli, 201
 
@@ -223,8 +223,8 @@ module.exports =
                     manager = new AppManager()
                     manager.installApp appli, (err, result) ->
                         if err
-                            mark_broken res, appli, err
-                            send_error_socket err
+                            markBroken res, appli, err
+                            sendErrorSocket err
                             return
 
                         if result.drone?
@@ -239,16 +239,16 @@ module.exports =
                                 else console.info 'icon attached'
 
                             appli.save (err) ->
-                                return send_error_socket err if err
+                                return sendErrorSocket err if err
                                 console.info 'saved port in db', appli.port
                                 manager.resetProxy (err) ->
-                                    return send_error_socket err if err
+                                    return sendErrorSocket err if err
                                     console.info 'proxy reset', appli.port
 
                         else
                             err = new Error "Controller has no " + \
                                             "informations about #{appli.name}"
-                            return send_error_socket err if err
+                            return sendErrorSocket err if err
 
 
     # Remove app from 3 places :
@@ -259,13 +259,13 @@ module.exports =
         req.body.slug = req.params.slug
         manager = new AppManager()
         manager.uninstallApp req.application, (err, result) ->
-            return mark_broken res, req.application, err if err
+            return markBroken res, req.application, err if err
 
             req.application.destroy (err) ->
-                return send_error res, err if err
+                return sendError res, err if err
 
                 manager.resetProxy (err) ->
-                    return send_error res, proxyErr if err
+                    return sendError res, proxyErr if err
 
                     res.send
                         success: true
@@ -282,12 +282,12 @@ module.exports =
             req.application.password = randomString 32
 
         manager.updateApp req.application, (err, result) ->
-            return mark_broken res, req.application, err if err
+            return markBroken res, req.application, err if err
             req.application.state = "installed"
 
             manifest = new Manifest()
             manifest.download req.application, (err) =>
-                return send_error res, err if err
+                return sendError res, err if err
                 req.application.permissions = manifest.getPermissions()
                 req.application.widget = manifest.getWidget()
                 req.application.version = manifest.getVersion()
@@ -298,10 +298,10 @@ module.exports =
                         if err then console.log err.stack
                         else console.info 'icon attached'
 
-                    return send_error res, err if err
+                    return sendError res, err if err
 
                     manager.resetProxy (err) ->
-                        return mark_broken res, req.application, err if err
+                        return markBroken res, req.application, err if err
 
                         res.send
                             success: true
@@ -316,7 +316,7 @@ module.exports =
         setTimeout () ->
             if startedApplications[req.application.id]?
                 delete startedApplications[req.application.id]
-                return mark_broken res, req.application,
+                return markBroken res, req.application,
                     stack: "Installation timeout",
                     message: "Installation timeout"
 
@@ -330,20 +330,20 @@ module.exports =
             manager.start req.application, (err, result) ->
                 if err
                     delete startedApplications[req.application.id]
-                    return mark_broken res, req.application, err
+                    return markBroken res, req.application, err
 
                 req.application.state = "installed"
                 req.application.port = result.drone.port
                 req.application.save (err) ->
                     if err
                         delete startedApplications[req.application.id]
-                        return mark_broken res, req.application, err
+                        return markBroken res, req.application, err
 
                     manager.resetProxy (err) ->
                         delete startedApplications[req.application.id]
 
                         if err
-                            mark_broken res, req.application, err
+                            markBroken res, req.application, err
                         else
                             res.send
                                 success: true
@@ -360,17 +360,17 @@ module.exports =
     stop: (req, res, next) ->
         manager = new AppManager
         manager.stop req.application, (err, result) ->
-            return mark_broken res, req.application, err if err
+            return markBroken res, req.application, err if err
 
             data =
                 state: 'stopped'
                 port : 0
 
             req.application.updateAttributes data, (err) ->
-                return send_error res, err if err
+                return sendError res, err if err
 
                 manager.resetProxy (err) ->
-                    return mark_broken res, req.application, err if err
+                    return markBroken res, req.application, err if err
                     res.send
                         success: true
                         msg: 'Application stopped'
