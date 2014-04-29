@@ -44,6 +44,7 @@ module.exports =
     "always on"                 : "sempre ligada"
     "keep always on"            : "manter sempre ligada"
     "stop this app"             : "parar esta aplicação"
+    "update required"           : "Atualização disponível"
 
 
     "application is installing" : """
@@ -132,7 +133,7 @@ module.exports =
     """
     "confirm update": "confirmar actualização"
     "no specific permissions needed":"Esta aplicação necssita de permissões especificas"
-    "menu description":"""Se esta é a tua primeira vez no Cozy aqui tens um pequeno guia 
+    "menu description":"""Se esta é a tua primeira vez no Cozy aqui tens um pequeno guia
     sobre todas as secções disponiveis. Todas elas podem ser escolhidas
     no menu localizado no teu lado superior direito."""
     "install your first app":"o teu Cozy, e depois instala a tua primeira aplicação na&nbsp;"

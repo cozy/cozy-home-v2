@@ -1232,6 +1232,7 @@ module.exports = {
   "always on": "always on",
   "keep always on": "keep always on",
   "stop this app": "stop this app",
+  "update required": "Update available",
   "application is installing": "An application is already installing.\nWait for it to finish, then run your installation again.",
   "no app message": "You have actually no application installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> to install a new one!",
   "welcome to app store": "Welcome to your cozy app store, install your own application from there\nor add an existing one from the list.",
@@ -1368,6 +1369,7 @@ module.exports = {
   "always on": "toujours démarrée",
   "keep always on": "garder toujours démarrée",
   "stop this app": "arrêter cet app",
+  "update required": "Mise à jour disponible",
   "application is installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
   "no app message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
   "welcome to app store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
@@ -1504,6 +1506,7 @@ module.exports = {
   "always on": "sempre ligada",
   "keep always on": "manter sempre ligada",
   "stop this app": "parar esta aplicação",
+  "update required": "Atualização disponível",
   "application is installing": "Uma aplicação já está a ser instalada.\nPor favor espere que acabe a instalçaõ e tente de novo.",
   "no app message": "Não tem aplicações instaladas no seu Cozy.\nVá á <a href=\"#applications\">loja</a> para instalar algumas!",
   "welcome to app store": "Bem vindo á loja de aplicações, instale a sua aplicação\nou escolha uma da lista.",
@@ -1572,7 +1575,7 @@ module.exports = {
   "Once updated, this application will require the following permissions:": "Depois de actualizada a aplicação irá requerer as seguintes permissões:",
   "confirm update": "confirmar actualização",
   "no specific permissions needed": "Esta aplicação necssita de permissões especificas",
-  "menu description": "Se esta é a tua primeira vez no Cozy aqui tens um pequeno guia \nsobre todas as secções disponiveis. Todas elas podem ser escolhidas\nno menu localizado no teu lado superior direito.",
+  "menu description": "Se esta é a tua primeira vez no Cozy aqui tens um pequeno guia\nsobre todas as secções disponiveis. Todas elas podem ser escolhidas\nno menu localizado no teu lado superior direito.",
   "install your first app": "o teu Cozy, e depois instala a tua primeira aplicação na&nbsp;",
   "where you reach applications": "è o local onde podes escolher as aplicações",
   "There you can manage the state of your applications: start it, stop it, remove it...": "Ali podes gerar o estado das tuas aplicações: iniciar, parar ou remover...",
@@ -2047,6 +2050,12 @@ buf.push('</span>');
 else
 {
 buf.push('<span class="state-label">' + escape((interp = app.state) == null ? '' : interp) + '</span>');
+}
+if ( app.needsUpdate)
+{
+buf.push('<span>&nbsp;</span><img');
+buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + "") }, {"width":true,"src":true,"title":true,"alt":true}));
+buf.push('/>');
 }
 buf.push('</div><div class="buttons right"><div class="mod right"><button class="btn remove-app">');
 var __val__ = t('remove')
@@ -2766,7 +2775,6 @@ module.exports = ApplicationRow = (function(_super) {
   }
 
   ApplicationRow.prototype.afterRender = function() {
-    this.icon = this.$('img');
     this.updateButton = new ColorButton(this.$(".update-app"));
     this.removeButton = new ColorButton(this.$(".remove-app"));
     this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
@@ -2783,7 +2791,6 @@ module.exports = ApplicationRow = (function(_super) {
     var bool;
     switch (this.model.get('state')) {
       case 'broken':
-        this.icon.attr('src', "img/broken.png");
         this.stateLabel.show().text(t('broken'));
         this.removeButton.displayGrey(t('remove'));
         this.updateButton.displayGrey(t('retry to install'));
@@ -2792,8 +2799,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.startStopBtn.hide();
         break;
       case 'installed':
-        this.icon.attr('src', "api/applications/" + app.id + ".png");
-        this.icon.removeClass('stopped');
         this.stateLabel.show().text(t('started'));
         this.removeButton.displayGrey(t('remove'));
         this.updateButton.displayGrey(t('update'));
@@ -2802,8 +2807,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.startStopBtn.displayGrey(t('stop this app'));
         break;
       case 'installing':
-        this.icon.attr('src', "img/installing.gif");
-        this.icon.removeClass('stopped');
         this.stateLabel.show().text(t('installing'));
         this.removeButton.displayGrey(t('abort'));
         this.updateButton.hide();
@@ -2812,8 +2815,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.startStopBtn.hide();
         break;
       case 'stopped':
-        this.icon.attr('src', "api/applications/" + app.id + ".png");
-        this.icon.addClass('stopped');
         this.stateLabel.show().text(t('stopped'));
         this.removeButton.displayGrey(t('remove'));
         this.updateButton.hide();

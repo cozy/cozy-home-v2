@@ -7,6 +7,10 @@
         else
             span.state-label
                 | #{app.state}
+        if app.needsUpdate
+            span &nbsp;
+            img(width=16, src="img/notification-orange.png", 
+                title="#{t('update required')}", alt="#{t('update required')}")
 
     .buttons.right
         .mod.right

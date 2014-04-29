@@ -24,7 +24,6 @@ module.exports = class ApplicationRow extends BaseView
         super
 
     afterRender: =>
-        @icon = @$ 'img'
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
         @startStopBtn = new ColorButton @$ ".start-stop-btn"
@@ -39,7 +38,6 @@ module.exports = class ApplicationRow extends BaseView
     onAppChanged: (app) =>
         switch @model.get 'state'
             when 'broken'
-                @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'retry to install'
@@ -47,8 +45,6 @@ module.exports = class ApplicationRow extends BaseView
                 @appStoppable.next().hide()
                 @startStopBtn.hide()
             when 'installed'
-                @icon.attr 'src', "api/applications/#{app.id}.png"
-                @icon.removeClass 'stopped'
                 @stateLabel.show().text t 'started'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.displayGrey t 'update'
@@ -56,8 +52,6 @@ module.exports = class ApplicationRow extends BaseView
                 @appStoppable.next().show()
                 @startStopBtn.displayGrey t 'stop this app'
             when 'installing'
-                @icon.attr 'src', "img/installing.gif"
-                @icon.removeClass 'stopped'
                 @stateLabel.show().text t 'installing'
                 @removeButton.displayGrey t 'abort'
                 @updateButton.hide()
@@ -65,8 +59,6 @@ module.exports = class ApplicationRow extends BaseView
                 @appStoppable.next().hide()
                 @startStopBtn.hide()
             when 'stopped'
-                @icon.attr 'src', "api/applications/#{app.id}.png"
-                @icon.addClass 'stopped'
                 @stateLabel.show().text t 'stopped'
                 @removeButton.displayGrey t 'remove'
                 @updateButton.hide()

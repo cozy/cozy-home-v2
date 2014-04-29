@@ -44,6 +44,7 @@ module.exports =
     "always on"                 : "always on"
     "keep always on"            : "keep always on"
     "stop this app"             : "stop this app"
+    "update required"           : "Update available"
 
 
     "application is installing" : """

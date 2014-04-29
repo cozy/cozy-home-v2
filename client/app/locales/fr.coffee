@@ -44,6 +44,7 @@ module.exports =
     "always on"                 : "toujours démarrée"
     "keep always on"            : "garder toujours démarrée"
     "stop this app"             : "arrêter cet app"
+    "update required"           : "Mise à jour disponible"
 
     "application is installing" : """
         Une application est en cours d'installation.
