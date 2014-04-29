@@ -1,7 +1,9 @@
 Application = require '../models/application'
 {Manifest} = require '../lib/manifest'
 
+
 fakePermission = '[object Object]'
+
 
 updatePermissions = (app) =>
     manifest = new Manifest()
@@ -16,4 +18,3 @@ module.exports = () ->
         for app in apps
             if app.permissions?.toString() is fakePermission.toString()
                 updatePermissions app
-

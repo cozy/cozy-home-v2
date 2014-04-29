@@ -8,6 +8,7 @@ application = module.exports = (callback) ->
     initProxy = require './server/initializers/proxy'
     setupRealtime = require './server/initializers/realtime'
     setupChecking = require './server/initializers/checking'
+    versionChecking = require './server/initializers/updates'
 
     options =
         name: 'Cozy Home'
@@ -23,6 +24,7 @@ application = module.exports = (callback) ->
 
         setupRealtime app, ->
             setupChecking()
+            versionChecking()
             callback app, server if callback?
 
 if not module.parent
