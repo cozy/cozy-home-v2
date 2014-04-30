@@ -28,6 +28,7 @@ module.exports = class ApplicationRow extends BaseView
         @removeButton = new ColorButton @$ ".remove-app"
         @startStopBtn = new ColorButton @$ ".start-stop-btn"
         @stateLabel = @$ '.state-label'
+        @updateIcon = @$ '.update-notification-icon'
         @appStoppable  = @$ ".app-stoppable"
 
         @listenTo @model, 'change', @onAppChanged
@@ -35,6 +36,7 @@ module.exports = class ApplicationRow extends BaseView
 
     ### Listener ###
 
+    # When an app document changed, the UI is updated accordingly.
     onAppChanged: (app) =>
         switch @model.get 'state'
             when 'broken'
@@ -65,7 +67,10 @@ module.exports = class ApplicationRow extends BaseView
                 @appStoppable.hide()
                 @appStoppable.next().hide()
                 @startStopBtn.displayGrey t 'start this app'
-        bool = @model.get('isStoppable')
+
+        @updateIcon.toggle @model.get 'needsUpdate'
+
+        bool = @model.get 'isStoppable'
         @$('.app-stoppable').attr 'checked', bool
 
     onStoppableClicked: (event) =>

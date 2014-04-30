@@ -2054,7 +2054,7 @@ buf.push('<span class="state-label">' + escape((interp = app.state) == null ? ''
 if ( app.needsUpdate)
 {
 buf.push('<span>&nbsp;</span><img');
-buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + "") }, {"width":true,"src":true,"title":true,"alt":true}));
+buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
 buf.push('/>');
 }
 buf.push('</div><div class="buttons right"><div class="mod right"><button class="btn remove-app">');
@@ -2779,6 +2779,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.removeButton = new ColorButton(this.$(".remove-app"));
     this.startStopBtn = new ColorButton(this.$(".start-stop-btn"));
     this.stateLabel = this.$('.state-label');
+    this.updateIcon = this.$('.update-notification-icon');
     this.appStoppable = this.$(".app-stoppable");
     this.listenTo(this.model, 'change', this.onAppChanged);
     return this.onAppChanged(this.model);
@@ -2822,6 +2823,7 @@ module.exports = ApplicationRow = (function(_super) {
         this.appStoppable.next().hide();
         this.startStopBtn.displayGrey(t('start this app'));
     }
+    this.updateIcon.toggle(this.model.get('needsUpdate'));
     bool = this.model.get('isStoppable');
     return this.$('.app-stoppable').attr('checked', bool);
   };
