@@ -14,10 +14,9 @@ TIME_BETWEEN_UPDATE_CHECKS = 1000 * 60 * 60 * 24;
 checkUpdate = function(notifier, app) {
   log.info("" + app.name + " - checking for an update...");
   return app.checkForUpdate(function(err, setUpdate) {
-    log.debug("" + app.version);
     if (err != null) {
       log.error("" + app.name + " - Error while checking update.");
-      return console.log(err);
+      return log.raw(err);
     } else if (setUpdate) {
       log.info("" + app.name + " - update required.");
       return notifier.createTemporary({
@@ -40,7 +39,7 @@ checkUpdates = function() {
     var app, _i, _len, _results;
     if (err) {
       log.error("Error when checking apps versions:");
-      return console.log(err);
+      return log.raw(err);
     } else {
       _results = [];
       for (_i = 0, _len = apps.length; _i < _len; _i++) {
