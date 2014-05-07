@@ -24,6 +24,7 @@ module.exports =
 
 
     'api/devices': get: devices.devices
+    'api/devices/:id': del: devices.remove
 
     'api/sys-data': get: monitor.sysData
 

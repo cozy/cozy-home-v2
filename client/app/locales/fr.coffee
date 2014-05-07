@@ -85,9 +85,8 @@ module.exports =
     "memory megabytes":"&nbsp;Mo (RAM)"
     "manage your applications":"Gérez vos applications"
     "manage your devices":"Gérez vos devices"
-    "file": "Fichier"
-    "fodler": "Dossier"
-    "synchronised data": "Données synchronisées"
+    "revoke device access": "Révoquer l'accès du périphérique"
+    "synchronized": "synchronisé"
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
 
@@ -109,6 +108,7 @@ module.exports =
     """
     "french":"Français"
     "english":"Anglais"
+    "portuguese": "Portugais"
     "change password procedure":"Procédure de changement de mot de passe"
     "current password":"mot de passe actuel"
     "new password":"nouveau mot de passe"
@@ -177,3 +177,4 @@ module.exports =
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
     "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées..."
+    "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"

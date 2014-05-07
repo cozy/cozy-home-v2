@@ -1257,9 +1257,8 @@ module.exports = {
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Manage your applications",
   "manage your devices": "Manage your devices",
-  "synchronised data": "Synchronised data",
-  "file": "File",
-  "folder": "Folder",
+  "synchronized": "synchronized",
+  "revoke device access": "Revoke device access",
   "no application installed": "There is no application installed.",
   "your parameters": " Your parameters",
   "alerts and password recovery email": "I need your email to send you alerts or for password recovering",
@@ -1270,6 +1269,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choose the language you want me to use to speak to you:",
   "french": "French",
   "english": "English",
+  "portuguese": "Portuguese",
   "change password procedure": "Change password procedure",
   "current password": "current password",
   "new password": "new password",
@@ -1318,7 +1318,8 @@ module.exports = {
   "change layout": "Change the layout",
   "introduction market": "Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers.",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later.",
-  "please wait data retrieval": "Please wait while data are being retrieved..."
+  "please wait data retrieval": "Please wait while data are being retrieved...",
+  "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
 };
 });
 
@@ -1393,9 +1394,8 @@ module.exports = {
   "memory megabytes": "&nbsp;Mo (RAM)",
   "manage your applications": "Gérez vos applications",
   "manage your devices": "Gérez vos devices",
-  "file": "Fichier",
-  "fodler": "Dossier",
-  "synchronised data": "Données synchronisées",
+  "revoke device access": "Révoquer l'accès du périphérique",
+  "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
   "your parameters": " Vos paramètres",
@@ -1406,6 +1406,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
   "french": "Français",
   "english": "Anglais",
+  "portuguese": "Portugais",
   "change password procedure": "Procédure de changement de mot de passe",
   "current password": "mot de passe actuel",
   "new password": "nouveau mot de passe",
@@ -1455,7 +1456,8 @@ module.exports = {
   "change layout": "Modifier la disposition",
   "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créé ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs.",
   "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
-  "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées..."
+  "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées...",
+  "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 };
 });
 
@@ -1531,9 +1533,8 @@ module.exports = {
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Gere as tuas aplicações",
   "manage your devices": "Gere os teus dispositivos",
-  "synchronised data": "Dados sincronizados",
-  "file": "Ficheiro",
-  "folder": "Pasta",
+  "synchronized": "sincronizado",
+  "revoke device access": "Revoke device access",
   "no application installed": "Não há aplicações instaladas.",
   "your parameters": " Os seus parâmetros",
   "alerts and password recovery email": "Necessito do seu email para enviar alertas ou email de recuperação de password.",
@@ -1544,6 +1545,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Escolha a lingua que quer que fale:",
   "french": "Francês",
   "english": "Inglês",
+  "portuguese": "Português",
   "change password procedure": "Mudar procedimento de password",
   "current password": "password actual",
   "new password": "password nova",
@@ -1592,7 +1594,8 @@ module.exports = {
   "change layout": "Mudar o layout",
   "introduction market": "Bem vindo á loja de aplicações do Cozy. Este é o sitio onde podes personalizar o teu Cozy\nao adicionar aplicações.\nApartir dai podes instalar a aplicação que construiste ou escolher entre\naplicações criadas pela Cozy Cloud e outros programadores.",
   "error connectivity issue": "Ocurreu um erro ao receber os teus dados.<br />Por favor tenta de novo.",
-  "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos..."
+  "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos...",
+  "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
 };
 });
 
@@ -1984,7 +1987,7 @@ buf.push('</option><option value="en">');
 var __val__ = t('english')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="pt">');
-var __val__ = t('Portuguese')
+var __val__ = t('portuguese')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select><button class="btn">');
 var __val__ = t('save')
@@ -2101,7 +2104,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
 var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div><div class="mod w66 left"><div class="title-device h4 mb3">');
+buf.push('</div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
 var __val__ = t('manage your devices')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div></div></div>');
@@ -2117,12 +2120,12 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span><span class="state-label">');
-var __val__ = t('synchronised')
+var __val__ = t('synchronized')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div><div class="buttons"><div class="mod center"><span class="doctype-label">');
-var __val__ = t('')
+buf.push('</span></div><div class="buttons right"><button class="remove-device btn">');
+var __val__ = t('revoke device access')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div></div>');
+buf.push('</button></div></div>');
 }
 return buf.join("");
 };
@@ -3082,14 +3085,11 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
 });
 
 ;require.register("views/config_device", function(exports, require, module) {
-var BaseView, ColorButton, DeviceRow,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+var BaseView, DeviceRow,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 BaseView = require('lib/base_view');
-
-ColorButton = require('widgets/install_button');
 
 module.exports = DeviceRow = (function(_super) {
   __extends(DeviceRow, _super);
@@ -3100,41 +3100,41 @@ module.exports = DeviceRow = (function(_super) {
 
   DeviceRow.prototype.template = require('templates/config_device');
 
+  DeviceRow.prototype.events = {
+    'click .remove-device': 'onRemoveClicked'
+  };
+
   DeviceRow.prototype.getRenderData = function() {
     return {
       device: this.model.attributes
     };
   };
 
-  /* Constructor*/
-
-
   function DeviceRow(options) {
-    this.afterRender = __bind(this.afterRender, this);
+    this.model = options.model;
     this.id = "device-btn-" + options.model.id;
     DeviceRow.__super__.constructor.apply(this, arguments);
   }
 
-  DeviceRow.prototype.afterRender = function() {
-    var deviceDiv, docType, _i, _len, _ref;
-    this.removeButton = new ColorButton(this.$(".remove-device"));
-    this.docType = this.$('.doctype-label');
-    this.docType.hide();
-    this.docType.html('');
-    if (this.model.get("configuration").length === 0) {
-      deviceDiv = $("<div class='docTypeLine'> <strong>" + (t('no specific data synchronised')) + " </strong> </div>");
-      this.docType.append(deviceDiv);
-    } else {
-      deviceDiv = $("<div class='dataLine'> <strong> " + (t('synchronised data')) + "    : </strong> </div>");
-      this.docType.append(deviceDiv);
-      _ref = Object.keys(this.model.get("configuration"));
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        docType = _ref[_i];
-        deviceDiv = $("<div class='docTypeLine'> <strong> " + docType + ": </strong> " + (this.model.get('configuration')[docType]) + " </div>");
-        this.docType.append(deviceDiv);
-      }
+  DeviceRow.prototype.onRemoveClicked = function(event) {
+    var _this = this;
+    if (window.confirm(t('revoke device confirmation message'))) {
+      this.$('.remove-device').html('&nbsp;');
+      $(event.currentTarget).spin('tiny', '#ffffff');
+      return $.ajax("/api/devices/" + (this.model.get('id')), {
+        type: "DELETE",
+        success: function() {
+          return _this.$el.fadeOut(function() {
+            _this.model.destroy();
+            return _this.destroy();
+          });
+        },
+        error: function() {
+          _this.$('.remove-device').html(t('revoke device access'));
+          return console.log("error while revoking the device access");
+        }
+      });
     }
-    return this.docType.slideDown();
   };
 
   return DeviceRow;
