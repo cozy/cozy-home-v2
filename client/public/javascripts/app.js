@@ -4051,7 +4051,7 @@ module.exports = HomeView = (function(_super) {
 
 
   HomeView.prototype.resetLayoutSizes = function() {
-    this.frames.height($(window).height() - 40);
+    this.frames.height($(window).height() - 50);
     if ($(window).width() > 500) {
       return this.content.height($(window).height() - 48);
     } else {
