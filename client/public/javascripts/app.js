@@ -3795,6 +3795,275 @@ module.exports = ApplicationRow = (function(_super) {
 })(BaseView);
 });
 
+;require.register("views/main", function(exports, require, module) {
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, User, UserPreference, appIframeTemplate, socketListener,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('lib/base_view');
+
+appIframeTemplate = require('templates/application_iframe');
+
+AppCollection = require('collections/application');
+
+DeviceCollection = require('collections/device');
+
+NavbarView = require('views/navbar');
+
+AccountView = require('views/account');
+
+HelpView = require('views/help');
+
+ConfigApplicationsView = require('views/config_applications');
+
+MarketView = require('views/market');
+
+ApplicationsListView = require('views/home');
+
+socketListener = require('lib/socket_listener');
+
+UserPreference = require('../models/user_preference');
+
+User = require('models/user');
+
+module.exports = HomeView = (function(_super) {
+  __extends(HomeView, _super);
+
+  HomeView.prototype.el = 'body';
+
+  HomeView.prototype.template = require('templates/layout');
+
+  function HomeView() {
+    this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
+    this.onAppHashChanged = __bind(this.onAppHashChanged, this);
+    this.displayConfigApplications = __bind(this.displayConfigApplications, this);
+    this.displayHelp = __bind(this.displayHelp, this);
+    this.displayAccount = __bind(this.displayAccount, this);
+    this.displayMarket = __bind(this.displayMarket, this);
+    this.displayApplicationsListEdit = __bind(this.displayApplicationsListEdit, this);
+    this.displayApplicationsList = __bind(this.displayApplicationsList, this);
+    this.displayView = __bind(this.displayView, this);
+    this.logout = __bind(this.logout, this);
+    this.testapps = __bind(this.testapps, this);
+    this.test = __bind(this.test, this);
+    this.afterRender = __bind(this.afterRender, this);
+    this.apps = new AppCollection();
+    this.listenTo(this.apps, 'reset', this.testapps);
+    this.devices = new DeviceCollection();
+    this.listenTo(this.devices, 'reset', this.test);
+    socketListener.watch(this.apps);
+    socketListener.watch(this.devices);
+    this.userPreference = new UserPreference();
+    HomeView.__super__.constructor.apply(this, arguments);
+  }
+
+  HomeView.prototype.afterRender = function() {
+    this.navbar = new NavbarView(this.apps);
+    this.applicationListView = new ApplicationsListView(this.apps, this.userPreference);
+    this.configApplications = new ConfigApplicationsView(this.apps, this.devices);
+    this.accountView = new AccountView();
+    this.helpView = new HelpView();
+    this.marketView = new MarketView(this.apps);
+    $("#content").niceScroll();
+    this.frames = this.$('#app-frames');
+    this.content = this.$('#content');
+    this.favicon = this.$('fav1');
+    this.favicon2 = this.$('fav2');
+    $(window).resize(this.resetLayoutSizes);
+    this.apps.fetch({
+      reset: true
+    });
+    this.devices.fetch({
+      reset: true
+    });
+    this.userPreference.fetch();
+    return this.resetLayoutSizes();
+  };
+
+  HomeView.prototype.test = function() {
+    return console.log('got devices', this.devices.length);
+  };
+
+  HomeView.prototype.testapps = function() {
+    return console.log('got apps', this.apps.length);
+  };
+
+  /* Functions*/
+
+
+  HomeView.prototype.logout = function(event) {
+    var user,
+      _this = this;
+    user = new User();
+    return user.logout({
+      success: function(data) {
+        return window.location = window.location.origin + '/login/';
+      },
+      error: function() {
+        return alert('Server error occured, logout failed.');
+      }
+    });
+  };
+
+  HomeView.prototype.displayView = function(view) {
+    var displayView,
+      _this = this;
+    $("#current-application").html('home');
+    displayView = function() {
+      _this.frames.hide();
+      view.$el.hide();
+      _this.content.show();
+      $('#home-content').append(view.$el);
+      view.$el.fadeIn();
+      _this.currentView = view;
+      _this.changeFavicon("favicon.ico");
+      return _this.resetLayoutSizes();
+    };
+    if (this.currentView != null) {
+      if (view === this.currentView) {
+        this.frames.hide();
+        this.content.show();
+        this.changeFavicon("favicon.ico");
+        this.resetLayoutSizes();
+        return;
+      }
+      return this.currentView.$el.fadeOut(function() {
+        _this.currentView.$el.detach();
+        return displayView();
+      });
+    } else {
+      return displayView();
+    }
+  };
+
+  HomeView.prototype.displayApplicationsList = function() {
+    this.displayView(this.applicationListView);
+    this.applicationListView.setMode('view');
+    return window.document.title = t("cozy home title");
+  };
+
+  HomeView.prototype.displayApplicationsListEdit = function() {
+    this.displayView(this.applicationListView);
+    this.applicationListView.setMode('edit');
+    return window.document.title = t("cozy home title");
+  };
+
+  HomeView.prototype.displayMarket = function() {
+    this.displayView(this.marketView);
+    return window.document.title = t("cozy app store title");
+  };
+
+  HomeView.prototype.displayAccount = function() {
+    this.displayView(this.accountView);
+    return window.document.title = t('cozy account title');
+  };
+
+  HomeView.prototype.displayHelp = function() {
+    this.displayView(this.helpView);
+    return window.document.title = t("cozy help title");
+  };
+
+  HomeView.prototype.displayConfigApplications = function() {
+    this.displayView(this.configApplications);
+    return window.document.title = t("cozy applications title");
+  };
+
+  HomeView.prototype.displayApplication = function(slug, hash) {
+    var frame, name,
+      _this = this;
+    if (this.apps.length === 0) {
+      this.apps.once('reset', function() {
+        return _this.displayApplication(slug, hash);
+      });
+      return null;
+    }
+    this.frames.show();
+    this.content.hide();
+    frame = this.$("#" + slug + "-frame");
+    if (frame.length === 0) {
+      frame = this.createApplicationIframe(slug, hash);
+    }
+    this.$('#app-frames').find('iframe').hide();
+    frame.show();
+    this.selectedApp = slug;
+    name = this.apps.get(slug).get('name');
+    if (name == null) {
+      name = '';
+    }
+    window.document.title = "Cozy - " + name;
+    $("#current-application").html(name);
+    this.changeFavicon("/apps/" + slug + "/favicon.ico");
+    this.resetLayoutSizes();
+    if (hash) {
+      if (hash === '#') {
+        hash = '';
+      }
+      return frame.prop('contentWindow').location.hash = hash;
+    }
+  };
+
+  HomeView.prototype.createApplicationIframe = function(slug, hash) {
+    var frame,
+      _this = this;
+    if (hash == null) {
+      hash = "";
+    }
+    this.frames.append(appIframeTemplate({
+      id: slug,
+      hash: hash
+    }));
+    frame = this.$("#" + slug + "-frame");
+    $(frame.prop('contentWindow')).on('hashchange', function() {
+      var location, newhash;
+      location = frame.prop('contentWindow').location;
+      newhash = location.hash.replace('#', '');
+      return _this.onAppHashChanged(slug, newhash);
+    });
+    this.resetLayoutSizes();
+    return frame;
+  };
+
+  HomeView.prototype.onAppHashChanged = function(slug, newhash) {
+    if (slug === this.selectedApp) {
+      if (typeof app !== "undefined" && app !== null) {
+        app.routers.main.navigate("/apps/" + slug + "/" + newhash, false);
+      }
+    }
+    return this.resetLayoutSizes();
+  };
+
+  HomeView.prototype.changeFavicon = function(url) {
+    var newfav, _ref, _ref1;
+    if ((_ref = this.favicon) != null) {
+      _ref.remove();
+    }
+    if ((_ref1 = this.favicon2) != null) {
+      _ref1.remove();
+    }
+    newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"';
+    this.favicon = $(newfav);
+    this.favicon2 = this.favicon.clone().attr('rel', 'shortcut icon');
+    return $('head').append(this.favicon, this.favicon2);
+  };
+
+  /* Configuration*/
+
+
+  HomeView.prototype.resetLayoutSizes = function() {
+    this.frames.height($(window).height() - 40);
+    if ($(window).width() > 500) {
+      return this.content.height($(window).height() - 48);
+    } else {
+      return this.content.height($(window).height());
+    }
+  };
+
+  return HomeView;
+
+})(BaseView);
+});
+
 ;require.register("views/market", function(exports, require, module) {
 var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, PopoverDescriptionView, PopoverPermissionsView, REPOREGEX, slugify,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
