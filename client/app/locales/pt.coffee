@@ -86,9 +86,8 @@ module.exports =
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Gere as tuas aplicações"
     "manage your devices":"Gere os teus dispositivos"
-    "synchronised data": "Dados sincronizados"
-    "file": "Ficheiro"
-    "folder": "Pasta"
+    "synchronized": "sincronizado"
+    "revoke device access": "Revoke device access"
     "no application installed":"Não há aplicações instaladas."
 
     "your parameters":" Os seus parâmetros"
@@ -100,6 +99,7 @@ module.exports =
     "Chose the language you want I use to speak with you:":"Escolha a lingua que quer que fale:"
     "french":"Francês"
     "english":"Inglês"
+    "portuguese": "Português"
     "change password procedure":"Mudar procedimento de password"
     "current password":"password actual"
     "new password":"password nova"
@@ -160,3 +160,4 @@ module.exports =
 
     "error connectivity issue": "Ocurreu um erro ao receber os teus dados.<br />Por favor tenta de novo."
     "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos..."
+    "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
