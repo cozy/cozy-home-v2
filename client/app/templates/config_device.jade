@@ -2,8 +2,7 @@
     .mod
         strong #{device.login}
         span &nbsp;-&nbsp;
-        span.state-label= t('synchronised')
-        
-    .buttons
-        .mod.center
-            span.doctype-label=t('')
+        span.state-label= t('synchronized')
+
+    .buttons.right
+        button.remove-device.btn= t('revoke device access')

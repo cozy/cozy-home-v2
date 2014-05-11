@@ -86,9 +86,8 @@ module.exports =
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Manage your applications"
     "manage your devices":"Manage your devices"
-    "synchronised data": "Synchronised data"
-    "file": "File"
-    "folder": "Folder"
+    "synchronized": "synchronized"
+    "revoke device access": "Revoke device access"
     "no application installed":"There is no application installed."
 
     "your parameters":" Your parameters"
@@ -100,6 +99,7 @@ module.exports =
     "Chose the language you want I use to speak with you:":"Choose the language you want me to use to speak to you:"
     "french":"French"
     "english":"English"
+    "portuguese":"Portuguese"
     "change password procedure":"Change password procedure"
     "current password":"current password"
     "new password":"new password"
@@ -160,3 +160,4 @@ module.exports =
 
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later."
     "please wait data retrieval": "Please wait while data are being retrieved..."
+    "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"

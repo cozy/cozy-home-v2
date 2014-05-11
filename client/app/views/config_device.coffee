@@ -1,5 +1,4 @@
 BaseView = require 'lib/base_view'
-ColorButton = require 'widgets/install_button'
 
 # Row displaying device name and attributes
 module.exports = class DeviceRow extends BaseView
@@ -7,28 +6,28 @@ module.exports = class DeviceRow extends BaseView
     tagName: "div"
     template: require 'templates/config_device'
 
+    events:
+        'click .remove-device': 'onRemoveClicked'
+
     getRenderData: ->
         device: @model.attributes
 
-
-    ### Constructor ####
-
     constructor: (options) ->
+        @model = options.model
         @id = "device-btn-#{options.model.id}"
         super
 
-    afterRender: =>
-        @removeButton = new ColorButton @$ ".remove-device"
-        @docType = @$('.doctype-label')
-        @docType.hide()
-        @docType.html ''
-        if @model.get("configuration").length is 0            
-            deviceDiv = $ "<div class='docTypeLine'> <strong>#{t('no specific data synchronised')} </strong> </div>"
-            @docType.append deviceDiv
-        else
-            deviceDiv = $ "<div class='dataLine'> <strong> #{t('synchronised data')}    : </strong> </div>"
-            @docType.append deviceDiv
-            for docType in Object.keys(@model.get("configuration"))
-                deviceDiv = $ "<div class='docTypeLine'> <strong> #{docType}: </strong> #{@model.get('configuration')[docType]} </div>"
-                @docType.append deviceDiv
-        @docType.slideDown()
+    onRemoveClicked: (event) ->
+        if window.confirm t 'revoke device confirmation message'
+            @$('.remove-device').html '&nbsp;'
+            $(event.currentTarget).spin 'tiny', '#ffffff'
+            $.ajax("/api/devices/#{@model.get('id')}",
+                type: "DELETE"
+                success: =>
+                    @$el.fadeOut =>
+                        @model.destroy()
+                        @destroy()
+                error: =>
+                    @$('.remove-device').html t 'revoke device access'
+                    console.log "error while revoking the device access"
+            )

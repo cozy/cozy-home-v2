@@ -1799,9 +1799,13 @@ body {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
+.config-device .spinner {
+  margin: 0 10px;
+}
 .config-device strong,
 .config-device .mod {
   margin-left: 5px;
+  display: inline-block;
 }
 .config-device .mod.left {
   margin: 0;
@@ -1829,7 +1833,6 @@ body {
 }
 .config-device:hover .docTypeLine {
   text-shadow: none;
-  margin-left: 25px;
 }
 #config-applications-view .change-layout img {
   margin-left: 5px;
