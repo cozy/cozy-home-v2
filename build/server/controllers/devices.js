@@ -32,7 +32,7 @@ module.exports = {
       if (err != null) {
         return next(err);
       } else {
-        return ds.del("device/" + id + "/", function(err, res, body) {
+        return ds.del("device/" + id + "/", function(err, response, body) {
           err = err || body.error;
           if (err != null) {
             return next(err);

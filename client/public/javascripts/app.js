@@ -2101,11 +2101,11 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
 var __val__ = t('memory megabytes')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div></div></div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
-var __val__ = t('manage your applications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
+buf.push('</span></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
 var __val__ = t('manage your devices')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
+var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div></div></div>');
 }

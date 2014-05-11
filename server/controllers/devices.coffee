@@ -23,7 +23,7 @@ module.exports =
             if err? then next err
             else
                 # proper removal of the device (device doc and filter)
-                ds.del "device/#{id}/", (err, res, body) ->
+                ds.del "device/#{id}/", (err, response, body) ->
                     err = err or body.error
                     if err? then next err
                     else
