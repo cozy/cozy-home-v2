@@ -374,9 +374,73 @@ module.exports = {
     });
   },
   updateAll: function(req, res, next) {
-    var checkupdate, totalApp, updateApp, updatedApp;
+    var broken, totalApp, updateApp, updateApps, updatedApp;
+    console.log("updateAll");
     totalApp = 0;
     updatedApp = 0;
+    broken = function(app, err) {
+      console.log("Marking app " + app.name + " as broken because");
+      console.log(err.stack);
+      app.state = "broken";
+      app.password = null;
+      app.errormsg = err.message;
+      return app.save(function(saveErr) {
+        if (saveErr != null) {
+          return console.log(saveErr);
+        }
+      });
+    };
+    updateApps = function(apps, callback) {
+      var app, manager;
+      if (apps.length > 0) {
+        app = apps.pop();
+        if ((app.needsUpdate != null) && app.needsUpdate) {
+          switch (app.state) {
+            case "installed":
+              console.log("Update " + app.name + " (installed)");
+              return updateApp(app, (function(_this) {
+                return function(err) {
+                  if (err) {
+                    broken(app, err);
+                  }
+                  return updateApps(apps, callback);
+                };
+              })(this));
+            case "stopped":
+              console.log("Update " + app.name + " (stopped)");
+              manager = new AppManager;
+              return manager.start(app, function(err, result) {
+                if (err) {
+                  broken(app, err);
+                  return updateApps(apps, callback);
+                } else {
+                  return updateApp(app, (function(_this) {
+                    return function(err) {
+                      if (err) {
+                        broken(app, err);
+                        return updateApps(apps, callback);
+                      } else {
+                        return manager.stop(app, function(err, result) {
+                          if (err) {
+                            broken(app, err);
+                          }
+                          return updateApps(apps, callback);
+                        });
+                      }
+                    };
+                  })(this));
+                }
+              });
+            default:
+              return updateApps(apps, callback);
+          }
+        } else {
+          return updateApps(apps, callback);
+        }
+      } else {
+        return callback();
+      }
+    };
     updateApp = function(app, callback) {
       var manager;
       manager = new AppManager();
@@ -418,63 +482,17 @@ module.exports = {
         })(this));
       });
     };
-    checkupdate = (function(_this) {
-      return function() {
-        if (totalApp > updatedApp) {
-          return setTimeout(function() {
-            return checkupdate();
-          }, 500);
-        } else {
-          return res.send({
-            success: true,
-            msg: 'Applications succesfuly updated'
-          });
-        }
-      };
-    })(this);
     return Application.all((function(_this) {
       return function(err, apps) {
-        var app, manager, _i, _len;
-        totalApp = apps.length;
-        for (_i = 0, _len = apps.length; _i < _len; _i++) {
-          app = apps[_i];
-          switch (app.state) {
-            case "installed":
-              console.log("installed " + app.name);
-              updateApp(app, function(err) {
-                if (err) {
-                  return markBroken(res, app, err);
-                }
-                return updatedApp = updatedApp + 1;
-              });
-              break;
-            case "stopped":
-              console.log("stopped " + app.name);
-              manager = new AppManager;
-              manager.start(app, function(err, result) {
-                if (err) {
-                  return markBroken(res, app, err);
-                }
-                return updateApp(app, (function(_this) {
-                  return function(err) {
-                    if (err) {
-                      return markBroken(res, app, err);
-                    }
-                    return manager.stop(app, function(err, result) {
-                      if (err) {
-                        return markBroken(res, app, err);
-                      }
-                      return updatedApp = updatedApp + 1;
-                    });
-                  };
-                })(this));
-              });
-              break;
-            default:
-              updatedApp = updatedApp + 1;
+        return updateApps(apps, function(err) {
+          if (err != null) {
+            sendError(res, err);
           }
-        }
-        return checkupdate();
+          return res.send({
+            success: true,
+            msg: 'Application succesfuly updated'
+          });
+        });
       };
     })(this));
   },

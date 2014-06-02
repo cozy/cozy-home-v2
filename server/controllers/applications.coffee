@@ -283,8 +283,57 @@ module.exports =
     # * proxy, cozy router
     # * database
     updateAll: (req, res, next) ->   
+        console.log("updateAll")
         totalApp = 0
         updatedApp = 0 
+
+        broken = (app, err) ->
+            console.log "Marking app #{app.name} as broken because"
+            console.log err.stack
+
+            app.state = "broken"
+            app.password = null
+            app.errormsg = err.message
+            app.save (saveErr) ->
+                console.log(saveErr) if saveErr?
+
+        updateApps = (apps, callback) ->
+            if apps.length > 0
+                app = apps.pop()
+                if app.needsUpdate? and app.needsUpdate
+                    switch app.state
+                        when "installed"
+                            # Update application 
+                            console.log("Update #{app.name} (installed)")
+                            updateApp app, (err) =>
+                                broken app, err if err
+                                updateApps(apps, callback)
+                        when "stopped"
+                            # Start application
+                            console.log("Update #{app.name} (stopped)")
+                            manager = new AppManager
+                            manager.start app, (err, result) ->
+                                if err
+                                    broken app, err
+                                    updateApps(apps, callback)
+                                else
+                                    # Update application
+                                    updateApp app, (err) =>
+                                        if err
+                                            broken app, err
+                                            updateApps(apps, callback)
+                                        else
+                                            # Stop application
+                                            manager.stop app, (err, result) ->
+                                                broken app, err if err
+                                                updateApps(apps, callback)
+                        else
+                            updateApps(apps, callback)
+                else
+                    updateApps(apps, callback)
+            else
+                callback()
+
         updateApp = (app, callback) ->
             manager = new AppManager()
             if not app.password?
@@ -308,43 +357,15 @@ module.exports =
                         callback err if err
                         manager.resetProxy (err) ->
                             callback()
-        checkupdate = () =>
-            if totalApp > updatedApp
-                setTimeout () =>
-                    checkupdate()
-                , 500
-            else
-                res.send
-                    success: true
-                    msg: 'Applications succesfuly updated'
 
         Application.all (err, apps) =>
-            totalApp = apps.length
-            for app in apps               
-                switch app.state
-                    when "installed"
-                        # Update application 
-                        console.log("installed #{app.name}")
-                        updateApp app, (err) =>
-                            return markBroken res, app, err if err
-                            updatedApp = updatedApp + 1 
-                    when "stopped"
-                        # Start application
-                        console.log("stopped #{app.name}")
-                        manager = new AppManager
-                        manager.start app, (err, result) ->
-                            return markBroken res, app, err if err
-                            # Update application
-                            updateApp app, (err) =>
-                                return markBroken res, app, err if err
-                                # Stop application
-                                manager.stop app, (err, result) ->
-                                    return markBroken res, app, err if err
-                                    updatedApp = updatedApp + 1 
-                    else
-                        # Application state is broken or installing
-                        updatedApp = updatedApp + 1 
-            checkupdate()
+            updateApps apps, (err) =>
+                sendError res, err if err?
+                res.send
+                    success: true
+                    msg: 'Application succesfuly updated'
+
+
 
     # Start a stopped application.
     start: (req, res, next) ->
