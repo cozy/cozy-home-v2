@@ -49,7 +49,7 @@ markBroken = function(res, app, err) {
   console.log(err.stack);
   app.state = "broken";
   app.password = null;
-  app.errormsg = err.message;
+  app.errormsg = err.message + ' :\n' + err.stack;
   return app.save(function(saveErr) {
     if (saveErr) {
       return sendError(res, saveErr);
@@ -374,20 +374,58 @@ module.exports = {
     });
   },
   updateAll: function(req, res, next) {
-    var broken, totalApp, updateApp, updateApps, updatedApp;
-    console.log("updateAll");
-    totalApp = 0;
-    updatedApp = 0;
+    var broken, updateApp, updateApps;
     broken = function(app, err) {
       console.log("Marking app " + app.name + " as broken because");
       console.log(err.stack);
       app.state = "broken";
       app.password = null;
-      app.errormsg = err.message;
+      app.errormsg = err.message + ' :\n' + err.stack;
       return app.save(function(saveErr) {
         if (saveErr != null) {
           return console.log(saveErr);
         }
+      });
+    };
+    updateApp = function(app, callback) {
+      var manager;
+      manager = new AppManager();
+      if (app.password == null) {
+        app.password = randomString(32);
+      }
+      return manager.updateApp(app, function(err, result) {
+        var manifest;
+        if (err != null) {
+          callback(err);
+        }
+        app.state = "installed";
+        manifest = new Manifest();
+        return manifest.download(app, (function(_this) {
+          return function(err) {
+            if (err != null) {
+              callback(err);
+            }
+            app.permissions = manifest.getPermissions();
+            app.widget = manifest.getWidget();
+            app.version = manifest.getVersion();
+            app.needsUpdate = false;
+            return app.save(function(err) {
+              saveIcon(app, function(err) {
+                if (err) {
+                  return console.log(err.stack);
+                } else {
+                  return console.info('icon attached');
+                }
+              });
+              if (err) {
+                callback(err);
+              }
+              return manager.resetProxy(function(err) {
+                return callback();
+              });
+            });
+          };
+        })(this));
       });
     };
     updateApps = function(apps, callback) {
@@ -440,47 +478,6 @@ module.exports = {
       } else {
         return callback();
       }
-    };
-    updateApp = function(app, callback) {
-      var manager;
-      manager = new AppManager();
-      if (app.password == null) {
-        app.password = randomString(32);
-      }
-      return manager.updateApp(app, function(err, result) {
-        var manifest;
-        if (err != null) {
-          callback(err);
-        }
-        app.state = "installed";
-        manifest = new Manifest();
-        return manifest.download(app, (function(_this) {
-          return function(err) {
-            if (err != null) {
-              callback(err);
-            }
-            app.permissions = manifest.getPermissions();
-            app.widget = manifest.getWidget();
-            app.version = manifest.getVersion();
-            app.needsUpdate = false;
-            return app.save(function(err) {
-              saveIcon(app, function(err) {
-                if (err) {
-                  return console.log(err.stack);
-                } else {
-                  return console.info('icon attached');
-                }
-              });
-              if (err) {
-                callback(err);
-              }
-              return manager.resetProxy(function(err) {
-                return callback();
-              });
-            });
-          };
-        })(this));
-      });
     };
     return Application.all((function(_this) {
       return function(err, apps) {

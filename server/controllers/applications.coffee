@@ -39,7 +39,7 @@ markBroken = (res, app, err) ->
 
     app.state = "broken"
     app.password = null
-    app.errormsg = err.message
+    app.errormsg = err.message + ' :\n' + err.stack
     app.save (saveErr) ->
         return sendError res, saveErr if saveErr
 
@@ -283,9 +283,6 @@ module.exports =
     # * proxy, cozy router
     # * database
     updateAll: (req, res, next) ->   
-        console.log("updateAll")
-        totalApp = 0
-        updatedApp = 0 
 
         broken = (app, err) ->
             console.log "Marking app #{app.name} as broken because"
@@ -293,9 +290,33 @@ module.exports =
 
             app.state = "broken"
             app.password = null
-            app.errormsg = err.message
+            app.errormsg = err.message + ' :\n' + err.stack
             app.save (saveErr) ->
                 console.log(saveErr) if saveErr?
+
+        updateApp = (app, callback) ->
+            manager = new AppManager()
+            if not app.password?
+                app.password = randomString 32
+
+            manager.updateApp app, (err, result) ->
+                callback err if err?
+                app.state = "installed"
+
+                manifest = new Manifest()
+                manifest.download app, (err) =>
+                    callback err if err?
+                    app.permissions = manifest.getPermissions()
+                    app.widget = manifest.getWidget()
+                    app.version = manifest.getVersion()
+                    app.needsUpdate = false
+                    app.save (err) ->
+                        saveIcon app, (err) ->
+                            if err then console.log err.stack
+                            else console.info 'icon attached'
+                        callback err if err
+                        manager.resetProxy (err) ->
+                            callback()
 
         updateApps = (apps, callback) ->
             if apps.length > 0
@@ -333,30 +354,6 @@ module.exports =
                     updateApps(apps, callback)
             else
                 callback()
-
-        updateApp = (app, callback) ->
-            manager = new AppManager()
-            if not app.password?
-                app.password = randomString 32
-
-            manager.updateApp app, (err, result) ->
-                callback err if err?
-                app.state = "installed"
-
-                manifest = new Manifest()
-                manifest.download app, (err) =>
-                    callback err if err?
-                    app.permissions = manifest.getPermissions()
-                    app.widget = manifest.getWidget()
-                    app.version = manifest.getVersion()
-                    app.needsUpdate = false
-                    app.save (err) ->
-                        saveIcon app, (err) ->
-                            if err then console.log err.stack
-                            else console.info 'icon attached'
-                        callback err if err
-                        manager.resetProxy (err) ->
-                            callback()
 
         Application.all (err, apps) =>
             updateApps apps, (err) =>
