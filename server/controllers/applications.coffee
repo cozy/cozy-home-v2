@@ -276,6 +276,76 @@ module.exports =
                             msg: 'Application succesfuly updated'
 
 
+
+
+    # Update all applications :
+    # * haibu, application manager
+    # * proxy, cozy router
+    # * database
+    updateAll: (req, res, next) ->   
+        totalApp = 0
+        updatedApp = 0 
+        updateApp = (app, callback) ->
+            manager = new AppManager()
+            if not app.password?
+                app.password = randomString 32
+
+            manager.updateApp app, (err, result) ->
+                callback err if err?
+                app.state = "installed"
+
+                manifest = new Manifest()
+                manifest.download app, (err) =>
+                    callback err if err?
+                    app.permissions = manifest.getPermissions()
+                    app.widget = manifest.getWidget()
+                    app.version = manifest.getVersion()
+                    app.needsUpdate = false
+                    app.save (err) ->
+                        saveIcon app, (err) ->
+                            if err then console.log err.stack
+                            else console.info 'icon attached'
+                        callback err if err
+                        manager.resetProxy (err) ->
+                            callback()
+        checkupdate = () =>
+            if totalApp > updatedApp
+                setTimeout () =>
+                    checkupdate()
+                , 500
+            else
+                res.send
+                    success: true
+                    msg: 'Applications succesfuly updated'
+
+        Application.all (err, apps) =>
+            totalApp = apps.length
+            for app in apps               
+                switch app.state
+                    when "installed"
+                        # Update application 
+                        console.log("installed #{app.name}")
+                        updateApp app, (err) =>
+                            return markBroken res, app, err if err
+                            updatedApp = updatedApp + 1 
+                    when "stopped"
+                        # Start application
+                        console.log("stopped #{app.name}")
+                        manager = new AppManager
+                        manager.start app, (err, result) ->
+                            return markBroken res, app, err if err
+                            # Update application
+                            updateApp app, (err) =>
+                                return markBroken res, app, err if err
+                                # Stop application
+                                manager.stop app, (err, result) ->
+                                    return markBroken res, app, err if err
+                                    updatedApp = updatedApp + 1 
+                    else
+                        # Application state is broken or installing
+                        updatedApp = updatedApp + 1 
+            checkupdate()
+
     # Start a stopped application.
     start: (req, res, next) ->
         # If controller is too slow, client receives a timeout

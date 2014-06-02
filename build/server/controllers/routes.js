@@ -49,6 +49,9 @@ module.exports = {
   'api/applications/:slug/update': {
     put: applications.update
   },
+  'api/applications/update/all': {
+    put: applications.updateAll
+  },
   'api/devices': {
     get: devices.devices
   },

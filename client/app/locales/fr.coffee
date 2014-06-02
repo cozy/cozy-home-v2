@@ -126,6 +126,7 @@ module.exports =
     "installed":"installée"
     "updated":"m.à.j"
     "updating":"m.à.j en cours"
+    "update-all": "m.à.j de toutes les applications"
     "update error":"Une erreur est survenue pendant la mise à jour"
     "start this app":"démarrer cette application"
     "stopped":"stoppée"

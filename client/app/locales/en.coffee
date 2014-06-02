@@ -114,6 +114,7 @@ module.exports =
     "installed":"installed"
     "updated":"updated"
     "updating":"updating"
+    "update-all": "update all"
     "update error":"An error occured while updating the application"
     "broken":"broken"
     "start this app":"start this app"

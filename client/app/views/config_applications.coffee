@@ -1,5 +1,7 @@
 request = require 'lib/request'
 BaseView = require 'lib/base_view'
+ColorButton = require 'widgets/install_button'
+Application = require 'models/application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
 
@@ -10,6 +12,9 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     subscriptions:
         'app-state-changed': 'onAppStateChanged'
 
+    events:
+        "click .update-all"        : "onUpdateClicked"
+
     constructor: (@apps, @devices) ->
         @listenTo @devices, 'reset', @displayDevices
         super()
@@ -17,10 +22,12 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     afterRender: ->
         @memoryFree = @$ '.memory-free'
         @diskSpace = @$ '.disk-space'
+        @updateBtn = new ColorButton  @$ '.update-all'
         @fetch()
         @applicationList = new ConfigApplicationList @apps
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
+        @applications = new Application()
 
     displayDevices: =>
         if not(@devices.length is 0)
@@ -48,3 +55,16 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
 
     onAppStateChanged: ->
         setTimeout @fetch, 10000
+
+    onUpdateClicked: ->
+        @updateBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        Backbone.Mediator.pub 'app-state-changed', true
+        @updateBtn.spin true, '#ffffff'
+        @applications.updateAll 
+            success: () =>
+                @updateBtn.displayGreen t "updated"
+                Backbone.Mediator.pub 'app-state-changed', true
+            error: () =>
+                @updateBtn.displayGreen t "error during updating"
+                Backbone.Mediator.pub 'app-state-changed', true
+                console.log('error')

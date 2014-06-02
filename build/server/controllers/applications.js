@@ -373,6 +373,111 @@ module.exports = {
       })(this));
     });
   },
+  updateAll: function(req, res, next) {
+    var checkupdate, totalApp, updateApp, updatedApp;
+    totalApp = 0;
+    updatedApp = 0;
+    updateApp = function(app, callback) {
+      var manager;
+      manager = new AppManager();
+      if (app.password == null) {
+        app.password = randomString(32);
+      }
+      return manager.updateApp(app, function(err, result) {
+        var manifest;
+        if (err != null) {
+          callback(err);
+        }
+        app.state = "installed";
+        manifest = new Manifest();
+        return manifest.download(app, (function(_this) {
+          return function(err) {
+            if (err != null) {
+              callback(err);
+            }
+            app.permissions = manifest.getPermissions();
+            app.widget = manifest.getWidget();
+            app.version = manifest.getVersion();
+            app.needsUpdate = false;
+            return app.save(function(err) {
+              saveIcon(app, function(err) {
+                if (err) {
+                  return console.log(err.stack);
+                } else {
+                  return console.info('icon attached');
+                }
+              });
+              if (err) {
+                callback(err);
+              }
+              return manager.resetProxy(function(err) {
+                return callback();
+              });
+            });
+          };
+        })(this));
+      });
+    };
+    checkupdate = (function(_this) {
+      return function() {
+        if (totalApp > updatedApp) {
+          return setTimeout(function() {
+            return checkupdate();
+          }, 500);
+        } else {
+          return res.send({
+            success: true,
+            msg: 'Applications succesfuly updated'
+          });
+        }
+      };
+    })(this);
+    return Application.all((function(_this) {
+      return function(err, apps) {
+        var app, manager, _i, _len;
+        totalApp = apps.length;
+        for (_i = 0, _len = apps.length; _i < _len; _i++) {
+          app = apps[_i];
+          switch (app.state) {
+            case "installed":
+              console.log("installed " + app.name);
+              updateApp(app, function(err) {
+                if (err) {
+                  return markBroken(res, app, err);
+                }
+                return updatedApp = updatedApp + 1;
+              });
+              break;
+            case "stopped":
+              console.log("stopped " + app.name);
+              manager = new AppManager;
+              manager.start(app, function(err, result) {
+                if (err) {
+                  return markBroken(res, app, err);
+                }
+                return updateApp(app, (function(_this) {
+                  return function(err) {
+                    if (err) {
+                      return markBroken(res, app, err);
+                    }
+                    return manager.stop(app, function(err, result) {
+                      if (err) {
+                        return markBroken(res, app, err);
+                      }
+                      return updatedApp = updatedApp + 1;
+                    });
+                  };
+                })(this));
+              });
+              break;
+            default:
+              updatedApp = updatedApp + 1;
+          }
+        }
+        return checkupdate();
+      };
+    })(this));
+  },
   start: function(req, res, next) {
     var manager;
     setTimeout(function() {

@@ -91,3 +91,7 @@ module.exports = class Application extends Backbone.Model
         options['patch'] = true
         options['type'] = 'PUT'
         @save homeposition: pos, options
+
+    updateAll: (callbacks) ->
+        @prepareCallbacks callbacks
+        client.put "/api/applications/update/all", {}, callbacks
