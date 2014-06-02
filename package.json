@@ -41,7 +41,8 @@
     "chai": "1.9.0",
     "coffee-script": "latest",
     "mocha": "1.17.1",
-    "request": "2.34.0"
+    "request": "2.34.0",
+    "nock": "0.32.3"
   },
   "scripts": {
     "test": "cake --use-js tests",

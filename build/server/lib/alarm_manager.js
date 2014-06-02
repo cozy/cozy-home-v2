@@ -78,7 +78,7 @@ module.exports = AlarmManager = (function() {
   };
 
   AlarmManager.prototype.addAlarmCounters = function(alarm) {
-    var in24h, now, occurence, occurences, rrule, trigg, _i, _len, _ref, _results;
+    var in24h, now, occurence, occurences, rrule, trigg, triggCopied, _i, _len, _ref, _results;
     this.clearTimeouts(alarm._id);
     now = new tDate();
     now.setTimezone(this.timezone);
@@ -88,14 +88,18 @@ module.exports = AlarmManager = (function() {
     trigg.setTimezone('UTC');
     if (alarm.rrule) {
       rrule = RRule.parseString(alarm.rrule);
-      rrule.dtstart = trigg;
+      triggCopied = new tDate(alarm.trigg);
+      triggCopied.setTimezone(time.currentTimezone);
+      rrule.dtstart = triggCopied;
       occurences = new RRule(rrule).between(now, in24h);
-      occurences = occurences.map(function(string) {
-        var occurence;
-        occurence = new tDate(string);
-        occurence.setTimezone(this.timezone);
-        return occurence;
-      });
+      occurences = occurences.map((function(_this) {
+        return function(string) {
+          var occurence;
+          occurence = new tDate(string);
+          occurence.setTimezone(_this.timezone);
+          return occurence;
+        };
+      })(this));
     } else if ((now.getTime() <= (_ref = trigg.getTime()) && _ref < in24h.getTime())) {
       occurences = [trigg];
     } else {
