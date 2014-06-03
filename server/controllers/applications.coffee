@@ -254,7 +254,8 @@ module.exports =
 
         manager.updateApp req.application, (err, result) ->
             return markBroken res, req.application, err if err
-            req.application.state = "installed"
+            if req.application.state isnt "stopped"
+                req.application.state = "installed"
 
             manifest = new Manifest()
             manifest.download req.application, (err) =>
@@ -290,7 +291,6 @@ module.exports =
         broken = (app, err) ->
             console.log "Marking app #{app.name} as broken because"
             console.log err.stack
-
             app.state = "broken"
             app.password = null
             if err.result?
@@ -307,7 +307,7 @@ module.exports =
 
             manager.updateApp app, (err, result) ->
                 callback err if err?
-                app.state = "installed"
+                #app.state = "installed"
 
                 manifest = new Manifest()
                 manifest.download app, (err) =>
@@ -329,31 +329,12 @@ module.exports =
                 app = apps.pop()
                 if app.needsUpdate? and app.needsUpdate
                     switch app.state
-                        when "installed"
+                        when "installed", "stopped"
                             # Update application 
-                            console.log("Update #{app.name} (installed)")
+                            console.log("Update #{app.name} (#{app.state})")
                             updateApp app, (err) =>
                                 broken app, err if err
                                 updateApps(apps, callback)
-                        when "stopped"
-                            # Start application
-                            console.log("Update #{app.name} (stopped)")
-                            manager = new AppManager
-                            manager.start app, (err, result) ->
-                                if err
-                                    broken app, err
-                                    updateApps(apps, callback)
-                                else
-                                    # Update application
-                                    updateApp app, (err) =>
-                                        if err
-                                            broken app, err
-                                            updateApps(apps, callback)
-                                        else
-                                            # Stop application
-                                            manager.stop app, (err, result) ->
-                                                broken app, err if err
-                                                updateApps(apps, callback)
                         else
                             updateApps(apps, callback)
                 else

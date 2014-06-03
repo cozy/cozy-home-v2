@@ -63,7 +63,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'stopped'
                 @stateLabel.show().text t 'stopped'
                 @removeButton.displayGrey t 'remove'
-                @updateButton.hide()
+                @updateButton.displayGrey t 'update'
                 @appStoppable.hide()
                 @appStoppable.next().hide()
                 @startStopBtn.displayGrey t 'start this app'
@@ -148,12 +148,20 @@ module.exports = class ApplicationRow extends BaseView
         Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateButton.spin 'small', '#ffffff'
-        @stateLabel.html t 'updating'
+        if @model.get('state') isnt 'broken'
+            @stateLabel.html t 'updating'
+        else
+            @stateLabel.html t "installing"
         @model.updateApp
             success: =>
-                @updateButton.displayGreen t "updated"
-                @stateLabel.html t 'started'
-                Backbone.Mediator.pub 'app-state-changed', true
+                if @model.get('state') is 'installed'
+                    @updateButton.displayGreen t "updated"
+                    @stateLabel.html t 'started'
+                    Backbone.Mediator.pub 'app-state-changed', true
+                if @model.get('state') is 'stopped'
+                    @updateButton.displayGreen t "updated"
+                    @stateLabel.html t 'stopped'
+                    Backbone.Mediator.pub 'app-state-changed', true
             error: (jqXHR) =>
                 alert t 'update error'
                 @stateLabel.html t 'broken'

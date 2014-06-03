@@ -341,7 +341,9 @@ module.exports = {
       if (err) {
         return markBroken(res, req.application, err);
       }
-      req.application.state = "installed";
+      if (req.application.state !== "stopped") {
+        req.application.state = "installed";
+      }
       manifest = new Manifest();
       return manifest.download(req.application, (function(_this) {
         return function(err) {
@@ -406,7 +408,6 @@ module.exports = {
         if (err != null) {
           callback(err);
         }
-        app.state = "installed";
         manifest = new Manifest();
         return manifest.download(app, (function(_this) {
           return function(err) {
@@ -437,13 +438,14 @@ module.exports = {
       });
     };
     updateApps = function(apps, callback) {
-      var app, manager;
+      var app;
       if (apps.length > 0) {
         app = apps.pop();
         if ((app.needsUpdate != null) && app.needsUpdate) {
           switch (app.state) {
             case "installed":
-              console.log("Update " + app.name + " (installed)");
+            case "stopped":
+              console.log("Update " + app.name + " (" + app.state + ")");
               return updateApp(app, (function(_this) {
                 return function(err) {
                   if (err) {
@@ -452,31 +454,6 @@ module.exports = {
                   return updateApps(apps, callback);
                 };
               })(this));
-            case "stopped":
-              console.log("Update " + app.name + " (stopped)");
-              manager = new AppManager;
-              return manager.start(app, function(err, result) {
-                if (err) {
-                  broken(app, err);
-                  return updateApps(apps, callback);
-                } else {
-                  return updateApp(app, (function(_this) {
-                    return function(err) {
-                      if (err) {
-                        broken(app, err);
-                        return updateApps(apps, callback);
-                      } else {
-                        return manager.stop(app, function(err, result) {
-                          if (err) {
-                            broken(app, err);
-                          }
-                          return updateApps(apps, callback);
-                        });
-                      }
-                    };
-                  })(this));
-                }
-              });
             default:
               return updateApps(apps, callback);
           }
