@@ -1284,7 +1284,7 @@ module.exports = {
   "installed": "installed",
   "updated": "updated",
   "updating": "updating",
-  "update-all": "update all",
+  "update all": "update all",
   "update error": "An error occured while updating the application",
   "broken": "broken",
   "start this app": "start this app",
@@ -1301,6 +1301,7 @@ module.exports = {
   "abort": "abort",
   "Once updated, this application will require the following permissions:": "Once updated, this application will require the following permissions:",
   "confirm update": "confirm update",
+  "confirm install": "confirm install",
   "no specific permissions needed": "This application does not need specific permissions",
   "menu description": "If it's your first time on Cozy here is a little guide\nabout all section available in your Cozy Home. All of them can be reached\nfrom the menu located on the top right corner.",
   "install your first app": "your Cozy then install your first application via the&nbsp;",
@@ -1423,7 +1424,7 @@ module.exports = {
   "installed": "installée",
   "updated": "m.à.j",
   "updating": "m.à.j en cours",
-  "update-all": "m.à.j de toutes les applications",
+  "update all": "Mettre tout à jour",
   "update error": "Une erreur est survenue pendant la mise à jour",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
@@ -1439,6 +1440,7 @@ module.exports = {
   "abort": "abort",
   "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requièra les permissions suivantes:",
   "confirm update": "confirmez la mise à jour",
+  "confirm install": "confirmez l'installation'",
   "no specific permissions needed": "Cette applicatiion n'a pas besoin d'informations spécifiques",
   "menu description": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.",
   "install your first app": "votre Cozy puis installer votre première application via l'",
@@ -1685,8 +1687,8 @@ module.exports = Application = (function(_super) {
 
   Application.prototype.updateApp = function(callbacks) {
     var _this = this;
-    this.prepareCallbacks(callbacks);
     if (this.get('state') !== 'broken') {
+      this.prepareCallbacks(callbacks);
       return client.put("/api/applications/" + this.id + "/update", {}, callbacks);
     } else {
       return client.del("/api/applications/" + this.id + "/uninstall", {
@@ -2115,7 +2117,7 @@ buf.push('</div></div><div class="mod w66 left"><div class="title-app h4 mb3">')
 var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><button class="btn update-all">');
-var __val__ = t('update-all')
+var __val__ = t('update all')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div></div></div>');
 }
@@ -2492,10 +2494,22 @@ var interp;
 buf.push('<div class="md-header mt2">');
 var __val__ = t('Once updated, this application will require the following permissions:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="confirmbtn" class="btn right">');
+buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2">');
+if ( model.state === 'broken')
+{
+buf.push('<a id="confirmbtn" class="btn right">');
+var __val__ = t('confirm install')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>');
+}
+else
+{
+buf.push('<a id="confirmbtn" class="btn right">');
 var __val__ = t('confirm update')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><a id="cancelbtn" class="btn light-btn right">');
+buf.push('</a>');
+}
+buf.push('<a id="cancelbtn" class="btn light-btn right">');
 var __val__ = t('cancel')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div>');
@@ -2831,7 +2845,7 @@ module.exports = ApplicationRow = (function(_super) {
       case 'stopped':
         this.stateLabel.show().text(t('stopped'));
         this.removeButton.displayGrey(t('remove'));
-        this.updateButton.hide();
+        this.updateButton.displayGrey(t('update'));
         this.appStoppable.hide();
         this.appStoppable.next().hide();
         this.startStopBtn.displayGrey(t('start this app'));
@@ -2952,12 +2966,23 @@ module.exports = ApplicationRow = (function(_super) {
     Backbone.Mediator.pub('app-state-changed', true);
     this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     this.updateButton.spin('small', '#ffffff');
-    this.stateLabel.html(t('updating'));
+    if (this.model.get('state') !== 'broken') {
+      this.stateLabel.html(t('updating'));
+    } else {
+      this.stateLabel.html(t("installing"));
+    }
     return this.model.updateApp({
       success: function() {
-        _this.updateButton.displayGreen(t("updated"));
-        _this.stateLabel.html(t('started'));
-        return Backbone.Mediator.pub('app-state-changed', true);
+        if (_this.model.get('state') === 'installed') {
+          _this.updateButton.displayGreen(t("updated"));
+          _this.stateLabel.html(t('started'));
+          Backbone.Mediator.pub('app-state-changed', true);
+        }
+        if (_this.model.get('state') === 'stopped') {
+          _this.updateButton.displayGreen(t("updated"));
+          _this.stateLabel.html(t('stopped'));
+          return Backbone.Mediator.pub('app-state-changed', true);
+        }
       },
       error: function(jqXHR) {
         alert(t('update error'));
@@ -3111,8 +3136,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
       },
       error: function() {
         _this.updateBtn.displayGreen(t("error during updating"));
-        Backbone.Mediator.pub('app-state-changed', true);
-        return console.log('error');
+        return Backbone.Mediator.pub('app-state-changed', true);
       }
     });
   };

@@ -46,12 +46,13 @@ module.exports = class Application extends Backbone.Model
 
     # Send to server an update request.
     updateApp: (callbacks) ->
-        @prepareCallbacks callbacks
         if @get('state') isnt 'broken'
+            @prepareCallbacks callbacks
             client.put "/api/applications/#{@id}/update", {}, callbacks
         else
-            client.del "/api/applications/#{@id}/uninstall",
-                success: => @install callbacks
+            client.del "/api/applications/#{@id}/uninstall", 
+                success: => 
+                    @install callbacks
                 error: callbacks.error
 
     # Send to server a start request
