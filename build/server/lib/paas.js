@@ -92,7 +92,7 @@ exports.AppManager = (function() {
         return _this.client.start(manifest, function(err, res, body) {
           if (!status2XX(res)) {
             if (err == null) {
-              err = new Error(body.error.message);
+              err = body.error;
             }
           }
           if (err) {

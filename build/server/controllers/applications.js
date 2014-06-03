@@ -49,7 +49,11 @@ markBroken = function(res, app, err) {
   console.log(err.stack);
   app.state = "broken";
   app.password = null;
-  app.errormsg = err.message + ' :\n' + err.stack;
+  if (err.result != null) {
+    app.errormsg = err.message + ' :\n' + err.result;
+  } else {
+    app.errormsg = err.message + ' :\n' + err.stack;
+  }
   return app.save(function(saveErr) {
     if (saveErr) {
       return sendError(res, saveErr);
@@ -380,7 +384,11 @@ module.exports = {
       console.log(err.stack);
       app.state = "broken";
       app.password = null;
-      app.errormsg = err.message + ' :\n' + err.stack;
+      if (err.result != null) {
+        app.errormsg = err.message + ' :\n' + err.result;
+      } else {
+        app.errormsg = err.message + ' :\n' + err.stack;
+      }
       return app.save(function(saveErr) {
         if (saveErr != null) {
           return console.log(saveErr);

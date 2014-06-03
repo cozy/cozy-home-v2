@@ -39,7 +39,10 @@ markBroken = (res, app, err) ->
 
     app.state = "broken"
     app.password = null
-    app.errormsg = err.message + ' :\n' + err.stack
+    if err.result?
+        app.errormsg = err.message + ' :\n' + err.result
+    else
+        app.errormsg = err.message + ' :\n' + err.stack
     app.save (saveErr) ->
         return sendError res, saveErr if saveErr
 
@@ -290,7 +293,10 @@ module.exports =
 
             app.state = "broken"
             app.password = null
-            app.errormsg = err.message + ' :\n' + err.stack
+            if err.result?
+                app.errormsg = err.message + ' :\n' + err.result
+            else
+                app.errormsg = err.message + ' :\n' + err.stack
             app.save (saveErr) ->
                 console.log(saveErr) if saveErr?
 
