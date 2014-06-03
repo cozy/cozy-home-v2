@@ -56,7 +56,7 @@ describe 'Alarm manager handles alarms', ->
                 alarm3.save done
 
 
-    it "Then I wait 5s", (done) ->
+    it "Then I wait 8s", (done) ->
         @timeout 10000
         setTimeout done, 8000
 
