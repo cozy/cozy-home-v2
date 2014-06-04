@@ -3131,7 +3131,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.updateBtn.spin(true, '#ffffff');
     return this.applications.updateAll({
       success: function() {
-        _this.updateBtn.displayGreen(t("update-all"));
+        _this.updateBtn.displayGreen(t("update all"));
         return Backbone.Mediator.pub('app-state-changed', true);
       },
       error: function() {

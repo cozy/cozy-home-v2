@@ -62,7 +62,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateBtn.spin true, '#ffffff'
         @applications.updateAll 
             success: =>
-                @updateBtn.displayGreen t "update-all"
+                @updateBtn.displayGreen t "update all"
                 Backbone.Mediator.pub 'app-state-changed', true
             error: =>
                 @updateBtn.displayGreen t "error during updating"
