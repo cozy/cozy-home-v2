@@ -63,7 +63,7 @@ randomString = (length) ->
 
 # Save an app's icon in the DS
 saveIcon = (appli, callback = ->) ->
-    if appli? and appli.port?
+    if appli? and appli.port? and appli.port isnt 0
         client = request.newClient "http://localhost:#{appli.port}/"
         tmpName = "/tmp/icon_#{appli.slug}.png"
         client.saveFile "icons/main_icon.png", tmpName, (err, res, body) ->
@@ -74,6 +74,33 @@ saveIcon = (appli, callback = ->) ->
                 callback null
     else
         callback new Error 'Appli cannot be reached'
+
+
+updateApp = (app, callback) ->
+    manager = new AppManager()
+    data = {}
+    if not app.password?
+        data.password = randomString 32
+    manager.updateApp app, (err, result) ->
+        callback err if err?
+        if app.state isnt "stopped"
+            data.state = "installed"
+
+        manifest = new Manifest()
+        manifest.download app, (err) =>
+            callback err if err?
+            data.permissions = manifest.getPermissions()
+            data.widget = manifest.getWidget()
+            data.version = manifest.getVersion()
+            data.needsUpdate = false
+            app.updateAttributes data, (err) ->
+                if app.state isnt 'stopped'
+                    saveIcon app, (err) ->
+                        if err then console.log err.stack
+                        else console.info 'icon attached'
+                callback err if err
+                manager.resetProxy (err) ->
+                    callback(err)
 
 
 module.exports =
@@ -243,43 +270,18 @@ module.exports =
                         msg: 'Application succesfuly uninstalled'
 
 
+
     # Update an app :
     # * haibu, application manager
     # * proxy, cozy router
     # * database
     update: (req, res, next) ->
-        manager = new AppManager()
-        if not req.application.password?
-            req.application.password = randomString 32
+        updateApp req.application, (err) ->
+            return markBroken res, req.application, err if err?
 
-        manager.updateApp req.application, (err, result) ->
-            return markBroken res, req.application, err if err
-            if req.application.state isnt "stopped"
-                req.application.state = "installed"
-
-            manifest = new Manifest()
-            manifest.download req.application, (err) =>
-                return sendError res, err if err
-                req.application.permissions = manifest.getPermissions()
-                req.application.widget = manifest.getWidget()
-                req.application.version = manifest.getVersion()
-                req.application.needsUpdate = false
-                req.application.save (err) ->
-
-                    saveIcon req.application, (err) ->
-                        if err then console.log err.stack
-                        else console.info 'icon attached'
-
-                    return sendError res, err if err
-
-                    manager.resetProxy (err) ->
-                        return markBroken res, req.application, err if err
-
-                        res.send
-                            success: true
-                            msg: 'Application succesfuly updated'
-
-
+            res.send
+                success: true
+                msg: 'Application succesfuly updated'
 
 
     # Update all applications :
@@ -299,30 +301,6 @@ module.exports =
                 app.errormsg = err.message + ' :\n' + err.stack
             app.save (saveErr) ->
                 console.log(saveErr) if saveErr?
-
-        updateApp = (app, callback) ->
-            manager = new AppManager()
-            if not app.password?
-                app.password = randomString 32
-
-            manager.updateApp app, (err, result) ->
-                callback err if err?
-                #app.state = "installed"
-
-                manifest = new Manifest()
-                manifest.download app, (err) =>
-                    callback err if err?
-                    app.permissions = manifest.getPermissions()
-                    app.widget = manifest.getWidget()
-                    app.version = manifest.getVersion()
-                    app.needsUpdate = false
-                    app.save (err) ->
-                        saveIcon app, (err) ->
-                            if err then console.log err.stack
-                            else console.info 'icon attached'
-                        callback err if err
-                        manager.resetProxy (err) ->
-                            callback()
 
         updateApps = (apps, callback) ->
             if apps.length > 0
