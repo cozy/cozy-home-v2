@@ -63,15 +63,20 @@ randomString = (length) ->
 
 # Save an app's icon in the DS
 saveIcon = (appli, callback = ->) ->
-    if appli? and appli.port? and appli.port isnt 0
-        client = request.newClient "http://localhost:#{appli.port}/"
-        tmpName = "/tmp/icon_#{appli.slug}.png"
-        client.saveFile "icons/main_icon.png", tmpName, (err, res, body) ->
-            return callback err if err
-            appli.attachFile tmpName, name: 'icon.png', (err) ->
-                fs.unlink tmpName
+    if appli?
+        git = (appli.git.split('/')[4]).replace('.git', '')
+        name = appli.name.toLowerCase()
+        root = "/usr/local/cozy/apps/#{name}/#{name}/#{git}/"
+        if appli.iconPath?
+            icon = root + appli.iconPath
+        else
+            icon = root + "client/app/assets/icons/main_icon.png"
+        if fs.existsSync icon
+            appli.attachFile icon, name: 'icon.png', (err) ->
                 return callback err if err
                 callback null
+        else
+            callback new Error "Icon not found"
     else
         callback new Error 'Appli cannot be reached'
 
@@ -92,12 +97,12 @@ updateApp = (app, callback) ->
             data.permissions = manifest.getPermissions()
             data.widget = manifest.getWidget()
             data.version = manifest.getVersion()
+            data.iconPath = manifest.getIconPath()
             data.needsUpdate = false
             app.updateAttributes data, (err) ->
-                if app.state isnt 'stopped'
-                    saveIcon app, (err) ->
-                        if err then console.log err.stack
-                        else console.info 'icon attached'
+                saveIcon app, (err) ->
+                    if err then console.log err.stack
+                    else console.info 'icon attached'
                 callback err if err
                 manager.resetProxy (err) ->
                     callback(err)
@@ -210,6 +215,7 @@ module.exports =
                 req.body.permissions = manifest.getPermissions()
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
+                req.body.iconPath = manifest.getIconPath()
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err

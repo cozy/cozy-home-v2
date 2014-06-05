@@ -7,6 +7,7 @@ request = require('request-json');
 exports.Manifest = (function() {
   function Manifest() {
     this.getMetaData = __bind(this.getMetaData, this);
+    this.getIconPath = __bind(this.getIconPath, this);
     this.getDescription = __bind(this.getDescription, this);
     this.getVersion = __bind(this.getVersion, this);
     this.getWidget = __bind(this.getWidget, this);
@@ -70,6 +71,14 @@ exports.Manifest = (function() {
     }
   };
 
+  Manifest.prototype.getIconPath = function() {
+    if (this.config['icon-path'] != null) {
+      return this.config['icon-path'];
+    } else {
+      return null;
+    }
+  };
+
   Manifest.prototype.getMetaData = function() {
     var metaData;
     metaData = {};
@@ -84,6 +93,9 @@ exports.Manifest = (function() {
     } else {
       metaData.displayName = this.config.name.replace('cozy-', '');
       metaData.displayName = metaData.displayName.replace('-', ' ');
+    }
+    if (this.config['icon-path'] != null) {
+      metaData.iconPath = this.config['icon-path'];
     }
     if (this.config['cozy-permissions'] != null) {
       metaData.permissions = this.config['cozy-permissions'];

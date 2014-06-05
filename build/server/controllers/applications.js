@@ -78,27 +78,31 @@ randomString = function(length) {
 };
 
 saveIcon = function(appli, callback) {
-  var client, tmpName;
+  var git, icon, name, root;
   if (callback == null) {
     callback = function() {};
   }
-  if ((appli != null) && (appli.port != null) && appli.port !== 0) {
-    client = request.newClient("http://localhost:" + appli.port + "/");
-    tmpName = "/tmp/icon_" + appli.slug + ".png";
-    return client.saveFile("icons/main_icon.png", tmpName, function(err, res, body) {
-      if (err) {
-        return callback(err);
-      }
-      return appli.attachFile(tmpName, {
+  if (appli != null) {
+    git = (appli.git.split('/')[4]).replace('.git', '');
+    name = appli.name.toLowerCase();
+    root = "/usr/local/cozy/apps/" + name + "/" + name + "/" + git + "/";
+    if (appli.iconPath != null) {
+      icon = root + appli.iconPath;
+    } else {
+      icon = root + "client/app/assets/icons/main_icon.png";
+    }
+    if (fs.existsSync(icon)) {
+      return appli.attachFile(icon, {
         name: 'icon.png'
       }, function(err) {
-        fs.unlink(tmpName);
         if (err) {
           return callback(err);
         }
         return callback(null);
       });
-    });
+    } else {
+      return callback(new Error("Icon not found"));
+    }
   } else {
     return callback(new Error('Appli cannot be reached'));
   }
@@ -128,17 +132,16 @@ updateApp = function(app, callback) {
         data.permissions = manifest.getPermissions();
         data.widget = manifest.getWidget();
         data.version = manifest.getVersion();
+        data.iconPath = manifest.getIconPath();
         data.needsUpdate = false;
         return app.updateAttributes(data, function(err) {
-          if (app.state !== 'stopped') {
-            saveIcon(app, function(err) {
-              if (err) {
-                return console.log(err.stack);
-              } else {
-                return console.info('icon attached');
-              }
-            });
-          }
+          saveIcon(app, function(err) {
+            if (err) {
+              return console.log(err.stack);
+            } else {
+              return console.info('icon attached');
+            }
+          });
           if (err) {
             callback(err);
           }
@@ -299,6 +302,7 @@ module.exports = {
         req.body.permissions = manifest.getPermissions();
         req.body.widget = manifest.getWidget();
         req.body.version = manifest.getVersion();
+        req.body.iconPath = manifest.getIconPath();
         return Application.create(req.body, function(err, appli) {
           var infos, manager;
           if (err) {

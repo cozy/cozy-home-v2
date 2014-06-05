@@ -49,6 +49,12 @@ class exports.Manifest
         else
             return null
 
+    getIconPath: =>
+        if @config['icon-path']?
+            return @config['icon-path']
+        else
+            return null
+
     getMetaData: =>
         metaData = {}
 
@@ -63,6 +69,9 @@ class exports.Manifest
         else
             metaData.displayName = @config.name.replace 'cozy-', ''
             metaData.displayName = metaData.displayName.replace '-', ' '
+
+        if @config['icon-path']?
+            metaData.iconPath = @config['icon-path']
 
         if @config['cozy-permissions']?
             metaData.permissions = @config['cozy-permissions']
