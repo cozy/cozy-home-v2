@@ -2937,7 +2937,16 @@ module.exports = ApplicationRow = (function(_super) {
           return Backbone.Mediator.pub('app-state-changed', true);
         },
         error: function() {
-          return _this.startStopBtn.spin(false);
+          var errormsg, msg;
+          _this.startStopBtn.spin(false);
+          _this.stateLabel.html(t('stopped'));
+          Backbone.Mediator.pub('app-state-changed', true);
+          msg = 'This app cannot start.';
+          errormsg = _this.model.get('errormsg');
+          if (errormsg) {
+            msg += " Error was : " + errormsg;
+          }
+          return alert(msg);
         }
       });
     }
@@ -3758,6 +3767,16 @@ module.exports = ApplicationRow = (function(_super) {
             _this.launchApp(event);
             _this.hideSpinner();
             return _this.icon.show();
+          },
+          error: function() {
+            _this.hideSpinner();
+            _this.icon.show();
+            msg = 'This app cannot start.';
+            errormsg = _this.model.get('errormsg');
+            if (errormsg) {
+              msg += " Error was : " + errormsg;
+            }
+            return alert(msg);
           }
         });
     }

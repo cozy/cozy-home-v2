@@ -36,7 +36,7 @@ class exports.AppManager
 
     checkMemory: (callback) ->
         @memoryManager.isEnoughMemory (err, enoughMemory) =>
-            err ?= new Error 'Not enough Memory' unless enoughMemory
+            err ?= 'Not enough Memory' unless enoughMemory
             callback.call @, err
 
 

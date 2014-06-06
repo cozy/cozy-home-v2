@@ -467,30 +467,47 @@ module.exports = {
       startedApplications[req.application.id] = true;
       manager = new AppManager;
       return manager.start(req.application, function(err, result) {
-        if (err) {
+        if (err && err !== "Not enough Memory") {
           delete startedApplications[req.application.id];
           return markBroken(res, req.application, err);
-        }
-        req.application.state = "installed";
-        req.application.port = result.drone.port;
-        return req.application.save(function(err) {
-          if (err) {
-            delete startedApplications[req.application.id];
-            return markBroken(res, req.application, err);
-          }
-          return manager.resetProxy(function(err) {
-            delete startedApplications[req.application.id];
-            if (err) {
-              return markBroken(res, req.application, err);
-            } else {
-              return res.send({
-                success: true,
-                msg: 'Application running',
-                app: req.application
-              });
+        } else if (err) {
+          delete startedApplications[req.application.id];
+          req.application.errormsg = err;
+          req.application.state = "stopped";
+          return req.application.save(function(saveErr) {
+            if (saveErr) {
+              return sendError(res, saveErr);
             }
+            return res.send({
+              app: req.application,
+              error: true,
+              success: false,
+              message: err.message,
+              stack: err.stack
+            }, 500);
           });
-        });
+        } else {
+          req.application.state = "installed";
+          req.application.port = result.drone.port;
+          return req.application.save(function(err) {
+            if (err) {
+              delete startedApplications[req.application.id];
+              return markBroken(res, req.application, err);
+            }
+            return manager.resetProxy(function(err) {
+              delete startedApplications[req.application.id];
+              if (err) {
+                return markBroken(res, req.application, err);
+              } else {
+                return res.send({
+                  success: true,
+                  msg: 'Application running',
+                  app: req.application
+                });
+              }
+            });
+          });
+        }
       });
     } else {
       return res.send({
