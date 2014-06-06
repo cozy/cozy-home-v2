@@ -56,9 +56,9 @@ describe 'Alarm manager handles alarms', ->
                 alarm3.save done
 
 
-    it "Then I wait 8s", (done) ->
-        @timeout 10000
-        setTimeout done, 8000
+    it "Then I wait 10s", (done) ->
+        @timeout 14000
+        setTimeout done, 12000
 
     it "And handleNotification has been called 3 times", ->
         @counter.should.equal 3
