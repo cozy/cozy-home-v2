@@ -105,15 +105,15 @@ module.exports = class AlarmManager
                 text: "Reminder: #{alarm.description}"
                 resource: resource
 
-
-        else if alarm.action in ['EMAIL', 'BOTH']
+        if alarm.action in ['EMAIL', 'BOTH']
             data =
                 from: "Cozy Agenda <no-reply@cozycloud.cc>"
                 subject: "[Cozy-Agenda] Reminder"
                 content: "Reminder: #{alarm.description}"
 
             CozyAdapter.sendMailToUser data, (error, response) ->
-                console.info error if error?
+                if error?
+                    console.info "Error while sending email -- #{error}"
 
-        else
+        if alarm.action not in ['EMAIL', 'DISPLAY', 'BOTH']
             console.log "UNKNOWN ACTION TYPE"
