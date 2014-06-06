@@ -126,6 +126,7 @@ module.exports =
     "installed":"installée"
     "updated":"m.à.j"
     "updating":"m.à.j en cours"
+    "update all": "Mettre tout à jour"
     "update error":"Une erreur est survenue pendant la mise à jour"
     "start this app":"démarrer cette application"
     "stopped":"stoppée"
@@ -145,6 +146,7 @@ module.exports =
         Une fois mise à jour l'application requièra les permissions suivantes:
     """
     "confirm update":"confirmez la mise à jour"
+    "confirm install":"confirmez l'installation'"
     "no specific permissions needed":"""
         Cette applicatiion n'a pas besoin d'informations spécifiques
     """

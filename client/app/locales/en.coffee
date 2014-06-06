@@ -114,6 +114,7 @@ module.exports =
     "installed":"installed"
     "updated":"updated"
     "updating":"updating"
+    "update all": "update all"
     "update error":"An error occured while updating the application"
     "broken":"broken"
     "start this app":"start this app"
@@ -132,6 +133,7 @@ module.exports =
         Once updated, this application will require the following permissions:
     """
     "confirm update": "confirm update"
+    "confirm install": "confirm install"
     "no specific permissions needed":"This application does not need specific permissions"
     "menu description":"""If it's your first time on Cozy here is a little guide
     about all section available in your Cozy Home. All of them can be reached

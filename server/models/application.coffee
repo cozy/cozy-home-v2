@@ -12,6 +12,7 @@ module.exports = Application = americano.getModel 'Application',
     isStoppable: {type: Boolean, default: false}
     date: {type: Date, default: Date.now}
     icon: String
+    iconPath: String
     git: String
     errormsg: String
     branch: String

@@ -39,7 +39,10 @@ markBroken = (res, app, err) ->
 
     app.state = "broken"
     app.password = null
-    app.errormsg = err.message
+    if err.result?
+        app.errormsg = err.message + ' :\n' + err.result
+    else
+        app.errormsg = err.message + ' :\n' + err.stack
     app.save (saveErr) ->
         return sendError res, saveErr if saveErr
 
@@ -60,17 +63,51 @@ randomString = (length) ->
 
 # Save an app's icon in the DS
 saveIcon = (appli, callback = ->) ->
-    if appli? and appli.port?
-        client = request.newClient "http://localhost:#{appli.port}/"
-        tmpName = "/tmp/icon_#{appli.slug}.png"
-        client.saveFile "icons/main_icon.png", tmpName, (err, res, body) ->
-            return callback err if err
-            appli.attachFile tmpName, name: 'icon.png', (err) ->
-                fs.unlink tmpName
+    if appli?
+        git = (appli.git.split('/')[4]).replace('.git', '')
+        name = appli.name.toLowerCase()
+        root = "/usr/local/cozy/apps/#{name}/#{name}/#{git}/"
+        if appli.iconPath?
+            icon = root + appli.iconPath
+        else
+            icon = root + "client/app/assets/icons/main_icon.png"
+        if fs.existsSync icon
+            appli.attachFile icon, name: 'icon.png', (err) ->
                 return callback err if err
                 callback null
+        else
+            callback new Error "Icon not found"
     else
         callback new Error 'Appli cannot be reached'
+
+
+updateApp = (app, callback) ->
+    manager = new AppManager()
+    data = {}
+    if not app.password?
+        data.password = randomString 32
+    manager.updateApp app, (err, result) ->
+        callback err if err?
+        if app.state isnt "stopped"
+            data.state = "installed"
+
+        manifest = new Manifest()
+        manifest.download app, (err) =>
+            if err?
+                callback err
+            else
+                data.permissions = manifest.getPermissions()
+                data.widget = manifest.getWidget()
+                data.version = manifest.getVersion()
+                data.iconPath = manifest.getIconPath()
+                data.needsUpdate = false
+                app.updateAttributes data, (err) ->
+                    saveIcon app, (err) ->
+                        if err then console.log err.stack
+                        else console.info 'icon attached'
+                    callback err if err
+                    manager.resetProxy (err) ->
+                        callback err
 
 
 module.exports =
@@ -180,6 +217,7 @@ module.exports =
                 req.body.permissions = manifest.getPermissions()
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
+                req.body.iconPath = manifest.getIconPath()
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
@@ -240,40 +278,63 @@ module.exports =
                         msg: 'Application succesfuly uninstalled'
 
 
+
     # Update an app :
     # * haibu, application manager
     # * proxy, cozy router
     # * database
     update: (req, res, next) ->
-        manager = new AppManager()
-        if not req.application.password?
-            req.application.password = randomString 32
+        updateApp req.application, (err) ->
+            return markBroken res, req.application, err if err?
 
-        manager.updateApp req.application, (err, result) ->
-            return markBroken res, req.application, err if err
-            req.application.state = "installed"
+            res.send
+                success: true
+                msg: 'Application succesfuly updated'
 
-            manifest = new Manifest()
-            manifest.download req.application, (err) =>
-                return sendError res, err if err
-                req.application.permissions = manifest.getPermissions()
-                req.application.widget = manifest.getWidget()
-                req.application.version = manifest.getVersion()
-                req.application.needsUpdate = false
-                req.application.save (err) ->
 
-                    saveIcon req.application, (err) ->
-                        if err then console.log err.stack
-                        else console.info 'icon attached'
+    # Update all applications :
+    # * haibu, application manager
+    # * proxy, cozy router
+    # * database
+    updateAll: (req, res, next) ->   
 
-                    return sendError res, err if err
+        broken = (app, err) ->
+            console.log "Marking app #{app.name} as broken because"
+            console.log err.stack
+            app.state = "broken"
+            app.password = null
+            if err.result?
+                app.errormsg = err.message + ' :\n' + err.result
+            else
+                app.errormsg = err.message + ' :\n' + err.stack
+            app.save (saveErr) ->
+                console.log(saveErr) if saveErr?
 
-                    manager.resetProxy (err) ->
-                        return markBroken res, req.application, err if err
+        updateApps = (apps, callback) ->
+            if apps.length > 0
+                app = apps.pop()
+                if app.needsUpdate? and app.needsUpdate
+                    switch app.state
+                        when "installed", "stopped"
+                            # Update application 
+                            console.log("Update #{app.name} (#{app.state})")
+                            updateApp app, (err) =>
+                                broken app, err if err
+                                updateApps(apps, callback)
+                        else
+                            updateApps(apps, callback)
+                else
+                    updateApps(apps, callback)
+            else
+                callback()
 
-                        res.send
-                            success: true
-                            msg: 'Application succesfuly updated'
+        Application.all (err, apps) =>
+            updateApps apps, (err) =>
+                sendError res, err if err?
+                res.send
+                    success: true
+                    msg: 'Application succesfuly updated'
+
 
 
     # Start a stopped application.

@@ -30,7 +30,7 @@ startTestServers = ->
     @proxy.listen 9104
 
     @fakeApp = helpers.fakeServer this_should_be_an: 'icon', 200
-    @fakeApp.listen 8001
+    @fakeApp.listen 8003
 
 stopTestServers = ->
     @haibu.close()
@@ -135,13 +135,26 @@ describe "Applications management", ->
 
         describe "UPDATE /api/applications/:slug/update Update an app", ->
 
-            it "When I send a request to update an application", (done) ->
+            it "When I send a request to update this application", (done) ->
                 @client.put "api/applications/my-app/update", {}, done
 
             it "Then it sends me a success response", ->
                 console.log @body
                 #@response.statusCode.should.equal 200
-                #expect(@body.success).to.be.ok
+                #expect(@body.success).to.be.ok    
+
+    describe "Application update all", ->
+
+        before resetTestServers
+
+        describe "UPDATE /api/applications/update/all Update all app", ->
+
+            it "When I send a request to update an application", (done) ->
+                @client.put "api/applications/update/all", {}, done
+
+            it "Then it sends me a success response", ->
+                @response.statusCode.should.equal 200
+                expect(@body.success).to.be.ok
 
     describe "Application stop", ->
 
