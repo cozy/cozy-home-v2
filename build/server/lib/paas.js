@@ -50,7 +50,7 @@ exports.AppManager = (function() {
       return function(err, enoughMemory) {
         if (!enoughMemory) {
           if (err == null) {
-            err = new Error('Not enough Memory');
+            err = 'Not enough Memory';
           }
         }
         return callback.call(_this, err);

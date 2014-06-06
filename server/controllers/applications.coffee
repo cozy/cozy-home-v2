@@ -357,27 +357,42 @@ module.exports =
 
             manager = new AppManager
             manager.start req.application, (err, result) ->
-                if err
+                if err and err isnt "Not enough Memory"
                     delete startedApplications[req.application.id]
                     return markBroken res, req.application, err
+                else if err
+                    delete startedApplications[req.application.id]
+                    req.application.errormsg = err
+                    req.application.state = "stopped"
+                    req.application.save (saveErr) ->
+                        return sendError res, saveErr if saveErr
 
-                req.application.state = "installed"
-                req.application.port = result.drone.port
-                req.application.save (err) ->
-                    if err
-                        delete startedApplications[req.application.id]
-                        return markBroken res, req.application, err
+                        res.send
+                            app: req.application
+                            error: true
+                            success: false
+                            message: err.message
+                            stack: err.stack
+                        , 500
+                else
 
-                    manager.resetProxy (err) ->
-                        delete startedApplications[req.application.id]
-
+                    req.application.state = "installed"
+                    req.application.port = result.drone.port
+                    req.application.save (err) ->
                         if err
-                            markBroken res, req.application, err
-                        else
-                            res.send
-                                success: true
-                                msg: 'Application running'
-                                app: req.application
+                            delete startedApplications[req.application.id]
+                            return markBroken res, req.application, err
+
+                        manager.resetProxy (err) ->
+                            delete startedApplications[req.application.id]
+
+                            if err
+                                markBroken res, req.application, err
+                            else
+                                res.send
+                                    success: true
+                                    msg: 'Application running'
+                                    app: req.application
 
         else
             res.send

@@ -131,6 +131,12 @@ module.exports = class ApplicationRow extends BaseView
                     Backbone.Mediator.pub 'app-state-changed', true
                 error: =>
                     @startStopBtn.spin false
+                    @stateLabel.html t 'stopped'
+                    Backbone.Mediator.pub 'app-state-changed', true
+                    msg = 'This app cannot start.'
+                    errormsg = @model.get 'errormsg'
+                    msg += " Error was : #{errormsg}" if errormsg
+                    alert msg
 
     remove: =>
         return super unless @model.get('state') is 'installed'

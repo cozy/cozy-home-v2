@@ -96,10 +96,18 @@ module.exports = class ApplicationRow extends BaseView
             when 'stopped'
                 @icon.hide()
                 @showSpinner()
-                @model.start success: =>
-                    @launchApp(event)
-                    @hideSpinner()
-                    @icon.show()
+                @model.start
+                    success: =>
+                        @launchApp(event)
+                        @hideSpinner()
+                        @icon.show()
+                    error: =>
+                        @hideSpinner()
+                        @icon.show()
+                        msg = 'This app cannot start.'
+                        errormsg = @model.get 'errormsg'
+                        msg += " Error was : #{errormsg}" if errormsg
+                        alert msg
 
     setUseWidget: (widget = true) =>
         widgetUrl = @model.get 'widget'

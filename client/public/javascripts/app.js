@@ -182,7 +182,7 @@ module.exports = ApplicationCollection = (function(_super) {
         name: "webdav",
         displayName: "Webdav",
         slug: "webdav",
-        git: "https://github.com/aenario/cozy-webdav.git",
+        git: "https://github.com/mycozycloud/cozy-webdav.git",
         comment: "official application",
         description: "Synchronize your contacts and your agenda with Cozy"
       }, {
@@ -1855,7 +1855,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
+require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -1869,7 +1869,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
+require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -1908,7 +1908,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
+require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -1919,7 +1919,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
+require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -1949,7 +1949,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
+require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -1967,7 +1967,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
+require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -1978,7 +1978,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
+require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2005,7 +2005,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
+require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2022,7 +2022,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
+require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2088,7 +2088,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application", function(exports, require, module) {
+require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2103,7 +2103,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application_widget", function(exports, require, module) {
+require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2117,7 +2117,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/layout", function(exports, require, module) {
+require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2150,7 +2150,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
+require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2174,7 +2174,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
+require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2200,7 +2200,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
+require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2214,7 +2214,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
+require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2226,7 +2226,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
+require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2241,7 +2241,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2257,7 +2257,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
+require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2269,7 +2269,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
+require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2287,7 +2287,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
+require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2309,7 +2309,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
+require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2342,7 +2342,7 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
+require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -2761,7 +2761,16 @@ module.exports = ApplicationRow = (function(_super) {
           return Backbone.Mediator.pub('app-state-changed', true);
         },
         error: function() {
-          return _this.startStopBtn.spin(false);
+          var errormsg, msg;
+          _this.startStopBtn.spin(false);
+          _this.stateLabel.html(t('stopped'));
+          Backbone.Mediator.pub('app-state-changed', true);
+          msg = 'This app cannot start.';
+          errormsg = _this.model.get('errormsg');
+          if (errormsg) {
+            msg += " Error was : " + errormsg;
+          }
+          return alert(msg);
         }
       });
     }
@@ -3582,6 +3591,16 @@ module.exports = ApplicationRow = (function(_super) {
             _this.launchApp(event);
             _this.hideSpinner();
             return _this.icon.show();
+          },
+          error: function() {
+            _this.hideSpinner();
+            _this.icon.show();
+            msg = 'This app cannot start.';
+            errormsg = _this.model.get('errormsg');
+            if (errormsg) {
+              msg += " Error was : " + errormsg;
+            }
+            return alert(msg);
           }
         });
     }
