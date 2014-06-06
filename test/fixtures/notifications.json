@@ -1,0 +1,24 @@
+[
+{
+   "text": "N'oubliez pas de vous inscrire sur Privowny !",
+   "resource": {
+       "app": "pouet",
+       "url": "/"
+   },
+   "app": "pouet",
+   "type": "persistent",
+   "docType": "Notification",
+   "publishDate": 1402040379881
+},
+{
+   "text": "Blabla",
+   "resource": {
+       "app": "pouet",
+       "url": "/"
+   },
+   "app": "pouet",
+   "type": "persistent",
+   "docType": "Notification",
+   "publishDate": 1402040379881
+}
+]

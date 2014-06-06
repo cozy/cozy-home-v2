@@ -23,7 +23,6 @@ module.exports =
     "your app"                 : "a tua aplicação!"
     "community contribution"    : "contribuição da comunidade"
     "official application"      : "aplicação oficial"
-    "fing application"          : "Aplicação FING"
     "application description"   : "Descrição da Aplicação"
     "downloading description"   : "A fazer download da descrição ..."
     "downloading permissions"   : "A fazer download das permissões ..."
