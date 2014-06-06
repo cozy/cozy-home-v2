@@ -182,7 +182,7 @@ module.exports = ApplicationCollection = (function(_super) {
         name: "webdav",
         displayName: "Webdav",
         slug: "webdav",
-        git: "https://github.com/aenario/cozy-webdav.git",
+        git: "https://github.com/mycozycloud/cozy-webdav.git",
         comment: "official application",
         description: "Synchronize your contacts and your agenda with Cozy"
       }, {
