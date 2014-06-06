@@ -93,19 +93,21 @@ updateApp = (app, callback) ->
 
         manifest = new Manifest()
         manifest.download app, (err) =>
-            callback err if err?
-            data.permissions = manifest.getPermissions()
-            data.widget = manifest.getWidget()
-            data.version = manifest.getVersion()
-            data.iconPath = manifest.getIconPath()
-            data.needsUpdate = false
-            app.updateAttributes data, (err) ->
-                saveIcon app, (err) ->
-                    if err then console.log err.stack
-                    else console.info 'icon attached'
-                callback err if err
-                manager.resetProxy (err) ->
-                    callback(err)
+            if err?
+                callback err
+            else
+                data.permissions = manifest.getPermissions()
+                data.widget = manifest.getWidget()
+                data.version = manifest.getVersion()
+                data.iconPath = manifest.getIconPath()
+                data.needsUpdate = false
+                app.updateAttributes data, (err) ->
+                    saveIcon app, (err) ->
+                        if err then console.log err.stack
+                        else console.info 'icon attached'
+                    callback err if err
+                    manager.resetProxy (err) ->
+                        callback err
 
 
 module.exports =

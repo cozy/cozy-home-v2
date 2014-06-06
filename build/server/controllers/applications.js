@@ -127,28 +127,29 @@ updateApp = function(app, callback) {
     return manifest.download(app, (function(_this) {
       return function(err) {
         if (err != null) {
-          callback(err);
-        }
-        data.permissions = manifest.getPermissions();
-        data.widget = manifest.getWidget();
-        data.version = manifest.getVersion();
-        data.iconPath = manifest.getIconPath();
-        data.needsUpdate = false;
-        return app.updateAttributes(data, function(err) {
-          saveIcon(app, function(err) {
+          return callback(err);
+        } else {
+          data.permissions = manifest.getPermissions();
+          data.widget = manifest.getWidget();
+          data.version = manifest.getVersion();
+          data.iconPath = manifest.getIconPath();
+          data.needsUpdate = false;
+          return app.updateAttributes(data, function(err) {
+            saveIcon(app, function(err) {
+              if (err) {
+                return console.log(err.stack);
+              } else {
+                return console.info('icon attached');
+              }
+            });
             if (err) {
-              return console.log(err.stack);
-            } else {
-              return console.info('icon attached');
+              callback(err);
             }
+            return manager.resetProxy(function(err) {
+              return callback(err);
+            });
           });
-          if (err) {
-            callback(err);
-          }
-          return manager.resetProxy(function(err) {
-            return callback(err);
-          });
-        });
+        }
       };
     })(this));
   });
