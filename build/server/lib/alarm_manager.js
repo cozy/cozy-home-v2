@@ -133,28 +133,30 @@ module.exports = AlarmManager = (function() {
   };
 
   AlarmManager.prototype.handleNotification = function(alarm) {
-    var data, resource, _ref, _ref1;
+    var data, resource, _ref, _ref1, _ref2;
     if ((_ref = alarm.action) === 'DISPLAY' || _ref === 'BOTH') {
       resource = alarm.related != null ? alarm.related : {
         app: 'calendar',
         url: "/#list"
       };
-      return this.notificationhelper.createTemporary({
+      this.notificationhelper.createTemporary({
         text: "Reminder: " + alarm.description,
         resource: resource
       });
-    } else if ((_ref1 = alarm.action) === 'EMAIL' || _ref1 === 'BOTH') {
+    }
+    if ((_ref1 = alarm.action) === 'EMAIL' || _ref1 === 'BOTH') {
       data = {
         from: "Cozy Agenda <no-reply@cozycloud.cc>",
         subject: "[Cozy-Agenda] Reminder",
         content: "Reminder: " + alarm.description
       };
-      return CozyAdapter.sendMailToUser(data, function(error, response) {
+      CozyAdapter.sendMailToUser(data, function(error, response) {
         if (error != null) {
-          return console.info(error);
+          return console.info("Error while sending email -- " + error);
         }
       });
-    } else {
+    }
+    if ((_ref2 = alarm.action) !== 'EMAIL' && _ref2 !== 'DISPLAY' && _ref2 !== 'BOTH') {
       return console.log("UNKNOWN ACTION TYPE");
     }
   };

@@ -31,6 +31,7 @@ module.exports = class NotificationsView extends ViewCollection
 
     afterRender: =>
         @counter    = @$ '#notifications-counter'
+        @counter.html '10'
         @clickcatcher = @$ '#clickcatcher'
         @clickcatcher.hide()
         @noNotifMsg = @$ '#no-notif-msg'
@@ -39,7 +40,6 @@ module.exports = class NotificationsView extends ViewCollection
         @dismissButton = @$ "#dismiss-all"
 
         super
-
         @initializing = true
         @collection.fetch().always -> @initializing = false
 
@@ -54,9 +54,14 @@ module.exports = class NotificationsView extends ViewCollection
         @$('#no-notif-msg').toggle(newCount is 0)
         @$('#dismiss-all').toggle(newCount isnt 0)
         if newCount is 0 #hide 0 counter
-            newCount = ""
-            @counter.html newCount
+            @counter.html ""
             @counter.hide()
+            imgPath = 'img/notification-white.png'
+            @$('#notifications-toggle img').attr 'src', imgPath
+            @$('#notifications-toggle').removeClass 'highlight'
+        #else
+            #@counter.html newCount
+            #@counter.show()
 
     windowClicked: =>
         if event? and @$el.has($(event.target)).length is 0
@@ -82,8 +87,6 @@ module.exports = class NotificationsView extends ViewCollection
             error: =>
                 @dismissButton.spin()
                 @dismissButton.css 'color', '#333'
-        @$('#notifications-toggle img').attr 'src', 'img/notification-white.png'
-        @$('#notifications-toggle').removeClass 'highlight'
 
     hideNotifList: (event) =>
         @notifList.slideUp 100
