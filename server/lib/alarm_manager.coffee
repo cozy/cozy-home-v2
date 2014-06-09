@@ -45,13 +45,14 @@ module.exports = class AlarmManager
     # and call addAlarmCounter for each one
     addAlarmCounters: (alarm) ->
         @clearTimeouts alarm._id
-        now = new tDate()
-        now.setTimezone @timezone
-        in24h = new tDate(now.getTime() + oneDay)
-        in24h.setTimezone @timezone
-        trigg = new tDate alarm.trigg
-        trigg.setTimezone 'UTC'
+        timezone = alarm.timezone or @timezone
 
+        now = new tDate()
+        now.setTimezone timezone
+        in24h = new tDate(now.getTime() + oneDay)
+        in24h.setTimezone timezone
+        alarm.timezoned timezone
+        trigg = new tDate alarm.trigg, timezone
         if alarm.rrule
             rrule = RRule.parseString alarm.rrule
 
@@ -64,12 +65,13 @@ module.exports = class AlarmManager
             occurences = new RRule(rrule).between(now, in24h)
             occurences = occurences.map (string) =>
                 occurence = new tDate string
-                occurence.setTimezone @timezone
+                occurence.setTimezone timezone
                 return occurence
         else if now.getTime() <= trigg.getTime() < in24h.getTime()
-                occurences = [trigg]
+
+            occurences = [trigg]
         else
-                occurences = []
+            occurences = []
 
         for occurence in occurences
             @addAlarmCounter alarm, occurence
@@ -79,9 +81,10 @@ module.exports = class AlarmManager
     # triggerDate
     addAlarmCounter: (alarm, triggerDate) ->
 
+        timezone = alarm.timezone or @timezone
         now = new tDate()
-        now.setTimezone @timezone
-        triggerDate.setTimezone @timezone
+        now.setTimezone timezone
+        triggerDate.setTimezone timezone
 
         delta = triggerDate.getTime() - now.getTime()
 

@@ -32,22 +32,30 @@ describe 'Alarm manager handles alarms', ->
 
         now = new time.Date()
         oneDay = 24*60*60*1000
-
+        date = new time.Date now.getTime() + 2000, 'America/Bogota'
+        date.setTimezone 'UTC'
         alarm1 = new Alarm
             action: 'DISPLAY'
-            trigg: new time.Date(now.getTime() + 2000)
+            trigg: date.toString().slice(0, 24)
             description: 'alarm1'
+            timezone: 'America/Bogota'
 
+        date = new time.Date now.getTime() + 2500 - oneDay, 'Europe/Paris'
+        date.setTimezone 'UTC'
         alarm2 = new Alarm
             action: 'EMAIL'
-            trigg: new time.Date(now.getTime() + 2500 - oneDay)
+            trigg: date.toString().slice(0, 24)
             rrule: 'FREQ=DAILY'
             description: 'alarm2'
+            timezone: 'Europe/Paris'
 
+        date = new time.Date now.getTime() + 3000, 'Europe/Paris'
+        date.setTimezone 'UTC'
         alarm3 = new Alarm
             action: 'BOTH'
-            trigg: new time.Date(now.getTime() + 3000)
+            trigg: date.toString().slice(0, 24)
             description: 'alarm3'
+            timezone: 'Europe/Paris'
 
         alarm1.save (err) ->
             return done err if err
