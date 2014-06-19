@@ -51,7 +51,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"official application"
                 description:"Share photos with your friends."
            ,
-                icon: "img/webdav.png"
+                icon: "img/sync-icon.png"
                 name: "sync"
                 displayName:"Sync"
                 slug: "sync"
