@@ -19,11 +19,11 @@ module.exports = class ApplicationCollection extends BaseCollection
     # fetch application list from the market
     fetchFromMarket: ->
         apps = [
-                icon:"img/agenda-icon.png"
+                icon:"img/calendar-icon.png"
                 name:"calendar"
                 displayName:"Calendar"
                 slug:"calendar"
-                git:"https://github.com/mycozycloud/cozy-agenda.git"
+                git:"https://github.com/cozy/cozy-calendar.git"
                 comment:"official application"
                 description:"Set up reminders and let cozy be your assistant"
            ,
@@ -31,7 +31,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 name:"contacts"
                 displayName:"Contacts"
                 slug:"contacts"
-                git:"https://github.com/mycozycloud/cozy-contacts.git"
+                git:"https://github.com/cozy/cozy-contacts.git"
                 comment:"official application"
                 description:"Manage your contacts with custom informations"
            ,
@@ -39,7 +39,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 name:"files"
                 displayName:"Files"
                 slug:"files"
-                git:"https://github.com/mycozycloud/cozy-files.git"
+                git:"https://github.com/cozy/cozy-files.git"
                 comment:"official application"
                 description:"Your online filesystem."
            ,
@@ -47,7 +47,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 name:"photos"
                 displayName:"Photos"
                 slug:"photos"
-                git:"https://github.com/mycozycloud/cozy-photos.git"
+                git:"https://github.com/cozy/cozy-photos.git"
                 comment:"official application"
                 description:"Share photos with your friends."
            ,
