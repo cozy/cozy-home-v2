@@ -162,22 +162,6 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "Share photos with your friends."
       }, {
-        icon: "img/notes-icon.png",
-        name: "notes",
-        displayName: "Note",
-        slug: "notes",
-        git: "https://github.com/cozy/notes.git",
-        comment: "community contribution",
-        description: "Organize and write your smart notes."
-      }, {
-        icon: "img/todos-icon.png",
-        name: "todos",
-        displayName: "Todos",
-        slug: "todos",
-        git: "https://github.com/cozy/todos.git",
-        comment: "community contribution",
-        description: "Write your tasks, order them and execute them efficiently."
-      }, {
         icon: "img/webdav.png",
         name: "sync",
         displayName: "Sync",
@@ -202,6 +186,14 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "An audio player to always keep your music with you"
       }, {
+        icon: "img/databrowser-icon.png",
+        name: "databrowser",
+        displayName: "Data Browser",
+        slug: "databrowser",
+        git: "https://github.com/n-a-n/cozy-databrowser.git",
+        comment: "community contribution",
+        description: "Browse and visualize all your data."
+      }, {
         icon: "img/feeds-icon.png",
         name: "feeds",
         displayName: "Feeds",
@@ -209,14 +201,6 @@ module.exports = ApplicationCollection = (function(_super) {
         git: "https://github.com/Piour/cozy-feeds.git",
         comment: "community contribution",
         description: "Aggregate your feeds and save your favorite links in bookmarks."
-      }, {
-        icon: "img/pfm.png",
-        name: "mes comptes",
-        displayName: "Mes Comptes",
-        slug: "pfm",
-        git: "https://github.com/seeker89/cozy-pfm.git",
-        comment: "community contribution",
-        description: "Suivez vos comptes banquaires sans avoir à vous relogger à chaque fois."
       }, {
         icon: "img/kyou.png",
         name: "kyou",
@@ -235,6 +219,14 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "Import data from external services (Twitter, Jawbone...)"
       }, {
+        icon: "img/pfm.png",
+        name: "mes comptes",
+        displayName: "Mes Comptes",
+        slug: "pfm",
+        git: "https://github.com/seeker89/cozy-pfm.git",
+        comment: "community contribution",
+        description: "Suivez vos comptes banquaires sans avoir à vous relogger à chaque fois."
+      }, {
         icon: "img/nirc-icon.png",
         name: "nirc",
         displayName: "nIRC",
@@ -242,6 +234,14 @@ module.exports = ApplicationCollection = (function(_super) {
         git: "https://github.com/frankrousseau/cozy-nirc.git",
         comment: "community contribution",
         description: "Access to your favorite IRC channel from your Cozy"
+      }, {
+        icon: "img/notes-icon.png",
+        name: "notes",
+        displayName: "Note",
+        slug: "notes",
+        git: "https://github.com/cozy/notes.git",
+        comment: "community contribution",
+        description: "Organize and write your smart notes."
       }, {
         icon: "img/owm.png",
         name: "owm",
@@ -251,13 +251,13 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "What is the weather like in your city? Check it out within your Cozy!"
       }, {
-        icon: "img/databrowser-icon.png",
-        name: "databrowser",
-        displayName: "Data Browser",
-        slug: "databrowser",
-        git: "https://github.com/n-a-n/cozy-databrowser.git",
+        icon: "img/todos-icon.png",
+        name: "todos",
+        displayName: "Todos",
+        slug: "todos",
+        git: "https://github.com/cozy/todos.git",
         comment: "community contribution",
-        description: "Browse and visualize all your data."
+        description: "Write your tasks, order them and execute them efficiently."
       }
     ];
     return this.reset(apps);
