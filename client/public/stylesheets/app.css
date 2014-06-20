@@ -1360,7 +1360,6 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
-  background: transparent;
   position: relative;
 }
 .application .mask,

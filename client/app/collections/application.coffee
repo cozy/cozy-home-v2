@@ -97,7 +97,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "kyou"
                 git: "https://github.com/frankrousseau/kyou.git"
                 comment: "community contribution"
-                description: "Quantify your for a better knowledge of yourself"
+                description: "Improve your hapiness and your health by quantifying you."
                 website: "http://frankrousseau.github.io/kyou"
            ,
                 icon: "img/konnectors-icon.png"
@@ -130,7 +130,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"notes"
                 git:"https://github.com/cozy/notes.git"
                 comment:"community contribution"
-                description:"Organize and write your smart notes."
+                description:"Organize and write smart notes."
            ,
                 icon: "img/owm.png"
                 name: "owm"
@@ -147,6 +147,14 @@ module.exports = class ApplicationCollection extends BaseCollection
                 git:"https://github.com/cozy/todos.git"
                 comment:"community contribution"
                 description:"Write your tasks, order them and execute them efficiently."
+           ,
+                icon:"img/tasky-icon.png"
+                name:"tasky"
+                displayName:"Tasky"
+                slug:"tasky"
+                git:"https://github.com/jsilvestre/tasky.git"
+                comment:"community contribution"
+                description:"Super fast and simple tag-based task manager."
         ]
 
         @reset apps

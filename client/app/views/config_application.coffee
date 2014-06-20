@@ -2,6 +2,7 @@ BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 PopoverPermissionsView = require 'views/popover_permissions'
 
+
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
     className: "line config-application clearfix"
@@ -33,6 +34,7 @@ module.exports = class ApplicationRow extends BaseView
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
+
 
     ### Listener ###
 
@@ -173,3 +175,4 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.html t 'broken'
                 @updateButton.displayRed t "update failed"
                 Backbone.Mediator.pub 'app-state-changed', true
+

@@ -5,6 +5,7 @@ Application = require 'models/application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
 
+
 module.exports = class exports.ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
     template: require 'templates/config_applications'
@@ -28,6 +29,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
+
 
     displayDevices: =>
         if not(@devices.length is 0)
@@ -60,7 +62,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         Backbone.Mediator.pub 'app-state-changed', true
         @updateBtn.spin true, '#ffffff'
-        @applications.updateAll 
+        @applications.updateAll
             success: =>
                 @updateBtn.displayGreen t "update all"
                 Backbone.Mediator.pub 'app-state-changed', true
