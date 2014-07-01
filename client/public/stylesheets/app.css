@@ -2007,8 +2007,6 @@ body {
   }
   .md-modal {
     position: fixed;
-    top: 45px;
-    left: 0;
     bottom: 0;
     width: 100%;
     height: 90%;
@@ -2173,9 +2171,6 @@ body {
   div.home-body {
     padding-top: 0;
     height: 100%;
-  }
-  .md-modal {
-    top: 0;
   }
   #home-menu .logout-menu-icon {
     display: inline;
