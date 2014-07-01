@@ -1,5 +1,4 @@
 BaseView = require 'lib/base_view'
-PopoverPermissionsView = require 'views/popover_permissions'
 PopoverDescriptionView = require 'views/popover_description'
 ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'

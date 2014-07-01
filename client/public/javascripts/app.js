@@ -2585,7 +2585,7 @@ module.exports = exports.AccountView = (function(_super) {
 });
 
 ;require.register("views/config_application", function(exports, require, module) {
-var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView,
+var ApplicationRow, BaseView, ColorButton, PopoverDescriptionView,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2594,7 +2594,7 @@ BaseView = require('lib/base_view');
 
 ColorButton = require('widgets/install_button');
 
-PopoverPermissionsView = require('views/popover_permissions');
+PopoverDescriptionView = require('views/popover_description');
 
 module.exports = ApplicationRow = (function(_super) {
   __extends(ApplicationRow, _super);
@@ -2722,27 +2722,29 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onUpdateClicked = function(event) {
-    event.preventDefault();
-    if (this.popover != null) {
-      this.popover.destroy();
-    }
-    return this.showPopover();
-  };
-
-  ApplicationRow.prototype.showPopover = function() {
     var _this = this;
-    this.popover = new PopoverPermissionsView({
-      model: this.model,
-      confirm: function(application) {
-        _this.popover.remove();
-        return _this.updateApp();
-      },
-      cancel: function(application) {
-        return _this.popover.remove();
-      }
-    });
-    this.$el.append(this.popover.$el);
-    return $(window).trigger('resize');
+    if (app.mainView.marketView.isInstalling()) {
+      alert(t('Cannot update application while an application is installing'));
+      return false;
+    } else {
+      event.preventDefault();
+      this.popover = new PopoverDescriptionView({
+        model: this.model,
+        label: t('update'),
+        confirm: function(application) {
+          $('#no-app-message').hide();
+          _this.popover.hide();
+          _this.popover.remove();
+          return _this.updateApp();
+        },
+        cancel: function(application) {
+          _this.popover.hide();
+          return _this.popover.remove();
+        }
+      });
+      $("#config-applications-view").append(this.popover.$el);
+      return this.popover.show();
+    }
   };
 
   ApplicationRow.prototype.onStartStopClicked = function(event) {
@@ -2800,10 +2802,6 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.updateApp = function() {
     var _this = this;
-    if (app.mainView.marketView.isInstalling()) {
-      alert(t('Cannot update application while an application is installing'));
-      return false;
-    }
     Backbone.Mediator.pub('app-state-changed', true);
     this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     this.updateButton.spin('small', '#ffffff');
@@ -3456,7 +3454,7 @@ module.exports = ApplicationsListView = (function(_super) {
 });
 
 ;require.register("views/home_application", function(exports, require, module) {
-var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView, WidgetTemplate,
+var ApplicationRow, BaseView, ColorButton, WidgetTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3464,8 +3462,6 @@ var ApplicationRow, BaseView, ColorButton, PopoverPermissionsView, WidgetTemplat
 BaseView = require('lib/base_view');
 
 ColorButton = require('widgets/install_button');
-
-PopoverPermissionsView = require('views/popover_permissions');
 
 WidgetTemplate = require('templates/home_application_widget');
 
@@ -3972,14 +3968,12 @@ module.exports = HomeView = (function(_super) {
 });
 
 ;require.register("views/market", function(exports, require, module) {
-var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, PopoverDescriptionView, PopoverPermissionsView, REPOREGEX, slugify,
+var AppCollection, Application, ApplicationRow, BaseView, ColorButton, MarketView, PopoverDescriptionView, REPOREGEX, slugify,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 BaseView = require('lib/base_view');
-
-PopoverPermissionsView = require('views/popover_permissions');
 
 PopoverDescriptionView = require('views/popover_description');
 
@@ -4712,7 +4706,9 @@ module.exports = PopoverDescriptionView = (function(_super) {
   PopoverDescriptionView.prototype.initialize = function(options) {
     PopoverDescriptionView.__super__.initialize.apply(this, arguments);
     this.confirmCallback = options.confirm;
-    return this.cancelCallback = options.cancel;
+    this.cancelCallback = options.cancel;
+    this.label = options.label != null ? options.label : t('install');
+    return this.$("#confirmbtn").html(this.label);
   };
 
   PopoverDescriptionView.prototype.afterRender = function() {
@@ -4748,7 +4744,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
     description = this.model.get("description");
     this.header.parent().append("<p class=\"line left\"> " + description + " </p>");
     if (Object.keys(this.model.get("permissions")).length === 0) {
-      permissionsDiv = $("<div class='permissionsLine'> <h4>" + (t('no specific permissions needed')) + " </h4> </div>");
+      permissionsDiv = $("<div class='permissionsLine'>\n    <h4>" + (t('no specific permissions needed')) + " </h4>\n</div>");
       this.body.append(permissionsDiv);
     } else {
       this.body.append("<h4>" + (t('required permissions')) + "</h4>");
@@ -4803,106 +4799,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   return PopoverDescriptionView;
-
-})(BaseView);
-});
-
-;require.register("views/popover_permissions", function(exports, require, module) {
-var BaseView, PopoverPermissionsView, REPOREGEX, _ref,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-BaseView = require('lib/base_view');
-
-REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})([\/\w\.-]*)*(?:\.git)?(@[\da-z\/-]+)?$/;
-
-module.exports = PopoverPermissionsView = (function(_super) {
-  __extends(PopoverPermissionsView, _super);
-
-  function PopoverPermissionsView() {
-    this.onConfirmClicked = __bind(this.onConfirmClicked, this);
-    this.onCancelClicked = __bind(this.onCancelClicked, this);
-    this.renderPermissions = __bind(this.renderPermissions, this);
-    _ref = PopoverPermissionsView.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  PopoverPermissionsView.prototype.id = 'market-popover-view';
-
-  PopoverPermissionsView.prototype.className = 'modal';
-
-  PopoverPermissionsView.prototype.tagName = 'div';
-
-  PopoverPermissionsView.prototype.template = require('templates/popover_permissions');
-
-  PopoverPermissionsView.prototype.events = {
-    'click #cancelbtn': 'onCancelClicked',
-    'click #confirmbtn': 'onConfirmClicked'
-  };
-
-  PopoverPermissionsView.prototype.initialize = function(options) {
-    PopoverPermissionsView.__super__.initialize.apply(this, arguments);
-    this.confirmCallback = options.confirm;
-    return this.cancelCallback = options.cancel;
-  };
-
-  PopoverPermissionsView.prototype.afterRender = function() {
-    var _this = this;
-    this.model.set("permissions", "");
-    this.body = this.$(".md-body");
-    this.body.addClass('loading');
-    this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
-    this.body.find('.spinner-container').spin('medium');
-    this.model.getPermissions({
-      success: function(data) {
-        _this.body.removeClass('loading');
-        if (!_this.model.hasChanged("permissions")) {
-          return _this.confirmCallback(_this.model);
-        }
-      },
-      error: function() {
-        _this.body.removeClass('loading');
-        _this.body.addClass('error');
-        return _this.body.html(t('error connectivity issue'));
-      }
-    });
-    return this.listenTo(this.model, "change:permissions", this.renderPermissions);
-  };
-
-  PopoverPermissionsView.prototype.renderPermissions = function() {
-    var docType, permission, permissionsDiv, _ref1;
-    this.body.hide();
-    this.body.html('');
-    if (Object.keys(this.model.get("permissions")).length === 0) {
-      permissionsDiv = $("<div class='permissionsLine'> <strong>" + (t('no specific permissions needed')) + " </strong> </div>");
-      this.body.append(permissionsDiv);
-    } else {
-      _ref1 = this.model.get("permissions");
-      for (docType in _ref1) {
-        permission = _ref1[docType];
-        permissionsDiv = $("<div class='permissionsLine'> <strong> " + docType + " </strong> <p> " + permission.description + " </p> </div>");
-        this.body.append(permissionsDiv);
-      }
-    }
-    return this.body.slideDown();
-  };
-
-  PopoverPermissionsView.prototype.onCancelClicked = function() {
-    var _this = this;
-    return this.$el.slideUp(function() {
-      return _this.cancelCallback(_this.model);
-    });
-  };
-
-  PopoverPermissionsView.prototype.onConfirmClicked = function() {
-    var _this = this;
-    return this.$el.slideUp(function() {
-      return _this.confirmCallback(_this.model);
-    });
-  };
-
-  return PopoverPermissionsView;
 
 })(BaseView);
 });

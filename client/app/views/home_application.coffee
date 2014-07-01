@@ -1,6 +1,5 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
-PopoverPermissionsView = require 'views/popover_permissions'
 WidgetTemplate = require 'templates/home_application_widget'
 
 # Row displaying application name and attributes

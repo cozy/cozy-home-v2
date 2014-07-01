@@ -16,6 +16,8 @@ module.exports = class PopoverDescriptionView extends BaseView
         super
         @confirmCallback = options.confirm
         @cancelCallback = options.cancel
+        @label = if options.label? then options.label else t 'install'
+        @$("#confirmbtn").html @label
 
     afterRender: ->
         @model.set "description", ""
@@ -49,7 +51,11 @@ module.exports = class PopoverDescriptionView extends BaseView
         @header.parent().append "<p class=\"line left\"> #{description} </p>"
 
         if Object.keys(@model.get("permissions")).length is 0
-            permissionsDiv = $ "<div class='permissionsLine'> <h4>#{t('no specific permissions needed')} </h4> </div>"
+            permissionsDiv = $ """
+                <div class='permissionsLine'>
+                    <h4>#{t('no specific permissions needed')} </h4>
+                </div>
+            """
             @body.append permissionsDiv
         else
             @body.append "<h4>#{t('required permissions')}</h4>"

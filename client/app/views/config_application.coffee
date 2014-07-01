@@ -1,6 +1,6 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
-PopoverPermissionsView = require 'views/popover_permissions'
+PopoverDescriptionView = require 'views/popover_description'
 
 
 # Row displaying application name and attributes
@@ -96,21 +96,24 @@ module.exports = class ApplicationRow extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateClicked: (event) =>
-        event.preventDefault()
-        if @popover?
-            @popover.destroy()
-        @showPopover()
-
-    showPopover: () ->
-        @popover = new PopoverPermissionsView
-            model: @model
-            confirm: (application) =>
-                @popover.remove()
-                @updateApp()
-            cancel: (application) =>
-                @popover.remove()
-        @$el.append @popover.$el
-        $(window).trigger 'resize'
+        if app.mainView.marketView.isInstalling()
+            alert t 'Cannot update application while an application is installing'
+            return false
+        else
+            event.preventDefault()
+            @popover = new PopoverDescriptionView
+                model: @model
+                label: t 'update'
+                confirm: (application) =>
+                    $('#no-app-message').hide()
+                    @popover.hide()
+                    @popover.remove()
+                    @updateApp()
+                cancel: (application) =>
+                    @popover.hide()
+                    @popover.remove()
+            $("#config-applications-view").append @popover.$el
+            @popover.show()
 
     onStartStopClicked: (event) =>
         event.preventDefault()
@@ -150,9 +153,6 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
-        if app.mainView.marketView.isInstalling()
-            alert t 'Cannot update application while an application is installing'
-            return false
         Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateButton.spin 'small', '#ffffff'
@@ -175,4 +175,3 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.html t 'broken'
                 @updateButton.displayRed t "update failed"
                 Backbone.Mediator.pub 'app-state-changed', true
-
