@@ -1360,7 +1360,6 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
-  background: #f7f4f0;
   position: relative;
 }
 .application .mask,
@@ -1729,22 +1728,6 @@ body {
 .cozy-app.official:hover {
   background: #e0e8ef;
 }
-.cozy-app.fing {
-  background: #f0fcfc;
-}
-.cozy-app.fing:hover {
-  background: #dbf8f8;
-}
-.cozy-app.fing h3 {
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-}
-.cozy-app.fing .app-text p {
-  height: 80px;
-  overflow: hidden;
-}
 .title-app a.subtitle {
   display: inline-block;
   font-family: styled;
@@ -2024,8 +2007,6 @@ body {
   }
   .md-modal {
     position: fixed;
-    top: 45px;
-    left: 0;
     bottom: 0;
     width: 100%;
     height: 90%;
@@ -2190,9 +2171,6 @@ body {
   div.home-body {
     padding-top: 0;
     height: 100%;
-  }
-  .md-modal {
-    top: 0;
   }
   #home-menu .logout-menu-icon {
     display: inline;

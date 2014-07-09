@@ -20,6 +20,7 @@ module.exports = Application = americano.getModel('Application', {
     "default": Date.now
   },
   icon: String,
+  iconPath: String,
   git: String,
   errormsg: String,
   branch: String,

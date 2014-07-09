@@ -1,6 +1,5 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
-PopoverPermissionsView = require 'views/popover_permissions'
 WidgetTemplate = require 'templates/home_application_widget'
 
 # Row displaying application name and attributes
@@ -96,10 +95,18 @@ module.exports = class ApplicationRow extends BaseView
             when 'stopped'
                 @icon.hide()
                 @showSpinner()
-                @model.start success: =>
-                    @launchApp(event)
-                    @hideSpinner()
-                    @icon.show()
+                @model.start
+                    success: =>
+                        @launchApp(event)
+                        @hideSpinner()
+                        @icon.show()
+                    error: =>
+                        @hideSpinner()
+                        @icon.show()
+                        msg = 'This app cannot start.'
+                        errormsg = @model.get 'errormsg'
+                        msg += " Error was : #{errormsg}" if errormsg
+                        alert msg
 
     setUseWidget: (widget = true) =>
         widgetUrl = @model.get 'widget'

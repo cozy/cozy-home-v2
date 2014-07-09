@@ -15,7 +15,7 @@ module.exports = class ColorPickerHandler extends Backbone.View
 
         @defaultColors =
             background: '#fcf9f5'
-            button: '#f7f4f0'
+            button: 'transparent' #'#f7f4f0'
             buttonHover: '#f1e2cf'
             invertedColor: '#000'
 

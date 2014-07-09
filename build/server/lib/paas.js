@@ -50,7 +50,7 @@ exports.AppManager = (function() {
       return function(err, enoughMemory) {
         if (!enoughMemory) {
           if (err == null) {
-            err = new Error('Not enough Memory');
+            err = 'Not enough Memory';
           }
         }
         return callback.call(_this, err);
@@ -92,7 +92,7 @@ exports.AppManager = (function() {
         return _this.client.start(manifest, function(err, res, body) {
           if (!status2XX(res)) {
             if (err == null) {
-              err = new Error(body.error.message);
+              err = body.error;
             }
           }
           if (err) {

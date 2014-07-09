@@ -54,9 +54,15 @@ module.exports = class AlarmManager
 
         if alarm.rrule
             rrule = RRule.parseString alarm.rrule
-            rrule.dtstart = trigg
+
+            # we cheat here because rrule returns timezoned occurences
+            # so it returns the UTC date marked as timezoned date...
+            # this must be removed when rrule fixes the issue
+            triggCopied = new tDate alarm.trigg
+            triggCopied.setTimezone time.currentTimezone
+            rrule.dtstart = triggCopied
             occurences = new RRule(rrule).between(now, in24h)
-            occurences = occurences.map (string) ->
+            occurences = occurences.map (string) =>
                 occurence = new tDate string
                 occurence.setTimezone @timezone
                 return occurence
@@ -99,15 +105,15 @@ module.exports = class AlarmManager
                 text: "Reminder: #{alarm.description}"
                 resource: resource
 
-
-        else if alarm.action in ['EMAIL', 'BOTH']
+        if alarm.action in ['EMAIL', 'BOTH']
             data =
                 from: "Cozy Agenda <no-reply@cozycloud.cc>"
                 subject: "[Cozy-Agenda] Reminder"
                 content: "Reminder: #{alarm.description}"
 
             CozyAdapter.sendMailToUser data, (error, response) ->
-                console.info error if error?
+                if error?
+                    console.info "Error while sending email -- #{error}"
 
-        else
+        if alarm.action not in ['EMAIL', 'DISPLAY', 'BOTH']
             console.log "UNKNOWN ACTION TYPE"

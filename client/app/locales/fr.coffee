@@ -23,7 +23,6 @@ module.exports =
     "your app"                 : "Votre Application !"
     "community contribution"    : "Developpeur Indépendant"
     "official application"      : "Application Officielle"
-    "fing application"          : "Application MesInfos"
     "application description"   : "Description de l'Application"
     "downloading description"   : "Téléchargement de la description…"
     "downloading permissions"   : "Téléchargement des permissions…"
@@ -126,6 +125,7 @@ module.exports =
     "installed":"installée"
     "updated":"m.à.j"
     "updating":"m.à.j en cours"
+    "update all": "Mettre tout à jour"
     "update error":"Une erreur est survenue pendant la mise à jour"
     "start this app":"démarrer cette application"
     "stopped":"stoppée"
@@ -145,6 +145,7 @@ module.exports =
         Une fois mise à jour l'application requièra les permissions suivantes:
     """
     "confirm update":"confirmez la mise à jour"
+    "confirm install":"confirmez l'installation'"
     "no specific permissions needed":"""
         Cette applicatiion n'a pas besoin d'informations spécifiques
     """

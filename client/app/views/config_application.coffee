@@ -1,6 +1,7 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
-PopoverPermissionsView = require 'views/popover_permissions'
+PopoverDescriptionView = require 'views/popover_description'
+
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
@@ -34,6 +35,7 @@ module.exports = class ApplicationRow extends BaseView
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
 
+
     ### Listener ###
 
     # When an app document changed, the UI is updated accordingly.
@@ -63,7 +65,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'stopped'
                 @stateLabel.show().text t 'stopped'
                 @removeButton.displayGrey t 'remove'
-                @updateButton.hide()
+                @updateButton.displayGrey t 'update'
                 @appStoppable.hide()
                 @appStoppable.next().hide()
                 @startStopBtn.displayGrey t 'start this app'
@@ -94,21 +96,24 @@ module.exports = class ApplicationRow extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateClicked: (event) =>
-        event.preventDefault()
-        if @popover?
-            @popover.destroy()
-        @showPopover()
-
-    showPopover: () ->
-        @popover = new PopoverPermissionsView
-            model: @model
-            confirm: (application) =>
-                @popover.remove()
-                @updateApp()
-            cancel: (application) =>
-                @popover.remove()
-        @$el.append @popover.$el
-        $(window).trigger 'resize'
+        if app.mainView.marketView.isInstalling()
+            alert t 'Cannot update application while an application is installing'
+            return false
+        else
+            event.preventDefault()
+            @popover = new PopoverDescriptionView
+                model: @model
+                label: t 'update'
+                confirm: (application) =>
+                    $('#no-app-message').hide()
+                    @popover.hide()
+                    @popover.remove()
+                    @updateApp()
+                cancel: (application) =>
+                    @popover.hide()
+                    @popover.remove()
+            $("#config-applications-view").append @popover.$el
+            @popover.show()
 
     onStartStopClicked: (event) =>
         event.preventDefault()
@@ -131,6 +136,12 @@ module.exports = class ApplicationRow extends BaseView
                     Backbone.Mediator.pub 'app-state-changed', true
                 error: =>
                     @startStopBtn.spin false
+                    @stateLabel.html t 'stopped'
+                    Backbone.Mediator.pub 'app-state-changed', true
+                    msg = 'This app cannot start.'
+                    errormsg = @model.get 'errormsg'
+                    msg += " Error was : #{errormsg}" if errormsg
+                    alert msg
 
     remove: =>
         return super unless @model.get('state') is 'installed'
@@ -142,18 +153,23 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
-        if app.mainView.marketView.isInstalling()
-            alert t 'Cannot update application while an application is installing'
-            return false
         Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateButton.spin 'small', '#ffffff'
-        @stateLabel.html t 'updating'
+        if @model.get('state') isnt 'broken'
+            @stateLabel.html t 'updating'
+        else
+            @stateLabel.html t "installing"
         @model.updateApp
             success: =>
-                @updateButton.displayGreen t "updated"
-                @stateLabel.html t 'started'
-                Backbone.Mediator.pub 'app-state-changed', true
+                if @model.get('state') is 'installed'
+                    @updateButton.displayGreen t "updated"
+                    @stateLabel.html t 'started'
+                    Backbone.Mediator.pub 'app-state-changed', true
+                if @model.get('state') is 'stopped'
+                    @updateButton.displayGreen t "updated"
+                    @stateLabel.html t 'stopped'
+                    Backbone.Mediator.pub 'app-state-changed', true
             error: (jqXHR) =>
                 alert t 'update error'
                 @stateLabel.html t 'broken'

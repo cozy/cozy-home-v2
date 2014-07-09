@@ -424,7 +424,6 @@ body
 .application
     cursor pointer
     transition all 0.3s
-    background lightgrey
     position relative
 
     .mask
@@ -776,21 +775,6 @@ body
 .cozy-app.official:hover
     background: lightgreyblue - 5%
 
-.cozy-app.fing
-    background: lightgreyred
-    &:hover
-        background: lightgreyred - 5%
-
-    h3
-        white-space nowrap
-        overflow hidden
-        text-overflow ellipsis
-
-    .app-text p
-        height 80px
-        overflow hidden
-
-
 // Config application
 .title-app a.subtitle
     display inline-block
@@ -1029,15 +1013,12 @@ body
         overflow: auto
     .md-modal
         position: fixed
-        top: 45px
-        left: 0
         bottom: 0
         width: 100%
         height: 90%
         z-index: 2000
         visibility: hidden
         backface-visibility: hidden
-        //transform: translateX(0) translateY(0)
         margin: 0
         padding: 0
 
@@ -1219,9 +1200,6 @@ body
     div.home-body
         padding-top: 0
         height: 100%
-
-    .md-modal
-        top: 0
 
     #home-menu
         .logout-menu-icon

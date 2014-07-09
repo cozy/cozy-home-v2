@@ -1,4 +1,5 @@
 os = require 'os'
+fs = require 'fs'
 exec = require('child_process').exec
 
 ControllerClient = require("cozy-clients").ControllerClient

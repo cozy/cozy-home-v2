@@ -1,6 +1,6 @@
 {
   "name": "cozy-home",
-  "version": "1.0.22",
+  "version": "1.0.24",
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
   "licenses": [
     {
@@ -41,7 +41,8 @@
     "chai": "1.9.0",
     "coffee-script": "latest",
     "mocha": "1.17.1",
-    "request": "2.34.0"
+    "request": "2.34.0",
+    "nock": "0.29.0"
   },
   "scripts": {
     "test": "cake --use-js tests",

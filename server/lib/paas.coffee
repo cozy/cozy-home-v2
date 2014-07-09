@@ -36,7 +36,7 @@ class exports.AppManager
 
     checkMemory: (callback) ->
         @memoryManager.isEnoughMemory (err, enoughMemory) =>
-            err ?= new Error 'Not enough Memory' unless enoughMemory
+            err ?= 'Not enough Memory' unless enoughMemory
             callback.call @, err
 
 
@@ -73,7 +73,7 @@ reseting routes"
             return callback err if err
 
             @client.start manifest, (err, res, body) ->
-                err ?= new Error body.error.message unless status2XX res
+                err ?= body.error unless status2XX res
 
                 if err
                     console.log "Error spawning app: #{app.name}"
