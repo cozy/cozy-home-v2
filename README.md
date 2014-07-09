@@ -50,6 +50,7 @@ In order to run the tests, you must only have the Data System started.
 ## Icons
 
 by [iconmonstr](http://iconmonstr.com/)
+Apps icons by [Elegant Themes](http://www.elegantthemes.com/blog/freebie-of-the-week/beautiful-flat-icons-for-free).
 
 ## License
 
