@@ -140,6 +140,14 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "community contribution"
                 description: "What is the weather like in your city? Check it out within your Cozy!"
            ,
+                icon:"img/remotestorage-icon.png"
+                name:"remotestorage"
+                displayName:"Remote Storage"
+                slug:"remotestorage"
+                git:"https://github.com/aenario/cozy-remotestorage.git"
+                comment:"community contribution"
+                description:"A Remote Storage appliance to store data from your Unhosted applications."
+           ,
                 icon:"img/todos-icon.png"
                 name:"todos"
                 displayName:"Todos"
