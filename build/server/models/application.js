@@ -13,7 +13,7 @@ module.exports = Application = americano.getModel('Application', {
   state: String,
   isStoppable: {
     type: Boolean,
-    "default": false
+    "default": true
   },
   date: {
     type: Date,
