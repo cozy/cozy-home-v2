@@ -30,7 +30,7 @@ start_timeout = (name) ->
                     if app.name is name and app.isStoppable
                         console.log "stop : " + name
                         stop_app app
-    , 900000
+    , 180000
 
 module.exports.restartTimeout = (name) ->
     if applicationTimeout[name]?
