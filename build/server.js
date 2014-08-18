@@ -7,13 +7,14 @@ process.on('uncaughtException', function(err) {
 });
 
 application = module.exports = function(callback) {
-  var americano, initProxy, options, request, setupChecking, setupRealtime, versionChecking;
+  var americano, autoStop, initProxy, options, request, setupChecking, setupRealtime, versionChecking;
   americano = require('americano');
   request = require('request-json');
   initProxy = require('./server/initializers/proxy');
   setupRealtime = require('./server/initializers/realtime');
   setupChecking = require('./server/initializers/checking');
   versionChecking = require('./server/initializers/updates');
+  autoStop = require('./server/lib/autostop');
   options = {
     name: 'Cozy Home',
     port: process.env.PORT || 9103,
@@ -28,6 +29,7 @@ application = module.exports = function(callback) {
     return setupRealtime(app, function() {
       setupChecking();
       versionChecking();
+      autoStop.init();
       if (callback != null) {
         return callback(app, server);
       }

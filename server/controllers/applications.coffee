@@ -7,6 +7,7 @@ log = require('printit')
 Application = require '../models/application'
 {AppManager} = require '../lib/paas'
 {Manifest} = require '../lib/manifest'
+autostop = require '../lib/autostop'
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -189,6 +190,7 @@ module.exports =
                     homeposition: req.body.homeposition or app.homeposition
                     isStoppable: Stoppable
                 app.updateAttributes changes, (err, app) ->
+                    autostop.restartTimeout app.name
                     return sendError res, err if err
                     res.send app
 
