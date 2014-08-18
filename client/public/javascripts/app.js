@@ -1891,7 +1891,12 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span>');
+buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+if ( app.version)
+{
+buf.push('<span>&nbsp;-&nbsp;</span><span>.' + escape((interp = app.version) == null ? '' : interp) + '</span>');
+}
+buf.push('<span>&nbsp;-&nbsp;</span>');
 if ( app.state === 'installed')
 {
 buf.push('<span class="state-label">');
