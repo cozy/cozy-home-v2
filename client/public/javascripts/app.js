@@ -2009,7 +2009,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
 var __val__ = t('Register and post on our forum: ')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud"> \ngroups.google.com/forum/?fromgroups#!forum/cozy-cloud</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"> <a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
 var __val__ = t('Ask your question on Twitter: ')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
