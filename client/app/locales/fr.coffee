@@ -96,7 +96,7 @@ module.exports =
     """
     "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous."
     "your timezone is required":"""
-        Votre timezone est requise pour vous afficher les dates correctements.
+        Votre fuseau horaire est requis pour vous afficher les dates correctement.
     """
     "domain name for urls and email":"""
         Le nom de domaine est utilisé pour construire les urls
@@ -142,7 +142,7 @@ module.exports =
     "cancel":"cancel"
     "abort":"abort"
     "Once updated, this application will require the following permissions:": """
-        Une fois mise à jour l'application requièra les permissions suivantes:
+        Une fois mise à jour l'application requerra les permissions suivantes:
     """
     "confirm update":"confirmez la mise à jour"
     "confirm install":"confirmez l'installation'"
@@ -177,5 +177,5 @@ module.exports =
     """
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
-    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées..."
+    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données..."
     "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
