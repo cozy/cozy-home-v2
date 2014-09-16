@@ -71,6 +71,6 @@ profiles you.
 You can reach the Cozy Community by:
 
 * Chatting with us on IRC #cozycloud on irc.freenode.net
-* Posting on our [Forum](https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud)
-* Posting issues on the [Github repos](https://github.com/mycozycloud/)
+* Posting on our [Forum](https://forum.cozy.io/)
+* Posting issues on the [Github repos](https://github.com/cozy/)
 * Mentioning us on [Twitter](http://twitter.com/mycozycloud)

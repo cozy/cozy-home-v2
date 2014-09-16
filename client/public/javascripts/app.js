@@ -1244,7 +1244,7 @@ module.exports = {
   "your parameters": " Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
   "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
-  "your timezone is required": "Votre timezone est requise pour vous afficher les dates correctements.",
+  "your timezone is required": "Votre fuseau horaire est requis pour vous afficher les dates correctement.",
   "domain name for urls and email": "Le nom de domaine est utilisé pour construire les urls\nenvoyées par mail à vos contacts.",
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
   "french": "Français",
@@ -1279,7 +1279,7 @@ module.exports = {
   "changing locale requires reload": "Le changement de langue nécessite le rechargement de la page.",
   "cancel": "cancel",
   "abort": "abort",
-  "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requièra les permissions suivantes:",
+  "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requerra les permissions suivantes:",
   "confirm update": "confirmez la mise à jour",
   "confirm install": "confirmez l'installation'",
   "no specific permissions needed": "Cette applicatiion n'a pas besoin d'informations spécifiques",
@@ -1301,7 +1301,7 @@ module.exports = {
   "change layout": "Modifier la disposition",
   "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créé ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs.",
   "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
-  "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des doonnées...",
+  "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données...",
   "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 };
 });
@@ -2014,7 +2014,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
 var __val__ = t('Register and post on our forum: ')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="https://groups.google.com/forum/?fromgroups#!forum/cozy-cloud"> \ngroups.google.com/forum/?fromgroups#!forum/cozy-cloud</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"> <a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
 var __val__ = t('Ask your question on Twitter: ')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
