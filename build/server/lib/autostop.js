@@ -74,7 +74,7 @@ startTimeout = function(name) {
         _results = [];
         for (_i = 0, _len = apps.length; _i < _len; _i++) {
           app = apps[_i];
-          if (app.name === name && app.isStoppable) {
+          if (app.name === name && app.isStoppable && app.state === "installed") {
             console.log("stop : " + name);
             _results.push(stopApp(app));
           } else {

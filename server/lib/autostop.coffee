@@ -42,9 +42,11 @@ startTimeout = (name) ->
         if name isnt "home" and name isnt "proxy"
             Application.all (err, apps) ->
                 for app in apps
-                    if app.name is name and app.isStoppable
-                        console.log "stop : " + name
-                        stopApp app
+                    if app.name is name and 
+                        app.isStoppable and 
+                        app.state is "installed"
+                            console.log "stop : " + name
+                            stopApp app
     , 3 * 60 * 1000
 
 ###
