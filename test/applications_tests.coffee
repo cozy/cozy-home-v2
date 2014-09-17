@@ -18,13 +18,13 @@ TESTAPPBRANCH =
 
 # reset the last calls for servers
 resetTestServers = ->
-    @haibu.reset()
+    @controller.reset()
     @proxy.reset()
 
 #initiate fake servers
 startTestServers = ->
-    @haibu = helpers.fakeServer { drone: { port: 8001 } }, 200
-    @haibu.listen 9002
+    @controller = helpers.fakeServer { drone: { port: 8001 } }, 200
+    @controller.listen 9002
 
     @proxy = helpers.fakeServer msg: "ok", 200
     @proxy.listen 9104
@@ -33,7 +33,7 @@ startTestServers = ->
     @fakeApp.listen 8003
 
 stopTestServers = ->
-    @haibu.close()
+    @controller.close()
     @proxy.close()
     @fakeApp.close()
 
@@ -81,13 +81,13 @@ describe "Applications management", ->
             it "After some time, ...", (done) ->
                 setTimeout done, 1000
 
-            it "And haibu have been requested to install this app", ->
-                request = @haibu.lastCall().request
+            it "And controller have been requested to install this app", ->
+                request = @controller.lastCall().request
 
                 request.url.should.equal "/drones/my-app/start"
                 request.method.should.equal "POST"
 
-                body = @haibu.lastCall().body
+                body = @controller.lastCall().body
                 should.exist body.start.user
                 should.exist body.start.name
                 should.exist body.start.repository
@@ -117,8 +117,8 @@ describe "Applications management", ->
             it "After some time, ...", (done) ->
                 setTimeout done, 1000
 
-            it "And haibu have been requested with correct branch", ->
-                body = @haibu.lastCall().body
+            it "And controller have been requested with correct branch", ->
+                body = @controller.lastCall().body
                 body.start.repository.branch.should.equal "mybranch"
 
             it "When I send a request to retrieve all applications", (done) ->
@@ -170,8 +170,8 @@ describe "Applications management", ->
                 expect(@body.success).to.be.ok
                 expect(@body.app.state).to.equal 'stopped'
 
-            it "And haibu have been requested to stop this app", ->
-                request = @haibu.lastCall().request
+            it "And controller have been requested to stop this app", ->
+                request = @controller.lastCall().request
                 request.url.should.equal "/drones/my-app/stop"
                 request.method.should.equal "POST"
 
@@ -192,13 +192,43 @@ describe "Applications management", ->
                 expect(@body.success).to.be.ok
                 expect(@body.app.state).to.equal 'installed'
 
-            it "And haibu have been requested to start this app", ->
-                request = @haibu.lastCall().request
+            it "And controller have been requested to start this app", ->
+                request = @controller.lastCall().request
                 request.url.should.equal "/drones/my-app/start"
                 request.method.should.equal "POST"
 
             it "And the proxy have been requested to update its routes", ->
-                @proxy.lastCall().request.url.should.equal "/routes/reset"
+                @proxy.lastCall().request.url.should.equal "/routes/reset"    
+
+
+    ###describe "Application auto stop", ->
+
+        before resetTestServers
+
+        describe "POST /api/applications/:slug/start Start an app", ->
+
+            it "When I send a request to stop an application", (done) ->
+                @client.post "api/applications/my-app/start", {}, done
+
+            it "Then it sends me a success response with the updated app", ->
+                @response.statusCode.should.equal 200
+                expect(@body.success).to.be.ok
+                expect(@body.app.state).to.equal 'installed'
+
+            it "And I wait 3 minutes", (done) ->
+                @timeout(3.2 * 60 * 1000)
+                setTimeout () ->
+                    done()
+                , 3.1 * 60 * 1000
+
+            it "And controller have been requested to stop this app", ->
+                request = @controller.lastCall().request
+                request.url.should.equal "/drones/my-app/stop"
+                request.method.should.equal "POST"
+
+            it "And the proxy have been requested to update its routes", ->
+                @proxy.lastCall().request.url.should.equal "/routes/reset"  ###
+
 
     describe "Application uninstallation", ->
 
@@ -213,8 +243,8 @@ describe "Applications management", ->
                 @response.statusCode.should.equal 200
                 expect(@body.success).to.be.ok
 
-            it "And haibu have been requested to clean this app", ->
-                request = @haibu.lastCall().request
+            it "And controller have been requested to clean this app", ->
+                request = @controller.lastCall().request
                 request.url.should.equal "/drones/my-app/clean"
                 request.method.should.equal "POST"
 

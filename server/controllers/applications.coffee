@@ -7,6 +7,7 @@ log = require('printit')
 Application = require '../models/application'
 {AppManager} = require '../lib/paas'
 {Manifest} = require '../lib/manifest'
+autostop = require '../lib/autostop'
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -61,22 +62,34 @@ randomString = (length) ->
         string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
+recoverIconPath = (root, appli) ->
+    if appli.iconPath?
+        return root + appli.iconPath
+    else
+         return root + "client/app/assets/icons/main_icon.png"
+
 # Save an app's icon in the DS
 saveIcon = (appli, callback = ->) ->
     if appli?
         git = (appli.git.split('/')[4]).replace('.git', '')
         name = appli.name.toLowerCase()
+        # Old controller 
         root = "/usr/local/cozy/apps/#{name}/#{name}/#{git}/"
-        if appli.iconPath?
-            icon = root + appli.iconPath
-        else
-            icon = root + "client/app/assets/icons/main_icon.png"
+        icon = recoverIconPath root, appli
         if fs.existsSync icon
             appli.attachFile icon, name: 'icon.png', (err) ->
                 return callback err if err
                 callback null
         else
-            callback new Error "Icon not found"
+            # New controller
+            root = "/usr/local/cozy/apps/#{name}/#{git}/"
+            icon = recoverIconPath root, appli
+            if fs.existsSync icon
+                appli.attachFile icon, name: 'icon.png', (err) ->
+                    return callback err if err
+                    callback null
+            else
+                callback new Error "Icon not found"
     else
         callback new Error 'Appli cannot be reached'
 
@@ -189,6 +202,7 @@ module.exports =
                     homeposition: req.body.homeposition or app.homeposition
                     isStoppable: Stoppable
                 app.updateAttributes changes, (err, app) ->
+                    autostop.restartTimeout app.name
                     return sendError res, err if err
                     res.send app
 

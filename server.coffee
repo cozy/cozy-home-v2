@@ -9,6 +9,7 @@ application = module.exports = (callback) ->
     setupRealtime = require './server/initializers/realtime'
     setupChecking = require './server/initializers/checking'
     versionChecking = require './server/initializers/updates'
+    autoStop = require './server/lib/autostop'
 
     options =
         name: 'Cozy Home'
@@ -25,6 +26,7 @@ application = module.exports = (callback) ->
         setupRealtime app, ->
             setupChecking()
             versionChecking()
+            autoStop.init()
             callback app, server if callback?
 
 if not module.parent
