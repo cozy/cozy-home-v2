@@ -1894,7 +1894,7 @@ var interp;
 buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
-buf.push('<span>&nbsp;-&nbsp;</span><span>.' + escape((interp = app.version) == null ? '' : interp) + '</span>');
+buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
 }
 buf.push('<span>&nbsp;-&nbsp;</span>');
 if ( app.state === 'installed')
