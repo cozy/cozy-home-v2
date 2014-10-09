@@ -274,6 +274,22 @@ module.exports = ApplicationCollection = (function(_super) {
         git: "https://github.com/jsilvestre/tasky.git",
         comment: "community contribution",
         description: "Super fast and simple tag-based task manager."
+      }, {
+        icon: "img/kresus-icon.png",
+        name: "kresus",
+        displayName: "Kresus",
+        slug: "kresus",
+        git: "https://github.com/bnjbvr/kresus.git",
+        comment: "community contribution",
+        description: "Kresus' Personal Finance Manager."
+      }, {
+        icon: "img/term-icon.png",
+        name: "term",
+        displayName: "Term",
+        slug: "term",
+        git: "https://github.com/alpha14/cozy-term.git",
+        comment: "community contribution",
+        description: "A terminal for your cozy."
       }
     ];
     return this.reset(apps);
