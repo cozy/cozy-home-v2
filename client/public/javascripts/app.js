@@ -1137,6 +1137,7 @@ module.exports = {
   "Write an email to our support team at:": "Write an email to our support team at:",
   "Register and post on our forum: ": "Register and post on our forum: ",
   "Ask your question on Twitter: ": "Ask your question on Twitter: ",
+  "Chat with us on IRC:": "Chat with us on IRC:",
   "Visit the project website and learn to build your app:": "Visit the project website and learn to build your app:",
   "your own application": "your own application",
   "installed": "installed",
@@ -1275,6 +1276,7 @@ module.exports = {
   "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
   "Register and post on our forum: ": "Postez un message sur notre forum : ",
   "Ask your question on Twitter: ": "Posez votre question sur Twitter : ",
+  "Chat with us on IRC:": "Discutez avec nous sur IRC :",
   "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
   "your own application": "votre propre application",
   "broken": "cassée",
@@ -1415,6 +1417,7 @@ module.exports = {
   "Write an email to our support team at:": "Escreve um e-mail á equipa de suporte:",
   "Register and post on our forum: ": "Regista-te no nosso fórum: ",
   "Ask your question on Twitter: ": "Pergunta-nos no Twitter: ",
+  "Chat with us on IRC:": "Chat with us on IRC:",
   "Visit the project website and learn to build your app:": "Visita o site do projecto para aprenderes a fazer a tua aplicação:",
   "your own application": "a tua aplicação",
   "installed": "instalada",
@@ -2034,9 +2037,12 @@ buf.push('</p><P class="help-text"> <a href="https://forum.cozy.io">forum.cozy.i
 var __val__ = t('Ask your question on Twitter: ')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
+var __val__ = t('Chat with us on IRC:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"> <a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P><p class="help-text">');
 var __val__ = t('Visit the project website and learn to build your app:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="http://cozy.io">cozy.io</a></P></div></div>');
+buf.push('</p><P class="help-text"> <a href="https://cozy.io">cozy.io</a></P></div></div>');
 }
 return buf.join("");
 };
