@@ -108,7 +108,7 @@ module.exports =
     "Write an email to our support team at:":"Escreve um e-mail á equipa de suporte:"
     "Register and post on our forum: ":"Regista-te no nosso fórum: "
     "Ask your question on Twitter: ":"Pergunta-nos no Twitter: "
-    "Chat with us on IRC:":"Chat with us on IRC:"
+    "Chat with us on IRC:":"Chat with us on IRC :"
     "Visit the project website and learn to build your app:":"Visita o site do projecto para aprenderes a fazer a tua aplicação:"
     "your own application":"a tua aplicação"
     "installed":"instalada"
