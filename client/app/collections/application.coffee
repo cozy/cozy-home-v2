@@ -156,6 +156,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"community contribution"
                 description:"Write your tasks, order them and execute them efficiently."
            ,
+
                 icon:"img/tasky-icon.png"
                 name:"tasky"
                 displayName:"Tasky"
@@ -163,6 +164,22 @@ module.exports = class ApplicationCollection extends BaseCollection
                 git:"https://github.com/jsilvestre/tasky.git"
                 comment:"community contribution"
                 description:"Super fast and simple tag-based task manager."
+           ,
+                icon:"img/kresus-icon.png"
+                name:"kresus"
+                displayName:"Kresus"
+                slug:"kresus"
+                git:"https://github.com/bnjbvr/kresus.git"
+                comment:"community contribution"
+                description:"Kresus' Personal Finance Manager."
+           ,
+                icon:"img/term-icon.png"
+                name:"term"
+                displayName:"Term"
+                slug:"term"
+                git:"https://github.com/alpha14/cozy-term.git"
+                comment:"community contribution"
+                description:"A terminal for your cozy."
         ]
 
         @reset apps
