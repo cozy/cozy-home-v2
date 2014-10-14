@@ -8,8 +8,7 @@ client = request.newClient 'http://localhost:9104/'
 getAuthController = ->
     if process.env.NODE_ENV is 'production'
         try
-            token = fs.readFileSync '/etc/cozy/controller.token', 'utf8'
-            token = token.split('\n')[0]
+            token = process.env.TOKEN
             return token
         catch err
             console.log err.message
