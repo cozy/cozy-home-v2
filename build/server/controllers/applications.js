@@ -107,7 +107,7 @@ saveIcon = function(appli, callback) {
         return callback(null);
       });
     } else {
-      root = "/usr/local/cozy/apps/" + name + "/" + git + "/";
+      root = "/usr/local/cozy/apps/" + name + "/";
       icon = recoverIconPath(root, appli);
       if (fs.existsSync(icon)) {
         return appli.attachFile(icon, {

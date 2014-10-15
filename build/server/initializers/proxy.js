@@ -15,8 +15,7 @@ getAuthController = function() {
   var err, token;
   if (process.env.NODE_ENV === 'production') {
     try {
-      token = fs.readFileSync('/etc/cozy/controller.token', 'utf8');
-      token = token.split('\n')[0];
+      token = process.env.TOKEN;
       return token;
     } catch (_error) {
       err = _error;

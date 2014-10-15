@@ -73,7 +73,7 @@ saveIcon = (appli, callback = ->) ->
     if appli?
         git = (appli.git.split('/')[4]).replace('.git', '')
         name = appli.name.toLowerCase()
-        # Old controller 
+        # Old controller
         root = "/usr/local/cozy/apps/#{name}/#{name}/#{git}/"
         icon = recoverIconPath root, appli
         if fs.existsSync icon
@@ -82,7 +82,7 @@ saveIcon = (appli, callback = ->) ->
                 callback null
         else
             # New controller
-            root = "/usr/local/cozy/apps/#{name}/#{git}/"
+            root = "/usr/local/cozy/apps/#{name}/"
             icon = recoverIconPath root, appli
             if fs.existsSync icon
                 appli.attachFile icon, name: 'icon.png', (err) ->
