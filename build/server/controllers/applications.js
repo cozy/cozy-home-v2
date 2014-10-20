@@ -392,7 +392,7 @@ module.exports = {
         }
         return manager.resetProxy(function(err) {
           if (err) {
-            return sendError(res, proxyErr);
+            return sendError(res, err);
           }
           return res.send({
             success: true,

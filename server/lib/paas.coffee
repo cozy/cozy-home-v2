@@ -109,14 +109,16 @@ reseting routes"
             console.info "Request controller for cleaning #{app.name}..."
 
             @client.clean manifest, (err, res, body) =>
-                err ?= new Error body.error.message unless status2XX res
-
-                if err
+                err ?= body.error unless status2XX res
+                if err and err.indexOf('application not installed') is -1
+                    err = new Error err
                     console.log "Error cleaning app: #{app.name}"
                     console.log err.message
                     console.log err.stack
                     callback err
                 else
+                    if err
+                        console.log "[Warning] #{err}"
                     console.info "Successfully cleaning app: #{app.name}"
                     callback null
         else
@@ -151,13 +153,15 @@ reseting routes"
         console.info "Request controller for stopping #{app.name}..."
 
         @client.stop app.slug, (err,res, body) =>
-            err ?= new Error body.error.message unless status2XX res
-
-            if err
+            err ?= body.error unless status2XX res
+            if err and err.indexOf('application not started') is -1
+                err = new Error err
                 console.log "Error stopping app: #{app.name}"
                 console.log err.message
                 console.log err.stack
                 callback err
             else
+                if err
+                    console.log "[Warning] #{err}"
                 console.info "Successfully stopping app: #{app.name}"
                 callback null

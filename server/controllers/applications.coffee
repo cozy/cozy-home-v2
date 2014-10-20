@@ -285,7 +285,7 @@ module.exports =
                 return sendError res, err if err
 
                 manager.resetProxy (err) ->
-                    return sendError res, proxyErr if err
+                    return sendError res, err if err
 
                     res.send
                         success: true
@@ -310,7 +310,7 @@ module.exports =
     # * haibu, application manager
     # * proxy, cozy router
     # * database
-    updateAll: (req, res, next) ->   
+    updateAll: (req, res, next) ->
 
         broken = (app, err) ->
             console.log "Marking app #{app.name} as broken because"
@@ -330,7 +330,7 @@ module.exports =
                 if app.needsUpdate? and app.needsUpdate
                     switch app.state
                         when "installed", "stopped"
-                            # Update application 
+                            # Update application
                             console.log("Update #{app.name} (#{app.state})")
                             updateApp app, (err) =>
                                 broken app, err if err
