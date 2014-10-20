@@ -143,15 +143,19 @@ exports.AppManager = (function() {
         return function(err, res, body) {
           if (!status2XX(res)) {
             if (err == null) {
-              err = new Error(body.error.message);
+              err = body.error;
             }
           }
-          if (err) {
+          if (err && err.indexOf('application not installed') === -1) {
+            err = new Error(err);
             console.log("Error cleaning app: " + app.name);
             console.log(err.message);
             console.log(err.stack);
             return callback(err);
           } else {
+            if (err) {
+              console.log("[Warning] " + err);
+            }
             console.info("Successfully cleaning app: " + app.name);
             return callback(null);
           }
@@ -203,15 +207,19 @@ exports.AppManager = (function() {
       return function(err, res, body) {
         if (!status2XX(res)) {
           if (err == null) {
-            err = new Error(body.error.message);
+            err = body.error;
           }
         }
-        if (err) {
+        if (err && err.indexOf('application not started') === -1) {
+          err = new Error(err);
           console.log("Error stopping app: " + app.name);
           console.log(err.message);
           console.log(err.stack);
           return callback(err);
         } else {
+          if (err) {
+            console.log("[Warning] " + err);
+          }
           console.info("Successfully stopping app: " + app.name);
           return callback(null);
         }
