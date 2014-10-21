@@ -15,7 +15,6 @@ Alarm = require "#{helpers.prefix}server/models/alarm"
 CozyInstance = require "#{helpers.prefix}server/models/cozyinstance"
 Notification = require "#{helpers.prefix}server/models/notification"
 User = require "#{helpers.prefix}server/models/user"
-time = require 'time'
 
 process.env.NAME = "home"
 process.env.TOKEN = "token"

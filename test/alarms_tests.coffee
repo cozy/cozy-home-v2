@@ -1,5 +1,6 @@
-time = require 'time'
 should = require('chai').Should()
+sinon = require 'sinon'
+moment = require 'moment-timezone'
 helpers = require './helpers'
 
 Alarm = require "#{helpers.prefix}server/models/alarm"
@@ -8,7 +9,7 @@ TESTPORT = 8889
 TESTMAIL = 'test@test.com'
 TESTPASS = 'password'
 
-describe 'Alarm manager handles alarms', ->
+describe.only 'Alarm manager handles alarms', ->
 
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.setup TESTPORT
@@ -18,56 +19,65 @@ describe 'Alarm manager handles alarms', ->
 
     before helpers.wait 2000
     before ->
-        @counter = 0
-        # console.log @app
-        @noConflictHN = @app.alarmManager.handleNotification
-        @app.alarmManager.handleNotification = =>
-            @counter = @counter + 1
-    after ->
-        @app.alarmManager.handleNotification = @noConflictHN
+        @sandbox = sinon.sandbox.create()
+        @sandbox.useFakeTimers moment().unix(), 'setTimeout'
+        @spy = @sandbox.spy @app.alarmManager, 'handleNotification'
+
+    after -> @sandbox.restore()
+
     after helpers.takeDown
 
 
     it "When I create 3 Alarms", (done) ->
 
-        now = new time.Date()
-        oneDay = 24*60*60*1000
-        date = new time.Date now.getTime() + 2000, 'America/Bogota'
-        date.setTimezone 'UTC'
-        alarm1 = new Alarm
-            action: 'DISPLAY'
-            trigg: date.toString().slice(0, 24)
-            description: 'alarm1'
-            timezone: 'America/Bogota'
+        now = moment().tz 'UTC'
 
-        date = new time.Date now.getTime() + 2500 - oneDay, 'Europe/Paris'
-        date.setTimezone 'UTC'
-        alarm2 = new Alarm
+        date = moment(now).add 5, 's'
+        @alarm1 = new Alarm
+            action: 'DISPLAY'
+            trigg: date.format()
+            description: 'alarm1'
+            timezone: 'Europe/Moscow'
+
+        date = moment(now).subtract 1, 'd'
+        @alarm2 = new Alarm
             action: 'EMAIL'
-            trigg: date.toString().slice(0, 24)
+            trigg: date.format()
             rrule: 'FREQ=DAILY'
             description: 'alarm2'
             timezone: 'Europe/Paris'
 
-        date = new time.Date now.getTime() + 3000, 'Europe/Paris'
-        date.setTimezone 'UTC'
-        alarm3 = new Alarm
+        date = moment(now).add 10, 's'
+        @alarm3 = new Alarm
             action: 'BOTH'
-            trigg: date.toString().slice(0, 24)
+            trigg: date.format()
             description: 'alarm3'
             timezone: 'Europe/Paris'
 
-        alarm1.save (err) ->
+        @alarm1.save (err) =>
             return done err if err
-            alarm2.save (err) ->
+            @alarm2.save (err) =>
                 return done err if err
-                alarm3.save done
+                @alarm3.save done
 
+    it "handleNotification shouldn't have been called", ->
+        @spy.callCount.should.equal 0
 
-    it "Then I wait 20s", (done) ->
-        @timeout 22000
-        setTimeout done, 20 * 1000
+    it "Then I wait for 6s", ->
+        @sandbox.clock.tick 6000
 
-    it "And handleNotification has been called 3 times", ->
-        @counter.should.equal 3
+    it "And handleNotification should have been called once with the 1st alarm", ->
+        @spy.callCount.should.equal 1
+        alarm = @spy.firstCall.args[0]
+        should.exist alarm
+        alarm.description.should.equal @alarm1.description
+
+    it "Then I wait 15 more second", ->
+        @sandbox.clock.tick 15000
+
+    it "And handleNotification has been called a second time with the 3rd alarm", ->
+        @spy.callCount.should.equal 2
+        alarm = @spy.secondCall.args[0]
+        should.exist alarm
+        alarm.description.should.equal @alarm3.description
 
