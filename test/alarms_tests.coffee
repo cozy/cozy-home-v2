@@ -9,7 +9,7 @@ TESTPORT = 8889
 TESTMAIL = 'test@test.com'
 TESTPASS = 'password'
 
-describe.only 'Alarm manager handles alarms', ->
+describe 'Alarm manager handles alarms', ->
 
     before helpers.createUser TESTMAIL, TESTPASS
     before helpers.setup TESTPORT
