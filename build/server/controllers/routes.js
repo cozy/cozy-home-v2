@@ -52,6 +52,9 @@ module.exports = {
   'api/applications/update/all': {
     put: applications.updateAll
   },
+  'api/applications/update/stack': {
+    put: applications.updateStack
+  },
   'api/devices': {
     get: devices.devices
   },

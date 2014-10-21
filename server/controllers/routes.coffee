@@ -22,6 +22,7 @@ module.exports =
     'api/applications/:slug/uninstall': del: applications.uninstall
     'api/applications/:slug/update': put: applications.update
     'api/applications/update/all': put: applications.updateAll
+    'api/applications/update/stack': put: applications.updateStack
 
 
     'api/devices': get: devices.devices

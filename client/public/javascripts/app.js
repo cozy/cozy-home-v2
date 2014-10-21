@@ -1615,6 +1615,11 @@ module.exports = Application = (function(_super) {
     return client.put("/api/applications/update/all", {}, callbacks);
   };
 
+  Application.prototype.updateStack = function(callbacks) {
+    this.prepareCallbacks(callbacks);
+    return client.put("/api/applications/update/stack", {}, callbacks);
+  };
+
   return Application;
 
 })(Backbone.Model);
@@ -1982,6 +1987,9 @@ var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><button class="btn update-all">');
 var __val__ = t('update all')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button class="btn update-stack">');
+var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div></div></div>');
 }
@@ -2940,7 +2948,8 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.events = {
-    "click .update-all": "onUpdateClicked"
+    "click .update-all": "onUpdateClicked",
+    "click .update-stack": "onUpdateStackClicked"
   };
 
   function ConfigApplicationsView(apps, devices) {
@@ -2956,6 +2965,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.memoryFree = this.$('.memory-free');
     this.diskSpace = this.$('.disk-space');
     this.updateBtn = new ColorButton(this.$('.update-all'));
+    this.updateStackBtn = new ColorButton(this.$('.update-stack'));
     this.fetch();
     this.applicationList = new ConfigApplicationList(this.apps);
     this.deviceList = new ConfigDeviceList(this.devices);
@@ -3011,6 +3021,21 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
       error: function() {
         _this.updateBtn.displayGreen(t("error during updating"));
         return Backbone.Mediator.pub('app-state-changed', true);
+      }
+    });
+  };
+
+  ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
+    var _this = this;
+    console.log("onUpdateStackClicked");
+    this.updateStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.updateStackBtn.spin(true, '#ffffff');
+    return this.applications.updateStack({
+      success: function() {
+        return _this.updateStackBtn.displayGreen(t("update stack"));
+      },
+      error: function() {
+        return _this.updateStackBtn.displayGreen(t("error during updating"));
       }
     });
   };

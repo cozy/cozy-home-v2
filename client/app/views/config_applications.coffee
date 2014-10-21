@@ -15,6 +15,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
 
     events:
         "click .update-all"        : "onUpdateClicked"
+        "click .update-stack"      : "onUpdateStackClicked"
 
     constructor: (@apps, @devices) ->
         @listenTo @devices, 'reset', @displayDevices
@@ -24,6 +25,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @memoryFree = @$ '.memory-free'
         @diskSpace = @$ '.disk-space'
         @updateBtn = new ColorButton  @$ '.update-all'
+        @updateStackBtn = new ColorButton  @$ '.update-stack'
         @fetch()
         @applicationList = new ConfigApplicationList @apps
         @deviceList = new ConfigDeviceList @devices
@@ -69,3 +71,13 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
             error: =>
                 @updateBtn.displayGreen t "error during updating"
                 Backbone.Mediator.pub 'app-state-changed', true
+
+    onUpdateStackClicked: ->
+        console.log "onUpdateStackClicked"
+        @updateStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @updateStackBtn.spin true, '#ffffff'
+        @applications.updateStack
+            success: =>
+                @updateStackBtn.displayGreen t "update stack"
+            error: =>
+                @updateStackBtn.displayGreen t "error during updating"

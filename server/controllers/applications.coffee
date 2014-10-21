@@ -433,3 +433,8 @@ module.exports =
                         success: true
                         msg: 'Application stopped'
                         app: req.application
+
+    updateStack: (req, res, next) ->
+        exec 'cozy-monitor update-cozy-stack', (err) ->
+            return sendError res, err if err
+
