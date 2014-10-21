@@ -1,6 +1,7 @@
 request = require("request-json")
 fs = require('fs')
 slugify = require 'cozy-slug'
+exec = require('child_process').exec
 log = require('printit')
     prefix: "applications"
 
