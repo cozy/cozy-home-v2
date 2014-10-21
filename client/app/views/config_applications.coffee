@@ -17,8 +17,9 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         "click .update-all"        : "onUpdateClicked"
         "click .update-stack"      : "onUpdateStackClicked"
 
-    constructor: (@apps, @devices) ->
+    constructor: (@apps, @devices, @stackApps) ->
         @listenTo @devices, 'reset', @displayDevices
+        @listenTo @stackApps, 'reset', @displayStackVersion
         super()
 
     afterRender: ->
@@ -32,6 +33,9 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
 
+    displayStackVersion: =>
+        for app in @stackApps.models
+            @$(".#{app.get 'name'}").html app.get 'version'
 
     displayDevices: =>
         if not(@devices.length is 0)
@@ -73,7 +77,6 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateStackClicked: ->
-        console.log "onUpdateStackClicked"
         @updateStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateStackBtn.spin true, '#ffffff'
         @applications.updateStack

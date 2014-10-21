@@ -436,6 +436,6 @@ module.exports =
                         app: req.application
 
     updateStack: (req, res, next) ->
-        exec "cozy-monitor update-cozy-stack #{process.env.TOKEN}", (err) ->
+        exec "cozy-monitor update-all-cozy-stack #{process.env.TOKEN}", (err) ->
             return sendError res, err if err
 

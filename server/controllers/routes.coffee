@@ -1,6 +1,7 @@
 monitor = require './monitor'
 account = require './account'
 applications = require './applications'
+stackApplications = require './stack_application'
 devices = require './devices'
 notifications = require './notifications'
 
@@ -22,7 +23,9 @@ module.exports =
     'api/applications/:slug/uninstall': del: applications.uninstall
     'api/applications/:slug/update': put: applications.update
     'api/applications/update/all': put: applications.updateAll
-    'api/applications/update/stack': put: applications.updateStack
+
+    'api/applications/stack': get: stackApplications.get
+    'api/applications/update/stack': put: stackApplications.update
 
 
     'api/devices': get: devices.devices

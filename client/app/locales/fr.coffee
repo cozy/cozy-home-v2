@@ -127,6 +127,7 @@ module.exports =
     "updated":"m.à.j"
     "updating":"m.à.j en cours"
     "update all": "Mettre tout à jour"
+    "update stack": "Mettre à jour la plate forme cozy"
     "update error":"Une erreur est survenue pendant la mise à jour"
     "start this app":"démarrer cette application"
     "stopped":"stoppée"

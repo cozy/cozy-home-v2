@@ -816,6 +816,9 @@ body
     .buttons
         display: none
 
+    .img
+        width: 72px
+
 .config-application:hover
     .buttons
         display: inline-block
@@ -1123,20 +1126,33 @@ body
                 display: block
 
 
-        .change-layout, .disk-space, .memory-free
+        .change-layout, .disk-space, .memory-free, .stack-app
             img
                 width 32px
                 margin 0px
                 margin-right 5px
+
         .sys-infos .line
             display inline-block
             clear none
+
         .sys-infos div
             // clear both
             // height 37px
             margin-top 5px
+
+        .platform .line
+            img
+                width 32px
+                margin 0px
+                margin-right 5px
+
         h4
             margin-bottom 20px
+
+        .stack-app .app
+            font-weight: bold
+
 
 @media (max-width: 640px)
 
@@ -1268,3 +1284,7 @@ body
 
                 span
                     display: none
+
+span.app
+    font-weight: bold
+
