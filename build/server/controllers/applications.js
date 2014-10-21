@@ -567,7 +567,7 @@ module.exports = {
     });
   },
   updateStack: function(req, res, next) {
-    return exec('cozy-monitor update-cozy-stack', function(err) {
+    return exec("cozy-monitor update-cozy-stack " + process.env.TOKEN, function(err) {
       if (err) {
         return sendError(res, err);
       }
