@@ -30,16 +30,6 @@ module.exports =
             else res.send rows: apps
 
     update: (req, res, next) ->
-        updateStack = spawn 'cozy-monitor', ['update-all-cozy-stack',  process.env.TOKEN], 'detached':true
+        updateStack = spawn 'cozy-monitor', ['update-all-cozy-stack',  process.env.TOKEN], {'detached':true, 'stdio': ['ignore', 'ignore', 'ignore']}
 
-        updateStack.on 'close', (code)->
-            return sendError res, err if err
-
-        updateStack.stdout.setEncoding 'utf8'
-        updateStack.stdout.on 'data', (data)->
-            console.log data
-
-        updateStack.stderr.setEncoding 'utf8'
-        updateStack.stderr.on 'data', (data) ->
-            console.log data
-
+        updateStack.unref()

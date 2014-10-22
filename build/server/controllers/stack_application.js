@@ -50,20 +50,9 @@ module.exports = {
   update: function(req, res, next) {
     var updateStack;
     updateStack = spawn('cozy-monitor', ['update-all-cozy-stack', process.env.TOKEN], {
-      'detached': true
+      'detached': true,
+      'stdio': ['ignore', 'ignore', 'ignore']
     });
-    updateStack.on('close', function(code) {
-      if (err) {
-        return sendError(res, err);
-      }
-    });
-    updateStack.stdout.setEncoding('utf8');
-    updateStack.stdout.on('data', function(data) {
-      return console.log(data);
-    });
-    updateStack.stderr.setEncoding('utf8');
-    return updateStack.stderr.on('data', function(data) {
-      return console.log(data);
-    });
+    return updateStack.unref();
   }
 };
