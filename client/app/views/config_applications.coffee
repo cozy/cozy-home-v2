@@ -23,6 +23,8 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         super()
 
     afterRender: ->
+        @spanRefresh = @$ '.refresh'
+        @spanRefresh.hide()
         @memoryFree = @$ '.memory-free'
         @diskSpace = @$ '.disk-space'
         @updateBtn = new ColorButton  @$ '.update-all'
@@ -81,8 +83,11 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn.spin true, '#ffffff'
         @applications.updateStack
             success: =>
-                window.location.reload()
+                #window.location.reload()
+                @spanRefresh.show()
                 @updateStackBtn.displayGreen t "update stack"
             error: =>
-                window.location.reload()
+                #window.location.reload()
                 #@updateStackBtn.displayGreen t "error during updating"
+                @spanRefresh.show()
+                @updateStackBtn.displayGreen t "update stack"

@@ -1312,6 +1312,7 @@ module.exports = {
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour la plate forme cozy",
+  "refresh page": "Pouvez-vous rafraichir votre page s'il vous plait",
   "update error": "Une erreur est survenue pendant la mise à jour",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
@@ -2079,7 +2080,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><button class="btn update-stack">');
 var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
+buf.push('</button></div><div class="line"><span class="refresh">t(\'refresh page\')</span></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
 var __val__ = t('manage your devices')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
@@ -3062,6 +3063,8 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   }
 
   ConfigApplicationsView.prototype.afterRender = function() {
+    this.spanRefresh = this.$('.refresh');
+    this.spanRefresh.hide();
     this.memoryFree = this.$('.memory-free');
     this.diskSpace = this.$('.disk-space');
     this.updateBtn = new ColorButton(this.$('.update-all'));
@@ -3142,11 +3145,12 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.updateStackBtn.spin(true, '#ffffff');
     return this.applications.updateStack({
       success: function() {
-        window.location.reload();
+        _this.spanRefresh.show();
         return _this.updateStackBtn.displayGreen(t("update stack"));
       },
       error: function() {
-        return window.location.reload();
+        _this.spanRefresh.show();
+        return _this.updateStackBtn.displayGreen(t("update stack"));
       }
     });
   };
