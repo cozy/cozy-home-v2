@@ -169,8 +169,8 @@ reseting routes"
     # Remove and reinstall app inside Haibu.
     updateStack: (callback) ->
 
-        console.info "Request controller for updating #{app.name}..."
-        @client.post 'apps/update-stack', {}, (err, res, body) ->
+        console.info "Request controller for updating stack..."
+        @client.updateStack {}, (err, res, body) ->
             err ?= new Error body.error.message unless status2XX res
             if err
                 console.log "Error updating stack"

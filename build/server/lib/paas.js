@@ -228,8 +228,8 @@ exports.AppManager = (function() {
   };
 
   AppManager.prototype.updateStack = function(callback) {
-    console.info("Request controller for updating " + app.name + "...");
-    return this.client.post('apps/update-stack', {}, function(err, res, body) {
+    console.info("Request controller for updating stack...");
+    return this.client.updateStack({}, function(err, res, body) {
       if (!status2XX(res)) {
         if (err == null) {
           err = new Error(body.error.message);
