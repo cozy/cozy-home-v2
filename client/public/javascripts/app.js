@@ -3142,10 +3142,11 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.updateStackBtn.spin(true, '#ffffff');
     return this.applications.updateStack({
       success: function() {
+        window.location.reload();
         return _this.updateStackBtn.displayGreen(t("update stack"));
       },
       error: function() {
-        return _this.updateStackBtn.displayGreen(t("error during updating"));
+        return window.location.reload();
       }
     });
   };

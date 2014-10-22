@@ -81,6 +81,8 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn.spin true, '#ffffff'
         @applications.updateStack
             success: =>
+                window.location.reload()
                 @updateStackBtn.displayGreen t "update stack"
             error: =>
-                @updateStackBtn.displayGreen t "error during updating"
+                window.location.reload()
+                #@updateStackBtn.displayGreen t "error during updating"
