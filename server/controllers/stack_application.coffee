@@ -1,6 +1,7 @@
 request = require("request-json")
 fs = require('fs')
 slugify = require 'cozy-slug'
+{AppManager} = require '../lib/paas'
 spawn = require('child_process').spawn
 log = require('printit')
     prefix: "applications"
@@ -30,6 +31,8 @@ module.exports =
             else res.send rows: apps
 
     update: (req, res, next) ->
-        updateStack = spawn 'cozy-monitor', ['update-all-cozy-stack',  process.env.TOKEN], {'detached':true, 'stdio': ['ignore', 'ignore', 'ignore']}
-
-        updateStack.unref()
+        manager = new AppManager()
+        manager.updateStack (err, res) ->
+            if err?
+                log.error err
+                sendError res, err

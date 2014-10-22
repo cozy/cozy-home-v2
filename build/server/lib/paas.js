@@ -227,6 +227,25 @@ exports.AppManager = (function() {
     })(this));
   };
 
+  AppManager.prototype.updateStack = function(callback) {
+    console.info("Request controller for updating " + app.name + "...");
+    return this.client.post('apps/update-stack', {}, function(err, res, body) {
+      if (!status2XX(res)) {
+        if (err == null) {
+          err = new Error(body.error.message);
+        }
+      }
+      if (err) {
+        console.log("Error updating stack");
+        console.log(err.stack);
+        return callback(err);
+      } else {
+        console.info("Successfully updated stack");
+        return callback(null, body);
+      }
+    });
+  };
+
   return AppManager;
 
 })();
