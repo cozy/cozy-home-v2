@@ -1170,7 +1170,10 @@ module.exports = {
   "updated": "updated",
   "updating": "updating",
   "update all": "Update all",
-  "update stack": "Update cozy stack",
+  "update stack": "Update",
+  "refresh page": "Can you refresh your page, please. It can take several minutes.",
+  "cozy platform": "Cozy Platform",
+  "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
   "broken": "broken",
   "start this app": "start this app",
@@ -1311,8 +1314,10 @@ module.exports = {
   "updated": "m.à.j",
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
-  "update stack": "Mettre à jour la plate forme cozy",
-  "refresh page": "Pouvez-vous rafraichir votre page s'il vous plait",
+  "update stack": "Mettre à jour",
+  "refresh page": "Pouvez-vous rafraichir votre page s'il vous plait. Cela peut prendre quelques minutes.",
+  "reboot stack": "Redémarrer",
+  "cozy platform": "Plate-forme Cozy",
   "update error": "Une erreur est survenue pendant la mise à jour",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
@@ -1649,6 +1654,11 @@ module.exports = Application = (function(_super) {
     return client.put("/api/applications/update/stack", {}, callbacks);
   };
 
+  Application.prototype.rebootStack = function(callbacks) {
+    this.prepareCallbacks(callbacks);
+    return client.put("/api/applications/reboot/stack", {}, callbacks);
+  };
+
   return Application;
 
 })(Backbone.Model);
@@ -1752,11 +1762,6 @@ module.exports = Application = (function(_super) {
         return error(jqXHR);
       }
     };
-  };
-
-  Application.prototype.updateStack = function(callbacks) {
-    this.prepareCallbacks(callbacks);
-    return client.put("/api/applications/update/stack", {}, callbacks);
   };
 
   return Application;
@@ -2075,12 +2080,18 @@ buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img
 var __val__ = t('memory megabytes')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div><h4>');
-var __val__ = "Cozy Platform"
+var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><button class="btn update-stack">');
 var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="line"><span class="refresh">t(\'refresh page\')</span></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
+buf.push('</button><button class="btn reboot-stack">');
+var __val__ = t('reboot stack')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="line"><span class="refresh">');
+var __val__ = t('refresh page')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
 var __val__ = t('manage your devices')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
@@ -3047,7 +3058,8 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
 
   ConfigApplicationsView.prototype.events = {
     "click .update-all": "onUpdateClicked",
-    "click .update-stack": "onUpdateStackClicked"
+    "click .update-stack": "onUpdateStackClicked",
+    "click .reboot-stack": "onRebootStackClicked"
   };
 
   function ConfigApplicationsView(apps, devices, stackApps) {
@@ -3069,6 +3081,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.diskSpace = this.$('.disk-space');
     this.updateBtn = new ColorButton(this.$('.update-all'));
     this.updateStackBtn = new ColorButton(this.$('.update-stack'));
+    this.rebootStackBtn = new ColorButton(this.$('.reboot-stack'));
     this.fetch();
     this.applicationList = new ConfigApplicationList(this.apps);
     this.deviceList = new ConfigDeviceList(this.devices);
@@ -3077,12 +3090,28 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
-    var app, _i, _len, _ref, _results;
+    var app, currentVersion, newVersion, _i, _len, _ref, _results;
     _ref = this.stackApps.models;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       app = _ref[_i];
-      _results.push(this.$("." + (app.get('name'))).html(app.get('version')));
+      this.$("." + (app.get('name'))).html(app.get('version'));
+      if ((app.get('version') != null) && app.get('lastVersion') && app.get('version') !== app.get('lastVersion')) {
+        this.$("." + (app.get('name'))).css('font-weight', "bold");
+        currentVersion = app.get('version').split('.');
+        newVersion = app.get('lastVersion').split('.');
+        if (currentVersion[0] !== newVersion[0]) {
+          _results.push(this.$("." + (app.get('name'))).css('color', "Red"));
+        } else if (currentVersion[1] !== newVersion[1]) {
+          _results.push(this.$("." + (app.get('name'))).css('color', "OrangeRed"));
+        } else if (currentVersion[2] !== newVersion[2]) {
+          _results.push(this.$("." + (app.get('name'))).css('color', "Orange"));
+        } else {
+          _results.push(void 0);
+        }
+      } else {
+        _results.push(void 0);
+      }
     }
     return _results;
   };
@@ -3151,6 +3180,22 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
       error: function() {
         _this.spanRefresh.show();
         return _this.updateStackBtn.displayGreen(t("update stack"));
+      }
+    });
+  };
+
+  ConfigApplicationsView.prototype.onRebootStackClicked = function() {
+    var _this = this;
+    this.rebootStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.rebootStackBtn.spin(true, '#ffffff');
+    return this.applications.rebootStack({
+      success: function() {
+        _this.spanRefresh.show();
+        return _this.rebootStackBtn.displayGreen(t("update stack"));
+      },
+      error: function() {
+        _this.spanRefresh.show();
+        return _this.rebootStackBtn.displayGreen(t("update stack"));
       }
     });
   };

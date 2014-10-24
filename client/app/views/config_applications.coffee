@@ -16,6 +16,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     events:
         "click .update-all"        : "onUpdateClicked"
         "click .update-stack"      : "onUpdateStackClicked"
+        "click .reboot-stack"      : "onRebootStackClicked"
 
     constructor: (@apps, @devices, @stackApps) ->
         @listenTo @devices, 'reset', @displayDevices
@@ -29,6 +30,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @diskSpace = @$ '.disk-space'
         @updateBtn = new ColorButton  @$ '.update-all'
         @updateStackBtn = new ColorButton  @$ '.update-stack'
+        @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
         @fetch()
         @applicationList = new ConfigApplicationList @apps
         @deviceList = new ConfigDeviceList @devices
@@ -38,6 +40,17 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     displayStackVersion: =>
         for app in @stackApps.models
             @$(".#{app.get 'name'}").html app.get 'version'
+            if app.get('version')? and app.get('lastVersion') and
+                app.get('version') isnt app.get('lastVersion')
+                    @$(".#{app.get 'name'}").css 'font-weight', "bold"
+                    currentVersion = app.get('version').split('.')
+                    newVersion = app.get('lastVersion').split('.')
+                    if currentVersion[0] isnt newVersion[0]
+                        @$(".#{app.get 'name'}").css 'color', "Red"
+                    else if currentVersion[1] isnt newVersion[1]
+                        @$(".#{app.get 'name'}").css 'color', "OrangeRed"
+                    else if currentVersion[2] isnt newVersion[2]
+                        @$(".#{app.get 'name'}").css 'color', "Orange"
 
     displayDevices: =>
         if not(@devices.length is 0)
@@ -83,11 +96,19 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn.spin true, '#ffffff'
         @applications.updateStack
             success: =>
-                #window.location.reload()
                 @spanRefresh.show()
                 @updateStackBtn.displayGreen t "update stack"
             error: =>
-                #window.location.reload()
-                #@updateStackBtn.displayGreen t "error during updating"
                 @spanRefresh.show()
                 @updateStackBtn.displayGreen t "update stack"
+
+    onRebootStackClicked: ->
+        @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @rebootStackBtn.spin true, '#ffffff'
+        @applications.rebootStack
+            success: =>
+                @spanRefresh.show()
+                @rebootStackBtn.displayGreen t "update stack"
+            error: =>
+                @spanRefresh.show()
+                @rebootStackBtn.displayGreen t "update stack"

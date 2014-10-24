@@ -58,5 +58,15 @@ module.exports = {
         return sendError(res, err);
       }
     });
+  },
+  reboot: function(req, res, next) {
+    var manager;
+    manager = new AppManager();
+    return manager.restartController(function(err, res) {
+      if (err != null) {
+        log.error(err);
+        return sendError(res, err);
+      }
+    });
   }
 };

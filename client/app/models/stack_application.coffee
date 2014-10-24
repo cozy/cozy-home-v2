@@ -24,9 +24,3 @@ module.exports = class Application extends Backbone.Model
             preerror jqXHR if preerror
             @trigger 'error', @, jqXHR, {}
             error jqXHR     if error
-
-
-
-    updateStack: (callbacks) ->
-        @prepareCallbacks callbacks
-        client.put "/api/applications/update/stack", {}, callbacks

@@ -21,7 +21,7 @@
                             span &nbsp;/&nbsp;
                             span.total 0&nbsp;
                             span= t('memory megabytes')
-                    h4= "Cozy Platform"
+                    h4= t('cozy platform')
                     .stack-app.mt2
                         .line
                             span.app Data System: 
@@ -37,8 +37,9 @@
                             span.controller --
                         .line
                             button.btn.update-stack= t('update stack')
+                            button.btn.reboot-stack= t('reboot stack')
                         .line
-                            span.refresh t('refresh page')
+                            span.refresh= t('refresh page')
 
 
         .mod.w66.right

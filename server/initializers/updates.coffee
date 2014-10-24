@@ -4,6 +4,7 @@ log = require('printit')
     prefix: 'application updates'
 
 Application = require '../models/application'
+StackApplication = require '../models/stack_application'
 
 
 # Time (in ms) between two checks for updates, for all apps

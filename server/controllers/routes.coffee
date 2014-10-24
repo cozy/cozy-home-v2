@@ -26,6 +26,7 @@ module.exports =
 
     'api/applications/stack': get: stackApplications.get
     'api/applications/update/stack': put: stackApplications.update
+    'api/applications/reboot/stack': put: stackApplications.reboot
 
 
     'api/devices': get: devices.devices

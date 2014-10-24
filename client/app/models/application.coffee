@@ -100,3 +100,7 @@ module.exports = class Application extends Backbone.Model
     updateStack: (callbacks) ->
         @prepareCallbacks callbacks
         client.put "/api/applications/update/stack", {}, callbacks
+
+    rebootStack: (callbacks) ->
+        @prepareCallbacks callbacks
+        client.put "/api/applications/reboot/stack", {}, callbacks
