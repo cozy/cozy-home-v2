@@ -108,7 +108,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @applications.rebootStack
             success: =>
                 @spanRefresh.show()
-                @rebootStackBtn.displayGreen t "update stack"
+                @rebootStackBtn.displayGreen t "reboot stack"
             error: =>
                 @spanRefresh.show()
-                @rebootStackBtn.displayGreen t "update stack"
+                @rebootStackBtn.displayGreen t "reboot stack"

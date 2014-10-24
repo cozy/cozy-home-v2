@@ -3191,11 +3191,11 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     return this.applications.rebootStack({
       success: function() {
         _this.spanRefresh.show();
-        return _this.rebootStackBtn.displayGreen(t("update stack"));
+        return _this.rebootStackBtn.displayGreen(t("reboot stack"));
       },
       error: function() {
         _this.spanRefresh.show();
-        return _this.rebootStackBtn.displayGreen(t("update stack"));
+        return _this.rebootStackBtn.displayGreen(t("reboot stack"));
       }
     });
   };
