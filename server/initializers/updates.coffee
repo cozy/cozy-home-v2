@@ -42,6 +42,13 @@ checkUpdates = ->
         else
             for app in apps
                 checkUpdate notifier, app
+        StackApplication.all (err, apps) ->
+            if err
+                log.error "Error when checking apps versions:"
+                log.raw err
+            else
+                for app in apps
+                    checkUpdate notifier, app
 
 
 # Start check update cron.
