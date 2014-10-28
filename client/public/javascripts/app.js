@@ -1649,16 +1649,6 @@ module.exports = Application = (function(_super) {
     return client.put("/api/applications/update/all", {}, callbacks);
   };
 
-  Application.prototype.updateStack = function(callbacks) {
-    this.prepareCallbacks(callbacks);
-    return client.put("/api/applications/update/stack", {}, callbacks);
-  };
-
-  Application.prototype.rebootStack = function(callbacks) {
-    this.prepareCallbacks(callbacks);
-    return client.put("/api/applications/reboot/stack", {}, callbacks);
-  };
-
   return Application;
 
 })(Backbone.Model);
@@ -1709,23 +1699,23 @@ module.exports = Notification = (function(_super) {
 });
 
 ;require.register("models/stack_application", function(exports, require, module) {
-var Application, client, _ref,
+var StackApplication, client, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 client = require("../helpers/client");
 
-module.exports = Application = (function(_super) {
-  __extends(Application, _super);
+module.exports = StackApplication = (function(_super) {
+  __extends(StackApplication, _super);
 
-  function Application() {
-    _ref = Application.__super__.constructor.apply(this, arguments);
+  function StackApplication() {
+    _ref = StackApplication.__super__.constructor.apply(this, arguments);
     return _ref;
   }
 
-  Application.prototype.idAttribute = 'slug';
+  StackApplication.prototype.idAttribute = 'name';
 
-  Application.prototype.url = function() {
+  StackApplication.prototype.url = function() {
     var base;
     base = "/api/applications/stack";
     if (this.get('id')) {
@@ -1734,7 +1724,7 @@ module.exports = Application = (function(_super) {
     return base;
   };
 
-  Application.prototype.prepareCallbacks = function(callbacks, presuccess, preerror) {
+  StackApplication.prototype.prepareCallbacks = function(callbacks, presuccess, preerror) {
     var error, success, _ref1,
       _this = this;
     _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
@@ -1764,7 +1754,34 @@ module.exports = Application = (function(_super) {
     };
   };
 
-  return Application;
+  StackApplication.prototype.waitReboot = function(callback) {
+    var _this = this;
+    console.log("waitReboot");
+    return client.get("api/applications/stack", {
+      success: function() {
+        console.log("ok");
+        return callback();
+      },
+      error: function() {
+        console.log('WAIT');
+        return setTimeout(function() {
+          return waitReboot(callback);
+        }, 500);
+      }
+    });
+  };
+
+  StackApplication.prototype.updateStack = function(callbacks) {
+    return this.waitReboot(callbacks);
+  };
+
+  StackApplication.prototype.rebootStack = function(callbacks) {
+    return client.put("/api/applications/reboot/stack", {}, function(err, res, body) {
+      return this.waitReboot(callbacks);
+    });
+  };
+
+  return StackApplication;
 
 })(Backbone.Model);
 });
@@ -3028,7 +3045,7 @@ module.exports = ApplicationsListView = (function(_super) {
 });
 
 ;require.register("views/config_applications", function(exports, require, module) {
-var Application, BaseView, ColorButton, ConfigApplicationList, ConfigDeviceList, request,
+var Application, BaseView, ColorButton, ConfigApplicationList, ConfigDeviceList, StackApplication, request,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3040,6 +3057,8 @@ BaseView = require('lib/base_view');
 ColorButton = require('widgets/install_button');
 
 Application = require('models/application');
+
+StackApplication = require('models/stack_application');
 
 ConfigApplicationList = require('./config_application_list');
 
@@ -3086,7 +3105,8 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.applicationList = new ConfigApplicationList(this.apps);
     this.deviceList = new ConfigDeviceList(this.devices);
     this.$el.find('.title-app').append(this.applicationList.$el);
-    return this.applications = new Application();
+    this.applications = new Application();
+    return this.stackApplications = new StackApplication();
   };
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
@@ -3172,15 +3192,9 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     var _this = this;
     this.updateStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     this.updateStackBtn.spin(true, '#ffffff');
-    return this.applications.updateStack({
-      success: function() {
-        _this.spanRefresh.show();
-        return _this.updateStackBtn.displayGreen(t("update stack"));
-      },
-      error: function() {
-        _this.spanRefresh.show();
-        return _this.updateStackBtn.displayGreen(t("update stack"));
-      }
+    this.spanRefresh.show();
+    return this.stackApplications.updateStack(function() {
+      return location.reload();
     });
   };
 
@@ -3188,15 +3202,9 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     var _this = this;
     this.rebootStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     this.rebootStackBtn.spin(true, '#ffffff');
-    return this.applications.rebootStack({
-      success: function() {
-        _this.spanRefresh.show();
-        return _this.rebootStackBtn.displayGreen(t("reboot stack"));
-      },
-      error: function() {
-        _this.spanRefresh.show();
-        return _this.rebootStackBtn.displayGreen(t("reboot stack"));
-      }
+    this.spanRefresh.show();
+    return this.stackApplications.rebootStack(function() {
+      return location.reload();
     });
   };
 

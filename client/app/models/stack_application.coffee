@@ -1,9 +1,9 @@
 client = require "../helpers/client"
 
-# Describes an application installed in mycloud.
-module.exports = class Application extends Backbone.Model
+# Describes a stack application.
+module.exports = class StackApplication extends Backbone.Model
 
-    idAttribute: 'slug'
+    idAttribute: 'name'
 
     url: ->
         base = "/api/applications/stack"
@@ -24,3 +24,24 @@ module.exports = class Application extends Backbone.Model
             preerror jqXHR if preerror
             @trigger 'error', @, jqXHR, {}
             error jqXHR     if error
+
+
+    waitReboot: (callback) ->
+        console.log "waitReboot"
+        client.get "api/applications/stack",
+            success: =>
+                console.log "ok"
+                callback()
+            error: =>
+                console.log 'WAIT'
+                setTimeout () ->
+                    waitReboot callback
+                , 500
+
+    updateStack: (callbacks) ->
+        #client.put "/api/applications/update/stack", {}, (err, res, body) ->
+        @waitReboot callbacks
+
+    rebootStack: (callbacks) ->
+        client.put "/api/applications/reboot/stack", {},  (err, res, body) ->
+            @waitReboot callbacks

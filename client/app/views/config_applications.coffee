@@ -2,6 +2,7 @@ request = require 'lib/request'
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 Application = require 'models/application'
+StackApplication = require 'models/stack_application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
 
@@ -36,6 +37,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
+        @stackApplications = new StackApplication()
 
     displayStackVersion: =>
         for app in @stackApps.models
@@ -94,21 +96,13 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     onUpdateStackClicked: ->
         @updateStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @updateStackBtn.spin true, '#ffffff'
-        @applications.updateStack
-            success: =>
-                @spanRefresh.show()
-                @updateStackBtn.displayGreen t "update stack"
-            error: =>
-                @spanRefresh.show()
-                @updateStackBtn.displayGreen t "update stack"
+        @spanRefresh.show()
+        @stackApplications.updateStack () =>
+            location.reload()
 
     onRebootStackClicked: ->
         @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @rebootStackBtn.spin true, '#ffffff'
-        @applications.rebootStack
-            success: =>
-                @spanRefresh.show()
-                @rebootStackBtn.displayGreen t "reboot stack"
-            error: =>
-                @spanRefresh.show()
-                @rebootStackBtn.displayGreen t "reboot stack"
+        @spanRefresh.show()
+        @stackApplications.rebootStack () =>
+            location.reload()
