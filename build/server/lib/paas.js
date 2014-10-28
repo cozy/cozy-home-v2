@@ -255,11 +255,11 @@ exports.AppManager = (function() {
         }
       }
       if (err) {
-        console.log("Error updating stack");
+        console.log("Error reboot stack");
         console.log(err.stack);
         return callback(err);
       } else {
-        console.info("Successfully updated stack");
+        console.info("Successfully reboot stack");
         return callback(null, body);
       }
     });

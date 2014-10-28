@@ -185,9 +185,9 @@ reseting routes"
         @client.restartController (err, res, body) ->
             err ?= new Error body.error.message unless status2XX res
             if err
-                console.log "Error updating stack"
+                console.log "Error reboot stack"
                 console.log err.stack
                 callback err
             else
-                console.info "Successfully updated stack"
+                console.info "Successfully reboot stack"
                 callback null, body

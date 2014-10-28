@@ -1793,8 +1793,14 @@ module.exports = StackApplication = (function(_super) {
   };
 
   StackApplication.prototype.rebootStack = function(callbacks) {
-    return client.put("/api/applications/reboot/stack", {}, function(err, res, body) {
-      return this.waitReboot(0, 1, callbacks);
+    var _this = this;
+    return client.put("/api/applications/reboot/stack", {}, {
+      sucess: function() {
+        return _this.waitReboot(0, 1, callbacks);
+      },
+      error: function() {
+        return _this.waitReboot(0, 1, callbacks);
+      }
     });
   };
 

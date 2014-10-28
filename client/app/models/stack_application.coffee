@@ -52,5 +52,8 @@ module.exports = class StackApplication extends Backbone.Model
                 @waitReboot 0, 3, callbacks
 
     rebootStack: (callbacks) ->
-        client.put "/api/applications/reboot/stack", {},  (err, res, body) ->
-            @waitReboot 0, 1, callbacks
+        client.put "/api/applications/reboot/stack", {},
+            sucess: =>
+                @waitReboot 0, 1, callbacks
+            error: =>
+                @waitReboot 0, 1, callbacks
