@@ -26,32 +26,24 @@ module.exports = class StackApplication extends Backbone.Model
             error jqXHR     if error
 
 
-    waitReboot: (step, total_step, callback) ->
-        console.log step
+    waitReboot: (callback) ->
         client.get "api/applications/stack",
             success: =>
-                if step is total_step
-                    callback()
-                else
-                    if step is 1
-                        step += step
-                    setTimeout () =>
-                        @waitReboot step, total_step, callback
-                    , 500
+                setTimeout () =>
+                    @waitReboot callback
+                , 500
             error: =>
                 setTimeout () =>
-                    if step is 0 or step is 2
-                        step = step + 1
-                    @waitReboot step, total_step, callback
+                    @waitReboot callback
                 , 500
 
     updateStack: (callbacks) ->
         client.put "/api/applications/update/stack", {},
             sucess: =>
-                @waitReboot 0, 3, callbacks
+                @waitReboot callbacks
             error: =>
-                @waitReboot 0, 3, callbacks
+                @waitReboot callbacks
 
     rebootStack: (callbacks) ->
         client.put "/api/applications/reboot/stack", {},  (err, res, body) ->
-            @waitReboot 0, 1, callbacks
+            @waitReboot callbacks

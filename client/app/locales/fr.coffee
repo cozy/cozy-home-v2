@@ -128,7 +128,7 @@ module.exports =
     "updating":"m.à.j en cours"
     "update all": "Mettre tout à jour"
     "update stack": "Mettre à jour"
-    "refresh page": "Pouvez-vous rafraichir votre page s'il vous plait. Cela peut prendre quelques minutes."
+    "refresh page": "Veuillez patienter, la page se rafraichira d'ici quelques minutes."
     "reboot stack": "Redémarrer"
     "cozy platform": "Plate-forme Cozy"
     "update error":"Une erreur est survenue pendant la mise à jour"

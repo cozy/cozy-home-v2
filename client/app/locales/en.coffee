@@ -116,7 +116,7 @@ module.exports =
     "updating":"updating"
     "update all": "Update all"
     "update stack": "Update"
-    "refresh page": "Can you refresh your page, please. It can take several minutes."
+    "refresh page": "Wait please, page will refresh in several minutes."
     "cozy platform": "Cozy Platform"
     "reboot stack": "Reboot"
     "update error":"An error occured while updating the application"

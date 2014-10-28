@@ -1171,7 +1171,7 @@ module.exports = {
   "updating": "updating",
   "update all": "Update all",
   "update stack": "Update",
-  "refresh page": "Can you refresh your page, please. It can take several minutes.",
+  "refresh page": "Wait please, page will refresh in several minutes.",
   "cozy platform": "Cozy Platform",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
@@ -1315,7 +1315,7 @@ module.exports = {
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour",
-  "refresh page": "Pouvez-vous rafraichir votre page s'il vous plait. Cela peut prendre quelques minutes.",
+  "refresh page": "Veuillez patienter, la page se rafraichira d'ici quelques minutes.",
   "reboot stack": "Redémarrer",
   "cozy platform": "Plate-forme Cozy",
   "update error": "Une erreur est survenue pendant la mise à jour",
@@ -1754,28 +1754,17 @@ module.exports = StackApplication = (function(_super) {
     };
   };
 
-  StackApplication.prototype.waitReboot = function(step, total_step, callback) {
+  StackApplication.prototype.waitReboot = function(callback) {
     var _this = this;
-    console.log(step);
     return client.get("api/applications/stack", {
       success: function() {
-        if (step === total_step) {
-          return callback();
-        } else {
-          if (step === 1) {
-            step += step;
-          }
-          return setTimeout(function() {
-            return _this.waitReboot(step, total_step, callback);
-          }, 500);
-        }
+        return setTimeout(function() {
+          return _this.waitReboot(callback);
+        }, 500);
       },
       error: function() {
         return setTimeout(function() {
-          if (step === 0 || step === 2) {
-            step = step + 1;
-          }
-          return _this.waitReboot(step, total_step, callback);
+          return _this.waitReboot(callback);
         }, 500);
       }
     });
@@ -1785,17 +1774,17 @@ module.exports = StackApplication = (function(_super) {
     var _this = this;
     return client.put("/api/applications/update/stack", {}, {
       sucess: function() {
-        return _this.waitReboot(0, 3, callbacks);
+        return _this.waitReboot(callbacks);
       },
       error: function() {
-        return _this.waitReboot(0, 3, callbacks);
+        return _this.waitReboot(callbacks);
       }
     });
   };
 
   StackApplication.prototype.rebootStack = function(callbacks) {
     return client.put("/api/applications/reboot/stack", {}, function(err, res, body) {
-      return this.waitReboot(0, 1, callbacks);
+      return this.waitReboot(callbacks);
     });
   };
 
