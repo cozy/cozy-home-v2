@@ -1754,17 +1754,27 @@ module.exports = StackApplication = (function(_super) {
     };
   };
 
-  StackApplication.prototype.waitReboot = function(callback) {
+  StackApplication.prototype.waitReboot = function(step, total_step, callback) {
     var _this = this;
     return client.get("api/applications/stack", {
       success: function() {
-        return setTimeout(function() {
-          return _this.waitReboot(callback);
-        }, 500);
+        if (step === total_step) {
+          return callback();
+        } else {
+          if (step === 1) {
+            step += step;
+          }
+          return setTimeout(function() {
+            return _this.waitReboot(step, total_step, callback);
+          }, 500);
+        }
       },
       error: function() {
         return setTimeout(function() {
-          return _this.waitReboot(callback);
+          if (step === 0 || step === 2) {
+            step = step + 1;
+          }
+          return _this.waitReboot(step, total_step, callback);
         }, 500);
       }
     });
@@ -1774,17 +1784,17 @@ module.exports = StackApplication = (function(_super) {
     var _this = this;
     return client.put("/api/applications/update/stack", {}, {
       sucess: function() {
-        return _this.waitReboot(callbacks);
+        return _this.waitReboot(0, 3, callbacks);
       },
       error: function() {
-        return _this.waitReboot(callbacks);
+        return _this.waitReboot(0, 3, callbacks);
       }
     });
   };
 
   StackApplication.prototype.rebootStack = function(callbacks) {
     return client.put("/api/applications/reboot/stack", {}, function(err, res, body) {
-      return this.waitReboot(callbacks);
+      return this.waitReboot(0, 1, callbacks);
     });
   };
 
