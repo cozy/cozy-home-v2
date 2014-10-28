@@ -1772,7 +1772,9 @@ module.exports = StackApplication = (function(_super) {
   };
 
   StackApplication.prototype.updateStack = function(callbacks) {
-    return this.waitReboot(callbacks);
+    return client.put("/api/applications/update/stack", {}, function(err, res, body) {
+      return this.waitReboot(callbacks);
+    });
   };
 
   StackApplication.prototype.rebootStack = function(callbacks) {
