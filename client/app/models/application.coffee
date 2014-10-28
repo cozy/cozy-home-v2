@@ -50,8 +50,8 @@ module.exports = class Application extends Backbone.Model
             @prepareCallbacks callbacks
             client.put "/api/applications/#{@id}/update", {}, callbacks
         else
-            client.del "/api/applications/#{@id}/uninstall", 
-                success: => 
+            client.del "/api/applications/#{@id}/uninstall",
+                success: =>
                     @install callbacks
                 error: callbacks.error
 

@@ -168,27 +168,19 @@ reseting routes"
 
     # Remove and reinstall app inside Haibu.
     updateStack: (callback) ->
-
         console.info "Request controller for updating stack..."
-        @client.stop "proxy", (err, res, body) =>
-            err ?= body.error unless status2XX res
+        @client.updateStack (err, res, body) ->
+            err ?= new Error body.error.message unless status2XX res
             if err
                 console.log "Error updating stack"
                 console.log err.stack
                 callback err
-            @client.updateStack (err, res, body) ->
-                err ?= new Error body.error.message unless status2XX res
-                if err
-                    console.log "Error updating stack"
-                    console.log err.stack
-                    callback err
-                else
-                    console.info "Successfully updated stack"
-                    callback null, body
+            else
+                console.info "Successfully updated stack"
+                callback null, body
 
     # Remove and reinstall app inside Haibu.
     restartController: (callback) ->
-
         console.info "Request controller for restarting stack..."
         @client.restartController (err, res, body) ->
             err ?= new Error body.error.message unless status2XX res

@@ -229,35 +229,21 @@ exports.AppManager = (function() {
 
   AppManager.prototype.updateStack = function(callback) {
     console.info("Request controller for updating stack...");
-    return this.client.stop("proxy", (function(_this) {
-      return function(err, res, body) {
-        if (!status2XX(res)) {
-          if (err == null) {
-            err = body.error;
-          }
+    return this.client.updateStack(function(err, res, body) {
+      if (!status2XX(res)) {
+        if (err == null) {
+          err = new Error(body.error.message);
         }
-        if (err) {
-          console.log("Error updating stack");
-          console.log(err.stack);
-          callback(err);
-        }
-        return _this.client.updateStack(function(err, res, body) {
-          if (!status2XX(res)) {
-            if (err == null) {
-              err = new Error(body.error.message);
-            }
-          }
-          if (err) {
-            console.log("Error updating stack");
-            console.log(err.stack);
-            return callback(err);
-          } else {
-            console.info("Successfully updated stack");
-            return callback(null, body);
-          }
-        });
-      };
-    })(this));
+      }
+      if (err) {
+        console.log("Error updating stack");
+        console.log(err.stack);
+        return callback(err);
+      } else {
+        console.info("Successfully updated stack");
+        return callback(null, body);
+      }
+    });
   };
 
   AppManager.prototype.restartController = function(callback) {
