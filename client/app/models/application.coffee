@@ -7,8 +7,7 @@ module.exports = class Application extends Backbone.Model
 
     url: ->
         base = "/api/applications/"
-        # return base + @id         if @id #slug
-        return base + "byid/" + @get('id') if @get('id')
+        return "#{base}byid/#{@get('id')}" if @get('id')
         return base
 
 

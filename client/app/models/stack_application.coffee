@@ -7,8 +7,7 @@ module.exports = class StackApplication extends Backbone.Model
 
     url: ->
         base = "/api/applications/stack"
-        # return base + @id         if @id #slug
-        return base + "byid/" + @get('id') if @get('id')
+        return "#{base}byid/#{@get('id')}" if @get('id')
         return base
 
     # use same events as backbone to enable socket-listener
