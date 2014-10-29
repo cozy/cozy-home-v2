@@ -366,6 +366,32 @@ module.exports = NotificationCollection = (function(_super) {
 })(Backbone.Collection);
 });
 
+;require.register("collections/stackApplication", function(exports, require, module) {
+var ApplicationCollection, BaseCollection, StackApplication, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseCollection = require('lib/base_collection');
+
+StackApplication = require('models/stack_application');
+
+module.exports = ApplicationCollection = (function(_super) {
+  __extends(ApplicationCollection, _super);
+
+  function ApplicationCollection() {
+    _ref = ApplicationCollection.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  ApplicationCollection.prototype.model = StackApplication;
+
+  ApplicationCollection.prototype.url = 'api/applications/stack';
+
+  return ApplicationCollection;
+
+})(BaseCollection);
+});
+
 ;require.register("helpers", function(exports, require, module) {
 exports.BrunchApplication = (function() {
   function BrunchApplication() {
@@ -1143,7 +1169,11 @@ module.exports = {
   "installed": "installed",
   "updated": "updated",
   "updating": "updating",
-  "update all": "update all",
+  "update all": "Update all",
+  "update stack": "Update",
+  "refresh page": "Wait please, page will refresh in several minutes.",
+  "cozy platform": "Cozy Platform",
+  "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
   "broken": "broken",
   "start this app": "start this app",
@@ -1284,6 +1314,10 @@ module.exports = {
   "updated": "m.à.j",
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
+  "update stack": "Mettre à jour",
+  "refresh page": "Veuillez patienter, la page se rafraichira d'ici quelques minutes.",
+  "reboot stack": "Redémarrer",
+  "cozy platform": "Plate-forme Cozy",
   "update error": "Une erreur est survenue pendant la mise à jour",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
@@ -1664,6 +1698,117 @@ module.exports = Notification = (function(_super) {
 })(BaseModel);
 });
 
+;require.register("models/stack_application", function(exports, require, module) {
+var StackApplication, client, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+client = require("../helpers/client");
+
+module.exports = StackApplication = (function(_super) {
+  __extends(StackApplication, _super);
+
+  function StackApplication() {
+    _ref = StackApplication.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  StackApplication.prototype.idAttribute = 'name';
+
+  StackApplication.prototype.url = function() {
+    var base;
+    base = "/api/applications/stack";
+    if (this.get('id')) {
+      return base + "byid/" + this.get('id');
+    }
+    return base;
+  };
+
+  StackApplication.prototype.prepareCallbacks = function(callbacks, presuccess, preerror) {
+    var error, success, _ref1,
+      _this = this;
+    _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
+    if (presuccess == null) {
+      presuccess = function(data) {
+        return _this.set(data.app);
+      };
+    }
+    this.trigger('request', this, null, callbacks);
+    callbacks.success = function(data) {
+      if (presuccess) {
+        presuccess(data);
+      }
+      _this.trigger('sync', _this, null, callbacks);
+      if (success) {
+        return success(data);
+      }
+    };
+    return callbacks.error = function(jqXHR) {
+      if (preerror) {
+        preerror(jqXHR);
+      }
+      _this.trigger('error', _this, jqXHR, {});
+      if (error) {
+        return error(jqXHR);
+      }
+    };
+  };
+
+  StackApplication.prototype.waitReboot = function(step, total_step, callback) {
+    var _this = this;
+    return client.get("api/applications/stack", {
+      success: function() {
+        if (step === total_step) {
+          return callback();
+        } else {
+          if (step === 1) {
+            step += step;
+          }
+          return setTimeout(function() {
+            return _this.waitReboot(step, total_step, callback);
+          }, 500);
+        }
+      },
+      error: function() {
+        return setTimeout(function() {
+          if (step === 0 || step === 2) {
+            step = step + 1;
+          }
+          return _this.waitReboot(step, total_step, callback);
+        }, 500);
+      }
+    });
+  };
+
+  StackApplication.prototype.updateStack = function(callbacks) {
+    var _this = this;
+    return client.put("/api/applications/update/stack", {}, {
+      sucess: function() {
+        return _this.waitReboot(0, 3, callbacks);
+      },
+      error: function() {
+        return _this.waitReboot(0, 3, callbacks);
+      }
+    });
+  };
+
+  StackApplication.prototype.rebootStack = function(callbacks) {
+    var _this = this;
+    return client.put("/api/applications/reboot/stack", {}, {
+      sucess: function() {
+        return _this.waitReboot(0, 1, callbacks);
+      },
+      error: function() {
+        return _this.waitReboot(0, 1, callbacks);
+      }
+    });
+  };
+
+  return StackApplication;
+
+})(Backbone.Model);
+});
+
 ;require.register("models/user", function(exports, require, module) {
 var BaseModel, User, client,
   __hasProp = {}.hasOwnProperty,
@@ -1973,6 +2118,18 @@ var __val__ = t('hard drive gigabytes')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
 var __val__ = t('memory megabytes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div></div><h4>');
+var __val__ = t('cozy platform')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><button class="btn update-stack">');
+var __val__ = t('update stack')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button class="btn reboot-stack">');
+var __val__ = t('reboot stack')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><div class="line"><span class="refresh">');
+var __val__ = t('refresh page')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
 var __val__ = t('manage your devices')
@@ -2911,7 +3068,7 @@ module.exports = ApplicationsListView = (function(_super) {
 });
 
 ;require.register("views/config_applications", function(exports, require, module) {
-var Application, BaseView, ColorButton, ConfigApplicationList, ConfigDeviceList, request,
+var Application, BaseView, ColorButton, ConfigApplicationList, ConfigDeviceList, StackApplication, request,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -2923,6 +3080,8 @@ BaseView = require('lib/base_view');
 ColorButton = require('widgets/install_button');
 
 Application = require('models/application');
+
+StackApplication = require('models/stack_application');
 
 ConfigApplicationList = require('./config_application_list');
 
@@ -2940,27 +3099,64 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.events = {
-    "click .update-all": "onUpdateClicked"
+    "click .update-all": "onUpdateClicked",
+    "click .update-stack": "onUpdateStackClicked",
+    "click .reboot-stack": "onRebootStackClicked"
   };
 
-  function ConfigApplicationsView(apps, devices) {
+  function ConfigApplicationsView(apps, devices, stackApps) {
     this.apps = apps;
     this.devices = devices;
+    this.stackApps = stackApps;
     this.fetch = __bind(this.fetch, this);
     this.displayDevices = __bind(this.displayDevices, this);
+    this.displayStackVersion = __bind(this.displayStackVersion, this);
     this.listenTo(this.devices, 'reset', this.displayDevices);
+    this.listenTo(this.stackApps, 'reset', this.displayStackVersion);
     ConfigApplicationsView.__super__.constructor.call(this);
   }
 
   ConfigApplicationsView.prototype.afterRender = function() {
+    this.spanRefresh = this.$('.refresh');
+    this.spanRefresh.hide();
     this.memoryFree = this.$('.memory-free');
     this.diskSpace = this.$('.disk-space');
     this.updateBtn = new ColorButton(this.$('.update-all'));
+    this.updateStackBtn = new ColorButton(this.$('.update-stack'));
+    this.rebootStackBtn = new ColorButton(this.$('.reboot-stack'));
     this.fetch();
     this.applicationList = new ConfigApplicationList(this.apps);
     this.deviceList = new ConfigDeviceList(this.devices);
     this.$el.find('.title-app').append(this.applicationList.$el);
-    return this.applications = new Application();
+    this.applications = new Application();
+    return this.stackApplications = new StackApplication();
+  };
+
+  ConfigApplicationsView.prototype.displayStackVersion = function() {
+    var app, currentVersion, newVersion, _i, _len, _ref, _results;
+    _ref = this.stackApps.models;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      app = _ref[_i];
+      this.$("." + (app.get('name'))).html(app.get('version'));
+      if ((app.get('version') != null) && app.get('lastVersion') && app.get('version') !== app.get('lastVersion')) {
+        this.$("." + (app.get('name'))).css('font-weight', "bold");
+        currentVersion = app.get('version').split('.');
+        newVersion = app.get('lastVersion').split('.');
+        if (currentVersion[0] !== newVersion[0]) {
+          _results.push(this.$("." + (app.get('name'))).css('color', "Red"));
+        } else if (currentVersion[1] !== newVersion[1]) {
+          _results.push(this.$("." + (app.get('name'))).css('color', "OrangeRed"));
+        } else if (currentVersion[2] !== newVersion[2]) {
+          _results.push(this.$("." + (app.get('name'))).css('color', "Orange"));
+        } else {
+          _results.push(void 0);
+        }
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
   };
 
   ConfigApplicationsView.prototype.displayDevices = function() {
@@ -3012,6 +3208,26 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
         _this.updateBtn.displayGreen(t("error during updating"));
         return Backbone.Mediator.pub('app-state-changed', true);
       }
+    });
+  };
+
+  ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
+    var _this = this;
+    this.updateStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.updateStackBtn.spin(true, '#ffffff');
+    this.spanRefresh.show();
+    return this.stackApplications.updateStack(function() {
+      return location.reload();
+    });
+  };
+
+  ConfigApplicationsView.prototype.onRebootStackClicked = function() {
+    var _this = this;
+    this.rebootStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.rebootStackBtn.spin(true, '#ffffff');
+    this.spanRefresh.show();
+    return this.stackApplications.rebootStack(function() {
+      return location.reload();
     });
   };
 
@@ -3740,7 +3956,7 @@ module.exports = ApplicationRow = (function(_super) {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, User, UserPreference, appIframeTemplate, socketListener,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, StackAppCollection, User, UserPreference, appIframeTemplate, socketListener,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3750,6 +3966,8 @@ BaseView = require('lib/base_view');
 appIframeTemplate = require('templates/application_iframe');
 
 AppCollection = require('collections/application');
+
+StackAppCollection = require('collections/stackApplication');
 
 DeviceCollection = require('collections/device');
 
@@ -3793,6 +4011,7 @@ module.exports = HomeView = (function(_super) {
     this.test = __bind(this.test, this);
     this.afterRender = __bind(this.afterRender, this);
     this.apps = new AppCollection();
+    this.stackApps = new StackAppCollection();
     this.listenTo(this.apps, 'reset', this.testapps);
     this.devices = new DeviceCollection();
     this.listenTo(this.devices, 'reset', this.test);
@@ -3805,7 +4024,7 @@ module.exports = HomeView = (function(_super) {
   HomeView.prototype.afterRender = function() {
     this.navbar = new NavbarView(this.apps);
     this.applicationListView = new ApplicationsListView(this.apps, this.userPreference);
-    this.configApplications = new ConfigApplicationsView(this.apps, this.devices);
+    this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
     this.marketView = new MarketView(this.apps);
@@ -3819,6 +4038,9 @@ module.exports = HomeView = (function(_super) {
       reset: true
     });
     this.devices.fetch({
+      reset: true
+    });
+    this.stackApps.fetch({
       reset: true
     });
     this.userPreference.fetch();

@@ -4,6 +4,7 @@ log = require('printit')
     prefix: 'application updates'
 
 Application = require '../models/application'
+StackApplication = require '../models/stack_application'
 
 
 # Time (in ms) between two checks for updates, for all apps
@@ -41,6 +42,13 @@ checkUpdates = ->
         else
             for app in apps
                 checkUpdate notifier, app
+        StackApplication.all (err, apps) ->
+            if err
+                log.error "Error when checking apps versions:"
+                log.raw err
+            else
+                for app in apps
+                    checkUpdate notifier, app
 
 
 # Start check update cron.

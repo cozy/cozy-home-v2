@@ -14,7 +14,7 @@
   "main": "server.js",
   "dependencies": {
     "cozy-slug": "0.1.2",
-    "cozy-clients": "0.8.5",
+    "cozy-clients": "1.0.3",
     "cozy-realtime-adapter": "0.11.2",
     "cozy-notifications-helper": "1.0.2",
     "jugglingdb-cozy-adapter": "0.4.5",

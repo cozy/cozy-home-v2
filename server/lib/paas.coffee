@@ -165,3 +165,29 @@ reseting routes"
                     console.log "[Warning] #{err}"
                 console.info "Successfully stopping app: #{app.name}"
                 callback null
+
+    # Remove and reinstall app inside Haibu.
+    updateStack: (callback) ->
+        console.info "Request controller for updating stack..."
+        @client.updateStack (err, res, body) ->
+            err ?= new Error body.error.message unless status2XX res
+            if err
+                console.log "Error updating stack"
+                console.log err.stack
+                callback err
+            else
+                console.info "Successfully updated stack"
+                callback null, body
+
+    # Remove and reinstall app inside Haibu.
+    restartController: (callback) ->
+        console.info "Request controller for restarting stack..."
+        @client.restartController (err, res, body) ->
+            err ?= new Error body.error.message unless status2XX res
+            if err
+                console.log "Error reboot stack"
+                console.log err.stack
+                callback err
+            else
+                console.info "Successfully reboot stack"
+                callback null, body

@@ -1,6 +1,7 @@
 BaseView = require 'lib/base_view'
 appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
+StackAppCollection = require 'collections/stackApplication'
 DeviceCollection = require 'collections/device'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
@@ -22,6 +23,7 @@ module.exports = class HomeView extends BaseView
 
     constructor: ->
         @apps = new AppCollection()
+        @stackApps = new StackAppCollection()
         @listenTo @apps, 'reset', @testapps
         @devices = new DeviceCollection()
         @listenTo @devices, 'reset', @test
@@ -34,7 +36,7 @@ module.exports = class HomeView extends BaseView
     afterRender: =>
         @navbar = new NavbarView @apps
         @applicationListView = new ApplicationsListView @apps, @userPreference
-        @configApplications = new ConfigApplicationsView @apps, @devices
+        @configApplications = new ConfigApplicationsView @apps, @devices, @stackApps
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
@@ -49,6 +51,7 @@ module.exports = class HomeView extends BaseView
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
         @devices.fetch reset: true
+        @stackApps.fetch reset: true
         @userPreference.fetch()
         @resetLayoutSizes()
 

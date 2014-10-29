@@ -227,6 +227,44 @@ exports.AppManager = (function() {
     })(this));
   };
 
+  AppManager.prototype.updateStack = function(callback) {
+    console.info("Request controller for updating stack...");
+    return this.client.updateStack(function(err, res, body) {
+      if (!status2XX(res)) {
+        if (err == null) {
+          err = new Error(body.error.message);
+        }
+      }
+      if (err) {
+        console.log("Error updating stack");
+        console.log(err.stack);
+        return callback(err);
+      } else {
+        console.info("Successfully updated stack");
+        return callback(null, body);
+      }
+    });
+  };
+
+  AppManager.prototype.restartController = function(callback) {
+    console.info("Request controller for restarting stack...");
+    return this.client.restartController(function(err, res, body) {
+      if (!status2XX(res)) {
+        if (err == null) {
+          err = new Error(body.error.message);
+        }
+      }
+      if (err) {
+        console.log("Error reboot stack");
+        console.log(err.stack);
+        return callback(err);
+      } else {
+        console.info("Successfully reboot stack");
+        return callback(null, body);
+      }
+    });
+  };
+
   return AppManager;
 
 })();
