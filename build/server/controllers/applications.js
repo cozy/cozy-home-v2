@@ -55,8 +55,10 @@ markBroken = function(res, app, err) {
   app.password = null;
   if (err.result != null) {
     app.errormsg = err.message + ' :\n' + err.result;
-  } else {
+  } else if (err.message != null) {
     app.errormsg = err.message + ' :\n' + err.stack;
+  } else {
+    app.errormsg = err;
   }
   return app.save(function(saveErr) {
     if (saveErr) {
