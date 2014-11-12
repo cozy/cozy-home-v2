@@ -61,8 +61,14 @@ module.exports.CozyGitlabProvider = CozyGitlabProvider = (function(_super) {
   }
 
   CozyGitlabProvider.prototype.getManifest = function(callback) {
-    var client, domain, path, prefixLength;
-    domain = "https://gitlab.cozycloud.cc:8586/";
+    var client, domain, part, path, prefixLength, repoSplit, _i, _len;
+    repoSplit = this.repoUrl.split('/');
+    for (_i = 0, _len = repoSplit.length; _i < _len; _i++) {
+      part = repoSplit[_i];
+      if (part.indexOf('gitlab') !== -1) {
+        domain = "https://" + part + "/";
+      }
+    }
     prefixLength = domain.length;
     client = request.newClient(domain);
     this.basePath = this.repoUrl.substring(prefixLength, this.repoUrl.length - 4);
