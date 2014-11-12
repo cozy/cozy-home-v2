@@ -42,7 +42,10 @@ module.exports.GithubProvider = class GithubProvider extends GitProvider
 module.exports.CozyGitlabProvider = class CozyGitlabProvider extends GitProvider
 
     getManifest: (callback) ->
-        domain = "https://gitlab.cozycloud.cc:8586/"
+        repoSplit = @repoUrl.split('/')
+        for part in repoSplit
+            if part.indexOf('gitlab') isnt -1
+                domain = "https://#{part}/"
         prefixLength = domain.length
         client = request.newClient domain
 
