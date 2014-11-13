@@ -165,5 +165,6 @@ module.exports =
     """
 
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later."
+    "package.json not found": "Unable to fetch package.json. Check your repo url."
     "please wait data retrieval": "Please wait while data are being retrieved..."
     "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"

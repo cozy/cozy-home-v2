@@ -1209,6 +1209,7 @@ module.exports = {
   "change layout": "Change the layout",
   "introduction market": "Welcome to the Cozy App Store. This is the place to customize your Cozy\nby adding applications.\nFrom there you can install the application you built or chose among the\napplications provided by Cozy Cloud and other developers.",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later.",
+  "package.json not found": "Unable to fetch package.json. Check your repo url.",
   "please wait data retrieval": "Please wait while data are being retrieved...",
   "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
 };
@@ -1353,6 +1354,7 @@ module.exports = {
   "change layout": "Modifier la disposition",
   "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créé ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs.",
   "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
+  "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git.",
   "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données...",
   "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 };
@@ -1519,7 +1521,7 @@ module.exports = Application = (function(_super) {
     var base;
     base = "/api/applications/";
     if (this.get('id')) {
-      return base + "byid/" + this.get('id');
+      return "" + base + "byid/" + (this.get('id'));
     }
     return base;
   };
@@ -1719,7 +1721,7 @@ module.exports = StackApplication = (function(_super) {
     var base;
     base = "/api/applications/stack";
     if (this.get('id')) {
-      return base + "byid/" + this.get('id');
+      return "" + base + "byid/" + (this.get('id'));
     }
     return base;
   };
@@ -4982,10 +4984,14 @@ module.exports = PopoverDescriptionView = (function(_super) {
         _this.body.removeClass('loading');
         return _this.renderDescription();
       },
-      error: function() {
+      error: function(error) {
         _this.body.removeClass('loading');
         _this.body.addClass('error');
-        return _this.body.html(t('error connectivity issue'));
+        if (error.responseText.indexOf('Not Found') !== -1) {
+          return _this.body.html(t('package.json not found'));
+        } else {
+          return _this.body.html(t('error connectivity issue'));
+        }
       }
     });
     this.overlay = $('.md-overlay');

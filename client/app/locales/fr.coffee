@@ -182,5 +182,6 @@ module.exports =
     """
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
+    "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git."
     "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données..."
     "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
