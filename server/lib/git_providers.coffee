@@ -45,7 +45,7 @@ module.exports.CozyGitlabProvider = class CozyGitlabProvider extends GitProvider
         repoSplit = @repoUrl.split('/')
         for part in repoSplit
             if part.indexOf('gitlab') isnt -1
-                domain = "https://#{part}/"
+                domain = "#{repoSplit[0]}//#{part}/"
         prefixLength = domain.length
         client = request.newClient domain
 
