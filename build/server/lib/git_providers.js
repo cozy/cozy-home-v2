@@ -66,7 +66,7 @@ module.exports.CozyGitlabProvider = CozyGitlabProvider = (function(_super) {
     for (_i = 0, _len = repoSplit.length; _i < _len; _i++) {
       part = repoSplit[_i];
       if (part.indexOf('gitlab') !== -1) {
-        domain = "https://" + part + "/";
+        domain = "" + repoSplit[0] + "//" + part + "/";
       }
     }
     prefixLength = domain.length;

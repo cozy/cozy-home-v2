@@ -32,10 +32,13 @@ module.exports = class PopoverDescriptionView extends BaseView
             success: =>
                 @body.removeClass 'loading'
                 @renderDescription()
-            error: =>
+            error: (error) =>
                 @body.removeClass 'loading'
                 @body.addClass 'error'
-                @body.html t 'error connectivity issue'
+                if error.responseText.indexOf('Not Found') isnt -1
+                    @body.html t 'package.json not found'
+                else
+                    @body.html t 'error connectivity issue'
 
         @overlay = $ '.md-overlay'
         @overlay.click =>
