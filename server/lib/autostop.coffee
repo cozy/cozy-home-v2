@@ -47,7 +47,7 @@ startTimeout = (name) ->
                         app.state is "installed"
                             console.log "stop : " + name
                             stopApp app
-    ,10 * 60 * 1000
+    ,5 * 60 * 1000
 
 ###
 Restart tiemout for application.
