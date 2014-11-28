@@ -71,24 +71,30 @@ iCalDurationToUnitValue = function(s) {
 };
 
 Event.prototype.getAlarms = function(defaultTimezone) {
-  var alarm, alarms, cozyAlarm, in24h, key, now, occurrence, occurrences, rrule, startDate, startDates, timezone, trigg, unitValues, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+  var ALLDAY_FORMAT, alarm, alarms, cozyAlarm, date, in24h, key, now, occurrence, occurrences, rrule, startDate, startDates, timezone, trigg, unitValues, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
   alarms = [];
+  ALLDAY_FORMAT = 'YYYY-MM-DD';
   timezone = this.timezone || defaultTimezone;
   _ref1 = (_ref = this.alarms) != null ? _ref.items : void 0;
   for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
     alarm = _ref1[_i];
     startDates = [];
-    if (this.isAllDay()) {
-      startDates = [moment.tz(this.start, timezone)];
-    } else if (this.rrule != null) {
+    if ((this.rrule != null) && this.rrule.length > 0) {
       now = moment().tz(timezone);
       in24h = moment(now).add(1, 'days');
       rrule = RRule.parseString(this.rrule);
       occurrences = new RRule(rrule).between(now.toDate(), in24h.toDate());
       for (_j = 0, _len1 = occurrences.length; _j < _len1; _j++) {
         occurrence = occurrences[_j];
-        startDates.push(moment.tz(occurrence, timezone));
+        if (this.isAllDay()) {
+          date = moment.tz(occurrence, ALLDAY_FORMAT, timezone);
+        } else {
+          date = moment.tz(occurrence, timezone);
+        }
+        startDates.push(date);
       }
+    } else if (this.isAllDay()) {
+      startDates = [moment.tz(this.start, ALLDAY_FORMAT, timezone)];
     } else {
       startDates = [moment.tz(this.start, 'UTC')];
     }
