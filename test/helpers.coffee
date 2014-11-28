@@ -12,6 +12,7 @@ else
 # Bring models in context
 Application = require "#{helpers.prefix}server/models/application"
 Alarm = require "#{helpers.prefix}server/models/alarm"
+Event = require "#{helpers.prefix}server/models/event"
 CozyInstance = require "#{helpers.prefix}server/models/cozyinstance"
 Notification = require "#{helpers.prefix}server/models/notification"
 User = require "#{helpers.prefix}server/models/user"
@@ -61,7 +62,8 @@ _clearDb = (callback) ->
                 Notification.destroyAll (err) ->
                     return callback err if err
                     Alarm.destroyAll (err) ->
-                        callback err
+                        Event.destroyAll (err) ->
+                            callback err
 
 helpers.setup = (port) ->
     (done) ->
