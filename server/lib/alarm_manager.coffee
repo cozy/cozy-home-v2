@@ -1,25 +1,29 @@
-time = require 'time'
-tDate = time.Date
-CozyAdapter = require('jugglingdb-cozy-adapter')
+CozyAdapter = require 'jugglingdb-cozy-adapter'
 RRule = require('rrule').RRule
+moment = require 'moment-timezone'
+log = require('printit')
+    prefix: 'alarm-manager'
 
-oneDay = 24*60*60*1000
+oneDay = 24 * 60 * 60 * 1000
 
 module.exports = class AlarmManager
 
     dailytimer: null
     timeouts: {}
 
-    constructor: (@timezone, @Alarm, @notificationhelper) ->
+    constructor: (@timezone, @Alarm, @Event, @notificationhelper) ->
         @fetchAlarms()
 
     # retrieve alarms from DS and call addAlarmCounters for
     # each one
-    fetchAlarms: () =>
+    fetchAlarms: =>
         @dailytimer = setTimeout @fetchAlarms, oneDay
         # We load the alarms for the next 24h
         @Alarm.all (err, alarms) =>
             @addAlarmCounters alarm for alarm in alarms
+
+            @Event.all (err, events) =>
+                @addEventCounters event for event in events
 
     # cancel all timeouts for a given id
     clearTimeouts: (id) ->
@@ -30,66 +34,45 @@ module.exports = class AlarmManager
     # Analyze upcoming event from Data System and act with it.
     handleAlarm: (event, msg) =>
         switch event
-            when "alarm.create"
+            when "alarm.create", "alarm.update"
                 @Alarm.find msg, (err, alarm) =>
-                    @addAlarmCounters alarm if alarm
+                    @addAlarmCounters alarm if alarm?
 
-            when "alarm.update"
-                @Alarm.find msg, (err, alarm) =>
-                    @addAlarmCounters alarm if alarm
+            when "event.create", "event.update"
+                @Event.find msg, (err, event) =>
+                    @addEventCounters event if event?
 
-            when "alarm.delete"
+            when "alarm.delete", "event.delete"
                 @clearTimeouts msg
+
+    # Handles event's alarms
+    addEventCounters: (event) ->
+        if event.alarms? and event.alarms.items?.length > 0
+            cozyAlarms = event.getAlarms @timezone
+            @addAlarmCounters cozyAlarm for cozyAlarm in cozyAlarms
+
 
     # find all notifications for a DS's alarm object
     # and call addAlarmCounter for each one
     addAlarmCounters: (alarm) ->
         @clearTimeouts alarm._id
-        now = new tDate()
-        now.setTimezone @timezone
-        in24h = new tDate(now.getTime() + oneDay)
-        in24h.setTimezone @timezone
-        trigg = new tDate alarm.trigg
-        trigg.setTimezone 'UTC'
+        timezone = alarm.timezone or @timezone
 
-        if alarm.rrule
-            rrule = RRule.parseString alarm.rrule
+        # single alarm, trigger date stored in UTC
+        triggerDate = moment.tz alarm.trigg, timezone
 
-            # we cheat here because rrule returns timezoned occurences
-            # so it returns the UTC date marked as timezoned date...
-            # this must be removed when rrule fixes the issue
-            triggCopied = new tDate alarm.trigg
-            triggCopied.setTimezone time.currentTimezone
-            rrule.dtstart = triggCopied
-            occurences = new RRule(rrule).between(now, in24h)
-            occurences = occurences.map (string) =>
-                occurence = new tDate string
-                occurence.setTimezone @timezone
-                return occurence
-        else if now.getTime() <= trigg.getTime() < in24h.getTime()
-                occurences = [trigg]
-        else
-                occurences = []
+        now = moment().tz timezone
+        in24h = moment(now).add 1, 'days'
 
-        for occurence in occurences
-            @addAlarmCounter alarm, occurence
+        if now.unix() <= triggerDate.unix() < in24h.unix()
 
+            delta = triggerDate.valueOf() - now.valueOf()
 
-    # setup a timeout to call handleNotification at
-    # triggerDate
-    addAlarmCounter: (alarm, triggerDate) ->
+            log.info "Notification in #{delta/1000} seconds."
 
-        now = new tDate()
-        now.setTimezone @timezone
-        triggerDate.setTimezone @timezone
-
-        delta = triggerDate.getTime() - now.getTime()
-
-        if delta > 0
-            console.info "Notification in #{delta/1000} seconds."
             @timeouts[alarm._id] ?= []
-            @timeouts[alarm._id].push setTimeout (=> @handleNotification alarm) , delta
-
+            timeout = setTimeout @handleNotification.bind(@), delta, alarm
+            @timeouts[alarm._id].push timeout
 
     # immediately create the Notification object
     # and/or send Email for a given alarm
@@ -113,7 +96,15 @@ module.exports = class AlarmManager
 
             CozyAdapter.sendMailToUser data, (error, response) ->
                 if error?
-                    console.info "Error while sending email -- #{error}"
+                    log.error "Error while sending email -- #{error}"
 
         if alarm.action not in ['EMAIL', 'DISPLAY', 'BOTH']
-            console.log "UNKNOWN ACTION TYPE"
+            log.error "UNKNOWN ACTION TYPE (#{alarm.action})"
+
+    # Handle only unique units strings.
+    iCalDurationToUnitValue: (s) ->
+        m = s.match /(\d+)(W|D|H|M|S)/
+        o = {}
+        o[m[2].toLowerCase()] = parseInt m[1]
+
+        return o

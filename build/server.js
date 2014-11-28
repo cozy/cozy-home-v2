@@ -27,9 +27,6 @@ application = module.exports = function(callback) {
       initProxy();
     }
     return setupRealtime(app, function() {
-      setupChecking();
-      versionChecking();
-      autoStop.init();
       if (callback != null) {
         return callback(app, server);
       }

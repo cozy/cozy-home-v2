@@ -24,9 +24,9 @@ application = module.exports = (callback) ->
             initProxy()
 
         setupRealtime app, ->
-            setupChecking()
-            versionChecking()
-            autoStop.init()
+            #setupChecking()
+            #versionChecking()
+            #autoStop.init()
             callback app, server if callback?
 
 if not module.parent

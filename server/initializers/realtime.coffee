@@ -5,6 +5,7 @@ AlarmManager = require '../lib/alarm_manager'
 
 User = require '../models/user'
 Alarm = require '../models/alarm'
+Event = require '../models/event'
 Application = require '../models/application'
 Notification = require '../models/notification'
 
@@ -39,7 +40,8 @@ module.exports = (app, callback) ->
             console.info "Internal server error. Can't retrieve users or no user exists."
         else
             timezone = users[0].timezone
-            alarmManager = new AlarmManager timezone, Alarm, notifhelper
+            alarmManager = new AlarmManager timezone, Alarm, Event, notifhelper
             app.alarmManager = alarmManager
             realtime.on 'alarm.*', alarmManager.handleAlarm
+            realtime.on 'event.*', alarmManager.handleAlarm
         callback()

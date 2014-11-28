@@ -10,6 +10,7 @@ module.exports = Alarm = americano.getModel('Alarm', {
   },
   trigg: String,
   rrule: String,
+  timezone: String,
   description: String,
   related: {
     type: String,
