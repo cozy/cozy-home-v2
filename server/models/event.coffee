@@ -40,22 +40,27 @@ iCalDurationToUnitValue = (s) ->
 Event::getAlarms = (defaultTimezone) ->
 
     alarms = []
+    ALLDAY_FORMAT = 'YYYY-MM-DD'
 
     timezone = @timezone or defaultTimezone
-
     for alarm in @alarms?.items
 
         startDates = []
 
-        if @isAllDay()
-            startDates = [moment.tz @start, timezone]
-        else if @rrule?
+        if @rrule? and @rrule.length > 0
             now = moment().tz timezone
             in24h = moment(now).add 1, 'days'
             rrule = RRule.parseString @rrule
             occurrences = new RRule(rrule).between now.toDate(), in24h.toDate()
             for occurrence in occurrences
-                startDates.push moment.tz occurrence, timezone
+                if @isAllDay()
+                    date = moment.tz occurrence, ALLDAY_FORMAT, timezone
+                else
+                    date = moment.tz occurrence, timezone
+                startDates.push date
+
+        else if @isAllDay()
+            startDates = [moment.tz @start, ALLDAY_FORMAT, timezone]
 
         else
             startDates = [moment.tz @start, 'UTC']
