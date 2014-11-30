@@ -85,7 +85,7 @@ module.exports = class AlarmManager
                 url: "/#list" #TODO go to the alarm itself
 
             @notificationhelper.createTemporary
-                text: "Reminder: #{alarm.description}"
+                text: "Reminder: #{alarm.description or ''}"
                 resource: resource
 
         if alarm.action in ['EMAIL', 'BOTH']

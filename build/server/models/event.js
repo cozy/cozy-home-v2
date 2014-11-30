@@ -76,8 +76,8 @@ Event.prototype.getAlarms = function(defaultTimezone) {
   ALLDAY_FORMAT = 'YYYY-MM-DD';
   timezone = this.timezone || defaultTimezone;
   _ref1 = (_ref = this.alarms) != null ? _ref.items : void 0;
-  for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-    alarm = _ref1[_i];
+  for (key = _i = 0, _len = _ref1.length; _i < _len; key = ++_i) {
+    alarm = _ref1[key];
     startDates = [];
     if ((this.rrule != null) && this.rrule.length > 0) {
       now = moment().tz(timezone);
@@ -107,7 +107,7 @@ Event.prototype.getAlarms = function(defaultTimezone) {
         trigg.subtract(value, key);
       }
       cozyAlarm = {
-        _id: this._id,
+        _id: "" + this._id + "_" + alarm.id,
         action: alarm.action,
         trigg: trigg.format(),
         description: this.description,
