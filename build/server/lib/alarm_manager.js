@@ -129,7 +129,7 @@ module.exports = AlarmManager = (function() {
         url: "/#list"
       };
       this.notificationhelper.createTemporary({
-        text: "Reminder: " + alarm.description,
+        text: "Reminder: " + (alarm.description || ''),
         resource: resource
       });
     }
