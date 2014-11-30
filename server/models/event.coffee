@@ -43,7 +43,7 @@ Event::getAlarms = (defaultTimezone) ->
     ALLDAY_FORMAT = 'YYYY-MM-DD'
 
     timezone = @timezone or defaultTimezone
-    for alarm in @alarms?.items
+    for alarm, key in @alarms?.items
 
         startDates = []
 
@@ -76,7 +76,7 @@ Event::getAlarms = (defaultTimezone) ->
 
             # formats like a Cozy alarm
             cozyAlarm =
-                _id: @_id
+                _id: "#{@_id}_#{alarm.id}"
                 action: alarm.action
                 trigg: trigg.format()
                 description: @description
