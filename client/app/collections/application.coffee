@@ -25,7 +25,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "calendar"
                 git: "https://github.com/cozy/cozy-calendar.git"
                 comment: "official application"
-                description: "Manage your events and sync them with your mobile."
+                description: "calendars description"
            ,
                 icon: "img/contacts-icon.png"
                 name: "contacts"
@@ -33,7 +33,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "contacts"
                 git: "https://github.com/cozy/cozy-contacts.git"
                 comment: "official application"
-                description: "Manage your contacts and sync them with your mobile."
+                description: "contacts description"
            ,
                 icon: "img/emails-icon.png"
                 name: "emails"
@@ -41,7 +41,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "emails"
                 git: "https://github.com/cozy/cozy-emails.git"
                 comment: "official application"
-                description: "Read, send and backup your emails."
+                description: "emails description"
            ,
                 icon: "img/files-icon.png"
                 name: "files"
@@ -49,7 +49,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "files"
                 git: "https://github.com/cozy/cozy-files.git"
                 comment: "official application"
-                description: "Your online filesystem synced with your devices."
+                description: "files description"
            ,
                 icon: "img/photos-icon.png"
                 name: "photos"
@@ -57,7 +57,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "photos"
                 git: "https://github.com/cozy/cozy-photos.git"
                 comment: "official application"
-                description: "Make photo album from you files and share them."
+                description: "photos description"
            ,
                 icon: "img/sync-icon.png"
                 name: "sync"
@@ -65,7 +65,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "sync"
                 git: "https://github.com/cozy/cozy-sync.git"
                 comment: "official application"
-                description: "The tool required to sync your contact and your calendar with your mobile."
+                description: "sync description"
            ,
                 icon: "img/bookmarks-icon.png"
                 name: "bookmarks"
@@ -73,7 +73,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "bookmarks"
                 git: "https://github.com/Piour/cozy-bookmarks.git"
                 comment: "community contribution"
-                description: "Save and manage your bookmarks."
+                description: "bookmark description"
            ,
                 icon: "img/cozy-music.png"
                 name: "cozic"
@@ -81,7 +81,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "cozic"
                 git: "https://github.com/rdubigny/cozy-music.git"
                 comment: "community contribution"
-                description: "An audio player to play your music from your browser."
+                description: "cozic description"
            ,
                 icon: "img/databrowser-icon.png"
                 name: "databrowser"
@@ -89,7 +89,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "databrowser"
                 git: "https://github.com/n-a-n/cozy-databrowser.git"
                 comment: "community contribution"
-                description: "Browse and visualize all your data (raw format)."
+                description: "databrowser description"
            ,
                 icon:"img/feeds-icon.png"
                 name:"feeds"
@@ -97,7 +97,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"feeds"
                 git:"https://github.com/Piour/cozy-feeds.git"
                 comment:"community contribution"
-                description:"Aggregate your feeds and save your favorite links in bookmarks."
+                description:"feeds description"
            ,
                 icon: "img/kyou.png"
                 name: "kyou"
@@ -105,7 +105,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "kyou"
                 git: "https://github.com/frankrousseau/kyou.git"
                 comment: "community contribution"
-                description: "Improve your hapiness and your health by quantifying you."
+                description: "kyou description"
                 website: "http://frankrousseau.github.io/kyou"
            ,
                 icon: "img/konnectors-icon.png"
@@ -114,7 +114,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "konnectors"
                 git: "https://github.com/frankrousseau/konnectors.git"
                 comment: "community contribution"
-                description: "Import data from external services (Twitter, Jawbone...)"
+                description: "konnectors description"
            ,
                 icon:"img/kresus-icon.png"
                 name:"kresus"
@@ -122,7 +122,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"kresus"
                 git:"https://github.com/bnjbvr/kresus.git"
                 comment:"community contribution"
-                description:"Des outils supplémentaires pour gérer vos comptes."
+                description:"kresus description"
            ,
                 icon:"img/nirc-icon.png"
                 name:"nirc"
@@ -130,7 +130,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"nirc"
                 git:"https://github.com/frankrousseau/cozy-nirc.git"
                 comment:"community contribution"
-                description:"Access to your favorite IRC channel from your Cozy."
+                description:"nirc description"
            ,
                 icon:"img/notes-icon.png"
                 name:"notes"
@@ -138,7 +138,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"notes"
                 git:"https://github.com/cozy/notes.git"
                 comment:"community contribution"
-                description:"Organize and write smart notes."
+                description:"notes description"
            ,
                 icon: "img/owm.png"
                 name: "owm"
@@ -146,7 +146,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "owm"
                 git: "https://github.com/Piour/piour-cozy-owm.git"
                 comment: "community contribution"
-                description: "What is the weather like in your city? Check it out within your Cozy!"
+                description: "owm description"
            ,
                 icon: "img/pfm.png"
                 name: "mes comptes"
@@ -154,7 +154,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug: "pfm"
                 git: "https://github.com/seeker89/cozy-pfm.git"
                 comment: "community contribution"
-                description: "Suivez vos comptes banquaires sans avoir à vous relogger à chaque fois."
+                description: "pfm description"
            ,
                 icon:"img/remotestorage-icon.png"
                 name:"remotestorage"
@@ -162,7 +162,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"remotestorage"
                 git:"https://github.com/aenario/cozy-remotestorage.git"
                 comment:"community contribution"
-                description:"A Remote Storage appliance to store data from your Unhosted applications."
+                description:"remote storage description"
            ,
                 icon:"img/tasky-icon.png"
                 name:"tasky"
@@ -170,7 +170,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"tasky"
                 git:"https://github.com/jsilvestre/tasky.git"
                 comment:"community contribution"
-                description:"Super fast and simple tag-based task manager."
+                description:"tasky description"
            ,
                 icon:"img/todos-icon.png"
                 name:"todos"
@@ -178,7 +178,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"todos"
                 git:"https://github.com/cozy/todos.git"
                 comment:"community contribution"
-                description:"Write your tasks, order them and execute them efficiently."
+                description:"todos description"
            ,
                 icon:"img/term-icon.png"
                 name:"term"
@@ -186,7 +186,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 slug:"term"
                 git:"https://github.com/alpha14/cozy-term.git"
                 comment:"community contribution"
-                description:"A terminal for your cozy."
+                description:"term description"
         ]
 
         @reset apps
