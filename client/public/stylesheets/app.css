@@ -839,7 +839,7 @@ select:focus {
   color: #fff;
   background: #ff850a;
   border-color: 1px solid #ff850a;
-  color: whit;
+  color: #fff;
 }
 .btn:active {
   -webkit-box-shadow: 1px 3px 2px rgba(0,0,0,0.2) inset, 0 0 0;
@@ -1550,8 +1550,8 @@ body {
   margin-bottom: 10px;
 }
 #account-view .input .btn {
-  height: 60px;
-  width: 60px;
+  height: 55px;
+  width: 55px;
   margin-left: 10px;
 }
 #home-view {
@@ -1775,6 +1775,12 @@ body {
 .config-application:hover .buttons {
   display: inline-block;
 }
+#config-applications-view .stack-app .app {
+  font-weight: normal;
+}
+#config-applications-view .stack-app .line.buttons {
+  margin-top: 20px;
+}
 .title-device {
   display: none;
 }
@@ -1963,6 +1969,16 @@ body {
   padding-top: 3px;
   position: absolute;
 }
+.noncozy-warning {
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 20px;
+  padding: 5px 10px;
+  color: #808080;
+  background: #fff4f0;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
 .md-body {
   background: #f7f4f0;
   padding: 20px;
@@ -2138,8 +2154,8 @@ body {
   #config-applications-view h4 {
     margin-bottom: 20px;
   }
-  #config-applications-view .stack-app .app {
-    font-weight: bold;
+  #config-applications-view .stack-app .line {
+    display: block;
   }
 }
 @media (max-width: 640px) {

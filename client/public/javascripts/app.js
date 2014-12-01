@@ -136,7 +136,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "calendar",
         git: "https://github.com/cozy/cozy-calendar.git",
         comment: "official application",
-        description: "Set up reminders and let cozy be your assistant"
+        description: "calendars description"
       }, {
         icon: "img/contacts-icon.png",
         name: "contacts",
@@ -144,7 +144,15 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "contacts",
         git: "https://github.com/cozy/cozy-contacts.git",
         comment: "official application",
-        description: "Manage your contacts with custom informations"
+        description: "contacts description"
+      }, {
+        icon: "img/emails-icon.png",
+        name: "emails",
+        displayName: "Emails",
+        slug: "emails",
+        git: "https://github.com/cozy/cozy-emails.git",
+        comment: "official application",
+        description: "emails description"
       }, {
         icon: "img/files-icon.png",
         name: "files",
@@ -152,7 +160,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "files",
         git: "https://github.com/cozy/cozy-files.git",
         comment: "official application",
-        description: "Your online filesystem."
+        description: "files description"
       }, {
         icon: "img/photos-icon.png",
         name: "photos",
@@ -160,7 +168,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "photos",
         git: "https://github.com/cozy/cozy-photos.git",
         comment: "official application",
-        description: "Share photos with your friends."
+        description: "photos description"
       }, {
         icon: "img/sync-icon.png",
         name: "sync",
@@ -168,7 +176,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "sync",
         git: "https://github.com/cozy/cozy-sync.git",
         comment: "official application",
-        description: "Synchronize your contacts and your agenda with Cozy"
+        description: "sync description"
       }, {
         icon: "img/bookmarks-icon.png",
         name: "bookmarks",
@@ -176,7 +184,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "bookmarks",
         git: "https://github.com/Piour/cozy-bookmarks.git",
         comment: "community contribution",
-        description: "Manage your bookmarks easily"
+        description: "bookmark description"
       }, {
         icon: "img/cozy-music.png",
         name: "cozic",
@@ -184,7 +192,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "cozic",
         git: "https://github.com/rdubigny/cozy-music.git",
         comment: "community contribution",
-        description: "An audio player to always keep your music with you"
+        description: "cozic description"
       }, {
         icon: "img/databrowser-icon.png",
         name: "databrowser",
@@ -192,7 +200,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "databrowser",
         git: "https://github.com/n-a-n/cozy-databrowser.git",
         comment: "community contribution",
-        description: "Browse and visualize all your data."
+        description: "databrowser description"
       }, {
         icon: "img/feeds-icon.png",
         name: "feeds",
@@ -200,7 +208,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "feeds",
         git: "https://github.com/Piour/cozy-feeds.git",
         comment: "community contribution",
-        description: "Aggregate your feeds and save your favorite links in bookmarks."
+        description: "feeds description"
       }, {
         icon: "img/kyou.png",
         name: "kyou",
@@ -208,7 +216,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "kyou",
         git: "https://github.com/frankrousseau/kyou.git",
         comment: "community contribution",
-        description: "Improve your hapiness and your health by quantifying you.",
+        description: "kyou description",
         website: "http://frankrousseau.github.io/kyou"
       }, {
         icon: "img/konnectors-icon.png",
@@ -217,63 +225,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "konnectors",
         git: "https://github.com/frankrousseau/konnectors.git",
         comment: "community contribution",
-        description: "Import data from external services (Twitter, Jawbone...)"
-      }, {
-        icon: "img/pfm.png",
-        name: "mes comptes",
-        displayName: "Mes Comptes",
-        slug: "pfm",
-        git: "https://github.com/seeker89/cozy-pfm.git",
-        comment: "community contribution",
-        description: "Suivez vos comptes banquaires sans avoir à vous relogger à chaque fois."
-      }, {
-        icon: "img/nirc-icon.png",
-        name: "nirc",
-        displayName: "nIRC",
-        slug: "nirc",
-        git: "https://github.com/frankrousseau/cozy-nirc.git",
-        comment: "community contribution",
-        description: "Access to your favorite IRC channel from your Cozy"
-      }, {
-        icon: "img/notes-icon.png",
-        name: "notes",
-        displayName: "Note",
-        slug: "notes",
-        git: "https://github.com/cozy/notes.git",
-        comment: "community contribution",
-        description: "Organize and write smart notes."
-      }, {
-        icon: "img/owm.png",
-        name: "owm",
-        displayName: "OWM",
-        slug: "owm",
-        git: "https://github.com/Piour/piour-cozy-owm.git",
-        comment: "community contribution",
-        description: "What is the weather like in your city? Check it out within your Cozy!"
-      }, {
-        icon: "img/remotestorage-icon.png",
-        name: "remotestorage",
-        displayName: "Remote Storage",
-        slug: "remotestorage",
-        git: "https://github.com/aenario/cozy-remotestorage.git",
-        comment: "community contribution",
-        description: "A Remote Storage appliance to store data from your Unhosted applications."
-      }, {
-        icon: "img/todos-icon.png",
-        name: "todos",
-        displayName: "Todos",
-        slug: "todos",
-        git: "https://github.com/cozy/todos.git",
-        comment: "community contribution",
-        description: "Write your tasks, order them and execute them efficiently."
-      }, {
-        icon: "img/tasky-icon.png",
-        name: "tasky",
-        displayName: "Tasky",
-        slug: "tasky",
-        git: "https://github.com/jsilvestre/tasky.git",
-        comment: "community contribution",
-        description: "Super fast and simple tag-based task manager."
+        description: "konnectors description"
       }, {
         icon: "img/kresus-icon.png",
         name: "kresus",
@@ -281,7 +233,63 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "kresus",
         git: "https://github.com/bnjbvr/kresus.git",
         comment: "community contribution",
-        description: "Kresus' Personal Finance Manager."
+        description: "kresus description"
+      }, {
+        icon: "img/nirc-icon.png",
+        name: "nirc",
+        displayName: "nIRC",
+        slug: "nirc",
+        git: "https://github.com/frankrousseau/cozy-nirc.git",
+        comment: "community contribution",
+        description: "nirc description"
+      }, {
+        icon: "img/notes-icon.png",
+        name: "notes",
+        displayName: "Note",
+        slug: "notes",
+        git: "https://github.com/cozy/notes.git",
+        comment: "community contribution",
+        description: "notes description"
+      }, {
+        icon: "img/owm.png",
+        name: "owm",
+        displayName: "OWM",
+        slug: "owm",
+        git: "https://github.com/Piour/piour-cozy-owm.git",
+        comment: "community contribution",
+        description: "owm description"
+      }, {
+        icon: "img/pfm.png",
+        name: "mes comptes",
+        displayName: "Mes Comptes",
+        slug: "pfm",
+        git: "https://github.com/seeker89/cozy-pfm.git",
+        comment: "community contribution",
+        description: "pfm description"
+      }, {
+        icon: "img/remotestorage-icon.png",
+        name: "remotestorage",
+        displayName: "Remote Storage",
+        slug: "remotestorage",
+        git: "https://github.com/aenario/cozy-remotestorage.git",
+        comment: "community contribution",
+        description: "remote storage description"
+      }, {
+        icon: "img/tasky-icon.png",
+        name: "tasky",
+        displayName: "Tasky",
+        slug: "tasky",
+        git: "https://github.com/jsilvestre/tasky.git",
+        comment: "community contribution",
+        description: "tasky description"
+      }, {
+        icon: "img/todos-icon.png",
+        name: "todos",
+        displayName: "Todos",
+        slug: "todos",
+        git: "https://github.com/cozy/todos.git",
+        comment: "community contribution",
+        description: "todos description"
       }, {
         icon: "img/term-icon.png",
         name: "term",
@@ -289,7 +297,7 @@ module.exports = ApplicationCollection = (function(_super) {
         slug: "term",
         git: "https://github.com/alpha14/cozy-term.git",
         comment: "community contribution",
-        description: "A terminal for your cozy."
+        description: "term description"
       }
     ];
     return this.reset(apps);
@@ -1136,7 +1144,7 @@ module.exports = {
   "app store": "App store",
   "configuration": "Configuration",
   "assistance": "Assistance",
-  "hardware consumption": "Hardware consumption",
+  "hardware consumption": "Hardware",
   "hard drive gigabytes": "&nbsp;GB (Hard Drive)",
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Manage your applications",
@@ -1172,7 +1180,7 @@ module.exports = {
   "update all": "Update all",
   "update stack": "Update",
   "refresh page": "Wait please, page will refresh in several minutes.",
-  "cozy platform": "Cozy Platform",
+  "cozy platform": "Platform",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
   "broken": "broken",
@@ -1211,7 +1219,33 @@ module.exports = {
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
   "please wait data retrieval": "Please wait while data are being retrieved...",
-  "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
+  "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
+  "dashboard": "Dashboard",
+  "synchronization": "Synchronization",
+  "synchronization description": "Cozy offers you synchronization capabilities for your files, your\ncontacts and your calendars. But it requires specific applications to\nachieve it.",
+  "caldav cardav with davdroid": "For your contacts and events, we recommend you the\nBitfire <a href=\"http://davdroid.bitfire.at/what-is-davdroid\">DAVDroid</a>\napplication. Once you have installed the Sync\napp on your Cozy, you can configure your DAVDroid app to synchronize\nyour contacts and events on your phone. Then, you will be able to\naccess them from your native applications.",
+  "files with cozy on android": "To access to all your files from your mobile, we recommend you to\ninstall the\n<a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">Cozy application</a>\nfrom the Android Play Store. Once done, just follow the instruction and\nbrowser your files directly from your phone.",
+  "calendars description": "Manage your events and sync them with your mobile.",
+  "contacts description": "Manage your contacts and sync them with your mobile.",
+  "emails description": "Read, send and backup your emails.",
+  "files description": "Your online filesystem synced with your devices.",
+  "photos description": "Make photo album from you files and share them.",
+  "sync description": "The tool required to sync your contact and your calendar with your mobile.",
+  "bookmark description": "Save and manage your bookmarks.",
+  "cozic description": "An audio player to play your music from your browser.",
+  "databrowser description": "Browse and visualize all your data (raw format).",
+  "feeds description": "Aggregate your feeds and save your favorite links in bookmarks.",
+  "kyou description": "Improve your hapiness and your health by quantifying you.",
+  "konnectors description": "Import data from external services (Twitter, Jawbone...).",
+  "kresus description": "Additional tools for your personal finance manager.",
+  "nirc description": "Access to your favorite IRC channel from your Cozy.",
+  "notes description": "Organize and write smart notes.",
+  "owm description": "Know how is going the weather anywhere in the world.",
+  "pfm description": "Manage your bank accounts without logging each time (French Banks only).",
+  "remote storage description": "A Remote Storage appliance to store data from your Unhosted applications.",
+  "tasky description": "Super fast and simple tag-based task manager.",
+  "todos description": "Write your tasks, order them and execute them efficiently.",
+  "term description": "A terminal for your cozy."
 };
 });
 
@@ -1280,7 +1314,7 @@ module.exports = {
   "app store": "App store",
   "configuration": "Configuration",
   "assistance": "Aide",
-  "hardware consumption": "Consommation Hardware",
+  "hardware consumption": "Matériel",
   "hard drive gigabytes": "&nbsp;Go (Disque Dur)",
   "memory megabytes": "&nbsp;Mo (RAM)",
   "manage your applications": "Gérez vos applications",
@@ -1318,7 +1352,7 @@ module.exports = {
   "update stack": "Mettre à jour",
   "refresh page": "Veuillez patienter, la page se rafraichira d'ici quelques minutes.",
   "reboot stack": "Redémarrer",
-  "cozy platform": "Plate-forme Cozy",
+  "cozy platform": "Plate-forme",
   "update error": "Une erreur est survenue pendant la mise à jour",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
@@ -1356,7 +1390,33 @@ module.exports = {
   "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
   "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git.",
   "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données...",
-  "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
+  "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?",
+  "dashboard": "Tableau de bord",
+  "synchronization": "Synchronisation",
+  "synchronization description": "Cozy vous permet de synchronisez vos fichiers, contact et calendriers\navec vos périphériques. Pour la mettre en route, vous devez installer\ndes applications spécifiques.",
+  "caldav cardav with davdroid": "Pour vos contacts et vos événements, nous vous recommandons\nl'application\n<a href=\"http://davdroid.bitfire.at/what-is-davdroid\">DAVDroid</a>\nde Bitfire. Une fois que vous aurez\ninstallé l'application Sync sur votre Cozy, vous pourrez\nconfigurer DAVDroid pour qu'il synchronise vos contacts et\ncalendriers. Ceux ci seront ensuite gérables via les\napplications natives du téléphone.",
+  "files with cozy on android": "Pour accéder à vos fichiers depuis votre mobile nous vous proposons\nl'application <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">Cozy</a>\ndisponible sur la place de marché Play Store pour Android. Une fois\nque vous l'aurez installé, suivez simplement les\ninstructions.  Vous pourrez ensuite naviguez dans vos fichiers\ndepuis votre mobile.",
+  "calendars description": "Gérez vos événements et synchronisez les avec votre mobile.",
+  "contacts description": "Gérez vos contacts et synchronisez les avec votre mobile.",
+  "emails description": "Lisez, envoyez et sauvegardez vos emails.",
+  "files description": "Vos fichiers en ligne et synchronisés avec votre mobile.",
+  "photos description": "Construisez un album photo depuis vos fichiers et partagez le.",
+  "sync description": "Cette application est requise pour synchronisez vos contacts et vos événements.",
+  "bookmark description": "Sauvergardez et gérez vos liens favoris.",
+  "cozic description": "Un lecteur audio pour votre musique dans votre navigateur.",
+  "databrowser description": "Naviguez dans vos données dans un format brut.",
+  "feeds description": "Aggrégez vos flux RSS et sauvegardez vos liens dans vos favoris.",
+  "kyou description": "Améliorez  votre humeur et votre santé en vous quantifiant.",
+  "konnectors description": "Import de données depuis des services externes (Twitter, Jawbone...).",
+  "kresus description": "Des outils supplémentaires pour gérer vos comptes.",
+  "nirc description": "Accédez à votre channel IRC préféré depuis votre Cozy.",
+  "notes description": "Ecrivez et organisez des notes intelligentes.",
+  "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !",
+  "pfm description": "Suivez vos comptes banquaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé.",
+  "remote storage description": "Un module Remote Storage pour vos applications Unhosted.",
+  "tasky description": "Un gestionnaire de tâche, basé sur les tags, rapide et simple.",
+  "todos description": "Ecrivez et ordonnancez vos tâchez efficacement.",
+  "term description": "Un terminal pour votre Cozy."
 };
 });
 
@@ -1426,7 +1486,7 @@ module.exports = {
   "app store": "Loja de aplicações",
   "configuration": "Configuração",
   "assistance": "Assistência",
-  "hardware consumption": "Consumo de hardware",
+  "hardware consumption": "Hardware",
   "hard drive gigabytes": "&nbsp;GB (Disco Rigido)",
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Gere as tuas aplicações",
@@ -2124,7 +2184,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><button class="btn update-stack">');
+buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line buttons"><button class="btn update-stack">');
 var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><button class="btn reboot-stack">');
@@ -2251,7 +2311,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('<a href="#applications">');
 var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a>.</p><p class="mt2 pa2">');
+buf.push('</a>.</p><h4 class="pa2">');
+var __val__ = t ('dashboard')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><p>');
 var __val__ = t ('menu description')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p><img src="/img/home-black.png"/><strong>');
@@ -2284,6 +2347,18 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</strong>');
 var __val__ = t('links to resources')
 buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><h4 class="pa2">');
+var __val__ = t ('synchronization')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><p>');
+var __val__ = t ('synchronization description')
+buf.push(null == __val__ ? "" : __val__);
+buf.push('</p><p>');
+var __val__ = t ('caldav cardav with davdroid')
+buf.push(null == __val__ ? "" : __val__);
+buf.push('</p><p>');
+var __val__ = t ('files with cozy on android')
+buf.push(null == __val__ ? "" : __val__);
 buf.push('</p></div></div><div id="app-list" class="gridster"></div>');
 }
 return buf.join("");
@@ -2396,7 +2471,10 @@ buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
 buf.push('/></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
 var __val__ = t(app.comment)
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><p class="par2">' + escape((interp = app.description) == null ? '' : interp) + '</p></div>');
+buf.push('</span><p class="par2">');
+var __val__ = t(app.description)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div>');
 }
 return buf.join("");
 };
@@ -2499,7 +2577,15 @@ buf.push('<div class="md-content"><div class="md-header clearfix"><div class="li
 buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
 buf.push('>&nbsp;</a><a');
 buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
-buf.push('><img src="img/star-white.png"/></a></div></div></div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
+buf.push('><img src="img/star-white.png"/></a></div></div>');
+if ( (model.comment !== 'official application'))
+{
+buf.push('<div class="line noncozy-warning">');
+var __val__ = t('warning this app is not maintained by cozy')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div>');
+}
+buf.push('</div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
