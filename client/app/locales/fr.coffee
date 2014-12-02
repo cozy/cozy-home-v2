@@ -66,7 +66,7 @@ module.exports =
         """
 
 
-    "your app list": "Accéder à vos apps"
+    "your app list": "Accédez à vos apps"
     "customize your cozy":"Personnalisez la mise en page"
     "manage your apps":"Gérez vos apps"
     "choose your apps":"Choisissez vos apps"
@@ -83,8 +83,8 @@ module.exports =
     "hard drive gigabytes":"&nbsp;Go (Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
     "manage your applications":"Gérez vos applications"
-    "manage your devices":"Gérez vos devices"
-    "revoke device access": "Révoquer l'accès du périphérique"
+    "manage your devices":"Gérez vos appareils"
+    "revoke device access": "Révoquer l'accès à l'appareil"
     "synchronized": "synchronisé"
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
@@ -99,7 +99,7 @@ module.exports =
         Votre fuseau horaire est requis pour vous afficher les dates correctement.
     """
     "domain name for urls and email":"""
-        Le nom de domaine est utilisé pour construire les urls
+        Le nom de domaine est utilisé pour construire les URL
         envoyées par mail à vos contacts.
     """
     "Chose the language you want I use to speak with you:":"""
@@ -144,26 +144,26 @@ module.exports =
     "changing locale requires reload":"""
         Le changement de langue nécessite le rechargement de la page.
     """
-    "cancel":"cancel"
-    "abort":"abort"
+    "cancel":"annuler"
+    "abort":"interrompre"
     "Once updated, this application will require the following permissions:": """
         Une fois mise à jour l'application requerra les permissions suivantes:
     """
     "confirm update":"confirmez la mise à jour"
     "confirm install":"confirmez l'installation'"
     "no specific permissions needed":"""
-        Cette applicatiion n'a pas besoin d'informations spécifiques
+        Cette application n'a pas besoin d'informations spécifiques
     """
     "menu description":"""Si c'est votre première fois sur Cozy, vous trouverez
     dans la suite un petit guide décrivant les sections de votre Cozy. Elles
-    peuvent tout être atteintes depuis le menu en haut à droite de l'acceuil Cozy.
+    peuvent tout être atteintes depuis le menu en haut à droite de l'accueil Cozy.
     """
     "install your first app":"votre Cozy puis installer votre première application via l'"
     "where you reach applications":"C'est ici que vous pouvez accéder à toutes vos applications."
     "app management":"Gestion des applications"
-    "There you can manage the state of your applications: start it, stop it, remove it...":"Ici tu peux gérer l'état de tes applications: démarre, arrête et supprime les..."
+    "There you can manage the state of your applications: start it, stop it, remove it...":"Ici vous pouvez gérer l'état de vos applications : les lancer, les interrompre, les supprimer…"
     "app store contains applications":"Dans l'app store, vous trouverez de nouvelles applications pour installer Cozy."
-    "set cozy parameters here":"Pour fonctionner correctement, Cozy requiert différents paramètres. Positionnez les dans cette section."
+    "set cozy parameters here":"Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section."
     "links to resources":"Vous trouverez ici toutes les ressources dont vous avez besoin."
     "The first place to find help is:":"Le premier endroit où trouver de l'aide est:"
     "removed":"supprimée"
@@ -171,20 +171,20 @@ module.exports =
     "finish layout edition": "Enregistrer"
     "reset customization": "Remise à zéro"
     "use widget": "Mode widget"
-    "use icon": "Mode icone"
+    "use icon": "Mode icône"
     "change layout": "Modifier la disposition"
 
     "introduction market": """
         Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez
         personnaliser votre Cozy en y ajoutant des applications.
-        Vous pouvez installer l'application que vous avez créé ou choisir parmi
+        Vous pouvez installer l'application que vous avez créée ou choisir parmi
         celles proposées par Cozycloud ou d'autres développeurs.
     """
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
     "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git."
     "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données..."
-    "revoke device confirmation message": "Cette action empêchera au périphérique associé d'accéder à votre Cozy. Êtes-vous sûr ?"
+    "revoke device confirmation message": "Cette action empêchera l'appareil associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 
     "dashboard": "Tableau de bord"
     "synchronization": "Synchronisation"
@@ -207,29 +207,29 @@ module.exports =
         Pour accéder à vos fichiers depuis votre mobile nous vous proposons
         l'application <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">Cozy</a>
         disponible sur la place de marché Play Store pour Android. Une fois
-        que vous l'aurez installé, suivez simplement les
-        instructions.  Vous pourrez ensuite naviguez dans vos fichiers
+        que vous l'aurez installée, suivez simplement les
+        instructions.  Vous pourrez ensuite naviguer dans vos fichiers
         depuis votre mobile.
     """
-    "calendars description": "Gérez vos événements et synchronisez les avec votre mobile."
-    "contacts description": "Gérez vos contacts et synchronisez les avec votre mobile."
+    "calendars description": "Gérez vos événements et synchronisez-les avec votre mobile."
+    "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile."
     "emails description": "Lisez, envoyez et sauvegardez vos emails."
     "files description": "Vos fichiers en ligne et synchronisés avec votre mobile."
     "photos description": "Construisez un album photo depuis vos fichiers et partagez le."
-    "sync description": "Cette application est requise pour synchronisez vos contacts et vos événements."
-    "bookmark description": "Sauvergardez et gérez vos liens favoris."
+    "sync description": "Cette application est nécessaire pour synchroniser vos contacts et vos événements."
+    "bookmark description": "Sauvegardez et gérez vos liens favoris."
     "cozic description": "Un lecteur audio pour votre musique dans votre navigateur."
     "databrowser description": "Naviguez dans vos données dans un format brut."
-    "feeds description": "Aggrégez vos flux RSS et sauvegardez vos liens dans vos favoris."
+    "feeds description": "Agrégez vos flux RSS et sauvegardez vos liens dans vos favoris."
     "kyou description": "Améliorez  votre humeur et votre santé en vous quantifiant."
     "konnectors description": "Import de données depuis des services externes (Twitter, Jawbone...)."
     "kresus description": "Des outils supplémentaires pour gérer vos comptes."
-    "nirc description": "Accédez à votre channel IRC préféré depuis votre Cozy."
-    "notes description": "Ecrivez et organisez des notes intelligentes."
-    "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !"
-    "pfm description": "Suivez vos comptes banquaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé."
+    "nirc description": "Accédez à votre canal IRC préféré depuis votre Cozy."
+    "notes description": "Écrivez et organisez des notes intelligentes."
+    "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !"
+    "pfm description": "Suivez vos comptes bancaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé."
     "remote storage description": "Un module Remote Storage pour vos applications Unhosted."
     "tasky description": "Un gestionnaire de tâche, basé sur les tags, rapide et simple."
-    "todos description": "Ecrivez et ordonnancez vos tâchez efficacement."
+    "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
 
