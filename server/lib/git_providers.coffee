@@ -1,4 +1,5 @@
 request = require 'request-json'
+url = require 'url'
 
 # Interface to implement to add a Git provider"
 # getManifest: (callback) ->
@@ -42,14 +43,11 @@ module.exports.GithubProvider = class GithubProvider extends GitProvider
 module.exports.CozyGitlabProvider = class CozyGitlabProvider extends GitProvider
 
     getManifest: (callback) ->
-        repoSplit = @repoUrl.split('/')
-        for part in repoSplit
-            if part.indexOf('gitlab') isnt -1
-                domain = "#{repoSplit[0]}//#{part}/"
-        prefixLength = domain.length
+        repo = url.parse(@repoUrl, true)
+        domain = "#{repo.protocol}//#{repo.host}"
         client = request.newClient domain
 
-        @basePath = @repoUrl.substring(prefixLength, @repoUrl.length - 4)
+        @basePath = repo.pathname.replace('.git', '')
         path = "#{@basePath}/raw/master/package.json"
         client.get path, (err, res, body) ->
             err = body.error if body.error?

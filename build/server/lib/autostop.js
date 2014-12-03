@@ -84,7 +84,7 @@ startTimeout = function(name) {
         return _results;
       });
     }
-  }, 3 * 60 * 1000);
+  }, 5 * 60 * 1000);
 };
 
 
