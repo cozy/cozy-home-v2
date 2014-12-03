@@ -80,7 +80,7 @@ module.exports =
     "app store":"Loja de aplicações"
     "configuration":"Configuração"
     "assistance":"Assistência"
-    "hardware consumption":"Consumo de hardware"
+    "hardware consumption":"Hardware"
     "hard drive gigabytes":"&nbsp;GB (Disco Rigido)"
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Gere as tuas aplicações"

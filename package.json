@@ -1,6 +1,6 @@
 {
   "name": "cozy-home",
-  "version": "1.0.29",
+  "version": "1.0.31",
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
   "licenses": [
     {
@@ -25,7 +25,7 @@
     "async": "0.2.10",
     "request-json": "0.4.6",
     "rrule": "2.0.1",
-    "time": "0.10.0"
+    "moment-timezone": "0.2.2"
   },
   "contributors": [
     "Zoe Bellot",
@@ -42,7 +42,8 @@
     "coffee-script": "latest",
     "mocha": "1.17.1",
     "request": "2.34.0",
-    "nock": "0.29.0"
+    "nock": "0.29.0",
+    "sinon": "^1.10.3"
   },
   "scripts": {
     "test": "cake --use-js tests",

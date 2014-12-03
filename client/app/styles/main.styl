@@ -619,8 +619,8 @@ body
 
     .input
         .btn
-            height: 60px
-            width: 60px
+            height: 55px
+            width: 55px
             margin-left: 10px
 
 
@@ -823,6 +823,15 @@ body
     .buttons
         display: inline-block
 
+#config-applications-view
+    .stack-app
+
+        .app
+            font-weight: normal
+
+        .line.buttons
+            margin-top: 20px
+
 // Config device
 
 .title-device
@@ -968,6 +977,15 @@ body
         right: 60px
         padding-top: 3px
         position: absolute
+
+.noncozy-warning
+    font-weight: bold
+    font-size: 14px
+    margin-top: 20px
+    padding: 5px 10px
+    color: grey
+    background: lightred
+    border-radius: 5px
 
 .md-body
 
@@ -1150,8 +1168,11 @@ body
         h4
             margin-bottom 20px
 
-        .stack-app .app
-            font-weight: bold
+        .stack-app
+            .line 
+                display block
+
+            
 
 
 @media (max-width: 640px)
