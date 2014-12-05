@@ -3,12 +3,14 @@ Polyglot = require 'node-polyglot'
 Instance = require '../models/cozyinstance'
 
 # Seeks the proper locale files, depending if we run from build/ or from sources
-buildLocalePath = '../../client/locales/'
+path = require 'path'
+buildLocalePath = '../../../client/app/locales/'
+buildLocalePath = path.resolve __dirname, buildLocalePath
 useBuildLocales = fs.existsSync buildLocalePath
 if useBuildLocales
     LOCALE_PATH = buildLocalePath
 else
-    LOCALE_PATH = '../../client/app/locales/'
+    LOCALE_PATH = path.resolve __dirname, '../../client/app/locales/'
 
 class LocalizationManager
 
@@ -29,9 +31,9 @@ class LocalizationManager
 
     getPolyglotByLocale: (locale) ->
         try
-            phrases = require "#{LOCALE_PATH}#{locale}"
+            phrases = require "#{LOCALE_PATH}/#{locale}"
         catch err
-            phrases = require "#{LOCALE_PATH}en"
+            phrases = require "#{LOCALE_PATH}/en"
         return new Polyglot locale: locale, phrases: phrases
 
     # execute polyglot.t, for server-side localization
