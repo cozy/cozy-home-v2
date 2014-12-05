@@ -163,3 +163,4 @@ module.exports =
     "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
     "reminder title email": "[Cozy-Calendar] Reminder"
     "reminder message": "Reminder: %{message}"
+    "warning unofficial app": "Warning! This app is not maintained by the Cozy team."

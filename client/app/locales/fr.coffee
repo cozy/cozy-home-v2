@@ -234,4 +234,5 @@ module.exports =
     "term description": "Un terminal pour votre Cozy."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder message": "Rappel : %{message}"
+    "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
 

@@ -222,4 +222,5 @@ module.exports =
     Details: %{details}
     """
     "reminder message": "Reminder: %{message}"
+    "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
 
