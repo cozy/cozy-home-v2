@@ -759,124 +759,6 @@ module.exports = BaseView = (function(_super) {
 })(Backbone.View);
 });
 
-;require.register("lib/color_picker_handler", function(exports, require, module) {
-var ColorPickerHandler,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-module.exports = ColorPickerHandler = (function(_super) {
-  __extends(ColorPickerHandler, _super);
-
-  ColorPickerHandler.prototype.currentSelectedField = null;
-
-  function ColorPickerHandler(options) {
-    this.targetFields = options.targetFields;
-    this.colorPicker = options.colorPicker;
-    ColorPickerHandler.__super__.constructor.call(this);
-  }
-
-  ColorPickerHandler.prototype.initialize = function() {
-    var _this = this;
-    this.targetFields.focus(function() {
-      return this.blur();
-    });
-    this.defaultColors = {
-      background: '#fcf9f5',
-      button: 'transparent',
-      buttonHover: '#f1e2cf',
-      invertedColor: '#000'
-    };
-    this.reset();
-    this.targetFields.click(function(event) {
-      var currentColor, farb, hexColor, offset, rgb;
-      event.stopPropagation();
-      if (_this.currentSelectedField === event.currentTarget) {
-        _this.colorPicker.hide();
-        $('.application').removeClass('ui-resizable-disabled');
-        return _this.currentSelectedField = null;
-      } else {
-        farb = $.farbtastic(_this.colorPicker);
-        currentColor = $(event.currentTarget).css('background-color');
-        rgb = currentColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-        hexColor = farb.pack([rgb[1] / 255, rgb[2] / 255, rgb[3] / 255]);
-        _this.colorPicker.show();
-        $('.application').addClass('ui-resizable-disabled');
-        _this.currentSelectedField = event.target;
-        offset = $(event.target).offset();
-        offset.top = 5;
-        offset.left += 25;
-        _this.colorPicker.offset(offset);
-        return farb.setColor(hexColor);
-      }
-    });
-    this.colorPicker.farbtastic(function(color) {
-      var inputName;
-      inputName = $(_this.currentSelectedField).attr('name');
-      if (inputName === "background-color") {
-        _this.currentColors.background = color;
-        _this.currentColors.invertedColor = _this.getInvertedColor(color);
-      } else if (inputName === "button-color") {
-        _this.currentColors.button = color;
-      } else if (inputName === "button-hover-color") {
-        _this.currentColors.buttonHover = color;
-      }
-      return _this.injectCss();
-    });
-    return this.enable();
-  };
-
-  ColorPickerHandler.prototype.disable = function() {
-    return $(window).off('click');
-  };
-
-  ColorPickerHandler.prototype.enable = function() {
-    var _this = this;
-    return $(window).click(function(event) {
-      if (!(event.target === $('.h-marker.marker')[0] || event.target === $('.wheel')[0])) {
-        _this.currentSelectedField = null;
-        $('.application').removeClass('ui-resizable-disabled');
-        return _this.colorPicker.hide();
-      }
-    });
-  };
-
-  ColorPickerHandler.prototype.getInvertedColor = function(color) {
-    var a, colors, farb, invertedColor;
-    farb = $.farbtastic(this.colorPicker);
-    colors = farb.unpack(color);
-    a = 1 - (0.299 * colors[0] + 0.587 * colors[1] + 0.114 * colors[2]);
-    invertedColor = a < 0.5 ? '#000' : '#fff';
-    return invertedColor;
-  };
-
-  ColorPickerHandler.prototype.reset = function() {
-    this.currentColors = _.clone(this.defaultColors);
-    return this.injectCss();
-  };
-
-  ColorPickerHandler.prototype.setCurrentColors = function(userPreference) {
-    var backgroundColor;
-    backgroundColor = userPreference.get('backgroundColor') || this.defaultColors.background;
-    return this.currentColors = {
-      background: backgroundColor,
-      button: userPreference.get('buttonColor') || this.defaultColors.background,
-      buttonHover: userPreference.get('buttonHoverColor') || this.defaultColors.background,
-      invertedColor: this.getInvertedColor(backgroundColor)
-    };
-  };
-
-  ColorPickerHandler.prototype.injectCss = function() {
-    var css;
-    css = "body, input[name=\"background-color\"] {\n    background-color: " + this.currentColors.background + ";\n}\n\n.application, input[name=\"button-color\"] {\n    background-color: " + this.currentColors.button + "\n}\n.application:hover,\n#home-menu .menu-btn:hover,\ninput[name=\"button-hover-color\"] {\n    background-color: " + this.currentColors.buttonHover + "\n}\ninput[name=\"background-color\"],\ninput[name=\"button-color\"],\ninput[name=\"button-hover-color\"] {\n    border: 1px solid " + this.currentColors.invertedColor + " !important\n}";
-    $('head style#cozy-custom-style').remove();
-    return $('head').append($("<style id='cozy-custom-style'>" + css + "</style>"));
-  };
-
-  return ColorPickerHandler;
-
-})(Backbone.View);
-});
-
 ;require.register("lib/request", function(exports, require, module) {
 exports.request = function(type, url, data, callback) {
   return $.ajax({
@@ -924,7 +806,7 @@ exports.del = function(url, callback) {
 });
 
 ;require.register("lib/socket_listener", function(exports, require, module) {
-var Application, Notification, SocketListener, application_idx, notification_idx, _ref,
+var Application, Device, Notification, SocketListener, application_idx, device_idx, notification_idx, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -932,9 +814,13 @@ Application = require('models/application');
 
 Notification = require('models/notification');
 
+Device = require('models/device');
+
 application_idx = 0;
 
 notification_idx = 1;
+
+device_idx = 2;
 
 SocketListener = (function(_super) {
   __extends(SocketListener, _super);
@@ -946,16 +832,19 @@ SocketListener = (function(_super) {
 
   SocketListener.prototype.models = {
     'notification': Notification,
+    'device': Device,
     'application': Application
   };
 
-  SocketListener.prototype.events = ['notification.create', 'notification.update', 'notification.delete', 'application.create', 'application.update', 'application.delete'];
+  SocketListener.prototype.events = ['notification.create', 'notification.update', 'notification.delete', 'device.create', 'device.update', 'device.delete', 'application.create', 'application.update', 'application.delete'];
 
   SocketListener.prototype.onRemoteCreate = function(model) {
     if (model instanceof Application) {
       return this.collections[application_idx].add(model);
     } else if (model instanceof Notification) {
       return this.collections[notification_idx].add(model);
+    } else if (model instanceof Device) {
+      return this.collections[device_idx].add(model);
     }
   };
 
@@ -964,6 +853,8 @@ SocketListener = (function(_super) {
       return this.collections[application_idx].remove(model);
     } else if (model instanceof Notification) {
       return this.collections[notification_idx].remove(model);
+    } else if (model instanceof Device) {
+      return this.collections[device_idx].remove(model);
     }
   };
 
@@ -1245,7 +1136,12 @@ module.exports = {
   "remote storage description": "A Remote Storage appliance to store data from your Unhosted applications.",
   "tasky description": "Super fast and simple tag-based task manager.",
   "todos description": "Write your tasks, order them and execute them efficiently.",
-  "term description": "A terminal for your cozy."
+  "term description": "A terminal for your cozy.",
+  "reminder title email": "Reminder",
+  "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
+  "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
+  "reminder message": "Reminder: %{message}",
+  "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
 };
 });
 
@@ -1416,7 +1312,10 @@ module.exports = {
   "remote storage description": "Un module Remote Storage pour vos applications Unhosted.",
   "tasky description": "Un gestionnaire de tâche, basé sur les tags, rapide et simple.",
   "todos description": "Écrivez et ordonnez vos tâches efficacement.",
-  "term description": "Un terminal pour votre Cozy."
+  "term description": "Un terminal pour votre Cozy.",
+  "reminder title email": "[Cozy-Calendar] Rappel",
+  "reminder message": "Rappel : %{message}",
+  "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
 };
 });
 
@@ -1554,7 +1453,10 @@ module.exports = {
   "introduction market": "Bem vindo á loja de aplicações do Cozy. Este é o sitio onde podes personalizar o teu Cozy\nao adicionar aplicações.\nApartir dai podes instalar a aplicação que construiste ou escolher entre\naplicações criadas pela Cozy Cloud e outros programadores.",
   "error connectivity issue": "Ocurreu um erro ao receber os teus dados.<br />Por favor tenta de novo.",
   "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos...",
-  "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
+  "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
+  "reminder title email": "[Cozy-Calendar] Reminder",
+  "reminder message": "Reminder: %{message}",
+  "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
 };
 });
 
@@ -1898,28 +1800,6 @@ module.exports = User = (function(_super) {
 })(BaseModel);
 });
 
-;require.register("models/user_preference", function(exports, require, module) {
-var BaseModel, UserPreference, _ref,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-BaseModel = require('lib/base_model').BaseModel;
-
-module.exports = UserPreference = (function(_super) {
-  __extends(UserPreference, _super);
-
-  function UserPreference() {
-    _ref = UserPreference.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  UserPreference.prototype.urlRoot = 'api/preference/';
-
-  return UserPreference;
-
-})(Backbone.Model);
-});
-
 ;require.register("routers/main_router", function(exports, require, module) {
 var MainRouter, _ref,
   __hasProp = {}.hasOwnProperty,
@@ -2097,7 +1977,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/application_iframe", function(exports, require, module) {
+;require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2111,7 +1991,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_application", function(exports, require, module) {
+;require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2155,7 +2035,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_application_list", function(exports, require, module) {
+;require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2166,7 +2046,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_applications", function(exports, require, module) {
+;require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2208,7 +2088,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_device", function(exports, require, module) {
+;require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2226,7 +2106,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_device_list", function(exports, require, module) {
+;require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2237,7 +2117,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/help", function(exports, require, module) {
+;require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2267,7 +2147,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/help_url", function(exports, require, module) {
+;require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2284,17 +2164,14 @@ return buf.join("");
 };
 });
 
-require.register("templates/home", function(exports, require, module) {
+;require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w800"><label>Background color</label><input name="background-color" class="colorpicked"/><label>Tile color</label><input name="button-color" class="colorpicked"/><label>Tile color on hover</label><input name="button-hover-color" class="colorpicked"/><div id="colorpicker"></div><a id="save-custom" href="#home" class="btn">');
+buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w600"><a href="#home" class="btn btn-large">');
 var __val__ = t('finish layout edition')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a>&nbsp;<a id="reset-custom" class="btn">');
-var __val__ = t('reset customization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('welcome to your cozy')
@@ -2365,7 +2242,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/home_application", function(exports, require, module) {
+;require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2380,7 +2257,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/home_application_widget", function(exports, require, module) {
+;require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2394,7 +2271,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/layout", function(exports, require, module) {
+;require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2427,7 +2304,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/market", function(exports, require, module) {
+;require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2451,7 +2328,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/market_application", function(exports, require, module) {
+;require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2480,7 +2357,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/menu_application", function(exports, require, module) {
+;require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2494,7 +2371,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/menu_applications", function(exports, require, module) {
+;require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2506,7 +2383,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/navbar", function(exports, require, module) {
+;require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2521,7 +2398,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/navbar_app_btn", function(exports, require, module) {
+;require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2537,7 +2414,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/notification", function(exports, require, module) {
+;require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2549,7 +2426,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/notifications", function(exports, require, module) {
+;require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2567,7 +2444,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/popover_description", function(exports, require, module) {
+;require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2581,7 +2458,7 @@ buf.push('><img src="img/star-white.png"/></a></div></div>');
 if ( (model.comment !== 'official application'))
 {
 buf.push('<div class="line noncozy-warning">');
-var __val__ = t('warning this app is not maintained by cozy')
+var __val__ = t('warning unofficial app')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div>');
 }
@@ -2597,7 +2474,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/popover_permissions", function(exports, require, module) {
+;require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2630,7 +2507,7 @@ return buf.join("");
 };
 });
 
-require.register("views/account", function(exports, require, module) {
+;require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -3488,14 +3365,11 @@ module.exports = ApplicationsListView = (function(_super) {
         if (_this.state === 'edit') {
           return _this.gridster.enable();
         }
-      },
-      'click #reset-custom': function() {
-        return _this.colorpicker.reset();
       }
     };
   };
 
-  function ApplicationsListView(apps, userPreference) {
+  function ApplicationsListView(apps) {
     this.saveChanges = __bind(this.saveChanges, this);
     this.doResize = __bind(this.doResize, this);
     this.resizeGridster = __bind(this.resizeGridster, this);
@@ -3503,7 +3377,6 @@ module.exports = ApplicationsListView = (function(_super) {
     this.afterRender = __bind(this.afterRender, this);
     this.initialize = __bind(this.initialize, this);
     this.apps = apps;
-    this.userPreference = userPreference;
     this.state = 'view';
     this.isLoading = true;
     ApplicationsListView.__super__.constructor.call(this, {
@@ -3519,40 +3392,19 @@ module.exports = ApplicationsListView = (function(_super) {
     this.listenTo(this.collection, 'reset', function() {
       return _this.isLoading = false;
     });
-    this.listenTo(this.userPreference, 'change', function(userPreference) {
-      _this.colorpicker.setCurrentColors(userPreference);
-      return _this.colorpicker.injectCss();
-    });
     ApplicationsListView.__super__.initialize.apply(this, arguments);
     return $(window).on('resize', _.debounce(this.onWindowResize, 300));
   };
 
   ApplicationsListView.prototype.afterRender = function() {
-    var ColorPickerHandler, cid, view, _ref, _results,
+    var cid, view, _ref, _results,
       _this = this;
     this.appList = this.$("#app-list");
     this.closeEditBtn = this.$('#home-edit-close');
-    ColorPickerHandler = require('../lib/color_picker_handler');
-    this.colorpicker = new ColorPickerHandler({
-      targetFields: this.$('.colorpicked'),
-      colorPicker: this.$('#colorpicker')
-    });
     this.$("#no-app-message").hide();
     $(".menu-btn a").click(function(event) {
       $(".menu-btn").removeClass('active');
       return $(event.target).closest('.menu-btn').addClass('active');
-    });
-    this.closeEditBtn.find('a#save-custom.btn').click(function(event) {
-      var bgColor, btnColor, btnHoverColor;
-      bgColor = _this.colorpicker.currentColors.background;
-      btnColor = _this.colorpicker.currentColors.button;
-      btnHoverColor = _this.colorpicker.currentColors.buttonHover;
-      _this.userPreference.set({
-        backgroundColor: bgColor,
-        buttonColor: btnColor,
-        buttonHoverColor: btnHoverColor
-      });
-      return _this.userPreference.save();
     });
     this.initGridster();
     ApplicationsListView.__super__.afterRender.apply(this, arguments);
@@ -3615,7 +3467,6 @@ module.exports = ApplicationsListView = (function(_super) {
         _ref.enable();
       }
       this.closeEditBtn.slideDown();
-      this.colorpicker.enable();
       _ref1 = this.views;
       _results = [];
       for (cid in _ref1) {
@@ -3624,7 +3475,6 @@ module.exports = ApplicationsListView = (function(_super) {
       }
       return _results;
     } else {
-      this.colorpicker.disable();
       if ((_ref2 = this.gridster) != null) {
         _ref2.disable();
       }
@@ -4044,7 +3894,7 @@ module.exports = ApplicationRow = (function(_super) {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, StackAppCollection, User, UserPreference, appIframeTemplate, socketListener,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -4056,6 +3906,8 @@ appIframeTemplate = require('templates/application_iframe');
 AppCollection = require('collections/application');
 
 StackAppCollection = require('collections/stackApplication');
+
+NotificationCollection = require('collections/notifications');
 
 DeviceCollection = require('collections/device');
 
@@ -4071,9 +3923,7 @@ MarketView = require('views/market');
 
 ApplicationsListView = require('views/home');
 
-socketListener = require('lib/socket_listener');
-
-UserPreference = require('../models/user_preference');
+SocketListener = require('lib/socket_listener');
 
 User = require('models/user');
 
@@ -4095,23 +3945,20 @@ module.exports = HomeView = (function(_super) {
     this.displayApplicationsList = __bind(this.displayApplicationsList, this);
     this.displayView = __bind(this.displayView, this);
     this.logout = __bind(this.logout, this);
-    this.testapps = __bind(this.testapps, this);
-    this.test = __bind(this.test, this);
     this.afterRender = __bind(this.afterRender, this);
     this.apps = new AppCollection();
     this.stackApps = new StackAppCollection();
-    this.listenTo(this.apps, 'reset', this.testapps);
     this.devices = new DeviceCollection();
-    this.listenTo(this.devices, 'reset', this.test);
-    socketListener.watch(this.apps);
-    socketListener.watch(this.devices);
-    this.userPreference = new UserPreference();
+    this.notifications = new NotificationCollection();
+    SocketListener.watch(this.apps);
+    SocketListener.watch(this.notifications);
+    SocketListener.watch(this.devices);
     HomeView.__super__.constructor.apply(this, arguments);
   }
 
   HomeView.prototype.afterRender = function() {
-    this.navbar = new NavbarView(this.apps);
-    this.applicationListView = new ApplicationsListView(this.apps, this.userPreference);
+    this.navbar = new NavbarView(this.apps, this.notifications);
+    this.applicationListView = new ApplicationsListView(this.apps);
     this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
@@ -4119,8 +3966,6 @@ module.exports = HomeView = (function(_super) {
     $("#content").niceScroll();
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
-    this.favicon = this.$('fav1');
-    this.favicon2 = this.$('fav2');
     $(window).resize(this.resetLayoutSizes);
     this.apps.fetch({
       reset: true
@@ -4131,16 +3976,7 @@ module.exports = HomeView = (function(_super) {
     this.stackApps.fetch({
       reset: true
     });
-    this.userPreference.fetch();
     return this.resetLayoutSizes();
-  };
-
-  HomeView.prototype.test = function() {
-    return console.log('got devices', this.devices.length);
-  };
-
-  HomeView.prototype.testapps = function() {
-    return console.log('got apps', this.apps.length);
   };
 
   /* Functions*/
@@ -4171,14 +4007,12 @@ module.exports = HomeView = (function(_super) {
       $('#home-content').append(view.$el);
       view.$el.fadeIn();
       _this.currentView = view;
-      _this.changeFavicon("favicon.ico");
       return _this.resetLayoutSizes();
     };
     if (this.currentView != null) {
       if (view === this.currentView) {
         this.frames.hide();
         this.content.show();
-        this.changeFavicon("favicon.ico");
         this.resetLayoutSizes();
         return;
       }
@@ -4247,7 +4081,6 @@ module.exports = HomeView = (function(_super) {
     }
     window.document.title = "Cozy - " + name;
     $("#current-application").html(name);
-    this.changeFavicon("/apps/" + slug + "/favicon.ico");
     return this.resetLayoutSizes();
   };
 
@@ -4279,20 +4112,6 @@ module.exports = HomeView = (function(_super) {
       }
     }
     return this.resetLayoutSizes();
-  };
-
-  HomeView.prototype.changeFavicon = function(url) {
-    var newfav, _ref, _ref1;
-    if ((_ref = this.favicon) != null) {
-      _ref.remove();
-    }
-    if ((_ref1 = this.favicon2) != null) {
-      _ref1.remove();
-    }
-    newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"';
-    this.favicon = $(newfav);
-    this.favicon2 = this.favicon.clone().attr('rel', 'shortcut icon');
-    return $('head').append(this.favicon, this.favicon2);
   };
 
   /* Configuration*/
@@ -4675,14 +4494,12 @@ module.exports = ApplicationView = (function(_super) {
 });
 
 ;require.register("views/menu_applications", function(exports, require, module) {
-var AppsMenu, SocketListener, ViewCollection,
+var AppsMenu, ViewCollection,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 ViewCollection = require('lib/view_collection');
-
-SocketListener = require('lib/socket_listener');
 
 module.exports = AppsMenu = (function(_super) {
   __extends(AppsMenu, _super);
@@ -4787,14 +4604,17 @@ module.exports = NavbarView = (function(_super) {
 
   NavbarView.prototype.template = require('templates/navbar');
 
-  function NavbarView(apps) {
+  function NavbarView(apps, notifications) {
     this.afterRender = __bind(this.afterRender, this);
     this.apps = apps;
+    this.notifications = notifications;
     NavbarView.__super__.constructor.call(this);
   }
 
   NavbarView.prototype.afterRender = function() {
-    this.notifications = new NotificationsView();
+    this.notifications = new NotificationsView({
+      collection: this.notifications
+    });
     return this.appMenu = new AppsMenu(this.apps);
   };
 
@@ -4874,7 +4694,7 @@ module.exports = NotificationView = (function(_super) {
 });
 
 ;require.register("views/notifications_view", function(exports, require, module) {
-var Notification, NotificationCollection, NotificationsView, SocketListener, ViewCollection, _ref,
+var Notification, NotificationsView, SocketListener, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -4882,8 +4702,6 @@ var Notification, NotificationCollection, NotificationsView, SocketListener, Vie
 ViewCollection = require('lib/view_collection');
 
 SocketListener = require('lib/socket_listener');
-
-NotificationCollection = require('collections/notifications');
 
 Notification = require('models/notification');
 
@@ -4912,14 +4730,6 @@ module.exports = NotificationsView = (function(_super) {
     "click #notifications-toggle": "showNotifList",
     "click #clickcatcher": "hideNotifList",
     "click #dismiss-all": "dismissAll"
-  };
-
-  NotificationsView.prototype.initialize = function() {
-    if (this.collection == null) {
-      this.collection = new NotificationCollection();
-    }
-    SocketListener.watch(this.collection);
-    return NotificationsView.__super__.initialize.apply(this, arguments);
   };
 
   NotificationsView.prototype.appendView = function(view) {
@@ -4964,6 +4774,9 @@ module.exports = NotificationsView = (function(_super) {
       imgPath = 'img/notification-white.png';
       this.$('#notifications-toggle img').attr('src', imgPath);
       return this.$('#notifications-toggle').removeClass('highlight');
+    } else {
+      this.counter.html(newCount);
+      return this.counter.show();
     }
   };
 
