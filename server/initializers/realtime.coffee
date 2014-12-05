@@ -16,8 +16,13 @@ notifhelper = new NotificationsHelper 'home'
 
 module.exports = (app, callback) ->
 
-    realtime = RealtimeAdapter app, ['notification.*', 'application.*']
+    eventsToForward = ['notification.*', 'application.*', 'device.*']
+    realtime = RealtimeAdapter app, eventsToForward
 
+    setInterval ->
+        console.log 'emit event'
+        app.io.sockets.emit 'notification.create', 'e33fc1841c55cc1b61cb9981ca02a8c5'
+    , 15 * 1000
     # also create a notification when an app install is complete
     realtime.on 'application.update', (event, id) ->
         Application.find id, (err, app) ->

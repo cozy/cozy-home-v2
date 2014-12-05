@@ -1,6 +1,5 @@
 ViewCollection = require 'lib/view_collection'
 SocketListener = require 'lib/socket_listener'
-NotificationCollection = require 'collections/notifications'
 Notification = require 'models/notification'
 
 SocketListener = require '../lib/socket_listener'
@@ -15,11 +14,6 @@ module.exports = class NotificationsView extends ViewCollection
         "click #notifications-toggle": "showNotifList"
         "click #clickcatcher"        : "hideNotifList"
         "click #dismiss-all"         : "dismissAll"
-
-    initialize: ->
-        @collection ?= new NotificationCollection()
-        SocketListener.watch @collection
-        super
 
     appendView: (view) ->
         @notifList.prepend view.el

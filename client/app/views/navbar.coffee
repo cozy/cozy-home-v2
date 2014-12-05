@@ -8,10 +8,11 @@ module.exports = class NavbarView extends BaseView
     el:'#header'
     template: require 'templates/navbar'
 
-    constructor: (apps) ->
+    constructor: (apps, notifications) ->
         @apps = apps
+        @notifications = notifications
         super()
 
     afterRender: =>
-        @notifications = new NotificationsView()
+        @notifications = new NotificationsView collection: @notifications
         @appMenu = new AppsMenu @apps

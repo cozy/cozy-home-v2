@@ -2,6 +2,7 @@ BaseView = require 'lib/base_view'
 appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
 StackAppCollection = require 'collections/stackApplication'
+NotificationCollection = require 'collections/notifications'
 DeviceCollection = require 'collections/device'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
@@ -9,7 +10,7 @@ HelpView = require 'views/help'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
-socketListener = require 'lib/socket_listener'
+SocketListener = require 'lib/socket_listener'
 
 User = require 'models/user'
 
@@ -23,16 +24,16 @@ module.exports = class HomeView extends BaseView
     constructor: ->
         @apps = new AppCollection()
         @stackApps = new StackAppCollection()
-        @listenTo @apps, 'reset', @testapps
         @devices = new DeviceCollection()
-        @listenTo @devices, 'reset', @test
-        socketListener.watch @apps
-        socketListener.watch @devices
+        @notifications = new NotificationCollection()
+        SocketListener.watch @apps
+        SocketListener.watch @notifications
+        SocketListener.watch @devices
 
         super
 
     afterRender: =>
-        @navbar = new NavbarView @apps
+        @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps
         @configApplications = new ConfigApplicationsView @apps, @devices, @stackApps
         @accountView = new AccountView()
@@ -48,13 +49,6 @@ module.exports = class HomeView extends BaseView
         @devices.fetch reset: true
         @stackApps.fetch reset: true
         @resetLayoutSizes()
-
-    test: =>
-        console.log('got devices', @devices.length)
-
-    testapps: =>
-        console.log('got apps', @apps.length)
-
 
     ### Functions ###
 
