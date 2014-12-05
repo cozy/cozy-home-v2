@@ -43,9 +43,6 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
 
-        @favicon = @$ 'fav1'
-        @favicon2 = @$ 'fav2'
-
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
         @devices.fetch reset: true
@@ -81,7 +78,6 @@ module.exports = class HomeView extends BaseView
             $('#home-content').append view.$el
             view.$el.fadeIn()
             @currentView = view
-            @changeFavicon "favicon.ico"
             @resetLayoutSizes()
 
         if @currentView?
@@ -89,7 +85,6 @@ module.exports = class HomeView extends BaseView
             if view is @currentView
                 @frames.hide()
                 @content.show()
-                @changeFavicon "favicon.ico"
                 @resetLayoutSizes()
                 return
 
@@ -152,7 +147,6 @@ module.exports = class HomeView extends BaseView
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
         $("#current-application").html name
-        @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
 
     createApplicationIframe: (slug, hash="") ->
@@ -169,14 +163,6 @@ module.exports = class HomeView extends BaseView
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
         @resetLayoutSizes()
-
-    changeFavicon: (url) ->
-        @favicon?.remove()
-        @favicon2?.remove()
-        newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"'
-        @favicon = $ newfav
-        @favicon2 = @favicon.clone().attr 'rel', 'shortcut icon'
-        $('head').append @favicon, @favicon2
 
     ### Configuration ###
 
