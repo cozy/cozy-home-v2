@@ -19,7 +19,9 @@ describe "Alarm manager handles event's alarms", ->
 
     before ->
         notifhelper = new NotificationsHelper 'home'
-        @alarmManager = new AlarmManager 'Europe/Paris', Alarm, Event, notifhelper
+        @alarmManager = new AlarmManager
+            timezone: 'Europe/Paris'
+            notificationHelper: notifhelper
 
     before ->
         @sandbox = sinon.sandbox.create()
