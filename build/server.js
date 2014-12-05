@@ -7,9 +7,10 @@ process.on('uncaughtException', function(err) {
 });
 
 application = module.exports = function(callback) {
-  var americano, autoStop, initProxy, options, request, setupChecking, setupRealtime, versionChecking;
+  var americano, autoStop, initProxy, localization, options, request, setupChecking, setupRealtime, versionChecking;
   americano = require('americano');
   request = require('request-json');
+  localization = require('./server/lib/localization_manager');
   initProxy = require('./server/initializers/proxy');
   setupRealtime = require('./server/initializers/realtime');
   setupChecking = require('./server/initializers/checking');
@@ -26,13 +27,15 @@ application = module.exports = function(callback) {
     if (process.env.NODE_ENV !== "test") {
       initProxy();
     }
-    return setupRealtime(app, function() {
-      setupChecking();
-      versionChecking();
-      autoStop.init();
-      if (callback != null) {
-        return callback(app, server);
-      }
+    return localization.initialize(function() {
+      return setupRealtime(app, function() {
+        setupChecking();
+        versionChecking();
+        autoStop.init();
+        if (callback != null) {
+          return callback(app, server);
+        }
+      });
     });
   });
 };

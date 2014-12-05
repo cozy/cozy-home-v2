@@ -1141,7 +1141,9 @@ module.exports = {
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
   "reminder message": "Reminder: %{message}",
-  "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
+  "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
+  "installation message failure": "%{appName}'s installation failed.",
+  "update available notification": "A new version of %{appName} is available."
 };
 });
 
@@ -1315,7 +1317,9 @@ module.exports = {
   "term description": "Un terminal pour votre Cozy.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder message": "Rappel : %{message}",
-  "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
+  "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy.",
+  "installation message failure": "Échec de l'installation de %{appName}.",
+  "update available notification": "Une nouvelle version de %{appName} est disponible."
 };
 });
 
@@ -1456,7 +1460,9 @@ module.exports = {
   "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
   "reminder title email": "[Cozy-Calendar] Reminder",
   "reminder message": "Reminder: %{message}",
-  "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
+  "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
+  "installation message failure": "%{appName}'s installation failed.",
+  "update available notification": "A new version of %{appName} is available."
 };
 });
 
