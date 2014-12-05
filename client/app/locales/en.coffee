@@ -212,4 +212,14 @@ module.exports =
     "tasky description": "Super fast and simple tag-based task manager."
     "todos description": "Write your tasks, order them and execute them efficiently."
     "term description": "A terminal for your cozy."
+    "reminder title email": "Reminder"
+    "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})"
+    "reminder message expanded": """
+    Reminder: %{description}
+    Start: %{start} (%{timezone})
+    End: %{end} (%{timezone})
+    Place: %{place}
+    Details: %{details}
+    """
+    "reminder message": "Reminder: %{message}"
 

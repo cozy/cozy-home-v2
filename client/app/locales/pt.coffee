@@ -161,3 +161,5 @@ module.exports =
     "error connectivity issue": "Ocurreu um erro ao receber os teus dados.<br />Por favor tenta de novo."
     "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos..."
     "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
+    "reminder title email": "[Cozy-Calendar] Reminder"
+    "reminder message": "Reminder: %{message}"

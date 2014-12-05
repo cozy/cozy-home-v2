@@ -3,6 +3,16 @@ RRule = require('rrule').RRule
 moment = require 'moment-timezone'
 log = require('printit')
     prefix: 'alarm-manager'
+Polyglot = require 'node-polyglot'
+fs = require 'fs'
+
+# Seeks the proper locale files, depending if we run from build/ or from sources
+buildLocalePath = '../../client/locales/'
+useBuildLocales = fs.existsSync buildLocalePath
+if useBuildLocales
+    LOCALE_PATH = buildLocalePath
+else
+    LOCALE_PATH = '../../client/app/locales/'
 
 oneDay = 24 * 60 * 60 * 1000
 
@@ -11,19 +21,26 @@ module.exports = class AlarmManager
     dailytimer: null
     timeouts: {}
 
-    constructor: (@timezone, @Alarm, @Event, @notificationhelper) ->
+    constructor: (options) ->
+        @timezone = options.timezone or 'UTC'
+        @locale = options.locale or 'en'
+        @Event = options.Event
+        @notificationHelper = options.notificationHelper
+
+        try
+            phrases = require "#{LOCALE_PATH}#{@locale}"
+        catch err
+            phrases = require "#{LOCALE_PATH}en"
+        @polyglot = new Polyglot locale: @locale, phrases: phrases
+
         @fetchAlarms()
 
     # retrieve alarms from DS and call addAlarmCounters for
     # each one
     fetchAlarms: =>
         @dailytimer = setTimeout @fetchAlarms, oneDay
-        # We load the alarms for the next 24h
-        @Alarm.all (err, alarms) =>
-            @addAlarmCounters alarm for alarm in alarms
-
-            @Event.all (err, events) =>
-                @addEventCounters event for event in events
+        @Event.all (err, events) =>
+            @addEventCounters event for event in events
 
     # cancel all timeouts for a given id
     clearTimeouts: (id) ->
@@ -33,16 +50,13 @@ module.exports = class AlarmManager
 
     # Analyze upcoming event from Data System and act with it.
     handleAlarm: (event, msg) =>
+        console.log event, msg
         switch event
-            when "alarm.create", "alarm.update"
-                @Alarm.find msg, (err, alarm) =>
-                    @addAlarmCounters alarm if alarm?
-
             when "event.create", "event.update"
                 @Event.find msg, (err, event) =>
                     @addEventCounters event if event?
 
-            when "alarm.delete", "event.delete"
+            when "event.delete"
                 @clearTimeouts msg
 
     # Handles event's alarms
@@ -84,30 +98,39 @@ module.exports = class AlarmManager
                 app: 'calendar'
                 url: "/#list" #TODO go to the alarm itself
 
-            @notificationhelper.createTemporary
-                text: "Reminder: #{alarm.description or ''}"
+            message = alarm.description or ''
+            @notificationHelper.createTemporary
+                text: @polyglot.t 'reminder message', {message}
                 resource: resource
 
         if alarm.action in ['EMAIL', 'BOTH']
             if alarm.event?
                 event = alarm.event
                 agenda = event.tags[0] or ''
+                titleKey = 'reminder title email expanded'
+                titleOptions =
+                    description: event.description
+                    date: event.start.format 'llll'
+                    calendarName: agenda
+
+                contentKey = 'reminder message expanded'
+                contentOptions =
+                    description: event.description
+                    start: event.start.format 'LLLL'
+                    end: event.end.format 'LLLL'
+                    place: event.place
+                    details: event.details
+                    timezone: timezone
                 data =
-                    from: 'Cozy Agenda <no-reply@cozycloud.cc>'
-                    subject: "Reminder: #{event.description} - " +
-                        "#{event.start.format 'llll'} " +
-                        "(#{agenda} : Cozy-Calendar)"
-                    content: "#{event.description} \n" +
-                        "Start: #{event.start.format 'LLLL'} #{@timezone}\n" +
-                        "End: #{event.end.format 'LLLL'} #{@timezone}\n" +
-                        "Place: #{event.place}\n" +
-                        "Description: #{event.details}\n"
+                    from: 'Cozy Calendar <no-reply@cozycloud.cc>'
+                    subject: @polyglot.t titleKey, titleOptions
+                    content: @polyglot.t contentKey, contentOptions
 
             else
                 data =
                     from: "Cozy Calendar <no-reply@cozycloud.cc>"
-                    subject: "[Cozy-Calendar] Reminder"
-                    content: "Reminder: ##{alarm.description}"
+                    subject: @polyglot.t 'reminder title email'
+                    content: @polyglot.t 'reminder message', {message}
 
             CozyAdapter.sendMailToUser data, (error, response) ->
                 if error?

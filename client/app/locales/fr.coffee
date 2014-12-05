@@ -232,4 +232,6 @@ module.exports =
     "tasky description": "Un gestionnaire de tâche, basé sur les tags, rapide et simple."
     "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
+    "reminder title email": "[Cozy-Calendar] Rappel"
+    "reminder message": "Rappel : %{message}"
 

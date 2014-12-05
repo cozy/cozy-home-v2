@@ -1,3 +1,5 @@
+async = require 'async'
+
 NotificationsHelper = require 'cozy-notifications-helper'
 RealtimeAdapter = require 'cozy-realtime-adapter'
 autostop = require '../lib/autostop'
@@ -6,6 +8,7 @@ AlarmManager = require '../lib/alarm_manager'
 User = require '../models/user'
 Alarm = require '../models/alarm'
 Event = require '../models/event'
+CozyInstance = require '../models/cozyinstance'
 Application = require '../models/application'
 Notification = require '../models/notification'
 
@@ -19,10 +22,6 @@ module.exports = (app, callback) ->
     eventsToForward = ['notification.*', 'application.*', 'device.*']
     realtime = RealtimeAdapter app, eventsToForward
 
-    setInterval ->
-        console.log 'emit event'
-        app.io.sockets.emit 'notification.create', 'e33fc1841c55cc1b61cb9981ca02a8c5'
-    , 15 * 1000
     # also create a notification when an app install is complete
     realtime.on 'application.update', (event, id) ->
         Application.find id, (err, app) ->
@@ -40,13 +39,19 @@ module.exports = (app, callback) ->
 
 
     # setup alarm manager for alarm events handling
-    User.all (err, users) ->
-        if err? or users.length is 0
+    async.parallel [User.all, CozyInstance.all], (err, results) ->
+        if err? or results.length isnt 2
             console.info "Internal server error. Can't retrieve users or no user exists."
         else
-            timezone = users[0].timezone
-            alarmManager = new AlarmManager timezone, Alarm, Event, notifhelper
+            [users, instances] = results
+            user = users[0]
+            instance = instances[0]
+            options =
+                timezone: user.timezone
+                locale: instance.locale
+                Event: Event
+                notificationHelper: notifhelper
+            alarmManager = new AlarmManager options
             app.alarmManager = alarmManager
-            realtime.on 'alarm.*', alarmManager.handleAlarm
             realtime.on 'event.*', alarmManager.handleAlarm
         callback()
