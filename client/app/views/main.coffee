@@ -9,8 +9,7 @@ HelpView = require 'views/help'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
-socketListener = require('lib/socket_listener')
-UserPreference = require '../models/user_preference'
+socketListener = require 'lib/socket_listener'
 
 User = require 'models/user'
 
@@ -30,12 +29,11 @@ module.exports = class HomeView extends BaseView
         socketListener.watch @apps
         socketListener.watch @devices
 
-        @userPreference = new UserPreference()
         super
 
     afterRender: =>
         @navbar = new NavbarView @apps
-        @applicationListView = new ApplicationsListView @apps, @userPreference
+        @applicationListView = new ApplicationsListView @apps
         @configApplications = new ConfigApplicationsView @apps, @devices, @stackApps
         @accountView = new AccountView()
         @helpView = new HelpView()
@@ -52,7 +50,6 @@ module.exports = class HomeView extends BaseView
         @apps.fetch reset: true
         @devices.fetch reset: true
         @stackApps.fetch reset: true
-        @userPreference.fetch()
         @resetLayoutSizes()
 
     test: =>
