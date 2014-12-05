@@ -3,16 +3,7 @@ RRule = require('rrule').RRule
 moment = require 'moment-timezone'
 log = require('printit')
     prefix: 'alarm-manager'
-Polyglot = require 'node-polyglot'
-fs = require 'fs'
-
-# Seeks the proper locale files, depending if we run from build/ or from sources
-buildLocalePath = '../../client/locales/'
-useBuildLocales = fs.existsSync buildLocalePath
-if useBuildLocales
-    LOCALE_PATH = buildLocalePath
-else
-    LOCALE_PATH = '../../client/app/locales/'
+localization = require './localization_manager'
 
 oneDay = 24 * 60 * 60 * 1000
 
@@ -23,16 +14,8 @@ module.exports = class AlarmManager
 
     constructor: (options) ->
         @timezone = options.timezone or 'UTC'
-        @locale = options.locale or 'en'
         @Event = options.Event
         @notificationHelper = options.notificationHelper
-
-        try
-            phrases = require "#{LOCALE_PATH}#{@locale}"
-        catch err
-            phrases = require "#{LOCALE_PATH}en"
-        @polyglot = new Polyglot locale: @locale, phrases: phrases
-
         @fetchAlarms()
 
     # retrieve alarms from DS and call addAlarmCounters for
@@ -100,7 +83,7 @@ module.exports = class AlarmManager
 
             message = alarm.description or ''
             @notificationHelper.createTemporary
-                text: @polyglot.t 'reminder message', {message}
+                text: localization.t 'reminder message', {message}
                 resource: resource
 
         if alarm.action in ['EMAIL', 'BOTH']

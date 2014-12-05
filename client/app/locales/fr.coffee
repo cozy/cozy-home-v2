@@ -235,4 +235,5 @@ module.exports =
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder message": "Rappel : %{message}"
     "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
-
+    "installation message failure": "Échec de l'installation de %{appName}."
+    "update available notification": "Une nouvelle version de %{appName} est disponible."

@@ -4,6 +4,7 @@ NotificationsHelper = require 'cozy-notifications-helper'
 RealtimeAdapter = require 'cozy-realtime-adapter'
 autostop = require '../lib/autostop'
 AlarmManager = require '../lib/alarm_manager'
+localization = require '../lib/localization_manager'
 
 User = require '../models/user'
 Alarm = require '../models/alarm'
@@ -28,9 +29,11 @@ module.exports = (app, callback) ->
             return console.log err.stack if err # no notification, no big deal
             switch app.state
                 when 'broken'
+                    messageKey = 'installation message failure'
+                    message = localization.t messageKey, appName: app.name
                     notifhelper.createTemporary
-                        text: "#{app.name}'s installation failled."
-                        resource: {app: 'home'}
+                        text: message
+                        resource: app: 'home'
                 else return
 
     realtime.on 'usage.application', (event, name) ->
@@ -39,16 +42,14 @@ module.exports = (app, callback) ->
 
 
     # setup alarm manager for alarm events handling
-    async.parallel [User.all, CozyInstance.all], (err, results) ->
-        if err? or results.length isnt 2
-            console.info "Internal server error. Can't retrieve users or no user exists."
+    User.all (err, users) ->
+        if err? or users.length is 0
+            console.info "Internal server error. Can't retrieve users or " + \
+                         "no user exists."
         else
-            [users, instances] = results
             user = users[0]
-            instance = instances[0]
             options =
                 timezone: user.timezone
-                locale: instance.locale
                 Event: Event
                 notificationHelper: notifhelper
             alarmManager = new AlarmManager options
