@@ -59,9 +59,9 @@ module.exports = class NotificationsView extends ViewCollection
             imgPath = 'img/notification-white.png'
             @$('#notifications-toggle img').attr 'src', imgPath
             @$('#notifications-toggle').removeClass 'highlight'
-        #else
-            #@counter.html newCount
-            #@counter.show()
+        else
+            @counter.html newCount
+            @counter.show()
 
     windowClicked: =>
         if event? and @$el.has($(event.target)).length is 0
