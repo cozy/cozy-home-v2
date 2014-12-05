@@ -4,6 +4,7 @@ moment = require 'moment-timezone'
 log = require('printit')
     prefix: 'alarm-manager'
 localization = require './localization_manager'
+Event = require '../models/event'
 
 oneDay = 24 * 60 * 60 * 1000
 
@@ -14,7 +15,6 @@ module.exports = class AlarmManager
 
     constructor: (options) ->
         @timezone = options.timezone or 'UTC'
-        @Event = options.Event
         @notificationHelper = options.notificationHelper
         @fetchAlarms()
 
@@ -22,7 +22,7 @@ module.exports = class AlarmManager
     # each one
     fetchAlarms: =>
         @dailytimer = setTimeout @fetchAlarms, oneDay
-        @Event.all (err, events) =>
+        Event.all (err, events) =>
             @addEventCounters event for event in events
 
     # cancel all timeouts for a given id

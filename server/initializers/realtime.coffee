@@ -7,8 +7,6 @@ AlarmManager = require '../lib/alarm_manager'
 localization = require '../lib/localization_manager'
 
 User = require '../models/user'
-Alarm = require '../models/alarm'
-Event = require '../models/event'
 CozyInstance = require '../models/cozyinstance'
 Application = require '../models/application'
 Notification = require '../models/notification'
@@ -50,7 +48,6 @@ module.exports = (app, callback) ->
             user = users[0]
             options =
                 timezone: user.timezone
-                Event: Event
                 notificationHelper: notifhelper
             alarmManager = new AlarmManager options
             app.alarmManager = alarmManager
