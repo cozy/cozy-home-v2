@@ -60,7 +60,6 @@ module.exports = AlarmManager = (function() {
   };
 
   AlarmManager.prototype.handleAlarm = function(event, msg) {
-    console.log(event, msg);
     switch (event) {
       case "event.create":
       case "event.update":
