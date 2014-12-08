@@ -89,10 +89,25 @@ module.exports = class AlarmManager
                 resource: resource
 
         if alarm.action in ['EMAIL', 'BOTH']
-            data =
-                from: "Cozy Agenda <no-reply@cozycloud.cc>"
-                subject: "[Cozy-Agenda] Reminder"
-                content: "Reminder: #{alarm.description}"
+            if alarm.event?
+                event = alarm.event
+                agenda = event.tags[0] or ''
+                data =
+                    from: 'Cozy Agenda <no-reply@cozycloud.cc>'
+                    subject: "Reminder: #{event.description} - " +
+                        "#{event.start.format 'llll'} " +
+                        "(#{agenda} : Cozy-Calendar)"
+                    content: "#{event.description} \n" +
+                        "Start: #{event.start.format 'LLLL'} #{@timezone}\n" +
+                        "End: #{event.end.format 'LLLL'} #{@timezone}\n" +
+                        "Place: #{event.place}\n" +
+                        "Description: #{event.details}\n"
+
+            else
+                data =
+                    from: "Cozy Calendar <no-reply@cozycloud.cc>"
+                    subject: "[Cozy-Calendar] Reminder"
+                    content: "Reminder: ##{alarm.description}"
 
             CozyAdapter.sendMailToUser data, (error, response) ->
                 if error?

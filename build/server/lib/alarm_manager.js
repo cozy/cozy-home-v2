@@ -122,7 +122,7 @@ module.exports = AlarmManager = (function() {
   };
 
   AlarmManager.prototype.handleNotification = function(alarm) {
-    var data, resource, _ref, _ref1, _ref2;
+    var agenda, data, event, resource, _ref, _ref1, _ref2;
     if ((_ref = alarm.action) === 'DISPLAY' || _ref === 'BOTH') {
       resource = alarm.related != null ? alarm.related : {
         app: 'calendar',
@@ -134,11 +134,21 @@ module.exports = AlarmManager = (function() {
       });
     }
     if ((_ref1 = alarm.action) === 'EMAIL' || _ref1 === 'BOTH') {
-      data = {
-        from: "Cozy Agenda <no-reply@cozycloud.cc>",
-        subject: "[Cozy-Agenda] Reminder",
-        content: "Reminder: " + alarm.description
-      };
+      if (alarm.event != null) {
+        event = alarm.event;
+        agenda = event.tags[0] || '';
+        data = {
+          from: 'Cozy Agenda <no-reply@cozycloud.cc>',
+          subject: ("Reminder: " + event.description + " - ") + ("" + (event.start.format('llll')) + " ") + ("(" + agenda + " : Cozy-Calendar)"),
+          content: ("" + event.description + " \n") + ("Start: " + (event.start.format('LLLL')) + " " + this.timezone + "\n") + ("End: " + (event.end.format('LLLL')) + " " + this.timezone + "\n") + ("Place: " + event.place + "\n") + ("Description: " + event.details + "\n")
+        };
+      } else {
+        data = {
+          from: "Cozy Calendar <no-reply@cozycloud.cc>",
+          subject: "[Cozy-Calendar] Reminder",
+          content: "Reminder: #" + alarm.description
+        };
+      }
       CozyAdapter.sendMailToUser(data, function(error, response) {
         if (error != null) {
           return log.error("Error while sending email -- " + error);
