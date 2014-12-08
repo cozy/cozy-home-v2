@@ -1,6 +1,6 @@
 BaseView = require 'lib/base_view'
 request = require 'lib/request'
-
+ApplicationCollection = require '../collections/application'
 
 module.exports = class PopoverDescriptionView extends BaseView
     id: 'market-popover-description-view'
@@ -18,6 +18,13 @@ module.exports = class PopoverDescriptionView extends BaseView
         @cancelCallback = options.cancel
         @label = if options.label? then options.label else t 'install'
         @$("#confirmbtn").html @label
+
+    getRenderData: ->
+        # retrieves from market if app is official or not
+        appsCollection = new ApplicationCollection().fetchFromMarket()
+        app = appsCollection.get @model.get('slug')
+        @model.set 'comment', app.get('comment')
+        return super()
 
     afterRender: ->
         @model.set "description", ""
