@@ -156,13 +156,13 @@ module.exports =
     """
     "menu description":"""Si c'est votre première fois sur Cozy, vous trouverez
     dans la suite un petit guide décrivant les sections de votre Cozy. Elles
-    peuvent tout être atteintes depuis le menu en haut à droite de l'accueil Cozy.
+    peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.
     """
     "install your first app":"votre Cozy puis installer votre première application via l'"
     "where you reach applications":"C'est ici que vous pouvez accéder à toutes vos applications."
     "app management":"Gestion des applications"
     "There you can manage the state of your applications: start it, stop it, remove it...":"Ici vous pouvez gérer l'état de vos applications : les lancer, les interrompre, les supprimer…"
-    "app store contains applications":"Dans l'app store, vous trouverez de nouvelles applications pour installer Cozy."
+    "app store contains applications":"Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy."
     "set cozy parameters here":"Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section."
     "links to resources":"Vous trouverez ici toutes les ressources dont vous avez besoin."
     "The first place to find help is:":"Le premier endroit où trouver de l'aide est:"
@@ -214,7 +214,7 @@ module.exports =
     "calendars description": "Gérez vos événements et synchronisez-les avec votre mobile."
     "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile."
     "emails description": "Lisez, envoyez et sauvegardez vos emails."
-    "files description": "Vos fichiers en ligne et synchronisés avec votre mobile."
+    "files description": "Gérez vos fichiers en ligne et synchronisez-les avec votre mobile."
     "photos description": "Construisez un album photo depuis vos fichiers et partagez le."
     "sync description": "Cette application est nécessaire pour synchroniser vos contacts et vos événements."
     "bookmark description": "Sauvegardez et gérez vos liens favoris."
