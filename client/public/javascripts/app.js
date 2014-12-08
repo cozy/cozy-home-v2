@@ -1370,12 +1370,12 @@ module.exports = {
   "confirm update": "confirmez la mise à jour",
   "confirm install": "confirmez l'installation'",
   "no specific permissions needed": "Cette application n'a pas besoin d'informations spécifiques",
-  "menu description": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent tout être atteintes depuis le menu en haut à droite de l'accueil Cozy.",
+  "menu description": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.",
   "install your first app": "votre Cozy puis installer votre première application via l'",
   "where you reach applications": "C'est ici que vous pouvez accéder à toutes vos applications.",
   "app management": "Gestion des applications",
   "There you can manage the state of your applications: start it, stop it, remove it...": "Ici vous pouvez gérer l'état de vos applications : les lancer, les interrompre, les supprimer…",
-  "app store contains applications": "Dans l'app store, vous trouverez de nouvelles applications pour installer Cozy.",
+  "app store contains applications": "Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.",
   "set cozy parameters here": "Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.",
   "links to resources": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
   "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
@@ -1399,7 +1399,7 @@ module.exports = {
   "calendars description": "Gérez vos événements et synchronisez-les avec votre mobile.",
   "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile.",
   "emails description": "Lisez, envoyez et sauvegardez vos emails.",
-  "files description": "Vos fichiers en ligne et synchronisés avec votre mobile.",
+  "files description": "Gérez vos fichiers en ligne et synchronisez-les avec votre mobile.",
   "photos description": "Construisez un album photo depuis vos fichiers et partagez le.",
   "sync description": "Cette application est nécessaire pour synchroniser vos contacts et vos événements.",
   "bookmark description": "Sauvegardez et gérez vos liens favoris.",
@@ -2097,7 +2097,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
+require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2111,7 +2111,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
+require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2155,7 +2155,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
+require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2166,7 +2166,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
+require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2208,7 +2208,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
+require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2226,7 +2226,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
+require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2237,7 +2237,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
+require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2267,7 +2267,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
+require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2284,7 +2284,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
+require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2365,7 +2365,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application", function(exports, require, module) {
+require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2380,7 +2380,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application_widget", function(exports, require, module) {
+require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2394,7 +2394,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/layout", function(exports, require, module) {
+require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2427,7 +2427,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
+require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2451,7 +2451,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
+require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2480,7 +2480,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
+require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2494,7 +2494,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
+require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2506,7 +2506,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
+require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2521,7 +2521,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2537,7 +2537,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
+require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2549,7 +2549,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
+require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2567,7 +2567,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
+require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2597,7 +2597,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
+require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2630,7 +2630,7 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
+require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
