@@ -4832,7 +4832,7 @@ module.exports = NotificationsView = (function(_super) {
 });
 
 ;require.register("views/popover_description", function(exports, require, module) {
-var BaseView, PopoverDescriptionView, request, _ref,
+var ApplicationCollection, BaseView, PopoverDescriptionView, request, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -4840,6 +4840,8 @@ var BaseView, PopoverDescriptionView, request, _ref,
 BaseView = require('lib/base_view');
 
 request = require('lib/request');
+
+ApplicationCollection = require('../collections/application');
 
 module.exports = PopoverDescriptionView = (function(_super) {
   __extends(PopoverDescriptionView, _super);
@@ -4873,6 +4875,14 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.cancelCallback = options.cancel;
     this.label = options.label != null ? options.label : t('install');
     return this.$("#confirmbtn").html(this.label);
+  };
+
+  PopoverDescriptionView.prototype.getRenderData = function() {
+    var app, appsCollection;
+    appsCollection = new ApplicationCollection().fetchFromMarket();
+    app = appsCollection.get(this.model.get('slug'));
+    this.model.set('comment', app.get('comment'));
+    return PopoverDescriptionView.__super__.getRenderData.call(this);
   };
 
   PopoverDescriptionView.prototype.afterRender = function() {
