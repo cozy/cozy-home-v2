@@ -33,7 +33,6 @@ module.exports = class AlarmManager
 
     # Analyze upcoming event from Data System and act with it.
     handleAlarm: (event, msg) =>
-        console.log event, msg
         switch event
             when "event.create", "event.update"
                 @Event.find msg, (err, event) =>
