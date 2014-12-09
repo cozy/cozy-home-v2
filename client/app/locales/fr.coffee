@@ -74,7 +74,7 @@ module.exports =
     "ask for assistance":"Demandez de l'aide"
     "logout":"déconnexion"
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
-    "you have no apps":"Vous n'avez pas encore d'applications, vous devriez en installer."
+    "you have no apps":"Vous n'avez pas encore d'applications, vous devriez"
     "configure":"configurer "
     "app store":"App store"
     "configuration":"Configuration"
