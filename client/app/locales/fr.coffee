@@ -20,10 +20,10 @@ module.exports =
     "dismiss all"               : "Ignorer toutes"
     "add application"         : "Ajouter l'application ?"
     "install"                   : "Installer"
-    "your app"                 : "Votre Application !"
-    "community contribution"    : "Developpeur Indépendant"
-    "official application"      : "Application Officielle"
-    "application description"   : "Description de l'Application"
+    "your app"                 : "Votre application !"
+    "community contribution"    : "Développeur indépendant"
+    "official application"      : "Application officielle"
+    "application description"   : "Description de l'application"
     "downloading description"   : "Téléchargement de la description…"
     "downloading permissions"   : "Téléchargement des permissions…"
     "Cancel"                    : "Annuler"
@@ -52,7 +52,7 @@ module.exports =
 
     "no app message": """
         Vous n'avez aucune application installée. Allez sur
-        l'<a href="#applications">app store</a> pour en installer une nouvelle !
+        l'<a href="#applications">app store</a> pour en installer au moins une !
         """
 
     "welcome to app store": """
@@ -62,7 +62,7 @@ module.exports =
 
     "installed everything": "Vous avez déjà tout installé !"
     "already similarly named app": """
-        Il y a déjà une application installée avec un nom similaire.
+        Une application qui porte un nom similaire est déjà installée.
         """
 
 
@@ -73,8 +73,8 @@ module.exports =
     "configure your cozy":"Configurez votre cozy"
     "ask for assistance":"Demandez de l'aide"
     "logout":"déconnexion"
-    "welcome to your cozy":"Bienvenue sur votre Cozy!"
-    "you have no apps":"Vous n'avez pas d'applications installées vous devriez"
+    "welcome to your cozy":"Bienvenue sur votre Cozy !"
+    "you have no apps":"Vous n'avez pas encore d'applications, vous devriez"
     "configure":"configurer "
     "app store":"App store"
     "configuration":"Configuration"
@@ -96,14 +96,14 @@ module.exports =
     """
     "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous."
     "your timezone is required":"""
-        Votre fuseau horaire est requis pour vous afficher les dates correctement.
+        Votre fuseau horaire est nécessaire pour vous afficher les dates correctement.
     """
     "domain name for urls and email":"""
         Le nom de domaine est utilisé pour construire les URL
         envoyées par mail à vos contacts.
     """
     "Chose the language you want I use to speak with you:":"""
-        Choisissez la langue que vous voulez que j'utilise pour vous parler.
+        Choisissez la langue que vous souhaitez que j'utilise pour vous parler.
     """
     "french":"Français"
     "english":"Anglais"
@@ -113,13 +113,13 @@ module.exports =
     "new password":"nouveau mot de passe"
     "confirm your new password":"confirmez votre nouveau mot de passe"
     "save your new password":"sauvegarder votre nouveau mot de passe"
-    "do you want assistance":"Est-ce que vous cherchez de l'aide ?"
-    "Write an email to our support team at:":"Ecrivez un email à notre équipe support :"
-    "Register and post on our forum: ":"Postez un message sur notre forum : "
-    "Ask your question on Twitter: ":"Posez votre question sur Twitter : "
-    "Chat with us on IRC:":"Discutez avec nous sur IRC :"
+    "do you want assistance":"Est-ce que vous cherchez de l'aide ?"
+    "Write an email to our support team at:":"Ecrivez un email à notre équipe support :"
+    "Register and post on our forum: ":"Postez un message sur notre forum : "
+    "Ask your question on Twitter: ":"Posez votre question sur Twitter : "
+    "Chat with us on IRC:":"Discutez avec nous sur IRC :"
     "Visit the project website and learn to build your app:":"""
-        Visitez le site du projet et apprenez à construire des applications.
+        Visitez le site du projet et apprenez à créer des applications.
     """
     "your own application":"votre propre application"
     "broken":"cassée"
@@ -128,13 +128,13 @@ module.exports =
     "updating":"m.à.j en cours"
     "update all": "Mettre tout à jour"
     "update stack": "Mettre à jour"
-    "refresh page": "Veuillez patienter, la page se rafraichira d'ici quelques minutes."
+    "refresh page": "Veuillez patienter, la page se rafraîchira d'ici quelques minutes."
     "reboot stack": "Redémarrer"
     "cozy platform": "Plate-forme"
     "update error":"Une erreur est survenue pendant la mise à jour"
     "start this app":"démarrer cette application"
     "stopped":"stoppée"
-    "retry to install":"réessai d'installation"
+    "retry to install":"nouvel essai d'installation"
     "cozy account title":"Cozy - Compte"
     "cozy app store title":"Cozy - App Store"
     "cozy home title":"Cozy - Home"
@@ -147,7 +147,7 @@ module.exports =
     "cancel":"annuler"
     "abort":"interrompre"
     "Once updated, this application will require the following permissions:": """
-        Une fois mise à jour l'application requerra les permissions suivantes:
+        Une fois mise à jour l'application demandera les permissions suivantes :
     """
     "confirm update":"confirmez la mise à jour"
     "confirm install":"confirmez l'installation'"
@@ -165,7 +165,7 @@ module.exports =
     "app store contains applications":"Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy."
     "set cozy parameters here":"Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section."
     "links to resources":"Vous trouverez ici toutes les ressources dont vous avez besoin."
-    "The first place to find help is:":"Le premier endroit où trouver de l'aide est:"
+    "The first place to find help is:":"Le premier endroit où trouver de l'aide est :"
     "removed":"supprimée"
     "required permissions":"Permissions requises"
     "finish layout edition": "Enregistrer"
@@ -189,8 +189,8 @@ module.exports =
     "dashboard": "Tableau de bord"
     "synchronization": "Synchronisation"
     "synchronization description": """
-        Cozy vous permet de synchronisez vos fichiers, contact et calendriers
-        avec vos périphériques. Pour la mettre en route, vous devez installer
+        Cozy vous permet de synchroniser vos fichiers, contact et calendriers
+        avec vos périphériques. Pour lancer la synchronisation, vous devez installer
         des applications spécifiques.
     """
     "caldav cardav with davdroid": """
@@ -215,21 +215,21 @@ module.exports =
     "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile."
     "emails description": "Lisez, envoyez et sauvegardez vos emails."
     "files description": "Gérez vos fichiers en ligne et synchronisez-les avec votre mobile."
-    "photos description": "Construisez un album photo depuis vos fichiers et partagez le."
+    "photos description": "Construisez un album photo depuis vos fichiers et partagez-le."
     "sync description": "Cette application est nécessaire pour synchroniser vos contacts et vos événements."
     "bookmark description": "Sauvegardez et gérez vos liens favoris."
     "cozic description": "Un lecteur audio pour votre musique dans votre navigateur."
     "databrowser description": "Naviguez dans vos données dans un format brut."
     "feeds description": "Agrégez vos flux RSS et sauvegardez vos liens dans vos favoris."
     "kyou description": "Améliorez  votre humeur et votre santé en vous quantifiant."
-    "konnectors description": "Import de données depuis des services externes (Twitter, Jawbone...)."
+    "konnectors description": "Importation de données depuis des services externes (Twitter, Jawbone…)."
     "kresus description": "Des outils supplémentaires pour gérer vos comptes."
     "nirc description": "Accédez à votre canal IRC préféré depuis votre Cozy."
     "notes description": "Écrivez et organisez des notes intelligentes."
     "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !"
     "pfm description": "Suivez vos comptes bancaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé."
     "remote storage description": "Un module Remote Storage pour vos applications Unhosted."
-    "tasky description": "Un gestionnaire de tâche, basé sur les tags, rapide et simple."
+    "tasky description": "Un gestionnaire de tâches, basé sur les tags, rapide et simple."
     "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
     "reminder title email": "[Cozy-Calendar] Rappel"
