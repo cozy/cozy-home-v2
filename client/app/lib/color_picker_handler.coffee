@@ -37,6 +37,8 @@ module.exports = class ColorPickerHandler extends Backbone.View
                 # compute picker's default color to selected form's value
                 currentColor = $(event.currentTarget).css 'background-color'
                 rgb = currentColor.match /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/
+                if not rgb?
+                    rgb = ['rgb(255, 255, 255)', 255, 255, 255]
                 hexColor = farb.pack [rgb[1]/255, rgb[2]/255, rgb[3]/255]
 
                 @colorPicker.show()
