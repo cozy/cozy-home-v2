@@ -80,7 +80,7 @@ module.exports =
     "app store":"App store"
     "configuration":"Configuration"
     "assistance":"Assistance"
-    "hardware consumption":"Hardware consumption"
+    "hardware consumption":"Hardware"
     "hard drive gigabytes":"&nbsp;GB (Hard Drive)"
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Manage your applications"
@@ -114,7 +114,11 @@ module.exports =
     "installed":"installed"
     "updated":"updated"
     "updating":"updating"
-    "update all": "update all"
+    "update all": "Update all"
+    "update stack": "Update"
+    "refresh page": "Wait please, page will refresh in several minutes."
+    "cozy platform": "Platform"
+    "reboot stack": "Reboot"
     "update error":"An error occured while updating the application"
     "broken":"broken"
     "start this app":"start this app"
@@ -161,5 +165,63 @@ module.exports =
     """
 
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please, try again later."
+    "package.json not found": "Unable to fetch package.json. Check your repo url."
     "please wait data retrieval": "Please wait while data are being retrieved..."
     "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
+
+    "dashboard": "Dashboard"
+    "synchronization": "Synchronization"
+    "synchronization description": """
+        Cozy offers you synchronization capabilities for your files, your
+        contacts and your calendars. But it requires specific applications to
+        achieve it.
+    """
+    "caldav cardav with davdroid": """
+        For your contacts and events, we recommend you the
+        Bitfire <a href="http://davdroid.bitfire.at/what-is-davdroid">DAVDroid</a>
+        application. Once you have installed the Sync
+        app on your Cozy, you can configure your DAVDroid app to synchronize
+        your contacts and events on your phone. Then, you will be able to
+        access them from your native applications.
+    """
+    "files with cozy on android": """
+        To access to all your files from your mobile, we recommend you to
+        install the
+        <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">Cozy application</a>
+        from the Android Play Store. Once done, just follow the instruction and
+        browser your files directly from your phone.
+    """
+    "calendars description": "Manage your events and sync them with your mobile."
+    "contacts description": "Manage your contacts and sync them with your mobile."
+    "emails description": "Read, send and backup your emails."
+    "files description": "Your online filesystem synced with your devices."
+    "photos description": "Make photo album from you files and share them."
+    "sync description": "The tool required to sync your contact and your calendar with your mobile."
+    "bookmark description": "Save and manage your bookmarks."
+    "cozic description": "An audio player to play your music from your browser."
+    "databrowser description": "Browse and visualize all your data (raw format)."
+    "feeds description": "Aggregate your feeds and save your favorite links in bookmarks."
+    "kyou description": "Improve your happiness and your health by quantifying you."
+    "konnectors description": "Import data from external services (Twitter, Jawbone...)."
+    "kresus description": "Additional tools for your personal finance manager."
+    "nirc description": "Access to your favorite IRC channel from your Cozy."
+    "notes description": "Organize and write smart notes."
+    "owm description": "Know how is the weather anywhere in the world."
+    "pfm description": "Manage your bank accounts without logging each time (French Banks only)."
+    "remote storage description": "A Remote Storage appliance to store data from your Unhosted applications."
+    "tasky description": "Super fast and simple tag-based task manager."
+    "todos description": "Write your tasks, order them and execute them efficiently."
+    "term description": "A terminal for your cozy."
+    "reminder title email": "Reminder"
+    "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})"
+    "reminder message expanded": """
+    Reminder: %{description}
+    Start: %{start} (%{timezone})
+    End: %{end} (%{timezone})
+    Place: %{place}
+    Details: %{details}
+    """
+    "reminder message": "Reminder: %{message}"
+    "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
+    "installation message failure": "%{appName}'s installation failed."
+    "update available notification": "A new version of %{appName} is available."

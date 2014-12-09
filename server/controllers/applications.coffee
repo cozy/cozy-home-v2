@@ -1,6 +1,7 @@
 request = require("request-json")
 fs = require('fs')
 slugify = require 'cozy-slug'
+exec = require('child_process').exec
 log = require('printit')
     prefix: "applications"
 
@@ -42,8 +43,10 @@ markBroken = (res, app, err) ->
     app.password = null
     if err.result?
         app.errormsg = err.message + ' :\n' + err.result
-    else
+    else if err.message?
         app.errormsg = err.message + ' :\n' + err.stack
+    else
+        app.errormsg = err
     app.save (saveErr) ->
         return sendError res, saveErr if saveErr
 

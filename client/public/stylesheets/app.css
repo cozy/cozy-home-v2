@@ -839,7 +839,7 @@ select:focus {
   color: #fff;
   background: #ff850a;
   border-color: 1px solid #ff850a;
-  color: whit;
+  color: #fff;
 }
 .btn:active {
   -webkit-box-shadow: 1px 3px 2px rgba(0,0,0,0.2) inset, 0 0 0;
@@ -1302,25 +1302,6 @@ body {
   font-weight: normal;
   margin-top: 10px;
 }
-#home-edit-close #colorpicker {
-  width: 195px;
-  height: 195px;
-  display: none;
-  position: absolute;
-  z-index: 100000000000;
-}
-#home-edit-close .colorpicked {
-  width: 20px;
-  height: 30px;
-  padding: 2px;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  font-family: "Helvetica";
-  border: 1px solid #000;
-  margin: 0 15px 0 5px;
-  cursor: pointer;
-}
 #app-list {
   text-align: center;
   margin: auto;
@@ -1465,14 +1446,17 @@ body {
 .application.ui-resizable:not(.ui-resizable-disabled) .bottom-handle {
   bottom: -6.5px;
   left: 50%;
+  cursor: row-resize;
 }
 .application.ui-resizable:not(.ui-resizable-disabled) .bottom-right-handle {
   bottom: -6.5px;
   right: -6.5px;
+  cursor: nwse-resize;
 }
 .application.ui-resizable:not(.ui-resizable-disabled) .right-handle {
   top: 50%;
   right: -6.5px;
+  cursor: col-resize;
 }
 .application:hover {
   background: #f1e2cf;
@@ -1550,8 +1534,8 @@ body {
   margin-bottom: 10px;
 }
 #account-view .input .btn {
-  height: 60px;
-  width: 60px;
+  height: 55px;
+  width: 55px;
   margin-left: 10px;
 }
 #home-view {
@@ -1769,8 +1753,17 @@ body {
 .config-application .buttons {
   display: none;
 }
+.config-application .img {
+  width: 72px;
+}
 .config-application:hover .buttons {
   display: inline-block;
+}
+#config-applications-view .stack-app .app {
+  font-weight: normal;
+}
+#config-applications-view .stack-app .line.buttons {
+  margin-top: 20px;
 }
 .title-device {
   display: none;
@@ -1960,6 +1953,16 @@ body {
   padding-top: 3px;
   position: absolute;
 }
+.noncozy-warning {
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 20px;
+  padding: 5px 10px;
+  color: #808080;
+  background: #fff4f0;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
 .md-body {
   background: #f7f4f0;
   padding: 20px;
@@ -2114,7 +2117,8 @@ body {
   }
   #config-applications-view .change-layout img,
   #config-applications-view .disk-space img,
-  #config-applications-view .memory-free img {
+  #config-applications-view .memory-free img,
+  #config-applications-view .stack-app img {
     width: 32px;
     margin: 0px;
     margin-right: 5px;
@@ -2126,8 +2130,16 @@ body {
   #config-applications-view .sys-infos div {
     margin-top: 5px;
   }
+  #config-applications-view .platform .line img {
+    width: 32px;
+    margin: 0px;
+    margin-right: 5px;
+  }
   #config-applications-view h4 {
     margin-bottom: 20px;
+  }
+  #config-applications-view .stack-app .line {
+    display: block;
   }
 }
 @media (max-width: 640px) {
@@ -2230,6 +2242,13 @@ body {
   #content #home-menu .menu-btn:hover span {
     display: none;
   }
+}
+span.app {
+  font-weight: bold;
+}
+button.btn {
+  margin-bottom: 4px;
+  margin-right: 4px;
 }
 
 

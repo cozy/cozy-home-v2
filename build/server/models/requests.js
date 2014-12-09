@@ -20,6 +20,9 @@ module.exports = {
   alarm: {
     all: americano.defaultRequests.all
   },
+  event: {
+    all: americano.defaultRequests.all
+  },
   cozyinstance: {
     all: americano.defaultRequests.all
   },
@@ -30,6 +33,9 @@ module.exports = {
   application: {
     all: americano.defaultRequests.all,
     bySlug: allSlug
+  },
+  stack_application: {
+    all: americano.defaultRequests.all
   },
   user_preference: {
     all: americano.defaultRequests.all

@@ -6,6 +6,9 @@
                 a(href="#{model.git}").repo-stars &nbsp;
                 a(href="#{model.git}")
                     img(src="img/star-white.png")
+        if (model.comment !== 'official application')
+            .line.noncozy-warning
+                = t('warning unofficial app')
     .md-body
     .md-footer.clearfix
         button.btn.right#confirmbtn= t('install')

@@ -1,6 +1,5 @@
 ViewCollection = require 'lib/view_collection'
 SocketListener = require 'lib/socket_listener'
-NotificationCollection = require 'collections/notifications'
 Notification = require 'models/notification'
 
 SocketListener = require '../lib/socket_listener'
@@ -15,11 +14,6 @@ module.exports = class NotificationsView extends ViewCollection
         "click #notifications-toggle": "showNotifList"
         "click #clickcatcher"        : "hideNotifList"
         "click #dismiss-all"         : "dismissAll"
-
-    initialize: ->
-        @collection ?= new NotificationCollection()
-        SocketListener.watch @collection
-        super
 
     appendView: (view) ->
         @notifList.prepend view.el
@@ -59,9 +53,9 @@ module.exports = class NotificationsView extends ViewCollection
             imgPath = 'img/notification-white.png'
             @$('#notifications-toggle img').attr 'src', imgPath
             @$('#notifications-toggle').removeClass 'highlight'
-        #else
-            #@counter.html newCount
-            #@counter.show()
+        else
+            @counter.html newCount
+            @counter.show()
 
     windowClicked: =>
         if event? and @$el.has($(event.target)).length is 0

@@ -4,7 +4,8 @@ log = require('printit')
     prefix: 'application updates'
 
 Application = require '../models/application'
-
+StackApplication = require '../models/stack_application'
+localization = require '../lib/localization_manager'
 
 # Time (in ms) between two checks for updates, for all apps
 TIME_BETWEEN_UPDATE_CHECKS = 1000 * 60 * 60 * 24 # once a day
@@ -21,9 +22,11 @@ checkUpdate = (notifier, app) ->
             log.raw err
         else if setUpdate
             log.info "#{app.name} - update required."
+            messageKey = 'update available notification'
+            message = localization.t messageKey, appName: app.name
             notifier.createTemporary
-                text: "A new version of #{app.name} is available!"
-                resource: {app: 'home'}
+                text: message
+                resource: app: 'home'
         else
             log.info "#{app.name} - no update required."
 
@@ -41,6 +44,13 @@ checkUpdates = ->
         else
             for app in apps
                 checkUpdate notifier, app
+        StackApplication.all (err, apps) ->
+            if err
+                log.error "Error when checking apps versions:"
+                log.raw err
+            else
+                for app in apps
+                    checkUpdate notifier, app
 
 
 # Start check update cron.

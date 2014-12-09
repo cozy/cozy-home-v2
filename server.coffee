@@ -5,6 +5,7 @@ process.on 'uncaughtException', (err) ->
 application = module.exports = (callback) ->
     americano = require 'americano'
     request = require 'request-json'
+    localization = require './server/lib/localization_manager'
     initProxy = require './server/initializers/proxy'
     setupRealtime = require './server/initializers/realtime'
     setupChecking = require './server/initializers/checking'
@@ -23,11 +24,12 @@ application = module.exports = (callback) ->
         if process.env.NODE_ENV isnt "test"
             initProxy()
 
-        setupRealtime app, ->
-            setupChecking()
-            versionChecking()
-            autoStop.init()
-            callback app, server if callback?
+        localization.initialize ->
+            setupRealtime app, ->
+                setupChecking()
+                versionChecking()
+                autoStop.init()
+                callback app, server if callback?
 
 if not module.parent
     application()

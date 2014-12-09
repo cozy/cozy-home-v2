@@ -1,6 +1,8 @@
 BaseView = require 'lib/base_view'
 appIframeTemplate = require 'templates/application_iframe'
 AppCollection = require 'collections/application'
+StackAppCollection = require 'collections/stackApplication'
+NotificationCollection = require 'collections/notifications'
 DeviceCollection = require 'collections/device'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
@@ -8,8 +10,7 @@ HelpView = require 'views/help'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
-socketListener = require('lib/socket_listener')
-UserPreference = require '../models/user_preference'
+SocketListener = require 'lib/socket_listener'
 
 User = require 'models/user'
 
@@ -22,19 +23,19 @@ module.exports = class HomeView extends BaseView
 
     constructor: ->
         @apps = new AppCollection()
-        @listenTo @apps, 'reset', @testapps
+        @stackApps = new StackAppCollection()
         @devices = new DeviceCollection()
-        @listenTo @devices, 'reset', @test
-        socketListener.watch @apps
-        socketListener.watch @devices
+        @notifications = new NotificationCollection()
+        SocketListener.watch @apps
+        SocketListener.watch @notifications
+        SocketListener.watch @devices
 
-        @userPreference = new UserPreference()
         super
 
     afterRender: =>
-        @navbar = new NavbarView @apps
-        @applicationListView = new ApplicationsListView @apps, @userPreference
-        @configApplications = new ConfigApplicationsView @apps, @devices
+        @navbar = new NavbarView @apps, @notifications
+        @applicationListView = new ApplicationsListView @apps
+        @configApplications = new ConfigApplicationsView @apps, @devices, @stackApps
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
@@ -43,21 +44,11 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
 
-        @favicon = @$ 'fav1'
-        @favicon2 = @$ 'fav2'
-
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
         @devices.fetch reset: true
-        @userPreference.fetch()
+        @stackApps.fetch reset: true
         @resetLayoutSizes()
-
-    test: =>
-        console.log('got devices', @devices.length)
-
-    testapps: =>
-        console.log('got apps', @apps.length)
-
 
     ### Functions ###
 
@@ -81,7 +72,6 @@ module.exports = class HomeView extends BaseView
             $('#home-content').append view.$el
             view.$el.fadeIn()
             @currentView = view
-            @changeFavicon "favicon.ico"
             @resetLayoutSizes()
 
         if @currentView?
@@ -89,7 +79,6 @@ module.exports = class HomeView extends BaseView
             if view is @currentView
                 @frames.hide()
                 @content.show()
-                @changeFavicon "favicon.ico"
                 @resetLayoutSizes()
                 return
 
@@ -152,7 +141,6 @@ module.exports = class HomeView extends BaseView
         name = '' if not name?
         window.document.title = "Cozy - #{name}"
         $("#current-application").html name
-        @changeFavicon "/apps/#{slug}/favicon.ico"
         @resetLayoutSizes()
 
     createApplicationIframe: (slug, hash="") ->
@@ -169,14 +157,6 @@ module.exports = class HomeView extends BaseView
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
         @resetLayoutSizes()
-
-    changeFavicon: (url) ->
-        @favicon?.remove()
-        @favicon2?.remove()
-        newfav = '<link rel="icon" type="image/x-icon" href="' + url + '" />"'
-        @favicon = $ newfav
-        @favicon2 = @favicon.clone().attr 'rel', 'shortcut icon'
-        $('head').append @favicon, @favicon2
 
     ### Configuration ###
 

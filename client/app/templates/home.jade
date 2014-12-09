@@ -1,17 +1,7 @@
 // .section-title.darkbg.bigger home
 
-#home-edit-close.w800
-    label Background color
-    input.colorpicked(name="background-color")
-    label Tile color
-    input.colorpicked(name="button-color")
-    label Tile color on hover
-    input.colorpicked(name="button-hover-color")
-    #colorpicker
-
-    a#save-custom.btn(href="#home")= t('finish layout edition')
-    | &nbsp;
-    a#reset-custom.btn= t('reset customization')
+#home-edit-close.w600
+    a.btn.btn-large(href="#home")= t('finish layout edition')
 
 #no-app-message.w600
 
@@ -25,7 +15,9 @@
         = ' ' + t ('install your first app')
         a(href="#applications")= t('app store')
         |.
-    p.mt2.pa2
+
+    h4.pa2= t ('dashboard')
+    p
         =t ('menu description')
     p
         img(src="/img/home-black.png")
@@ -48,4 +40,11 @@
         strong=t('assistance') + ': '
         = t('links to resources')
 
+    h4.pa2= t ('synchronization')
+    p
+        !=t ('synchronization description')
+    p
+        !=t ('caldav cardav with davdroid')
+    p
+        !=t ('files with cozy on android')
 #app-list.gridster

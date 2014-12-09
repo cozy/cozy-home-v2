@@ -21,10 +21,29 @@
                             span &nbsp;/&nbsp;
                             span.total 0&nbsp;
                             span= t('memory megabytes')
+                    h4= t('cozy platform')
+                    .stack-app.mt2
+                        .line
+                            span.app Data System: 
+                            span.data-system --
+                        .line
+                            span.app Proxy: 
+                            span.proxy --
+                        .line
+                            span.app Home: 
+                            span.home --
+                        .line
+                            span.app Controller: 
+                            span.controller --
+                        .line.buttons
+                            button.btn.update-stack= t('update stack')
+                            button.btn.reboot-stack= t('reboot stack')
+                        .line
+                            span.refresh= t('refresh page')
+
 
         .mod.w66.right
             .title-device.h4.mb3= t('manage your devices')
         .mod.w66.left
             .title-app.h4.mb3= t('manage your applications')
             button.btn.update-all= t('update all')
-

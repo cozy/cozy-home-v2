@@ -2,6 +2,7 @@ request = require 'lib/request'
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 Application = require 'models/application'
+StackApplication = require 'models/stack_application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
 
@@ -15,21 +16,43 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
 
     events:
         "click .update-all"        : "onUpdateClicked"
+        "click .update-stack"      : "onUpdateStackClicked"
+        "click .reboot-stack"      : "onRebootStackClicked"
 
-    constructor: (@apps, @devices) ->
+    constructor: (@apps, @devices, @stackApps) ->
         @listenTo @devices, 'reset', @displayDevices
+        @listenTo @stackApps, 'reset', @displayStackVersion
         super()
 
     afterRender: ->
+        @spanRefresh = @$ '.refresh'
+        @spanRefresh.hide()
         @memoryFree = @$ '.memory-free'
         @diskSpace = @$ '.disk-space'
         @updateBtn = new ColorButton  @$ '.update-all'
+        @updateStackBtn = new ColorButton  @$ '.update-stack'
+        @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
         @fetch()
         @applicationList = new ConfigApplicationList @apps
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
+        @stackApplications = new StackApplication()
 
+    displayStackVersion: =>
+        for app in @stackApps.models
+            @$(".#{app.get 'name'}").html app.get 'version'
+            if app.get('version')? and app.get('lastVersion') and
+                app.get('version') isnt app.get('lastVersion')
+                    @$(".#{app.get 'name'}").css 'font-weight', "bold"
+                    currentVersion = app.get('version').split('.')
+                    newVersion = app.get('lastVersion').split('.')
+                    if currentVersion[0] isnt newVersion[0]
+                        @$(".#{app.get 'name'}").css 'color', "Red"
+                    else if currentVersion[1] isnt newVersion[1]
+                        @$(".#{app.get 'name'}").css 'color', "OrangeRed"
+                    else if currentVersion[2] isnt newVersion[2]
+                        @$(".#{app.get 'name'}").css 'color', "Orange"
 
     displayDevices: =>
         if not(@devices.length is 0)
@@ -69,3 +92,17 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
             error: =>
                 @updateBtn.displayGreen t "error during updating"
                 Backbone.Mediator.pub 'app-state-changed', true
+
+    onUpdateStackClicked: ->
+        @updateStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @updateStackBtn.spin true, '#ffffff'
+        @spanRefresh.show()
+        @stackApplications.updateStack () =>
+            location.reload()
+
+    onRebootStackClicked: ->
+        @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @rebootStackBtn.spin true, '#ffffff'
+        @spanRefresh.show()
+        @stackApplications.rebootStack () =>
+            location.reload()

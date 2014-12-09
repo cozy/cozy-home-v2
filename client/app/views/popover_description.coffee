@@ -1,6 +1,6 @@
 BaseView = require 'lib/base_view'
 request = require 'lib/request'
-
+ApplicationCollection = require '../collections/application'
 
 module.exports = class PopoverDescriptionView extends BaseView
     id: 'market-popover-description-view'
@@ -19,6 +19,13 @@ module.exports = class PopoverDescriptionView extends BaseView
         @label = if options.label? then options.label else t 'install'
         @$("#confirmbtn").html @label
 
+    getRenderData: ->
+        # retrieves from market if app is official or not
+        appsCollection = new ApplicationCollection().fetchFromMarket()
+        app = appsCollection.get @model.get('slug')
+        @model.set 'comment', app.get('comment')
+        return super()
+
     afterRender: ->
         @model.set "description", ""
         @body = @$ ".md-body"
@@ -32,10 +39,13 @@ module.exports = class PopoverDescriptionView extends BaseView
             success: =>
                 @body.removeClass 'loading'
                 @renderDescription()
-            error: =>
+            error: (error) =>
                 @body.removeClass 'loading'
                 @body.addClass 'error'
-                @body.html t 'error connectivity issue'
+                if error.responseText.indexOf('Not Found') isnt -1
+                    @body.html t 'package.json not found'
+                else
+                    @body.html t 'error connectivity issue'
 
         @overlay = $ '.md-overlay'
         @overlay.click =>

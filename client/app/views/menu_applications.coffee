@@ -1,5 +1,4 @@
 ViewCollection = require 'lib/view_collection'
-SocketListener = require 'lib/socket_listener'
 
 module.exports = class AppsMenu extends ViewCollection
 

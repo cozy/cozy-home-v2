@@ -9,6 +9,8 @@ module.exports =
         all: americano.defaultRequests.all
     alarm:
         all: americano.defaultRequests.all
+    event:
+        all: americano.defaultRequests.all
     cozyinstance:
         all: americano.defaultRequests.all
     notification:
@@ -17,5 +19,7 @@ module.exports =
     application:
         all: americano.defaultRequests.all
         bySlug: allSlug
+    stack_application:
+        all: americano.defaultRequests.all
     user_preference:
         all: americano.defaultRequests.all
