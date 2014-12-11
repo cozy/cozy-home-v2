@@ -48,7 +48,7 @@ Event::_getRecurringStartDates = (startingBound, endingBound) ->
     return starts if not @isRecurring()
 
     startMDate = moment.tz @start, @timezone
-    
+
     startJsDate = new Date startMDate.toISOString()
 
     options = RRule.parseString @rrule
@@ -87,7 +87,6 @@ Event::getAlarms = (userTimezone) ->
 
     alarms = []
 
-    # timezone = @timezone or userTimezone
     for alarm, key in @alarms?.items
         startDates = []
 
@@ -116,13 +115,11 @@ Event::getAlarms = (userTimezone) ->
                 action: alarm.action
                 trigg: trigg.toISOString() # Cozy alarm uses UTC.
                 description: @description
-                #timezone: @timezone
 
             # Generate the realevent this reminder is about.
             # Compute realevent end as event.start + event.duration.
             # Don't bother with timezone, as we only need a diff.
-            duration = moment @end
-                .diff moment(@start), 'seconds'
+            duration = moment(@end).diff moment(@start), 'seconds'
             endDate = startDate.clone().add duration, 'seconds'
 
             event =
