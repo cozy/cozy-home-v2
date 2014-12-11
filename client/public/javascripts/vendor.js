@@ -17901,8 +17901,8 @@ exports.rethrow = function rethrow(err, filename, lineno){
         path = 'public/' + appName + '/'
       }
       else {
-        // if dev
-        path = 'public/'
+        // if home
+        path = ''
       }
 
       pathToSocketIO = "" + path + "socket.io";

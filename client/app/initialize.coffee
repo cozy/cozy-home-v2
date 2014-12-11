@@ -45,6 +45,7 @@ class exports.Application extends BrunchApplication
 
         url = window.location.origin
         pathToSocketIO = "#{window.location.pathname.substring(1)}socket.io"
+        console.log url
         socket = io.connect url, resource: pathToSocketIO
         socket.on 'installerror', (err) ->
             console.log "An error occured while attempting to install app"

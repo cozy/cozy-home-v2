@@ -15,7 +15,7 @@
   "dependencies": {
     "cozy-slug": "0.1.2",
     "cozy-clients": "1.0.3",
-    "cozy-realtime-adapter": "0.11.3",
+    "cozy-realtime-adapter": "0.11.4",
     "cozy-notifications-helper": "1.0.2",
     "jugglingdb-cozy-adapter": "0.4.5",
     "americano": "0.3.1",
