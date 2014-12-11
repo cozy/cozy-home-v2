@@ -646,7 +646,6 @@ exports.Application = (function(_super) {
     }
     url = window.location.origin;
     pathToSocketIO = "" + (window.location.pathname.substring(1)) + "socket.io";
-    console.log(url);
     socket = io.connect(url, {
       resource: pathToSocketIO
     });

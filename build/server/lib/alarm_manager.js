@@ -63,7 +63,7 @@ module.exports = AlarmManager = (function() {
     switch (event) {
       case "event.create":
       case "event.update":
-        return this.Event.find(msg, (function(_this) {
+        return Event.find(msg, (function(_this) {
           return function(err, event) {
             if (event != null) {
               return _this.addEventCounters(event);
@@ -92,7 +92,8 @@ module.exports = AlarmManager = (function() {
     var delta, in24h, now, timeout, timezone, triggerDate, _base, _name, _ref;
     this.clearTimeouts(alarm._id);
     timezone = alarm.timezone || this.timezone;
-    triggerDate = moment.tz(alarm.trigg, timezone);
+    triggerDate = moment.tz(alarm.trigg, 'UTC');
+    triggerDate.tz(timezone);
     now = moment().tz(timezone);
     in24h = moment(now).add(1, 'days');
     if ((now.unix() <= (_ref = triggerDate.unix()) && _ref < in24h.unix())) {
