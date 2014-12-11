@@ -114,7 +114,7 @@ module.exports.init = function() {
     for (_i = 0, _len = apps.length; _i < _len; _i++) {
       app = apps[_i];
       if (app.state === 'installed' && app.isStoppable) {
-        _results.push(startTimeout(app.name));
+        _results.push(startTimeout(app.slug));
       } else {
         _results.push(void 0);
       }
