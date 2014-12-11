@@ -4,13 +4,13 @@ Instance = require '../models/cozyinstance'
 
 # Seeks the proper locale files, depending if we run from build/ or from sources
 path = require 'path'
-buildLocalePath = '../../../client/app/locales/'
+buildLocalePath = '../../client/app/locales/'
 buildLocalePath = path.resolve __dirname, buildLocalePath
 useBuildLocales = fs.existsSync buildLocalePath
 if useBuildLocales
     LOCALE_PATH = buildLocalePath
 else
-    LOCALE_PATH = path.resolve __dirname, '../../client/app/locales/'
+    LOCALE_PATH = path.resolve __dirname, '../client/app/locales/'
 
 class LocalizationManager
 

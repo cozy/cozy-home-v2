@@ -75,7 +75,9 @@ task 'build', 'Build CoffeeScript to Javascript', ->
     logger.options.prefix = 'cake:build'
     logger.info "Start compilation..."
     command = "coffee -cb --output build/server server && " + \
-              "coffee -cb --output build/ server.coffee"
+              "coffee -cb --output build/ server.coffee  && " + \
+              "coffee -cb --output build/client/app/locales client/app/locales"
+
     exec command, (err, stdout, stderr) ->
         if err
             logger.error "An error has occurred while compiling:\n" + err
