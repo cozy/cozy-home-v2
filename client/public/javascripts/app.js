@@ -1049,6 +1049,7 @@ module.exports = {
   "your timezone is required": "Your timezone is required to display dates properly",
   "domain name for urls and email": "The domain name is used to build urls send via email to you or your contacts",
   "save": "save",
+  "saved": "saved",
   "Chose the language you want I use to speak with you:": "Choose the language you want me to use to speak to you:",
   "french": "French",
   "english": "English",
@@ -1221,6 +1222,7 @@ module.exports = {
   "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
+  "saved": "sauvé",
   "your parameters": " Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
   "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
@@ -1403,6 +1405,7 @@ module.exports = {
   "your timezone is required": "O fuso horário é necessário para mostrar as datas correctamente.",
   "domain name for urls and email": "O dominio é usado para construir links para enviar para si ou para os seus contactos.",
   "save": "guardar",
+  "saved": "saved",
   "Chose the language you want I use to speak with you:": "Escolha a lingua que quer que fale:",
   "french": "Francês",
   "english": "Inglês",
@@ -2634,7 +2637,7 @@ module.exports = exports.AccountView = (function(_super) {
           return saveButton.html('error');
         } else {
           saveButton.addClass('green');
-          saveButton.html('saved');
+          saveButton.html(t('saved'));
           if (fieldName === 'locale') {
             alert(t('changing locale requires reload'));
             window.location.reload();
