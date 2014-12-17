@@ -95,6 +95,7 @@ module.exports =
     "your timezone is required":"Your timezone is required to display dates properly"
     "domain name for urls and email":"The domain name is used to build urls send via email to you or your contacts"
     "save":"save"
+    "saved":"saved"
     "Chose the language you want I use to speak with you:":"Choose the language you want me to use to speak to you:"
     "french":"French"
     "english":"English"

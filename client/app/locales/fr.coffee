@@ -88,6 +88,7 @@ module.exports =
     "synchronized": "synchronisé"
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
+    "saved":"sauvé"
 
     "your parameters":" Vos paramètres"
     "alerts and password recovery email":"""
