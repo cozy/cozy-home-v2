@@ -3834,7 +3834,7 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.canUseWidget = function() {
-    return this.model.has('widget');
+    return false;
   };
 
   ApplicationRow.prototype.getNbCols = function() {

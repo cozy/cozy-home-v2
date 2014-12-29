@@ -125,7 +125,9 @@ module.exports = class ApplicationRow extends BaseView
             @$('.application-inner').append @stateLabel
             @$('.application-inner').removeClass 'widget'
 
-    canUseWidget: () => @model.has 'widget'
+    canUseWidget: () =>
+        #@model.has 'widget'
+        false
 
     getNbCols: ->
         return window.app.mainView.applicationListView.colsNb
