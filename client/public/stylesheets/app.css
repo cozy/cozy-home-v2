@@ -1329,6 +1329,7 @@ body {
   filter: alpha(opacity=70);
 }
 #app-list .use-widget {
+  display: none;
   z-index: 20;
   position: absolute;
   bottom: 10px;
