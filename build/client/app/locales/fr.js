@@ -72,6 +72,7 @@ module.exports = {
   "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
+  "saved": "sauvé",
   "your parameters": " Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
   "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",

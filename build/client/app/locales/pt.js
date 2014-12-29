@@ -78,6 +78,7 @@ module.exports = {
   "your timezone is required": "O fuso horário é necessário para mostrar as datas correctamente.",
   "domain name for urls and email": "O dominio é usado para construir links para enviar para si ou para os seus contactos.",
   "save": "guardar",
+  "saved": "saved",
   "Chose the language you want I use to speak with you:": "Escolha a lingua que quer que fale:",
   "french": "Francês",
   "english": "Inglês",
