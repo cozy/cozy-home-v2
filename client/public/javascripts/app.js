@@ -4346,9 +4346,9 @@ module.exports = MarketView = (function(_super) {
 
   MarketView.prototype.parseGitUrl = function(url) {
     var branch, domain, error, git, name, out, parsed, parts, path, port, proto, slug;
+    url = url.trim();
     url = url.replace('git@github.com:', 'https://github.com/');
     url = url.replace('git://', 'https://');
-    console.debug(REPOREGEX);
     parsed = REPOREGEX.exec(url);
     if (parsed == null) {
       error = {
