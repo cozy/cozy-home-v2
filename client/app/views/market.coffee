@@ -148,9 +148,9 @@ module.exports = class MarketView extends BaseView
                 alert t JSON.parse(jqXHR.responseText).message
 
     parseGitUrl: (url) ->
+        url = url.trim()
         url = url.replace 'git@github.com:', 'https://github.com/'
         url = url.replace 'git://', 'https://'
-        console.debug REPOREGEX
         parsed = REPOREGEX.exec url
         unless parsed?
             error =
