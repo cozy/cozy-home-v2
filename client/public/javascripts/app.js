@@ -2799,6 +2799,10 @@ module.exports = ApplicationRow = (function(_super) {
     ApplicationRow.__super__.constructor.apply(this, arguments);
   }
 
+  ApplicationRow.prototype.initialize = function() {
+    return this.listenTo(this.model, 'change:version', this.render);
+  };
+
   ApplicationRow.prototype.afterRender = function() {
     this.updateButton = new ColorButton(this.$(".update-app"));
     this.removeButton = new ColorButton(this.$(".remove-app"));
