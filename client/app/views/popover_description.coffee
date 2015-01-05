@@ -23,7 +23,11 @@ module.exports = class PopoverDescriptionView extends BaseView
         # retrieves from market if app is official or not
         appsCollection = new ApplicationCollection().fetchFromMarket()
         app = appsCollection.get @model.get('slug')
-        @model.set 'comment', app.get('comment')
+
+        # By default, apps are 'community contribution'.
+        # Used for "install from Git"
+        comment = if app? then app.get('comment') else 'community contribution'
+        @model.set 'comment', comment
         return super()
 
     afterRender: ->
