@@ -1993,7 +1993,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<iframe');
-buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
+buf.push(attrs({ 'src':("apps/" + (id) + "/" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
 buf.push('></iframe>');
 }
 return buf.join("");
@@ -4102,6 +4102,9 @@ module.exports = HomeView = (function(_super) {
       _this = this;
     if (hash == null) {
       hash = "";
+    }
+    if ((hash != null ? hash.length : void 0) > 0) {
+      hash = "#" + hash;
     }
     this.frames.append(appIframeTemplate({
       id: slug,
