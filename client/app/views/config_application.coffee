@@ -25,6 +25,8 @@ module.exports = class ApplicationRow extends BaseView
         super
 
     initialize: ->
+        # only re-render when 'version' changes, because it's the only displayed
+        # field that can change during the update
         @listenTo @model, 'change:version', @render
 
     afterRender: =>
