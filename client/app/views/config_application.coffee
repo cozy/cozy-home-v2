@@ -24,6 +24,9 @@ module.exports = class ApplicationRow extends BaseView
         @id = "app-btn-#{options.model.id}"
         super
 
+    initialize: ->
+        @listenTo @model, 'change:version', @render
+
     afterRender: =>
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
