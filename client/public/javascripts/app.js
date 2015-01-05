@@ -4888,10 +4888,11 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.getRenderData = function() {
-    var app, appsCollection;
+    var app, appsCollection, comment;
     appsCollection = new ApplicationCollection().fetchFromMarket();
     app = appsCollection.get(this.model.get('slug'));
-    this.model.set('comment', app.get('comment'));
+    comment = app != null ? app.get('comment') : 'community contribution';
+    this.model.set('comment', comment);
     return PopoverDescriptionView.__super__.getRenderData.call(this);
   };
 
