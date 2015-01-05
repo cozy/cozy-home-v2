@@ -7,7 +7,7 @@ module.exports = StackApplication = americano.getModel 'StackApplication',
     name: String
     version: String
     lastVersion: String
-    repository: Object
+    git: String
 
 StackApplication.all = (params, callback) ->
     StackApplication.request "all", params, callback
@@ -45,6 +45,7 @@ StackApplication::checkForUpdate = (callback) ->
                 setFlag(repoVersion)
             else if @version isnt repoVersion
                 setFlag(repoVersion)
-
+            else if @lastVersion isnt repoVersion
+                setFlag(repoVersion)
             else
                 callback null, false
