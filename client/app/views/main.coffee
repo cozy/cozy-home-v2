@@ -144,6 +144,10 @@ module.exports = class HomeView extends BaseView
         @resetLayoutSizes()
 
     createApplicationIframe: (slug, hash="") ->
+
+        # prepends '#' only if there is an actual hash
+        hash = "##{hash}" if hash?.length > 0
+
         @frames.append appIframeTemplate(id: slug, hash:hash)
         frame = @$("##{slug}-frame")
         $(frame.prop('contentWindow')).on 'hashchange', =>

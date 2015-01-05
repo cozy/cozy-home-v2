@@ -1993,7 +1993,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<iframe');
-buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
+buf.push(attrs({ 'src':("apps/" + (id) + "/" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
 buf.push('></iframe>');
 }
 return buf.join("");
@@ -2798,6 +2798,10 @@ module.exports = ApplicationRow = (function(_super) {
     this.id = "app-btn-" + options.model.id;
     ApplicationRow.__super__.constructor.apply(this, arguments);
   }
+
+  ApplicationRow.prototype.initialize = function() {
+    return this.listenTo(this.model, 'change:version', this.render);
+  };
 
   ApplicationRow.prototype.afterRender = function() {
     this.updateButton = new ColorButton(this.$(".update-app"));
@@ -4099,6 +4103,9 @@ module.exports = HomeView = (function(_super) {
     if (hash == null) {
       hash = "";
     }
+    if ((hash != null ? hash.length : void 0) > 0) {
+      hash = "#" + hash;
+    }
     this.frames.append(appIframeTemplate({
       id: slug,
       hash: hash
@@ -4881,10 +4888,11 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.getRenderData = function() {
-    var app, appsCollection;
+    var app, appsCollection, comment;
     appsCollection = new ApplicationCollection().fetchFromMarket();
     app = appsCollection.get(this.model.get('slug'));
-    this.model.set('comment', app.get('comment'));
+    comment = app != null ? app.get('comment') : 'community contribution';
+    this.model.set('comment', comment);
     return PopoverDescriptionView.__super__.getRenderData.call(this);
   };
 

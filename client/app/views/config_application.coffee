@@ -24,6 +24,11 @@ module.exports = class ApplicationRow extends BaseView
         @id = "app-btn-#{options.model.id}"
         super
 
+    initialize: ->
+        # only re-render when 'version' changes, because it's the only displayed
+        # field that can change during the update
+        @listenTo @model, 'change:version', @render
+
     afterRender: =>
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
