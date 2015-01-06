@@ -10,9 +10,15 @@ module.exports = class Application extends Backbone.Model
         return "#{base}byid/#{@get('id')}" if @get('id')
         return base
 
+    isIconSvg: ->
+        iconPath = @get 'iconPath'
+        defaultIcon = @get 'icon'
+        icon = iconPath or defaultIcon
+        return icon.indexOf('.svg') isnt -1
 
-    isRunning: () -> @get('state') is 'installed'
-    isBroken: () ->  @get('state') is 'broken'
+
+    isRunning: -> @get('state') is 'installed'
+    isBroken: ->  @get('state') is 'broken'
 
     # use same events as backbone to enable socket-listener
     prepareCallbacks: (callbacks, presuccess, preerror) ->

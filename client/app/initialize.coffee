@@ -2,7 +2,7 @@
 
 MainRouter = require 'routers/main_router'
 MainView = require 'views/main'
-
+colorSet = require '../helpers/color-set'
 
 class exports.Application extends BrunchApplication
     # This callback would be executed on document ready event.
@@ -36,8 +36,8 @@ class exports.Application extends BrunchApplication
         @mainView =  new MainView()
         @routers.main = new MainRouter()
 
-        # render layout
-        #$("body").html @mainView.el
+        # Defines the application's color set once
+        ColorHash.addScheme 'cozy', colorSet
 
         Backbone.history.start()
         if Backbone.history.getFragment() is ''

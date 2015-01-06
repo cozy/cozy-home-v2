@@ -711,7 +711,7 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
 }
 @font-face {
   font-family: main;
-  src: url("/fonts/signika-regular.ttf");
+  src: url("/fonts/source-sans-pro.ttf");
 }
 html {
   height: 100%;
@@ -1374,6 +1374,10 @@ body {
   max-width: 100px;
   max-height: 100px;
 }
+.application .application-inner img.svg {
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+}
 .application .application-inner img.stopped {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -1388,7 +1392,7 @@ body {
   height: 20%;
   max-height: 20px;
   text-align: center;
-  font-family: styled;
+  font-family: main;
   text-transform: uppercase;
   font-size: 15px;
   color: #363a46;
@@ -1681,6 +1685,11 @@ body {
   height: 180px;
   padding: 20px 20px 10px 20px;
   margin-right: 10px;
+}
+#market-view #no-app-message .app-img img.svg,
+.cozy-app .app-img img.svg {
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
 }
 #market-view #no-app-message .img-btn,
 .cozy-app .img-btn {

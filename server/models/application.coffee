@@ -13,6 +13,7 @@ module.exports = Application = americano.getModel 'Application',
     date: {type: Date, default: Date.now}
     icon: String
     iconPath: String
+    color: {type: String, default: null}
     git: String
     errormsg: String
     branch: String

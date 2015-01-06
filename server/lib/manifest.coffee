@@ -49,7 +49,10 @@ class exports.Manifest
             return null
 
     getVersion: =>
-        return @config.version || "0.0.0"
+        if @config['version']?
+            return @config['version']
+        else
+            return "0.0.0"
 
     getDescription: =>
         if @config['description']?
@@ -60,6 +63,12 @@ class exports.Manifest
     getIconPath: =>
         if @config['icon-path']?
             return @config['icon-path']
+        else
+            return null
+
+    getColor: ->
+        if @config['cozy-color']?
+            return @config['cozy-color']
         else
             return null
 
@@ -86,5 +95,8 @@ class exports.Manifest
 
         if @config.stars?
             metaData.stars = @config.stars
+
+        if @config['cozy-color']
+            metaData.color = @config['cozy-color']
 
         return metaData

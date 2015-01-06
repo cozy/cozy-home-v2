@@ -1,14 +1,15 @@
-request = require("request-json")
-fs = require('fs')
+request = require 'request-json'
+fs = require 'fs'
 slugify = require 'cozy-slug'
-exec = require('child_process').exec
+{exec} = require 'child_process'
 log = require('printit')
     prefix: "applications"
 
 Application = require '../models/application'
-{AppManager} = require '../lib/paas'
+manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 autostop = require '../lib/autostop'
+saveIcon = require('../lib/icon').save
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -65,40 +66,8 @@ randomString = (length) ->
         string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
-recoverIconPath = (root, appli) ->
-    if appli.iconPath?
-        return root + appli.iconPath
-    else
-         return root + "client/app/assets/icons/main_icon.png"
-
-# Save an app's icon in the DS
-saveIcon = (appli, callback = ->) ->
-    if appli?
-        git = (appli.git.split('/')[4]).replace('.git', '')
-        name = appli.name.toLowerCase()
-        # Old controller
-        root = "/usr/local/cozy/apps/#{name}/#{name}/#{git}/"
-        icon = recoverIconPath root, appli
-        if fs.existsSync icon
-            appli.attachFile icon, name: 'icon.png', (err) ->
-                return callback err if err
-                callback null
-        else
-            # New controller
-            root = "/usr/local/cozy/apps/#{name}/"
-            icon = recoverIconPath root, appli
-            if fs.existsSync icon
-                appli.attachFile icon, name: 'icon.png', (err) ->
-                    return callback err if err
-                    callback null
-            else
-                callback new Error "Icon not found"
-    else
-        callback new Error 'Appli cannot be reached'
-
 
 updateApp = (app, callback) ->
-    manager = new AppManager()
     data = {}
     if not app.password?
         data.password = randomString 32
@@ -116,18 +85,17 @@ updateApp = (app, callback) ->
                 data.widget = manifest.getWidget()
                 data.version = manifest.getVersion()
                 data.iconPath = manifest.getIconPath()
+                data.color = manifest.getColor()
                 data.needsUpdate = false
                 app.updateAttributes data, (err) ->
                     saveIcon app, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
-                    callback err if err
-                    manager.resetProxy (err) ->
-                        callback err
+                    callback err if err?
+                    manager.resetProxy callback
 
 
 module.exports =
-
 
     # Load application corresponding to slug given in params
     loadApplication: (req, res, next, slug) ->
@@ -181,16 +149,19 @@ module.exports =
 
 
     icon: (req, res, next) ->
-        if req.application?._attachments?['icon.png']
-            return req.application.getFile('icon.png', (->)).pipe res
 
-        # else, do the attaching (apps installed before)
-        # FOR MIGRATION, REMOVE ME LATER
-        saveIcon req.application, (err) =>
-            if err
-                return fs.createReadStream('./client/app/assets/img/stopped.png').pipe res
-            req.application.getFile('icon.png', (->)).pipe res
-
+        if req.application?._attachments?['icon.svg']
+            stream = req.application.getFile('icon.svg', (->))
+            stream.pipefilter = (res, dest) ->
+                dest.set 'Content-Type', 'image/svg+xml'
+            stream.pipe res
+        else if req.application?._attachments?['icon.png']
+            res.type 'png'
+            stream = req.application.getFile('icon.png', (->))
+            stream.pipe res
+        else
+            res.type 'png'
+            fs.createReadStream('./client/app/assets/img/stopped.png').pipe res
 
     updatestoppable: (req, res, next) ->
         Application.find req.params.id, (err, app) ->
@@ -235,6 +206,7 @@ module.exports =
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
                 req.body.iconPath = manifest.getIconPath()
+                req.body.color = manifest.getColor()
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
@@ -243,7 +215,6 @@ module.exports =
 
                     infos = JSON.stringify appli
                     console.info "attempt to install app #{infos}"
-                    manager = new AppManager()
                     manager.installApp appli, (err, result) ->
                         if err
                             markBroken res, appli, err
@@ -257,16 +228,15 @@ module.exports =
                             msg = "install succeeded on port #{appli.port}"
                             console.info msg
 
-                            saveIcon appli, (err) ->
-                                if err then console.log err.stack
-                                else console.info 'icon attached'
-
                             appli.save (err) ->
-                                return sendErrorSocket err if err
-                                console.info 'saved port in db', appli.port
-                                manager.resetProxy (err) ->
-                                    return sendErrorSocket err if err
-                                    console.info 'proxy reset', appli.port
+                                return sendErrorSocket err if err?
+                                saveIcon appli, (err) ->
+                                    if err? then console.log err.stack
+                                    else console.info 'icon attached'
+                                    console.info 'saved port in db', appli.port
+                                    manager.resetProxy (err) ->
+                                        return sendErrorSocket err if err?
+                                        console.info 'proxy reset', appli.port
 
                         else
                             err = new Error "Controller has no " + \
@@ -280,7 +250,6 @@ module.exports =
     # * database
     uninstall: (req, res, next) ->
         req.body.slug = req.params.slug
-        manager = new AppManager()
         manager.uninstallApp req.application, (err, result) ->
             return markBroken res, req.application, err if err
 
@@ -372,7 +341,6 @@ module.exports =
         unless startedApplications[req.application.id]?
             startedApplications[req.application.id] = true
 
-            manager = new AppManager
             manager.start req.application, (err, result) ->
                 if err and err isnt "Not enough Memory"
                     delete startedApplications[req.application.id]
@@ -419,7 +387,6 @@ module.exports =
 
 
     stop: (req, res, next) ->
-        manager = new AppManager
         manager.stop req.application, (err, result) ->
             return markBroken res, req.application, err if err
 
