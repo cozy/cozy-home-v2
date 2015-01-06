@@ -66,12 +66,6 @@ randomString = (length) ->
         string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
-###
-TODO: EMAIL JEAN-PIERRE
-TODO: CHANGE 'DEL' ROUTES TO 'DELETE'
-TODO: CHANGE lib/paas.coffee WITH NEW ERROR DETECTION
-TODO: CHANGE lib/manifest.coffee `getVersion` HANDLING
-###
 
 updateApp = (app, callback) ->
     data = {}

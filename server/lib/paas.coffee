@@ -149,7 +149,8 @@ reseting routes"
 
             @client.clean manifest, (err, res, body) =>
                 err ?= body.error unless status2XX res
-                if err and err.indexOf('application not installed') is -1
+                errMsg = 'application not installed'
+                if err? and err.indexOf? and err.indexOf(errMsg) is -1
                     err = new Error err
                     console.log "Error cleaning app: #{app.name}"
                     console.log err.message

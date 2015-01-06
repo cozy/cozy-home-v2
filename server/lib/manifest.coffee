@@ -49,7 +49,10 @@ class exports.Manifest
             return null
 
     getVersion: =>
-        return @config.version || "0.0.0"
+        if @config['version']?
+            return @config['version']
+        else
+            return "0.0.0"
 
     getDescription: =>
         if @config['description']?
