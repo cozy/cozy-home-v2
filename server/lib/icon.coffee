@@ -13,12 +13,15 @@ Get right icon path depending on app configuration:
 ###
 icons.getPath = (root, appli) ->
 
+    iconPath = null
+
     # try to retrieve icon path from manifest, if developer set it.
-    iconPath = path.join root, appli.iconPath
+    if appli.iconPath? and fs.existsSync(path.join root, appli.iconPath)
+        iconPath = path.join root, appli.iconPath
 
     # if it has not been set, or if it doesn't exist, try to guess the icon path
     # first check for svg icon, then for png.
-    if not appli.iconPath? or not fs.existsSync(iconPath)
+    else
         basePath = path.join root, "client", "app", "assets", "icons"
         svgPath = path.join basePath, "main_icon.svg"
         pngPath = path.join basePath, "main_icon.png"
