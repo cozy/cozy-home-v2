@@ -19,8 +19,10 @@ Get right icon path depending on app configuration:
 
 icons.getPath = function(root, appli) {
   var basePath, extension, iconName, iconPath, pngPath, result, svgPath;
-  iconPath = path.join(root, appli.iconPath);
-  if ((appli.iconPath == null) || !fs.existsSync(iconPath)) {
+  iconPath = null;
+  if ((appli.iconPath != null) && fs.existsSync(path.join(root, appli.iconPath))) {
+    iconPath = path.join(root, appli.iconPath);
+  } else {
     basePath = path.join(root, "client", "app", "assets", "icons");
     svgPath = path.join(basePath, "main_icon.svg");
     pngPath = path.join(basePath, "main_icon.png");
