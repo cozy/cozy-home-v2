@@ -19,7 +19,7 @@ module.exports = class ApplicationCollection extends BaseCollection
     # fetch application list from the market
     fetchFromMarket: ->
         apps = [
-                icon: "img/calendar-icon.png"
+                icon: "img/apps/calendar.svg"
                 name: "calendar"
                 displayName: "Calendar"
                 slug: "calendar"
@@ -27,7 +27,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "official application"
                 description: "calendars description"
            ,
-                icon: "img/contacts-icon.png"
+                icon: "img/apps/contacts.svg"
                 name: "contacts"
                 displayName: "Contacts"
                 slug: "contacts"
@@ -35,7 +35,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "official application"
                 description: "contacts description"
            ,
-                icon: "img/emails-icon.png"
+                icon: "img/apps/emails.svg"
                 name: "emails"
                 displayName: "Emails"
                 slug: "emails"
@@ -43,7 +43,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "official application"
                 description: "emails description"
            ,
-                icon: "img/files-icon.png"
+                icon: "img/apps/files.svg"
                 name: "files"
                 displayName: "Files"
                 slug: "files"
@@ -51,7 +51,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "official application"
                 description: "files description"
            ,
-                icon: "img/photos-icon.png"
+                icon: "img/apps/photos.svg"
                 name: "photos"
                 displayName: "Photos"
                 slug: "photos"
@@ -67,7 +67,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "official application"
                 description: "sync description"
            ,
-                icon: "img/bookmarks-icon.png"
+                icon: "img/apps/bookmarks.svg"
                 name: "bookmarks"
                 displayName: "Bookmarks"
                 slug: "bookmarks"
@@ -75,7 +75,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "community contribution"
                 description: "bookmark description"
            ,
-                icon: "img/cozy-music.png"
+                icon: "img/apps/cozic.svg"
                 name: "cozic"
                 displayName: "Cozic"
                 slug: "cozic"
@@ -83,7 +83,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "community contribution"
                 description: "cozic description"
            ,
-                icon: "img/databrowser-icon.png"
+                icon: "img/apps/databrowser.svg"
                 name: "databrowser"
                 displayName:"Data Browser"
                 slug: "databrowser"
@@ -91,7 +91,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "community contribution"
                 description: "databrowser description"
            ,
-                icon:"img/feeds-icon.png"
+                icon:"img/apps/feeds.svg"
                 name:"feeds"
                 displayName:"Feeds"
                 slug:"feeds"
@@ -99,7 +99,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"community contribution"
                 description:"feeds description"
            ,
-                icon: "img/kyou.png"
+                icon: "img/apps/kyou.svg"
                 name: "kyou"
                 displayName:"KYou"
                 slug: "kyou"
@@ -108,7 +108,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 description: "kyou description"
                 website: "http://frankrousseau.github.io/kyou"
            ,
-                icon: "img/konnectors-icon.png"
+                icon: "img/apps/konnectors.svg"
                 name: "konnectors"
                 displayName:"Konnectors"
                 slug: "konnectors"
@@ -124,7 +124,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"community contribution"
                 description:"kresus description"
            ,
-                icon:"img/nirc-icon.png"
+                icon:"img/apps/nirc.svg"
                 name:"nirc"
                 displayName:"nIRC"
                 slug:"nirc"
@@ -132,7 +132,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"community contribution"
                 description:"nirc description"
            ,
-                icon:"img/notes-icon.png"
+                icon:"img/apps/notes.svg"
                 name:"notes"
                 displayName:"Note"
                 slug:"notes"
@@ -140,7 +140,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"community contribution"
                 description:"notes description"
            ,
-                icon: "img/owm.png"
+                icon: "img/apps/owm.svg"
                 name: "owm"
                 displayName:"OWM"
                 slug: "owm"
@@ -148,7 +148,7 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment: "community contribution"
                 description: "owm description"
            ,
-                icon: "img/pfm.png"
+                icon: "img/apps/pfm.svg"
                 name: "mes comptes"
                 displayName:"Mes Comptes"
                 slug: "pfm"
@@ -164,15 +164,16 @@ module.exports = class ApplicationCollection extends BaseCollection
                 comment:"community contribution"
                 description:"remote storage description"
            ,
-                icon:"img/tasky-icon.png"
+                icon:"img/apps/tasky.svg"
                 name:"tasky"
                 displayName:"Tasky"
                 slug:"tasky"
                 git:"https://github.com/jsilvestre/tasky.git"
                 comment:"community contribution"
                 description:"tasky description"
+                color: '#1bda4c'
            ,
-                icon:"img/todos-icon.png"
+                icon:"img/apps/todos.svg"
                 name:"todos"
                 displayName:"Todos"
                 slug:"todos"

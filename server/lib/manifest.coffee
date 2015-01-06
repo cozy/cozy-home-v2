@@ -63,6 +63,12 @@ class exports.Manifest
         else
             return null
 
+    getColor: ->
+        if @config['cozy-color']?
+            return @config['cozy-color']
+        else
+            return null
+
     getMetaData: =>
         metaData = {}
 
@@ -86,5 +92,8 @@ class exports.Manifest
 
         if @config.stars?
             metaData.stars = @config.stars
+
+        if @config['cozy-color']
+            metaData.color = @config['cozy-color']
 
         return metaData

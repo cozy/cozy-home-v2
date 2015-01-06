@@ -434,8 +434,10 @@ body
             display block
             margin 0px auto 2% auto
             text-align center
-            max-width: 100px
-            max-height: 100px
+            max-width 100px
+            max-height 100px
+
+            border-radius 200px
 
             &.stopped
                 opacity 0.5
@@ -446,16 +448,15 @@ body
             color textcolor
 
         .app-title
-            // line-height: 20%
             height 20%
             max-height 20px
 
             text-align center
-            font-family: styled
-            text-transform: uppercase
-            font-size: 15px
-            color: darkblue
-            text-decoration: none
+            font-family main
+            text-transform uppercase
+            font-size 15px
+            color darkblue
+            text-decoration none
 
         .state-label
             font-size: 18px
@@ -733,6 +734,9 @@ body
         height: 180px
         padding: 20px 20px 10px 20px
         margin-right: 10px
+
+        img.svg
+            border-radius 200px
 
     .img-btn
         width: 24px

@@ -18,6 +18,7 @@ module.exports =
         put: applications.updatestoppable
     'api/applications/install': post: applications.install
     'api/applications/:slug.png': get: applications.icon
+    'api/applications/:slug.svg': get: applications.icon
     'api/applications/:slug/start': post: applications.start
     'api/applications/:slug/stop': post: applications.stop
     'api/applications/:slug/uninstall': del: applications.uninstall
