@@ -21,7 +21,7 @@ module.exports =
     'api/applications/:slug.svg': get: applications.icon
     'api/applications/:slug/start': post: applications.start
     'api/applications/:slug/stop': post: applications.stop
-    'api/applications/:slug/uninstall': del: applications.uninstall
+    'api/applications/:slug/uninstall': delete: applications.uninstall
     'api/applications/:slug/update': put: applications.update
     'api/applications/update/all': put: applications.updateAll
 
@@ -31,7 +31,7 @@ module.exports =
 
 
     'api/devices': get: devices.devices
-    'api/devices/:id': del: devices.remove
+    'api/devices/:id': delete: devices.remove
 
     'api/sys-data': get: monitor.sysData
 
@@ -47,12 +47,12 @@ module.exports =
 
     'api/notifications':
         get: notifications.all
-        del: notifications.deleteAll
+        delete: notifications.deleteAll
     'api/notifications/:id':
         get: notifications.show
-        del: notifications.delete
+        delete: notifications.delete
 
     'notifications': post: notifications.create
     'notifications/:app/:ref':
         put: notifications.updateOrCreate
-        del: notifications.destroy
+        delete: notifications.destroy
