@@ -1,12 +1,12 @@
-request = require("request-json")
-fs = require('fs')
+request = require 'request-json'
+fs = require 'fs'
 slugify = require 'cozy-slug'
-exec = require('child_process').exec
+{exec} = require 'child_process'
 log = require('printit')
     prefix: "applications"
 
 Application = require '../models/application'
-{AppManager} = require '../lib/paas'
+manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 autostop = require '../lib/autostop'
 
@@ -98,7 +98,6 @@ saveIcon = (appli, callback = ->) ->
 
 
 updateApp = (app, callback) ->
-    manager = new AppManager()
     data = {}
     if not app.password?
         data.password = randomString 32
@@ -243,7 +242,6 @@ module.exports =
 
                     infos = JSON.stringify appli
                     console.info "attempt to install app #{infos}"
-                    manager = new AppManager()
                     manager.installApp appli, (err, result) ->
                         if err
                             markBroken res, appli, err
@@ -280,7 +278,6 @@ module.exports =
     # * database
     uninstall: (req, res, next) ->
         req.body.slug = req.params.slug
-        manager = new AppManager()
         manager.uninstallApp req.application, (err, result) ->
             return markBroken res, req.application, err if err
 
@@ -372,7 +369,6 @@ module.exports =
         unless startedApplications[req.application.id]?
             startedApplications[req.application.id] = true
 
-            manager = new AppManager
             manager.start req.application, (err, result) ->
                 if err and err isnt "Not enough Memory"
                     delete startedApplications[req.application.id]
@@ -419,7 +415,6 @@ module.exports =
 
 
     stop: (req, res, next) ->
-        manager = new AppManager
         manager.stop req.application, (err, result) ->
             return markBroken res, req.application, err if err
 

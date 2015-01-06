@@ -72,32 +72,23 @@ module.exports = class MarketView extends BaseView
             @popover?.confirmCallback()
 
     onInstallClicked: (event) =>
-        if @isInstalling()
-            alert t "application is installing"
-        else
-            data = git: @$("#app-git-field").val()
+        data = git: @$("#app-git-field").val()
 
-            @parsedGit data
-            event.preventDefault()
-            false
-
-    isInstalling: ->
-        return @installedApps.where(state:'installing').length isnt 0
+        @parsedGit data
+        event.preventDefault()
+        return false
 
     # parse git url before install application
     parsedGit: (app) ->
-        if @isInstalling()
-            alert t "application is installing"
+        parsed = @parseGitUrl app.git
+        if parsed.error
+            @displayError parsed.msg
         else
-            parsed = @parseGitUrl app.git
-            if parsed.error
-                @displayError parsed.msg
-            else
-                @hideError()
-                application = new Application(parsed)
-                data =
-                    app: application
-                @showDescription data
+            @hideError()
+            application = new Application(parsed)
+            data =
+                app: application
+            @showDescription data
 
     # pop up with application description
     showDescription: (appWidget) ->
@@ -131,7 +122,6 @@ module.exports = class MarketView extends BaseView
             callback()
 
     runInstallation: (application) =>
-        return true if @isInstalling()
         @hideError()
 
         application.install

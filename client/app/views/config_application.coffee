@@ -101,24 +101,20 @@ module.exports = class ApplicationRow extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateClicked: (event) =>
-        if app.mainView.marketView.isInstalling()
-            alert t 'Cannot update application while an application is installing'
-            return false
-        else
-            event.preventDefault()
-            @popover = new PopoverDescriptionView
-                model: @model
-                label: t 'update'
-                confirm: (application) =>
-                    $('#no-app-message').hide()
-                    @popover.hide()
-                    @popover.remove()
-                    @updateApp()
-                cancel: (application) =>
-                    @popover.hide()
-                    @popover.remove()
-            $("#config-applications-view").append @popover.$el
-            @popover.show()
+        event.preventDefault()
+        @popover = new PopoverDescriptionView
+            model: @model
+            label: t 'update'
+            confirm: (application) =>
+                $('#no-app-message').hide()
+                @popover.hide()
+                @popover.remove()
+                @updateApp()
+            cancel: (application) =>
+                @popover.hide()
+                @popover.remove()
+        $("#config-applications-view").append @popover.$el
+        @popover.show()
 
     onStartStopClicked: (event) =>
         event.preventDefault()

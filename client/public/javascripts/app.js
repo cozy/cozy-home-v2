@@ -2893,28 +2893,23 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.onUpdateClicked = function(event) {
     var _this = this;
-    if (app.mainView.marketView.isInstalling()) {
-      alert(t('Cannot update application while an application is installing'));
-      return false;
-    } else {
-      event.preventDefault();
-      this.popover = new PopoverDescriptionView({
-        model: this.model,
-        label: t('update'),
-        confirm: function(application) {
-          $('#no-app-message').hide();
-          _this.popover.hide();
-          _this.popover.remove();
-          return _this.updateApp();
-        },
-        cancel: function(application) {
-          _this.popover.hide();
-          return _this.popover.remove();
-        }
-      });
-      $("#config-applications-view").append(this.popover.$el);
-      return this.popover.show();
-    }
+    event.preventDefault();
+    this.popover = new PopoverDescriptionView({
+      model: this.model,
+      label: t('update'),
+      confirm: function(application) {
+        $('#no-app-message').hide();
+        _this.popover.hide();
+        _this.popover.remove();
+        return _this.updateApp();
+      },
+      cancel: function(application) {
+        _this.popover.hide();
+        return _this.popover.remove();
+      }
+    });
+    $("#config-applications-view").append(this.popover.$el);
+    return this.popover.show();
   };
 
   ApplicationRow.prototype.onStartStopClicked = function(event) {
@@ -4254,40 +4249,26 @@ module.exports = MarketView = (function(_super) {
 
   MarketView.prototype.onInstallClicked = function(event) {
     var data;
-    if (this.isInstalling()) {
-      return alert(t("application is installing"));
-    } else {
-      data = {
-        git: this.$("#app-git-field").val()
-      };
-      this.parsedGit(data);
-      event.preventDefault();
-      return false;
-    }
-  };
-
-  MarketView.prototype.isInstalling = function() {
-    return this.installedApps.where({
-      state: 'installing'
-    }).length !== 0;
+    data = {
+      git: this.$("#app-git-field").val()
+    };
+    this.parsedGit(data);
+    event.preventDefault();
+    return false;
   };
 
   MarketView.prototype.parsedGit = function(app) {
     var application, data, parsed;
-    if (this.isInstalling()) {
-      return alert(t("application is installing"));
+    parsed = this.parseGitUrl(app.git);
+    if (parsed.error) {
+      return this.displayError(parsed.msg);
     } else {
-      parsed = this.parseGitUrl(app.git);
-      if (parsed.error) {
-        return this.displayError(parsed.msg);
-      } else {
-        this.hideError();
-        application = new Application(parsed);
-        data = {
-          app: application
-        };
-        return this.showDescription(data);
-      }
+      this.hideError();
+      application = new Application(parsed);
+      data = {
+        app: application
+      };
+      return this.showDescription(data);
     }
   };
 
@@ -4330,9 +4311,6 @@ module.exports = MarketView = (function(_super) {
 
   MarketView.prototype.runInstallation = function(application) {
     var _this = this;
-    if (this.isInstalling()) {
-      return true;
-    }
     this.hideError();
     return application.install({
       ignoreMySocketNotification: true,
@@ -4461,11 +4439,7 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onInstallClicked = function() {
-    if (this.marketView.isInstalling()) {
-      return alert(t("application is installing"));
-    } else {
-      return this.marketView.showDescription(this, this.installButton);
-    }
+    return this.marketView.showDescription(this, this.installButton);
   };
 
   return ApplicationRow;

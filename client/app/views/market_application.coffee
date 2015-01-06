@@ -23,7 +23,4 @@ module.exports = class ApplicationRow extends BaseView
             @$el.addClass 'official'
 
     onInstallClicked: =>
-        if @marketView.isInstalling()
-            alert t "application is installing"
-        else
-            @marketView.showDescription this, @installButton
+        @marketView.showDescription this, @installButton
