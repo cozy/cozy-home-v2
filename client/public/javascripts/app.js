@@ -130,7 +130,7 @@ module.exports = ApplicationCollection = (function(_super) {
     var apps;
     apps = [
       {
-        icon: "img/calendar-icon.png",
+        icon: "img/apps/calendar.svg",
         name: "calendar",
         displayName: "Calendar",
         slug: "calendar",
@@ -138,7 +138,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "calendars description"
       }, {
-        icon: "img/contacts-icon.png",
+        icon: "img/apps/contacts.svg",
         name: "contacts",
         displayName: "Contacts",
         slug: "contacts",
@@ -146,7 +146,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "contacts description"
       }, {
-        icon: "img/emails-icon.png",
+        icon: "img/apps/emails.svg",
         name: "emails",
         displayName: "Emails",
         slug: "emails",
@@ -154,7 +154,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "emails description"
       }, {
-        icon: "img/files-icon.png",
+        icon: "img/apps/files.svg",
         name: "files",
         displayName: "Files",
         slug: "files",
@@ -162,7 +162,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "files description"
       }, {
-        icon: "img/photos-icon.png",
+        icon: "img/apps/photos.svg",
         name: "photos",
         displayName: "Photos",
         slug: "photos",
@@ -178,7 +178,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "sync description"
       }, {
-        icon: "img/bookmarks-icon.png",
+        icon: "img/apps/bookmarks.svg",
         name: "bookmarks",
         displayName: "Bookmarks",
         slug: "bookmarks",
@@ -186,7 +186,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "bookmark description"
       }, {
-        icon: "img/cozy-music.png",
+        icon: "img/apps/cozic.svg",
         name: "cozic",
         displayName: "Cozic",
         slug: "cozic",
@@ -194,7 +194,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "cozic description"
       }, {
-        icon: "img/databrowser-icon.png",
+        icon: "img/apps/databrowser.svg",
         name: "databrowser",
         displayName: "Data Browser",
         slug: "databrowser",
@@ -202,7 +202,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "databrowser description"
       }, {
-        icon: "img/feeds-icon.png",
+        icon: "img/apps/feeds.svg",
         name: "feeds",
         displayName: "Feeds",
         slug: "feeds",
@@ -210,7 +210,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "feeds description"
       }, {
-        icon: "img/kyou.png",
+        icon: "img/apps/kyou.svg",
         name: "kyou",
         displayName: "KYou",
         slug: "kyou",
@@ -219,7 +219,7 @@ module.exports = ApplicationCollection = (function(_super) {
         description: "kyou description",
         website: "http://frankrousseau.github.io/kyou"
       }, {
-        icon: "img/konnectors-icon.png",
+        icon: "img/apps/konnectors.svg",
         name: "konnectors",
         displayName: "Konnectors",
         slug: "konnectors",
@@ -235,7 +235,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "kresus description"
       }, {
-        icon: "img/nirc-icon.png",
+        icon: "img/apps/nirc.svg",
         name: "nirc",
         displayName: "nIRC",
         slug: "nirc",
@@ -243,7 +243,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "nirc description"
       }, {
-        icon: "img/notes-icon.png",
+        icon: "img/apps/notes.svg",
         name: "notes",
         displayName: "Note",
         slug: "notes",
@@ -251,7 +251,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "notes description"
       }, {
-        icon: "img/owm.png",
+        icon: "img/apps/owm.svg",
         name: "owm",
         displayName: "OWM",
         slug: "owm",
@@ -259,7 +259,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "owm description"
       }, {
-        icon: "img/pfm.png",
+        icon: "img/apps/pfm.svg",
         name: "mes comptes",
         displayName: "Mes Comptes",
         slug: "pfm",
@@ -275,15 +275,16 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "remote storage description"
       }, {
-        icon: "img/tasky-icon.png",
+        icon: "img/apps/tasky.svg",
         name: "tasky",
         displayName: "Tasky",
         slug: "tasky",
         git: "https://github.com/jsilvestre/tasky.git",
         comment: "community contribution",
-        description: "tasky description"
+        description: "tasky description",
+        color: '#1bda4c'
       }, {
-        icon: "img/todos-icon.png",
+        icon: "img/apps/todos.svg",
         name: "todos",
         displayName: "Todos",
         slug: "todos",
@@ -581,6 +582,10 @@ exports.del = function(url, callbacks) {
 };
 });
 
+;require.register("helpers/color-set", function(exports, require, module) {
+module.exports = ['ead1ad', 'fbf0c2', '1e4eb1', '3cd7c3', '39a5f8', '232d48', '3a6367', '85aa54', '38cc7a', '1bda4c', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'f14aa8', 'ffb1be', 'b63e57', 'ae29c2', '966f81', '40363a', 'ff0048', 'c23957', 'ff5c56', '7b0100', 'f5dd16', 'f1fab8', 'ffbe56'];
+});
+
 ;require.register("helpers/locales", function(exports, require, module) {
 exports.locales = {
   'en': 'English',
@@ -593,7 +598,7 @@ exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Af
 });
 
 ;require.register("initialize", function(exports, require, module) {
-var BrunchApplication, MainRouter, MainView, _ref,
+var BrunchApplication, MainRouter, MainView, colorSet, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -602,6 +607,8 @@ BrunchApplication = require('./helpers').BrunchApplication;
 MainRouter = require('routers/main_router');
 
 MainView = require('views/main');
+
+colorSet = require('../helpers/color-set');
 
 exports.Application = (function(_super) {
   __extends(Application, _super);
@@ -640,6 +647,7 @@ exports.Application = (function(_super) {
     this.routers = {};
     this.mainView = new MainView();
     this.routers.main = new MainRouter();
+    ColorHash.addScheme('cozy', colorSet);
     Backbone.history.start();
     if (Backbone.history.getFragment() === '') {
       this.routers.main.navigate('home', true);
@@ -1495,6 +1503,14 @@ module.exports = Application = (function(_super) {
       return "" + base + "byid/" + (this.get('id'));
     }
     return base;
+  };
+
+  Application.prototype.isIconSvg = function() {
+    var defaultIcon, icon, iconPath;
+    iconPath = this.get('iconPath');
+    defaultIcon = this.get('icon');
+    icon = iconPath || defaultIcon;
+    return icon.indexOf('.svg') !== -1;
   };
 
   Application.prototype.isRunning = function() {
@@ -3719,21 +3735,32 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.afterRender = function() {
+    var color, slug;
     this.icon = this.$('img');
     this.stateLabel = this.$('.state-label');
     this.title = this.$('.app-title');
     this.listenTo(this.model, 'change', this.onAppChanged);
-    return this.onAppChanged(this.model);
+    this.onAppChanged(this.model);
+    slug = this.model.get('slug');
+    color = this.model.get('color');
+    if (this.model.isIconSvg()) {
+      if (color == null) {
+        color = ColorHash.getColor(slug, 'cozy');
+      }
+      this.icon.addClass('svg');
+      return this.icon.css('background', color);
+    }
   };
 
   /* Listener*/
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var useWidget, _ref;
+    var extension, useWidget, _ref;
     if (this.model.get('state') !== 'installed' || !this.canUseWidget()) {
       this.$('.use-widget').hide();
     }
+    console.log(this.model.get('state'));
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
@@ -3742,7 +3769,8 @@ module.exports = ApplicationRow = (function(_super) {
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
         this.hideSpinner();
-        this.icon.attr('src', "api/applications/" + app.id + ".png");
+        extension = this.model.isIconSvg() ? 'svg' : 'png';
+        this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.hide();
         this.icon.show();
         this.icon.removeClass('stopped');
@@ -3757,7 +3785,8 @@ module.exports = ApplicationRow = (function(_super) {
         this.showSpinner();
         return this.stateLabel.show().text('installing');
       case 'stopped':
-        this.icon.attr('src', "api/applications/" + app.id + ".png");
+        extension = this.model.isIconSvg() ? 'svg' : 'png';
+        this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.addClass('stopped');
         this.hideSpinner();
         this.icon.show();
@@ -4432,9 +4461,20 @@ module.exports = ApplicationRow = (function(_super) {
   }
 
   ApplicationRow.prototype.afterRender = function() {
+    var color, iconNode, slug;
     this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
     if (this.app.get('comment') === 'official application') {
-      return this.$el.addClass('official');
+      this.$el.addClass('official');
+    }
+    slug = this.app.get('slug');
+    color = this.app.get('color');
+    if (this.app.isIconSvg()) {
+      if (color == null) {
+        color = ColorHash.getColor(slug, 'cozy');
+      }
+      iconNode = this.$('.app-img img');
+      iconNode.addClass('svg');
+      return iconNode.css('background', color);
     }
   };
 

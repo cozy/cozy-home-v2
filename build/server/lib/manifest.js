@@ -70,7 +70,11 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getVersion = function() {
-    return this.config.version || "0.0.0";
+    if (this.config['version'] != null) {
+      return this.config['version'];
+    } else {
+      return "0.0.0";
+    }
   };
 
   Manifest.prototype.getDescription = function() {
@@ -84,6 +88,14 @@ exports.Manifest = (function() {
   Manifest.prototype.getIconPath = function() {
     if (this.config['icon-path'] != null) {
       return this.config['icon-path'];
+    } else {
+      return null;
+    }
+  };
+
+  Manifest.prototype.getColor = function() {
+    if (this.config['cozy-color'] != null) {
+      return this.config['cozy-color'];
     } else {
       return null;
     }
@@ -112,6 +124,9 @@ exports.Manifest = (function() {
     }
     if (this.config.stars != null) {
       metaData.stars = this.config.stars;
+    }
+    if (this.config['cozy-color']) {
+      metaData.color = this.config['cozy-color'];
     }
     return metaData;
   };

@@ -191,12 +191,14 @@ AppManager = (function() {
       console.info("Request controller for cleaning " + app.name + "...");
       return this.client.clean(manifest, (function(_this) {
         return function(err, res, body) {
+          var errMsg;
           if (!status2XX(res)) {
             if (err == null) {
               err = body.error;
             }
           }
-          if (err && err.indexOf('application not installed') === -1) {
+          errMsg = 'application not installed';
+          if ((err != null) && (err.indexOf != null) && err.indexOf(errMsg) === -1) {
             err = new Error(err);
             console.log("Error cleaning app: " + app.name);
             console.log(err.message);
