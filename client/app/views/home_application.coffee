@@ -53,6 +53,7 @@ module.exports = class ApplicationRow extends BaseView
             unless color?
                 color = ColorHash.getColor slug, 'cozy'
 
+            @icon.addClass 'svg'
             @icon.css 'background', color
 
     ### Listener ###
