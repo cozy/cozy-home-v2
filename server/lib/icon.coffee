@@ -23,7 +23,7 @@ icons.getPath = (root, appli) ->
 
     if appli.icon?
         if process.env.NODE_ENV is 'production'
-            homeBasePath = path.join basePath, 'home/client/app/assets'
+            homeBasePath = path.join basePath, '../home/client/app/assets'
         else
             homeBasePath = path.join process.cwd(), 'client/app/assets'
 
