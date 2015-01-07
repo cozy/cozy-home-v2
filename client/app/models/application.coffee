@@ -18,7 +18,7 @@ module.exports = class Application extends Backbone.Model
         if not icon?
             attachments = @get '_attachments'
 
-            if 'icon.svg' of attachments
+            if 'icon.svg' in Object.keys(attachments)
                 icon =  'icon.svg'
 
         return icon? and icon.indexOf('.svg') isnt -1
