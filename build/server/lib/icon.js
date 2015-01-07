@@ -28,11 +28,7 @@ icons.getPath = function(root, appli) {
     iconPath = path.join(root, appli.iconPath);
   }
   if (appli.icon != null) {
-    if (process.env.NODE_ENV === 'production') {
-      homeBasePath = path.join(basePath, '../home/client/app/assets');
-    } else {
-      homeBasePath = path.join(process.cwd(), 'client/app/assets');
-    }
+    homeBasePath = path.join(process.cwd(), 'client/app/assets');
     iconPath = path.join(homeBasePath, appli.icon);
     if (!fs.existsSync(iconPath)) {
       iconPath = null;
