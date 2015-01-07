@@ -26,7 +26,7 @@ module.exports = class ApplicationRow extends BaseView
         color = @app.get 'color'
 
         # Only set a background color for SVG icons
-        if @app.isIconSvg()
+        if @app.get('icon').indexOf('.svg') isnt -1
             # if there is no set color, we use an auto-generated one
             unless color?
                 color = ColorHash.getColor slug, 'cozy'

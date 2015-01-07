@@ -73,8 +73,6 @@ module.exports = class ApplicationRow extends BaseView
             when 'installed'
                 @hideSpinner()
 
-                console.log app.id
-                console.log @model.isIconSvg()
                 if @model.isIconSvg()
                     extension = 'svg'
                     @icon.addClass 'svg'

@@ -26,10 +26,6 @@ icons.getPath = function(root, appli) {
   iconPath = null;
   if ((appli.iconPath != null) && fs.existsSync(path.join(root, appli.iconPath))) {
     iconPath = path.join(root, appli.iconPath);
-  }
-  if (appli.icon != null) {
-    homeBasePath = path.join(process.cwd(), 'client/app/assets');
-    iconPath = path.join(homeBasePath, appli.icon);
     if (!fs.existsSync(iconPath)) {
       iconPath = null;
     }
@@ -43,6 +39,13 @@ icons.getPath = function(root, appli) {
     } else if (fs.existsSync(pngPath)) {
       iconPath = pngPath;
     } else {
+      iconPath = null;
+    }
+  }
+  if ((iconPath == null) && (appli.icon != null)) {
+    homeBasePath = path.join(process.cwd(), 'client/app/assets');
+    iconPath = path.join(homeBasePath, appli.icon);
+    if (!fs.existsSync(iconPath)) {
       iconPath = null;
     }
   }
@@ -69,11 +72,10 @@ icons.save = function(appli, callback) {
     name = appli.name.toLowerCase();
     basePath = '/' + path.join('usr', 'local', 'cozy', 'apps');
     root = path.join(basePath, name, name, repoName);
-    iconInfos = icons.getPath(root, appli);
-    if (iconInfos == null) {
+    if (!fs.existsSync(root)) {
       root = path.join(basePath, name);
-      iconInfos = icons.getPath(root, appli);
     }
+    iconInfos = icons.getPath(root, appli);
     if (iconInfos != null) {
       iconStr = JSON.stringify(iconInfos);
       log.debug("Icon to save for app " + appli.slug + ": " + iconStr);

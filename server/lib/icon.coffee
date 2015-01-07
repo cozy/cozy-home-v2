@@ -20,12 +20,7 @@ icons.getPath = (root, appli) ->
     # try to retrieve icon path from manifest, if developer set it.
     if appli.iconPath? and fs.existsSync(path.join root, appli.iconPath)
         iconPath = path.join root, appli.iconPath
-
-    if appli.icon?
-        homeBasePath = path.join process.cwd(), 'client/app/assets'
-
-        iconPath = path.join homeBasePath, appli.icon
-        iconPath = null unless fs.existsSync iconPath
+        iconPath = null unless fs.existsSync(iconPath)
 
     # if it has not been set, or if it doesn't exist, try to guess the icon path
     # first check for svg icon, then for png.
@@ -40,6 +35,12 @@ icons.getPath = (root, appli) ->
             iconPath = pngPath
         else
             iconPath = null
+
+    # ultimately, get the iconPath from the marketplace
+    if not iconPath? and appli.icon?
+        homeBasePath = path.join process.cwd(), 'client/app/assets'
+        iconPath = path.join homeBasePath, appli.icon
+        iconPath = null unless fs.existsSync(iconPath)
 
     # the icon's file couldn't be retrieved
     unless iconPath?
@@ -68,12 +69,12 @@ icons.save = (appli, callback = ->) ->
         # This path matches the old controller paths.
         # It's required for backward compatibilities.
         root = path.join basePath, name, name, repoName
-        iconInfos = icons.getPath root, appli
 
         # Else it checks the new controller paths.
-        unless iconInfos?
+        unless fs.existsSync(root)
             root = path.join basePath, name
-            iconInfos = icons.getPath root, appli
+
+        iconInfos = icons.getPath root, appli
 
         if iconInfos?
             iconStr = JSON.stringify iconInfos
