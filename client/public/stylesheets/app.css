@@ -1398,6 +1398,7 @@ body {
   font-size: 15px;
   color: #363a46;
   text-decoration: none;
+  margin-top: 12px;
 }
 .application .application-inner .state-label {
   font-size: 18px;
