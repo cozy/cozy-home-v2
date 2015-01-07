@@ -21,6 +21,10 @@ module.exports = Application = americano.getModel('Application', {
   },
   icon: String,
   iconPath: String,
+  color: {
+    type: String,
+    "default": null
+  },
   git: String,
   errormsg: String,
   branch: String,

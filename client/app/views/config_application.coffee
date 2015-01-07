@@ -24,6 +24,11 @@ module.exports = class ApplicationRow extends BaseView
         @id = "app-btn-#{options.model.id}"
         super
 
+    initialize: ->
+        # only re-render when 'version' changes, because it's the only displayed
+        # field that can change during the update
+        @listenTo @model, 'change:version', @render
+
     afterRender: =>
         @updateButton = new ColorButton @$ ".update-app"
         @removeButton = new ColorButton @$ ".remove-app"
@@ -96,24 +101,20 @@ module.exports = class ApplicationRow extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateClicked: (event) =>
-        if app.mainView.marketView.isInstalling()
-            alert t 'Cannot update application while an application is installing'
-            return false
-        else
-            event.preventDefault()
-            @popover = new PopoverDescriptionView
-                model: @model
-                label: t 'update'
-                confirm: (application) =>
-                    $('#no-app-message').hide()
-                    @popover.hide()
-                    @popover.remove()
-                    @updateApp()
-                cancel: (application) =>
-                    @popover.hide()
-                    @popover.remove()
-            $("#config-applications-view").append @popover.$el
-            @popover.show()
+        event.preventDefault()
+        @popover = new PopoverDescriptionView
+            model: @model
+            label: t 'update'
+            confirm: (application) =>
+                $('#no-app-message').hide()
+                @popover.hide()
+                @popover.remove()
+                @updateApp()
+            cancel: (application) =>
+                @popover.hide()
+                @popover.remove()
+        $("#config-applications-view").append @popover.$el
+        @popover.show()
 
     onStartStopClicked: (event) =>
         event.preventDefault()
