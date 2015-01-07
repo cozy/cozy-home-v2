@@ -1779,10 +1779,10 @@ module.exports = StackApplication = (function(_super) {
     var _this = this;
     return client.put("/api/applications/update/stack", {}, {
       sucess: function() {
-        return _this.waitReboot(0, 3, callbacks);
+        return _this.waitReboot(0, 2, callbacks);
       },
       error: function() {
-        return _this.waitReboot(0, 3, callbacks);
+        return _this.waitReboot(0, 2, callbacks);
       }
     });
   };
