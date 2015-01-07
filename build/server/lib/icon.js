@@ -29,7 +29,7 @@ icons.getPath = function(root, appli) {
   }
   if (appli.icon != null) {
     if (process.env.NODE_ENV === 'production') {
-      homeBasePath = path.join(basePath, 'home/client/app/assets');
+      homeBasePath = path.join(basePath, '../home/client/app/assets');
     } else {
       homeBasePath = path.join(process.cwd(), 'client/app/assets');
     }
