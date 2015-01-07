@@ -9,7 +9,7 @@ module.exports = StackApplication = americano.getModel('StackApplication', {
   name: String,
   version: String,
   lastVersion: String,
-  repository: Object
+  git: String
 });
 
 StackApplication.all = function(params, callback) {
@@ -43,6 +43,8 @@ StackApplication.prototype.checkForUpdate = function(callback) {
         } else if (_this.version == null) {
           return setFlag(repoVersion);
         } else if (_this.version !== repoVersion) {
+          return setFlag(repoVersion);
+        } else if (_this.lastVersion !== repoVersion) {
           return setFlag(repoVersion);
         } else {
           return callback(null, false);
