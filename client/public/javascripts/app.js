@@ -583,7 +583,7 @@ exports.del = function(url, callbacks) {
 });
 
 ;require.register("helpers/color-set", function(exports, require, module) {
-module.exports = ['ead1ad', 'fbf0c2', '1e4eb1', '3cd7c3', '39a5f8', '232d48', '3a6367', '85aa54', '38cc7a', '1bda4c', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'f14aa8', 'ffb1be', 'b63e57', 'ae29c2', '966f81', '40363a', 'ff0048', 'c23957', 'ff5c56', '7b0100', 'f5dd16', 'f1fab8', 'ffbe56'];
+module.exports = ['ead1ad', 'fbf0c2', '1e4eb1', '3cd7c3', '39a5f8', 'B4AED9', '3a6367', '85aa54', '38cc7a', '8DED2A', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'f14aa8', 'ffb1be', 'b63e57', 'ae29c2', '966f81', '40363a', 'DD99CE', 'E26987', '7cA6ff', '7b0100', 'f5dd16', 'f1fab8', 'ffbe56'];
 });
 
 ;require.register("helpers/locales", function(exports, require, module) {
@@ -1506,11 +1506,17 @@ module.exports = Application = (function(_super) {
   };
 
   Application.prototype.isIconSvg = function() {
-    var defaultIcon, icon, iconPath;
+    var attachments, defaultIcon, icon, iconPath;
     iconPath = this.get('iconPath');
     defaultIcon = this.get('icon');
     icon = iconPath || defaultIcon;
-    return icon.indexOf('.svg') !== -1;
+    if (icon == null) {
+      attachments = this.get('_attachments');
+      if ('icon.svg' in attachments) {
+        icon = 'icon.svg';
+      }
+    }
+    return (icon != null) && icon.indexOf('.svg') !== -1;
   };
 
   Application.prototype.isRunning = function() {
@@ -3760,7 +3766,6 @@ module.exports = ApplicationRow = (function(_super) {
     if (this.model.get('state') !== 'installed' || !this.canUseWidget()) {
       this.$('.use-widget').hide();
     }
-    console.log(this.model.get('state'));
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
@@ -3769,7 +3774,15 @@ module.exports = ApplicationRow = (function(_super) {
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
         this.hideSpinner();
-        extension = this.model.isIconSvg() ? 'svg' : 'png';
+        console.log(app.id);
+        console.log(this.model.isIconSvg());
+        if (this.model.isIconSvg()) {
+          extension = 'svg';
+          this.icon.addClass('svg');
+        } else {
+          extension = 'png';
+          this.icon.removeClass('svg');
+        }
         this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.hide();
         this.icon.show();
@@ -3785,7 +3798,13 @@ module.exports = ApplicationRow = (function(_super) {
         this.showSpinner();
         return this.stateLabel.show().text('installing');
       case 'stopped':
-        extension = this.model.isIconSvg() ? 'svg' : 'png';
+        if (this.model.isIconSvg()) {
+          extension = 'svg';
+          this.icon.addClass('svg');
+        } else {
+          extension = 'png';
+          this.icon.removeClass('svg');
+        }
         this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.addClass('stopped');
         this.hideSpinner();

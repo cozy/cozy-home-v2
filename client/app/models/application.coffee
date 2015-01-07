@@ -14,7 +14,14 @@ module.exports = class Application extends Backbone.Model
         iconPath = @get 'iconPath'
         defaultIcon = @get 'icon'
         icon = iconPath or defaultIcon
-        return icon.indexOf('.svg') isnt -1
+
+        if not icon?
+            attachments = @get '_attachments'
+
+            if 'icon.svg' of attachments
+                icon =  'icon.svg'
+
+        return icon? and icon.indexOf('.svg') isnt -1
 
 
     isRunning: -> @get('state') is 'installed'

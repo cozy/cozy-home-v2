@@ -1377,6 +1377,7 @@ body {
 .application .application-inner img.svg {
   -webkit-border-radius: 200px;
   border-radius: 200px;
+  padding: 5px;
 }
 .application .application-inner img.stopped {
   opacity: 0.5;

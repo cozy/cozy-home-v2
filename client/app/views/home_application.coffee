@@ -49,6 +49,7 @@ module.exports = class ApplicationRow extends BaseView
 
         # Only set a background color for SVG icons
         if @model.isIconSvg()
+
             # if there is no set color, we use an auto-generated one
             unless color?
                 color = ColorHash.getColor slug, 'cozy'
@@ -62,7 +63,6 @@ module.exports = class ApplicationRow extends BaseView
         if @model.get('state') isnt 'installed' or not @canUseWidget()
             @$('.use-widget').hide()
 
-        console.log @model.get 'state'
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
@@ -72,7 +72,16 @@ module.exports = class ApplicationRow extends BaseView
 
             when 'installed'
                 @hideSpinner()
-                extension = if @model.isIconSvg() then 'svg' else 'png'
+
+                console.log app.id
+                console.log @model.isIconSvg()
+                if @model.isIconSvg()
+                    extension = 'svg'
+                    @icon.addClass 'svg'
+                else
+                    extension = 'png'
+                    @icon.removeClass 'svg'
+
                 @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
                 @icon.hide()
                 @icon.show()
@@ -87,7 +96,14 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.show().text 'installing'
 
             when 'stopped'
-                extension = if @model.isIconSvg() then 'svg' else 'png'
+
+                if @model.isIconSvg()
+                    extension = 'svg'
+                    @icon.addClass 'svg'
+                else
+                    extension = 'png'
+                    @icon.removeClass 'svg'
+
                 @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()

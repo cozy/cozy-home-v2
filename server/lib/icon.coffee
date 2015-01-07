@@ -1,5 +1,7 @@
 fs = require 'fs'
 path = require 'path'
+log = require('printit')
+    prefix: 'icons'
 
 module.exports = icons = {}
 
@@ -19,9 +21,18 @@ icons.getPath = (root, appli) ->
     if appli.iconPath? and fs.existsSync(path.join root, appli.iconPath)
         iconPath = path.join root, appli.iconPath
 
+    if appli.icon?
+        if process.env.NODE_ENV is 'production'
+            homeBasePath = path.join basePath, 'home/client/app/assets'
+        else
+            homeBasePath = path.join process.cwd(), 'client/app/assets'
+
+        iconPath = path.join homeBasePath, appli.icon
+        iconPath = null unless fs.existsSync iconPath
+
     # if it has not been set, or if it doesn't exist, try to guess the icon path
     # first check for svg icon, then for png.
-    else
+    unless iconPath?
         basePath = path.join root, "client", "app", "assets", "icons"
         svgPath = path.join basePath, "main_icon.svg"
         pngPath = path.join basePath, "main_icon.png"
@@ -68,6 +79,8 @@ icons.save = (appli, callback = ->) ->
             iconInfos = icons.getPath root, appli
 
         if iconInfos?
+            iconStr = JSON.stringify iconInfos
+            log.debug "Icon to save for app #{appli.slug}: #{iconStr}"
             appli.attachFile iconInfos.path, name: iconInfos.name, (err) ->
                 if err then callback err
                 else callback()
