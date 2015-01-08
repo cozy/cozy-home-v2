@@ -1038,6 +1038,8 @@ module.exports = {
   "logout": "logout",
   "welcome to your cozy": "Welcome to your Cozy!",
   "you have no apps": "You have no application installed. You should",
+  "follow wizard": "follow the step-by-step guide",
+  "skip wizard": "You can also directly ",
   "configure": "configure ",
   "app management": "App management",
   "app store": "App store",
@@ -1152,7 +1154,20 @@ module.exports = {
   "reminder message": "Reminder: %{message}",
   "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
   "installation message failure": "%{appName}'s installation failed.",
-  "update available notification": "A new version of %{appName} is available."
+  "update available notification": "A new version of %{appName} is available.",
+  "tutorial title": "Applications installation wizard",
+  "tutorial no": "No",
+  "tutorial yes": "Yes",
+  "tutorial question files": "Would you like to manage your files, and to\nsynchronize them across your devices, like with Dropbox, Drive or iCloud?",
+  "tutorial question emails": "Would you like to write and read your emails,\nlike with Gmail, Outlook or Yahoo?",
+  "tutorial question calendar": "Would you like to manage your calendars,\nand to synchronize them across your devices?",
+  "tutorial question contacts": "Would you like to manage your contacts,\nand to synchronize them across your devices?",
+  "tutorial question photos": "Would you like to create photo albums to\nshare them with your friends and family?",
+  "tutorial final headline": "Please wait while Cozy installs the selected\napplications. In the meantime, you can finish the platform's configuration,\nor check the user guides:",
+  "tutorial doc files link": "Synchronize my files on my mobile(s) device(s)",
+  "tutorial doc contacts link": "Synchronize my contacts",
+  "tutorial doc calendar link": "Synchronize my calendars",
+  "tutorial final button": "I want to use my Cozy now"
 };
 });
 
@@ -1217,8 +1232,10 @@ module.exports = {
   "logout": "déconnexion",
   "welcome to your cozy": "Bienvenue sur votre Cozy !",
   "you have no apps": "Vous n'avez pas encore d'applications, vous devriez",
+  "follow wizard": "suivre le guide pas à pas",
+  "skip wizard": "Vous pouvez aussi directement ",
   "configure": "configurer ",
-  "app store": "App store",
+  "app store": "Applithèque",
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
@@ -1329,7 +1346,20 @@ module.exports = {
   "reminder message": "Rappel : %{message}",
   "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy.",
   "installation message failure": "Échec de l'installation de %{appName}.",
-  "update available notification": "Une nouvelle version de %{appName} est disponible."
+  "update available notification": "Une nouvelle version de %{appName} est disponible.",
+  "tutorial title": "Applications installation wizard",
+  "tutorial no": "Non",
+  "tutorial yes": "Oui",
+  "tutorial question files": "Souhaitez-vous gérer vos fichiers et les\nsynchroniser sur vos différents périphériques,\ncomme avec Dropbox, Drive ou iCloud ?",
+  "tutorial question emails": "Souhaitez-vous écrire et consulter vos emails,\ncomme avec Gmail, Outlook ou Yahoo ?",
+  "tutorial question calendar": "Souhaitez-vous gérer vos agendas et les\nsynchroniser avec vos autres périphériques ?",
+  "tutorial question contacts": "Souhaitez-vous gérer vos contacts et les\nsynchroniser avec vos autres périphériques ?",
+  "tutorial question photos": "Souhaitez-vous gérer créer des albums photos\npour les partager avec votre famille et vos amis ?",
+  "tutorial final headline": "Veuillez patienter pendant que Cozy installe\nles applications que vous avez choisi. En attendant, vous pouvez terminer\nla configuration de la plateforme, ou consulter les guides d'utilisation :",
+  "tutorial doc files link": "Synchroniser mes fichiers avec mon mobile ou ma tablette",
+  "tutorial doc contacts link": "Synchroniser mes contacts",
+  "tutorial doc calendar link": "Synchroniser mes agendas",
+  "tutorial final button": "Je souhaite utiliser mon Cozy maintenant"
 };
 });
 
@@ -1506,13 +1536,9 @@ module.exports = Application = (function(_super) {
   };
 
   Application.prototype.isIconSvg = function() {
-    var attachments;
-    attachments = this.get('_attachments');
-    if (attachments != null) {
-      return attachments['icon.svg'] != null;
-    } else {
-      return false;
-    }
+    var iconType;
+    iconType = this.get('iconType');
+    return (iconType != null) && iconType === 'svg';
   };
 
   Application.prototype.isRunning = function() {
@@ -1847,6 +1873,7 @@ module.exports = MainRouter = (function(_super) {
     "config-applications": "configApplications",
     "account": "account",
     "help": "help",
+    "tutorial": "tutorial",
     "logout": "logout",
     "apps/:slug": "application",
     "apps/:slug/*hash": "application",
@@ -1915,6 +1942,10 @@ module.exports = MainRouter = (function(_super) {
 
   MainRouter.prototype.application = function(slug, hash) {
     return app.mainView.displayApplication(slug, hash);
+  };
+
+  MainRouter.prototype.tutorial = function() {
+    return app.mainView.displayTutorial();
   };
 
   MainRouter.prototype.logout = function() {
@@ -2206,7 +2237,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><div class="line"><p class="bigger pa2">');
 var __val__ = t('you have no apps') + ' '
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('<a href="#account">');
+buf.push('<a href="#tutorial">');
+var __val__ = t('follow wizard') + '. '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>' + escape((interp = t('skip wizard')) == null ? '' : interp) + '<a href="#account">');
 var __val__ = t('configure')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>');
@@ -2529,6 +2563,81 @@ buf.push('<a id="cancelbtn" class="btn light-btn right">');
 var __val__ = t('cancel')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div>');
+}
+return buf.join("");
+};
+});
+
+;require.register("templates/tutorial", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<!--.section-title.darkbg.bigger help--><line class="w800 lightgrey"><h4 class="help-text darkbg pa2">');
+var __val__ = t('tutorial title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div id="tuto-files" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question files')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="files-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="files-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-emails" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question emails')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="emails-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="emails-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-calendar" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question calendar')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="calendar-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="calendar-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-contacts" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question contacts')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="contacts-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="contacts-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-photos" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question photos')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="photos-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="photos-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="end-screen" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial final headline')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><ul><li><a href="http://cozy.io/mobile/files.html">');
+var __val__ = t('tutorial doc files link')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li><li><a href="http://cozy.io/mobile/contacts.html">');
+var __val__ = t('tutorial doc contacts link')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li><li><a href="http://cozy.io/mobile/calendar.html">');
+var __val__ = t('tutorial doc calendar link')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li></ul><p class="center"><a href="#home" class="btn">');
+var __val__ = t('tutorial final button')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></p></div></line>');
 }
 return buf.join("");
 };
@@ -3124,14 +3233,15 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
-    var app, currentVersion, newVersion, _i, _len, _ref, _results;
+    var app, currentVersion, lastVersion, newVersion, _i, _len, _ref, _results;
     _ref = this.stackApps.models;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       app = _ref[_i];
       this.$("." + (app.get('name'))).html(app.get('version'));
       currentVersion = app.get('version').split('.');
-      newVersion = app.get('lastVersion').split('.');
+      lastVersion = app.get('lastVersion') || '0.0.0';
+      newVersion = lastVersion.split('.');
       if (parseInt(currentVersion[2]) < parseInt(newVersion[2])) {
         this.$("." + (app.get('name'))).css('font-weight', "bold");
         this.$("." + (app.get('name'))).css('color', "Orange");
@@ -3944,7 +4054,7 @@ module.exports = ApplicationRow = (function(_super) {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, TutorialView, User, appIframeTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3966,6 +4076,8 @@ NavbarView = require('views/navbar');
 AccountView = require('views/account');
 
 HelpView = require('views/help');
+
+TutorialView = require('views/tutorial');
 
 ConfigApplicationsView = require('views/config_applications');
 
@@ -4007,12 +4119,19 @@ module.exports = HomeView = (function(_super) {
   }
 
   HomeView.prototype.afterRender = function() {
+    var marketApps, processInstall;
     this.navbar = new NavbarView(this.apps, this.notifications);
     this.applicationListView = new ApplicationsListView(this.apps);
     this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
     this.marketView = new MarketView(this.apps);
+    processInstall = this.marketView.runInstallation.bind(this.marketView);
+    marketApps = this.marketView.marketApps;
+    this.tutorialView = new TutorialView({
+      processInstall: processInstall,
+      marketApps: marketApps
+    });
     $("#content").niceScroll();
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
@@ -4099,6 +4218,12 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.displayHelp = function() {
     this.displayView(this.helpView);
+    return window.document.title = t("cozy help title");
+  };
+
+  HomeView.prototype.displayTutorial = function() {
+    this.tutorialView.reset();
+    this.displayView(this.tutorialView);
     return window.document.title = t("cozy help title");
   };
 
@@ -4351,8 +4476,11 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
-  MarketView.prototype.runInstallation = function(application) {
+  MarketView.prototype.runInstallation = function(application, shouldRedirect) {
     var _this = this;
+    if (shouldRedirect == null) {
+      shouldRedirect = true;
+    }
     this.hideError();
     return application.install({
       ignoreMySocketNotification: true,
@@ -4363,7 +4491,9 @@ module.exports = MarketView = (function(_super) {
           _this.resetForm();
         }
         _this.installedApps.add(application);
-        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+        if (shouldRedirect) {
+          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+        }
       },
       error: function(jqXHR) {
         return alert(t(JSON.parse(jqXHR.responseText).message));
@@ -5015,6 +5145,109 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   return PopoverDescriptionView;
+
+})(BaseView);
+});
+
+;require.register("views/tutorial", function(exports, require, module) {
+var BaseView, Tutorial,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+BaseView = require('lib/base_view');
+
+module.exports = Tutorial = (function(_super) {
+  __extends(Tutorial, _super);
+
+  Tutorial.prototype.id = 'tutorial-view';
+
+  Tutorial.prototype.template = require('templates/tutorial');
+
+  Tutorial.prototype.events = {
+    'click #files-yes': 'onYesClicked',
+    'click #files-no': 'onNoClicked',
+    'click #emails-yes': 'onYesClicked',
+    'click #emails-no': 'onNoClicked',
+    'click #contacts-yes': 'onYesClicked',
+    'click #contacts-no': 'onNoClicked',
+    'click #calendar-yes': 'onYesClicked',
+    'click #calendar-no': 'onNoClicked',
+    'click #photos-yes': 'onYesClicked',
+    'click #photos-no': 'onNoClicked'
+  };
+
+  Tutorial.prototype.appList = ['files', 'emails', 'contacts', 'calendar', 'photos'];
+
+  Tutorial.prototype.currentAppIndex = 0;
+
+  Tutorial.prototype.appsToInstall = [];
+
+  function Tutorial(options) {
+    Tutorial.__super__.constructor.call(this);
+    this.processInstall = options.processInstall;
+    this.marketApps = options.marketApps;
+  }
+
+  Tutorial.prototype.reset = function() {
+    this.currentAppIndex = 0;
+    this.appsToInstall = [];
+    return this.render();
+  };
+
+  Tutorial.prototype.afterRender = function() {
+    var app, application, currentApp, _i, _len, _ref, _results;
+    currentApp = this.getCurrentApp();
+    if (currentApp != null) {
+      return this.$("#tuto-" + currentApp).addClass('active');
+    } else {
+      this.$('#end-screen').addClass('active');
+      _ref = this.appsToInstall;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        app = _ref[_i];
+        application = this.marketApps.findWhere({
+          slug: app
+        });
+        _results.push(this.processInstall(application, false));
+      }
+      return _results;
+    }
+  };
+
+  Tutorial.prototype.onYesClicked = function() {
+    this.addCurentToInstallList();
+    return this.goToNextQuestion();
+  };
+
+  Tutorial.prototype.onNoClicked = function() {
+    return this.goToNextQuestion();
+  };
+
+  Tutorial.prototype.goToNextQuestion = function() {
+    var currentApp;
+    currentApp = this.getCurrentApp();
+    this.$("#tuto-" + currentApp).removeClass('active');
+    this.currentAppIndex++;
+    return this.afterRender();
+  };
+
+  Tutorial.prototype.addCurentToInstallList = function() {
+    var alreadyInList, currentApp, relatedToSync;
+    currentApp = this.getCurrentApp();
+    this.appsToInstall.push(currentApp);
+    relatedToSync = currentApp === 'calendar' || currentApp === 'contacts';
+    alreadyInList = __indexOf.call(this.appsToInstall, 'sync') >= 0;
+    if (relatedToSync && !alreadyInList) {
+      return this.appsToInstall.push('sync');
+    }
+  };
+
+  Tutorial.prototype.getCurrentApp = function() {
+    return this.appList[this.currentAppIndex];
+  };
+
+  return Tutorial;
 
 })(BaseView);
 });

@@ -22,7 +22,7 @@ Get right icon path depending on app configuration:
  */
 
 icons.getPath = function(root, appli) {
-  var basePath, extension, homeBasePath, iconName, iconPath, pngPath, result, svgPath;
+  var basePath, extension, homeBasePath, iconPath, pngPath, result, svgPath;
   iconPath = null;
   if ((appli.iconPath != null) && fs.existsSync(path.join(root, appli.iconPath))) {
     iconPath = path.join(root, appli.iconPath);
@@ -53,20 +53,16 @@ icons.getPath = function(root, appli) {
     return null;
   } else {
     extension = iconPath.indexOf('.svg') !== -1 ? 'svg' : 'png';
-    iconName = "icon." + extension;
     result = {
       path: iconPath,
-      name: iconName
+      extension: extension
     };
     return result;
   }
 };
 
-icons.save = function(appli, callback) {
-  var basePath, iconInfos, iconStr, name, repoName, root;
-  if (callback == null) {
-    callback = function() {};
-  }
+icons.getIconInfos = function(appli) {
+  var basePath, iconInfos, name, repoName, root;
   if (appli != null) {
     repoName = (appli.git.split('/')[4]).replace('.git', '');
     name = appli.name.toLowerCase();
@@ -77,21 +73,34 @@ icons.save = function(appli, callback) {
     }
     iconInfos = icons.getPath(root, appli);
     if (iconInfos != null) {
-      iconStr = JSON.stringify(iconInfos);
-      log.debug("Icon to save for app " + appli.slug + ": " + iconStr);
-      return appli.attachFile(iconInfos.path, {
-        name: iconInfos.name
-      }, function(err) {
-        if (err) {
-          return callback(err);
-        } else {
-          return callback();
-        }
-      });
+      return iconInfos;
     } else {
-      return callback(new Error("Icon not found"));
+      throw new Error("Icon not found");
     }
   } else {
-    return callback(new Error('Appli cannot be reached'));
+    throw new Error('Appli cannot be reached');
+  }
+};
+
+icons.save = function(appli, iconInfos, callback) {
+  var iconStr, name;
+  if (callback == null) {
+    callback = function() {};
+  }
+  if (iconInfos != null) {
+    iconStr = JSON.stringify(iconInfos);
+    log.debug("Icon to save for app " + appli.slug + ": " + iconStr);
+    name = "icon." + iconInfos.extension;
+    return appli.attachFile(iconInfos.path, {
+      name: name
+    }, function(err) {
+      if (err) {
+        return callback(err);
+      } else {
+        return callback();
+      }
+    });
+  } else {
+    return callback(new Error('icon information not found'));
   }
 };

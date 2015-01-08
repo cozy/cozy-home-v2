@@ -1379,11 +1379,6 @@ body {
   border-radius: 200px;
   padding: 5px;
 }
-.application .application-inner img.stopped {
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
 .application .application-inner p {
   margin: 0;
   font-family: main;
@@ -2005,6 +2000,19 @@ body {
   -ms-filter: none;
   filter: none;
   visibility: visible;
+}
+#tutorial-view div.question {
+  display: none;
+}
+#tutorial-view div.question.active {
+  display: block;
+}
+#tutorial-view div.question button {
+  padding: 10px;
+  font-size: 16px;
+}
+#tutorial-view #end-screen ul {
+  margin: 10px 150px;
 }
 @media (max-width: 850px) {
   #header span,
