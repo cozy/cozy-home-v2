@@ -49,18 +49,14 @@ icons.getPath = (root, appli) ->
     # the file name changes based on image type
     else
         extension = if iconPath.indexOf('.svg') isnt -1 then 'svg' else 'png'
-        iconName = "icon.#{extension}"
-
         result =
             path: iconPath
-            name: iconName
+            extension: extension
 
         return result
 
-
-# Save app's icon into the data system. The home displays this icon.
-icons.save = (appli, callback = ->) ->
-
+# Retrieves icon information
+icons.getIconInfos = (appli) ->
     if appli?
         repoName = (appli.git.split('/')[4]).replace '.git', ''
         name = appli.name.toLowerCase()
@@ -77,13 +73,23 @@ icons.save = (appli, callback = ->) ->
         iconInfos = icons.getPath root, appli
 
         if iconInfos?
-            iconStr = JSON.stringify iconInfos
-            log.debug "Icon to save for app #{appli.slug}: #{iconStr}"
-            appli.attachFile iconInfos.path, name: iconInfos.name, (err) ->
-                if err then callback err
-                else callback()
+            return iconInfos
         else
-            callback new Error "Icon not found"
+            throw new Error "Icon not found"
 
     else
-        callback new Error 'Appli cannot be reached'
+        throw new Error 'Appli cannot be reached'
+
+# Save app's icon into the data system. The home displays this icon.
+icons.save = (appli, iconInfos, callback = ->) ->
+
+    if iconInfos?
+        iconStr = JSON.stringify iconInfos
+        log.debug "Icon to save for app #{appli.slug}: #{iconStr}"
+        name = "icon.#{iconInfos.extension}"
+        appli.attachFile iconInfos.path, name: name, (err) ->
+            if err then callback err
+            else callback()
+    else
+        callback new Error('icon information not found')
+

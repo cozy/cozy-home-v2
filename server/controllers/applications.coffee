@@ -9,7 +9,7 @@ Application = require '../models/application'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 autostop = require '../lib/autostop'
-saveIcon = require('../lib/icon').save
+icons = require '../lib/icon'
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -87,9 +87,15 @@ updateApp = (app, callback) ->
                 data.iconPath = manifest.getIconPath()
                 data.color = manifest.getColor()
                 data.needsUpdate = false
+                try
+                    iconInfos = icons.getIconInfos appli
+                catch err
+                    console.log err
+                    iconInfos = null
+                data.iconType = iconInfos?.extension or null
                 app.updateAttributes data, (err) ->
                     callback err if err?
-                    saveIcon app, (err) ->
+                    icons.save app, iconInfos, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
                         manager.resetProxy callback
@@ -207,6 +213,12 @@ module.exports =
                 req.body.version = manifest.getVersion()
                 req.body.iconPath = manifest.getIconPath()
                 req.body.color = manifest.getColor()
+                try
+                 iconInfos = icons.getIconInfos req.body
+                catch err
+                    console.log err
+                    iconInfos = null
+                req.body.iconType = iconInfos?.extension or null
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
@@ -230,7 +242,7 @@ module.exports =
 
                             appli.save (err) ->
                                 return sendErrorSocket err if err?
-                                saveIcon appli, (err) ->
+                                icons.save appli, iconInfos, (err) ->
                                     if err? then console.log err.stack
                                     else console.info 'icon attached'
                                     console.info 'saved port in db', appli.port
