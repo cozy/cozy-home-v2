@@ -88,11 +88,11 @@ updateApp = (app, callback) ->
                 data.color = manifest.getColor()
                 data.needsUpdate = false
                 app.updateAttributes data, (err) ->
+                    callback err if err?
                     saveIcon app, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
-                    callback err if err?
-                    manager.resetProxy callback
+                        manager.resetProxy callback
 
 
 module.exports =
