@@ -89,12 +89,13 @@ updateApp = (app, callback) ->
                 data.color = manifest.getColor()
                 data.needsUpdate = false
                 try
-                    info =
+                    # `icons.getIconInfos` needs info from 'data' and 'app'.
+                    infos =
                         git: app.git
                         name: app.name
                         icon: app.icon
                         iconPath: data.iconPath
-                    iconInfos = icons.getIconInfos
+                    iconInfos = icons.getIconInfos infos
                 catch err
                     console.log err
                     iconInfos = null
