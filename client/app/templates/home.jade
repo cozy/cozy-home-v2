@@ -11,6 +11,8 @@
     p.biggest= t('welcome to your cozy')
   .line
     p.bigger.pa2= t('you have no apps') + ' '
+        a(href="#tutorial")= t('follow wizard') + '. '
+        | #{t('skip wizard')}
         a(href="#account")= t('configure')
         = ' ' + t ('install your first app')
         a(href="#applications")= t('app store')
