@@ -22,6 +22,12 @@ icons.getPath = (root, appli) ->
         iconPath = path.join root, appli.iconPath
         iconPath = null unless fs.existsSync(iconPath)
 
+    # Get the iconPath from the marketplace if possible.
+    if not iconPath? and appli.icon?
+        homeBasePath = path.join process.cwd(), 'client/app/assets'
+        iconPath = path.join homeBasePath, appli.icon
+        iconPath = null unless fs.existsSync(iconPath)
+
     # if it has not been set, or if it doesn't exist, try to guess the icon path
     # first check for svg icon, then for png.
     unless iconPath?
@@ -35,12 +41,6 @@ icons.getPath = (root, appli) ->
             iconPath = pngPath
         else
             iconPath = null
-
-    # ultimately, get the iconPath from the marketplace
-    if not iconPath? and appli.icon?
-        homeBasePath = path.join process.cwd(), 'client/app/assets'
-        iconPath = path.join homeBasePath, appli.icon
-        iconPath = null unless fs.existsSync(iconPath)
 
     # the icon's file couldn't be retrieved
     unless iconPath?

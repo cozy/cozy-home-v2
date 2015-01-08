@@ -30,6 +30,13 @@ icons.getPath = function(root, appli) {
       iconPath = null;
     }
   }
+  if ((iconPath == null) && (appli.icon != null)) {
+    homeBasePath = path.join(process.cwd(), 'client/app/assets');
+    iconPath = path.join(homeBasePath, appli.icon);
+    if (!fs.existsSync(iconPath)) {
+      iconPath = null;
+    }
+  }
   if (iconPath == null) {
     basePath = path.join(root, "client", "app", "assets", "icons");
     svgPath = path.join(basePath, "main_icon.svg");
@@ -39,13 +46,6 @@ icons.getPath = function(root, appli) {
     } else if (fs.existsSync(pngPath)) {
       iconPath = pngPath;
     } else {
-      iconPath = null;
-    }
-  }
-  if ((iconPath == null) && (appli.icon != null)) {
-    homeBasePath = path.join(process.cwd(), 'client/app/assets');
-    iconPath = path.join(homeBasePath, appli.icon);
-    if (!fs.existsSync(iconPath)) {
       iconPath = null;
     }
   }
