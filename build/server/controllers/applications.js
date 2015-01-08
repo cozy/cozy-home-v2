@@ -112,17 +112,17 @@ updateApp = function(app, callback) {
           data.color = manifest.getColor();
           data.needsUpdate = false;
           return app.updateAttributes(data, function(err) {
-            saveIcon(app, function(err) {
-              if (err) {
-                return console.log(err.stack);
-              } else {
-                return console.info('icon attached');
-              }
-            });
             if (err != null) {
               callback(err);
             }
-            return manager.resetProxy(callback);
+            return saveIcon(app, function(err) {
+              if (err) {
+                console.log(err.stack);
+              } else {
+                console.info('icon attached');
+              }
+              return manager.resetProxy(callback);
+            });
           });
         }
       };
