@@ -1355,7 +1355,7 @@ module.exports = {
   "installation message failure": "Échec de l'installation de %{appName}.",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
-  "tutorial title": "Applications installation wizard",
+  "tutorial title": "Assistant à l'installation d'applications",
   "tutorial no": "Non",
   "tutorial yes": "Oui",
   "tutorial question files": "Souhaitez-vous gérer vos fichiers et les\nsynchroniser sur vos différents périphériques,\ncomme avec Dropbox, Drive ou iCloud ?",
