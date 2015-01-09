@@ -20,8 +20,9 @@ StackApplication.prototype.checkForUpdate = function(callback) {
   var manifest, setFlag;
   setFlag = (function(_this) {
     return function(repoVersion) {
-      _this.lastVersion = repoVersion;
-      return _this.save(function(err) {
+      return _this.updateAttributes({
+        lastVersion: repoVersion
+      }, function(err) {
         if (err) {
           return callback(err);
         } else {
