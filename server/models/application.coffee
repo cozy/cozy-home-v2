@@ -38,9 +38,8 @@ Application.destroyAll = (params, callback) ->
 #
 # callback: function(err, needsUpdate)
 Application::checkForUpdate = (callback) ->
-    setFlag = () =>
-        @needsUpdate = true
-        @save (err) =>
+    setFlag = =>
+        @updateAttributes needsUpdate: true, (err) ->
             if err
                 callback err
             else
@@ -50,7 +49,6 @@ Application::checkForUpdate = (callback) ->
     if @needsUpdate
         callback null, false
     else
-
         # Retrieve manifest
         manifest = new Manifest()
         manifest.download @, (err) =>

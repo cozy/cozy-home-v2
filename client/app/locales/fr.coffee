@@ -240,6 +240,7 @@ module.exports =
     "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
     "installation message failure": "Échec de l'installation de %{appName}."
     "update available notification": "Une nouvelle version de %{appName} est disponible."
+    "stack update available notification": "Une nouvelle version de la plateforme est disponible."
 
     "tutorial title": "Applications installation wizard"
     "tutorial no": "Non"

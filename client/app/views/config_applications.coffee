@@ -39,6 +39,9 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @applications = new Application()
         @stackApplications = new StackApplication()
 
+    openUpdatePopover: (slug) ->
+        @applicationList.openUpdatePopover slug
+
     displayStackVersion: =>
         for app in @stackApps.models
             @$(".#{app.get 'name'}").html app.get 'version'

@@ -1,22 +1,27 @@
 ViewCollection = require 'lib/view_collection'
 ApplicationRow = require 'views/config_application'
-
+PopoverDescriptionView = require 'views/popover_description'
 
 module.exports = class ApplicationsListView extends ViewCollection
     id: 'config-application-list'
     tagName: 'div'
     template: require 'templates/config_application_list'
     itemView: require 'views/config_application'
-
+    itemViewOptions: ->
     constructor: (apps) ->
         @apps = apps
         super collection: apps
 
-        #@displayNoAppMessage() if @apps.length is 0
-
     afterRender: =>
         @appList = @$ "#app-list"
 
-    #displayNoAppMessage: ->
-        #@$el.append t 'no application installed'
+    openUpdatePopover: (slug) ->
+        appToUpdateView = null
+        for cid, view of @views
+            if view.model.get('slug') is slug
+                appToUpdateView = view
+                break
+
+        appToUpdateView.openPopover() if appToUpdateView?
+
 
