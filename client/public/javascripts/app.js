@@ -5297,7 +5297,7 @@ module.exports = Tutorial = (function(_super) {
 
   Tutorial.prototype.currentAppIndex = 0;
 
-  Tutorial.prototype.appsToInstall = [];
+  Tutorial.prototype.installedApps = [];
 
   function Tutorial(options) {
     Tutorial.__super__.constructor.call(this);
@@ -5307,32 +5307,22 @@ module.exports = Tutorial = (function(_super) {
 
   Tutorial.prototype.reset = function() {
     this.currentAppIndex = 0;
-    this.appsToInstall = [];
+    this.installedApps = [];
     return this.render();
   };
 
   Tutorial.prototype.afterRender = function() {
-    var app, application, currentApp, _i, _len, _ref, _results;
+    var currentApp;
     currentApp = this.getCurrentApp();
     if (currentApp != null) {
       return this.$("#tuto-" + currentApp).addClass('active');
     } else {
-      this.$('#end-screen').addClass('active');
-      _ref = this.appsToInstall;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        app = _ref[_i];
-        application = this.marketApps.findWhere({
-          slug: app
-        });
-        _results.push(this.processInstall(application, false));
-      }
-      return _results;
+      return this.$('#end-screen').addClass('active');
     }
   };
 
   Tutorial.prototype.onYesClicked = function() {
-    this.addCurentToInstallList();
+    this.installApp();
     return this.goToNextQuestion();
   };
 
@@ -5348,14 +5338,22 @@ module.exports = Tutorial = (function(_super) {
     return this.afterRender();
   };
 
-  Tutorial.prototype.addCurentToInstallList = function() {
-    var alreadyInList, currentApp, relatedToSync;
+  Tutorial.prototype.installApp = function() {
+    var alreadyInList, application, currentApp, relatedToSync;
     currentApp = this.getCurrentApp();
-    this.appsToInstall.push(currentApp);
+    this.installedApps.push(currentApp);
+    application = this.marketApps.findWhere({
+      slug: currentApp
+    });
+    this.processInstall(application, false);
     relatedToSync = currentApp === 'calendar' || currentApp === 'contacts';
-    alreadyInList = __indexOf.call(this.appsToInstall, 'sync') >= 0;
+    alreadyInList = __indexOf.call(this.installedApps, 'sync') >= 0;
     if (relatedToSync && !alreadyInList) {
-      return this.appsToInstall.push('sync');
+      this.installedApps.push('sync');
+      application = this.marketApps.findWhere({
+        slug: 'sync'
+      });
+      return this.processInstall(application, false);
     }
   };
 
