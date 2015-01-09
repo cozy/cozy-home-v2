@@ -45,7 +45,9 @@ createStackUpdateNotification = (notifier) ->
     message = localization.t messageKey
     notifier.createTemporary
         text: message
-        resource: app: 'home'
+        resource:
+            app: 'home'
+            url: "update-stack"
 
 
 # Check if a new version of an application is available for each of application

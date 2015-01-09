@@ -5,7 +5,7 @@ Application = require 'models/application'
 StackApplication = require 'models/stack_application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
-
+UpdateStackModal = require './update_stack_modal'
 
 module.exports = class exports.ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
@@ -98,15 +98,22 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateStackClicked: ->
-        @updateStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @updateStackBtn.spin true, '#ffffff'
-        @spanRefresh.show()
-        @stackApplications.updateStack () =>
-            location.reload()
+
+        @popover.hide() if @popover?
+        @popover = new UpdateStackModal
+            confirm: (application) =>
+                @stackApplications.updateStack ->
+                    location.reload()
+            cancel: (application) =>
+                @popover.hide()
+                @popover.remove()
+
+        $("#config-applications-view").append @popover.$el
+        @popover.show()
 
     onRebootStackClicked: ->
         @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @rebootStackBtn.spin true, '#ffffff'
         @spanRefresh.show()
-        @stackApplications.rebootStack () =>
+        @stackApplications.rebootStack ->
             location.reload()

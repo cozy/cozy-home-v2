@@ -145,6 +145,19 @@ module.exports = class HomeView extends BaseView
                 @configApplications.openUpdatePopover slug
             , 500
 
+
+    displayUpdateStack: ->
+        @displayView @configApplications
+        window.document.title = t "cozy applications title"
+        window.app.routers.main.navigate 'config-applications', false
+
+        # wait for 500ms before triggering the popover opening, because
+        # the configApplications view is not completely rendered yet (??)
+        setTimeout =>
+            @configApplications.onUpdateStackClicked()
+        , 500
+
+
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
     # iframes. Then currently selected frame is registered
