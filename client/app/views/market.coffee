@@ -121,7 +121,7 @@ module.exports = class MarketView extends BaseView
         else
             callback()
 
-    runInstallation: (application) =>
+    runInstallation: (application, shouldRedirect = true) =>
         @hideError()
 
         application.install
@@ -132,7 +132,8 @@ module.exports = class MarketView extends BaseView
                 else
                     @resetForm()
                 @installedApps.add application
-                app?.routers.main.navigate 'home', true
+                if shouldRedirect
+                    app?.routers.main.navigate 'home', true
 
             error: (jqXHR) =>
                 alert t JSON.parse(jqXHR.responseText).message

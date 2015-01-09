@@ -75,8 +75,10 @@ module.exports =
     "logout":"déconnexion"
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
     "you have no apps":"Vous n'avez pas encore d'applications, vous devriez"
+    "follow wizard": "suivre le guide pas à pas"
+    "skip wizard": "Vous pouvez aussi directement "
     "configure":"configurer "
-    "app store":"App store"
+    "app store":"Applithèque"
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
@@ -238,3 +240,27 @@ module.exports =
     "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
     "installation message failure": "Échec de l'installation de %{appName}."
     "update available notification": "Une nouvelle version de %{appName} est disponible."
+
+    "tutorial title": "Applications installation wizard"
+    "tutorial no": "Non"
+    "tutorial yes": "Oui"
+    "tutorial question files": """Souhaitez-vous gérer vos fichiers et les
+    synchroniser sur vos différents périphériques,
+    comme avec Dropbox, Drive ou iCloud ?
+    """
+    "tutorial question emails": """Souhaitez-vous écrire et consulter vos emails,
+    comme avec Gmail, Outlook ou Yahoo ?"""
+    "tutorial question calendar": """Souhaitez-vous gérer vos agendas et les
+    synchroniser avec vos autres périphériques ?"""
+    "tutorial question contacts": """Souhaitez-vous gérer vos contacts et les
+    synchroniser avec vos autres périphériques ?"""
+    "tutorial question photos": """Souhaitez-vous gérer créer des albums photos
+    pour les partager avec votre famille et vos amis ?"""
+    "tutorial final headline": """Veuillez patienter pendant que Cozy installe
+    les applications que vous avez choisi. En attendant, vous pouvez terminer
+    la configuration de la plateforme, ou consulter les guides d'utilisation :
+    """
+    "tutorial doc files link": "Synchroniser mes fichiers avec mon mobile ou ma tablette"
+    "tutorial doc contacts link": "Synchroniser mes contacts"
+    "tutorial doc calendar link": "Synchroniser mes agendas"
+    "tutorial final button": "Je souhaite utiliser mon Cozy maintenant"

@@ -9,7 +9,7 @@ Application = require '../models/application'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 autostop = require '../lib/autostop'
-saveIcon = require('../lib/icon').save
+icons = require '../lib/icon'
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -40,15 +40,16 @@ markBroken = (res, app, err) ->
     console.log "Marking app #{app.name} as broken because"
     console.log err.stack
 
-    app.state = "broken"
-    app.password = null
+    data =
+        state: 'broken'
+        password: null
     if err.result?
-        app.errormsg = err.message + ' :\n' + err.result
+        data.errormsg = err.message + ' :\n' + err.result
     else if err.message?
-        app.errormsg = err.message + ' :\n' + err.stack
+        data.errormsg = err.message + ' :\n' + err.stack
     else
-        app.errormsg = err
-    app.save (saveErr) ->
+        data.errormsg = err
+    app.updateAttributes data, (saveErr) ->
         return sendError res, saveErr if saveErr
 
         res.send
@@ -87,12 +88,24 @@ updateApp = (app, callback) ->
                 data.iconPath = manifest.getIconPath()
                 data.color = manifest.getColor()
                 data.needsUpdate = false
+                try
+                    # `icons.getIconInfos` needs info from 'data' and 'app'.
+                    infos =
+                        git: app.git
+                        name: app.name
+                        icon: app.icon
+                        iconPath: data.iconPath
+                    iconInfos = icons.getIconInfos infos
+                catch err
+                    console.log err
+                    iconInfos = null
+                data.iconType = iconInfos?.extension or null
                 app.updateAttributes data, (err) ->
-                    saveIcon app, (err) ->
+                    callback err if err?
+                    icons.save app, iconInfos, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
-                    callback err if err?
-                    manager.resetProxy callback
+                        manager.resetProxy callback
 
 
 module.exports =
@@ -207,6 +220,12 @@ module.exports =
                 req.body.version = manifest.getVersion()
                 req.body.iconPath = manifest.getIconPath()
                 req.body.color = manifest.getColor()
+                try
+                 iconInfos = icons.getIconInfos req.body
+                catch err
+                    console.log err
+                    iconInfos = null
+                req.body.iconType = iconInfos?.extension or null
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
@@ -222,15 +241,15 @@ module.exports =
                             return
 
                         if result.drone?
-                            appli.state = "installed"
-                            appli.port = result.drone.port
+                            updatedData =
+                                state: 'installed'
+                                port: result.drone.port
 
                             msg = "install succeeded on port #{appli.port}"
                             console.info msg
-
-                            appli.save (err) ->
+                            appli.updateAttributes updatedData, (err) ->
                                 return sendErrorSocket err if err?
-                                saveIcon appli, (err) ->
+                                icons.save appli, iconInfos, (err) ->
                                     if err? then console.log err.stack
                                     else console.info 'icon attached'
                                     console.info 'saved port in db', appli.port
@@ -287,13 +306,14 @@ module.exports =
         broken = (app, err) ->
             console.log "Marking app #{app.name} as broken because"
             console.log err.stack
-            app.state = "broken"
-            app.password = null
+            data =
+                state: 'broken'
+                password: null
             if err.result?
-                app.errormsg = err.message + ' :\n' + err.result
+                data.errormsg = err.message + ' :\n' + err.result
             else
-                app.errormsg = err.message + ' :\n' + err.stack
-            app.save (saveErr) ->
+                data.errormsg = err.message + ' :\n' + err.stack
+            app.updateAttributes data, (saveErr) ->
                 console.log(saveErr) if saveErr?
 
         updateApps = (apps, callback) ->
@@ -347,9 +367,10 @@ module.exports =
                     return markBroken res, req.application, err
                 else if err
                     delete startedApplications[req.application.id]
-                    req.application.errormsg = err
-                    req.application.state = "stopped"
-                    req.application.save (saveErr) ->
+                    data =
+                        errormsg: err
+                        state: 'stopped'
+                    req.application.updateAttributes data, (saveErr) ->
                         return sendError res, saveErr if saveErr
 
                         res.send
@@ -360,10 +381,10 @@ module.exports =
                             stack: err.stack
                         , 500
                 else
-
-                    req.application.state = "installed"
-                    req.application.port = result.drone.port
-                    req.application.save (err) ->
+                    data =
+                        state: 'installed'
+                        port: result.drone.port
+                    req.application.updateAttributes data, (err) ->
                         if err
                             delete startedApplications[req.application.id]
                             return markBroken res, req.application, err

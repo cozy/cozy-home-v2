@@ -8,6 +8,7 @@ module.exports = class MainRouter extends Backbone.Router
         "config-applications": "configApplications"
         "account": "account"
         "help": "help"
+        "tutorial": "tutorial"
         "logout": "logout"
         "apps/:slug" : "application"
         "apps/:slug/*hash" : "application"
@@ -62,6 +63,9 @@ module.exports = class MainRouter extends Backbone.Router
 
     application: (slug, hash) ->
         app.mainView.displayApplication slug, hash
+
+    tutorial: ->
+        app.mainView.displayTutorial()
 
     logout: ->
         app.mainView.logout()

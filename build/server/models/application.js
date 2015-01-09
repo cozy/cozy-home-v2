@@ -21,6 +21,7 @@ module.exports = Application = americano.getModel('Application', {
   },
   icon: String,
   iconPath: String,
+  iconType: String,
   color: {
     type: String,
     "default": null

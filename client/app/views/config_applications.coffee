@@ -43,7 +43,8 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         for app in @stackApps.models
             @$(".#{app.get 'name'}").html app.get 'version'
             currentVersion = app.get('version').split('.')
-            newVersion = app.get('lastVersion').split('.')
+            lastVersion = app.get('lastVersion') or '0.0.0'
+            newVersion = lastVersion.split('.')
             if parseInt(currentVersion[2]) < parseInt(newVersion[2])
                 @$(".#{app.get 'name'}").css 'font-weight', "bold"
                 @$(".#{app.get 'name'}").css 'color', "Orange"

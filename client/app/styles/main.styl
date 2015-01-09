@@ -439,10 +439,7 @@ body
 
             &.svg
                 border-radius 200px
-                padding: 5px
-
-            &.stopped
-                opacity 0.5
+                padding 5px
 
         p
             margin: 0
@@ -1007,6 +1004,20 @@ body
 .md-show
     opacity: 1
     visibility: visible
+
+#tutorial-view
+    div.question
+        display none
+        &.active
+            display block
+
+        button
+            padding 10px
+            font-size 16px
+
+    #end-screen
+        ul
+            margin 10px 150px
 
 // Responsive
 
