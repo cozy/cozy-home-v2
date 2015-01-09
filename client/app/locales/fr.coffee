@@ -245,7 +245,7 @@ module.exports =
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
 
-    "tutorial title": "Applications installation wizard"
+    "tutorial title": "Assistant à l'installation d'applications"
     "tutorial no": "Non"
     "tutorial yes": "Oui"
     "tutorial question files": """Souhaitez-vous gérer vos fichiers et les
