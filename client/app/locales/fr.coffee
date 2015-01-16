@@ -32,6 +32,7 @@ module.exports =
     "confirm"                   : "Confirmer"
     "installing"                : "Installation en cours"
     "remove"                    : "enlever"
+    "removing"                  : "Suppression en cours"
     "update"                    : "m.à.j."
     "started"                   : "démarrée"
     "notifications"             : "Notifications"
