@@ -75,6 +75,8 @@ module.exports =
     "logout":"logout"
     "welcome to your cozy":"Welcome to your Cozy!"
     "you have no apps":"You have no application installed. You should"
+    "follow wizard": "follow the step-by-step guide"
+    "skip wizard": "You can also directly "
     "configure":"configure "
     "app management":"App management"
     "app store":"App store"
@@ -95,6 +97,7 @@ module.exports =
     "your timezone is required":"Your timezone is required to display dates properly"
     "domain name for urls and email":"The domain name is used to build urls send via email to you or your contacts"
     "save":"save"
+    "saved":"saved"
     "Chose the language you want I use to speak with you:":"Choose the language you want me to use to speak to you:"
     "french":"French"
     "english":"English"
@@ -225,3 +228,26 @@ module.exports =
     "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
+
+    "tutorial title": "Applications installation wizard"
+    "tutorial no": "No"
+    "tutorial yes": "Yes"
+    "tutorial question files": """Would you like to manage your files, and to
+    synchronize them across your devices, like with Dropbox, Drive or iCloud?
+    """
+    "tutorial question emails": """Would you like to write and read your emails,
+    like with Gmail, Outlook or Yahoo?"""
+    "tutorial question calendar": """Would you like to manage your calendars,
+     and to synchronize them across your devices?"""
+    "tutorial question contacts": """Would you like to manage your contacts,
+    and to synchronize them across your devices?"""
+    "tutorial question photos": """Would you like to create photo albums to
+    share them with your friends and family?"""
+    "tutorial final headline": """Please wait while Cozy installs the selected
+    applications. In the meantime, you can finish the platform's configuration,
+    or check the user guides:"""
+    "tutorial doc files link": "Synchronize my files on my mobile(s) device(s)"
+    "tutorial doc contacts link": "Synchronize my contacts"
+    "tutorial doc calendar link": "Synchronize my calendars"
+    "tutorial final button": "I want to use my Cozy now"
+

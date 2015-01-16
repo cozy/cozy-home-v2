@@ -1,4 +1,6 @@
 request = require 'request-json'
+logger = require('printit')
+    prefix: 'manifest'
 
 # Class to facilitate applications' permissions management
 class exports.Manifest
@@ -6,27 +8,33 @@ class exports.Manifest
     download: (app, callback) ->
 
         # we can be smarter here
-        providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
-        providerName = providerName[0]
+        if app.git?
+            providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
+            providerName = providerName[0]
 
-        # This could be moved to a separate factory class...
-        if providerName is "gitlab.cozycloud.cc"
-            Provider = require('./git_providers').CozyGitlabProvider
-        else # fallback to github
-            Provider = require('./git_providers').GithubProvider
+            # This could be moved to a separate factory class...
+            if providerName is "gitlab.cozycloud.cc"
+                Provider = require('./git_providers').CozyGitlabProvider
+            else # fallback to github
+                Provider = require('./git_providers').GithubProvider
 
-        provider = new Provider app
-        provider.getManifest (err, data) =>
-            if err?
-                callback err
-            else
-                @config = data
-                provider.getStars (err, stars) =>
-                    if err?
-                        callback err
-                    else
-                        @config.stars = stars
-                        callback null
+            provider = new Provider app
+            provider.getManifest (err, data) =>
+                if err?
+                    callback err
+                else
+                    @config = data
+                    provider.getStars (err, stars) =>
+                        if err?
+                            callback err
+                        else
+                            @config.stars = stars
+                            callback null
+        else
+            logger.warn 'App manifest without git URL'
+            logger.raw app
+            callback null
+
 
     getPermissions: =>
         if @config["cozy-permissions"]?
@@ -41,7 +49,10 @@ class exports.Manifest
             return null
 
     getVersion: =>
-        return @config.version || "0.0.0"
+        if @config['version']?
+            return @config['version']
+        else
+            return "0.0.0"
 
     getDescription: =>
         if @config['description']?
@@ -52,6 +63,12 @@ class exports.Manifest
     getIconPath: =>
         if @config['icon-path']?
             return @config['icon-path']
+        else
+            return null
+
+    getColor: ->
+        if @config['cozy-color']?
+            return @config['cozy-color']
         else
             return null
 
@@ -78,5 +95,8 @@ class exports.Manifest
 
         if @config.stars?
             metaData.stars = @config.stars
+
+        if @config['cozy-color']
+            metaData.color = @config['cozy-color']
 
         return metaData

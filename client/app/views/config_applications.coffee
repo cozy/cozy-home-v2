@@ -42,17 +42,18 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     displayStackVersion: =>
         for app in @stackApps.models
             @$(".#{app.get 'name'}").html app.get 'version'
-            if app.get('version')? and app.get('lastVersion') and
-                app.get('version') isnt app.get('lastVersion')
-                    @$(".#{app.get 'name'}").css 'font-weight', "bold"
-                    currentVersion = app.get('version').split('.')
-                    newVersion = app.get('lastVersion').split('.')
-                    if currentVersion[0] isnt newVersion[0]
-                        @$(".#{app.get 'name'}").css 'color', "Red"
-                    else if currentVersion[1] isnt newVersion[1]
-                        @$(".#{app.get 'name'}").css 'color', "OrangeRed"
-                    else if currentVersion[2] isnt newVersion[2]
-                        @$(".#{app.get 'name'}").css 'color', "Orange"
+            currentVersion = app.get('version').split('.')
+            lastVersion = app.get('lastVersion') or '0.0.0'
+            newVersion = lastVersion.split('.')
+            if parseInt(currentVersion[2]) < parseInt(newVersion[2])
+                @$(".#{app.get 'name'}").css 'font-weight', "bold"
+                @$(".#{app.get 'name'}").css 'color', "Orange"
+            if parseInt(currentVersion[1]) < parseInt(newVersion[1])
+                @$(".#{app.get 'name'}").css 'font-weight', "bold"
+                @$(".#{app.get 'name'}").css 'color', "OrangeRed"
+            if parseInt(currentVersion[0]) < parseInt(newVersion[0])
+                @$(".#{app.get 'name'}").css 'font-weight', "bold"
+                @$(".#{app.get 'name'}").css 'color', "Red"
 
     displayDevices: =>
         if not(@devices.length is 0)

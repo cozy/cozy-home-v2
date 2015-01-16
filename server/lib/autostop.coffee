@@ -67,4 +67,4 @@ module.exports.init = () ->
     Application.all (err, apps) ->
         for app in apps
             if app.state is 'installed' and app.isStoppable
-                startTimeout app.name
+                startTimeout app.slug

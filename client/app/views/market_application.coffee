@@ -22,8 +22,18 @@ module.exports = class ApplicationRow extends BaseView
         if @app.get('comment') is 'official application'
             @$el.addClass 'official'
 
+        slug = @app.get 'slug'
+        color = @app.get 'color'
+
+        # Only set a background color for SVG icons
+        if @app.get('icon').indexOf('.svg') isnt -1
+            # if there is no set color, we use an auto-generated one
+            unless color?
+                color = ColorHash.getColor slug, 'cozy'
+
+            iconNode = @$ '.app-img img'
+            iconNode.addClass 'svg'
+            iconNode.css 'background', color
+
     onInstallClicked: =>
-        if @marketView.isInstalling()
-            alert t "application is installing"
-        else
-            @marketView.showDescription this, @installButton
+        @marketView.showDescription this, @installButton

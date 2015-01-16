@@ -1,0 +1,45 @@
+//.section-title.darkbg.bigger help
+line.w800.lightgrey
+    h4.help-text.darkbg.pa2=t('tutorial title')
+    #tuto-files.line.pa2.question
+        p.help-text.mt2=t('tutorial question files')
+        p.center
+            button#files-no.btn=t('tutorial no')
+            button#files-yes.btn=t('tutorial yes')
+
+    #tuto-emails.line.pa2.question
+        p.help-text.mt2=t('tutorial question emails')
+        p.center
+            button#emails-no.btn=t('tutorial no')
+            button#emails-yes.btn=t('tutorial yes')
+
+    #tuto-calendar.line.pa2.question
+        p.help-text.mt2=t('tutorial question calendar')
+        p.center
+            button#calendar-no.btn=t('tutorial no')
+            button#calendar-yes.btn=t('tutorial yes')
+
+    #tuto-contacts.line.pa2.question
+        p.help-text.mt2=t('tutorial question contacts')
+        p.center
+            button#contacts-no.btn=t('tutorial no')
+            button#contacts-yes.btn=t('tutorial yes')
+
+    #tuto-photos.line.pa2.question
+        p.help-text.mt2=t('tutorial question photos')
+        p.center
+            button#photos-no.btn=t('tutorial no')
+            button#photos-yes.btn=t('tutorial yes')
+
+    #end-screen.line.pa2.question
+        p.help-text.mt2=t('tutorial final headline')
+        ul
+            li
+                a(href='http://cozy.io/mobile/files.html')=t('tutorial doc files link')
+            li
+                a(href='http://cozy.io/mobile/contacts.html')=t('tutorial doc contacts link')
+            li
+                a(href='http://cozy.io/mobile/calendar.html')=t('tutorial doc calendar link')
+
+        p.center
+            a.btn(href="#home")=t('tutorial final button')

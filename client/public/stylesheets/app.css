@@ -711,7 +711,7 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
 }
 @font-face {
   font-family: main;
-  src: url("/fonts/signika-regular.ttf");
+  src: url("/fonts/source-sans-pro.ttf");
 }
 html {
   height: 100%;
@@ -1329,6 +1329,7 @@ body {
   filter: alpha(opacity=70);
 }
 #app-list .use-widget {
+  display: none;
   z-index: 20;
   position: absolute;
   bottom: 10px;
@@ -1373,10 +1374,10 @@ body {
   max-width: 100px;
   max-height: 100px;
 }
-.application .application-inner img.stopped {
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
+.application .application-inner img.svg {
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+  padding: 5px;
 }
 .application .application-inner p {
   margin: 0;
@@ -1387,11 +1388,12 @@ body {
   height: 20%;
   max-height: 20px;
   text-align: center;
-  font-family: styled;
+  font-family: main;
   text-transform: uppercase;
   font-size: 15px;
   color: #363a46;
   text-decoration: none;
+  margin-top: 12px;
 }
 .application .application-inner .state-label {
   font-size: 18px;
@@ -1680,6 +1682,11 @@ body {
   height: 180px;
   padding: 20px 20px 10px 20px;
   margin-right: 10px;
+}
+#market-view #no-app-message .app-img img.svg,
+.cozy-app .app-img img.svg {
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
 }
 #market-view #no-app-message .img-btn,
 .cozy-app .img-btn {
@@ -1993,6 +2000,19 @@ body {
   -ms-filter: none;
   filter: none;
   visibility: visible;
+}
+#tutorial-view div.question {
+  display: none;
+}
+#tutorial-view div.question.active {
+  display: block;
+}
+#tutorial-view div.question button {
+  padding: 10px;
+  font-size: 16px;
+}
+#tutorial-view #end-screen ul {
+  margin: 10px 150px;
 }
 @media (max-width: 850px) {
   #header span,

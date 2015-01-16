@@ -35,7 +35,7 @@ module.exports = class AlarmManager
     handleAlarm: (event, msg) =>
         switch event
             when "event.create", "event.update"
-                @Event.find msg, (err, event) =>
+                Event.find msg, (err, event) =>
                     @addEventCounters event if event?
 
             when "event.delete"
@@ -55,7 +55,8 @@ module.exports = class AlarmManager
         timezone = alarm.timezone or @timezone
 
         # single alarm, trigger date stored in UTC
-        triggerDate = moment.tz alarm.trigg, timezone
+        triggerDate = moment.tz alarm.trigg, 'UTC'
+        triggerDate.tz timezone
 
         now = moment().tz timezone
         in24h = moment(now).add 1, 'days'

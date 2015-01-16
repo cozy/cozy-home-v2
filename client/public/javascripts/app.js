@@ -130,7 +130,7 @@ module.exports = ApplicationCollection = (function(_super) {
     var apps;
     apps = [
       {
-        icon: "img/calendar-icon.png",
+        icon: "img/apps/calendar.svg",
         name: "calendar",
         displayName: "Calendar",
         slug: "calendar",
@@ -138,7 +138,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "calendars description"
       }, {
-        icon: "img/contacts-icon.png",
+        icon: "img/apps/contacts.svg",
         name: "contacts",
         displayName: "Contacts",
         slug: "contacts",
@@ -146,7 +146,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "contacts description"
       }, {
-        icon: "img/emails-icon.png",
+        icon: "img/apps/emails.svg",
         name: "emails",
         displayName: "Emails",
         slug: "emails",
@@ -154,7 +154,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "emails description"
       }, {
-        icon: "img/files-icon.png",
+        icon: "img/apps/files.svg",
         name: "files",
         displayName: "Files",
         slug: "files",
@@ -162,7 +162,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "files description"
       }, {
-        icon: "img/photos-icon.png",
+        icon: "img/apps/photos.svg",
         name: "photos",
         displayName: "Photos",
         slug: "photos",
@@ -178,7 +178,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "sync description"
       }, {
-        icon: "img/bookmarks-icon.png",
+        icon: "img/apps/bookmarks.svg",
         name: "bookmarks",
         displayName: "Bookmarks",
         slug: "bookmarks",
@@ -186,7 +186,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "bookmark description"
       }, {
-        icon: "img/cozy-music.png",
+        icon: "img/apps/cozic.svg",
         name: "cozic",
         displayName: "Cozic",
         slug: "cozic",
@@ -194,7 +194,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "cozic description"
       }, {
-        icon: "img/databrowser-icon.png",
+        icon: "img/apps/databrowser.svg",
         name: "databrowser",
         displayName: "Data Browser",
         slug: "databrowser",
@@ -202,7 +202,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "databrowser description"
       }, {
-        icon: "img/feeds-icon.png",
+        icon: "img/apps/feeds.svg",
         name: "feeds",
         displayName: "Feeds",
         slug: "feeds",
@@ -210,7 +210,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "feeds description"
       }, {
-        icon: "img/kyou.png",
+        icon: "img/apps/kyou.svg",
         name: "kyou",
         displayName: "KYou",
         slug: "kyou",
@@ -219,7 +219,7 @@ module.exports = ApplicationCollection = (function(_super) {
         description: "kyou description",
         website: "http://frankrousseau.github.io/kyou"
       }, {
-        icon: "img/konnectors-icon.png",
+        icon: "img/apps/konnectors.svg",
         name: "konnectors",
         displayName: "Konnectors",
         slug: "konnectors",
@@ -235,7 +235,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "kresus description"
       }, {
-        icon: "img/nirc-icon.png",
+        icon: "img/apps/nirc.svg",
         name: "nirc",
         displayName: "nIRC",
         slug: "nirc",
@@ -243,7 +243,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "nirc description"
       }, {
-        icon: "img/notes-icon.png",
+        icon: "img/apps/notes.svg",
         name: "notes",
         displayName: "Note",
         slug: "notes",
@@ -251,7 +251,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "notes description"
       }, {
-        icon: "img/owm.png",
+        icon: "img/apps/owm.svg",
         name: "owm",
         displayName: "OWM",
         slug: "owm",
@@ -259,7 +259,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "owm description"
       }, {
-        icon: "img/pfm.png",
+        icon: "img/apps/pfm.svg",
         name: "mes comptes",
         displayName: "Mes Comptes",
         slug: "pfm",
@@ -275,15 +275,16 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "remote storage description"
       }, {
-        icon: "img/tasky-icon.png",
+        icon: "img/apps/tasky.svg",
         name: "tasky",
         displayName: "Tasky",
         slug: "tasky",
         git: "https://github.com/jsilvestre/tasky.git",
         comment: "community contribution",
-        description: "tasky description"
+        description: "tasky description",
+        color: '#1bda4c'
       }, {
-        icon: "img/todos-icon.png",
+        icon: "img/apps/todos.svg",
         name: "todos",
         displayName: "Todos",
         slug: "todos",
@@ -581,6 +582,10 @@ exports.del = function(url, callbacks) {
 };
 });
 
+;require.register("helpers/color-set", function(exports, require, module) {
+module.exports = ['ead1ad', 'fbf0c2', '1e4eb1', '3cd7c3', '39a5f8', 'B4AED9', '3a6367', '85aa54', '38cc7a', '8DED2A', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'f14aa8', 'ffb1be', 'b63e57', 'ae29c2', '966f81', '40363a', 'DD99CE', 'E26987', '7cA6ff', '7b0100', 'f5dd16', 'f1fab8', 'ffbe56'];
+});
+
 ;require.register("helpers/locales", function(exports, require, module) {
 exports.locales = {
   'en': 'English',
@@ -593,7 +598,7 @@ exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Af
 });
 
 ;require.register("initialize", function(exports, require, module) {
-var BrunchApplication, MainRouter, MainView, _ref,
+var BrunchApplication, MainRouter, MainView, colorSet, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -602,6 +607,8 @@ BrunchApplication = require('./helpers').BrunchApplication;
 MainRouter = require('routers/main_router');
 
 MainView = require('views/main');
+
+colorSet = require('../helpers/color-set');
 
 exports.Application = (function(_super) {
   __extends(Application, _super);
@@ -640,6 +647,7 @@ exports.Application = (function(_super) {
     this.routers = {};
     this.mainView = new MainView();
     this.routers.main = new MainRouter();
+    ColorHash.addScheme('cozy', colorSet);
     Backbone.history.start();
     if (Backbone.history.getFragment() === '') {
       this.routers.main.navigate('home', true);
@@ -1030,6 +1038,8 @@ module.exports = {
   "logout": "logout",
   "welcome to your cozy": "Welcome to your Cozy!",
   "you have no apps": "You have no application installed. You should",
+  "follow wizard": "follow the step-by-step guide",
+  "skip wizard": "You can also directly ",
   "configure": "configure ",
   "app management": "App management",
   "app store": "App store",
@@ -1049,6 +1059,7 @@ module.exports = {
   "your timezone is required": "Your timezone is required to display dates properly",
   "domain name for urls and email": "The domain name is used to build urls send via email to you or your contacts",
   "save": "save",
+  "saved": "saved",
   "Chose the language you want I use to speak with you:": "Choose the language you want me to use to speak to you:",
   "french": "French",
   "english": "English",
@@ -1143,7 +1154,20 @@ module.exports = {
   "reminder message": "Reminder: %{message}",
   "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
   "installation message failure": "%{appName}'s installation failed.",
-  "update available notification": "A new version of %{appName} is available."
+  "update available notification": "A new version of %{appName} is available.",
+  "tutorial title": "Applications installation wizard",
+  "tutorial no": "No",
+  "tutorial yes": "Yes",
+  "tutorial question files": "Would you like to manage your files, and to\nsynchronize them across your devices, like with Dropbox, Drive or iCloud?",
+  "tutorial question emails": "Would you like to write and read your emails,\nlike with Gmail, Outlook or Yahoo?",
+  "tutorial question calendar": "Would you like to manage your calendars,\nand to synchronize them across your devices?",
+  "tutorial question contacts": "Would you like to manage your contacts,\nand to synchronize them across your devices?",
+  "tutorial question photos": "Would you like to create photo albums to\nshare them with your friends and family?",
+  "tutorial final headline": "Please wait while Cozy installs the selected\napplications. In the meantime, you can finish the platform's configuration,\nor check the user guides:",
+  "tutorial doc files link": "Synchronize my files on my mobile(s) device(s)",
+  "tutorial doc contacts link": "Synchronize my contacts",
+  "tutorial doc calendar link": "Synchronize my calendars",
+  "tutorial final button": "I want to use my Cozy now"
 };
 });
 
@@ -1170,10 +1194,10 @@ module.exports = {
   "dismiss all": "Ignorer toutes",
   "add application": "Ajouter l'application ?",
   "install": "Installer",
-  "your app": "Votre Application !",
-  "community contribution": "Developpeur Indépendant",
-  "official application": "Application Officielle",
-  "application description": "Description de l'Application",
+  "your app": "Votre application !",
+  "community contribution": "Développeur indépendant",
+  "official application": "Application officielle",
+  "application description": "Description de l'application",
   "downloading description": "Téléchargement de la description…",
   "downloading permissions": "Téléchargement des permissions…",
   "Cancel": "Annuler",
@@ -1195,10 +1219,10 @@ module.exports = {
   "stop this app": "arrêter cet app",
   "update required": "Mise à jour disponible",
   "application is installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
-  "no app message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer une nouvelle !",
+  "no app message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer au moins une !",
   "welcome to app store": "Bienvenue sur l'app store, vous pouvez installer votre propre application\nou ajouter une application existante dans la liste",
   "installed everything": "Vous avez déjà tout installé !",
-  "already similarly named app": "Il y a déjà une application installée avec un nom similaire.",
+  "already similarly named app": "Une application qui porte un nom similaire est déjà installée.",
   "your app list": "Accédez à vos apps",
   "customize your cozy": "Personnalisez la mise en page",
   "manage your apps": "Gérez vos apps",
@@ -1206,10 +1230,12 @@ module.exports = {
   "configure your cozy": "Configurez votre cozy",
   "ask for assistance": "Demandez de l'aide",
   "logout": "déconnexion",
-  "welcome to your cozy": "Bienvenue sur votre Cozy!",
-  "you have no apps": "Vous n'avez pas d'applications installées vous devriez",
+  "welcome to your cozy": "Bienvenue sur votre Cozy !",
+  "you have no apps": "Vous n'avez pas encore d'applications, vous devriez",
+  "follow wizard": "suivre le guide pas à pas",
+  "skip wizard": "Vous pouvez aussi directement ",
   "configure": "configurer ",
-  "app store": "App store",
+  "app store": "Applithèque",
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
@@ -1221,12 +1247,13 @@ module.exports = {
   "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
+  "saved": "sauvé",
   "your parameters": " Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
   "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
-  "your timezone is required": "Votre fuseau horaire est requis pour vous afficher les dates correctement.",
+  "your timezone is required": "Votre fuseau horaire est nécessaire pour vous afficher les dates correctement.",
   "domain name for urls and email": "Le nom de domaine est utilisé pour construire les URL\nenvoyées par mail à vos contacts.",
-  "Chose the language you want I use to speak with you:": "Choisissez la langue que vous voulez que j'utilise pour vous parler.",
+  "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez que j'utilise pour vous parler.",
   "french": "Français",
   "english": "Anglais",
   "portuguese": "Portugais",
@@ -1235,12 +1262,12 @@ module.exports = {
   "new password": "nouveau mot de passe",
   "confirm your new password": "confirmez votre nouveau mot de passe",
   "save your new password": "sauvegarder votre nouveau mot de passe",
-  "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
-  "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
-  "Register and post on our forum: ": "Postez un message sur notre forum : ",
-  "Ask your question on Twitter: ": "Posez votre question sur Twitter : ",
-  "Chat with us on IRC:": "Discutez avec nous sur IRC :",
-  "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à construire des applications.",
+  "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
+  "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
+  "Register and post on our forum: ": "Postez un message sur notre forum : ",
+  "Ask your question on Twitter: ": "Posez votre question sur Twitter : ",
+  "Chat with us on IRC:": "Discutez avec nous sur IRC :",
+  "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à créer des applications.",
   "your own application": "votre propre application",
   "broken": "cassée",
   "installed": "installée",
@@ -1248,13 +1275,13 @@ module.exports = {
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour",
-  "refresh page": "Veuillez patienter, la page se rafraichira d'ici quelques minutes.",
+  "refresh page": "Veuillez patienter, la page se rafraîchira d'ici quelques minutes.",
   "reboot stack": "Redémarrer",
   "cozy platform": "Plate-forme",
   "update error": "Une erreur est survenue pendant la mise à jour",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
-  "retry to install": "réessai d'installation",
+  "retry to install": "nouvel essai d'installation",
   "cozy account title": "Cozy - Compte",
   "cozy app store title": "Cozy - App Store",
   "cozy home title": "Cozy - Home",
@@ -1264,7 +1291,7 @@ module.exports = {
   "changing locale requires reload": "Le changement de langue nécessite le rechargement de la page.",
   "cancel": "annuler",
   "abort": "interrompre",
-  "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application requerra les permissions suivantes:",
+  "Once updated, this application will require the following permissions:": "Une fois mise à jour l'application demandera les permissions suivantes :",
   "confirm update": "confirmez la mise à jour",
   "confirm install": "confirmez l'installation'",
   "no specific permissions needed": "Cette application n'a pas besoin d'informations spécifiques",
@@ -1276,7 +1303,7 @@ module.exports = {
   "app store contains applications": "Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.",
   "set cozy parameters here": "Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.",
   "links to resources": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
-  "The first place to find help is:": "Le premier endroit où trouver de l'aide est:",
+  "The first place to find help is:": "Le premier endroit où trouver de l'aide est :",
   "removed": "supprimée",
   "required permissions": "Permissions requises",
   "finish layout edition": "Enregistrer",
@@ -1291,35 +1318,48 @@ module.exports = {
   "revoke device confirmation message": "Cette action empêchera l'appareil associé d'accéder à votre Cozy. Êtes-vous sûr ?",
   "dashboard": "Tableau de bord",
   "synchronization": "Synchronisation",
-  "synchronization description": "Cozy vous permet de synchronisez vos fichiers, contact et calendriers\navec vos périphériques. Pour la mettre en route, vous devez installer\ndes applications spécifiques.",
+  "synchronization description": "Cozy vous permet de synchroniser vos fichiers, contact et calendriers\navec vos périphériques. Pour lancer la synchronisation, vous devez installer\ndes applications spécifiques.",
   "caldav cardav with davdroid": "Pour vos contacts et vos événements, nous vous recommandons\nl'application\n<a href=\"http://davdroid.bitfire.at/what-is-davdroid\">DAVDroid</a>\nde Bitfire. Une fois que vous aurez\ninstallé l'application Sync sur votre Cozy, vous pourrez\nconfigurer DAVDroid pour qu'il synchronise vos contacts et\ncalendriers. Ceux ci seront ensuite gérables via les\napplications natives du téléphone.",
   "files with cozy on android": "Pour accéder à vos fichiers depuis votre mobile nous vous proposons\nl'application <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">Cozy</a>\ndisponible sur la place de marché Play Store pour Android. Une fois\nque vous l'aurez installée, suivez simplement les\ninstructions.  Vous pourrez ensuite naviguer dans vos fichiers\ndepuis votre mobile.",
   "calendars description": "Gérez vos événements et synchronisez-les avec votre mobile.",
   "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile.",
   "emails description": "Lisez, envoyez et sauvegardez vos emails.",
   "files description": "Gérez vos fichiers en ligne et synchronisez-les avec votre mobile.",
-  "photos description": "Construisez un album photo depuis vos fichiers et partagez le.",
+  "photos description": "Construisez un album photo depuis vos fichiers et partagez-le.",
   "sync description": "Cette application est nécessaire pour synchroniser vos contacts et vos événements.",
   "bookmark description": "Sauvegardez et gérez vos liens favoris.",
   "cozic description": "Un lecteur audio pour votre musique dans votre navigateur.",
   "databrowser description": "Naviguez dans vos données dans un format brut.",
   "feeds description": "Agrégez vos flux RSS et sauvegardez vos liens dans vos favoris.",
   "kyou description": "Améliorez  votre humeur et votre santé en vous quantifiant.",
-  "konnectors description": "Import de données depuis des services externes (Twitter, Jawbone...).",
+  "konnectors description": "Importation de données depuis des services externes (Twitter, Jawbone…).",
   "kresus description": "Des outils supplémentaires pour gérer vos comptes.",
   "nirc description": "Accédez à votre canal IRC préféré depuis votre Cozy.",
   "notes description": "Écrivez et organisez des notes intelligentes.",
   "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !",
   "pfm description": "Suivez vos comptes bancaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé.",
   "remote storage description": "Un module Remote Storage pour vos applications Unhosted.",
-  "tasky description": "Un gestionnaire de tâche, basé sur les tags, rapide et simple.",
+  "tasky description": "Un gestionnaire de tâches, basé sur les tags, rapide et simple.",
   "todos description": "Écrivez et ordonnez vos tâches efficacement.",
   "term description": "Un terminal pour votre Cozy.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder message": "Rappel : %{message}",
   "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy.",
   "installation message failure": "Échec de l'installation de %{appName}.",
-  "update available notification": "Une nouvelle version de %{appName} est disponible."
+  "update available notification": "Une nouvelle version de %{appName} est disponible.",
+  "tutorial title": "Applications installation wizard",
+  "tutorial no": "Non",
+  "tutorial yes": "Oui",
+  "tutorial question files": "Souhaitez-vous gérer vos fichiers et les\nsynchroniser sur vos différents périphériques,\ncomme avec Dropbox, Drive ou iCloud ?",
+  "tutorial question emails": "Souhaitez-vous écrire et consulter vos emails,\ncomme avec Gmail, Outlook ou Yahoo ?",
+  "tutorial question calendar": "Souhaitez-vous gérer vos agendas et les\nsynchroniser avec vos autres périphériques ?",
+  "tutorial question contacts": "Souhaitez-vous gérer vos contacts et les\nsynchroniser avec vos autres périphériques ?",
+  "tutorial question photos": "Souhaitez-vous gérer créer des albums photos\npour les partager avec votre famille et vos amis ?",
+  "tutorial final headline": "Veuillez patienter pendant que Cozy installe\nles applications que vous avez choisi. En attendant, vous pouvez terminer\nla configuration de la plateforme, ou consulter les guides d'utilisation :",
+  "tutorial doc files link": "Synchroniser mes fichiers avec mon mobile ou ma tablette",
+  "tutorial doc contacts link": "Synchroniser mes contacts",
+  "tutorial doc calendar link": "Synchroniser mes agendas",
+  "tutorial final button": "Je souhaite utiliser mon Cozy maintenant"
 };
 });
 
@@ -1403,6 +1443,7 @@ module.exports = {
   "your timezone is required": "O fuso horário é necessário para mostrar as datas correctamente.",
   "domain name for urls and email": "O dominio é usado para construir links para enviar para si ou para os seus contactos.",
   "save": "guardar",
+  "saved": "saved",
   "Chose the language you want I use to speak with you:": "Escolha a lingua que quer que fale:",
   "french": "Francês",
   "english": "Inglês",
@@ -1492,6 +1533,12 @@ module.exports = Application = (function(_super) {
       return "" + base + "byid/" + (this.get('id'));
     }
     return base;
+  };
+
+  Application.prototype.isIconSvg = function() {
+    var iconType;
+    iconType = this.get('iconType');
+    return (iconType != null) && iconType === 'svg';
   };
 
   Application.prototype.isRunning = function() {
@@ -1754,10 +1801,10 @@ module.exports = StackApplication = (function(_super) {
     var _this = this;
     return client.put("/api/applications/update/stack", {}, {
       sucess: function() {
-        return _this.waitReboot(0, 3, callbacks);
+        return _this.waitReboot(0, 2, callbacks);
       },
       error: function() {
-        return _this.waitReboot(0, 3, callbacks);
+        return _this.waitReboot(0, 2, callbacks);
       }
     });
   };
@@ -1826,6 +1873,7 @@ module.exports = MainRouter = (function(_super) {
     "config-applications": "configApplications",
     "account": "account",
     "help": "help",
+    "tutorial": "tutorial",
     "logout": "logout",
     "apps/:slug": "application",
     "apps/:slug/*hash": "application",
@@ -1894,6 +1942,10 @@ module.exports = MainRouter = (function(_super) {
 
   MainRouter.prototype.application = function(slug, hash) {
     return app.mainView.displayApplication(slug, hash);
+  };
+
+  MainRouter.prototype.tutorial = function() {
+    return app.mainView.displayTutorial();
   };
 
   MainRouter.prototype.logout = function() {
@@ -1990,7 +2042,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<iframe');
-buf.push(attrs({ 'src':("apps/" + (id) + "/#" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
+buf.push(attrs({ 'src':("apps/" + (id) + "/" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
 buf.push('></iframe>');
 }
 return buf.join("");
@@ -2185,7 +2237,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><div class="line"><p class="bigger pa2">');
 var __val__ = t('you have no apps') + ' '
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('<a href="#account">');
+buf.push('<a href="#tutorial">');
+var __val__ = t('follow wizard') + '. '
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>' + escape((interp = t('skip wizard')) == null ? '' : interp) + '<a href="#account">');
 var __val__ = t('configure')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>');
@@ -2513,6 +2568,81 @@ return buf.join("");
 };
 });
 
+;require.register("templates/tutorial", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<!--.section-title.darkbg.bigger help--><line class="w800 lightgrey"><h4 class="help-text darkbg pa2">');
+var __val__ = t('tutorial title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div id="tuto-files" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question files')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="files-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="files-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-emails" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question emails')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="emails-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="emails-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-calendar" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question calendar')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="calendar-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="calendar-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-contacts" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question contacts')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="contacts-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="contacts-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="tuto-photos" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial question photos')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><button id="photos-no" class="btn">');
+var __val__ = t('tutorial no')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="photos-yes" class="btn">');
+var __val__ = t('tutorial yes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p></div><div id="end-screen" class="line pa2 question"><p class="help-text mt2">');
+var __val__ = t('tutorial final headline')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><ul><li><a href="http://cozy.io/mobile/files.html">');
+var __val__ = t('tutorial doc files link')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li><li><a href="http://cozy.io/mobile/contacts.html">');
+var __val__ = t('tutorial doc contacts link')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li><li><a href="http://cozy.io/mobile/calendar.html">');
+var __val__ = t('tutorial doc calendar link')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></li></ul><p class="center"><a href="#home" class="btn">');
+var __val__ = t('tutorial final button')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></p></div></line>');
+}
+return buf.join("");
+};
+});
+
 ;require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -2634,7 +2764,7 @@ module.exports = exports.AccountView = (function(_super) {
           return saveButton.html('error');
         } else {
           saveButton.addClass('green');
-          saveButton.html('saved');
+          saveButton.html(t('saved'));
           if (fieldName === 'locale') {
             alert(t('changing locale requires reload'));
             window.location.reload();
@@ -2796,6 +2926,10 @@ module.exports = ApplicationRow = (function(_super) {
     ApplicationRow.__super__.constructor.apply(this, arguments);
   }
 
+  ApplicationRow.prototype.initialize = function() {
+    return this.listenTo(this.model, 'change:version', this.render);
+  };
+
   ApplicationRow.prototype.afterRender = function() {
     this.updateButton = new ColorButton(this.$(".update-app"));
     this.removeButton = new ColorButton(this.$(".remove-app"));
@@ -2886,28 +3020,23 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.onUpdateClicked = function(event) {
     var _this = this;
-    if (app.mainView.marketView.isInstalling()) {
-      alert(t('Cannot update application while an application is installing'));
-      return false;
-    } else {
-      event.preventDefault();
-      this.popover = new PopoverDescriptionView({
-        model: this.model,
-        label: t('update'),
-        confirm: function(application) {
-          $('#no-app-message').hide();
-          _this.popover.hide();
-          _this.popover.remove();
-          return _this.updateApp();
-        },
-        cancel: function(application) {
-          _this.popover.hide();
-          return _this.popover.remove();
-        }
-      });
-      $("#config-applications-view").append(this.popover.$el);
-      return this.popover.show();
-    }
+    event.preventDefault();
+    this.popover = new PopoverDescriptionView({
+      model: this.model,
+      label: t('update'),
+      confirm: function(application) {
+        $('#no-app-message').hide();
+        _this.popover.hide();
+        _this.popover.remove();
+        return _this.updateApp();
+      },
+      cancel: function(application) {
+        _this.popover.hide();
+        return _this.popover.remove();
+      }
+    });
+    $("#config-applications-view").append(this.popover.$el);
+    return this.popover.show();
   };
 
   ApplicationRow.prototype.onStartStopClicked = function(event) {
@@ -3104,25 +3233,26 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
-    var app, currentVersion, newVersion, _i, _len, _ref, _results;
+    var app, currentVersion, lastVersion, newVersion, _i, _len, _ref, _results;
     _ref = this.stackApps.models;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       app = _ref[_i];
       this.$("." + (app.get('name'))).html(app.get('version'));
-      if ((app.get('version') != null) && app.get('lastVersion') && app.get('version') !== app.get('lastVersion')) {
+      currentVersion = app.get('version').split('.');
+      lastVersion = app.get('lastVersion') || '0.0.0';
+      newVersion = lastVersion.split('.');
+      if (parseInt(currentVersion[2]) < parseInt(newVersion[2])) {
         this.$("." + (app.get('name'))).css('font-weight', "bold");
-        currentVersion = app.get('version').split('.');
-        newVersion = app.get('lastVersion').split('.');
-        if (currentVersion[0] !== newVersion[0]) {
-          _results.push(this.$("." + (app.get('name'))).css('color', "Red"));
-        } else if (currentVersion[1] !== newVersion[1]) {
-          _results.push(this.$("." + (app.get('name'))).css('color', "OrangeRed"));
-        } else if (currentVersion[2] !== newVersion[2]) {
-          _results.push(this.$("." + (app.get('name'))).css('color', "Orange"));
-        } else {
-          _results.push(void 0);
-        }
+        this.$("." + (app.get('name'))).css('color', "Orange");
+      }
+      if (parseInt(currentVersion[1]) < parseInt(newVersion[1])) {
+        this.$("." + (app.get('name'))).css('font-weight', "bold");
+        this.$("." + (app.get('name'))).css('color', "OrangeRed");
+      }
+      if (parseInt(currentVersion[0]) < parseInt(newVersion[0])) {
+        this.$("." + (app.get('name'))).css('font-weight', "bold");
+        _results.push(this.$("." + (app.get('name'))).css('color', "Red"));
       } else {
         _results.push(void 0);
       }
@@ -3717,18 +3847,28 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.afterRender = function() {
+    var color, slug;
     this.icon = this.$('img');
     this.stateLabel = this.$('.state-label');
     this.title = this.$('.app-title');
     this.listenTo(this.model, 'change', this.onAppChanged);
-    return this.onAppChanged(this.model);
+    this.onAppChanged(this.model);
+    slug = this.model.get('slug');
+    color = this.model.get('color');
+    if (this.model.isIconSvg()) {
+      if (color == null) {
+        color = ColorHash.getColor(slug, 'cozy');
+      }
+      this.icon.addClass('svg');
+      return this.icon.css('background', color);
+    }
   };
 
   /* Listener*/
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var useWidget, _ref;
+    var extension, useWidget, _ref;
     if (this.model.get('state') !== 'installed' || !this.canUseWidget()) {
       this.$('.use-widget').hide();
     }
@@ -3740,7 +3880,14 @@ module.exports = ApplicationRow = (function(_super) {
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
         this.hideSpinner();
-        this.icon.attr('src', "api/applications/" + app.id + ".png");
+        if (this.model.isIconSvg()) {
+          extension = 'svg';
+          this.icon.addClass('svg');
+        } else {
+          extension = 'png';
+          this.icon.removeClass('svg');
+        }
+        this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.hide();
         this.icon.show();
         this.icon.removeClass('stopped');
@@ -3755,7 +3902,14 @@ module.exports = ApplicationRow = (function(_super) {
         this.showSpinner();
         return this.stateLabel.show().text('installing');
       case 'stopped':
-        this.icon.attr('src', "api/applications/" + app.id + ".png");
+        if (this.model.isIconSvg()) {
+          extension = 'svg';
+          this.icon.addClass('svg');
+        } else {
+          extension = 'png';
+          this.icon.removeClass('svg');
+        }
+        this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.addClass('stopped');
         this.hideSpinner();
         this.icon.show();
@@ -3831,7 +3985,7 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.canUseWidget = function() {
-    return this.model.has('widget');
+    return false;
   };
 
   ApplicationRow.prototype.getNbCols = function() {
@@ -3900,7 +4054,7 @@ module.exports = ApplicationRow = (function(_super) {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, TutorialView, User, appIframeTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3922,6 +4076,8 @@ NavbarView = require('views/navbar');
 AccountView = require('views/account');
 
 HelpView = require('views/help');
+
+TutorialView = require('views/tutorial');
 
 ConfigApplicationsView = require('views/config_applications');
 
@@ -3963,12 +4119,19 @@ module.exports = HomeView = (function(_super) {
   }
 
   HomeView.prototype.afterRender = function() {
+    var marketApps, processInstall;
     this.navbar = new NavbarView(this.apps, this.notifications);
     this.applicationListView = new ApplicationsListView(this.apps);
     this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
     this.marketView = new MarketView(this.apps);
+    processInstall = this.marketView.runInstallation.bind(this.marketView);
+    marketApps = this.marketView.marketApps;
+    this.tutorialView = new TutorialView({
+      processInstall: processInstall,
+      marketApps: marketApps
+    });
     $("#content").niceScroll();
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
@@ -4058,6 +4221,12 @@ module.exports = HomeView = (function(_super) {
     return window.document.title = t("cozy help title");
   };
 
+  HomeView.prototype.displayTutorial = function() {
+    this.tutorialView.reset();
+    this.displayView(this.tutorialView);
+    return window.document.title = t("cozy help title");
+  };
+
   HomeView.prototype.displayConfigApplications = function() {
     this.displayView(this.configApplications);
     return window.document.title = t("cozy applications title");
@@ -4095,6 +4264,9 @@ module.exports = HomeView = (function(_super) {
       _this = this;
     if (hash == null) {
       hash = "";
+    }
+    if ((hash != null ? hash.length : void 0) > 0) {
+      hash = "#" + hash;
     }
     this.frames.append(appIframeTemplate({
       id: slug,
@@ -4244,40 +4416,26 @@ module.exports = MarketView = (function(_super) {
 
   MarketView.prototype.onInstallClicked = function(event) {
     var data;
-    if (this.isInstalling()) {
-      return alert(t("application is installing"));
-    } else {
-      data = {
-        git: this.$("#app-git-field").val()
-      };
-      this.parsedGit(data);
-      event.preventDefault();
-      return false;
-    }
-  };
-
-  MarketView.prototype.isInstalling = function() {
-    return this.installedApps.where({
-      state: 'installing'
-    }).length !== 0;
+    data = {
+      git: this.$("#app-git-field").val()
+    };
+    this.parsedGit(data);
+    event.preventDefault();
+    return false;
   };
 
   MarketView.prototype.parsedGit = function(app) {
     var application, data, parsed;
-    if (this.isInstalling()) {
-      return alert(t("application is installing"));
+    parsed = this.parseGitUrl(app.git);
+    if (parsed.error) {
+      return this.displayError(parsed.msg);
     } else {
-      parsed = this.parseGitUrl(app.git);
-      if (parsed.error) {
-        return this.displayError(parsed.msg);
-      } else {
-        this.hideError();
-        application = new Application(parsed);
-        data = {
-          app: application
-        };
-        return this.showDescription(data);
-      }
+      this.hideError();
+      application = new Application(parsed);
+      data = {
+        app: application
+      };
+      return this.showDescription(data);
     }
   };
 
@@ -4318,10 +4476,10 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
-  MarketView.prototype.runInstallation = function(application) {
+  MarketView.prototype.runInstallation = function(application, shouldRedirect) {
     var _this = this;
-    if (this.isInstalling()) {
-      return true;
+    if (shouldRedirect == null) {
+      shouldRedirect = true;
     }
     this.hideError();
     return application.install({
@@ -4333,7 +4491,9 @@ module.exports = MarketView = (function(_super) {
           _this.resetForm();
         }
         _this.installedApps.add(application);
-        return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+        if (shouldRedirect) {
+          return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
+        }
       },
       error: function(jqXHR) {
         return alert(t(JSON.parse(jqXHR.responseText).message));
@@ -4343,9 +4503,9 @@ module.exports = MarketView = (function(_super) {
 
   MarketView.prototype.parseGitUrl = function(url) {
     var branch, domain, error, git, name, out, parsed, parts, path, port, proto, slug;
+    url = url.trim();
     url = url.replace('git@github.com:', 'https://github.com/');
     url = url.replace('git://', 'https://');
-    console.debug(REPOREGEX);
     parsed = REPOREGEX.exec(url);
     if (parsed == null) {
       error = {
@@ -4444,18 +4604,25 @@ module.exports = ApplicationRow = (function(_super) {
   }
 
   ApplicationRow.prototype.afterRender = function() {
+    var color, iconNode, slug;
     this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
     if (this.app.get('comment') === 'official application') {
-      return this.$el.addClass('official');
+      this.$el.addClass('official');
+    }
+    slug = this.app.get('slug');
+    color = this.app.get('color');
+    if (this.app.get('icon').indexOf('.svg') !== -1) {
+      if (color == null) {
+        color = ColorHash.getColor(slug, 'cozy');
+      }
+      iconNode = this.$('.app-img img');
+      iconNode.addClass('svg');
+      return iconNode.css('background', color);
     }
   };
 
   ApplicationRow.prototype.onInstallClicked = function() {
-    if (this.marketView.isInstalling()) {
-      return alert(t("application is installing"));
-    } else {
-      return this.marketView.showDescription(this, this.installButton);
-    }
+    return this.marketView.showDescription(this, this.installButton);
   };
 
   return ApplicationRow;
@@ -4878,10 +5045,11 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.getRenderData = function() {
-    var app, appsCollection;
+    var app, appsCollection, comment;
     appsCollection = new ApplicationCollection().fetchFromMarket();
     app = appsCollection.get(this.model.get('slug'));
-    this.model.set('comment', app.get('comment'));
+    comment = app != null ? app.get('comment') : 'community contribution';
+    this.model.set('comment', comment);
     return PopoverDescriptionView.__super__.getRenderData.call(this);
   };
 
@@ -4977,6 +5145,109 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   return PopoverDescriptionView;
+
+})(BaseView);
+});
+
+;require.register("views/tutorial", function(exports, require, module) {
+var BaseView, Tutorial,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+BaseView = require('lib/base_view');
+
+module.exports = Tutorial = (function(_super) {
+  __extends(Tutorial, _super);
+
+  Tutorial.prototype.id = 'tutorial-view';
+
+  Tutorial.prototype.template = require('templates/tutorial');
+
+  Tutorial.prototype.events = {
+    'click #files-yes': 'onYesClicked',
+    'click #files-no': 'onNoClicked',
+    'click #emails-yes': 'onYesClicked',
+    'click #emails-no': 'onNoClicked',
+    'click #contacts-yes': 'onYesClicked',
+    'click #contacts-no': 'onNoClicked',
+    'click #calendar-yes': 'onYesClicked',
+    'click #calendar-no': 'onNoClicked',
+    'click #photos-yes': 'onYesClicked',
+    'click #photos-no': 'onNoClicked'
+  };
+
+  Tutorial.prototype.appList = ['files', 'emails', 'contacts', 'calendar', 'photos'];
+
+  Tutorial.prototype.currentAppIndex = 0;
+
+  Tutorial.prototype.appsToInstall = [];
+
+  function Tutorial(options) {
+    Tutorial.__super__.constructor.call(this);
+    this.processInstall = options.processInstall;
+    this.marketApps = options.marketApps;
+  }
+
+  Tutorial.prototype.reset = function() {
+    this.currentAppIndex = 0;
+    this.appsToInstall = [];
+    return this.render();
+  };
+
+  Tutorial.prototype.afterRender = function() {
+    var app, application, currentApp, _i, _len, _ref, _results;
+    currentApp = this.getCurrentApp();
+    if (currentApp != null) {
+      return this.$("#tuto-" + currentApp).addClass('active');
+    } else {
+      this.$('#end-screen').addClass('active');
+      _ref = this.appsToInstall;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        app = _ref[_i];
+        application = this.marketApps.findWhere({
+          slug: app
+        });
+        _results.push(this.processInstall(application, false));
+      }
+      return _results;
+    }
+  };
+
+  Tutorial.prototype.onYesClicked = function() {
+    this.addCurentToInstallList();
+    return this.goToNextQuestion();
+  };
+
+  Tutorial.prototype.onNoClicked = function() {
+    return this.goToNextQuestion();
+  };
+
+  Tutorial.prototype.goToNextQuestion = function() {
+    var currentApp;
+    currentApp = this.getCurrentApp();
+    this.$("#tuto-" + currentApp).removeClass('active');
+    this.currentAppIndex++;
+    return this.afterRender();
+  };
+
+  Tutorial.prototype.addCurentToInstallList = function() {
+    var alreadyInList, currentApp, relatedToSync;
+    currentApp = this.getCurrentApp();
+    this.appsToInstall.push(currentApp);
+    relatedToSync = currentApp === 'calendar' || currentApp === 'contacts';
+    alreadyInList = __indexOf.call(this.appsToInstall, 'sync') >= 0;
+    if (relatedToSync && !alreadyInList) {
+      return this.appsToInstall.push('sync');
+    }
+  };
+
+  Tutorial.prototype.getCurrentApp = function() {
+    return this.appList[this.currentAppIndex];
+  };
+
+  return Tutorial;
 
 })(BaseView);
 });

@@ -395,6 +395,7 @@ body
         opacity 0.7
 
     .use-widget
+        display none
         z-index 20
         position absolute
         bottom 10px
@@ -433,11 +434,12 @@ body
             display block
             margin 0px auto 2% auto
             text-align center
-            max-width: 100px
-            max-height: 100px
+            max-width 100px
+            max-height 100px
 
-            &.stopped
-                opacity 0.5
+            &.svg
+                border-radius 200px
+                padding 5px
 
         p
             margin: 0
@@ -445,16 +447,16 @@ body
             color textcolor
 
         .app-title
-            // line-height: 20%
             height 20%
             max-height 20px
 
             text-align center
-            font-family: styled
-            text-transform: uppercase
-            font-size: 15px
-            color: darkblue
-            text-decoration: none
+            font-family main
+            text-transform uppercase
+            font-size 15px
+            color darkblue
+            text-decoration none
+            margin-top 12px
 
         .state-label
             font-size: 18px
@@ -733,6 +735,9 @@ body
         padding: 20px 20px 10px 20px
         margin-right: 10px
 
+        img.svg
+            border-radius 200px
+
     .img-btn
         width: 24px
         opacity: 0.3
@@ -999,6 +1004,20 @@ body
 .md-show
     opacity: 1
     visibility: visible
+
+#tutorial-view
+    div.question
+        display none
+        &.active
+            display block
+
+        button
+            padding 10px
+            font-size 16px
+
+    #end-screen
+        ul
+            margin 10px 150px
 
 // Responsive
 

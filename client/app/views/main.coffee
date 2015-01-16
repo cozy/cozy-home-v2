@@ -7,6 +7,7 @@ DeviceCollection = require 'collections/device'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 HelpView = require 'views/help'
+TutorialView = require 'views/tutorial'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
@@ -39,6 +40,11 @@ module.exports = class HomeView extends BaseView
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
+
+        # Re-use the marketView runInstallation function into the tutorial view
+        processInstall = @marketView.runInstallation.bind @marketView
+        marketApps = @marketView.marketApps
+        @tutorialView = new TutorialView {processInstall, marketApps}
 
         $("#content").niceScroll()
         @frames = @$ '#app-frames'
@@ -113,6 +119,11 @@ module.exports = class HomeView extends BaseView
         @displayView @helpView
         window.document.title = t "cozy help title"
 
+    displayTutorial: ->
+        @tutorialView.reset()
+        @displayView @tutorialView
+        window.document.title = t "cozy help title"
+
     displayConfigApplications: =>
         @displayView @configApplications
         window.document.title = t "cozy applications title"
@@ -144,6 +155,10 @@ module.exports = class HomeView extends BaseView
         @resetLayoutSizes()
 
     createApplicationIframe: (slug, hash="") ->
+
+        # prepends '#' only if there is an actual hash
+        hash = "##{hash}" if hash?.length > 0
+
         @frames.append appIframeTemplate(id: slug, hash:hash)
         frame = @$("##{slug}-frame")
         $(frame.prop('contentWindow')).on 'hashchange', =>
