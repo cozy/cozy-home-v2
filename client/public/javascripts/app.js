@@ -1088,6 +1088,7 @@ module.exports = {
   "cozy platform": "Platform",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
+  "error update uninstalled app": "You can't update an application that is not installed.",
   "broken": "broken",
   "start this app": "start this app",
   "stopped": "stopped",
@@ -1114,6 +1115,7 @@ module.exports = {
   "links to resources": "You will find here some links to assistance resources.",
   "The first place to find help is:": "The first place to find help is:",
   "removed": "removed",
+  "removing": "removing",
   "required permissions": "Required Permissions",
   "finish layout edition": "Save",
   "reset customization": "Reset",
@@ -1286,6 +1288,7 @@ module.exports = {
   "reboot stack": "Redémarrer",
   "cozy platform": "Plate-forme",
   "update error": "Une erreur est survenue pendant la mise à jour",
+  "error update uninstalled app": "Vous ne pouvez pas mettre à jour une application non installée.",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
   "retry to install": "nouvel essai d'installation",
@@ -1312,6 +1315,7 @@ module.exports = {
   "links to resources": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
   "The first place to find help is:": "Le premier endroit où trouver de l'aide est :",
   "removed": "supprimée",
+  "removing": "en cours de suppression",
   "required permissions": "Permissions requises",
   "finish layout edition": "Enregistrer",
   "reset customization": "Remise à zéro",
@@ -3221,18 +3225,21 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.openUpdatePopover = function(slug) {
-    var appToUpdateView, cid, view, _ref;
+    var appToUpdateView, cids, i, view;
     appToUpdateView = null;
-    _ref = this.views;
-    for (cid in _ref) {
-      view = _ref[cid];
+    cids = Object.keys(this.views);
+    i = 0;
+    while ((cids[i] != null) && (appToUpdateView == null)) {
+      view = this.views[cids[i]];
       if (view.model.get('slug') === slug) {
         appToUpdateView = view;
-        break;
       }
+      i++;
     }
     if (appToUpdateView != null) {
       return appToUpdateView.openPopover();
+    } else {
+      return alert(t('error update uninstalled app'));
     }
   };
 
@@ -4323,18 +4330,21 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayUpdateApplication = function(slug) {
-    var _this = this;
+    var action, method, timeout;
     this.displayView(this.configApplications);
     window.document.title = t("cozy applications title");
     window.app.routers.main.navigate('config-applications', false);
+    method = this.configApplications.openUpdatePopover;
+    action = method.bind(this.configApplications, slug);
+    timeout = null;
     if (this.apps.length === 0) {
-      return this.listenToOnce(this.apps, 'reset', function() {
-        return _this.configApplications.openUpdatePopover(slug);
+      this.listenToOnce(this.apps, 'reset', function() {
+        clearTimeout(timeout);
+        return action();
       });
+      return timeout = setTimeout(action, 1500);
     } else {
-      return setTimeout(function() {
-        return _this.configApplications.openUpdatePopover(slug);
-      }, 500);
+      return setTimeout(action, 500);
     }
   };
 
@@ -5297,7 +5307,7 @@ module.exports = Tutorial = (function(_super) {
 
   Tutorial.prototype.currentAppIndex = 0;
 
-  Tutorial.prototype.installedApps = [];
+  Tutorial.prototype.installedFromTutorial = [];
 
   function Tutorial(options) {
     Tutorial.__super__.constructor.call(this);
@@ -5307,7 +5317,7 @@ module.exports = Tutorial = (function(_super) {
 
   Tutorial.prototype.reset = function() {
     this.currentAppIndex = 0;
-    this.installedApps = [];
+    this.installedFromTutorial = [];
     return this.render();
   };
 
@@ -5341,15 +5351,15 @@ module.exports = Tutorial = (function(_super) {
   Tutorial.prototype.installApp = function() {
     var alreadyInList, application, currentApp, relatedToSync;
     currentApp = this.getCurrentApp();
-    this.installedApps.push(currentApp);
+    this.installedFromTutorial.push(currentApp);
     application = this.marketApps.findWhere({
       slug: currentApp
     });
     this.processInstall(application, false);
     relatedToSync = currentApp === 'calendar' || currentApp === 'contacts';
-    alreadyInList = __indexOf.call(this.installedApps, 'sync') >= 0;
+    alreadyInList = __indexOf.call(this.installedFromTutorial, 'sync') >= 0;
     if (relatedToSync && !alreadyInList) {
-      this.installedApps.push('sync');
+      this.installedFromTutorial.push('sync');
       application = this.marketApps.findWhere({
         slug: 'sync'
       });
