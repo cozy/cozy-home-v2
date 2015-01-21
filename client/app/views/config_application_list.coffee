@@ -17,10 +17,13 @@ module.exports = class ApplicationsListView extends ViewCollection
 
     openUpdatePopover: (slug) ->
         appToUpdateView = null
-        for cid, view of @views
+        cids = Object.keys @views
+        i = 0
+        while cids[i]? and not appToUpdateView?
+            view = @views[cids[i]]
             if view.model.get('slug') is slug
                 appToUpdateView = view
-                break
+            i++
 
         appToUpdateView.openPopover() if appToUpdateView?
 
