@@ -174,6 +174,7 @@ module.exports =
     "links to resources":"Vous trouverez ici toutes les ressources dont vous avez besoin."
     "The first place to find help is:":"Le premier endroit où trouver de l'aide est :"
     "removed":"supprimée"
+    "removing":"en cours de suppression"
     "required permissions":"Permissions requises"
     "finish layout edition": "Enregistrer"
     "reset customization": "Remise à zéro"
