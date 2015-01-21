@@ -128,6 +128,7 @@ module.exports = class HomeView extends BaseView
         @displayView @configApplications
         window.document.title = t "cozy applications title"
 
+
     displayUpdateApplication: (slug) =>
         @displayView @configApplications
         window.document.title = t "cozy applications title"
@@ -135,15 +136,23 @@ module.exports = class HomeView extends BaseView
 
         # When the route is called on browser loading, it must wait for
         # apps list to be retrieved
+        method = @configApplications.openUpdatePopover
+        action = method.bind @configApplications, slug
+        timeout = null
+
         if @apps.length is 0
-            @listenToOnce @apps, 'reset', =>
-                @configApplications.openUpdatePopover slug
+            @listenToOnce @apps, 'reset', ->
+                # stop the timeout so the action is not executed twice
+                clearTimeout timeout
+                action()
+
+            # if there is no app installed, this timeout will trigger
+            # the action
+            timeout = setTimeout action, 1500
         else
             # wait for 500ms before triggering the popover opening, because
             # the configApplications view is not completely rendered yet (??)
-            setTimeout =>
-                @configApplications.openUpdatePopover slug
-            , 500
+            setTimeout action, 500
 
 
     displayUpdateStack: ->

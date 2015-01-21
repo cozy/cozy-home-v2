@@ -138,6 +138,7 @@ module.exports =
     "reboot stack": "Redémarrer"
     "cozy platform": "Plate-forme"
     "update error":"Une erreur est survenue pendant la mise à jour"
+    "error update uninstalled app": "Vous ne pouvez pas mettre à jour une application non installée."
     "start this app":"démarrer cette application"
     "stopped":"stoppée"
     "retry to install":"nouvel essai d'installation"

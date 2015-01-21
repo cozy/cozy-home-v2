@@ -25,6 +25,9 @@ module.exports = class ApplicationsListView extends ViewCollection
                 appToUpdateView = view
             i++
 
-        appToUpdateView.openPopover() if appToUpdateView?
+        if appToUpdateView?
+            appToUpdateView.openPopover()
+        else
+            alert t('error update uninstalled app')
 
 

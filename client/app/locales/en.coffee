@@ -126,6 +126,7 @@ module.exports =
     "cozy platform": "Platform"
     "reboot stack": "Reboot"
     "update error":"An error occured while updating the application"
+    "error update uninstalled app": "You can't update an application that is not installed."
     "broken":"broken"
     "start this app":"start this app"
     "stopped":"stopped"
