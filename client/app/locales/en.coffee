@@ -122,7 +122,7 @@ module.exports =
     "refresh page": "Wait please, page will refresh in several minutes."
     "update stack modal title": "Update of your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?"
-    "update stack modal confirm": "Mettre à jour"
+    "update stack modal confirm": "Update"
     "cozy platform": "Platform"
     "reboot stack": "Reboot"
     "update error":"An error occured while updating the application"
