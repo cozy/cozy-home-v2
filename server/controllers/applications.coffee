@@ -8,6 +8,7 @@ log = require('printit')
 Application = require '../models/application'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
+market = require '../lib/market'
 autostop = require '../lib/autostop'
 icons = require '../lib/icon'
 
@@ -424,3 +425,16 @@ module.exports =
                         success: true
                         msg: 'Application stopped'
                         app: req.application
+
+    fetchMarket: (req, res, next) ->
+        market.download (err, data) ->
+            if err?
+                res.send
+                    error: true
+                    success: false
+                    message: err
+                , 500
+            else
+                res.send
+                    success:true
+                    apps: data

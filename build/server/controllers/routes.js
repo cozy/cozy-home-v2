@@ -57,6 +57,9 @@ module.exports = {
   'api/applications/update/all': {
     put: applications.updateAll
   },
+  'api/applications/market': {
+    get: applications.fetchMarket
+  },
   'api/applications/stack': {
     get: stackApplications.get
   },
