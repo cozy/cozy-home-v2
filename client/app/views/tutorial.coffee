@@ -25,7 +25,7 @@ module.exports = class Tutorial extends BaseView
     ]
 
     currentAppIndex: 0
-    installedApps: []
+    installedFromTutorial: []
 
     constructor: (options) ->
         super()
@@ -34,7 +34,7 @@ module.exports = class Tutorial extends BaseView
 
     reset: ->
         @currentAppIndex = 0
-        @installedApps = []
+        @installedFromTutorial = []
         @render()
 
     afterRender: ->
@@ -60,16 +60,16 @@ module.exports = class Tutorial extends BaseView
 
     installApp: ->
         currentApp = @getCurrentApp()
-        @installedApps.push currentApp
+        @installedFromTutorial.push currentApp
 
         application = @marketApps.findWhere slug: currentApp
         @processInstall application, false
 
         # Installs Sync if Calendar or Contacts is installed
         relatedToSync = currentApp in ['calendar', 'contacts']
-        alreadyInList = 'sync' in @installedApps
+        alreadyInList = 'sync' in @installedFromTutorial
         if relatedToSync and not alreadyInList
-            @installedApps.push 'sync'
+            @installedFromTutorial.push 'sync'
 
             application = @marketApps.findWhere slug: 'sync'
             @processInstall application, false
