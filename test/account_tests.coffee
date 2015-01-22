@@ -100,6 +100,8 @@ describe 'Modify account success', ->
 
     it 'And user data should be updated', (done) ->
         User.all (err, users) ->
+            should.not.exist err
+            should.exist users
             user = users[0]
             user.email.should.equal 'test@test.fr'
             bcrypt.compare 'password2', user.password,  (err, res) ->
