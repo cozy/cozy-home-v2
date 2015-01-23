@@ -135,9 +135,10 @@ module.exports = ApplicationCollection = (function(_super) {
     if (this.apps.length > 0) {
       return callback(this.reset(this.apps));
     } else {
-      return client.get('api/applications/market', function(err, body) {
-        _this.apps = body.apps;
-        return callback(_this.reset(_this.apps));
+      return client.get('api/applications/market', function(err, apps) {
+        _this.apps = apps;
+        _this.reset(_this.apps);
+        return callback();
       });
     }
   };

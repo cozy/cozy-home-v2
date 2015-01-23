@@ -24,6 +24,7 @@ module.exports = class ApplicationCollection extends BaseCollection
         if @apps.length > 0
             callback @reset(@apps)
         else
-            client.get 'api/applications/market', (err, body) =>
-                @apps = body.apps
-                callback @reset(@apps)
+            client.get 'api/applications/market', (err, apps) =>
+                @apps = apps
+                @reset @apps
+                callback()

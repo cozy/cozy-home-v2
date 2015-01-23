@@ -46,7 +46,7 @@ module.exports = class MarketView extends BaseView
         @listenTo @installedApps, 'reset',  @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps, 'reset',  @onAppListsChanged
-        @marketApps.fetchFromMarket () ->
+        @marketApps.fetchFromMarket ->
 
     onAppListsChanged: =>
         @$(".cozy-app").remove()

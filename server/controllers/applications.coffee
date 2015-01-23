@@ -435,6 +435,4 @@ module.exports =
                     message: err
                 , 500
             else
-                res.send
-                    success:true
-                    apps: data
+                res.send 200, data

@@ -567,10 +567,7 @@ module.exports = {
           message: err
         }, 500);
       } else {
-        return res.send({
-          success: true,
-          apps: data
-        });
+        return res.send(200, data);
       }
     });
   }
