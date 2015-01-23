@@ -24,22 +24,26 @@ initializeApplication = require "#{helpers.prefix}server"
 
 # github mock
 nock = require 'nock'
+nockOptions = allowUnmocked: true
 #nock.recorder.rec()
-nock 'https://raw.github.com'
-.get '/mycozycloud/my-app/master/package.json'
-.reply 200,
-    name: 'my-app'
-    'cozy-displayName': 'My App'
-    'cozy-permissions':
-        'contact': description: 'description'
+nock 'https://raw.github.com', nockOptions
+    .persist()
+    .get '/mycozycloud/my-app/master/package.json'
+    .reply 200,
+        name: 'my-app'
+        'cozy-displayName': 'My App'
+        'cozy-permissions':
+            'contact': description: 'description'
 
-nock 'https://raw.github.com'
-.get '/mycozycloud/my-app2/mybranch/package.json'
-.reply 200,
-    name: 'my-app'
-    'cozy-displayName': 'My App'
-    'cozy-permissions':
-        'contact': description: 'description'
+nock 'https://raw.github.com', nockOptions
+    .persist()
+    .get '/mycozycloud/my-app2/mybranch/package.json'
+    .reply 200,
+        name: 'my-app'
+        'cozy-displayName': 'My App'
+        'cozy-permissions':
+            'contact': description: 'description'
+
 
 # init the compound application
 # will create @app in context
