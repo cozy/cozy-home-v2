@@ -102,6 +102,11 @@ module.exports = class ApplicationRow extends BaseView
 
     onUpdateClicked: (event) =>
         event.preventDefault()
+        @openPopover()
+
+    openPopover: ->
+        @popover.hide() if @popover?
+
         @popover = new PopoverDescriptionView
             model: @model
             label: t 'update'

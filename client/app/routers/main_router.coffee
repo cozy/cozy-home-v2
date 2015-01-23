@@ -10,6 +10,8 @@ module.exports = class MainRouter extends Backbone.Router
         "help": "help"
         "tutorial": "tutorial"
         "logout": "logout"
+        "update/:slug": "updateApp"
+        "update-stack": "updateStack"
         "apps/:slug" : "application"
         "apps/:slug/*hash" : "application"
         "*path": "applicationList"
@@ -47,6 +49,14 @@ module.exports = class MainRouter extends Backbone.Router
 
     configApplications: ->
         app.mainView.displayConfigApplications()
+        @selectIcon 2
+
+    updateApp: (slug) ->
+        app.mainView.displayUpdateApplication slug
+        @selectIcon 2
+
+    updateStack: ->
+        app.mainView.displayUpdateStack()
         @selectIcon 2
 
     help: ->
