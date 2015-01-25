@@ -170,7 +170,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "official application",
         description: "photos description"
       }, {
-        icon: "img/sync-icon.png",
+        icon: "img/apps/sync.svg",
         name: "sync",
         displayName: "Sync",
         slug: "sync",
@@ -227,7 +227,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "konnectors description"
       }, {
-        icon: "img/kresus-icon.png",
+        icon: "img/apps/kresus.svg",
         name: "kresus",
         displayName: "Kresus",
         slug: "kresus",
@@ -267,7 +267,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "pfm description"
       }, {
-        icon: "img/remotestorage-icon.png",
+        icon: "img/apps/remote_storage.svg",
         name: "remotestorage",
         displayName: "Remote Storage",
         slug: "remotestorage",
@@ -292,7 +292,7 @@ module.exports = ApplicationCollection = (function(_super) {
         comment: "community contribution",
         description: "todos description"
       }, {
-        icon: "img/term-icon.png",
+        icon: "img/apps/term.svg",
         name: "term",
         displayName: "Term",
         slug: "term",
