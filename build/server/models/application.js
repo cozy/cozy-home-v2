@@ -54,8 +54,9 @@ Application.prototype.checkForUpdate = function(callback) {
   var manifest, setFlag;
   setFlag = (function(_this) {
     return function() {
-      _this.needsUpdate = true;
-      return _this.save(function(err) {
+      return _this.updateAttributes({
+        needsUpdate: true
+      }, function(err) {
         if (err) {
           return callback(err);
         } else {

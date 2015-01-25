@@ -25,7 +25,7 @@ module.exports = class Tutorial extends BaseView
     ]
 
     currentAppIndex: 0
-    appsToInstall: []
+    installedFromTutorial: []
 
     constructor: (options) ->
         super()
@@ -34,7 +34,7 @@ module.exports = class Tutorial extends BaseView
 
     reset: ->
         @currentAppIndex = 0
-        @appsToInstall = []
+        @installedFromTutorial = []
         @render()
 
     afterRender: ->
@@ -44,13 +44,9 @@ module.exports = class Tutorial extends BaseView
             @$("#tuto-#{currentApp}").addClass 'active'
         else
             @$('#end-screen').addClass 'active'
-            # install all selected applications
-            for app in @appsToInstall
-                application = @marketApps.findWhere slug: app
-                @processInstall application, false
 
     onYesClicked: ->
-        @addCurentToInstallList()
+        @installApp()
         @goToNextQuestion()
 
     onNoClicked: ->
@@ -62,14 +58,20 @@ module.exports = class Tutorial extends BaseView
         @currentAppIndex++
         @afterRender()
 
-    addCurentToInstallList: ->
+    installApp: ->
         currentApp = @getCurrentApp()
-        @appsToInstall.push currentApp
+        @installedFromTutorial.push currentApp
+
+        application = @marketApps.findWhere slug: currentApp
+        @processInstall application, false
 
         # Installs Sync if Calendar or Contacts is installed
         relatedToSync = currentApp in ['calendar', 'contacts']
-        alreadyInList = 'sync' in @appsToInstall
+        alreadyInList = 'sync' in @installedFromTutorial
         if relatedToSync and not alreadyInList
-            @appsToInstall.push 'sync'
+            @installedFromTutorial.push 'sync'
+
+            application = @marketApps.findWhere slug: 'sync'
+            @processInstall application, false
 
     getCurrentApp: -> return @appList[@currentAppIndex]
