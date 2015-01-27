@@ -45,7 +45,8 @@
     "mocha": "1.17.1",
     "nock": "0.29.0",
     "request": "2.34.0",
-    "sinon": "1.12.2"
+    "should": "^4.6.1",
+    "sinon": "^1.12.2"
   },
   "scripts": {
     "test": "cake --use-js tests",
