@@ -25,6 +25,8 @@ module.exports =
     'api/applications/:slug/update': put: applications.update
     'api/applications/update/all': put: applications.updateAll
 
+    'api/applications/market': get: applications.fetchMarket
+
     'api/applications/stack': get: stackApplications.get
     'api/applications/update/stack': put: stackApplications.update
     'api/applications/reboot/stack': put: stackApplications.reboot

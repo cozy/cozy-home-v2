@@ -26,7 +26,8 @@
     "request-json": "0.4.6",
     "rrule": "2.0.1",
     "moment-timezone": "0.2.2",
-    "node-polyglot": "0.4.1"
+    "node-polyglot": "0.4.1",
+    "del": "1.1.1"
   },
   "contributors": [
     "Zoe Bellot",

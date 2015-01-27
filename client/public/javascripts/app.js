@@ -91,13 +91,15 @@
   globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
-var Application, ApplicationCollection, BaseCollection, _ref,
+var Application, ApplicationCollection, BaseCollection, client, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 BaseCollection = require('lib/base_collection');
 
 Application = require('models/application');
+
+client = require('../lib/client');
 
 module.exports = ApplicationCollection = (function(_super) {
   __extends(ApplicationCollection, _super);
@@ -110,6 +112,8 @@ module.exports = ApplicationCollection = (function(_super) {
   ApplicationCollection.prototype.model = Application;
 
   ApplicationCollection.prototype.url = 'api/applications/';
+
+  ApplicationCollection.prototype.apps = [];
 
   ApplicationCollection.prototype.get = function(idorslug) {
     var app, out, _i, _len, _ref1;
@@ -126,182 +130,17 @@ module.exports = ApplicationCollection = (function(_super) {
     }
   };
 
-  ApplicationCollection.prototype.fetchFromMarket = function() {
-    var apps;
-    apps = [
-      {
-        icon: "img/apps/calendar.svg",
-        name: "calendar",
-        displayName: "Calendar",
-        slug: "calendar",
-        git: "https://github.com/cozy/cozy-calendar.git",
-        comment: "official application",
-        description: "calendars description"
-      }, {
-        icon: "img/apps/contacts.svg",
-        name: "contacts",
-        displayName: "Contacts",
-        slug: "contacts",
-        git: "https://github.com/cozy/cozy-contacts.git",
-        comment: "official application",
-        description: "contacts description"
-      }, {
-        icon: "img/apps/emails.svg",
-        name: "emails",
-        displayName: "Emails",
-        slug: "emails",
-        git: "https://github.com/cozy/cozy-emails.git",
-        comment: "official application",
-        description: "emails description"
-      }, {
-        icon: "img/apps/files.svg",
-        name: "files",
-        displayName: "Files",
-        slug: "files",
-        git: "https://github.com/cozy/cozy-files.git",
-        comment: "official application",
-        description: "files description"
-      }, {
-        icon: "img/apps/photos.svg",
-        name: "photos",
-        displayName: "Photos",
-        slug: "photos",
-        git: "https://github.com/cozy/cozy-photos.git",
-        comment: "official application",
-        description: "photos description"
-      }, {
-        icon: "img/apps/sync.svg",
-        name: "sync",
-        displayName: "Sync",
-        slug: "sync",
-        git: "https://github.com/cozy/cozy-sync.git",
-        comment: "official application",
-        description: "sync description"
-      }, {
-        icon: "img/apps/bookmarks.svg",
-        name: "bookmarks",
-        displayName: "Bookmarks",
-        slug: "bookmarks",
-        git: "https://github.com/Piour/cozy-bookmarks.git",
-        comment: "community contribution",
-        description: "bookmark description"
-      }, {
-        icon: "img/apps/cozic.svg",
-        name: "cozic",
-        displayName: "Cozic",
-        slug: "cozic",
-        git: "https://github.com/rdubigny/cozy-music.git",
-        comment: "community contribution",
-        description: "cozic description"
-      }, {
-        icon: "img/apps/databrowser.svg",
-        name: "databrowser",
-        displayName: "Data Browser",
-        slug: "databrowser",
-        git: "https://github.com/n-a-n/cozy-databrowser.git",
-        comment: "community contribution",
-        description: "databrowser description"
-      }, {
-        icon: "img/apps/feeds.svg",
-        name: "feeds",
-        displayName: "Feeds",
-        slug: "feeds",
-        git: "https://github.com/Piour/cozy-feeds.git",
-        comment: "community contribution",
-        description: "feeds description"
-      }, {
-        icon: "img/apps/kyou.svg",
-        name: "kyou",
-        displayName: "KYou",
-        slug: "kyou",
-        git: "https://github.com/frankrousseau/kyou.git",
-        comment: "community contribution",
-        description: "kyou description",
-        website: "http://frankrousseau.github.io/kyou"
-      }, {
-        icon: "img/apps/konnectors.svg",
-        name: "konnectors",
-        displayName: "Konnectors",
-        slug: "konnectors",
-        git: "https://github.com/frankrousseau/konnectors.git",
-        comment: "community contribution",
-        description: "konnectors description"
-      }, {
-        icon: "img/apps/kresus.svg",
-        name: "kresus",
-        displayName: "Kresus",
-        slug: "kresus",
-        git: "https://github.com/bnjbvr/kresus.git",
-        comment: "community contribution",
-        description: "kresus description"
-      }, {
-        icon: "img/apps/nirc.svg",
-        name: "nirc",
-        displayName: "nIRC",
-        slug: "nirc",
-        git: "https://github.com/frankrousseau/cozy-nirc.git",
-        comment: "community contribution",
-        description: "nirc description"
-      }, {
-        icon: "img/apps/notes.svg",
-        name: "notes",
-        displayName: "Note",
-        slug: "notes",
-        git: "https://github.com/cozy/notes.git",
-        comment: "community contribution",
-        description: "notes description"
-      }, {
-        icon: "img/apps/owm.svg",
-        name: "owm",
-        displayName: "OWM",
-        slug: "owm",
-        git: "https://github.com/Piour/piour-cozy-owm.git",
-        comment: "community contribution",
-        description: "owm description"
-      }, {
-        icon: "img/apps/pfm.svg",
-        name: "mes comptes",
-        displayName: "Mes Comptes",
-        slug: "pfm",
-        git: "https://github.com/seeker89/cozy-pfm.git",
-        comment: "community contribution",
-        description: "pfm description"
-      }, {
-        icon: "img/apps/remote_storage.svg",
-        name: "remotestorage",
-        displayName: "Remote Storage",
-        slug: "remotestorage",
-        git: "https://github.com/aenario/cozy-remotestorage.git",
-        comment: "community contribution",
-        description: "remote storage description"
-      }, {
-        icon: "img/apps/tasky.svg",
-        name: "tasky",
-        displayName: "Tasky",
-        slug: "tasky",
-        git: "https://github.com/jsilvestre/tasky.git",
-        comment: "community contribution",
-        description: "tasky description",
-        color: '#1bda4c'
-      }, {
-        icon: "img/apps/todos.svg",
-        name: "todos",
-        displayName: "Todos",
-        slug: "todos",
-        git: "https://github.com/cozy/todos.git",
-        comment: "community contribution",
-        description: "todos description"
-      }, {
-        icon: "img/apps/term.svg",
-        name: "term",
-        displayName: "Term",
-        slug: "term",
-        git: "https://github.com/alpha14/cozy-term.git",
-        comment: "community contribution",
-        description: "term description"
-      }
-    ];
-    return this.reset(apps);
+  ApplicationCollection.prototype.fetchFromMarket = function(callback) {
+    var _this = this;
+    if (this.apps.length > 0) {
+      return callback(this.reset(this.apps));
+    } else {
+      return client.get('api/applications/market', function(err, apps) {
+        _this.apps = apps;
+        _this.reset(_this.apps);
+        return callback();
+      });
+    }
   };
 
   return ApplicationCollection;
@@ -765,6 +604,51 @@ module.exports = BaseView = (function(_super) {
   return BaseView;
 
 })(Backbone.View);
+});
+
+;require.register("lib/client", function(exports, require, module) {
+exports.request = function(type, url, data, callback) {
+  return $.ajax({
+    type: type,
+    url: url,
+    data: data != null ? JSON.stringify(data) : null,
+    contentType: "application/json",
+    dataType: "json",
+    success: function(data) {
+      if (callback != null) {
+        return callback(null, data);
+      }
+    },
+    error: function(data) {
+      var _ref;
+      if ((_ref = data.status) === 200 || _ref === 201 || _ref === 204 || _ref === 304) {
+        if (callback != null) {
+          return callback(null, data);
+        }
+      } else if ((data != null) && (data.msg != null) && (callback != null)) {
+        return callback(new Error(data.msg));
+      } else if (callback != null) {
+        return callback(new Error("Server error occured"));
+      }
+    }
+  });
+};
+
+exports.get = function(url, callbacks) {
+  return exports.request("GET", url, null, callbacks);
+};
+
+exports.post = function(url, data, callbacks) {
+  return exports.request("POST", url, data, callbacks);
+};
+
+exports.put = function(url, data, callbacks) {
+  return exports.request("PUT", url, data, callbacks);
+};
+
+exports.del = function(url, callbacks) {
+  return exports.request("DELETE", url, null, callbacks);
+};
 });
 
 ;require.register("lib/request", function(exports, require, module) {
@@ -2059,7 +1943,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
+require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2073,7 +1957,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
+require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2117,7 +2001,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
+require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2128,7 +2012,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
+require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2170,7 +2054,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
+require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2188,7 +2072,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
+require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2199,7 +2083,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
+require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2229,7 +2113,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
+require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2246,7 +2130,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
+require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2327,7 +2211,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application", function(exports, require, module) {
+require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2342,7 +2226,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application_widget", function(exports, require, module) {
+require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2356,7 +2240,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/layout", function(exports, require, module) {
+require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2389,7 +2273,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
+require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2413,7 +2297,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
+require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2442,7 +2326,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
+require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2456,7 +2340,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
+require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2468,7 +2352,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
+require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2483,7 +2367,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2499,7 +2383,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
+require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2511,7 +2395,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
+require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2529,7 +2413,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
+require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2559,7 +2443,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
+require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2592,7 +2476,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/tutorial", function(exports, require, module) {
+require.register("templates/tutorial", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2667,7 +2551,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/update_stack_modal", function(exports, require, module) {
+require.register("templates/update_stack_modal", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2694,7 +2578,7 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
+require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -4504,7 +4388,7 @@ module.exports = MarketView = (function(_super) {
     this.listenTo(this.installedApps, 'reset', this.onAppListsChanged);
     this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
     this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
-    return this.marketApps.fetchFromMarket();
+    return this.marketApps.fetchFromMarket(function() {});
   };
 
   MarketView.prototype.onAppListsChanged = function() {
@@ -5125,7 +5009,7 @@ module.exports = NotificationsView = (function(_super) {
 });
 
 ;require.register("views/popover_description", function(exports, require, module) {
-var ApplicationCollection, BaseView, PopoverDescriptionView, request, _ref,
+var ApplicationCollection, BaseView, PopoverDescriptionView, collection, request, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -5135,6 +5019,8 @@ BaseView = require('lib/base_view');
 request = require('lib/request');
 
 ApplicationCollection = require('../collections/application');
+
+collection = new ApplicationCollection();
 
 module.exports = PopoverDescriptionView = (function(_super) {
   __extends(PopoverDescriptionView, _super);
@@ -5171,11 +5057,13 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.getRenderData = function() {
-    var app, appsCollection, comment;
-    appsCollection = new ApplicationCollection().fetchFromMarket();
-    app = appsCollection.get(this.model.get('slug'));
-    comment = app != null ? app.get('comment') : 'community contribution';
-    this.model.set('comment', comment);
+    var _this = this;
+    collection.fetchFromMarket(function(appsCollection) {
+      var app, comment;
+      app = appsCollection.get(_this.model.get('slug'));
+      comment = app != null ? app.get('comment') : 'community contribution';
+      return _this.model.set('comment', comment);
+    });
     return PopoverDescriptionView.__super__.getRenderData.call(this);
   };
 
