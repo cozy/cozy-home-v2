@@ -45,8 +45,6 @@ StackApplication.prototype.checkForUpdate = function(callback) {
           return setFlag(repoVersion);
         } else if (_this.version !== repoVersion) {
           return setFlag(repoVersion);
-        } else if (_this.lastVersion !== repoVersion) {
-          return setFlag(repoVersion);
         } else {
           return callback(null, false);
         }
