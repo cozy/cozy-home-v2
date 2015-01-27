@@ -1687,6 +1687,9 @@ body {
 .cozy-app .app-img img.svg {
   -webkit-border-radius: 200px;
   border-radius: 200px;
+  padding: 10px;
+  width: 140px;
+  height: 140px;
 }
 #market-view #no-app-message .img-btn,
 .cozy-app .img-btn {
