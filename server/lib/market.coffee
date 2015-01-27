@@ -6,9 +6,24 @@ fs = require 'fs'
 del = require('del')
 apps = []
 
+# sort the applications list by official/community status, then by name
+comparator = (a, b) ->
+    if a.comment is 'official application' \
+    and b.comment isnt 'official application'
+        return -1
+    else if a.comment isnt 'official application' \
+    and b.comment is 'official application'
+        return 1
+    else if a.name > b.name
+        return 1
+    else if a.name < b.name
+        return -1
+    else
+        return 0
+
 module.exports.download = (callback) ->
     if apps.length > 0
-        # Market are already downloaded
+        # Market is already downloaded
         callback null, apps
     else
         if process.env.MARKET?
@@ -37,4 +52,6 @@ module.exports.download = (callback) ->
                         catch
                             # Coffeescript
                             apps.push require "../../market/apps/#{file}"
+
+                    apps.sort comparator
                     callback err, apps

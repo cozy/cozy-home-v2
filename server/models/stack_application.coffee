@@ -44,7 +44,5 @@ StackApplication::checkForUpdate = (callback) ->
                 setFlag repoVersion
             else if @version isnt repoVersion
                 setFlag repoVersion
-            else if @lastVersion isnt repoVersion
-                setFlag repoVersion
             else
                 callback null, false

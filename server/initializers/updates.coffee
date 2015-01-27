@@ -33,21 +33,29 @@ checkUpdate = (app, callback) ->
 createAppUpdateNotification = (notifier, app) ->
     messageKey = 'update available notification'
     message = localization.t messageKey, appName: app.name
-    notifier.createTemporary
+    notificationSlug = "home_update_notification_app_#{app.name}"
+    notifier.createOrUpdatePersistent notificationSlug,
+        app: 'konnectors'
         text: message
         resource:
             app: 'home'
             url: "update/#{app.slug}"
+    , (err) ->
+        log.error err if err?
 
 
 createStackUpdateNotification = (notifier) ->
     messageKey = 'stack update available notification'
     message = localization.t messageKey
-    notifier.createTemporary
+    notificationSlug = "home_update_notification_stack"
+    notifier.createOrUpdatePersistent notificationSlug,
+        app: 'konnectors'
         text: message
         resource:
             app: 'home'
             url: "update-stack"
+    , (err) ->
+        log.error err if err?
 
 
 # Check if a new version of an application is available for each of application
@@ -65,7 +73,6 @@ checkUpdates = ->
             log.raw err
         else
             {applications, stackApplications} = results
-
             # Creates an update notification for each app that has a new version
             # available.
             async.filterSeries applications, checkUpdate, (appsToUpdate) ->

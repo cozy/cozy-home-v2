@@ -35,29 +35,41 @@ checkUpdate = function(app, callback) {
 };
 
 createAppUpdateNotification = function(notifier, app) {
-  var message, messageKey;
+  var message, messageKey, notificationSlug;
   messageKey = 'update available notification';
   message = localization.t(messageKey, {
     appName: app.name
   });
-  return notifier.createTemporary({
+  notificationSlug = "home_update_notification_app_" + app.name;
+  return notifier.createOrUpdatePersistent(notificationSlug, {
+    app: 'konnectors',
     text: message,
     resource: {
       app: 'home',
       url: "update/" + app.slug
     }
+  }, function(err) {
+    if (err != null) {
+      return log.error(err);
+    }
   });
 };
 
 createStackUpdateNotification = function(notifier) {
-  var message, messageKey;
+  var message, messageKey, notificationSlug;
   messageKey = 'stack update available notification';
   message = localization.t(messageKey);
-  return notifier.createTemporary({
+  notificationSlug = "home_update_notification_stack";
+  return notifier.createOrUpdatePersistent(notificationSlug, {
+    app: 'konnectors',
     text: message,
     resource: {
       app: 'home',
       url: "update-stack"
+    }
+  }, function(err) {
+    if (err != null) {
+      return log.error(err);
     }
   });
 };
