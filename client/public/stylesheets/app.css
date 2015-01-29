@@ -1680,16 +1680,16 @@ body {
   box-sizing: border-box;
   width: 180px;
   height: 180px;
-  padding: 20px 20px 10px 20px;
+  padding: 25px 20px 10px 20px;
   margin-right: 10px;
 }
 #market-view #no-app-message .app-img img.svg,
 .cozy-app .app-img img.svg {
   -webkit-border-radius: 200px;
   border-radius: 200px;
-  padding: 10px;
-  width: 140px;
-  height: 140px;
+  padding: 15px;
+  width: 130px;
+  height: 130px;
 }
 #market-view #no-app-message .img-btn,
 .cozy-app .img-btn {
