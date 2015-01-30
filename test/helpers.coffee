@@ -105,6 +105,9 @@ helpers.createApp = (name, slug, index, state) -> (callback) ->
         state: state
         index: index
         slug: slug
+        password: slug
+        permissions:
+            Event: description: 'access the events'
 
     app.save callback
 
