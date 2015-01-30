@@ -975,42 +975,43 @@ body {
   height: 48px;
   padding: 0;
 }
-.navbar img {
-  width: 32px;
-  margin-left: 15px;
-  margin-top: 8px;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  transition: all 0.3s;
-}
 .navbar span {
   margin: 0;
 }
-.navbar a {
+.logo {
+  margin: 6px 0 0 15px;
+  font-family: styled;
+  font-weight: 400;
+  font-size: 0.8em;
   color: #fff;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+  -ms-transition: opacity 0.3s;
+  transition: opacity 0.3s;
 }
-.navbar a:hover {
-  color: #000;
-  margin: 0;
-  padding: 0;
-}
-.navbar a:hover img {
+.logo:hover {
+  color: #fff;
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
-.navbar #logout-button {
+.logo img {
+  width: 32px;
+}
+.logo span {
+  vertical-align: super;
+}
+#logout-button {
   margin-right: 10px;
 }
-.navbar #logout-button span {
+#logout-button span {
   display: none;
 }
-.navbar #logout-button:hover span {
+#logout-button:hover span {
   display: none;
 }
 /* content */
