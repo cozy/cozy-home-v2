@@ -72,36 +72,40 @@ body
     height: 48px
     padding: 0
 
-    img
-        width: 32px
-        margin-left: 15px
-        margin-top: 8px
-        opacity: 0.5
-        transition: all 0.3s
-
     span
         margin: 0
 
-    a
-        color: white
 
-    a:hover
-        color: black
-        margin: 0
-        padding: 0
+.logo
+    margin 6px 0 0 15px
 
-        img
-            opacity: 1
+    font-family styled
+    font-weight 400
+    font-size .8em
+
+    color white
+    opacity .5
+    transition opacity .3s
+
+    &:hover
+        color white
+        opacity 1
+
+    img
+        width 32px
+
+    span
+        vertical-align super
 
 
-    #logout-button
-        margin-right: 10px
-        span
-            display: none
+#logout-button
+    margin-right: 10px
+    span
+        display: none
 
-    #logout-button:hover
-        span
-            display: none
+#logout-button:hover
+    span
+        display: none
 
 /* content */
 
@@ -1317,4 +1321,3 @@ span.app
 button.btn
     margin-bottom: 4px
     margin-right: 4px
-
