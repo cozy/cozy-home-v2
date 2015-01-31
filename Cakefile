@@ -52,11 +52,11 @@ task 'tests', "Run tests #{taskDetails}", (opts) ->
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err?
-            logger.error "Running mocha caught exception:\n#{err}"
-            setTimeout (-> process.exit 1), 100
-        else if stderr?
-            logger.error "Errors output to stderr during tests:\n#{stderr}"
-            setTimeout (-> process.exit 1), 100
+            console.log "Running mocha caught exception:\n#{err}"
+            process.exit 1
+        else if stderr?.length > 0
+            console.log "Errors output to stderr during tests:\n#{stderr}"
+            process.exit 1
         else
             console.log "Tests succeeded!"
             process.exit 0
