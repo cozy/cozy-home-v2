@@ -7,13 +7,12 @@ process.on('uncaughtException', function(err) {
 });
 
 application = module.exports = function(callback) {
-  var americano, autoStop, initProxy, localization, options, request, setupChecking, setupRealtime, versionChecking;
+  var americano, autoStop, initProxy, localization, options, request, setupRealtime, versionChecking;
   americano = require('americano');
   request = require('request-json');
   localization = require('./server/lib/localization_manager');
   initProxy = require('./server/initializers/proxy');
   setupRealtime = require('./server/initializers/realtime');
-  setupChecking = require('./server/initializers/checking');
   versionChecking = require('./server/initializers/updates');
   autoStop = require('./server/lib/autostop');
   options = {
@@ -29,7 +28,6 @@ application = module.exports = function(callback) {
     }
     return localization.initialize(function() {
       return setupRealtime(app, function() {
-        setupChecking();
         versionChecking();
         autoStop.init();
         if (callback != null) {
