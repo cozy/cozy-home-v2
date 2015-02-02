@@ -72,36 +72,44 @@ body
     height: 48px
     padding: 0
 
-    img
-        width: 32px
-        margin-left: 15px
-        margin-top: 8px
-        opacity: 0.5
-        transition: all 0.3s
-
     span
         margin: 0
 
-    a
-        color: white
-
-    a:hover
-        color: black
-        margin: 0
-        padding: 0
-
-        img
-            opacity: 1
+    img
+        height 28px
+        vertical-align: middle
 
 
-    #logout-button
-        margin-right: 10px
-        span
-            display: none
+.logo
+    margin 7px 15px
 
-    #logout-button:hover
-        span
-            display: none
+    font-family styled
+    font-weight 400
+    font-size .8em
+
+    color white
+    opacity .5
+    transition opacity .3s
+
+    &:hover
+        color white
+        opacity 1
+
+    span
+        vertical-align super
+
+
+#logout-button
+    margin-right: 15px
+    height: 45px
+    line-height 45px
+
+    span
+        display: none
+
+#logout-button:hover
+    span
+        display: none
 
 /* content */
 
@@ -201,17 +209,11 @@ body
     width: 60px
     cursor: pointer
     margin-left: 10px
-    margin-top: 0
-    padding-top: 0
-    padding-left: 5px
-    padding-right: 10px
+    margin: 0
+    padding: 0 10px
     transition: all 0.3s
     position: relative
     transition: all 0.3s
-
-    img
-        padding: 0
-        margin: 0
 
     #notifications-counter
         height 20px
@@ -267,6 +269,7 @@ body
 #notifications-container
     position: relative
     padding: 0
+    margin-right: 15px
 
     a
         width: 20px
@@ -1317,4 +1320,3 @@ span.app
 button.btn
     margin-bottom: 4px
     margin-right: 4px
-

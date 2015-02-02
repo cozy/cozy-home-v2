@@ -975,42 +975,46 @@ body {
   height: 48px;
   padding: 0;
 }
-.navbar img {
-  width: 32px;
-  margin-left: 15px;
-  margin-top: 8px;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  transition: all 0.3s;
-}
 .navbar span {
   margin: 0;
 }
-.navbar a {
+.navbar img {
+  height: 28px;
+  vertical-align: middle;
+}
+.logo {
+  margin: 7px 15px;
+  font-family: styled;
+  font-weight: 400;
+  font-size: 0.8em;
   color: #fff;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+  -ms-transition: opacity 0.3s;
+  transition: opacity 0.3s;
 }
-.navbar a:hover {
-  color: #000;
-  margin: 0;
-  padding: 0;
-}
-.navbar a:hover img {
+.logo:hover {
+  color: #fff;
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
-.navbar #logout-button {
-  margin-right: 10px;
+.logo span {
+  vertical-align: super;
 }
-.navbar #logout-button span {
+#logout-button {
+  margin-right: 15px;
+  height: 45px;
+  line-height: 45px;
+}
+#logout-button span {
   display: none;
 }
-.navbar #logout-button:hover span {
+#logout-button:hover span {
   display: none;
 }
 /* content */
@@ -1112,10 +1116,8 @@ body {
   width: 60px;
   cursor: pointer;
   margin-left: 10px;
-  margin-top: 0;
-  padding-top: 0;
-  padding-left: 5px;
-  padding-right: 10px;
+  margin: 0;
+  padding: 0 10px;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1127,10 +1129,6 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
-}
-#notifications-toggle img {
-  padding: 0;
-  margin: 0;
 }
 #notifications-toggle #notifications-counter {
   height: 20px;
@@ -1192,6 +1190,7 @@ body {
 #notifications-container {
   position: relative;
   padding: 0;
+  margin-right: 15px;
 }
 #notifications-container a {
   width: 20px;
