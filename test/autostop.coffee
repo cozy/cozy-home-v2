@@ -486,12 +486,13 @@ describe "Auto-stop manager", ->
             @sandbox.clock.tick 2 * minute
             @sandbox.clock.restore()
 
+        it "Then after a while", (done) ->
+            @timeout 4500
+            setTimeout done, 4000
+
         it "Then the application should be stopped", (done) ->
-            @timeout 6000
-            setTimeout ->
-                Application.all key: 'test-app', (err, apps) ->
-                    should.not.exist err
-                    should.exist apps
-                    apps[0].state.should.equal 'stopped'
-                    done()
-            , 5000
+            Application.all key: 'test-app', (err, apps) ->
+                should.not.exist err
+                should.exist apps
+                apps[0].state.should.equal 'stopped'
+                done()
