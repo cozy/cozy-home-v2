@@ -8,7 +8,6 @@ application = module.exports = (callback) ->
     localization = require './server/lib/localization_manager'
     initProxy = require './server/initializers/proxy'
     setupRealtime = require './server/initializers/realtime'
-    setupChecking = require './server/initializers/checking'
     versionChecking = require './server/initializers/updates'
     autoStop = require './server/lib/autostop'
 
@@ -26,7 +25,6 @@ application = module.exports = (callback) ->
 
         localization.initialize ->
             setupRealtime app, ->
-                setupChecking()
                 versionChecking()
                 autoStop.init()
                 callback app, server if callback?

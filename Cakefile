@@ -45,14 +45,17 @@ task 'tests', "Run tests #{taskDetails}", (opts) ->
 
     env = if options['env'] then "NODE_ENV=#{options.env}" else "NODE_ENV=test"
     env += " USE_JS=true" if options['use-js']? and options['use-js']
+    env += " NAME=home TOKEN=token"
     logger.info "Running tests with #{env}..."
     command = "#{env} mocha " + files.join(" ") + " --reporter spec --colors "
     command += "--compilers coffee:coffee-script/register"
     exec command, (err, stdout, stderr) ->
         console.log stdout
-        if err or stderr
-            console.log stderr
-            console.log "Running mocha caught exception:\n" + err
+        if err?
+            console.log "Running mocha caught exception:\n#{err}"
+            setTimeout (-> process.exit 1), 100
+        else if stderr?.length > 0
+            console.log "Errors output to stderr during tests:\n#{stderr}"
             setTimeout (-> process.exit 1), 100
         else
             console.log "Tests succeeded!"
