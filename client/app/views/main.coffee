@@ -181,7 +181,14 @@ module.exports = class HomeView extends BaseView
         @content.hide()
 
         frame = @$("##{slug}-frame")
-        frame = @createApplicationIframe(slug, hash) if frame.length is 0
+        if frame.length is 0
+            frame = @createApplicationIframe(slug, hash)
+
+        # if the app was already open, we want to change its hash
+        # only if there is a hash in the home given url.
+        else if hash
+            frame.prop('contentWindow').location.hash = hash
+
         @$('#app-frames').find('iframe').hide()
         frame.show()
 

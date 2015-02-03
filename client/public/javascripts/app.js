@@ -4256,6 +4256,8 @@ module.exports = HomeView = (function(_super) {
     frame = this.$("#" + slug + "-frame");
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
+    } else if (hash) {
+      frame.prop('contentWindow').location.hash = hash;
     }
     this.$('#app-frames').find('iframe').hide();
     frame.show();
