@@ -8,6 +8,7 @@ module.exports = class MainRouter extends Backbone.Router
         "account": "account"
         "help": "help"
         "home/install": "installWizard"
+        "home/quicktour": "quickTourWizard"
         "logout": "logout"
         "update/:slug": "updateApp"
         "update-stack": "updateStack"
@@ -75,6 +76,9 @@ module.exports = class MainRouter extends Backbone.Router
 
     installWizard: ->
         app.mainView.displayInstallWizard()
+
+    quickTourWizard: ->
+        app.mainView.displayQuickTourWizard()
 
     logout: ->
         app.mainView.logout()

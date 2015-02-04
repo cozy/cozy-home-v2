@@ -10,6 +10,7 @@ module.exports = class WizardView extends BaseView
     bindStepsEvents: ->
         events =
             'click .next': 'next'
+            'click .close': 'close'
 
         for step in @steps
             continue unless step.choices?

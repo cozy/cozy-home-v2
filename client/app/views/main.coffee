@@ -8,6 +8,7 @@ NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 HelpView = require 'views/help'
 InstallWizardView = require 'views/install_wizard'
+QuickTourWizardView = require 'views/quick_tour_wizard'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
@@ -115,13 +116,18 @@ module.exports = class HomeView extends BaseView
         window.document.title = t "cozy help title"
 
     displayInstallWizard: ->
-        console.debug 'installwizard'
-        if @installWizardView?
-            @installWizardView.dispose()
+        @installWizardView.dispose() if @installWizardView?
 
-        @installWizardView = new InstallWizardView(market: @marketView);
+        @installWizardView = new InstallWizardView market: @marketView
         @$el.append @installWizardView.render().$el
         @installWizardView.show()
+
+    displayQuickTourWizard: ->
+        @quickTourWizardView.dispose() if @quickTourWizardView?
+
+        @quickTourWizardView = new QuickTourWizardView()
+        @$el.append @quickTourWizardView.render().$el
+        @quickTourWizardView.show()
 
     displayConfigApplications: =>
         @displayView @configApplications
