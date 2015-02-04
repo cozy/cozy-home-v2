@@ -6,8 +6,6 @@ module.exports = class WizardView extends BaseView
 
     template: require './templates/wizard'
 
-    steps: []
-
 
     bindStepsEvents: ->
         events =
@@ -22,8 +20,14 @@ module.exports = class WizardView extends BaseView
 
     initialize: ->
         super
+        @steps = [] unless @steps?
         @isDialogEnabled = !!@el.showModal
         @bindStepsEvents()
+
+
+    dispose: ->
+        @undelegateEvents()
+        @remove()
 
 
     getRenderData: ->
@@ -31,6 +35,7 @@ module.exports = class WizardView extends BaseView
 
 
     show: ->
+        console.debug 'show'
         @currentIndex = @$el.find('.progress [aria-selected=true]').index()
         @progress()
 

@@ -115,9 +115,12 @@ module.exports = class HomeView extends BaseView
         window.document.title = t "cozy help title"
 
     displayInstallWizard: ->
-        unless @installWizardView?
-            @installWizardView = new InstallWizardView(market: @marketView);
-            @$el.append @installWizardView.render().$el
+        console.debug 'installwizard'
+        if @installWizardView?
+            @installWizardView.dispose()
+
+        @installWizardView = new InstallWizardView(market: @marketView);
+        @$el.append @installWizardView.render().$el
         @installWizardView.show()
 
     displayConfigApplications: =>

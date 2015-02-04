@@ -2,10 +2,11 @@ WizardView = require 'lib/wizard_view'
 
 module.exports = class InstallWizardView extends WizardView
 
-    installedApps: []
-
     initialize: (options) ->
         @marketView = options.market if options.market?
+
+        @steps = []
+        @installedApps = []
 
         @steps.push slug: 'welcome'
         for slug in ['files', 'emails', 'contacts', 'calendar', 'photos']
@@ -23,6 +24,10 @@ module.exports = class InstallWizardView extends WizardView
 
         super
 
+
+    close: ->
+        super
+        window.app.routers.main.navigate 'home'
 
     installApp: (app) ->
         application = @marketView.marketApps.findWhere slug: app
