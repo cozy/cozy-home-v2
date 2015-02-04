@@ -74,10 +74,15 @@ module.exports =
     "ask for assistance":"Ask for assistance"
     "logout":"logout"
     "welcome to your cozy":"Welcome to your Cozy!"
-    "you have no apps":"You have no application installed. You should"
-    "follow wizard": "follow the step-by-step guide"
-    "skip wizard": "You can also directly "
-    "configure":"configure "
+    "you have no apps":"You have no application installed."
+    'first steps': """
+        You can <a href="%{wizard}">use our wizard</a> to help you to install and configure your apps,
+        or you can take a <a href="%{quicktour}">quick tour</a> to discover your Cozy features.
+    """
+    'customize your cozy': """
+        You can also <a href="%{account}">go to your settings</a> to customize your Cozy
+        or <a href="%{appstore}">take a look at the App Store</a> to install your first app.
+    """
     "app management":"App management"
     "app store":"App store"
     "configuration":"Configuration"
@@ -149,7 +154,6 @@ module.exports =
     "menu description":"""If it's your first time on Cozy here is a little guide
     about all section available in your Cozy Home. All of them can be reached
     from the menu located on the top right corner."""
-    "install your first app":"your Cozy then install your first application via the&nbsp;"
     "where you reach applications":"It is the place from where you can reach your applications"
     "There you can manage the state of your applications: start it, stop it, remove it...":"There you can manage the state of your applications: start it, stop it, remove it..."
     "app store contains applications":"In the app store, you will find new applications to install on your Cozy."
@@ -256,4 +260,3 @@ module.exports =
     "tutorial doc contacts link": "Synchronize my contacts"
     "tutorial doc calendar link": "Synchronize my calendars"
     "tutorial final button": "I want to use my Cozy now"
-

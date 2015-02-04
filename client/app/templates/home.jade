@@ -4,49 +4,13 @@
     a.btn.btn-large(href="#home")= t('finish layout edition')
 
 #no-app-message.w600
+    .darkbg#start-title.clearfix
+        a(href="http://cozy.io")
+            img.logo(src="img/happycloud.png")
+        p.biggest= t('welcome to your cozy')
+        
+    p.bigger!= t('you have no apps')
+    p.bigger!= t('first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
+    p.bigger!= t('customize your cozy', {account: '#account', appstore: '#applications'})
 
-  .darkbg#start-title.clearfix
-    a(href="http://cozy.io")
-        img.logo(src="img/happycloud.png")
-    p.biggest= t('welcome to your cozy')
-  .line
-    p.bigger.pa2= t('you have no apps') + ' '
-        a(href="#tutorial")= t('follow wizard') + '. '
-        | #{t('skip wizard')}
-        a(href="#account")= t('configure')
-        = ' ' + t ('install your first app')
-        a(href="#applications")= t('app store')
-        |.
-
-    h4.pa2= t ('dashboard')
-    p
-        =t ('menu description')
-    p
-        img(src="/img/home-black.png")
-        strong= t('home') + ': '
-        = t('where you reach applications')
-    p
-        img(src="/img/config-apps.png")
-        strong=t('app management') + ': '
-        = t('There you can manage the state of your applications: start it, stop it, remove it...')
-    p
-        img(src="/img/apps.png")
-        strong= t('app store') + ': '
-        = t('app store contains applications')
-    p
-        img(src="/img/configuration.png")
-        strong=t('configuration') + ': '
-        = t('set cozy parameters here')
-    p
-        img(src="/img/help.png")
-        strong=t('assistance') + ': '
-        = t('links to resources')
-
-    h4.pa2= t ('synchronization')
-    p
-        !=t ('synchronization description')
-    p
-        !=t ('caldav cardav with davdroid')
-    p
-        !=t ('files with cozy on android')
 #app-list.gridster

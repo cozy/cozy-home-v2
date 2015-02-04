@@ -74,10 +74,15 @@ module.exports =
     "ask for assistance":"Demandez de l'aide"
     "logout":"déconnexion"
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
-    "you have no apps":"Vous n'avez pas encore d'applications, vous devriez"
-    "follow wizard": "suivre le guide pas à pas"
-    "skip wizard": "Vous pouvez aussi directement "
-    "configure":"configurer "
+    "you have no apps":"Vous n'avez aucune application installée."
+    'first steps': """
+        Vous pouvez <a href="%{wizard}">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,
+        ou vous pouvez ouvrir <a href="%{quicktour}">les "premiers pas"</a> pour découvrir les fonctionnalités de votre Cozy.
+    """
+    'customize your cozy': """
+        Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
+        ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
+    """
     "app store":"Applithèque"
     "configuration":"Configuration"
     "assistance":"Aide"
@@ -165,7 +170,6 @@ module.exports =
     dans la suite un petit guide décrivant les sections de votre Cozy. Elles
     peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.
     """
-    "install your first app":"votre Cozy puis installer votre première application via l'"
     "where you reach applications":"C'est ici que vous pouvez accéder à toutes vos applications."
     "app management":"Gestion des applications"
     "There you can manage the state of your applications: start it, stop it, remove it...":"Ici vous pouvez gérer l'état de vos applications : les lancer, les interrompre, les supprimer…"

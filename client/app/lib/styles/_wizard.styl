@@ -1,0 +1,131 @@
+dialog
+    display none
+
+    position absolute
+    z-index 5
+    top 50%
+    left 50%
+    transform translateX(-50%) translateY(-50%)
+
+    min-width 60vw
+    margin 0
+    padding 0
+
+    border 1px solid darkblue
+    box-shadow 0 0 5px darkblue
+    background-color orangewhite
+
+
+dialog[open]
+    display block
+
+    & + .backdrop
+    &::backdrop
+        position absolute
+        z-index 4
+        top 0
+        left 0
+        right 0
+        bottom 0
+
+        background-color rgba(255, 255, 255, .65)
+
+
+.wizard
+    top calc(50% + 24px) // Header nav height (48px) div 2
+
+    &[open]
+        display flex
+        flex-direction column
+        justify-content
+
+    [aria-hidden=true]
+        display none
+
+
+    section
+        min-height 30vh
+
+
+    footer
+        padding 1em 0
+
+
+    // we prefer use `ol` as progress element directly rather than wrap it in a
+    // div, but due to inconsistent renders between FF and Chome w/ pseudo-el
+    // and flex spacing, we fix the bug like this.
+    .progress
+        position relative
+
+        &::before
+        &::after
+            content ''
+            position absolute
+            top 50%
+            left 21%
+            right: 21%
+            display block
+            height 4px
+            margin-top -2px
+        &::before
+            background-color lightgrey - 10%
+        &::after
+            background-color orange
+
+        for percent in (0..100)
+            &.adv-{percent}::after
+                // `after` covers 60% at max (from left: 20% to right: 20%)
+                right ((100 - percent) * .58 + 21) * 1%
+
+        ol
+            list-style-type none
+
+            display flex
+            justify-content space-between
+            margin 0 20%
+            padding 0
+
+        li
+            position relative
+            z-index 1
+            text-indent -9999em
+            width .8em
+            height .8em
+            border-radius 50%
+            background-color lightgrey - 10%
+
+        [aria-selected=true]
+            background-color blue
+
+        .past
+            background-color orange
+
+
+    header
+        padding .65em 1.5em
+        background-color darkblue
+        color white
+
+    h1
+        font-family styled
+
+    section
+        font-family main
+
+        p
+            padding 1em 1.5em
+
+        footer
+            text-align center
+
+    button
+        margin: 0 1em
+        padding .45em .85em
+        border none
+        border-radius 5px
+        background-color blue
+        color white
+        font 1em main
+
+        &.yes
+            background-color orange

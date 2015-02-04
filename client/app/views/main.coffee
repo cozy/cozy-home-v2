@@ -8,6 +8,7 @@ NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 HelpView = require 'views/help'
 TutorialView = require 'views/tutorial'
+InstallWizardView = require 'views/install_wizard'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
@@ -40,11 +41,6 @@ module.exports = class HomeView extends BaseView
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
-
-        # Re-use the marketView runInstallation function into the tutorial view
-        processInstall = @marketView.runInstallation.bind @marketView
-        marketApps = @marketView.marketApps
-        @tutorialView = new TutorialView {processInstall, marketApps}
 
         $("#content").niceScroll()
         @frames = @$ '#app-frames'
@@ -119,10 +115,11 @@ module.exports = class HomeView extends BaseView
         @displayView @helpView
         window.document.title = t "cozy help title"
 
-    displayTutorial: ->
-        @tutorialView.reset()
-        @displayView @tutorialView
-        window.document.title = t "cozy help title"
+    displayInstallWizard: ->
+        unless @installWizardView?
+            @installWizardView = new InstallWizardView(market: @marketView);
+            @$el.append @installWizardView.render().$el
+        @installWizardView.show()
 
     displayConfigApplications: =>
         @displayView @configApplications
