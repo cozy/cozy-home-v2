@@ -36,7 +36,6 @@ module.exports = class WizardView extends BaseView
 
 
     show: ->
-        console.debug 'show'
         @currentIndex = @$el.find('.progress [aria-selected=true]').index()
         @progress()
 

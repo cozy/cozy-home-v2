@@ -20,14 +20,16 @@ module.exports = class InstallWizardView extends WizardView
             beforeShow: @resumeInstalls
             choices:
                 'go-to-my-cozy': 'close'
-                'show-me-a-quick-tour': 'quicktour'
+                'show-me-a-quick-tour': _.partial @close, 'home/quicktour'
 
         super
 
 
-    close: ->
+    close: (url) ->
         super
-        window.app.routers.main.navigate 'home'
+        url = 'home' unless typeof url is 'string'
+        window.app.routers.main.navigate url, trigger: true
+
 
     installApp: (app) ->
         application = @marketView.marketApps.findWhere slug: app
