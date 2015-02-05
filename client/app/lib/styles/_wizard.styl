@@ -2,7 +2,7 @@ dialog
     display none
 
     position absolute
-    z-index 5
+    z-index 100
     top 50%
     left 50%
     transform translateX(-50%) translateY(-50%)
@@ -10,9 +10,11 @@ dialog
     min-width 60vw
     margin 0
     padding 0
+    @media (max-width: 640px)
+        min-width 90vw
 
     border 1px solid darkblue
-    box-shadow 0 0 5px darkblue
+    box-shadow 0 0 5px alpha(orangewhite, .55)
     background-color orangewhite
 
 
@@ -22,7 +24,7 @@ dialog[open]
     & + .backdrop
     &::backdrop
         position absolute
-        z-index 4
+        z-index 99
         top 0
         left 0
         right 0
@@ -32,7 +34,8 @@ dialog[open]
 
 
 .wizard
-    top calc(50% + 24px) // Header nav height (48px) div 2
+    @media (min-width: 501px)
+        top calc(50% + 24px) // Header nav height (48px) div 2
 
     &[open]
         display flex
