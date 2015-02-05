@@ -2,11 +2,18 @@ WizardView = require 'lib/wizard_view'
 
 module.exports = class QuickTourWizardView extends WizardView
 
+    context: 'quicktourwizard'
+
+
     initialize: () ->
         @steps = [
             slug: 'welcome'
         ,
             slug: 'dashboard'
+        ,
+            slug: 'apps'
+        ,
+            slug: 'help'
         ,
             slug: 'sync'
         ]

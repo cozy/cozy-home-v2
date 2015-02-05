@@ -2,6 +2,8 @@ WizardView = require 'lib/wizard_view'
 
 module.exports = class InstallWizardView extends WizardView
 
+    context: 'installwizard'
+
     initialize: (options) ->
         @marketView = options.market if options.market?
 

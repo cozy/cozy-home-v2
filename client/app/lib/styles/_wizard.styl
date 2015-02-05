@@ -8,6 +8,7 @@ dialog
     transform translateX(-50%) translateY(-50%)
 
     min-width 60vw
+    max-height 90vh
     margin 0
     padding 0
     @media (max-width: 640px)
@@ -48,6 +49,11 @@ dialog[open]
 
     section
         min-height 30vh
+        display flex
+        flex-direction column
+
+        .content
+            overflow auto
 
 
     footer
@@ -116,14 +122,19 @@ dialog[open]
         font-family main
 
         p
-            padding 1em 1.5em
+            margin 0
+            padding 0 1.5em 1em
+
+            &:first-child
+                padding-top 1em
 
         footer
             text-align center
+            padding-bottom 0
 
     button
         float: none !important
-        margin: 0 1em
+        margin: 0 1em 1em
         padding .45em .85em
         border none
         border-radius 5px

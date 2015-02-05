@@ -166,17 +166,6 @@ module.exports =
     "no specific permissions needed":"""
         Cette application n'a pas besoin d'informations spécifiques
     """
-    "menu description":"""Si c'est votre première fois sur Cozy, vous trouverez
-    dans la suite un petit guide décrivant les sections de votre Cozy. Elles
-    peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.
-    """
-    "where you reach applications":"C'est ici que vous pouvez accéder à toutes vos applications."
-    "app management":"Gestion des applications"
-    "There you can manage the state of your applications: start it, stop it, remove it...":"Ici vous pouvez gérer l'état de vos applications : les lancer, les interrompre, les supprimer…"
-    "app store contains applications":"Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy."
-    "set cozy parameters here":"Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section."
-    "links to resources":"Vous trouverez ici toutes les ressources dont vous avez besoin."
-    "The first place to find help is:":"Le premier endroit où trouver de l'aide est :"
     "removed":"supprimée"
     "removing":"en cours de suppression"
     "required permissions":"Permissions requises"
@@ -199,30 +188,7 @@ module.exports =
     "revoke device confirmation message": "Cette action empêchera l'appareil associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 
     "dashboard": "Tableau de bord"
-    "synchronization": "Synchronisation"
-    "synchronization description": """
-        Cozy vous permet de synchroniser vos fichiers, contact et calendriers
-        avec vos périphériques. Pour lancer la synchronisation, vous devez installer
-        des applications spécifiques.
-    """
-    "caldav cardav with davdroid": """
-        Pour vos contacts et vos événements, nous vous recommandons
-        l'application
-        <a href="http://davdroid.bitfire.at/what-is-davdroid">DAVDroid</a>
-        de Bitfire. Une fois que vous aurez
-        installé l'application Sync sur votre Cozy, vous pourrez
-        configurer DAVDroid pour qu'il synchronise vos contacts et
-        calendriers. Ceux ci seront ensuite gérables via les
-        applications natives du téléphone.
-    """
-    "files with cozy on android": """
-        Pour accéder à vos fichiers depuis votre mobile nous vous proposons
-        l'application <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">Cozy</a>
-        disponible sur la place de marché Play Store pour Android. Une fois
-        que vous l'aurez installée, suivez simplement les
-        instructions.  Vous pourrez ensuite naviguer dans vos fichiers
-        depuis votre mobile.
-    """
+
     "calendars description": "Gérez vos événements et synchronisez-les avec votre mobile."
     "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile."
     "emails description": "Lisez, envoyez et sauvegardez vos emails."
@@ -251,26 +217,75 @@ module.exports =
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
 
-    "tutorial title": "Assistant à l'installation d'applications"
-    "tutorial no": "Non"
-    "tutorial yes": "Oui"
-    "tutorial question files": """Souhaitez-vous gérer vos fichiers et les
-    synchroniser sur vos différents périphériques,
-    comme avec Dropbox, Drive ou iCloud ?
-    """
-    "tutorial question emails": """Souhaitez-vous écrire et consulter vos emails,
-    comme avec Gmail, Outlook ou Yahoo ?"""
-    "tutorial question calendar": """Souhaitez-vous gérer vos agendas et les
-    synchroniser avec vos autres périphériques ?"""
-    "tutorial question contacts": """Souhaitez-vous gérer vos contacts et les
-    synchroniser avec vos autres périphériques ?"""
-    "tutorial question photos": """Souhaitez-vous gérer créer des albums photos
-    pour les partager avec votre famille et vos amis ?"""
-    "tutorial final headline": """Veuillez patienter pendant que Cozy installe
-    les applications que vous avez choisi. En attendant, vous pouvez terminer
-    la configuration de la plateforme, ou consulter les guides d'utilisation :
-    """
-    "tutorial doc files link": "Synchroniser mes fichiers avec mon mobile ou ma tablette"
-    "tutorial doc contacts link": "Synchroniser mes contacts"
-    "tutorial doc calendar link": "Synchroniser mes agendas"
-    "tutorial final button": "Je souhaite utiliser mon Cozy maintenant"
+    'installwizard':
+        'welcome title': "Bienvenue dans votre Cozy"
+        'welcome content': """
+            <p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>
+            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>
+        """
+        'yes': "Activer l'application %{slug}"
+        'no': "Non, merci"
+        'continue to files': "Configurer mes applicatons"
+        'files title': "Configurer l'application Files"
+        'files content': """
+            <p>Souhaitez-vous utiliser l'application fichiers qui vous permet de stocker fichiers et dossiers et d'avoir accès à tous vos documents, n'importe où ?</p>
+        """
+        'emails title': "Configurer l'application Emails"
+        'emails content': """
+            <p>Souhaitez-vous activer le webmail qui vous permet de connecter vos différentes boites mails dans une messagerie unifiée ?</p>
+        """
+        'contacts title': "Configurer l'application Contacts"
+        'contacts content': """
+            <p>Souhaitez-vous activer l'application contacts qui vous permet de gérer votre carnet d'adresses ?</p>
+            <p><small>L'installation de cette application provoquera également l'installation de l'application sync qui vous permet de synchroniser vos données avec votre smartphone et / ou votre ordinateur.</small></p>
+        """
+        'calendar title': "Configurer l'application Calendar"
+        'calendar content': """
+            <p>Souhaitez-vous activer l'application calendrier qui vous permet de gérer votre agenda ?</p>
+            <p><small>L'installation de cette application provoquera également l'installation de l'application sync qui vous permet de synchroniser vos données avec votre smartphone et / ou votre ordinateur.</small></p>
+        """
+        'photos title': "Configurer l'application Photos"
+        'photos content': """
+            <p>Souhaitez-vous installer l'application photos qui vous permet de stocker vos images et albums et de les partager avec vos proches ?</p>
+            <p><small>Si vous utilisez un smartphone Android, vous pouvez installer notre application sur votre smartphone pour télécharger vos photos directement depuis votre téléphone.</small></p>
+        """
+        'thanks title': "Et voilà !"
+        'thanks content': """
+            <p>Félicitations ! Vous venez de configurer votre Cozy en y installant les applications suivantes :</p>
+        """
+        'go-to-my-cozy': "Je suis prêt à utiliser mon Cozy"
+        'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
+
+    'quicktourwizard':
+        'welcome title': "Découvrez votre Cozy !"
+        'welcome content': """
+            <p>Bienvenue sur votre nouveau Cozy.</p>
+            <p>Ce tour rapide vous présentera les fonctionnalités de votre Cozy.</p>
+            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>
+        """
+        'continue to dashboard': "Découvrez le Tableau de bord"
+        'dashboard title': "Découvrez le Tableau de bord"
+        'dashboard content': """
+            <p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>
+            <p><img src="/img/home-black.png"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>
+        """
+        'continue to apps': "Comment gérer mes applications ?"
+        'apps title': "Gérer mes applications"
+        'apps content': """
+            <p><img src="/img/config-apps.png"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>
+            <p><img src="/img/apps.png"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>
+        """
+        'continue to help': "Comment trouver de l'aide ?"
+        'help title': "Obtenir de l'aide"
+        'help content': """
+            <p><img src="/img/configuration.png"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>
+            <p><img src="/img/help.png"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>
+        """
+        'continue to sync': "Synchronisez vos données"
+        'sync title': "Synchronisation"
+        'sync content': """
+            <p>Cozy vous permet de synchroniser vos fichiers, contact et calendriers avec vos périphériques. Pour lancer la synchronisation, vous devez installer des applications spécifiques.</p>
+            <p>Pour vos contacts et vos événements, nous vous recommandons l'application <a href="http://davdroid.bitfire.at/what-is-davdroid">DAVDroid</a> de Bitfire. Une fois que vous aurez installé l'application Sync sur votre Cozy, vous pourrez configurer DAVDroid pour qu'il synchronise vos contacts et calendriers. Ceux ci seront ensuite gérables via les applications natives du téléphone.</p>
+            <p>Pour accéder à vos fichiers depuis votre mobile nous vous proposons l'application <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">Cozy</a> disponible sur la place de marché Play Store pour Android. Une fois que vous l'aurez installée, suivez simplement les instructions. Vous pourrez ensuite naviguer dans vos fichiers depuis votre mobile.</p>
+        """
+        'close wizard': "Je suis prêt à utiliser mon Cozy"

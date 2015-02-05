@@ -5,6 +5,7 @@ module.exports = class WizardView extends BaseView
     className: 'wizard'
 
     template: require './templates/wizard'
+    context: 'wizard'
 
 
     bindStepsEvents: ->
@@ -32,6 +33,7 @@ module.exports = class WizardView extends BaseView
 
 
     getRenderData: ->
+        context: @context
         steps: @steps
 
 
