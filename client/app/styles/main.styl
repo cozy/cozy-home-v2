@@ -78,6 +78,7 @@ body
     img
         height 28px
         vertical-align: middle
+        margin 0
 
 
 .logo
@@ -96,6 +97,7 @@ body
         opacity 1
 
     span
+        display inline-block !important    // make the beta flag always visible
         vertical-align super
 
 
@@ -216,18 +218,19 @@ body
     transition: all 0.3s
 
     #notifications-counter
+        position absolute
+        top 3px
+        right 0
+
         height 20px
-        top 5px
-        right 2px
-        line-height 20px
-        padding 0 3px
+        width 20px
+        border-radius 50%
+        line-height 17px
+        font-size 15px
+
         text-align center
-        border none
         background #d9534f
         color #fff
-        position absolute
-        font-size 15px
-        border-radius 10px
         border 2px solid #363a46
 
         &:empty
