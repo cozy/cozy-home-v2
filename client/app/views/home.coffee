@@ -45,12 +45,12 @@ module.exports = class ApplicationsListView extends ViewCollection
             @view.enable() for cid, view of @views
 
     checkIfEmpty: ->
-        displayHelp = @apps.size() is 0 and not @isLoading
-        @$("#no-app-message").toggle displayHelp
-        # and app.mainView.marketView.installedApps is 0
+        noapps = @apps.size() is 0 and not @isLoading
+        @$("#no-app-message").toggle noapps
+        if noapps
+            window.app.routers.main.navigate 'home/install', trigger: true
 
     computeGridDims: () ->
-        # = $('#home-content').width()
         width = $(window).width()
         if width > 640 then width = width - 100
         else width = width - 65
