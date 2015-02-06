@@ -286,8 +286,11 @@ module.exports =
         'continue to sync': "Synchronisez vos données"
         'sync title': "Synchronisation"
         'sync content': """
-            <p>Cozy vous permet de synchroniser vos fichiers, contact et calendriers avec vos périphériques. Pour lancer la synchronisation, vous devez installer des applications spécifiques.</p>
-            <p>Pour vos contacts et vos événements, nous vous recommandons l'application <a href="http://davdroid.bitfire.at/what-is-davdroid">DAVDroid</a> de Bitfire. Une fois que vous aurez installé l'application Sync sur votre Cozy, vous pourrez configurer DAVDroid pour qu'il synchronise vos contacts et calendriers. Ceux ci seront ensuite gérables via les applications natives du téléphone.</p>
-            <p>Pour accéder à vos fichiers depuis votre mobile nous vous proposons l'application <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">Cozy</a> disponible sur la place de marché Play Store pour Android. Une fois que vous l'aurez installée, suivez simplement les instructions. Vous pourrez ensuite naviguer dans vos fichiers depuis votre mobile.</p>
+            <p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>
+            <ul>
+                <li><a href="http://cozy.io/mobile/files.html">Sync Fichiers</a></li>
+                <li><a href="http://cozy.io/mobile/calendar.html">Sync Calendrier</a></li>
+                <li><a href="http://cozy.io/mobile/contacts.html">Sync Contacts</a></li>
+            </ul>
         """
         'close wizard': "Je suis prêt à utiliser mon Cozy"
