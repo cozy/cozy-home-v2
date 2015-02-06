@@ -76,9 +76,11 @@ module.exports = class MainRouter extends Backbone.Router
 
     installWizard: ->
         app.mainView.displayInstallWizard()
+        @selectIcon 0 # no highlighted button
 
     quickTourWizard: ->
         app.mainView.displayQuickTourWizard()
+        @selectIcon 0 # no highlighted button
 
     logout: ->
         app.mainView.logout()

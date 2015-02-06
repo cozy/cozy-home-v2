@@ -45,12 +45,13 @@ module.exports = class WizardView extends BaseView
             @el.showModal()
         else
             @el.setAttribute 'open', true
-            document.addEventListener 'keyup', @close
+            document.addEventListener 'keydown', @close
             @$backdrop = $('<div/>', {'class': 'backdrop'}).insertAfter @$el
 
 
     close: (event) =>
         return if event.keyCode? and event.keyCode isnt 27
+        event.preventDefault?()
 
         @el.removeAttribute 'open'
         document.removeEventListener 'keyup', @close

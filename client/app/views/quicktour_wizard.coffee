@@ -1,6 +1,6 @@
 WizardView = require 'lib/wizard_view'
 
-module.exports = class QuickTourWizardView extends WizardView
+module.exports = class QuicktourWizardView extends WizardView
 
     context: 'quicktourwizard'
 
