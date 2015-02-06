@@ -7,12 +7,12 @@ dialog
     left 50%
     transform translateX(-50%) translateY(-50%)
 
-    min-width 60vw
-    max-height 90vh
+    width 60vw
+    height auto
     margin 0
     padding 0
     @media (max-width: 640px)
-        min-width 90vw
+        width 90vw
 
     border 1px solid darkblue
     box-shadow 0 0 5px alpha(orangewhite, .55)
@@ -48,15 +48,22 @@ dialog[open]
 
 
     section
-        min-height 30vh
+        max-height 70vh
         display flex
         flex-direction column
+        flex 2 auto
 
         .content
             overflow auto
+            flex 2 auto
+
+        header
+        footer
+            flex 1 auto
 
 
     footer
+        flex 1 auto
         padding 1em 0
 
 
@@ -128,6 +135,9 @@ dialog[open]
             &:first-child
                 padding-top 1em
 
+        ul
+            padding 0 1.5em 1em 4em
+
         footer
             text-align center
             padding-bottom 0
@@ -138,9 +148,20 @@ dialog[open]
         padding .45em .85em
         border none
         border-radius 5px
+        font 1em main
+        cursor: pointer
+
         background-color blue
         color white
-        font 1em main
 
-        &.yes
+        &:focus
+        &:hover
             background-color orange
+
+        &.action.no
+            background-color transparent
+            color blue
+
+            &:focus
+            &:hover
+                color orange

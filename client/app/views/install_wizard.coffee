@@ -53,4 +53,4 @@ module.exports = class InstallWizardView extends WizardView
         $appsList = $ '<ul/>'
         for app in @installedApps
             $('<li/>', text: app).appendTo $appsList
-        @$("section:last footer").before $appsList
+        @$("section:last .content").append $appsList
