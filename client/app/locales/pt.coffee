@@ -74,8 +74,7 @@ module.exports =
     "ask for assistance":"Pede assistência"
     "logout":"sair"
     "welcome to your cozy":"Ben vindo ao teu Cozy!"
-    "you have no apps":"Não tens aplicações instaladas. Devias"
-    "configure":"configurar "
+    "you have no apps":"Não tens aplicações instaladas"
     "app management":"Gestão de aplicações"
     "app store":"Loja de aplicações"
     "configuration":"Configuração"
@@ -134,16 +133,6 @@ module.exports =
     """
     "confirm update": "confirmar actualização"
     "no specific permissions needed":"Esta aplicação necssita de permissões especificas"
-    "menu description":"""Se esta é a tua primeira vez no Cozy aqui tens um pequeno guia
-    sobre todas as secções disponiveis. Todas elas podem ser escolhidas
-    no menu localizado no teu lado superior direito."""
-    "install your first app":"o teu Cozy, e depois instala a tua primeira aplicação na&nbsp;"
-    "where you reach applications":"è o local onde podes escolher as aplicações"
-    "There you can manage the state of your applications: start it, stop it, remove it...":"Ali podes gerar o estado das tuas aplicações: iniciar, parar ou remover..."
-    "app store contains applications":"Na Loja de Aplicações podes econtrar aplicações para o teu Cozy."
-    "set cozy parameters here":"Para funcionar bem o teu Cozy precisa de vários parámetros. Coloca-os nesta seccção."
-    "links to resources":"Encontrarás aqui alguns links para recursos de ajuda."
-    "The first place to find help is:":"O primeiro local para encontrares ajuda é:"
     "removed":"removido"
     "required permissions":"Permissões necessárias:"
     "finish layout edition": "Guardar"
@@ -167,3 +156,89 @@ module.exports =
     "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
+
+    'noapps':
+        'first steps': """
+            You can <a href="%{wizard}">use our wizard</a> to help you to install and configure your apps,
+            or you can take a <a href="%{quicktour}">quick tour</a> to discover your Cozy features.
+        """
+        'customize your cozy': """
+            You can also <a href="%{account}">go to your settings</a> to customize your Cozy
+            or <a href="%{appstore}">take a look at the App Store</a> to install your first app.
+        """
+
+    'installwizard':
+        'welcome title': "Welcome to your new Cozy"
+        'welcome content': """
+            <p>This wizard will help you to choose, install and configure your apps in your Cozy.</p>
+            <p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href="#help">keep in touch with us</a> if you expect some issues.</p>
+        """
+        'yes': "Activate this %{slug} app"
+        'no': "No, thanks"
+        'continue to files': "Configure my apps"
+        'files title': "Configure Files app"
+        'files content': """
+            <p>Do you want a files application that stores for you files and folder, so your documents are available anywhere?</p>
+        """
+        'emails title': "Configure Emails app"
+        'emails content': """
+            <p>Do you want a webmail that can connects to your email(s) provider(s), so you can access a private, unified mailbox everywhere?</p>
+        """
+        'contacts title': "Configure Contacts app"
+        'contacts content': """
+            <p>Do you want a contacts application that will manage your addressbook to keep instant access to your friends?</p>
+            <p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>
+        """
+        'calendar title': "Configure Calendar app"
+        'calendar content': """
+            <p>Do you want a calendar application that will tracks your upcoming events?</p>
+            <p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>
+        """
+        'photos title': "Configure Photos app"
+        'photos content': """
+            <p>Do you want a photos app that stores your pictures in albums and allows you to share them with others?</p>
+            <p><small>Tip: if you use an Android smartphone, you can use our app to upload your photos to the app directly from you phone.</small></p>
+        """
+        'thanks title': "It's done!"
+        'thanks content': """
+            <p>That's all! You've just configured your cozy with the following apps:</p>
+        """
+        'go-to-my-cozy': "I'm ready to use my Cozy"
+        'show-me-a-quick-tour': "Please tell me more about my Cozy"
+
+    'quicktourwizard':
+        'welcome title': "Meet your Cozy!"
+        'welcome content': """
+            <p>Welcome to your brand new Cozy</p>
+            <p>This quick steps tour will presents to you some features about your Cozy.</p>
+            <p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href="#help">keep in touch with us</a> if you expect some issues.</p>
+        """
+        'continue to dashboard': "Discover the Dashboard"
+        'dashboard title': "Discover the Dashboard"
+        'dashboard content': """
+            <p>Here is a little guide about all section available in your Cozy Home. All of them can be reached from the menu located on the top right corner.</p>
+            <p><img src="/img/home-black.png"><strong>Home: </strong>It is the place from where you can reach your applications</p>
+        """
+        'continue to apps': "How to manage your apps?"
+        'apps title': "Manage your apps"
+        'apps content': """
+            <p><img src="/img/config-apps.png"><strong>App management: </strong>There you can manage the state of your applications: start it, stop it, remove it…</p>
+            <p><img src="/img/apps.png"><strong>App store: </strong>In the app store, you will find new applications to install on your Cozy.</p>
+        """
+        'continue to help': "How to get assistance?"
+        'help title': "Get help"
+        'help content': """
+            <p><img src="/img/configuration.png"><strong>Configuration: </strong>To work properly your Cozy requires several parameters. Set them in this section.</p>
+            <p><img src="/img/help.png"><strong>Assistance: </strong>You will find here some links to assistance resources.</p>
+        """
+        'continue to sync': "Sync with your smartphone"
+        'sync title': "Get in Sync"
+        'sync content': """
+            <p>To get more information about syncing, you can take a look at the following resources:</p>
+            <ul>
+                <li><a href="http://cozy.io/mobile/files.html">Sync Fichiers</a></li>
+                <li><a href="http://cozy.io/mobile/calendar.html">Sync Calendrier</a></li>
+                <li><a href="http://cozy.io/mobile/contacts.html">Sync Contacts</a></li>
+            </ul>
+        """
+        'close wizard': "Now I'm ready to use my Cozy"

@@ -1,0 +1,24 @@
+each step, index in steps
+    section(id="#{step.slug}-wizard-tabpanel"
+            role="tabpanel"
+            aria-labelledby="#{step.slug}-wizard-tabpanel"
+            aria-hidden="#{index !== 0? 'true':'false'}")
+        header
+            h1= t(context + '.' + step.slug + " title")
+        div.content!= t(context + '.' + step.slug + " content")
+        footer
+            if step.choices
+                each action, label in step.choices
+                    button.action(id="#{step.slug}-#{label}"
+                                  class="#{label}")= t(context + '.' + label, step)
+            else if index === (steps.length - 1)
+                button.close= t(context + '.' + "close wizard")
+            else
+                button.next= t(context + '.' + "continue to " + steps[index + 1].slug)
+
+footer: div.progress.adv-0: ol
+    each step, index in steps
+        li(id="#{step.slug}-wizard-tab"
+           aria-selected="#{index === 0? 'true':'false'}"
+           role='tab'
+           aria-controls='#{step.slug}-wizard-tabpanel')= step.slug

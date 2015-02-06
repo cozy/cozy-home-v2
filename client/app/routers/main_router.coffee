@@ -1,6 +1,5 @@
 module.exports = class MainRouter extends Backbone.Router
 
-
     routes :
         "home": "applicationList"
         "customize": "applicationListEdit"
@@ -8,7 +7,8 @@ module.exports = class MainRouter extends Backbone.Router
         "config-applications": "configApplications"
         "account": "account"
         "help": "help"
-        "tutorial": "tutorial"
+        "home/install": "installWizard"
+        "home/quicktour": "quickTourWizard"
         "logout": "logout"
         "update/:slug": "updateApp"
         "update-stack": "updateStack"
@@ -74,10 +74,13 @@ module.exports = class MainRouter extends Backbone.Router
     application: (slug, hash) ->
         app.mainView.displayApplication slug, hash
 
-    tutorial: ->
-        app.mainView.displayTutorial()
+    installWizard: ->
+        app.mainView.displayInstallWizard()
+        @selectIcon 0 # no highlighted button
+
+    quickTourWizard: ->
+        app.mainView.displayQuickTourWizard()
+        @selectIcon 0 # no highlighted button
 
     logout: ->
         app.mainView.logout()
-
-
