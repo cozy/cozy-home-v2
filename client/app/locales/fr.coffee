@@ -75,14 +75,6 @@ module.exports =
     "logout":"déconnexion"
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
     "you have no apps":"Vous n'avez aucune application installée."
-    'first steps': """
-        Vous pouvez <a href="%{wizard}">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,
-        ou vous pouvez ouvrir <a href="%{quicktour}">les "premiers pas"</a> pour découvrir les fonctionnalités de votre Cozy.
-    """
-    'customize your cozy': """
-        Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
-        ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
-    """
     "app store":"Applithèque"
     "configuration":"Configuration"
     "assistance":"Aide"
@@ -216,6 +208,16 @@ module.exports =
     "installation message failure": "Échec de l'installation de %{appName}."
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
+
+    'noapps':
+        'first steps': """
+        Vous pouvez <a href="%{wizard}">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,
+        ou vous pouvez ouvrir <a href="%{quicktour}">les "premiers pas"</a> pour découvrir les fonctionnalités de votre Cozy.
+        """
+        'customize your cozy': """
+            Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
+            ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
+        """
 
     'installwizard':
         'welcome title': "Bienvenue dans votre Cozy"

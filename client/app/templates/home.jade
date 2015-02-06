@@ -8,9 +8,9 @@
         a(href="http://cozy.io")
             img.logo(src="img/happycloud.png")
         p.biggest= t('welcome to your cozy')
-        
+
     p.bigger!= t('you have no apps')
-    p.bigger!= t('first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
-    p.bigger!= t('customize your cozy', {account: '#account', appstore: '#applications'})
+    p.bigger!= t('noapps.first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
+    p.bigger!= t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 
 #app-list.gridster
