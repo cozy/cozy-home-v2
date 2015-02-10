@@ -2740,7 +2740,8 @@ body {
     margin-bottom: -5px;
   }
   .application .application-inner .app-title {
-    font-size: 0.8em;
+    margin-top: 4px;
+    font-size: 12px;
   }
   #market-view #your-app .btn {
     height: 30px;
