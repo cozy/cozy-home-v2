@@ -235,7 +235,7 @@ module.exports = class HomeView extends BaseView
     resetLayoutSizes: =>
         @frames.height $(window).height() - 50
 
-        if $(window).width() > 500
+        if $(window).width() > 640
             @content.height $(window).height() - 48
         else
             @content.height $(window).height()
