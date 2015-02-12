@@ -176,7 +176,7 @@ module.exports = class ApplicationRow extends BaseView
 
     launchApp: (e) =>
         # if ctrl or middle click or small device
-        if e.which is 2 or e.ctrlKey or e.metaKey or $(window).width() <= 500
+        if e.which is 2 or e.ctrlKey or e.metaKey or $(window).width() <= 640
             window.open "apps/#{@model.id}/", "_blank"
         else if e.which is 1 # left click
             window.app.routers.main.navigate "apps/#{@model.id}/", true
