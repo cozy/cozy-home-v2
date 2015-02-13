@@ -2540,11 +2540,9 @@ body {
   margin: 10px 150px;
 }
 @media (max-width: 850px) {
-  #header span,
   #market-view span {
     display: none;
   }
-  #header #notificaction-counter,
   #market-view #notificaction-counter {
     display: inline;
   }
@@ -2624,7 +2622,6 @@ body {
   }
   #market-view .app-img img {
     margin: 0;
-    width: 100px;
   }
   #market-view h3 {
     margin-bottom: 10px;
@@ -2643,7 +2640,7 @@ body {
   }
   #market-view .cozy-app {
     width: 100%;
-    height: 150px;
+    height: 180px;
   }
   #notifications .notification a.doaction {
     width: 300px;
@@ -2688,8 +2685,20 @@ body {
   }
 }
 @media (max-width: 640px) {
-  #account-view input {
-    max-width: 215px;
+  header#header {
+    display: none;
+  }
+  div.home-body {
+    padding-top: 0;
+    height: 100%;
+  }
+  #account-view p {
+    margin: 10px 0;
+  }
+  #account-view input,
+  #account-view select {
+    width: 100%;
+    font-size: 16px;
   }
   #home-content {
     padding: 5px 60px 5px 5px;
@@ -2722,15 +2731,8 @@ body {
   }
 }
 @media (max-width: 500px) {
-  header#header {
-    display: none;
-  }
-  div.home-body {
-    padding-top: 0;
-    height: 100%;
-  }
   #home-menu .logout-menu-icon {
-    display: inline;
+    display: block;
   }
   .customize-icon,
   .help-icon {
@@ -2750,7 +2752,7 @@ body {
     font-size: 16px;
   }
   #market-view .cozy-app {
-    height: 200px;
+    height: auto;
     margin-top: 10px;
   }
   #market-view .app-text {
@@ -2760,12 +2762,13 @@ body {
     display: block;
     padding: 0;
     width: 100%;
-    height: 60px;
+    height: 120px;
     text-align: left;
   }
   #market-view .app-img img {
-    margin: 0;
-    width: 50px;
+    margin: 10px 0 0 10px;
+    width: 100px;
+    height: 100px;
   }
   #notifications-container {
     display: none;
