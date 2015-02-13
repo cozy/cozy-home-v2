@@ -130,6 +130,7 @@ module.exports = class ApplicationsListView extends ViewCollection
             widget_margins: [@grid_margin, @grid_margin]
             widget_base_dimensions: [@grid_size, @grid_size]
 
+
     appendView: (view) ->
         pos = view.model.getHomePosition @colsNb
         pos ?= col: 0, row: 0, sizex: 1, sizey: 1 # default

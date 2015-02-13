@@ -106,7 +106,7 @@ module.exports = class MarketView extends BaseView
         @$el.append @popover.$el
         @popover.show()
 
-        if $(window).width() <= 500
+        if $(window).width() <= 640
             @appList.hide()
 
 
