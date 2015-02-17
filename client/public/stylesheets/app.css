@@ -705,14 +705,6 @@ source https://github.com/stubbornella/oocss/blob/master/core/spacing/space.css
     right: -5px;
     top: -5px;
 }
-@font-face {
-  font-family: styled;
-  src: url("/fonts/maven-pro-light-200.otf");
-}
-@font-face {
-  font-family: main;
-  src: url("/fonts/source-sans-pro.ttf");
-}
 html {
   height: 100%;
   padding: 0;
@@ -728,7 +720,7 @@ body {
   box-sizing: border-box;
   min-width: 320px;
   color: #000;
-  font-family: styled;
+  font-family: 'Maven Pro', sans-serif;
   font-size: 18px;
 }
 a {
@@ -750,7 +742,7 @@ iframe {
 input,
 select {
   background: #fff;
-  font-family: styled;
+  font-family: 'Maven Pro', sans-serif;
   text-align: center;
   font-size: 30px;
   height: 60px;
@@ -823,7 +815,7 @@ select:focus {
   background: #15a7c7;
   border: 1px #11869f;
   margin: 0;
-  font-family: main;
+  font-family: 'Source Sans Pro', sans-serif;
   color: #fff;
   padding: 5px;
   -webkit-border-radius: 4px;
@@ -861,7 +853,7 @@ select:focus {
   display: none;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  font-family: styled;
+  font-family: 'Maven Pro', sans-serif;
   font-size: 20px;
   padding: 20px;
   color: #fff;
@@ -875,7 +867,7 @@ select:focus {
 .light-btn {
   background: transparent;
   margin: 0;
-  font-family: main;
+  font-family: 'Source Sans Pro', sans-serif;
   color: #15a7c7;
   padding: 5px;
   margin-right: 5px;
@@ -1502,8 +1494,8 @@ body {
 }
 .logo {
   margin: 7px 15px;
-  font-family: styled;
-  font-weight: 400;
+  font-family: 'Maven Pro', sans-serif;
+  font-weight: normal;
   font-size: 0.8em;
   color: #fff;
   opacity: 0.5;
@@ -1903,14 +1895,14 @@ body {
 }
 .application .application-inner p {
   margin: 0;
-  font-family: main;
+  font-family: 'Source Sans Pro', sans-serif;
   color: textcolor;
 }
 .application .application-inner .app-title {
   height: 20%;
   max-height: 20px;
   text-align: center;
-  font-family: main;
+  font-family: 'Source Sans Pro', sans-serif;
   text-transform: uppercase;
   font-size: 15px;
   color: #363a46;
@@ -2246,7 +2238,7 @@ body {
 }
 .title-app a.subtitle {
   display: inline-block;
-  font-family: styled;
+  font-family: 'Maven Pro', sans-serif;
   font-size: 15px;
 }
 #config-application-list {
@@ -2271,7 +2263,7 @@ body {
   margin: 0;
 }
 .config-application .smaller {
-  font-family: main;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 .config-application .md-header {
   background: transparent;
@@ -2319,7 +2311,7 @@ body {
   margin: 0;
 }
 .config-device .smaller {
-  font-family: main;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 .config-device .md-header {
   background: transparent;
@@ -2349,7 +2341,7 @@ body {
 }
 #config-applications-view .change-layout a {
   color: #000;
-  font-family: styled;
+  font-family: 'Maven Pro', sans-serif;
   font-weight: normal;
 }
 #config-applications-view .change-layout a:hover {
