@@ -720,15 +720,11 @@ body {
   box-sizing: border-box;
   min-width: 320px;
   color: #000;
-  font-family: 'Maven Pro', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 18px;
 }
 a {
   color: #15a7c7;
-  font-weight: bold;
-}
-a {
-  color: textcolor;
   text-decoration: none;
 }
 a:hover {
@@ -907,11 +903,21 @@ dialog {
   -webkit-box-shadow: 0 0 5px rgba(252,249,245,0.55);
   box-shadow: 0 0 5px rgba(252,249,245,0.55);
   background-color: #fcf9f5;
+  font-family: "Source Sans Pro", sans-serif;
 }
 @media (max-width: 640px) {
   dialog {
     width: 90vw;
   }
+}
+dialog h1 {
+  font-family: 'Maven Pro', sans-serif;
+  font-weight: normal;
+}
+dialog a,
+dialog button,
+dialog [role=button] {
+  font: 1em "Source Sans Pro", sans-serif;
 }
 dialog[open] {
   display: block;
@@ -1361,12 +1367,6 @@ dialog[open]::backdrop {
   background-color: #363a46;
   color: #fff;
 }
-.wizard h1 {
-  font-family: styled;
-}
-.wizard section {
-  font-family: main;
-}
 .wizard section p {
   margin: 0;
   padding: 0 1.5em 1em;
@@ -1388,7 +1388,6 @@ dialog[open]::backdrop {
   border: none;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  font: 1em main;
   cursor: pointer;
   background-color: #15a7c7;
   color: #fff;
@@ -1551,6 +1550,7 @@ body {
   padding-right: 5px;
   cursor: pointer;
   color: #fff;
+  font-family: 'Maven Pro', sans-serif;
 }
 #menu-applications-toggle #current-application {
   font-weight: normal;
@@ -1626,10 +1626,11 @@ body {
   background: #fce9d5;
 }
 #notifications-toggle {
+  display: block;
   height: 45px;
   line-height: 45px;
   font-size: 45px;
-  width: 60px;
+  width: auto;
   cursor: pointer;
   margin-left: 10px;
   margin: 0;
@@ -1645,6 +1646,9 @@ body {
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
+}
+#notifications-toggle img {
+  vertical-align: baseline;
 }
 #notifications-toggle #notifications-counter {
   position: absolute;
@@ -1708,7 +1712,6 @@ body {
   margin-right: 15px;
 }
 #notifications-container a {
-  width: 20px;
   color: #363a46;
 }
 #notifications-container .badge {
