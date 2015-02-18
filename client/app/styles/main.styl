@@ -212,10 +212,11 @@ body
             background: #fce9d5
 
 #notifications-toggle
+    display block
     height: 45px
     line-height: 45px
     font-size: 45px
-    width: 60px
+    width: auto
     cursor: pointer
     margin-left: 10px
     margin: 0
@@ -223,6 +224,9 @@ body
     transition: all 0.3s
     position: relative
     transition: all 0.3s
+
+    img //position hotfix
+        vertical-align baseline
 
     #notifications-counter
         position absolute
@@ -282,7 +286,6 @@ body
     margin-right: 15px
 
     a
-        width: 20px
         color: darkblue
 
     .badge
