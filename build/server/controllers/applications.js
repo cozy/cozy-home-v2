@@ -296,23 +296,13 @@ module.exports = {
       }
       manifest = new Manifest();
       return manifest.download(req.body, function(err) {
-        var iconInfos;
         if (err) {
           return sendError(res, err);
         }
         req.body.permissions = manifest.getPermissions();
         req.body.widget = manifest.getWidget();
         req.body.version = manifest.getVersion();
-        req.body.iconPath = manifest.getIconPath();
         req.body.color = manifest.getColor();
-        try {
-          iconInfos = icons.getIconInfos(req.body);
-        } catch (_error) {
-          err = _error;
-          console.log(err);
-          iconInfos = null;
-        }
-        req.body.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
         return Application.create(req.body, function(err, appli) {
           var infos;
           if (err) {
@@ -325,7 +315,7 @@ module.exports = {
           infos = JSON.stringify(appli);
           console.info("attempt to install app " + infos);
           return manager.installApp(appli, function(err, result) {
-            var msg, updatedData;
+            var iconInfos, msg, updatedData;
             if (err) {
               markBroken(res, appli, err);
               sendErrorSocket(err);
@@ -338,6 +328,16 @@ module.exports = {
               };
               msg = "install succeeded on port " + appli.port;
               console.info(msg);
+              appli.iconPath = manifest.getIconPath();
+              appli.color = manifest.getColor();
+              try {
+                iconInfos = icons.getIconInfos(appli);
+              } catch (_error) {
+                err = _error;
+                console.log(err);
+                iconInfos = null;
+              }
+              appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
               return appli.updateAttributes(updatedData, function(err) {
                 if (err != null) {
                   return sendErrorSocket(err);
