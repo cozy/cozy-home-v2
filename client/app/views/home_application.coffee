@@ -72,10 +72,14 @@ module.exports = class ApplicationRow extends BaseView
 
             when 'installed'
                 @hideSpinner()
-
                 if @model.isIconSvg()
+                    slug = @model.get 'slug'
+                    color = @model.get 'color'
+                    unless color?
+                        color = ColorHash.getColor slug, 'cozy'
                     extension = 'svg'
                     @icon.addClass 'svg'
+                    @icon.css 'background', color
                 else
                     extension = 'png'
                     @icon.removeClass 'svg'
