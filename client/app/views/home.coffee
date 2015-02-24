@@ -30,7 +30,6 @@ module.exports = class ApplicationsListView extends ViewCollection
 
     afterRender: =>
         @appList = @$ "#app-list"
-        @closeEditBtn = @$ '#home-edit-close'
 
         @$("#no-app-message").hide()
         $(".menu-btn a").click (event) =>
@@ -40,7 +39,6 @@ module.exports = class ApplicationsListView extends ViewCollection
         @initGridster()
         super
         if @state is 'view'
-            @$('#home-edit-close').hide()
             @gridster.disable()
             @view.enable() for cid, view of @views
 
@@ -78,11 +76,9 @@ module.exports = class ApplicationsListView extends ViewCollection
 
         if @state is 'edit'
             @gridster?.enable()
-            @closeEditBtn.slideDown()
             view.disable() for cid, view of @views
         else
             @gridster?.disable()
-            @closeEditBtn.slideUp()
             view.enable() for cid, view of @views
 
     initGridster: ->
