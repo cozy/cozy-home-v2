@@ -43,9 +43,9 @@
       var event, pathToSocketIO, socket, url, _i, _len, _ref, _results;
 
       url = window.location.origin;
-      pathToSocketIO = "" + (window.location.pathname.substring(1)) + "socket.io";
+      pathToSocketIO = "/" + (window.location.pathname.substring(1)) + "socket.io";
       socket = io.connect(url, {
-        resource: pathToSocketIO
+        path: pathToSocketIO
       });
       _ref = this.events;
       _results = [];
