@@ -480,26 +480,9 @@ body
             color: red
 
     // resize mode
-    &.ui-resizable:not(.ui-resizable-disabled)
+    &.edit-mode
         cursor move
         border 3px solid blue //#f7f4f0 - 15%
-
-        .ui-resizable-e
-            width 20px
-            right -10px
-            cursor col-resize
-
-        .ui-resizable-s
-            height 20px
-            bottom -10px
-            cursor row-resize
-
-        .ui-resizable-se
-            width 20px
-            height 20px
-            right -10px
-            bottom -10px
-            cursor nwse-resize
 
         .mask
             display block
@@ -511,31 +494,6 @@ body
             z-index 10
             background grey
             opacity 0.5
-
-        .bottom-handle
-        .bottom-right-handle
-        .right-handle
-            display block
-            position absolute
-            z-index 100
-            width 10px
-            height 10px
-            background blue
-            border 1px solid #fff
-
-        .bottom-handle
-            bottom -6.5px // border + height/2
-            left 50%
-            cursor row-resize
-        .bottom-right-handle
-            bottom -6.5px
-            right -6.5px
-            cursor nwse-resize
-        .right-handle
-            top 50%
-            right -6.5px
-            cursor col-resize
-
 
     &:hover
         background: orangewhite - 10%
