@@ -1917,28 +1917,11 @@ body {
   font-weight: normal;
   color: #f00;
 }
-.application.ui-resizable:not(.ui-resizable-disabled) {
+.application.edit-mode {
   cursor: move;
   border: 3px solid #15a7c7;
 }
-.application.ui-resizable:not(.ui-resizable-disabled) .ui-resizable-e {
-  width: 20px;
-  right: -10px;
-  cursor: col-resize;
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .ui-resizable-s {
-  height: 20px;
-  bottom: -10px;
-  cursor: row-resize;
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .ui-resizable-se {
-  width: 20px;
-  height: 20px;
-  right: -10px;
-  bottom: -10px;
-  cursor: nwse-resize;
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .mask {
+.application.edit-mode .mask {
   display: block;
   position: absolute;
   top: 0px;
@@ -1950,32 +1933,6 @@ body {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .bottom-handle,
-.application.ui-resizable:not(.ui-resizable-disabled) .bottom-right-handle,
-.application.ui-resizable:not(.ui-resizable-disabled) .right-handle {
-  display: block;
-  position: absolute;
-  z-index: 100;
-  width: 10px;
-  height: 10px;
-  background: #15a7c7;
-  border: 1px solid #fff;
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .bottom-handle {
-  bottom: -6.5px;
-  left: 50%;
-  cursor: row-resize;
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .bottom-right-handle {
-  bottom: -6.5px;
-  right: -6.5px;
-  cursor: nwse-resize;
-}
-.application.ui-resizable:not(.ui-resizable-disabled) .right-handle {
-  top: 50%;
-  right: -6.5px;
-  cursor: col-resize;
 }
 .application:hover {
   background: #f1e2cf;

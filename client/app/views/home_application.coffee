@@ -25,13 +25,13 @@ module.exports = class ApplicationRow extends BaseView
 
     enable: ->
         @enabled = true
-        @$el.resizable 'disable'
         @$('.widget-mask').hide()
+        @$el.removeClass 'edit-mode'
         @$('.use-widget').hide()
 
     disable: ->
         @enabled = false
-        @$el.resizable('enable') if @$el.resizable 'widget'
+        @$el.addClass 'edit-mode'
         if @canUseWidget()
             @$('.widget-mask').show()
             @$('.use-widget').show()

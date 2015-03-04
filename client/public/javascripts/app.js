@@ -2528,7 +2528,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="mask"></div><div class="bottom-handle"></div><div class="bottom-right-handle"></div><div class="right-handle"></div><button class="btn use-widget">');
+buf.push('<div class="mask"></div><button class="btn use-widget">');
 var __val__ = t('use widget')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
@@ -3798,7 +3798,6 @@ module.exports = ApplicationsListView = (function(_super) {
 
   function ApplicationsListView(apps) {
     this.saveChanges = __bind(this.saveChanges, this);
-    this.doResize = __bind(this.doResize, this);
     this.resizeGridster = __bind(this.resizeGridster, this);
     this.onWindowResize = __bind(this.onWindowResize, this);
     this.afterRender = __bind(this.afterRender, this);
@@ -3942,6 +3941,9 @@ module.exports = ApplicationsListView = (function(_super) {
           sizex: wgd.size_x,
           sizey: wgd.size_y
         };
+      },
+      resize: {
+        enabled: false
       }
     });
     this.gridster = this.appList.data('gridster');
@@ -3982,8 +3984,7 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
-    var pos,
-      _this = this;
+    var pos;
     pos = view.model.getHomePosition(this.colsNb);
     if (pos == null) {
       pos = {
@@ -3993,31 +3994,6 @@ module.exports = ApplicationsListView = (function(_super) {
         sizey: 1
       };
     }
-    view.$el.resizable({
-      animate: false,
-      stop: function(event, ui) {
-        return _.delay(_this.doResize, 300, view.$el);
-      },
-      resize: function(event, ui) {
-        var clip, dim, size, toobig, _i, _len, _ref, _results;
-        _ref = ['width', 'height'];
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          dim = _ref[_i];
-          size = ui.size[dim];
-          clip = _this.grid_size;
-          while (clip < size) {
-            clip += _this.grid_step;
-          }
-          toobig = clip - size > size - clip + _this.grid_step;
-          if (toobig && clip !== _this.grid_size) {
-            clip -= _this.grid_step;
-          }
-          _results.push(ui.element[dim](clip));
-        }
-        return _results;
-      }
-    });
     this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
     this.gridster.resize_widget(view.$el, pos.sizex, pos.sizey);
     if (this.state === 'view') {
@@ -4030,19 +4006,6 @@ module.exports = ApplicationsListView = (function(_super) {
   ApplicationsListView.prototype.removeView = function(view) {
     this.gridster.remove_widget(view.$el, true);
     return ApplicationsListView.__super__.removeView.apply(this, arguments);
-  };
-
-  ApplicationsListView.prototype.doResize = function($el) {
-    var grid_h, grid_w;
-    grid_w = Math.ceil($el.width() / this.grid_step);
-    grid_h = Math.ceil($el.height() / this.grid_step);
-    this.gridster.resize_widget($el, grid_w, grid_h);
-    this.gridster.set_dom_grid_height();
-    $el.height('');
-    $el.width('');
-    $el.css('top', '');
-    $el.css('left', '');
-    return this.saveChanges();
   };
 
   ApplicationsListView.prototype.saveChanges = function() {
@@ -4122,16 +4085,14 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.enable = function() {
     this.enabled = true;
-    this.$el.resizable('disable');
     this.$('.widget-mask').hide();
+    this.$el.removeClass('edit-mode');
     return this.$('.use-widget').hide();
   };
 
   ApplicationRow.prototype.disable = function() {
     this.enabled = false;
-    if (this.$el.resizable('widget')) {
-      this.$el.resizable('enable');
-    }
+    this.$el.addClass('edit-mode');
     if (this.canUseWidget()) {
       this.$('.widget-mask').show();
       return this.$('.use-widget').show();

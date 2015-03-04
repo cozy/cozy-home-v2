@@ -99,6 +99,7 @@ module.exports = class ApplicationsListView extends ViewCollection
                 row:   wgd.row
                 sizex: wgd.size_x
                 sizey: wgd.size_y
+            resize: enabled: false
 
         @gridster = @appList.data('gridster')
         @gridster.set_dom_grid_height()
@@ -131,22 +132,6 @@ module.exports = class ApplicationsListView extends ViewCollection
         pos = view.model.getHomePosition @colsNb
         pos ?= col: 0, row: 0, sizex: 1, sizey: 1 # default
 
-        view.$el.resizable
-            animate: false
-            stop: (event, ui) => _.delay @doResize, 300,  view.$el
-            resize: (event, ui) =>
-                for dim in ['width', 'height']
-                    size = ui.size[dim]
-                    clip = @grid_size
-                    clip += @grid_step while clip < size
-
-                    toobig = clip - size > size - clip + @grid_step
-                    if toobig and clip isnt @grid_size
-                        clip -= @grid_step
-
-                    ui.element[dim] clip
-
-
         @gridster.add_widget view.$el, pos.sizex, pos.sizey, pos.col, pos.row
 
         # Somehow make the widget work immediately
@@ -158,21 +143,6 @@ module.exports = class ApplicationsListView extends ViewCollection
     removeView: (view) ->
         @gridster.remove_widget view.$el, true
         super
-
-    doResize: ($el) =>
-        grid_w = Math.ceil $el.width() / @grid_step
-        grid_h = Math.ceil $el.height() / @grid_step
-
-        @gridster.resize_widget $el, grid_w, grid_h
-        @gridster.set_dom_grid_height()
-
-        # cleanup resizable element.style leftovers
-        $el.height ''
-        $el.width ''
-        $el.css 'top', ''
-        $el.css 'left', ''
-
-        @saveChanges()
 
     saveChanges: () =>
         properties = ['col', 'row', 'sizex', 'sizey']
