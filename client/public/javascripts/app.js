@@ -758,7 +758,8 @@ module.exports = new SocketListener();
 });
 
 ;require.register("lib/templates/wizard", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -936,7 +937,7 @@ return buf.join("");
 };
 });
 
-;require.register("lib/view_collection", function(exports, require, module) {
+require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1129,7 +1130,7 @@ module.exports = WizardView = (function(_super) {
       event.preventDefault();
     }
     this.el.removeAttribute('open');
-    document.removeEventListener('keyup', this.close);
+    document.removeEventListener('keydown', this.close);
     if (!this.isDialogEnabled) {
       return this.$backdrop.remove();
     }
@@ -2234,7 +2235,8 @@ module.exports = MainRouter = (function(_super) {
 });
 
 ;require.register("templates/account", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2311,8 +2313,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/application_iframe", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2325,8 +2328,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/config_application", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2369,8 +2373,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/config_application_list", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2380,8 +2385,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/config_applications", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2422,8 +2428,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/config_device", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2440,8 +2447,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/config_device_list", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2451,8 +2459,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/help", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2481,8 +2490,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/help_url", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2498,8 +2508,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/home", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2522,8 +2533,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/home_application", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2537,8 +2549,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application_widget", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/home_application_widget", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2551,8 +2564,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/layout", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/layout", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2584,8 +2598,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/market", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2608,8 +2623,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/market_application", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2637,8 +2653,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/menu_application", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2651,8 +2668,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/menu_applications", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2663,8 +2681,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/navbar", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2678,8 +2697,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2694,8 +2714,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/notification", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2706,8 +2727,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/notifications", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2724,8 +2746,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/popover_description", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2754,8 +2777,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/popover_permissions", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2787,8 +2811,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/tutorial", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/tutorial", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2862,8 +2887,9 @@ return buf.join("");
 };
 });
 
-;require.register("templates/update_stack_modal", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+require.register("templates/update_stack_modal", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
@@ -2889,7 +2915,7 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
+require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -5532,9 +5558,10 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.$el.addClass('md-show');
     this.overlay.addClass('md-show');
     $('#home-content').addClass('md-open');
-    return setTimeout(function() {
+    setTimeout(function() {
       return _this.$('.md-content').addClass('md-show');
     }, 300);
+    return document.addEventListener('keydown', this.onCancelClicked);
   };
 
   PopoverDescriptionView.prototype.hide = function() {
@@ -5545,10 +5572,14 @@ module.exports = PopoverDescriptionView = (function(_super) {
       _this.$el.removeClass('md-show');
       return _this.remove();
     });
-    return $('#home-content').removeClass('md-open');
+    $('#home-content').removeClass('md-open');
+    return document.removeEventListener('keydown', this.onCancelClicked);
   };
 
-  PopoverDescriptionView.prototype.onCancelClicked = function() {
+  PopoverDescriptionView.prototype.onCancelClicked = function(event) {
+    if ((event.keyCode != null) && event.keyCode !== 27) {
+      return;
+    }
     this.hide();
     return this.cancelCallback(this.model);
   };
