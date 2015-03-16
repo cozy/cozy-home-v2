@@ -54,7 +54,7 @@ module.exports = class WizardView extends BaseView
         event.preventDefault?()
 
         @el.removeAttribute 'open'
-        document.removeEventListener 'keyup', @close
+        document.removeEventListener 'keydown', @close
         @$backdrop.remove() unless @isDialogEnabled
 
 
