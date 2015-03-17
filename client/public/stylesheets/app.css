@@ -1483,6 +1483,21 @@ body {
   height: 48px;
   padding: 0;
 }
+.navbar a {
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+  -ms-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+.navbar a:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 .navbar span {
   margin: 0;
 }
@@ -1497,14 +1512,6 @@ body {
   font-weight: normal;
   font-size: 0.8em;
   color: #fff;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-  -webkit-transition: opacity 0.3s;
-  -moz-transition: opacity 0.3s;
-  -o-transition: opacity 0.3s;
-  -ms-transition: opacity 0.3s;
-  transition: opacity 0.3s;
 }
 .logo:hover {
   color: #fff;
@@ -1554,18 +1561,6 @@ body {
 }
 #menu-applications-toggle #current-application {
   font-weight: normal;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
-#menu-applications-toggle #current-application:active {
-  color: #fff;
-}
-#menu-applications-toggle #current-application:hover {
-  color: #fff;
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
 }
 #menu-applications-toggle span {
   font-size: 28px;
