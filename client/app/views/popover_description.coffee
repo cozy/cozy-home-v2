@@ -1,7 +1,5 @@
 BaseView = require 'lib/base_view'
 request = require 'lib/request'
-ApplicationCollection = require '../collections/application'
-collection = new ApplicationCollection()
 
 module.exports = class PopoverDescriptionView extends BaseView
     id: 'market-popover-description-view'
@@ -20,16 +18,6 @@ module.exports = class PopoverDescriptionView extends BaseView
         @label = if options.label? then options.label else t 'install'
         @$("#confirmbtn").html @label
 
-    getRenderData: ->
-        # retrieves from market if app is official or not
-        collection.fetchFromMarket (appsCollection) =>
-            app = appsCollection.get @model.get('slug')
-
-            # By default, apps are 'community contribution'.
-            # Used for "install from Git"
-            comment = if app? then app.get('comment') else 'community contribution'
-            @model.set 'comment', comment
-        return super()
 
     afterRender: ->
         @model.set "description", ""

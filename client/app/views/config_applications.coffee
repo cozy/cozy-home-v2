@@ -6,6 +6,7 @@ StackApplication = require 'models/stack_application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
 UpdateStackModal = require './update_stack_modal'
+AppsCollection = require '../collections/application'
 
 module.exports = class exports.ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
@@ -33,11 +34,13 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn = new ColorButton  @$ '.update-stack'
         @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
         @fetch()
-        @applicationList = new ConfigApplicationList @apps
+        @market = new AppsCollection()
+        @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
+        @market.fetchFromMarket ->
 
     openUpdatePopover: (slug) ->
         @applicationList.openUpdatePopover slug
