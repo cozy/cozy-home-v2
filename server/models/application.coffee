@@ -9,7 +9,7 @@ module.exports = Application = americano.getModel 'Application',
     description: String
     slug: String
     state: String
-    isStoppable: {type: Boolean, default: true}
+    isStoppable: {type: Boolean, default: false}
     date: {type: Date, default: Date.now}
     icon: String
     iconPath: String
