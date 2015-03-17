@@ -1,61 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   id="Calque_1"
-   x="0px"
-   y="0px"
-   width="68.26px"
-   height="70.655px"
-   viewBox="0 0 68.26 70.655"
-   enable-background="new 0 0 68.26 70.655"
-   xml:space="preserve"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="term.svg"><metadata
-     id="metadata13"><rdf:RDF><cc:Work
-         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
-     id="defs11" /><sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1316"
-     inkscape:window-height="995"
-     id="namedview9"
-     showgrid="false"
-     inkscape:zoom="3.3401741"
-     inkscape:cx="-29.639129"
-     inkscape:cy="35.327499"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="Calque_1" /><text
-     transform="scale(0.9292573,1.0761282)"
-     id="text3"
-     x="12.219966"
-     y="41.111149"
-     style="font-size:8.09149265px"><tspan
-       x="12.219966"
-       y="41.111149"
-       font-size="60"
-       id="tspan5"
-       style="font-size:40.45746231px;font-family:MyriadPro-Bold">&gt;</tspan><tspan
-       x="36.332611"
-       y="41.111149"
-       font-size="65"
-       id="tspan7"
-       style="font-size:43.82891846px;font-family:MyriadPro-Bold">_</tspan></text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80pt" height="80pt" viewBox="0 0 80 80" version="1.1">
+<defs>
+<g>
+<symbol overflow="visible" id="glyph0-0">
+<path style="stroke:none;" d="M 2.1875 8.65625 L 2.1875 -34.546875 L 24.1875 -34.546875 L 24.1875 8.65625 Z M 4.65625 5.9375 L 21.75 5.9375 L 21.75 -31.796875 L 4.65625 -31.796875 Z M 4.65625 5.9375 "/>
+</symbol>
+<symbol overflow="visible" id="glyph0-1">
+<path style="stroke:none;" d="M 4.65625 -24.125 L 4.65625 -28.46875 L 32.203125 -17.34375 L 32.203125 -13.375 L 4.65625 -2.25 L 4.65625 -6.609375 L 26.796875 -15.34375 Z M 4.65625 -24.125 "/>
+</symbol>
+<symbol overflow="visible" id="glyph1-0">
+<path style="stroke:none;" d="M 2.390625 9.375 L 2.390625 -37.375 L 26.390625 -37.375 L 26.390625 9.375 Z M 5.09375 6.421875 L 23.71875 6.421875 L 23.71875 -34.390625 L 5.09375 -34.390625 Z M 5.09375 6.421875 "/>
+</symbol>
+<symbol overflow="visible" id="glyph1-1">
+<path style="stroke:none;" d="M 24.46875 8.796875 L 24.46875 12.5 L -0.46875 12.5 L -0.46875 8.796875 Z M 24.46875 8.796875 "/>
+</symbol>
+</g>
+</defs>
+<g id="surface1">
+<g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
+  <use xlink:href="#glyph0-1" x="13.359375" y="50.518523"/>
+</g>
+<g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
+  <use xlink:href="#glyph1-1" x="39.71875" y="50.676909"/>
+</g>
+</g>
 </svg>
