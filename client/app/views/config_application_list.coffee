@@ -1,16 +1,24 @@
 ViewCollection = require 'lib/view_collection'
 ApplicationRow = require 'views/config_application'
 PopoverDescriptionView = require 'views/popover_description'
+ApplicationsList = require '../collections/application'
 
 module.exports = class ApplicationsListView extends ViewCollection
     id: 'config-application-list'
     tagName: 'div'
     template: require 'templates/config_application_list'
     itemView: require 'views/config_application'
-    itemViewOptions: ->
-    constructor: (apps) ->
+    itemViewOptions: (model) ->
+        app = @market.get model.get('slug')
+        # By default, apps are 'community contribution'.
+        # Used for "install from Git"
+        comment = if app? then app.get('comment') else 'community contribution'
+        model.set 'comment', comment
+
+    constructor: (apps, market) ->
         @apps = apps
-        super collection: apps
+        @market = market
+        super collection: @apps
 
     afterRender: =>
         @appList = @$ "#app-list"
