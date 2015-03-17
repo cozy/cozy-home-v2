@@ -83,6 +83,7 @@ module.exports = class PopoverDescriptionView extends BaseView
         setTimeout =>
             @$('.md-content').addClass 'md-show'
         , 300
+        document.addEventListener 'keydown', @onCancelClicked
 
     hide: =>
         @body.getNiceScroll().hide()
@@ -91,8 +92,10 @@ module.exports = class PopoverDescriptionView extends BaseView
             @$el.removeClass 'md-show'
             @remove()
         $('#home-content').removeClass 'md-open'
+        document.removeEventListener 'keydown', @onCancelClicked
 
-    onCancelClicked: () =>
+    onCancelClicked: (event) =>
+        return if event.keyCode? and event.keyCode isnt 27
         @hide()
         @cancelCallback(@model)
 
