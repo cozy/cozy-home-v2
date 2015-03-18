@@ -1263,10 +1263,12 @@ module.exports = {
   "updating": "updating",
   "update all": "Update all",
   "update stack": "Update",
-  "refresh page": "Wait please, page will refresh in several minutes.",
+  "refresh page": "Wait please, update take in several minutes.",
   "update stack modal title": "Update of your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?",
   "update stack modal confirm": "Update",
+  "update stack success": "Your applications are updated, page will refresh.",
+  "update stack error": "An error occured during update.",
   "cozy platform": "Platform",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
@@ -1477,10 +1479,12 @@ module.exports = {
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour",
-  "refresh page": "Veuillez patienter, la page se rafraîchira d'ici quelques minutes.",
+  "refresh page": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
   "update stack modal title": "Mise à jour de votre Cozy",
   "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Êtes-vous sûr ?",
   "update stack modal confirm": "Mettre à jour",
+  "update stack success": "Vos applications ont bien été mise à jour, la page va se rafraichir.",
+  "update stack error": "Une erreur s'est produit pendant la mise à jour.",
   "reboot stack": "Redémarrer",
   "cozy platform": "Plate-forme",
   "update error": "Une erreur est survenue pendant la mise à jour",
@@ -1686,6 +1690,14 @@ module.exports = {
   "installed": "instalada",
   "updated": "actualizada",
   "updating": "a actualizar",
+  "update all": "Actualizar todos",
+  "update stack": "Actualizar",
+  "refresh page": "Wait please, update take in several minutes.",
+  "update stack modal title": "Update of your Cozy",
+  "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?",
+  "update stack modal confirm": "Actualizar",
+  "update stack success": "Your applications are updated, page will refresh.",
+  "update stack error": "An error occured during update.",
   "update error": "Ocurreu um erro durante a actualização da aplicação",
   "broken": "quebrado",
   "start this app": "iniciar esta aplicação",
@@ -2035,7 +2047,9 @@ module.exports = StackApplication = (function(_super) {
     return client.get("api/applications/stack", {
       success: function() {
         if (step === total_step) {
-          return success();
+          if (success) {
+            return success('ok');
+          }
         } else {
           if (step === 1) {
             step += step;
@@ -2880,10 +2894,10 @@ buf.push('</p><p class="step2">');
 var __val__ = t('refresh page')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="success">');
-var __val__ = t('success')
+var __val__ = t('update stack success')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="error">');
-var __val__ = t('error')
+var __val__ = t('update stack error')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
 var __val__ = t('update stack modal confirm')
@@ -3639,7 +3653,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
           return _this.stackApplications.updateStack(cb);
         },
         error: function() {
-          return cb(error);
+          return _this.popover.onError();
         }
       });
     };
@@ -3647,7 +3661,12 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
-    return this.popoverManagement(this.stackApplications.updateStack);
+    var action,
+      _this = this;
+    action = function(cb) {
+      return _this.stackApplications.updateStack(cb);
+    };
+    return this.popoverManagement(action);
   };
 
   ConfigApplicationsView.prototype.onRebootStackClicked = function() {

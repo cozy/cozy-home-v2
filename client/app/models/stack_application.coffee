@@ -30,7 +30,7 @@ module.exports = class StackApplication extends Backbone.Model
         client.get "api/applications/stack",
             success: =>
                 if step is total_step
-                    success()
+                    success 'ok' if success
                 else
                     if step is 1
                         step += step

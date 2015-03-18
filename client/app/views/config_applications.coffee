@@ -113,11 +113,13 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 success: =>
                     @stackApplications.updateStack cb
                 error: =>
-                    cb error
+                    @popover.onError()
         @popoverManagement action
 
     onUpdateStackClicked: ->
-        @popoverManagement @stackApplications.updateStack
+        action = (cb) =>
+            @stackApplications.updateStack cb
+        @popoverManagement action
 
     onRebootStackClicked: ->
         @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
