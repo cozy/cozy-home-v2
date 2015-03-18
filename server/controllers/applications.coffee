@@ -6,6 +6,8 @@ log = require('printit')
     prefix: "applications"
 
 Application = require '../models/application'
+NotificationsHelper = require 'cozy-notifications-helper'
+localization = require '../lib/localization_manager'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 market = require '../lib/market'
@@ -18,6 +20,15 @@ icons = require '../lib/icon'
 startedApplications = {}
 
 # Helpers
+
+# Remove a notification after an update
+removeAppUpdateNotification = (app) ->
+    notifier = new NotificationsHelper 'home'
+    messageKey = 'update available notification'
+    message = localization.t messageKey, appName: app.name
+    notificationSlug = "home_update_notification_app_#{app.name}"
+    notifier.destroy notificationSlug, (err) ->
+        log.error err if err?
 
 sendError = (res, err, code=500) ->
     err ?=
@@ -103,6 +114,7 @@ updateApp = (app, callback) ->
                 data.iconType = iconInfos?.extension or null
                 app.updateAttributes data, (err) ->
                     callback err if err?
+                    removeAppUpdateNotification app
                     icons.save app, iconInfos, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
@@ -295,7 +307,6 @@ module.exports =
     update: (req, res, next) ->
         updateApp req.application, (err) ->
             return markBroken res, req.application, err if err?
-
             res.send
                 success: true
                 msg: 'Application succesfuly updated'
