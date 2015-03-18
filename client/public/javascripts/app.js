@@ -2028,18 +2028,20 @@ module.exports = StackApplication = (function(_super) {
     };
   };
 
-  StackApplication.prototype.waitReboot = function(step, total_step, callback) {
-    var _this = this;
+  StackApplication.prototype.waitReboot = function(step, total_step, callbackŝ) {
+    var error, success, _ref1,
+      _this = this;
+    _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
     return client.get("api/applications/stack", {
       success: function() {
         if (step === total_step) {
-          return callback();
+          return success();
         } else {
           if (step === 1) {
             step += step;
           }
           return setTimeout(function() {
-            return _this.waitReboot(step, total_step, callback);
+            return _this.waitReboot(step, total_step, callbacks);
           }, 500);
         }
       },
@@ -2048,7 +2050,7 @@ module.exports = StackApplication = (function(_super) {
           if (step === 0 || step === 2) {
             step = step + 1;
           }
-          return _this.waitReboot(step, total_step, callback);
+          return _this.waitReboot(step, total_step, callbacks);
         }, 500);
       }
     });
@@ -3600,7 +3602,6 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
 
   ConfigApplicationsView.prototype.popoverManagement = function(action) {
     var _this = this;
-    console.log("popoverManagement");
     if (this.popover != null) {
       this.popover.hide();
     }
@@ -3632,7 +3633,6 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   ConfigApplicationsView.prototype.onUpdateClicked = function() {
     var action,
       _this = this;
-    console.log('onUpdateClicked');
     action = function(cb) {
       return _this.applications.updateAll({
         success: function() {
