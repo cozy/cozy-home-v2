@@ -116,7 +116,7 @@ module.exports =
     "updating":"updating"
     "update all": "Update all"
     "update stack": "Update"
-    "refresh page": "Wait please, update take in several minutes."
+    "refresh page": "Wait please, update takes several minutes."
     "update stack modal title": "Update of your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?"
     "update stack modal confirm": "Update"

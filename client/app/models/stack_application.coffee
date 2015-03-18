@@ -25,7 +25,7 @@ module.exports = class StackApplication extends Backbone.Model
             error jqXHR     if error
 
 
-    waitReboot: (step, total_step, callbackŝ) ->
+    waitReboot: (step, total_step, callbacks) ->
         {success, error} = callbacks or {}
         client.get "api/applications/stack",
             success: =>
