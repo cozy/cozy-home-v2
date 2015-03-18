@@ -2877,8 +2877,17 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="step2">');
 var __val__ = t('refresh page')
 buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="success">');
+var __val__ = t('success')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="error">');
+var __val__ = t('error')
+buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
 var __val__ = t('update stack modal confirm')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="ok" class="btn right">');
+var __val__ = t('ok')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
 var __val__ = t('cancel')
@@ -3589,41 +3598,56 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     return setTimeout(this.fetch, 10000);
   };
 
-  ConfigApplicationsView.prototype.onUpdateClicked = function() {
+  ConfigApplicationsView.prototype.popoverManagement = function(action) {
     var _this = this;
-    this.updateBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-    Backbone.Mediator.pub('app-state-changed', true);
-    this.updateBtn.spin(true, '#ffffff');
-    return this.applications.updateAll({
-      success: function() {
-        _this.updateBtn.displayGreen(t("update all"));
-        return Backbone.Mediator.pub('app-state-changed', true);
-      },
-      error: function() {
-        _this.updateBtn.displayGreen(t("error during updating"));
-        return Backbone.Mediator.pub('app-state-changed', true);
-      }
-    });
-  };
-
-  ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
-    var _this = this;
+    console.log("popoverManagement");
     if (this.popover != null) {
       this.popover.hide();
     }
     this.popover = new UpdateStackModal({
       confirm: function(application) {
-        return _this.stackApplications.updateStack(function() {
-          return location.reload();
+        return action({
+          success: function() {
+            return _this.popover.onSuccess();
+          },
+          error: function() {
+            return this.popover.onError();
+          }
         });
       },
       cancel: function(application) {
         _this.popover.hide();
         return _this.popover.remove();
+      },
+      end: function(success) {
+        if (success) {
+          return location.reload();
+        }
       }
     });
     $("#config-applications-view").append(this.popover.$el);
     return this.popover.show();
+  };
+
+  ConfigApplicationsView.prototype.onUpdateClicked = function() {
+    var action,
+      _this = this;
+    console.log('onUpdateClicked');
+    action = function(cb) {
+      return _this.applications.updateAll({
+        success: function() {
+          return _this.stackApplications.updateStack(cb);
+        },
+        error: function() {
+          return cb(error);
+        }
+      });
+    };
+    return this.popoverManagement(action);
+  };
+
+  ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
+    return this.popoverManagement(this.stackApplications.updateStack);
   };
 
   ConfigApplicationsView.prototype.onRebootStackClicked = function() {
@@ -5632,13 +5656,15 @@ module.exports = UpdateStackModal = (function(_super) {
 
   UpdateStackModal.prototype.events = {
     'click #cancelbtn': 'onCancelClicked',
-    'click #confirmbtn': 'onConfirmClicked'
+    'click #confirmbtn': 'onConfirmClicked',
+    'click #ok': 'onClose'
   };
 
   UpdateStackModal.prototype.initialize = function(options) {
     UpdateStackModal.__super__.initialize.apply(this, arguments);
     this.confirmCallback = options.confirm;
-    return this.cancelCallback = options.cancel;
+    this.cancelCallback = options.cancel;
+    return this.endCallback = options.end;
   };
 
   UpdateStackModal.prototype.afterRender = function() {
@@ -5647,7 +5673,10 @@ module.exports = UpdateStackModal = (function(_super) {
     this.overlay.click(function() {
       return _this.hide();
     });
-    return this.$('.step2').hide();
+    this.$('.step2').hide();
+    this.$('.success').hide();
+    this.$('.error').hide();
+    return this.$('#ok').hide();
   };
 
   UpdateStackModal.prototype.handleContentHeight = function() {
@@ -5676,6 +5705,26 @@ module.exports = UpdateStackModal = (function(_super) {
       return _this.remove();
     });
     return $('#home-content').removeClass('md-open');
+  };
+
+  UpdateStackModal.prototype.onSuccess = function() {
+    this.$('.step2').hide();
+    this.$('.success').show();
+    this.$('#ok').show();
+    return this.$('#confirmbtn').hide();
+  };
+
+  UpdateStackModal.prototype.onError = function() {
+    this.$('.step2').hide();
+    this.$('.error').show();
+    this.$('#ok').show();
+    this.$('#confirmbtn').hide();
+    return this.endCallback(false);
+  };
+
+  UpdateStackModal.prototype.onClose = function() {
+    this.hide();
+    return this.endCallback(true);
   };
 
   UpdateStackModal.prototype.onCancelClicked = function() {

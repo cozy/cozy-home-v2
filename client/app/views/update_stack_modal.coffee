@@ -12,19 +12,23 @@ module.exports = class UpdateStackModal extends BaseView
     events:
         'click #cancelbtn':'onCancelClicked'
         'click #confirmbtn':'onConfirmClicked'
+        'click #ok':'onClose'
 
 
     initialize: (options) ->
         super
         @confirmCallback = options.confirm
         @cancelCallback = options.cancel
+        @endCallback = options.end
 
 
     afterRender: ->
         @overlay = $ '.md-overlay'
         @overlay.click => @hide()
         @$('.step2').hide()
-
+        @$('.success').hide()
+        @$('.error').hide()
+        @$('#ok').hide()
 
     handleContentHeight: ->
         @body.css 'max-height', "#{$(window).height() / 2}px"
@@ -48,6 +52,22 @@ module.exports = class UpdateStackModal extends BaseView
             @remove()
         $('#home-content').removeClass 'md-open'
 
+    onSuccess: ->
+        @$('.step2').hide()
+        @$('.success').show()
+        @$('#ok').show()
+        @$('#confirmbtn').hide()
+
+    onError: ->
+        @$('.step2').hide()
+        @$('.error').show()
+        @$('#ok').show()
+        @$('#confirmbtn').hide()
+        @endCallback false
+
+    onClose: ->
+        @hide()
+        @endCallback true
 
     onCancelClicked: ->
         @hide()
