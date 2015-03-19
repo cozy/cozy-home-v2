@@ -756,15 +756,13 @@ body
         text-transform: lowercase
         font-size: 20px
 
-    .mod
-        margin-left: 5px
-        display inline-block
-
-    .mod.left
-        margin: 0
-
     .smaller
         font-family: 'Source Sans Pro', sans-serif
+        display flex
+        align-items center
+
+        input
+            margin 0 5px 0
 
     .md-header
         background: transparent
@@ -775,15 +773,37 @@ body
         .btn
             font-weight: normal
 
+    &:hover .buttons
+        display flex
+
     .buttons
         display: none
+        align-items center
+
+        button
+            position relative
+            margin 0 0 0 5px
+            min-width 24px
+            min-height 24px
+            font-size 12px
+
+        .label
+            display none
+
+        // overrides inline styles
+        .spinner
+            position absolute !important
+            top 12px !important
+            left 12px !important
+
+        .spinner + i
+            opacity .35
 
     .img
         width: 72px
 
     .comments
         clear both
-        margin-left 5px
         font-size 14px
         line-height 20px
 
@@ -793,10 +813,6 @@ body
 
         a
             color grey
-
-.config-application:hover
-    .buttons
-        display: inline-block
 
 #config-applications-view
     .stack-app

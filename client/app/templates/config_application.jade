@@ -1,5 +1,5 @@
 .clearfix
-    .mod
+    span.left
         strong #{app.displayName}
         if app.version
             span &nbsp;-&nbsp; #{app.version}
@@ -16,19 +16,22 @@
                 title="#{t('update required')}", alt="#{t('update required')}")
 
     .buttons.right
-        .mod.right
-            button.btn.remove-app= t('remove')
-        .mod.right
-            button.btn.update-app= t('update')
-        .mod.right
-            button.btn.btn-large.start-stop-btn= t('stop this app')
-        .mod.right.smaller
+        span.smaller
             input(class="app-stoppable",
                   type="checkbox",
                   title="always on",
                   checked="checked",
-                  name="app-stoppable")
-            label(for="app-stoppable") auto stop
+                  name="app-stoppable-#{app.id}")
+            label(for="app-stoppable-#{app.id}") auto stop
+        button.btn.btn-large.start-stop-btn
+            i.fa.fa-power-off
+            span.label= t('stop this app')
+        button.btn.update-app
+            i.fa.fa-refresh
+            span.label= t('update')
+        button.btn.remove-app
+            i.fa.fa-trash
+            span.label= t('remove')
 
     .comments
         if app.comment === 'official application'
