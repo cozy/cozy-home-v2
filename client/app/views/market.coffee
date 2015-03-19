@@ -99,7 +99,7 @@ module.exports = class MarketView extends BaseView
                 @popover.hide()
                 @appList.show()
                 @hideApplication appWidget, =>
-                    @runInstallation appWidget.app
+                    @runInstallation appWidget.app, false
             cancel: (application) =>
                 @popover.hide()
                 @appList.show()
