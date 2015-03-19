@@ -222,6 +222,8 @@ module.exports =
             ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
         """
 
+    'relaunch install wizard': "Relancer l'assistant d'installation"
+
     'installwizard':
         'welcome title': "Bienvenue dans votre Cozy"
         'welcome content': """

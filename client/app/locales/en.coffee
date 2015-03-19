@@ -214,6 +214,8 @@ module.exports =
             or <a href="%{appstore}">take a look at the App Store</a> to install your first app.
         """
 
+    'relaunch install wizard': "Relaunch install wizard"
+
     'installwizard':
         'welcome title': "Welcome to your new Cozy"
         'welcome content': """
