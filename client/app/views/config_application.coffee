@@ -10,7 +10,8 @@ module.exports = class ApplicationRow extends BaseView
     template: require 'templates/config_application'
 
     getRenderData: ->
-        app: @model.attributes
+        app: _.extend {}, @model.attributes,
+            website: @model.get('website') or @model.get('git')[...-4]
 
     events:
         "click .remove-app"        : "onRemoveClicked"

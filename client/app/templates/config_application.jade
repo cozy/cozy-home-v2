@@ -12,7 +12,7 @@
         if app.needsUpdate
             span &nbsp;
             img.update-notification-icon(
-                width=16, src="img/notification-orange.png", 
+                width=16, src="img/notification-orange.png",
                 title="#{t('update required')}", alt="#{t('update required')}")
 
     .buttons.right
@@ -29,3 +29,8 @@
                   checked="checked",
                   name="app-stoppable")
             label(for="app-stoppable") auto stop
+
+    .comments
+        if app.comment === 'official application'
+            img(src="img/happycloud-black.svg", alt="#{t(app.comment)}", width="20")
+        a(href="#{app.website}")= app.website
