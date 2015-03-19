@@ -8,7 +8,9 @@
                     img(src="img/star-white.png")
         if (model.comment !== 'official application')
             .line.noncozy-warning
-                = t('warning unofficial app')
+                i.fa.fa-info-circle
+                span
+                    != t('warning unofficial app')
     .md-body
     .md-footer.clearfix
         button.btn.right#confirmbtn= t('install')

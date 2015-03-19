@@ -196,7 +196,10 @@ module.exports =
     Details: %{details}
     """
     "reminder message": "Reminder: %{message}"
-    "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
+    "warning unofficial app": """
+        This app is a communautary app and isn't maintained by the Cozy team.
+        To report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.
+    """
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
     "stack update available notification": "A new version of the platform is available."

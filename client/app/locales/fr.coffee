@@ -204,7 +204,10 @@ module.exports =
     "term description": "Un terminal pour votre Cozy."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder message": "Rappel : %{message}"
-    "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
+    "warning unofficial app": """
+        Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.
+        Pour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.
+    """
     "installation message failure": "Échec de l'installation de %{appName}."
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
