@@ -98,8 +98,12 @@ module.exports = class MarketView extends BaseView
                 $('#no-app-message').hide()
                 @popover.hide()
                 @appList.show()
-                @hideApplication appWidget, =>
-                    @runInstallation appWidget.app, false
+                @waitApplication appWidget, true
+                @runInstallation appWidget.app
+                , =>
+                    @hideApplication appWidget
+                , =>
+                    @waitApplication appWidget, false
             cancel: (application) =>
                 @popover.hide()
                 @appList.show()
@@ -110,19 +114,34 @@ module.exports = class MarketView extends BaseView
             @appList.hide()
 
 
+    waitApplication: (appWidget, toggle = true) ->
+        if toggle
+            appWidget.installInProgress = true
+            appWidget.$el.spin 'large', '#363a46'
+            appWidget.$el.addClass 'install'
+
+        else
+            appWidget.installInProgress = false
+            appWidget.$el.spin false
+            appWidget.$el.removeClass 'install'
+
+
+
     hideApplication: (appWidget, callback) =>
         # Test if application is installed by the market
         # or directly with a repo github
         if appWidget.$el?
             appWidget.$el.fadeOut =>
                 setTimeout =>
-                    callback()
+                    callback() if typeof callback is 'function'
                 , 600
         else
             callback()
 
-    runInstallation: (application, shouldRedirect = true) =>
+    runInstallation: (application, shouldRedirect = true, errCallback) =>
         @hideError()
+
+        cb = shouldRedirect if typeof shouldRedirect is 'function'
 
         application.install
             ignoreMySocketNotification: true
@@ -132,11 +151,14 @@ module.exports = class MarketView extends BaseView
                 else
                     @resetForm()
                 @installedApps.add application
-                if shouldRedirect
+                if cb
+                    cb()
+                else if shouldRedirect
                     app?.routers.main.navigate 'home', true
 
             error: (jqXHR) =>
                 alert t JSON.parse(jqXHR.responseText).message
+                errCallback() if typeof errCallback is 'function'
 
     parseGitUrl: (url) ->
         url = url.trim()
