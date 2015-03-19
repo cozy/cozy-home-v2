@@ -776,6 +776,11 @@ body
     &:hover .buttons
         display flex
 
+        @media (max-width: 640px)
+            float left
+            clear left
+            margin-top 1em
+
     .buttons
         display: none
         align-items center
@@ -787,8 +792,15 @@ body
             min-height 24px
             font-size 12px
 
+            @media (max-width: 640px)
+                margin-right 5px
+
+            &:hover .label
+                display inline
+
         .label
             display none
+
 
         // overrides inline styles
         .spinner
@@ -804,15 +816,20 @@ body
 
     .comments
         clear both
+        float left
+        margin-top 1em
         font-size 14px
         line-height 20px
 
         img
             display inline-block
-            margin-right 5px
+            margin 0 5px 0 0
 
         a
             color grey
+
+            @media (max-width: 640px)
+                display none
 
 #config-applications-view
     .stack-app
