@@ -79,7 +79,7 @@ module.exports =
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
-    "hard drive gigabytes":"&nbsp;Go (Disque Dur)"
+    "hard drive gigabytes":"(Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
     "manage your applications":"Gérez vos applications"
     "manage your devices":"Gérez vos appareils"

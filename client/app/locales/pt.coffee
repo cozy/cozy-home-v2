@@ -80,7 +80,7 @@ module.exports =
     "configuration":"Configuração"
     "assistance":"Assistência"
     "hardware consumption":"Hardware"
-    "hard drive gigabytes":"&nbsp;GB (Disco Rigido)"
+    "hard drive gigabytes":"(Disco Rigido)"
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Gere as tuas aplicações"
     "manage your devices":"Gere os teus dispositivos"
