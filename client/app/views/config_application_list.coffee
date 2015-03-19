@@ -23,6 +23,16 @@ module.exports = class ApplicationsListView extends ViewCollection
     afterRender: =>
         @appList = @$ "#app-list"
 
+    appendView: (view) ->
+        if @$el.is ':empty'
+            @$el.append view.el
+        else
+            views = _.values @views
+            sortedViews = _.sortBy views, (view) ->
+                view.model.get('displayName').toLowerCase()
+            index = _.indexOf(sortedViews, view) - 1
+            view.$el.insertAfter @$el.find(".config-application:eq(#{index})")
+
     openUpdatePopover: (slug) ->
         appToUpdateView = null
         cids = Object.keys @views
