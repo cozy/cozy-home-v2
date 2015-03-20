@@ -66,7 +66,7 @@ Application.prototype.checkForUpdate = function(callback) {
     };
   })(this);
   if (this.needsUpdate) {
-    return callback(null, false);
+    return callback(null, true);
   } else {
     manifest = new Manifest();
     return manifest.download(this, (function(_this) {
