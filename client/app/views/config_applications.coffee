@@ -95,8 +95,8 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 action
                     success: =>
                         @popover.onSuccess()
-                    error: ->
-                        @popover.onError()
+                    error: (err) =>
+                        @popover.onError(err.responseText)
             cancel: (application) =>
                 @popover.hide()
                 @popover.remove()
@@ -109,11 +109,20 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
 
     onUpdateClicked: ->
         action = (cb) =>
+            {success, error} = cb or {}
             @applications.updateAll
                 success: =>
                     @stackApplications.updateStack cb
-                error: =>
-                    @popover.onError()
+                error: (err) =>
+                    @stackApplications.updateStack
+                        success: =>
+                            if error
+                                error err
+                            else
+                                success "ok"
+                        error: (stack_err) =>
+                            err.stack = stack_err
+                            error err if error
         @popoverManagement action
 
     onUpdateStackClicked: ->

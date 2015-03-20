@@ -1268,7 +1268,8 @@ module.exports = {
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?",
   "update stack modal confirm": "Update",
   "update stack success": "Your applications are updated, page will refresh.",
-  "update stack error": "An error occured during update.",
+  "update stack error": "An error occured during update, page will refresh.",
+  "applications broken": "Applications broken",
   "cozy platform": "Platform",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
@@ -1483,8 +1484,9 @@ module.exports = {
   "update stack modal title": "Mise à jour de votre Cozy",
   "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Êtes-vous sûr ?",
   "update stack modal confirm": "Mettre à jour",
-  "update stack success": "Vos applications ont bien été mise à jour, la page va se rafraichir.",
-  "update stack error": "Une erreur s'est produit pendant la mise à jour.",
+  "update stack success": "Vos applications ont bien été mises à jour, la page va se rafraichir.",
+  "update stack error": "Une erreur s'est produit pendant la mise à jour, la page va se rafraichir.",
+  "applications broken": "Applications cassées",
   "reboot stack": "Redémarrer",
   "cozy platform": "Plate-forme",
   "update error": "Une erreur est survenue pendant la mise à jour",
@@ -1697,8 +1699,9 @@ module.exports = {
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?",
   "update stack modal confirm": "Actualizar",
   "update stack success": "Your applications are updated, page will refresh.",
-  "update stack error": "An error occured during update.",
+  "update stack error": "An error occured during update, page will refresh.",
   "update error": "Ocurreu um erro durante a actualização da aplicação",
+  "applications broken": "Applications broken",
   "broken": "quebrado",
   "start this app": "iniciar esta aplicação",
   "stopped": "parada",
@@ -3625,8 +3628,8 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
           success: function() {
             return _this.popover.onSuccess();
           },
-          error: function() {
-            return this.popover.onError();
+          error: function(err) {
+            return _this.popover.onError(err.responseText);
           }
         });
       },
@@ -3648,12 +3651,28 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     var action,
       _this = this;
     action = function(cb) {
+      var error, success, _ref;
+      _ref = cb || {}, success = _ref.success, error = _ref.error;
       return _this.applications.updateAll({
         success: function() {
           return _this.stackApplications.updateStack(cb);
         },
-        error: function() {
-          return _this.popover.onError();
+        error: function(err) {
+          return _this.stackApplications.updateStack({
+            success: function() {
+              if (error) {
+                return error(err);
+              } else {
+                return success("ok");
+              }
+            },
+            error: function(stack_err) {
+              err.stack = stack_err;
+              if (error) {
+                return error(err);
+              }
+            }
+          });
         }
       });
     };
@@ -5695,7 +5714,8 @@ module.exports = UpdateStackModal = (function(_super) {
     this.$('.step2').hide();
     this.$('.success').hide();
     this.$('.error').hide();
-    return this.$('#ok').hide();
+    this.$('#ok').hide();
+    return this.body = this.$(".md-body");
   };
 
   UpdateStackModal.prototype.handleContentHeight = function() {
@@ -5733,12 +5753,26 @@ module.exports = UpdateStackModal = (function(_super) {
     return this.$('#confirmbtn').hide();
   };
 
-  UpdateStackModal.prototype.onError = function() {
+  UpdateStackModal.prototype.onError = function(err) {
+    var app, appError, _i, _len, _ref1, _results;
     this.$('.step2').hide();
     this.$('.error').show();
     this.$('#ok').show();
     this.$('#confirmbtn').hide();
-    return this.endCallback(false);
+    this.endCallback(false);
+    err = JSON.parse(err);
+    if (Object.keys(err.message).length > 0) {
+      appError = $("<div class='app-broken'>\n    <h5> " + (t('applications broken')) + ": </h5>\n</div>");
+      this.body.append(appError);
+      _ref1 = Object.keys(err.message);
+      _results = [];
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        app = _ref1[_i];
+        appError = $("<div class='app-broken'>\n    " + app + "\n</div>");
+        _results.push(this.body.append(appError));
+      }
+      return _results;
+    }
   };
 
   UpdateStackModal.prototype.onClose = function() {

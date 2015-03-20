@@ -29,6 +29,7 @@ module.exports = class UpdateStackModal extends BaseView
         @$('.success').hide()
         @$('.error').hide()
         @$('#ok').hide()
+        @body = @$ ".md-body"
 
     handleContentHeight: ->
         @body.css 'max-height', "#{$(window).height() / 2}px"
@@ -58,12 +59,28 @@ module.exports = class UpdateStackModal extends BaseView
         @$('#ok').show()
         @$('#confirmbtn').hide()
 
-    onError: ->
+    onError: (err) ->
         @$('.step2').hide()
         @$('.error').show()
         @$('#ok').show()
         @$('#confirmbtn').hide()
         @endCallback false
+        err = JSON.parse err
+        if Object.keys(err.message).length > 0
+            appError = $ """
+                <div class='app-broken'>
+                    <h5> #{t('applications broken')}: </h5>
+                </div>
+            """
+            @body.append appError
+            for app in Object.keys(err.message)
+                appError = $ """
+                    <div class='app-broken'>
+                        #{app}
+                    </div>
+                """
+                @body.append appError
+
 
     onClose: ->
         @hide()
