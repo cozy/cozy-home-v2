@@ -67,7 +67,7 @@ module.exports = class MarketView extends BaseView
 
     onEnterPressed: (event) =>
         if event.which is 13 and not @popover?.$el.is(':visible')
-            @onInstallClicked()
+            @onInstallClicked(event)
         else if event.which is 13
             @popover?.confirmCallback()
 
@@ -76,7 +76,6 @@ module.exports = class MarketView extends BaseView
 
         @parsedGit data
         event.preventDefault()
-        return false
 
     # parse git url before install application
     parsedGit: (app) ->
@@ -98,12 +97,15 @@ module.exports = class MarketView extends BaseView
                 $('#no-app-message').hide()
                 @popover.hide()
                 @appList.show()
-                @waitApplication appWidget, true
-                @runInstallation appWidget.app
-                , =>
-                    @hideApplication appWidget
-                , =>
-                    @waitApplication appWidget, false
+                if appWidget.$el
+                    @waitApplication appWidget, true
+                    @runInstallation appWidget.app
+                    , =>
+                        @hideApplication appWidget
+                    , =>
+                        @waitApplication appWidget, false
+                else
+                    @runInstallation appWidget.app
             cancel: (application) =>
                 @popover.hide()
                 @appList.show()
