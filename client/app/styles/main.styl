@@ -684,6 +684,9 @@ body
     transition: all 0.3s
     text-align: left
 
+    &.install
+        opacity .35
+
     h3
         margin-top: 30px
         margin-bottom: 0
@@ -748,23 +751,21 @@ body
 
 .config-application
     background: lightgrey
-    padding 10px 10px 0 10px
-    margin-bottom: 5px
+    padding 10px
+    margin-bottom: 10px
     border-radius: 5px
 
     strong
         text-transform: lowercase
         font-size: 20px
 
-    .mod
-        margin-left: 5px
-        display inline-block
-
-    .mod.left
-        margin: 0
-
     .smaller
         font-family: 'Source Sans Pro', sans-serif
+        display flex
+        align-items center
+
+        input
+            margin 0 5px 0
 
     .md-header
         background: transparent
@@ -775,15 +776,64 @@ body
         .btn
             font-weight: normal
 
+    &:hover .buttons
+        display flex
+
+        @media (max-width: 640px)
+            float left
+            clear left
+            margin-top 1em
+
     .buttons
         display: none
+        align-items center
+
+        button
+            position relative
+            margin 0 0 0 5px
+            min-width 24px
+            min-height 24px
+            font-size 12px
+
+            @media (max-width: 640px)
+                margin-right 5px
+
+            &:hover .label
+                display inline
+
+        .label
+            display none
+
+
+        // overrides inline styles
+        .spinner
+            position absolute !important
+            top 50% !important
+            left 50% !important
+            transform translateX(-50%) translateY(-50%)
+
+        .spinner + i
+            opacity .35
 
     .img
         width: 72px
 
-.config-application:hover
-    .buttons
-        display: inline-block
+    .comments
+        clear both
+        float left
+        margin-top 1em
+        font-size 14px
+        line-height 20px
+
+        img
+            display inline-block
+            margin 0 5px 0 0
+
+        a
+            color grey
+
+            @media (max-width: 640px)
+                display none
 
 #config-applications-view
     .stack-app
@@ -941,13 +991,29 @@ body
         position: absolute
 
 .noncozy-warning
-    font-weight: bold
-    font-size: 14px
     margin-top: 20px
-    padding: 5px 10px
-    color: grey
-    background: lightred
+    padding 5px 10px
     border-radius: 5px
+    background lightgreyblue
+
+    .fa
+        float left
+        font-size 28px
+        margin 5px 10px 5px 0
+        color blue
+
+    span
+    a
+        font-weight bold
+        font-size 14px
+        color black
+
+    a
+        color blue
+
+        &:hover
+            color orange
+
 
 .md-body
 

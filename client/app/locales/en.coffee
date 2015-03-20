@@ -80,7 +80,7 @@ module.exports =
     "configuration":"Configuration"
     "assistance":"Assistance"
     "hardware consumption":"Hardware"
-    "hard drive gigabytes":"&nbsp;GB (Hard Drive)"
+    "hard drive gigabytes":"(Hard Drive)"
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Manage your applications"
     "manage your devices":"Manage your devices"
@@ -196,7 +196,10 @@ module.exports =
     Details: %{details}
     """
     "reminder message": "Reminder: %{message}"
-    "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
+    "warning unofficial app": """
+        This app is a communautary app and isn't maintained by the Cozy team.
+        To report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.
+    """
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
     "stack update available notification": "A new version of the platform is available."
@@ -210,6 +213,8 @@ module.exports =
             You can also <a href="%{account}">go to your settings</a> to customize your Cozy
             or <a href="%{appstore}">take a look at the App Store</a> to install your first app.
         """
+
+    'relaunch install wizard': "Relaunch install wizard"
 
     'installwizard':
         'welcome title': "Welcome to your new Cozy"

@@ -936,7 +936,7 @@ return buf.join("");
 };
 });
 
-;require.register("lib/view_collection", function(exports, require, module) {
+require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1228,7 +1228,7 @@ module.exports = {
   "configuration": "Configuration",
   "assistance": "Assistance",
   "hardware consumption": "Hardware",
-  "hard drive gigabytes": "&nbsp;GB (Hard Drive)",
+  "hard drive gigabytes": "(Hard Drive)",
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Manage your applications",
   "manage your devices": "Manage your devices",
@@ -1327,7 +1327,7 @@ module.exports = {
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
   "reminder message": "Reminder: %{message}",
-  "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
+  "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
@@ -1335,6 +1335,7 @@ module.exports = {
     'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help you to install and configure your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> to discover your Cozy features.",
     'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
   },
+  'relaunch install wizard': "Relaunch install wizard",
   'installwizard': {
     'welcome title': "Welcome to your new Cozy",
     'welcome content': "<p>This wizard will help you to choose, install and configure your apps in your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
@@ -1411,7 +1412,7 @@ module.exports = {
   "confirm": "Confirmer",
   "installing": "Installation en cours",
   "remove": "enlever",
-  "update": "m.à.j.",
+  "update": "mettre à jour",
   "started": "démarrée",
   "notifications": "Notifications",
   "questions and help forum": "Forum d'aide",
@@ -1441,7 +1442,7 @@ module.exports = {
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
-  "hard drive gigabytes": "&nbsp;Go (Disque Dur)",
+  "hard drive gigabytes": "(Disque Dur)",
   "memory megabytes": "&nbsp;Mo (RAM)",
   "manage your applications": "Gérez vos applications",
   "manage your devices": "Gérez vos appareils",
@@ -1538,7 +1539,7 @@ module.exports = {
   "term description": "Un terminal pour votre Cozy.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder message": "Rappel : %{message}",
-  "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy.",
+  "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
   "installation message failure": "Échec de l'installation de %{appName}.",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
@@ -1546,6 +1547,7 @@ module.exports = {
     'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
     'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'Applithèque</a> pour installer votre première application."
   },
+  'relaunch install wizard': "Relancer l'assistant d'installation",
   'installwizard': {
     'welcome title': "Bienvenue dans votre Cozy",
     'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
@@ -1653,7 +1655,7 @@ module.exports = {
   "configuration": "Configuração",
   "assistance": "Assistência",
   "hardware consumption": "Hardware",
-  "hard drive gigabytes": "&nbsp;GB (Disco Rigido)",
+  "hard drive gigabytes": "(Disco Rigido)",
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Gere as tuas aplicações",
   "manage your devices": "Gere os teus dispositivos",
@@ -1716,13 +1718,14 @@ module.exports = {
   "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
   "reminder title email": "[Cozy-Calendar] Reminder",
   "reminder message": "Reminder: %{message}",
-  "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
+  "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
   'noapps': {
     'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help you to install and configure your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> to discover your Cozy features.",
     'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
   },
+  'relaunch install wizard': "Relaunch install wizard",
   'installwizard': {
     'welcome title': "Welcome to your new Cozy",
     'welcome content': "<p>This wizard will help you to choose, install and configure your apps in your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
@@ -2311,7 +2314,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
+require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2325,13 +2328,13 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
+require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('<div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
@@ -2354,22 +2357,38 @@ buf.push('<span>&nbsp;</span><img');
 buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
 buf.push('/>');
 }
-buf.push('</div><div class="buttons right"><div class="mod right"><button class="btn remove-app">');
-var __val__ = t('remove')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="mod right"><button class="btn update-app">');
-var __val__ = t('update')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
+buf.push('</span><div class="buttons right"><span class="smaller"><input');
+buf.push(attrs({ 'type':("checkbox"), 'title':("always on"), 'checked':("checked"), 'name':("app-stoppable-" + (app.id) + ""), "class": ("app-stoppable") }, {"class":true,"type":true,"title":true,"checked":true,"name":true}));
+buf.push('/><label');
+buf.push(attrs({ 'for':("app-stoppable-" + (app.id) + "") }, {"for":true}));
+buf.push('>auto stop</label></span><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off"></i> <span class="label">');
 var __val__ = t('stop this app')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div></div>');
+buf.push('</span></button><button class="btn update-app"><i class="fa fa-refresh"></i> <span class="label">');
+var __val__ = t('update')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button><button class="btn remove-app"><i class="fa fa-trash"></i> <span class="label">');
+var __val__ = t('remove')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div><div class="comments">');
+if ( app.comment === 'official application')
+{
+buf.push('<img');
+buf.push(attrs({ 'src':("img/happycloud-black.svg"), 'alt':("" + (t(app.comment)) + ""), 'width':("20") }, {"src":true,"alt":true,"width":true}));
+buf.push('/>');
+}
+buf.push('<a');
+buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+buf.push('>');
+var __val__ = app.website
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
+require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2380,7 +2399,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
+require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2389,13 +2408,7 @@ var interp;
 buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>');
-var __val__ = t('hard drive gigabytes')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
-var __val__ = t('memory megabytes')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><h4>');
+buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line buttons"><button class="btn update-stack">');
@@ -2422,7 +2435,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
+require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2440,7 +2453,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
+require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2451,7 +2464,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
+require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2460,7 +2473,10 @@ var interp;
 buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">');
 var __val__ = t('do you want assistance')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line pa2"><p class="help-text mt2">');
+buf.push('</h4><div class="line pa2"><p class="help-text"><a href="/home/install" class="wizard">');
+var __val__ = t('relaunch install wizard')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></p></div><div class="line pa2"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
@@ -2481,7 +2497,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
+require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2498,7 +2514,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
+require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2522,7 +2538,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application", function(exports, require, module) {
+require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2537,7 +2553,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application_widget", function(exports, require, module) {
+require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2551,7 +2567,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/layout", function(exports, require, module) {
+require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2584,7 +2600,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
+require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2608,7 +2624,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
+require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2637,7 +2653,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
+require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2651,7 +2667,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
+require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2663,7 +2679,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
+require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2678,7 +2694,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2694,7 +2710,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
+require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2706,7 +2722,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
+require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2724,7 +2740,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
+require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2737,10 +2753,10 @@ buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
 buf.push('><img src="img/star-white.png"/></a></div></div>');
 if ( (model.comment !== 'official application'))
 {
-buf.push('<div class="line noncozy-warning">');
+buf.push('<div class="line noncozy-warning"><i class="fa fa-info-circle"></i><span>');
 var __val__ = t('warning unofficial app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div>');
+buf.push(null == __val__ ? "" : __val__);
+buf.push('</span></div>');
 }
 buf.push('</div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
 var __val__ = t('install')
@@ -2754,7 +2770,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
+require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2787,7 +2803,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/tutorial", function(exports, require, module) {
+require.register("templates/tutorial", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2862,7 +2878,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/update_stack_modal", function(exports, require, module) {
+require.register("templates/update_stack_modal", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2889,7 +2905,7 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
+require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -3146,7 +3162,9 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.getRenderData = function() {
     return {
-      app: this.model.attributes
+      app: _.extend({}, this.model.attributes, {
+        website: this.model.get('website') || this.model.get('git').slice(0, -4)
+      })
     };
   };
 
@@ -3249,7 +3267,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onRemoveClicked = function(event) {
     var _this = this;
     event.preventDefault();
-    this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.removeButton.displayGrey("");
     this.removeButton.spin(true, '#ffffff');
     this.stateLabel.html(t('removing'));
     return this.model.uninstall({
@@ -3295,7 +3313,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onStartStopClicked = function(event) {
     var _this = this;
     event.preventDefault();
-    this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.startStopBtn.displayGrey("");
     this.startStopBtn.spin(true, '#ffffff');
     if (this.model.isRunning()) {
       return this.model.stop({
@@ -3348,7 +3366,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.updateApp = function() {
     var _this = this;
     Backbone.Mediator.pub('app-state-changed', true);
-    this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.updateButton.displayGrey("");
     this.updateButton.spin('small', '#ffffff');
     if (this.model.get('state') !== 'broken') {
       this.stateLabel.html(t('updating'));
@@ -3357,6 +3375,7 @@ module.exports = ApplicationRow = (function(_super) {
     }
     return this.model.updateApp({
       success: function() {
+        _this.updateButton.spin(false);
         if (_this.model.get('state') === 'installed') {
           _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('started'));
@@ -3369,6 +3388,7 @@ module.exports = ApplicationRow = (function(_super) {
         }
       },
       error: function(jqXHR) {
+        _this.updateButton.spin(false);
         alert(t('update error'));
         _this.stateLabel.html(t('broken'));
         _this.updateButton.displayRed(t("update failed"));
@@ -3425,6 +3445,20 @@ module.exports = ApplicationsListView = (function(_super) {
 
   ApplicationsListView.prototype.afterRender = function() {
     return this.appList = this.$("#app-list");
+  };
+
+  ApplicationsListView.prototype.appendView = function(view) {
+    var index, sortedViews, views;
+    if (this.$el.is(':empty')) {
+      return this.$el.append(view.el);
+    } else {
+      views = _.values(this.views);
+      sortedViews = _.sortBy(views, function(view) {
+        return view.model.get('displayName').toLowerCase();
+      });
+      index = _.indexOf(sortedViews, view) - 1;
+      return view.$el.insertAfter(this.$el.find(".config-application:eq(" + index + ")"));
+    }
   };
 
   ApplicationsListView.prototype.openUpdatePopover = function(slug) {
@@ -3570,7 +3604,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
         _this.displayMemory(data.freeMem, data.totalMem);
-        return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+        return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace, data.unit);
       }
     });
   };
@@ -3580,9 +3614,9 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     return this.memoryFree.find('.total').html(Math.floor(total / 1000));
   };
 
-  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
+  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total, unit) {
     this.diskSpace.find('.amount').html(amount);
-    return this.diskSpace.find('.total').html(total);
+    return this.diskSpace.find('.total').html("" + total + " " + (unit || 'G'));
   };
 
   ConfigApplicationsView.prototype.onAppStateChanged = function() {
@@ -3737,7 +3771,7 @@ module.exports = DevicesListView = (function(_super) {
 });
 
 ;require.register("views/help", function(exports, require, module) {
-var BaseView,
+var BaseView, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -3746,19 +3780,24 @@ BaseView = require('lib/base_view');
 module.exports = exports.AccountView = (function(_super) {
   __extends(AccountView, _super);
 
+  function AccountView() {
+    _ref = AccountView.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
   AccountView.prototype.id = 'help-view';
 
   AccountView.prototype.template = require('templates/help');
 
-  function AccountView() {
-    AccountView.__super__.constructor.call(this);
-  }
+  AccountView.prototype.events = {
+    'click .wizard': 'displayWizard'
+  };
 
   AccountView.prototype.afterRender = function() {
     var _this = this;
     return $.get("api/instances/", function(data) {
-      var helpUrl, instance, template, _ref;
-      instance = (_ref = data.rows) != null ? _ref[0] : void 0;
+      var helpUrl, instance, template, _ref1;
+      instance = (_ref1 = data.rows) != null ? _ref1[0] : void 0;
       helpUrl = instance != null ? instance.helpUrl : void 0;
       if (helpUrl != null) {
         template = require('templates/help_url');
@@ -3766,6 +3805,15 @@ module.exports = exports.AccountView = (function(_super) {
           helpUrl: helpUrl
         }));
       }
+    });
+  };
+
+  AccountView.prototype.displayWizard = function(event) {
+    var dest;
+    event.preventDefault();
+    dest = event.target.getAttribute('href');
+    return window.app.routers.main.navigate(dest, {
+      trigger: true
     });
   };
 
@@ -4868,8 +4916,11 @@ module.exports = MarketView = (function(_super) {
         $('#no-app-message').hide();
         _this.popover.hide();
         _this.appList.show();
-        return _this.hideApplication(appWidget, function() {
-          return _this.runInstallation(appWidget.app);
+        _this.waitApplication(appWidget, true);
+        return _this.runInstallation(appWidget.app, function() {
+          return _this.hideApplication(appWidget);
+        }, function() {
+          return _this.waitApplication(appWidget, false);
         });
       },
       cancel: function(application) {
@@ -4884,12 +4935,29 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
+  MarketView.prototype.waitApplication = function(appWidget, toggle) {
+    if (toggle == null) {
+      toggle = true;
+    }
+    if (toggle) {
+      appWidget.installInProgress = true;
+      appWidget.$el.spin('large', '#363a46');
+      return appWidget.$el.addClass('install');
+    } else {
+      appWidget.installInProgress = false;
+      appWidget.$el.spin(false);
+      return appWidget.$el.removeClass('install');
+    }
+  };
+
   MarketView.prototype.hideApplication = function(appWidget, callback) {
     var _this = this;
     if (appWidget.$el != null) {
       return appWidget.$el.fadeOut(function() {
         return setTimeout(function() {
-          return callback();
+          if (typeof callback === 'function') {
+            return callback();
+          }
         }, 600);
       });
     } else {
@@ -4897,12 +4965,16 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
-  MarketView.prototype.runInstallation = function(application, shouldRedirect) {
-    var _this = this;
+  MarketView.prototype.runInstallation = function(application, shouldRedirect, errCallback) {
+    var cb,
+      _this = this;
     if (shouldRedirect == null) {
       shouldRedirect = true;
     }
     this.hideError();
+    if (typeof shouldRedirect === 'function') {
+      cb = shouldRedirect;
+    }
     return application.install({
       ignoreMySocketNotification: true,
       success: function(data) {
@@ -4912,12 +4984,17 @@ module.exports = MarketView = (function(_super) {
           _this.resetForm();
         }
         _this.installedApps.add(application);
-        if (shouldRedirect) {
+        if (cb) {
+          return cb();
+        } else if (shouldRedirect) {
           return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
         }
       },
       error: function(jqXHR) {
-        return alert(t(JSON.parse(jqXHR.responseText).message));
+        alert(t(JSON.parse(jqXHR.responseText).message));
+        if (typeof errCallback === 'function') {
+          return errCallback();
+        }
       }
     });
   };
@@ -5022,6 +5099,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.afterRender = __bind(this.afterRender, this);
     ApplicationRow.__super__.constructor.call(this);
     this.mouseOut = true;
+    this.installInProgress = false;
   }
 
   ApplicationRow.prototype.afterRender = function() {
@@ -5043,6 +5121,9 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onInstallClicked = function() {
+    if (this.installInProgress) {
+      return;
+    }
     return this.marketView.showDescription(this, this.installButton);
   };
 
@@ -5708,11 +5789,12 @@ var ColorButton;
 module.exports = ColorButton = (function() {
   function ColorButton(button) {
     this.button = button;
+    this.label = this.button.find('.label' || this.button);
   }
 
   ColorButton.prototype.displayGrey = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.removeClass("btn-red");
     this.button.removeClass("btn-green");
     return this.button.removeClass("btn-orange");
@@ -5720,7 +5802,7 @@ module.exports = ColorButton = (function() {
 
   ColorButton.prototype.displayOrange = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.removeClass("btn-red");
     this.button.removeClass("btn-green");
     return this.button.addClass("btn-orange");
@@ -5728,7 +5810,7 @@ module.exports = ColorButton = (function() {
 
   ColorButton.prototype.displayGreen = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.addClass("btn-green");
     this.button.removeClass("btn-red");
     return this.button.removeClass("btn-orange");
@@ -5736,7 +5818,7 @@ module.exports = ColorButton = (function() {
 
   ColorButton.prototype.displayRed = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.removeClass("btn-green");
     this.button.addClass("btn-red");
     return this.button.removeClass("btn-orange");

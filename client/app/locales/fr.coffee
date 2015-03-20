@@ -32,7 +32,7 @@ module.exports =
     "confirm"                   : "Confirmer"
     "installing"                : "Installation en cours"
     "remove"                    : "enlever"
-    "update"                    : "m.à.j."
+    "update"                    : "mettre à jour"
     "started"                   : "démarrée"
     "notifications"             : "Notifications"
     "questions and help forum"  : "Forum d'aide"
@@ -79,7 +79,7 @@ module.exports =
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
-    "hard drive gigabytes":"&nbsp;Go (Disque Dur)"
+    "hard drive gigabytes":"(Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
     "manage your applications":"Gérez vos applications"
     "manage your devices":"Gérez vos appareils"
@@ -204,7 +204,10 @@ module.exports =
     "term description": "Un terminal pour votre Cozy."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder message": "Rappel : %{message}"
-    "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
+    "warning unofficial app": """
+        Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.
+        Pour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.
+    """
     "installation message failure": "Échec de l'installation de %{appName}."
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
@@ -218,6 +221,8 @@ module.exports =
             Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
             ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
         """
+
+    'relaunch install wizard': "Relancer l'assistant d'installation"
 
     'installwizard':
         'welcome title': "Bienvenue dans votre Cozy"
