@@ -73,6 +73,13 @@ body
     height: 48px
     padding: 0
 
+    a
+        opacity .5
+        transition opacity .3s
+
+        &:hover
+            opacity 1
+
     span
         margin: 0
 
@@ -90,8 +97,6 @@ body
     font-size .8em
 
     color white
-    opacity .5
-    transition opacity .3s
 
     &:hover
         color white
@@ -144,14 +149,6 @@ body
 
     #current-application
         font-weight: normal
-        opacity: 0.5
-
-    #current-application:active
-        color: white
-
-    #current-application:hover
-        color: white
-        opacity: 1
 
     span
         font-size: 28px

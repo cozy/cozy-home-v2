@@ -1129,7 +1129,7 @@ module.exports = WizardView = (function(_super) {
       event.preventDefault();
     }
     this.el.removeAttribute('open');
-    document.removeEventListener('keyup', this.close);
+    document.removeEventListener('keydown', this.close);
     if (!this.isDialogEnabled) {
       return this.$backdrop.remove();
     }
@@ -5591,9 +5591,10 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.$el.addClass('md-show');
     this.overlay.addClass('md-show');
     $('#home-content').addClass('md-open');
-    return setTimeout(function() {
+    setTimeout(function() {
       return _this.$('.md-content').addClass('md-show');
     }, 300);
+    return document.addEventListener('keydown', this.onCancelClicked);
   };
 
   PopoverDescriptionView.prototype.hide = function() {
@@ -5604,10 +5605,14 @@ module.exports = PopoverDescriptionView = (function(_super) {
       _this.$el.removeClass('md-show');
       return _this.remove();
     });
-    return $('#home-content').removeClass('md-open');
+    $('#home-content').removeClass('md-open');
+    return document.removeEventListener('keydown', this.onCancelClicked);
   };
 
-  PopoverDescriptionView.prototype.onCancelClicked = function() {
+  PopoverDescriptionView.prototype.onCancelClicked = function(event) {
+    if ((event.keyCode != null) && event.keyCode !== 27) {
+      return;
+    }
     this.hide();
     return this.cancelCallback(this.model);
   };
