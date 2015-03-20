@@ -2124,6 +2124,12 @@ body {
   transition: all 0.3s;
   text-align: left;
 }
+#market-view #no-app-message.install,
+.cozy-app.install {
+  opacity: 0.35;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=35)";
+  filter: alpha(opacity=35);
+}
 #market-view #no-app-message h3,
 .cozy-app h3 {
   margin-top: 30px;
@@ -2245,6 +2251,13 @@ body {
   display: box;
   display: flex;
 }
+@media (max-width: 640px) {
+  .config-application:hover .buttons {
+    float: left;
+    clear: left;
+    margin-top: 1em;
+  }
+}
 .config-application .buttons {
   display: none;
   -webkit-box-align: center;
@@ -2261,13 +2274,26 @@ body {
   min-height: 24px;
   font-size: 12px;
 }
+@media (max-width: 640px) {
+  .config-application .buttons button {
+    margin-right: 5px;
+  }
+}
+.config-application .buttons button:hover .label {
+  display: inline;
+}
 .config-application .buttons .label {
   display: none;
 }
 .config-application .buttons .spinner {
   position: absolute !important;
-  top: 12px !important;
-  left: 12px !important;
+  top: 50% !important;
+  left: 50% !important;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
 }
 .config-application .buttons .spinner + i {
   opacity: 0.35;
@@ -2279,15 +2305,22 @@ body {
 }
 .config-application .comments {
   clear: both;
+  float: left;
+  margin-top: 1em;
   font-size: 14px;
   line-height: 20px;
 }
 .config-application .comments img {
   display: inline-block;
-  margin-right: 5px;
+  margin: 0 5px 0 0;
 }
 .config-application .comments a {
   color: #808080;
+}
+@media (max-width: 640px) {
+  .config-application .comments a {
+    display: none;
+  }
 }
 #config-applications-view .stack-app .app {
   font-weight: normal;

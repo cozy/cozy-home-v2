@@ -1412,7 +1412,7 @@ module.exports = {
   "confirm": "Confirmer",
   "installing": "Installation en cours",
   "remove": "enlever",
-  "update": "m.à.j.",
+  "update": "mettre à jour",
   "started": "démarrée",
   "notifications": "Notifications",
   "questions and help forum": "Forum d'aide",
@@ -2361,13 +2361,13 @@ buf.push('</span><div class="buttons right"><span class="smaller"><input');
 buf.push(attrs({ 'type':("checkbox"), 'title':("always on"), 'checked':("checked"), 'name':("app-stoppable-" + (app.id) + ""), "class": ("app-stoppable") }, {"class":true,"type":true,"title":true,"checked":true,"name":true}));
 buf.push('/><label');
 buf.push(attrs({ 'for':("app-stoppable-" + (app.id) + "") }, {"for":true}));
-buf.push('>auto stop</label></span><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off"></i><span class="label">');
+buf.push('>auto stop</label></span><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off"></i> <span class="label">');
 var __val__ = t('stop this app')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn update-app"><i class="fa fa-refresh"></i><span class="label">');
+buf.push('</span></button><button class="btn update-app"><i class="fa fa-refresh"></i> <span class="label">');
 var __val__ = t('update')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn remove-app"><i class="fa fa-trash"></i><span class="label">');
+buf.push('</span></button><button class="btn remove-app"><i class="fa fa-trash"></i> <span class="label">');
 var __val__ = t('remove')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button></div><div class="comments">');
@@ -3267,7 +3267,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onRemoveClicked = function(event) {
     var _this = this;
     event.preventDefault();
-    this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.removeButton.displayGrey("");
     this.removeButton.spin(true, '#ffffff');
     this.stateLabel.html(t('removing'));
     return this.model.uninstall({
@@ -3313,7 +3313,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onStartStopClicked = function(event) {
     var _this = this;
     event.preventDefault();
-    this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.startStopBtn.displayGrey("");
     this.startStopBtn.spin(true, '#ffffff');
     if (this.model.isRunning()) {
       return this.model.stop({
@@ -3366,7 +3366,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.updateApp = function() {
     var _this = this;
     Backbone.Mediator.pub('app-state-changed', true);
-    this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.updateButton.displayGrey("");
     this.updateButton.spin('small', '#ffffff');
     if (this.model.get('state') !== 'broken') {
       this.stateLabel.html(t('updating'));
@@ -3375,6 +3375,7 @@ module.exports = ApplicationRow = (function(_super) {
     }
     return this.model.updateApp({
       success: function() {
+        _this.updateButton.spin(false);
         if (_this.model.get('state') === 'installed') {
           _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('started'));
@@ -3387,6 +3388,7 @@ module.exports = ApplicationRow = (function(_super) {
         }
       },
       error: function(jqXHR) {
+        _this.updateButton.spin(false);
         alert(t('update error'));
         _this.stateLabel.html(t('broken'));
         _this.updateButton.displayRed(t("update failed"));
@@ -4914,8 +4916,11 @@ module.exports = MarketView = (function(_super) {
         $('#no-app-message').hide();
         _this.popover.hide();
         _this.appList.show();
-        return _this.hideApplication(appWidget, function() {
-          return _this.runInstallation(appWidget.app, false);
+        _this.waitApplication(appWidget, true);
+        return _this.runInstallation(appWidget.app, function() {
+          return _this.hideApplication(appWidget);
+        }, function() {
+          return _this.waitApplication(appWidget, false);
         });
       },
       cancel: function(application) {
@@ -4930,12 +4935,29 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
+  MarketView.prototype.waitApplication = function(appWidget, toggle) {
+    if (toggle == null) {
+      toggle = true;
+    }
+    if (toggle) {
+      appWidget.installInProgress = true;
+      appWidget.$el.spin('large', '#363a46');
+      return appWidget.$el.addClass('install');
+    } else {
+      appWidget.installInProgress = false;
+      appWidget.$el.spin(false);
+      return appWidget.$el.removeClass('install');
+    }
+  };
+
   MarketView.prototype.hideApplication = function(appWidget, callback) {
     var _this = this;
     if (appWidget.$el != null) {
       return appWidget.$el.fadeOut(function() {
         return setTimeout(function() {
-          return callback();
+          if (typeof callback === 'function') {
+            return callback();
+          }
         }, 600);
       });
     } else {
@@ -4943,12 +4965,16 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
-  MarketView.prototype.runInstallation = function(application, shouldRedirect) {
-    var _this = this;
+  MarketView.prototype.runInstallation = function(application, shouldRedirect, errCallback) {
+    var cb,
+      _this = this;
     if (shouldRedirect == null) {
       shouldRedirect = true;
     }
     this.hideError();
+    if (typeof shouldRedirect === 'function') {
+      cb = shouldRedirect;
+    }
     return application.install({
       ignoreMySocketNotification: true,
       success: function(data) {
@@ -4958,12 +4984,17 @@ module.exports = MarketView = (function(_super) {
           _this.resetForm();
         }
         _this.installedApps.add(application);
-        if (shouldRedirect) {
+        if (cb) {
+          return cb();
+        } else if (shouldRedirect) {
           return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
         }
       },
       error: function(jqXHR) {
-        return alert(t(JSON.parse(jqXHR.responseText).message));
+        alert(t(JSON.parse(jqXHR.responseText).message));
+        if (typeof errCallback === 'function') {
+          return errCallback();
+        }
       }
     });
   };
@@ -5068,6 +5099,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.afterRender = __bind(this.afterRender, this);
     ApplicationRow.__super__.constructor.call(this);
     this.mouseOut = true;
+    this.installInProgress = false;
   }
 
   ApplicationRow.prototype.afterRender = function() {
@@ -5089,6 +5121,9 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onInstallClicked = function() {
+    if (this.installInProgress) {
+      return;
+    }
     return this.marketView.showDescription(this, this.installButton);
   };
 

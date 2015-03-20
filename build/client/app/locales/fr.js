@@ -33,7 +33,7 @@ module.exports = {
   "confirm": "Confirmer",
   "installing": "Installation en cours",
   "remove": "enlever",
-  "update": "m.à.j.",
+  "update": "mettre à jour",
   "started": "démarrée",
   "notifications": "Notifications",
   "questions and help forum": "Forum d'aide",
