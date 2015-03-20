@@ -4877,7 +4877,7 @@ module.exports = MarketView = (function(_super) {
   MarketView.prototype.onEnterPressed = function(event) {
     var _ref, _ref1;
     if (event.which === 13 && !((_ref = this.popover) != null ? _ref.$el.is(':visible') : void 0)) {
-      return this.onInstallClicked();
+      return this.onInstallClicked(event);
     } else if (event.which === 13) {
       return (_ref1 = this.popover) != null ? _ref1.confirmCallback() : void 0;
     }
@@ -4889,8 +4889,7 @@ module.exports = MarketView = (function(_super) {
       git: this.$("#app-git-field").val()
     };
     this.parsedGit(data);
-    event.preventDefault();
-    return false;
+    return event.preventDefault();
   };
 
   MarketView.prototype.parsedGit = function(app) {
@@ -4916,12 +4915,16 @@ module.exports = MarketView = (function(_super) {
         $('#no-app-message').hide();
         _this.popover.hide();
         _this.appList.show();
-        _this.waitApplication(appWidget, true);
-        return _this.runInstallation(appWidget.app, function() {
-          return _this.hideApplication(appWidget);
-        }, function() {
-          return _this.waitApplication(appWidget, false);
-        });
+        if (appWidget.$el) {
+          _this.waitApplication(appWidget, true);
+          return _this.runInstallation(appWidget.app, function() {
+            return _this.hideApplication(appWidget);
+          }, function() {
+            return _this.waitApplication(appWidget, false);
+          });
+        } else {
+          return _this.runInstallation(appWidget.app);
+        }
       },
       cancel: function(application) {
         _this.popover.hide();
