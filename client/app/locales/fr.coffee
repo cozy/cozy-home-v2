@@ -28,7 +28,7 @@ module.exports =
     "downloading permissions"   : "Téléchargement des permissions…"
     "Cancel"                    : "Annuler"
     "ok"                        : "Ok"
-    "applications permissions"  : "Permissions de l'Application"
+    "applications permissions"  : "Permissions de l'application"
     "confirm"                   : "Confirmer"
     "installing"                : "Installation en cours"
     "remove"                    : "enlever"
@@ -42,7 +42,7 @@ module.exports =
     "memory unit"               : "Mo"
     "always on"                 : "toujours démarrée"
     "keep always on"            : "garder toujours démarrée"
-    "stop this app"             : "arrêter cet app"
+    "stop this app"             : "arrêter cette application"
     "update required"           : "Mise à jour disponible"
 
     "application is installing" : """
@@ -176,7 +176,7 @@ module.exports =
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
     "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git."
-    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données..."
+    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données…"
     "revoke device confirmation message": "Cette action empêchera l'appareil associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 
     "dashboard": "Tableau de bord"
