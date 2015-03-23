@@ -2,10 +2,11 @@
 module.exports = class ColorButton
 
     constructor: (@button) ->
+        @label = @button.find '.label' or @button
 
     displayGrey: (text) ->
         @button.show()
-        @button.html text
+        @label.html text
         @button.removeClass "btn-red"
         @button.removeClass "btn-green"
         @button.removeClass "btn-orange"
@@ -13,21 +14,21 @@ module.exports = class ColorButton
 
     displayOrange: (text) ->
         @button.show()
-        @button.html text
+        @label.html text
         @button.removeClass "btn-red"
         @button.removeClass "btn-green"
         @button.addClass "btn-orange"
 
     displayGreen: (text) ->
         @button.show()
-        @button.html text
+        @label.html text
         @button.addClass "btn-green"
         @button.removeClass "btn-red"
         @button.removeClass "btn-orange"
 
     displayRed: (text) ->
         @button.show()
-        @button.html text
+        @label.html text
         @button.removeClass "btn-green"
         @button.addClass  "btn-red"
         @button.removeClass "btn-orange"

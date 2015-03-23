@@ -24,8 +24,8 @@ module.exports =
     "community contribution"    : "contribuição da comunidade"
     "official application"      : "aplicação oficial"
     "application description"   : "Descrição da Aplicação"
-    "downloading description"   : "A fazer download da descrição ..."
-    "downloading permissions"   : "A fazer download das permissões ..."
+    "downloading description"   : "A fazer download da descrição…"
+    "downloading permissions"   : "A fazer download das permissões…"
     "Cancel"                    : "Cancelar"
     "ok"                        : "Ok"
     "applications permissions"  : "Permissões da Aplicação"
@@ -80,7 +80,7 @@ module.exports =
     "configuration":"Configuração"
     "assistance":"Assistência"
     "hardware consumption":"Hardware"
-    "hard drive gigabytes":"&nbsp;GB (Disco Rigido)"
+    "hard drive gigabytes":"(Disco Rigido)"
     "memory megabytes":"&nbsp;MB (RAM)"
     "manage your applications":"Gere as tuas aplicações"
     "manage your devices":"Gere os teus dispositivos"
@@ -158,11 +158,14 @@ module.exports =
     """
 
     "error connectivity issue": "Ocurreu um erro ao receber os teus dados.<br />Por favor tenta de novo."
-    "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos..."
+    "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos…"
     "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?"
     "reminder title email": "[Cozy-Calendar] Reminder"
     "reminder message": "Reminder: %{message}"
-    "warning unofficial app": "Warning! This app is not maintained by the Cozy team."
+    "warning unofficial app": """
+        This app is a communautary app and isn't maintained by the Cozy team.
+        To report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.
+    """
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
 
@@ -175,6 +178,8 @@ module.exports =
             You can also <a href="%{account}">go to your settings</a> to customize your Cozy
             or <a href="%{appstore}">take a look at the App Store</a> to install your first app.
         """
+
+    'relaunch install wizard': "Relaunch install wizard"
 
     'installwizard':
         'welcome title': "Welcome to your new Cozy"

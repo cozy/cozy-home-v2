@@ -28,11 +28,11 @@ module.exports =
     "downloading permissions"   : "Téléchargement des permissions…"
     "Cancel"                    : "Annuler"
     "ok"                        : "Ok"
-    "applications permissions"  : "Permissions de l'Application"
+    "applications permissions"  : "Permissions de l'application"
     "confirm"                   : "Confirmer"
     "installing"                : "Installation en cours"
     "remove"                    : "enlever"
-    "update"                    : "m.à.j."
+    "update"                    : "mettre à jour"
     "started"                   : "démarrée"
     "notifications"             : "Notifications"
     "questions and help forum"  : "Forum d'aide"
@@ -42,7 +42,7 @@ module.exports =
     "memory unit"               : "Mo"
     "always on"                 : "toujours démarrée"
     "keep always on"            : "garder toujours démarrée"
-    "stop this app"             : "arrêter cet app"
+    "stop this app"             : "arrêter cette application"
     "update required"           : "Mise à jour disponible"
 
     "application is installing" : """
@@ -79,7 +79,7 @@ module.exports =
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
-    "hard drive gigabytes":"&nbsp;Go (Disque Dur)"
+    "hard drive gigabytes":"(Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
     "manage your applications":"Gérez vos applications"
     "manage your devices":"Gérez vos appareils"
@@ -179,7 +179,7 @@ module.exports =
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
     "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git."
-    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données..."
+    "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données…"
     "revoke device confirmation message": "Cette action empêchera l'appareil associé d'accéder à votre Cozy. Êtes-vous sûr ?"
 
     "dashboard": "Tableau de bord"
@@ -207,7 +207,10 @@ module.exports =
     "term description": "Un terminal pour votre Cozy."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder message": "Rappel : %{message}"
-    "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy."
+    "warning unofficial app": """
+        Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.
+        Pour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.
+    """
     "installation message failure": "Échec de l'installation de %{appName}."
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
@@ -221,6 +224,8 @@ module.exports =
             Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
             ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
         """
+
+    'relaunch install wizard': "Relancer l'assistant d'installation"
 
     'installwizard':
         'welcome title': "Bienvenue dans votre Cozy"

@@ -75,15 +75,15 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 alert t 'Server error occured, infos cannot be displayed.'
             else
                 @displayMemory data.freeMem, data.totalMem
-                @displayDiskSpace data.usedDiskSpace, data.totalDiskSpace
+                @displayDiskSpace data.usedDiskSpace, data.totalDiskSpace, data.unit
 
     displayMemory: (amount, total) ->
         @memoryFree.find('.amount').html Math.floor((total - amount) / 1000)
         @memoryFree.find('.total').html Math.floor(total / 1000)
 
-    displayDiskSpace: (amount, total) ->
+    displayDiskSpace: (amount, total, unit) ->
         @diskSpace.find('.amount').html amount
-        @diskSpace.find('.total').html total
+        @diskSpace.find('.total').html "#{total} #{unit or 'G'}"
 
     onAppStateChanged: ->
         setTimeout @fetch, 10000

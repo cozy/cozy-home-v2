@@ -16,6 +16,7 @@ module.exports = class ApplicationRow extends BaseView
     constructor: (@app, @marketView) ->
         super()
         @mouseOut = true
+        @installInProgress = false
 
     afterRender: =>
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
@@ -36,4 +37,5 @@ module.exports = class ApplicationRow extends BaseView
             iconNode.css 'background', color
 
     onInstallClicked: =>
+        return if @installInProgress
         @marketView.showDescription this, @installButton

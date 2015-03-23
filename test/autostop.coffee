@@ -451,8 +451,17 @@ describe "Auto-stop manager", ->
         after helpers.takeDown
 
         it "When I start an auto-stoppable application", (done) ->
-            creator = helpers.createApp "Test App", "test-app", 0, "installed"
-            creator done
+            app = new Application
+                name: "Test App"
+                state: "installed"
+                index: 0
+                slug: "test-app"
+                password: "test-app"
+                permissions:
+                    Event: description: 'access the events'
+                isStoppable: true
+
+            app.save done
 
         it "Then I wait for 4 minutes", ->
             @sandbox.clock.tick 4 * minute

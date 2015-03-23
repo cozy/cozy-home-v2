@@ -36,7 +36,7 @@ exports.MemoryManager = (function() {
   };
 
   MemoryManager.prototype._extractDataFromDfResult = function(resp) {
-    var data, freeSpace, i, len, line, lineData, lines, totalSpace, usedSpace;
+    var data, freeSpace, i, len, line, lineData, lines, totalSpace, unit, usedSpace;
     data = {};
     lines = resp.split('\n');
     for (i = 0, len = lines.length; i < len; i++) {
@@ -47,9 +47,11 @@ exports.MemoryManager = (function() {
         freeSpace = lineData[3].substring(0, lineData[3].length - 1);
         totalSpace = lineData[1].substring(0, lineData[1].length - 1);
         usedSpace = lineData[2].substring(0, lineData[2].length - 1);
+        unit = lineData[1].slice(-1);
         data.totalDiskSpace = totalSpace;
         data.freeDiskSpace = freeSpace;
         data.usedDiskSpace = usedSpace;
+        data.unit = unit;
       }
     }
     return data;

@@ -2124,6 +2124,12 @@ body {
   transition: all 0.3s;
   text-align: left;
 }
+#market-view #no-app-message.install,
+.cozy-app.install {
+  opacity: 0.35;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=35)";
+  filter: alpha(opacity=35);
+}
 #market-view #no-app-message h3,
 .cozy-app h3 {
   margin-top: 30px;
@@ -2201,8 +2207,8 @@ body {
 }
 .config-application {
   background: #f7f4f0;
-  padding: 10px 10px 0 10px;
-  margin-bottom: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
@@ -2210,15 +2216,23 @@ body {
   text-transform: lowercase;
   font-size: 20px;
 }
-.config-application .mod {
-  margin-left: 5px;
-  display: inline-block;
-}
-.config-application .mod.left {
-  margin: 0;
-}
 .config-application .smaller {
   font-family: 'Source Sans Pro', sans-serif;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.config-application .smaller input {
+  margin: 0 5px 0;
 }
 .config-application .md-header {
   background: transparent;
@@ -2229,14 +2243,84 @@ body {
 .config-application .md-footer .btn {
   font-weight: normal;
 }
+.config-application:hover .buttons {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+@media (max-width: 640px) {
+  .config-application:hover .buttons {
+    float: left;
+    clear: left;
+    margin-top: 1em;
+  }
+}
 .config-application .buttons {
   display: none;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.config-application .buttons button {
+  position: relative;
+  margin: 0 0 0 5px;
+  min-width: 24px;
+  min-height: 24px;
+  font-size: 12px;
+}
+@media (max-width: 640px) {
+  .config-application .buttons button {
+    margin-right: 5px;
+  }
+}
+.config-application .buttons button:hover .label {
+  display: inline;
+}
+.config-application .buttons .label {
+  display: none;
+}
+.config-application .buttons .spinner {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+.config-application .buttons .spinner + i {
+  opacity: 0.35;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=35)";
+  filter: alpha(opacity=35);
 }
 .config-application .img {
   width: 72px;
 }
-.config-application:hover .buttons {
+.config-application .comments {
+  clear: both;
+  float: left;
+  margin-top: 1em;
+  font-size: 14px;
+  line-height: 20px;
+}
+.config-application .comments img {
   display: inline-block;
+  margin: 0 5px 0 0;
+}
+.config-application .comments a {
+  color: #808080;
+}
+@media (max-width: 640px) {
+  .config-application .comments a {
+    display: none;
+  }
 }
 #config-applications-view .stack-app .app {
   font-weight: normal;
@@ -2433,14 +2517,29 @@ body {
   position: absolute;
 }
 .noncozy-warning {
-  font-weight: bold;
-  font-size: 14px;
   margin-top: 20px;
   padding: 5px 10px;
-  color: #808080;
-  background: #fff4f0;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+  background: #f0f4f7;
+}
+.noncozy-warning .fa {
+  float: left;
+  font-size: 28px;
+  margin: 5px 10px 5px 0;
+  color: #15a7c7;
+}
+.noncozy-warning span,
+.noncozy-warning a {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000;
+}
+.noncozy-warning a {
+  color: #15a7c7;
+}
+.noncozy-warning a:hover {
+  color: #ff850a;
 }
 .md-body {
   background: #f7f4f0;
