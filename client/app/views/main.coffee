@@ -7,7 +7,6 @@ DeviceCollection = require 'collections/device'
 NavbarView = require 'views/navbar'
 AccountView = require 'views/account'
 HelpView = require 'views/help'
-TutorialView = require 'views/tutorial'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView = require 'views/market'
 ApplicationsListView = require 'views/home'
@@ -21,6 +20,8 @@ module.exports = class HomeView extends BaseView
     el: 'body'
 
     template: require 'templates/layout'
+
+    wizards: ['install', 'quicktour']
 
     constructor: ->
         @apps = new AppCollection()
@@ -40,11 +41,6 @@ module.exports = class HomeView extends BaseView
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
-
-        # Re-use the marketView runInstallation function into the tutorial view
-        processInstall = @marketView.runInstallation.bind @marketView
-        marketApps = @marketView.marketApps
-        @tutorialView = new TutorialView {processInstall, marketApps}
 
         $("#content").niceScroll()
         @frames = @$ '#app-frames'
@@ -95,10 +91,23 @@ module.exports = class HomeView extends BaseView
             displayView()
 
     # Display application manager page, hides app frames, active home button.
-    displayApplicationsList: =>
+    displayApplicationsList: (wizard=null) =>
         @displayView @applicationListView
         @applicationListView.setMode 'view'
         window.document.title = t "cozy home title"
+
+        for wiz in @wizards
+            wview = "#{wiz}WizardView"
+            @[wview].dispose() if @[wview]? and wizard isnt wiz
+
+        if wizard? and wizard in @wizards
+            wview = "#{wizard}WizardView"
+            WView = require "views/#{wizard}_wizard"
+
+            options = market: @marketView if wizard is 'install'
+            @[wview] = new WView options
+            @$el.append @[wview].render().$el
+            @[wview].show()
 
     displayApplicationsListEdit: =>
         @displayView @applicationListView
@@ -119,14 +128,54 @@ module.exports = class HomeView extends BaseView
         @displayView @helpView
         window.document.title = t "cozy help title"
 
-    displayTutorial: ->
-        @tutorialView.reset()
-        @displayView @tutorialView
-        window.document.title = t "cozy help title"
+    displayInstallWizard: ->
+        @displayApplicationsList 'install'
+
+    displayQuickTourWizard: ->
+        @displayApplicationsList 'quicktour'
 
     displayConfigApplications: =>
         @displayView @configApplications
         window.document.title = t "cozy applications title"
+
+
+    displayUpdateApplication: (slug) =>
+        @displayView @configApplications
+        window.document.title = t "cozy applications title"
+        window.app.routers.main.navigate 'config-applications', false
+
+        # When the route is called on browser loading, it must wait for
+        # apps list to be retrieved
+        method = @configApplications.openUpdatePopover
+        action = method.bind @configApplications, slug
+        timeout = null
+
+        if @apps.length is 0
+            @listenToOnce @apps, 'reset', ->
+                # stop the timeout so the action is not executed twice
+                clearTimeout timeout
+                action()
+
+            # if there is no app installed, this timeout will trigger
+            # the action
+            timeout = setTimeout action, 1500
+        else
+            # wait for 500ms before triggering the popover opening, because
+            # the configApplications view is not completely rendered yet (??)
+            setTimeout action, 500
+
+
+    displayUpdateStack: ->
+        @displayView @configApplications
+        window.document.title = t "cozy applications title"
+        window.app.routers.main.navigate 'config-applications', false
+
+        # wait for 500ms before triggering the popover opening, because
+        # the configApplications view is not completely rendered yet (??)
+        setTimeout =>
+            @configApplications.onUpdateStackClicked()
+        , 500
+
 
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
@@ -142,7 +191,14 @@ module.exports = class HomeView extends BaseView
         @content.hide()
 
         frame = @$("##{slug}-frame")
-        frame = @createApplicationIframe(slug, hash) if frame.length is 0
+        if frame.length is 0
+            frame = @createApplicationIframe(slug, hash)
+
+        # if the app was already open, we want to change its hash
+        # only if there is a hash in the home given url.
+        else if hash
+            frame.prop('contentWindow').location.hash = hash
+
         @$('#app-frames').find('iframe').hide()
         frame.show()
 
@@ -179,7 +235,7 @@ module.exports = class HomeView extends BaseView
     resetLayoutSizes: =>
         @frames.height $(window).height() - 50
 
-        if $(window).width() > 500
+        if $(window).width() > 640
             @content.height $(window).height() - 48
         else
             @content.height $(window).height()

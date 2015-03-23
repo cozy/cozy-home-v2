@@ -10,7 +10,8 @@ module.exports = class ApplicationRow extends BaseView
     template: require 'templates/config_application'
 
     getRenderData: ->
-        app: @model.attributes
+        app: _.extend {}, @model.attributes,
+            website: @model.get('website') or @model.get('git')[...-4]
 
     events:
         "click .remove-app"        : "onRemoveClicked"
@@ -89,7 +90,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onRemoveClicked: (event) =>
         event.preventDefault()
-        @removeButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @removeButton.displayGrey ""
         @removeButton.spin true, '#ffffff'
         @stateLabel.html t 'removing'
         @model.uninstall
@@ -102,6 +103,11 @@ module.exports = class ApplicationRow extends BaseView
 
     onUpdateClicked: (event) =>
         event.preventDefault()
+        @openPopover()
+
+    openPopover: ->
+        @popover.hide() if @popover?
+
         @popover = new PopoverDescriptionView
             model: @model
             label: t 'update'
@@ -118,7 +124,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onStartStopClicked: (event) =>
         event.preventDefault()
-        @startStopBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @startStopBtn.displayGrey ""
         @startStopBtn.spin true, '#ffffff'
         if(@model.isRunning())
             @model.stop
@@ -155,7 +161,7 @@ module.exports = class ApplicationRow extends BaseView
 
     updateApp: ->
         Backbone.Mediator.pub 'app-state-changed', true
-        @updateButton.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        @updateButton.displayGrey ""
         @updateButton.spin 'small', '#ffffff'
         if @model.get('state') isnt 'broken'
             @stateLabel.html t 'updating'
@@ -163,6 +169,7 @@ module.exports = class ApplicationRow extends BaseView
             @stateLabel.html t "installing"
         @model.updateApp
             success: =>
+                @updateButton.spin false
                 if @model.get('state') is 'installed'
                     @updateButton.displayGreen t "updated"
                     @stateLabel.html t 'started'
@@ -172,6 +179,7 @@ module.exports = class ApplicationRow extends BaseView
                     @stateLabel.html t 'stopped'
                     Backbone.Mediator.pub 'app-state-changed', true
             error: (jqXHR) =>
+                @updateButton.spin false
                 alert t 'update error'
                 @stateLabel.html t 'broken'
                 @updateButton.displayRed t "update failed"

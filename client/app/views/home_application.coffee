@@ -25,13 +25,13 @@ module.exports = class ApplicationRow extends BaseView
 
     enable: ->
         @enabled = true
-        @$el.resizable 'disable'
         @$('.widget-mask').hide()
+        @$el.removeClass 'edit-mode'
         @$('.use-widget').hide()
 
     disable: ->
         @enabled = false
-        @$el.resizable('enable') if @$el.resizable 'widget'
+        @$el.addClass 'edit-mode'
         if @canUseWidget()
             @$('.widget-mask').show()
             @$('.use-widget').show()
@@ -72,10 +72,14 @@ module.exports = class ApplicationRow extends BaseView
 
             when 'installed'
                 @hideSpinner()
-
                 if @model.isIconSvg()
+                    slug = @model.get 'slug'
+                    color = @model.get 'color'
+                    unless color?
+                        color = ColorHash.getColor slug, 'cozy'
                     extension = 'svg'
                     @icon.addClass 'svg'
+                    @icon.css 'background', color
                 else
                     extension = 'png'
                     @icon.removeClass 'svg'
@@ -176,7 +180,7 @@ module.exports = class ApplicationRow extends BaseView
 
     launchApp: (e) =>
         # if ctrl or middle click or small device
-        if e.which is 2 or e.ctrlKey or e.metaKey or $(window).width() <= 500
+        if e.which is 2 or e.ctrlKey or e.metaKey or $(window).width() <= 640
             window.open "apps/#{@model.id}/", "_blank"
         else if e.which is 1 # left click
             window.app.routers.main.navigate "apps/#{@model.id}/", true

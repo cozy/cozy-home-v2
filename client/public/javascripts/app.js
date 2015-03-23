@@ -91,13 +91,15 @@
   globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
-var Application, ApplicationCollection, BaseCollection, _ref,
+var Application, ApplicationCollection, BaseCollection, client, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 BaseCollection = require('lib/base_collection');
 
 Application = require('models/application');
+
+client = require('../lib/client');
 
 module.exports = ApplicationCollection = (function(_super) {
   __extends(ApplicationCollection, _super);
@@ -110,6 +112,8 @@ module.exports = ApplicationCollection = (function(_super) {
   ApplicationCollection.prototype.model = Application;
 
   ApplicationCollection.prototype.url = 'api/applications/';
+
+  ApplicationCollection.prototype.apps = [];
 
   ApplicationCollection.prototype.get = function(idorslug) {
     var app, out, _i, _len, _ref1;
@@ -126,182 +130,17 @@ module.exports = ApplicationCollection = (function(_super) {
     }
   };
 
-  ApplicationCollection.prototype.fetchFromMarket = function() {
-    var apps;
-    apps = [
-      {
-        icon: "img/apps/calendar.svg",
-        name: "calendar",
-        displayName: "Calendar",
-        slug: "calendar",
-        git: "https://github.com/cozy/cozy-calendar.git",
-        comment: "official application",
-        description: "calendars description"
-      }, {
-        icon: "img/apps/contacts.svg",
-        name: "contacts",
-        displayName: "Contacts",
-        slug: "contacts",
-        git: "https://github.com/cozy/cozy-contacts.git",
-        comment: "official application",
-        description: "contacts description"
-      }, {
-        icon: "img/apps/emails.svg",
-        name: "emails",
-        displayName: "Emails",
-        slug: "emails",
-        git: "https://github.com/cozy/cozy-emails.git",
-        comment: "official application",
-        description: "emails description"
-      }, {
-        icon: "img/apps/files.svg",
-        name: "files",
-        displayName: "Files",
-        slug: "files",
-        git: "https://github.com/cozy/cozy-files.git",
-        comment: "official application",
-        description: "files description"
-      }, {
-        icon: "img/apps/photos.svg",
-        name: "photos",
-        displayName: "Photos",
-        slug: "photos",
-        git: "https://github.com/cozy/cozy-photos.git",
-        comment: "official application",
-        description: "photos description"
-      }, {
-        icon: "img/sync-icon.png",
-        name: "sync",
-        displayName: "Sync",
-        slug: "sync",
-        git: "https://github.com/cozy/cozy-sync.git",
-        comment: "official application",
-        description: "sync description"
-      }, {
-        icon: "img/apps/bookmarks.svg",
-        name: "bookmarks",
-        displayName: "Bookmarks",
-        slug: "bookmarks",
-        git: "https://github.com/Piour/cozy-bookmarks.git",
-        comment: "community contribution",
-        description: "bookmark description"
-      }, {
-        icon: "img/apps/cozic.svg",
-        name: "cozic",
-        displayName: "Cozic",
-        slug: "cozic",
-        git: "https://github.com/rdubigny/cozy-music.git",
-        comment: "community contribution",
-        description: "cozic description"
-      }, {
-        icon: "img/apps/databrowser.svg",
-        name: "databrowser",
-        displayName: "Data Browser",
-        slug: "databrowser",
-        git: "https://github.com/n-a-n/cozy-databrowser.git",
-        comment: "community contribution",
-        description: "databrowser description"
-      }, {
-        icon: "img/apps/feeds.svg",
-        name: "feeds",
-        displayName: "Feeds",
-        slug: "feeds",
-        git: "https://github.com/Piour/cozy-feeds.git",
-        comment: "community contribution",
-        description: "feeds description"
-      }, {
-        icon: "img/apps/kyou.svg",
-        name: "kyou",
-        displayName: "KYou",
-        slug: "kyou",
-        git: "https://github.com/frankrousseau/kyou.git",
-        comment: "community contribution",
-        description: "kyou description",
-        website: "http://frankrousseau.github.io/kyou"
-      }, {
-        icon: "img/apps/konnectors.svg",
-        name: "konnectors",
-        displayName: "Konnectors",
-        slug: "konnectors",
-        git: "https://github.com/frankrousseau/konnectors.git",
-        comment: "community contribution",
-        description: "konnectors description"
-      }, {
-        icon: "img/kresus-icon.png",
-        name: "kresus",
-        displayName: "Kresus",
-        slug: "kresus",
-        git: "https://github.com/bnjbvr/kresus.git",
-        comment: "community contribution",
-        description: "kresus description"
-      }, {
-        icon: "img/apps/nirc.svg",
-        name: "nirc",
-        displayName: "nIRC",
-        slug: "nirc",
-        git: "https://github.com/frankrousseau/cozy-nirc.git",
-        comment: "community contribution",
-        description: "nirc description"
-      }, {
-        icon: "img/apps/notes.svg",
-        name: "notes",
-        displayName: "Note",
-        slug: "notes",
-        git: "https://github.com/cozy/notes.git",
-        comment: "community contribution",
-        description: "notes description"
-      }, {
-        icon: "img/apps/owm.svg",
-        name: "owm",
-        displayName: "OWM",
-        slug: "owm",
-        git: "https://github.com/Piour/piour-cozy-owm.git",
-        comment: "community contribution",
-        description: "owm description"
-      }, {
-        icon: "img/apps/pfm.svg",
-        name: "mes comptes",
-        displayName: "Mes Comptes",
-        slug: "pfm",
-        git: "https://github.com/seeker89/cozy-pfm.git",
-        comment: "community contribution",
-        description: "pfm description"
-      }, {
-        icon: "img/remotestorage-icon.png",
-        name: "remotestorage",
-        displayName: "Remote Storage",
-        slug: "remotestorage",
-        git: "https://github.com/aenario/cozy-remotestorage.git",
-        comment: "community contribution",
-        description: "remote storage description"
-      }, {
-        icon: "img/apps/tasky.svg",
-        name: "tasky",
-        displayName: "Tasky",
-        slug: "tasky",
-        git: "https://github.com/jsilvestre/tasky.git",
-        comment: "community contribution",
-        description: "tasky description",
-        color: '#1bda4c'
-      }, {
-        icon: "img/apps/todos.svg",
-        name: "todos",
-        displayName: "Todos",
-        slug: "todos",
-        git: "https://github.com/cozy/todos.git",
-        comment: "community contribution",
-        description: "todos description"
-      }, {
-        icon: "img/term-icon.png",
-        name: "term",
-        displayName: "Term",
-        slug: "term",
-        git: "https://github.com/alpha14/cozy-term.git",
-        comment: "community contribution",
-        description: "term description"
-      }
-    ];
-    return this.reset(apps);
+  ApplicationCollection.prototype.fetchFromMarket = function(callback) {
+    var _this = this;
+    if (this.apps.length > 0) {
+      return callback(this.reset(this.apps));
+    } else {
+      return client.get('api/applications/market', function(err, apps) {
+        _this.apps = apps;
+        _this.reset(_this.apps);
+        return callback();
+      });
+    }
   };
 
   return ApplicationCollection;
@@ -583,7 +422,7 @@ exports.del = function(url, callbacks) {
 });
 
 ;require.register("helpers/color-set", function(exports, require, module) {
-module.exports = ['ead1ad', 'fbf0c2', '1e4eb1', '3cd7c3', '39a5f8', 'B4AED9', '3a6367', '85aa54', '38cc7a', '8DED2A', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'f14aa8', 'ffb1be', 'b63e57', 'ae29c2', '966f81', '40363a', 'DD99CE', 'E26987', '7cA6ff', '7b0100', 'f5dd16', 'f1fab8', 'ffbe56'];
+module.exports = ['ead1ad', 'fbf0c2', '3cd7c3', '59b5f8', 'B4AED9', '78dc9a', '8DED2A', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'ffb1be', 'DD99CE', 'E26987', '8CB1FF', 'f5dd16', 'f1fab8', 'ffbe56', '6EE1C8', 'C4BEE9', '49b5f8', 'EC8E73', '8BEE8C'];
 });
 
 ;require.register("helpers/locales", function(exports, require, module) {
@@ -767,6 +606,51 @@ module.exports = BaseView = (function(_super) {
 })(Backbone.View);
 });
 
+;require.register("lib/client", function(exports, require, module) {
+exports.request = function(type, url, data, callback) {
+  return $.ajax({
+    type: type,
+    url: url,
+    data: data != null ? JSON.stringify(data) : null,
+    contentType: "application/json",
+    dataType: "json",
+    success: function(data) {
+      if (callback != null) {
+        return callback(null, data);
+      }
+    },
+    error: function(data) {
+      var _ref;
+      if ((_ref = data.status) === 200 || _ref === 201 || _ref === 204 || _ref === 304) {
+        if (callback != null) {
+          return callback(null, data);
+        }
+      } else if ((data != null) && (data.msg != null) && (callback != null)) {
+        return callback(new Error(data.msg));
+      } else if (callback != null) {
+        return callback(new Error("Server error occured"));
+      }
+    }
+  });
+};
+
+exports.get = function(url, callbacks) {
+  return exports.request("GET", url, null, callbacks);
+};
+
+exports.post = function(url, data, callbacks) {
+  return exports.request("POST", url, data, callbacks);
+};
+
+exports.put = function(url, data, callbacks) {
+  return exports.request("PUT", url, data, callbacks);
+};
+
+exports.del = function(url, callbacks) {
+  return exports.request("DELETE", url, null, callbacks);
+};
+});
+
 ;require.register("lib/request", function(exports, require, module) {
 exports.request = function(type, url, data, callback) {
   return $.ajax({
@@ -873,7 +757,186 @@ SocketListener = (function(_super) {
 module.exports = new SocketListener();
 });
 
-;require.register("lib/view_collection", function(exports, require, module) {
+;require.register("lib/templates/wizard", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+// iterate steps
+;(function(){
+  if ('number' == typeof steps.length) {
+
+    for (var index = 0, $$l = steps.length; index < $$l; index++) {
+      var step = steps[index];
+
+buf.push('<section');
+buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tabpanel"), 'role':("tabpanel"), 'aria-labelledby':("" + (step.slug) + "-wizard-tabpanel"), 'aria-hidden':("" + (index !== 0? 'true':'false') + "") }, {"id":true,"role":true,"aria-labelledby":true,"aria-hidden":true}));
+buf.push('><header><h1>');
+var __val__ = t(context + '.' + step.slug + " title")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h1></header><div class="content">');
+var __val__ = t(context + '.' + step.slug + " content")
+buf.push(null == __val__ ? "" : __val__);
+buf.push('</div><footer>');
+if ( step.choices)
+{
+// iterate step.choices
+;(function(){
+  if ('number' == typeof step.choices.length) {
+
+    for (var label = 0, $$l = step.choices.length; label < $$l; label++) {
+      var action = step.choices[label];
+
+buf.push('<button');
+buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
+buf.push('>');
+var __val__ = t(context + '.' + label, step)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+    }
+
+  } else {
+    var $$l = 0;
+    for (var label in step.choices) {
+      $$l++;      var action = step.choices[label];
+
+buf.push('<button');
+buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
+buf.push('>');
+var __val__ = t(context + '.' + label, step)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+    }
+
+  }
+}).call(this);
+
+}
+else if ( index === (steps.length - 1))
+{
+buf.push('<button class="close">');
+var __val__ = t(context + '.' + "close wizard")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+}
+else
+{
+buf.push('<button class="next">');
+var __val__ = t(context + '.' + "continue to " + steps[index + 1].slug)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+}
+buf.push('</footer></section>');
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in steps) {
+      $$l++;      var step = steps[index];
+
+buf.push('<section');
+buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tabpanel"), 'role':("tabpanel"), 'aria-labelledby':("" + (step.slug) + "-wizard-tabpanel"), 'aria-hidden':("" + (index !== 0? 'true':'false') + "") }, {"id":true,"role":true,"aria-labelledby":true,"aria-hidden":true}));
+buf.push('><header><h1>');
+var __val__ = t(context + '.' + step.slug + " title")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h1></header><div class="content">');
+var __val__ = t(context + '.' + step.slug + " content")
+buf.push(null == __val__ ? "" : __val__);
+buf.push('</div><footer>');
+if ( step.choices)
+{
+// iterate step.choices
+;(function(){
+  if ('number' == typeof step.choices.length) {
+
+    for (var label = 0, $$l = step.choices.length; label < $$l; label++) {
+      var action = step.choices[label];
+
+buf.push('<button');
+buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
+buf.push('>');
+var __val__ = t(context + '.' + label, step)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+    }
+
+  } else {
+    var $$l = 0;
+    for (var label in step.choices) {
+      $$l++;      var action = step.choices[label];
+
+buf.push('<button');
+buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
+buf.push('>');
+var __val__ = t(context + '.' + label, step)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+    }
+
+  }
+}).call(this);
+
+}
+else if ( index === (steps.length - 1))
+{
+buf.push('<button class="close">');
+var __val__ = t(context + '.' + "close wizard")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+}
+else
+{
+buf.push('<button class="next">');
+var __val__ = t(context + '.' + "continue to " + steps[index + 1].slug)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button>');
+}
+buf.push('</footer></section>');
+    }
+
+  }
+}).call(this);
+
+buf.push('<footer><div class="progress adv-0"><ol>');
+// iterate steps
+;(function(){
+  if ('number' == typeof steps.length) {
+
+    for (var index = 0, $$l = steps.length; index < $$l; index++) {
+      var step = steps[index];
+
+buf.push('<li');
+buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tab"), 'aria-selected':("" + (index === 0? 'true':'false') + ""), 'role':('tab'), 'aria-controls':('' + (step.slug) + '-wizard-tabpanel') }, {"id":true,"aria-selected":true,"role":true,"aria-controls":true}));
+buf.push('>');
+var __val__ = step.slug
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li>');
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in steps) {
+      $$l++;      var step = steps[index];
+
+buf.push('<li');
+buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tab"), 'aria-selected':("" + (index === 0? 'true':'false') + ""), 'role':('tab'), 'aria-controls':('' + (step.slug) + '-wizard-tabpanel') }, {"id":true,"aria-selected":true,"role":true,"aria-controls":true}));
+buf.push('>');
+var __val__ = step.slug
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li>');
+    }
+
+  }
+}).call(this);
+
+buf.push('</ol></div></footer>');
+}
+return buf.join("");
+};
+});
+
+require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -977,6 +1040,128 @@ module.exports = ViewCollection = (function(_super) {
 })(BaseView);
 });
 
+;require.register("lib/wizard_view", function(exports, require, module) {
+var BaseView, WizardView, _ref,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('./base_view');
+
+module.exports = WizardView = (function(_super) {
+  __extends(WizardView, _super);
+
+  function WizardView() {
+    this.close = __bind(this.close, this);
+    _ref = WizardView.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  WizardView.prototype.tagName = 'dialog';
+
+  WizardView.prototype.className = 'wizard';
+
+  WizardView.prototype.template = require('./templates/wizard');
+
+  WizardView.prototype.context = 'wizard';
+
+  WizardView.prototype.bindStepsEvents = function() {
+    var action, events, label, step, _i, _len, _ref1, _ref2;
+    events = {
+      'click .next': 'next',
+      'click .close': 'close'
+    };
+    _ref1 = this.steps;
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      step = _ref1[_i];
+      if (step.choices == null) {
+        continue;
+      }
+      _ref2 = step.choices;
+      for (label in _ref2) {
+        action = _ref2[label];
+        events["click #" + step.slug + "-" + label] = action;
+      }
+    }
+    return this.delegateEvents(events);
+  };
+
+  WizardView.prototype.initialize = function() {
+    WizardView.__super__.initialize.apply(this, arguments);
+    if (this.steps == null) {
+      this.steps = [];
+    }
+    this.isDialogEnabled = !!this.el.showModal;
+    return this.bindStepsEvents();
+  };
+
+  WizardView.prototype.dispose = function() {
+    this.undelegateEvents();
+    return this.remove();
+  };
+
+  WizardView.prototype.getRenderData = function() {
+    return {
+      context: this.context,
+      steps: this.steps
+    };
+  };
+
+  WizardView.prototype.show = function() {
+    this.currentIndex = this.$el.find('.progress [aria-selected=true]').index();
+    this.progress();
+    if (this.isDialogEnabled) {
+      return this.el.showModal();
+    } else {
+      this.el.setAttribute('open', true);
+      document.addEventListener('keydown', this.close);
+      return this.$backdrop = $('<div/>', {
+        'class': 'backdrop'
+      }).insertAfter(this.$el);
+    }
+  };
+
+  WizardView.prototype.close = function(event) {
+    if ((event.keyCode != null) && event.keyCode !== 27) {
+      return;
+    }
+    if (typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+    this.el.removeAttribute('open');
+    document.removeEventListener('keydown', this.close);
+    if (!this.isDialogEnabled) {
+      return this.$backdrop.remove();
+    }
+  };
+
+  WizardView.prototype.next = function() {
+    this.currentIndex++;
+    return this.displayStep();
+  };
+
+  WizardView.prototype.displayStep = function() {
+    var _ref1;
+    if ((_ref1 = this.steps[this.currentIndex].beforeShow) != null) {
+      _ref1.call(this);
+    }
+    this.$('[role=tabpanel]').not(":eq(" + this.currentIndex + ")").attr('aria-hidden', true).end().eq(this.currentIndex).attr('aria-hidden', false);
+    this.$('[role=tab]').not(":eq(" + this.currentIndex + ")").attr('aria-selected', false).end().eq(this.currentIndex).attr('aria-selected', true);
+    return this.progress();
+  };
+
+  WizardView.prototype.progress = function() {
+    var adv;
+    adv = 0 | this.currentIndex / (this.steps.length - 1) * 100;
+    this.$('.progress').attr('class', "progress adv-" + adv);
+    return this.$(".progress li:lt(" + this.currentIndex + ")").addClass('past');
+  };
+
+  return WizardView;
+
+})(BaseView);
+});
+
 ;require.register("locales/en", function(exports, require, module) {
 module.exports = {
   "home": "Home",
@@ -1037,16 +1222,13 @@ module.exports = {
   "ask for assistance": "Ask for assistance",
   "logout": "logout",
   "welcome to your cozy": "Welcome to your Cozy!",
-  "you have no apps": "You have no application installed. You should",
-  "follow wizard": "follow the step-by-step guide",
-  "skip wizard": "You can also directly ",
-  "configure": "configure ",
+  "you have no apps": "You have no application installed.",
   "app management": "App management",
   "app store": "App store",
   "configuration": "Configuration",
   "assistance": "Assistance",
   "hardware consumption": "Hardware",
-  "hard drive gigabytes": "&nbsp;GB (Hard Drive)",
+  "hard drive gigabytes": "(Hard Drive)",
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Manage your applications",
   "manage your devices": "Manage your devices",
@@ -1082,9 +1264,13 @@ module.exports = {
   "update all": "Update all",
   "update stack": "Update",
   "refresh page": "Wait please, page will refresh in several minutes.",
+  "update stack modal title": "Update of your Cozy",
+  "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?",
+  "update stack modal confirm": "Update",
   "cozy platform": "Platform",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the application",
+  "error update uninstalled app": "You can't update an application that is not installed.",
   "broken": "broken",
   "start this app": "start this app",
   "stopped": "stopped",
@@ -1102,15 +1288,8 @@ module.exports = {
   "confirm update": "confirm update",
   "confirm install": "confirm install",
   "no specific permissions needed": "This application does not need specific permissions",
-  "menu description": "If it's your first time on Cozy here is a little guide\nabout all section available in your Cozy Home. All of them can be reached\nfrom the menu located on the top right corner.",
-  "install your first app": "your Cozy then install your first application via the&nbsp;",
-  "where you reach applications": "It is the place from where you can reach your applications",
-  "There you can manage the state of your applications: start it, stop it, remove it...": "There you can manage the state of your applications: start it, stop it, remove it...",
-  "app store contains applications": "In the app store, you will find new applications to install on your Cozy.",
-  "set cozy parameters here": "To work properly your Cozy requires several parameters. Set them in this section.",
-  "links to resources": "You will find here some links to assistance resources.",
-  "The first place to find help is:": "The first place to find help is:",
   "removed": "removed",
+  "removing": "removing",
   "required permissions": "Required Permissions",
   "finish layout edition": "Save",
   "reset customization": "Reset",
@@ -1123,10 +1302,6 @@ module.exports = {
   "please wait data retrieval": "Please wait while data are being retrieved...",
   "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
   "dashboard": "Dashboard",
-  "synchronization": "Synchronization",
-  "synchronization description": "Cozy offers you synchronization capabilities for your files, your\ncontacts and your calendars. But it requires specific applications to\nachieve it.",
-  "caldav cardav with davdroid": "For your contacts and events, we recommend you the\nBitfire <a href=\"http://davdroid.bitfire.at/what-is-davdroid\">DAVDroid</a>\napplication. Once you have installed the Sync\napp on your Cozy, you can configure your DAVDroid app to synchronize\nyour contacts and events on your phone. Then, you will be able to\naccess them from your native applications.",
-  "files with cozy on android": "To access to all your files from your mobile, we recommend you to\ninstall the\n<a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">Cozy application</a>\nfrom the Android Play Store. Once done, just follow the instruction and\nbrowser your files directly from your phone.",
   "calendars description": "Manage your events and sync them with your mobile.",
   "contacts description": "Manage your contacts and sync them with your mobile.",
   "emails description": "Read, send and backup your emails.",
@@ -1152,22 +1327,53 @@ module.exports = {
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
   "reminder message": "Reminder: %{message}",
-  "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
+  "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
-  "tutorial title": "Applications installation wizard",
-  "tutorial no": "No",
-  "tutorial yes": "Yes",
-  "tutorial question files": "Would you like to manage your files, and to\nsynchronize them across your devices, like with Dropbox, Drive or iCloud?",
-  "tutorial question emails": "Would you like to write and read your emails,\nlike with Gmail, Outlook or Yahoo?",
-  "tutorial question calendar": "Would you like to manage your calendars,\nand to synchronize them across your devices?",
-  "tutorial question contacts": "Would you like to manage your contacts,\nand to synchronize them across your devices?",
-  "tutorial question photos": "Would you like to create photo albums to\nshare them with your friends and family?",
-  "tutorial final headline": "Please wait while Cozy installs the selected\napplications. In the meantime, you can finish the platform's configuration,\nor check the user guides:",
-  "tutorial doc files link": "Synchronize my files on my mobile(s) device(s)",
-  "tutorial doc contacts link": "Synchronize my contacts",
-  "tutorial doc calendar link": "Synchronize my calendars",
-  "tutorial final button": "I want to use my Cozy now"
+  "stack update available notification": "A new version of the platform is available.",
+  'noapps': {
+    'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help you to install and configure your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> to discover your Cozy features.",
+    'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
+  },
+  'relaunch install wizard': "Relaunch install wizard",
+  'installwizard': {
+    'welcome title': "Welcome to your new Cozy",
+    'welcome content': "<p>This wizard will help you to choose, install and configure your apps in your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
+    'yes': "Activate this %{slug} app",
+    'no': "No, thanks",
+    'continue to files': "Configure my apps",
+    'files title': "Configure Files app",
+    'files content': "<p>Do you want a files application that stores for you files and folder, so your documents are available anywhere?</p>",
+    'emails title': "Configure Emails app",
+    'emails content': "<p>Do you want a webmail that can connects to your email(s) provider(s), so you can access a private, unified mailbox everywhere?</p>",
+    'contacts title': "Configure Contacts app",
+    'contacts content': "<p>Do you want a contacts application that will manage your addressbook to keep instant access to your friends?</p>\n<p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>",
+    'calendar title': "Configure Calendar app",
+    'calendar content': "<p>Do you want a calendar application that will tracks your upcoming events?</p>\n<p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>",
+    'photos title': "Configure Photos app",
+    'photos content': "<p>Do you want a photos app that stores your pictures in albums and allows you to share them with others?</p>\n<p><small>Tip: if you use an Android smartphone, you can use our app to upload your photos to the app directly from you phone.</small></p>",
+    'thanks title': "It's done!",
+    'thanks content': "<p>That's all! You've just configured your cozy with the following apps:</p>",
+    'go-to-my-cozy': "I'm ready to use my Cozy",
+    'show-me-a-quick-tour': "Please tell me more about my Cozy"
+  },
+  'quicktourwizard': {
+    'welcome title': "Meet your Cozy!",
+    'welcome content': "<p>Welcome to your brand new Cozy.</p>\n<p>This quick steps tour will presents to you some features about your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
+    'continue to dashboard': "Discover the Dashboard",
+    'dashboard title': "Discover the Dashboard",
+    'dashboard content': "<p>Here is a little guide about all section available in your Cozy Home. All of them can be reached from the menu located on the top right corner.</p>\n<p><img src=\"/img/home-black.png\"><strong>Home: </strong>It is the place from where you can reach your applications</p>",
+    'continue to apps': "How to manage your apps?",
+    'apps title': "Manage your apps",
+    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>App management: </strong>There you can manage the state of your applications: start it, stop it, remove it…</p>\n<p><img src=\"/img/apps.png\"><strong>App store: </strong>In the app store, you will find new applications to install on your Cozy.</p>",
+    'continue to help': "How to get assistance?",
+    'help title': "Get help",
+    'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>To work properly your Cozy requires several parameters. Set them in this section.</p>\n<p><img src=\"/img/help.png\"><strong>Assistance: </strong>You will find here some links to assistance resources.</p>",
+    'continue to sync': "Sync with your smartphone",
+    'sync title': "Get in Sync",
+    'sync content': "<p>To get more information about syncing, you can take a look at the following resources:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Files</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendar</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
+    'close wizard': "Now I'm ready to use my Cozy"
+  }
 };
 });
 
@@ -1206,7 +1412,7 @@ module.exports = {
   "confirm": "Confirmer",
   "installing": "Installation en cours",
   "remove": "enlever",
-  "update": "m.à.j.",
+  "update": "mettre à jour",
   "started": "démarrée",
   "notifications": "Notifications",
   "questions and help forum": "Forum d'aide",
@@ -1231,15 +1437,12 @@ module.exports = {
   "ask for assistance": "Demandez de l'aide",
   "logout": "déconnexion",
   "welcome to your cozy": "Bienvenue sur votre Cozy !",
-  "you have no apps": "Vous n'avez pas encore d'applications, vous devriez",
-  "follow wizard": "suivre le guide pas à pas",
-  "skip wizard": "Vous pouvez aussi directement ",
-  "configure": "configurer ",
+  "you have no apps": "Vous n'avez aucune application installée.",
   "app store": "Applithèque",
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
-  "hard drive gigabytes": "&nbsp;Go (Disque Dur)",
+  "hard drive gigabytes": "(Disque Dur)",
   "memory megabytes": "&nbsp;Mo (RAM)",
   "manage your applications": "Gérez vos applications",
   "manage your devices": "Gérez vos appareils",
@@ -1276,9 +1479,13 @@ module.exports = {
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour",
   "refresh page": "Veuillez patienter, la page se rafraîchira d'ici quelques minutes.",
+  "update stack modal title": "Mise à jour de votre Cozy",
+  "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Êtes-vous sûr ?",
+  "update stack modal confirm": "Mettre à jour",
   "reboot stack": "Redémarrer",
   "cozy platform": "Plate-forme",
   "update error": "Une erreur est survenue pendant la mise à jour",
+  "error update uninstalled app": "Vous ne pouvez pas mettre à jour une application non installée.",
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
   "retry to install": "nouvel essai d'installation",
@@ -1295,16 +1502,8 @@ module.exports = {
   "confirm update": "confirmez la mise à jour",
   "confirm install": "confirmez l'installation'",
   "no specific permissions needed": "Cette application n'a pas besoin d'informations spécifiques",
-  "menu description": "Si c'est votre première fois sur Cozy, vous trouverez\ndans la suite un petit guide décrivant les sections de votre Cozy. Elles\npeuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.",
-  "install your first app": "votre Cozy puis installer votre première application via l'",
-  "where you reach applications": "C'est ici que vous pouvez accéder à toutes vos applications.",
-  "app management": "Gestion des applications",
-  "There you can manage the state of your applications: start it, stop it, remove it...": "Ici vous pouvez gérer l'état de vos applications : les lancer, les interrompre, les supprimer…",
-  "app store contains applications": "Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.",
-  "set cozy parameters here": "Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.",
-  "links to resources": "Vous trouverez ici toutes les ressources dont vous avez besoin.",
-  "The first place to find help is:": "Le premier endroit où trouver de l'aide est :",
   "removed": "supprimée",
+  "removing": "en cours de suppression",
   "required permissions": "Permissions requises",
   "finish layout edition": "Enregistrer",
   "reset customization": "Remise à zéro",
@@ -1317,10 +1516,6 @@ module.exports = {
   "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données...",
   "revoke device confirmation message": "Cette action empêchera l'appareil associé d'accéder à votre Cozy. Êtes-vous sûr ?",
   "dashboard": "Tableau de bord",
-  "synchronization": "Synchronisation",
-  "synchronization description": "Cozy vous permet de synchroniser vos fichiers, contact et calendriers\navec vos périphériques. Pour lancer la synchronisation, vous devez installer\ndes applications spécifiques.",
-  "caldav cardav with davdroid": "Pour vos contacts et vos événements, nous vous recommandons\nl'application\n<a href=\"http://davdroid.bitfire.at/what-is-davdroid\">DAVDroid</a>\nde Bitfire. Une fois que vous aurez\ninstallé l'application Sync sur votre Cozy, vous pourrez\nconfigurer DAVDroid pour qu'il synchronise vos contacts et\ncalendriers. Ceux ci seront ensuite gérables via les\napplications natives du téléphone.",
-  "files with cozy on android": "Pour accéder à vos fichiers depuis votre mobile nous vous proposons\nl'application <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">Cozy</a>\ndisponible sur la place de marché Play Store pour Android. Une fois\nque vous l'aurez installée, suivez simplement les\ninstructions.  Vous pourrez ensuite naviguer dans vos fichiers\ndepuis votre mobile.",
   "calendars description": "Gérez vos événements et synchronisez-les avec votre mobile.",
   "contacts description": "Gérez vos contacts et synchronisez-les avec votre mobile.",
   "emails description": "Lisez, envoyez et sauvegardez vos emails.",
@@ -1344,22 +1539,53 @@ module.exports = {
   "term description": "Un terminal pour votre Cozy.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder message": "Rappel : %{message}",
-  "warning unofficial app": "Attention ! Cette application n'est pas maintenue par l'équipe de Cozy.",
+  "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
   "installation message failure": "Échec de l'installation de %{appName}.",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
-  "tutorial title": "Applications installation wizard",
-  "tutorial no": "Non",
-  "tutorial yes": "Oui",
-  "tutorial question files": "Souhaitez-vous gérer vos fichiers et les\nsynchroniser sur vos différents périphériques,\ncomme avec Dropbox, Drive ou iCloud ?",
-  "tutorial question emails": "Souhaitez-vous écrire et consulter vos emails,\ncomme avec Gmail, Outlook ou Yahoo ?",
-  "tutorial question calendar": "Souhaitez-vous gérer vos agendas et les\nsynchroniser avec vos autres périphériques ?",
-  "tutorial question contacts": "Souhaitez-vous gérer vos contacts et les\nsynchroniser avec vos autres périphériques ?",
-  "tutorial question photos": "Souhaitez-vous gérer créer des albums photos\npour les partager avec votre famille et vos amis ?",
-  "tutorial final headline": "Veuillez patienter pendant que Cozy installe\nles applications que vous avez choisi. En attendant, vous pouvez terminer\nla configuration de la plateforme, ou consulter les guides d'utilisation :",
-  "tutorial doc files link": "Synchroniser mes fichiers avec mon mobile ou ma tablette",
-  "tutorial doc contacts link": "Synchroniser mes contacts",
-  "tutorial doc calendar link": "Synchroniser mes agendas",
-  "tutorial final button": "Je souhaite utiliser mon Cozy maintenant"
+  "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
+  'noapps': {
+    'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
+    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'Applithèque</a> pour installer votre première application."
+  },
+  'relaunch install wizard': "Relancer l'assistant d'installation",
+  'installwizard': {
+    'welcome title': "Bienvenue dans votre Cozy",
+    'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
+    'yes': "Activer l'application %{slug}",
+    'no': "Non, merci",
+    'continue to files': "Configurer mes applicatons",
+    'files title': "Configurer l'application Files",
+    'files content': "<p>Souhaitez-vous utiliser l'application fichiers qui vous permet de stocker fichiers et dossiers et d'avoir accès à tous vos documents, n'importe où ?</p>",
+    'emails title': "Configurer l'application Emails",
+    'emails content': "<p>Souhaitez-vous activer le webmail qui vous permet de connecter vos différentes boites mails dans une messagerie unifiée ?</p>",
+    'contacts title': "Configurer l'application Contacts",
+    'contacts content': "<p>Souhaitez-vous activer l'application contacts qui vous permet de gérer votre carnet d'adresses ?</p>\n<p><small>L'installation de cette application provoquera également l'installation de l'application sync qui vous permet de synchroniser vos données avec votre smartphone et / ou votre ordinateur.</small></p>",
+    'calendar title': "Configurer l'application Calendar",
+    'calendar content': "<p>Souhaitez-vous activer l'application calendrier qui vous permet de gérer votre agenda ?</p>\n<p><small>L'installation de cette application provoquera également l'installation de l'application sync qui vous permet de synchroniser vos données avec votre smartphone et / ou votre ordinateur.</small></p>",
+    'photos title': "Configurer l'application Photos",
+    'photos content': "<p>Souhaitez-vous installer l'application photos qui vous permet de stocker vos images et albums et de les partager avec vos proches ?</p>\n<p><small>Si vous utilisez un smartphone Android, vous pouvez installer notre application sur votre smartphone pour télécharger vos photos directement depuis votre téléphone.</small></p>",
+    'thanks title': "Et voilà !",
+    'thanks content': "<p>Félicitations ! Vous venez de configurer votre Cozy en y installant les applications suivantes :</p>",
+    'go-to-my-cozy': "Je suis prêt à utiliser mon Cozy",
+    'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
+  },
+  'quicktourwizard': {
+    'welcome title': "Découvrez votre Cozy !",
+    'welcome content': "<p>Bienvenue sur votre nouveau Cozy.</p>\n<p>Ce tour rapide vous présentera les fonctionnalités de votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
+    'continue to dashboard': "Découvrez le Tableau de bord",
+    'dashboard title': "Découvrez le Tableau de bord",
+    'dashboard content': "<p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>\n<p><img src=\"/img/home-black.png\"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>",
+    'continue to apps': "Comment gérer mes applications ?",
+    'apps title': "Gérer mes applications",
+    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
+    'continue to help': "Comment trouver de l'aide ?",
+    'help title': "Obtenir de l'aide",
+    'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
+    'continue to sync': "Synchronisez vos données",
+    'sync title': "Synchronisation",
+    'sync content': "<p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
+    'close wizard': "Je suis prêt à utiliser mon Cozy"
+  }
 };
 });
 
@@ -1423,14 +1649,13 @@ module.exports = {
   "ask for assistance": "Pede assistência",
   "logout": "sair",
   "welcome to your cozy": "Ben vindo ao teu Cozy!",
-  "you have no apps": "Não tens aplicações instaladas. Devias",
-  "configure": "configurar ",
+  "you have no apps": "Não tens aplicações instaladas",
   "app management": "Gestão de aplicações",
   "app store": "Loja de aplicações",
   "configuration": "Configuração",
   "assistance": "Assistência",
   "hardware consumption": "Hardware",
-  "hard drive gigabytes": "&nbsp;GB (Disco Rigido)",
+  "hard drive gigabytes": "(Disco Rigido)",
   "memory megabytes": "&nbsp;MB (RAM)",
   "manage your applications": "Gere as tuas aplicações",
   "manage your devices": "Gere os teus dispositivos",
@@ -1480,14 +1705,6 @@ module.exports = {
   "Once updated, this application will require the following permissions:": "Depois de actualizada a aplicação irá requerer as seguintes permissões:",
   "confirm update": "confirmar actualização",
   "no specific permissions needed": "Esta aplicação necssita de permissões especificas",
-  "menu description": "Se esta é a tua primeira vez no Cozy aqui tens um pequeno guia\nsobre todas as secções disponiveis. Todas elas podem ser escolhidas\nno menu localizado no teu lado superior direito.",
-  "install your first app": "o teu Cozy, e depois instala a tua primeira aplicação na&nbsp;",
-  "where you reach applications": "è o local onde podes escolher as aplicações",
-  "There you can manage the state of your applications: start it, stop it, remove it...": "Ali podes gerar o estado das tuas aplicações: iniciar, parar ou remover...",
-  "app store contains applications": "Na Loja de Aplicações podes econtrar aplicações para o teu Cozy.",
-  "set cozy parameters here": "Para funcionar bem o teu Cozy precisa de vários parámetros. Coloca-os nesta seccção.",
-  "links to resources": "Encontrarás aqui alguns links para recursos de ajuda.",
-  "The first place to find help is:": "O primeiro local para encontrares ajuda é:",
   "removed": "removido",
   "required permissions": "Permissões necessárias:",
   "finish layout edition": "Guardar",
@@ -1501,9 +1718,52 @@ module.exports = {
   "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
   "reminder title email": "[Cozy-Calendar] Reminder",
   "reminder message": "Reminder: %{message}",
-  "warning unofficial app": "Warning! This app is not maintained by the Cozy team.",
+  "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "installation message failure": "%{appName}'s installation failed.",
-  "update available notification": "A new version of %{appName} is available."
+  "update available notification": "A new version of %{appName} is available.",
+  'noapps': {
+    'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help you to install and configure your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> to discover your Cozy features.",
+    'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
+  },
+  'relaunch install wizard': "Relaunch install wizard",
+  'installwizard': {
+    'welcome title': "Welcome to your new Cozy",
+    'welcome content': "<p>This wizard will help you to choose, install and configure your apps in your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
+    'yes': "Activate this %{slug} app",
+    'no': "No, thanks",
+    'continue to files': "Configure my apps",
+    'files title': "Configure Files app",
+    'files content': "<p>Do you want a files application that stores for you files and folder, so your documents are available anywhere?</p>",
+    'emails title': "Configure Emails app",
+    'emails content': "<p>Do you want a webmail that can connects to your email(s) provider(s), so you can access a private, unified mailbox everywhere?</p>",
+    'contacts title': "Configure Contacts app",
+    'contacts content': "<p>Do you want a contacts application that will manage your addressbook to keep instant access to your friends?</p>\n<p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>",
+    'calendar title': "Configure Calendar app",
+    'calendar content': "<p>Do you want a calendar application that will tracks your upcoming events?</p>\n<p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>",
+    'photos title': "Configure Photos app",
+    'photos content': "<p>Do you want a photos app that stores your pictures in albums and allows you to share them with others?</p>\n<p><small>Tip: if you use an Android smartphone, you can use our app to upload your photos to the app directly from you phone.</small></p>",
+    'thanks title': "It's done!",
+    'thanks content': "<p>That's all! You've just configured your cozy with the following apps:</p>",
+    'go-to-my-cozy': "I'm ready to use my Cozy",
+    'show-me-a-quick-tour': "Please tell me more about my Cozy"
+  },
+  'quicktourwizard': {
+    'welcome title': "Meet your Cozy!",
+    'welcome content': "<p>Welcome to your brand new Cozy</p>\n<p>This quick steps tour will presents to you some features about your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
+    'continue to dashboard': "Discover the Dashboard",
+    'dashboard title': "Discover the Dashboard",
+    'dashboard content': "<p>Here is a little guide about all section available in your Cozy Home. All of them can be reached from the menu located on the top right corner.</p>\n<p><img src=\"/img/home-black.png\"><strong>Home: </strong>It is the place from where you can reach your applications</p>",
+    'continue to apps': "How to manage your apps?",
+    'apps title': "Manage your apps",
+    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>App management: </strong>There you can manage the state of your applications: start it, stop it, remove it…</p>\n<p><img src=\"/img/apps.png\"><strong>App store: </strong>In the app store, you will find new applications to install on your Cozy.</p>",
+    'continue to help': "How to get assistance?",
+    'help title': "Get help",
+    'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>To work properly your Cozy requires several parameters. Set them in this section.</p>\n<p><img src=\"/img/help.png\"><strong>Assistance: </strong>You will find here some links to assistance resources.</p>",
+    'continue to sync': "Sync with your smartphone",
+    'sync title': "Get in Sync",
+    'sync content': "<p>To get more information about syncing, you can take a look at the following resources:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
+    'close wizard': "Now I'm ready to use my Cozy"
+  }
 };
 });
 
@@ -1873,8 +2133,11 @@ module.exports = MainRouter = (function(_super) {
     "config-applications": "configApplications",
     "account": "account",
     "help": "help",
-    "tutorial": "tutorial",
+    "home/install": "installWizard",
+    "home/quicktour": "quickTourWizard",
     "logout": "logout",
+    "update/:slug": "updateApp",
+    "update-stack": "updateStack",
     "apps/:slug": "application",
     "apps/:slug/*hash": "application",
     "*path": "applicationList",
@@ -1925,6 +2188,16 @@ module.exports = MainRouter = (function(_super) {
     return this.selectIcon(2);
   };
 
+  MainRouter.prototype.updateApp = function(slug) {
+    app.mainView.displayUpdateApplication(slug);
+    return this.selectIcon(2);
+  };
+
+  MainRouter.prototype.updateStack = function() {
+    app.mainView.displayUpdateStack();
+    return this.selectIcon(2);
+  };
+
   MainRouter.prototype.help = function() {
     app.mainView.displayHelp();
     return this.selectIcon(5);
@@ -1944,8 +2217,14 @@ module.exports = MainRouter = (function(_super) {
     return app.mainView.displayApplication(slug, hash);
   };
 
-  MainRouter.prototype.tutorial = function() {
-    return app.mainView.displayTutorial();
+  MainRouter.prototype.installWizard = function() {
+    app.mainView.displayInstallWizard();
+    return this.selectIcon(0);
+  };
+
+  MainRouter.prototype.quickTourWizard = function() {
+    app.mainView.displayQuickTourWizard();
+    return this.selectIcon(0);
   };
 
   MainRouter.prototype.logout = function() {
@@ -2035,7 +2314,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
+require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2049,13 +2328,13 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
+require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('<div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
@@ -2078,22 +2357,38 @@ buf.push('<span>&nbsp;</span><img');
 buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
 buf.push('/>');
 }
-buf.push('</div><div class="buttons right"><div class="mod right"><button class="btn remove-app">');
-var __val__ = t('remove')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="mod right"><button class="btn update-app">');
-var __val__ = t('update')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="mod right"><button class="btn btn-large start-stop-btn">');
+buf.push('</span><div class="buttons right"><span class="smaller"><input');
+buf.push(attrs({ 'type':("checkbox"), 'title':("always on"), 'checked':("checked"), 'name':("app-stoppable-" + (app.id) + ""), "class": ("app-stoppable") }, {"class":true,"type":true,"title":true,"checked":true,"name":true}));
+buf.push('/><label');
+buf.push(attrs({ 'for':("app-stoppable-" + (app.id) + "") }, {"for":true}));
+buf.push('>auto stop</label></span><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off"></i> <span class="label">');
 var __val__ = t('stop this app')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="mod right smaller"><input type="checkbox" title="always on" checked="checked" name="app-stoppable" class="app-stoppable"/><label for="app-stoppable">auto stop</label></div></div></div>');
+buf.push('</span></button><button class="btn update-app"><i class="fa fa-refresh"></i> <span class="label">');
+var __val__ = t('update')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button><button class="btn remove-app"><i class="fa fa-trash"></i> <span class="label">');
+var __val__ = t('remove')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div><div class="comments">');
+if ( app.comment === 'official application')
+{
+buf.push('<img');
+buf.push(attrs({ 'src':("img/happycloud-black.svg"), 'alt':("" + (t(app.comment)) + ""), 'width':("20") }, {"src":true,"alt":true,"width":true}));
+buf.push('/>');
+}
+buf.push('<a');
+buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+buf.push('>');
+var __val__ = app.website
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
+require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2104,7 +2399,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
+require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2113,13 +2408,7 @@ var interp;
 buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0</span><span>');
-var __val__ = t('hard drive gigabytes')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span><span>&nbsp;/&nbsp;</span><span class="total">0&nbsp;</span><span>');
-var __val__ = t('memory megabytes')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><h4>');
+buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line buttons"><button class="btn update-stack">');
@@ -2146,7 +2435,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
+require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2164,7 +2453,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
+require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2175,7 +2464,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
+require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2184,7 +2473,10 @@ var interp;
 buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">');
 var __val__ = t('do you want assistance')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line pa2"><p class="help-text mt2">');
+buf.push('</h4><div class="line pa2"><p class="help-text"><a href="/home/install" class="wizard">');
+var __val__ = t('relaunch install wizard')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></p></div><div class="line pa2"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
@@ -2205,7 +2497,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
+require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2222,94 +2514,37 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
+require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!-- .section-title.darkbg.bigger home--><div id="home-edit-close" class="w600"><a href="#home" class="btn btn-large">');
-var __val__ = t('finish layout edition')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('welcome to your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div><div class="line"><p class="bigger pa2">');
-var __val__ = t('you have no apps') + ' '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('<a href="#tutorial">');
-var __val__ = t('follow wizard') + '. '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a>' + escape((interp = t('skip wizard')) == null ? '' : interp) + '<a href="#account">');
-var __val__ = t('configure')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a>');
-var __val__ = ' ' + t ('install your first app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('<a href="#applications">');
-var __val__ = t('app store')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a>.</p><h4 class="pa2">');
-var __val__ = t ('dashboard')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><p>');
-var __val__ = t ('menu description')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><img src="/img/home-black.png"/><strong>');
-var __val__ = t('home') + ': '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</strong>');
-var __val__ = t('where you reach applications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><img src="/img/config-apps.png"/><strong>');
-var __val__ = t('app management') + ': '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</strong>');
-var __val__ = t('There you can manage the state of your applications: start it, stop it, remove it...')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><img src="/img/apps.png"/><strong>');
-var __val__ = t('app store') + ': '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</strong>');
-var __val__ = t('app store contains applications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><img src="/img/configuration.png"/><strong>');
-var __val__ = t('configuration') + ': '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</strong>');
-var __val__ = t('set cozy parameters here')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><img src="/img/help.png"/><strong>');
-var __val__ = t('assistance') + ': '
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</strong>');
-var __val__ = t('links to resources')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><h4 class="pa2">');
-var __val__ = t ('synchronization')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><p>');
-var __val__ = t ('synchronization description')
+buf.push('</p></div><p class="bigger">');
+var __val__ = t('you have no apps')
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p><p>');
-var __val__ = t ('caldav cardav with davdroid')
+buf.push('</p><p class="bigger">');
+var __val__ = t('noapps.first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p><p>');
-var __val__ = t ('files with cozy on android')
+buf.push('</p><p class="bigger">');
+var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p></div></div><div id="app-list" class="gridster"></div>');
+buf.push('</p></div><div id="app-list" class="gridster"></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/home_application", function(exports, require, module) {
+require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="mask"></div><div class="bottom-handle"></div><div class="bottom-right-handle"></div><div class="right-handle"></div><button class="btn use-widget">');
+buf.push('<div class="mask"></div><button class="btn use-widget">');
 var __val__ = t('use widget')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
@@ -2318,7 +2553,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home_application_widget", function(exports, require, module) {
+require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2332,7 +2567,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/layout", function(exports, require, module) {
+require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2365,7 +2600,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
+require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2389,7 +2624,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
+require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2418,7 +2653,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
+require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2432,7 +2667,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
+require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2444,13 +2679,13 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
+require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar clearfix"><a href="#home" class="left"><img src="img/happycloud-small.png"/></a><div id="menu-applications-container" class="left"></div><a id="logout-button" href="#logout" class="right"><span>');
+buf.push('<div class="navbar clearfix"><a href="#home" class="logo left"><img src="img/happycloud-white.svg"/><span>beta</span></a><div id="menu-applications-container" class="left"></div><a id="logout-button" href="#logout" class="right"><span>');
 var __val__ = t('logout')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><img src="img/logout-white.png"/></a><div id="notifications-container" class="right"></div></div>');
@@ -2459,7 +2694,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2475,7 +2710,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
+require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2487,7 +2722,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
+require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2505,7 +2740,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
+require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2518,10 +2753,10 @@ buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
 buf.push('><img src="img/star-white.png"/></a></div></div>');
 if ( (model.comment !== 'official application'))
 {
-buf.push('<div class="line noncozy-warning">');
+buf.push('<div class="line noncozy-warning"><i class="fa fa-info-circle"></i><span>');
 var __val__ = t('warning unofficial app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div>');
+buf.push(null == __val__ ? "" : __val__);
+buf.push('</span></div>');
 }
 buf.push('</div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
 var __val__ = t('install')
@@ -2535,7 +2770,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
+require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2568,7 +2803,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/tutorial", function(exports, require, module) {
+require.register("templates/tutorial", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2643,7 +2878,34 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
+require.register("templates/update_stack_modal", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">');
+var __val__ = t('update stack modal title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h3></div></div><div class="md-body"><p class="step1">');
+var __val__ = t('update stack modal content')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="step2">');
+var __val__ = t('refresh page')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
+var __val__ = t('update stack modal confirm')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
+var __val__ = t('cancel')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -2900,7 +3162,9 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.getRenderData = function() {
     return {
-      app: this.model.attributes
+      app: _.extend({}, this.model.attributes, {
+        website: this.model.get('website') || this.model.get('git').slice(0, -4)
+      })
     };
   };
 
@@ -3003,7 +3267,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onRemoveClicked = function(event) {
     var _this = this;
     event.preventDefault();
-    this.removeButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.removeButton.displayGrey("");
     this.removeButton.spin(true, '#ffffff');
     this.stateLabel.html(t('removing'));
     return this.model.uninstall({
@@ -3019,8 +3283,15 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onUpdateClicked = function(event) {
-    var _this = this;
     event.preventDefault();
+    return this.openPopover();
+  };
+
+  ApplicationRow.prototype.openPopover = function() {
+    var _this = this;
+    if (this.popover != null) {
+      this.popover.hide();
+    }
     this.popover = new PopoverDescriptionView({
       model: this.model,
       label: t('update'),
@@ -3042,7 +3313,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.onStartStopClicked = function(event) {
     var _this = this;
     event.preventDefault();
-    this.startStopBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.startStopBtn.displayGrey("");
     this.startStopBtn.spin(true, '#ffffff');
     if (this.model.isRunning()) {
       return this.model.stop({
@@ -3095,7 +3366,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.updateApp = function() {
     var _this = this;
     Backbone.Mediator.pub('app-state-changed', true);
-    this.updateButton.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.updateButton.displayGrey("");
     this.updateButton.spin('small', '#ffffff');
     if (this.model.get('state') !== 'broken') {
       this.stateLabel.html(t('updating'));
@@ -3104,6 +3375,7 @@ module.exports = ApplicationRow = (function(_super) {
     }
     return this.model.updateApp({
       success: function() {
+        _this.updateButton.spin(false);
         if (_this.model.get('state') === 'installed') {
           _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('started'));
@@ -3116,6 +3388,7 @@ module.exports = ApplicationRow = (function(_super) {
         }
       },
       error: function(jqXHR) {
+        _this.updateButton.spin(false);
         alert(t('update error'));
         _this.stateLabel.html(t('broken'));
         _this.updateButton.displayRed(t("update failed"));
@@ -3130,7 +3403,7 @@ module.exports = ApplicationRow = (function(_super) {
 });
 
 ;require.register("views/config_application_list", function(exports, require, module) {
-var ApplicationRow, ApplicationsListView, ViewCollection,
+var ApplicationRow, ApplicationsList, ApplicationsListView, PopoverDescriptionView, ViewCollection,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3138,6 +3411,10 @@ var ApplicationRow, ApplicationsListView, ViewCollection,
 ViewCollection = require('lib/view_collection');
 
 ApplicationRow = require('views/config_application');
+
+PopoverDescriptionView = require('views/popover_description');
+
+ApplicationsList = require('../collections/application');
 
 module.exports = ApplicationsListView = (function(_super) {
   __extends(ApplicationsListView, _super);
@@ -3150,16 +3427,57 @@ module.exports = ApplicationsListView = (function(_super) {
 
   ApplicationsListView.prototype.itemView = require('views/config_application');
 
-  function ApplicationsListView(apps) {
+  ApplicationsListView.prototype.itemViewOptions = function(model) {
+    var app, comment;
+    app = this.market.get(model.get('slug'));
+    comment = app != null ? app.get('comment') : 'community contribution';
+    return model.set('comment', comment);
+  };
+
+  function ApplicationsListView(apps, market) {
     this.afterRender = __bind(this.afterRender, this);
     this.apps = apps;
+    this.market = market;
     ApplicationsListView.__super__.constructor.call(this, {
-      collection: apps
+      collection: this.apps
     });
   }
 
   ApplicationsListView.prototype.afterRender = function() {
     return this.appList = this.$("#app-list");
+  };
+
+  ApplicationsListView.prototype.appendView = function(view) {
+    var index, sortedViews, views;
+    if (this.$el.is(':empty')) {
+      return this.$el.append(view.el);
+    } else {
+      views = _.values(this.views);
+      sortedViews = _.sortBy(views, function(view) {
+        return view.model.get('displayName').toLowerCase();
+      });
+      index = _.indexOf(sortedViews, view) - 1;
+      return view.$el.insertAfter(this.$el.find(".config-application:eq(" + index + ")"));
+    }
+  };
+
+  ApplicationsListView.prototype.openUpdatePopover = function(slug) {
+    var appToUpdateView, cids, i, view;
+    appToUpdateView = null;
+    cids = Object.keys(this.views);
+    i = 0;
+    while ((cids[i] != null) && (appToUpdateView == null)) {
+      view = this.views[cids[i]];
+      if (view.model.get('slug') === slug) {
+        appToUpdateView = view;
+      }
+      i++;
+    }
+    if (appToUpdateView != null) {
+      return appToUpdateView.openPopover();
+    } else {
+      return alert(t('error update uninstalled app'));
+    }
   };
 
   return ApplicationsListView;
@@ -3168,7 +3486,7 @@ module.exports = ApplicationsListView = (function(_super) {
 });
 
 ;require.register("views/config_applications", function(exports, require, module) {
-var Application, BaseView, ColorButton, ConfigApplicationList, ConfigDeviceList, StackApplication, request,
+var Application, AppsCollection, BaseView, ColorButton, ConfigApplicationList, ConfigDeviceList, StackApplication, UpdateStackModal, request,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3186,6 +3504,10 @@ StackApplication = require('models/stack_application');
 ConfigApplicationList = require('./config_application_list');
 
 ConfigDeviceList = require('./config_device_list');
+
+UpdateStackModal = require('./update_stack_modal');
+
+AppsCollection = require('../collections/application');
 
 module.exports = exports.ConfigApplicationsView = (function(_super) {
   __extends(ConfigApplicationsView, _super);
@@ -3225,11 +3547,17 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.updateStackBtn = new ColorButton(this.$('.update-stack'));
     this.rebootStackBtn = new ColorButton(this.$('.reboot-stack'));
     this.fetch();
-    this.applicationList = new ConfigApplicationList(this.apps);
+    this.market = new AppsCollection();
+    this.applicationList = new ConfigApplicationList(this.apps, this.market);
     this.deviceList = new ConfigDeviceList(this.devices);
     this.$el.find('.title-app').append(this.applicationList.$el);
     this.applications = new Application();
-    return this.stackApplications = new StackApplication();
+    this.stackApplications = new StackApplication();
+    return this.market.fetchFromMarket(function() {});
+  };
+
+  ConfigApplicationsView.prototype.openUpdatePopover = function(slug) {
+    return this.applicationList.openUpdatePopover(slug);
   };
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
@@ -3276,7 +3604,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
         _this.displayMemory(data.freeMem, data.totalMem);
-        return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace);
+        return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace, data.unit);
       }
     });
   };
@@ -3286,9 +3614,9 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     return this.memoryFree.find('.total').html(Math.floor(total / 1000));
   };
 
-  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
+  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total, unit) {
     this.diskSpace.find('.amount').html(amount);
-    return this.diskSpace.find('.total').html(total);
+    return this.diskSpace.find('.total').html("" + total + " " + (unit || 'G'));
   };
 
   ConfigApplicationsView.prototype.onAppStateChanged = function() {
@@ -3314,16 +3642,25 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
 
   ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
     var _this = this;
-    this.updateStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-    this.updateStackBtn.spin(true, '#ffffff');
-    this.spanRefresh.show();
-    return this.stackApplications.updateStack(function() {
-      return location.reload();
+    if (this.popover != null) {
+      this.popover.hide();
+    }
+    this.popover = new UpdateStackModal({
+      confirm: function(application) {
+        return _this.stackApplications.updateStack(function() {
+          return location.reload();
+        });
+      },
+      cancel: function(application) {
+        _this.popover.hide();
+        return _this.popover.remove();
+      }
     });
+    $("#config-applications-view").append(this.popover.$el);
+    return this.popover.show();
   };
 
   ConfigApplicationsView.prototype.onRebootStackClicked = function() {
-    var _this = this;
     this.rebootStackBtn.displayGrey("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     this.rebootStackBtn.spin(true, '#ffffff');
     this.spanRefresh.show();
@@ -3434,7 +3771,7 @@ module.exports = DevicesListView = (function(_super) {
 });
 
 ;require.register("views/help", function(exports, require, module) {
-var BaseView,
+var BaseView, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -3443,19 +3780,24 @@ BaseView = require('lib/base_view');
 module.exports = exports.AccountView = (function(_super) {
   __extends(AccountView, _super);
 
+  function AccountView() {
+    _ref = AccountView.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
   AccountView.prototype.id = 'help-view';
 
   AccountView.prototype.template = require('templates/help');
 
-  function AccountView() {
-    AccountView.__super__.constructor.call(this);
-  }
+  AccountView.prototype.events = {
+    'click .wizard': 'displayWizard'
+  };
 
   AccountView.prototype.afterRender = function() {
     var _this = this;
     return $.get("api/instances/", function(data) {
-      var helpUrl, instance, template, _ref;
-      instance = (_ref = data.rows) != null ? _ref[0] : void 0;
+      var helpUrl, instance, template, _ref1;
+      instance = (_ref1 = data.rows) != null ? _ref1[0] : void 0;
       helpUrl = instance != null ? instance.helpUrl : void 0;
       if (helpUrl != null) {
         template = require('templates/help_url');
@@ -3463,6 +3805,15 @@ module.exports = exports.AccountView = (function(_super) {
           helpUrl: helpUrl
         }));
       }
+    });
+  };
+
+  AccountView.prototype.displayWizard = function(event) {
+    var dest;
+    event.preventDefault();
+    dest = event.target.getAttribute('href');
+    return window.app.routers.main.navigate(dest, {
+      trigger: true
     });
   };
 
@@ -3507,7 +3858,6 @@ module.exports = ApplicationsListView = (function(_super) {
 
   function ApplicationsListView(apps) {
     this.saveChanges = __bind(this.saveChanges, this);
-    this.doResize = __bind(this.doResize, this);
     this.resizeGridster = __bind(this.resizeGridster, this);
     this.onWindowResize = __bind(this.onWindowResize, this);
     this.afterRender = __bind(this.afterRender, this);
@@ -3536,7 +3886,6 @@ module.exports = ApplicationsListView = (function(_super) {
     var cid, view, _ref, _results,
       _this = this;
     this.appList = this.$("#app-list");
-    this.closeEditBtn = this.$('#home-edit-close');
     this.$("#no-app-message").hide();
     $(".menu-btn a").click(function(event) {
       $(".menu-btn").removeClass('active');
@@ -3545,7 +3894,6 @@ module.exports = ApplicationsListView = (function(_super) {
     this.initGridster();
     ApplicationsListView.__super__.afterRender.apply(this, arguments);
     if (this.state === 'view') {
-      this.$('#home-edit-close').hide();
       this.gridster.disable();
       _ref = this.views;
       _results = [];
@@ -3558,9 +3906,14 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.checkIfEmpty = function() {
-    var displayHelp;
-    displayHelp = this.apps.size() === 0 && !this.isLoading;
-    return this.$("#no-app-message").toggle(displayHelp);
+    var noapps;
+    noapps = this.apps.size() === 0 && !this.isLoading;
+    this.$("#no-app-message").toggle(noapps);
+    if (noapps) {
+      return window.app.routers.main.navigate('home/install', {
+        trigger: true
+      });
+    }
   };
 
   ApplicationsListView.prototype.computeGridDims = function() {
@@ -3602,7 +3955,6 @@ module.exports = ApplicationsListView = (function(_super) {
       if ((_ref = this.gridster) != null) {
         _ref.enable();
       }
-      this.closeEditBtn.slideDown();
       _ref1 = this.views;
       _results = [];
       for (cid in _ref1) {
@@ -3614,7 +3966,6 @@ module.exports = ApplicationsListView = (function(_super) {
       if ((_ref2 = this.gridster) != null) {
         _ref2.disable();
       }
-      this.closeEditBtn.slideUp();
       _ref3 = this.views;
       _results1 = [];
       for (cid in _ref3) {
@@ -3650,6 +4001,9 @@ module.exports = ApplicationsListView = (function(_super) {
           sizex: wgd.size_x,
           sizey: wgd.size_y
         };
+      },
+      resize: {
+        enabled: false
       }
     });
     this.gridster = this.appList.data('gridster');
@@ -3690,8 +4044,7 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
-    var pos,
-      _this = this;
+    var pos;
     pos = view.model.getHomePosition(this.colsNb);
     if (pos == null) {
       pos = {
@@ -3701,31 +4054,6 @@ module.exports = ApplicationsListView = (function(_super) {
         sizey: 1
       };
     }
-    view.$el.resizable({
-      animate: false,
-      stop: function(event, ui) {
-        return _.delay(_this.doResize, 300, view.$el);
-      },
-      resize: function(event, ui) {
-        var clip, dim, size, toobig, _i, _len, _ref, _results;
-        _ref = ['width', 'height'];
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          dim = _ref[_i];
-          size = ui.size[dim];
-          clip = _this.grid_size;
-          while (clip < size) {
-            clip += _this.grid_step;
-          }
-          toobig = clip - size > size - clip + _this.grid_step;
-          if (toobig && clip !== _this.grid_size) {
-            clip -= _this.grid_step;
-          }
-          _results.push(ui.element[dim](clip));
-        }
-        return _results;
-      }
-    });
     this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
     this.gridster.resize_widget(view.$el, pos.sizex, pos.sizey);
     if (this.state === 'view') {
@@ -3738,19 +4066,6 @@ module.exports = ApplicationsListView = (function(_super) {
   ApplicationsListView.prototype.removeView = function(view) {
     this.gridster.remove_widget(view.$el, true);
     return ApplicationsListView.__super__.removeView.apply(this, arguments);
-  };
-
-  ApplicationsListView.prototype.doResize = function($el) {
-    var grid_h, grid_w;
-    grid_w = Math.ceil($el.width() / this.grid_step);
-    grid_h = Math.ceil($el.height() / this.grid_step);
-    this.gridster.resize_widget($el, grid_w, grid_h);
-    this.gridster.set_dom_grid_height();
-    $el.height('');
-    $el.width('');
-    $el.css('top', '');
-    $el.css('left', '');
-    return this.saveChanges();
   };
 
   ApplicationsListView.prototype.saveChanges = function() {
@@ -3830,16 +4145,14 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.enable = function() {
     this.enabled = true;
-    this.$el.resizable('disable');
     this.$('.widget-mask').hide();
+    this.$el.removeClass('edit-mode');
     return this.$('.use-widget').hide();
   };
 
   ApplicationRow.prototype.disable = function() {
     this.enabled = false;
-    if (this.$el.resizable('widget')) {
-      this.$el.resizable('enable');
-    }
+    this.$el.addClass('edit-mode');
     if (this.canUseWidget()) {
       this.$('.widget-mask').show();
       return this.$('.use-widget').show();
@@ -3868,7 +4181,7 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var extension, useWidget, _ref;
+    var color, extension, slug, useWidget, _ref;
     if (this.model.get('state') !== 'installed' || !this.canUseWidget()) {
       this.$('.use-widget').hide();
     }
@@ -3881,8 +4194,14 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installed':
         this.hideSpinner();
         if (this.model.isIconSvg()) {
+          slug = this.model.get('slug');
+          color = this.model.get('color');
+          if (color == null) {
+            color = ColorHash.getColor(slug, 'cozy');
+          }
           extension = 'svg';
           this.icon.addClass('svg');
+          this.icon.css('background', color);
         } else {
           extension = 'png';
           this.icon.removeClass('svg');
@@ -4012,7 +4331,7 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.launchApp = function(e) {
-    if (e.which === 2 || e.ctrlKey || e.metaKey || $(window).width() <= 500) {
+    if (e.which === 2 || e.ctrlKey || e.metaKey || $(window).width() <= 640) {
       return window.open("apps/" + this.model.id + "/", "_blank");
     } else if (e.which === 1) {
       return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
@@ -4053,11 +4372,110 @@ module.exports = ApplicationRow = (function(_super) {
 })(BaseView);
 });
 
+;require.register("views/install_wizard", function(exports, require, module) {
+var InstallWizardView, WizardView, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+WizardView = require('lib/wizard_view');
+
+module.exports = InstallWizardView = (function(_super) {
+  __extends(InstallWizardView, _super);
+
+  function InstallWizardView() {
+    _ref = InstallWizardView.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  InstallWizardView.prototype.context = 'installwizard';
+
+  InstallWizardView.prototype.initialize = function(options) {
+    var slug, _i, _len, _ref1;
+    if (options.market != null) {
+      this.marketView = options.market;
+    }
+    this.steps = [];
+    this.installedApps = [];
+    this.steps.push({
+      slug: 'welcome'
+    });
+    _ref1 = ['files', 'emails', 'contacts', 'calendar', 'photos'];
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      slug = _ref1[_i];
+      this.steps.push({
+        slug: slug,
+        choices: {
+          'no': 'next',
+          'yes': _.partial(this.validStep, slug)
+        }
+      });
+    }
+    this.steps.push({
+      slug: 'thanks',
+      beforeShow: this.resumeInstalls,
+      choices: {
+        'go-to-my-cozy': 'close',
+        'show-me-a-quick-tour': _.partial(this.close, 'home/quicktour')
+      }
+    });
+    return InstallWizardView.__super__.initialize.apply(this, arguments);
+  };
+
+  InstallWizardView.prototype.close = function(url) {
+    InstallWizardView.__super__.close.apply(this, arguments);
+    if (typeof url !== 'string') {
+      url = 'home';
+    }
+    return window.app.routers.main.navigate(url, {
+      trigger: true
+    });
+  };
+
+  InstallWizardView.prototype.installApp = function(app) {
+    var application;
+    application = this.marketView.marketApps.findWhere({
+      slug: app
+    });
+    if (application == null) {
+      return;
+    }
+    this.marketView.runInstallation(application, false);
+    this.installedApps.push(app);
+    if ((app === 'calendar' || app === 'contacts') && __indexOf.call(this.installedApps, 'sync') < 0) {
+      return this.installApp('sync');
+    }
+  };
+
+  InstallWizardView.prototype.validStep = function(app) {
+    this.installApp(app);
+    return this.next();
+  };
+
+  InstallWizardView.prototype.resumeInstalls = function() {
+    var $appsList, app, _i, _len, _ref1;
+    $appsList = $('<ul/>');
+    _ref1 = this.installedApps;
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      app = _ref1[_i];
+      $('<li/>', {
+        text: app
+      }).appendTo($appsList);
+    }
+    return this.$("section:last .content").append($appsList);
+  };
+
+  return InstallWizardView;
+
+})(WizardView);
+});
+
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, TutorialView, User, appIframeTemplate,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 BaseView = require('lib/base_view');
 
@@ -4077,8 +4495,6 @@ AccountView = require('views/account');
 
 HelpView = require('views/help');
 
-TutorialView = require('views/tutorial');
-
 ConfigApplicationsView = require('views/config_applications');
 
 MarketView = require('views/market');
@@ -4096,9 +4512,12 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.template = require('templates/layout');
 
+  HomeView.prototype.wizards = ['install', 'quicktour'];
+
   function HomeView() {
     this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
     this.onAppHashChanged = __bind(this.onAppHashChanged, this);
+    this.displayUpdateApplication = __bind(this.displayUpdateApplication, this);
     this.displayConfigApplications = __bind(this.displayConfigApplications, this);
     this.displayHelp = __bind(this.displayHelp, this);
     this.displayAccount = __bind(this.displayAccount, this);
@@ -4119,19 +4538,12 @@ module.exports = HomeView = (function(_super) {
   }
 
   HomeView.prototype.afterRender = function() {
-    var marketApps, processInstall;
     this.navbar = new NavbarView(this.apps, this.notifications);
     this.applicationListView = new ApplicationsListView(this.apps);
     this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
     this.marketView = new MarketView(this.apps);
-    processInstall = this.marketView.runInstallation.bind(this.marketView);
-    marketApps = this.marketView.marketApps;
-    this.tutorialView = new TutorialView({
-      processInstall: processInstall,
-      marketApps: marketApps
-    });
     $("#content").niceScroll();
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
@@ -4194,10 +4606,34 @@ module.exports = HomeView = (function(_super) {
     }
   };
 
-  HomeView.prototype.displayApplicationsList = function() {
+  HomeView.prototype.displayApplicationsList = function(wizard) {
+    var WView, options, wiz, wview, _i, _len, _ref;
+    if (wizard == null) {
+      wizard = null;
+    }
     this.displayView(this.applicationListView);
     this.applicationListView.setMode('view');
-    return window.document.title = t("cozy home title");
+    window.document.title = t("cozy home title");
+    _ref = this.wizards;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      wiz = _ref[_i];
+      wview = "" + wiz + "WizardView";
+      if ((this[wview] != null) && wizard !== wiz) {
+        this[wview].dispose();
+      }
+    }
+    if ((wizard != null) && __indexOf.call(this.wizards, wizard) >= 0) {
+      wview = "" + wizard + "WizardView";
+      WView = require("views/" + wizard + "_wizard");
+      if (wizard === 'install') {
+        options = {
+          market: this.marketView
+        };
+      }
+      this[wview] = new WView(options);
+      this.$el.append(this[wview].render().$el);
+      return this[wview].show();
+    }
   };
 
   HomeView.prototype.displayApplicationsListEdit = function() {
@@ -4221,15 +4657,46 @@ module.exports = HomeView = (function(_super) {
     return window.document.title = t("cozy help title");
   };
 
-  HomeView.prototype.displayTutorial = function() {
-    this.tutorialView.reset();
-    this.displayView(this.tutorialView);
-    return window.document.title = t("cozy help title");
+  HomeView.prototype.displayInstallWizard = function() {
+    return this.displayApplicationsList('install');
+  };
+
+  HomeView.prototype.displayQuickTourWizard = function() {
+    return this.displayApplicationsList('quicktour');
   };
 
   HomeView.prototype.displayConfigApplications = function() {
     this.displayView(this.configApplications);
     return window.document.title = t("cozy applications title");
+  };
+
+  HomeView.prototype.displayUpdateApplication = function(slug) {
+    var action, method, timeout;
+    this.displayView(this.configApplications);
+    window.document.title = t("cozy applications title");
+    window.app.routers.main.navigate('config-applications', false);
+    method = this.configApplications.openUpdatePopover;
+    action = method.bind(this.configApplications, slug);
+    timeout = null;
+    if (this.apps.length === 0) {
+      this.listenToOnce(this.apps, 'reset', function() {
+        clearTimeout(timeout);
+        return action();
+      });
+      return timeout = setTimeout(action, 1500);
+    } else {
+      return setTimeout(action, 500);
+    }
+  };
+
+  HomeView.prototype.displayUpdateStack = function() {
+    var _this = this;
+    this.displayView(this.configApplications);
+    window.document.title = t("cozy applications title");
+    window.app.routers.main.navigate('config-applications', false);
+    return setTimeout(function() {
+      return _this.configApplications.onUpdateStackClicked();
+    }, 500);
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
@@ -4246,6 +4713,8 @@ module.exports = HomeView = (function(_super) {
     frame = this.$("#" + slug + "-frame");
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
+    } else if (hash) {
+      frame.prop('contentWindow').location.hash = hash;
     }
     this.$('#app-frames').find('iframe').hide();
     frame.show();
@@ -4297,7 +4766,7 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.resetLayoutSizes = function() {
     this.frames.height($(window).height() - 50);
-    if ($(window).width() > 500) {
+    if ($(window).width() > 640) {
       return this.content.height($(window).height() - 48);
     } else {
       return this.content.height($(window).height());
@@ -4378,7 +4847,7 @@ module.exports = MarketView = (function(_super) {
     this.listenTo(this.installedApps, 'reset', this.onAppListsChanged);
     this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
     this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
-    return this.marketApps.fetchFromMarket();
+    return this.marketApps.fetchFromMarket(function() {});
   };
 
   MarketView.prototype.onAppListsChanged = function() {
@@ -4408,7 +4877,7 @@ module.exports = MarketView = (function(_super) {
   MarketView.prototype.onEnterPressed = function(event) {
     var _ref, _ref1;
     if (event.which === 13 && !((_ref = this.popover) != null ? _ref.$el.is(':visible') : void 0)) {
-      return this.onInstallClicked();
+      return this.onInstallClicked(event);
     } else if (event.which === 13) {
       return (_ref1 = this.popover) != null ? _ref1.confirmCallback() : void 0;
     }
@@ -4420,8 +4889,7 @@ module.exports = MarketView = (function(_super) {
       git: this.$("#app-git-field").val()
     };
     this.parsedGit(data);
-    event.preventDefault();
-    return false;
+    return event.preventDefault();
   };
 
   MarketView.prototype.parsedGit = function(app) {
@@ -4447,9 +4915,16 @@ module.exports = MarketView = (function(_super) {
         $('#no-app-message').hide();
         _this.popover.hide();
         _this.appList.show();
-        return _this.hideApplication(appWidget, function() {
+        if (appWidget.$el) {
+          _this.waitApplication(appWidget, true);
+          return _this.runInstallation(appWidget.app, function() {
+            return _this.hideApplication(appWidget);
+          }, function() {
+            return _this.waitApplication(appWidget, false);
+          });
+        } else {
           return _this.runInstallation(appWidget.app);
-        });
+        }
       },
       cancel: function(application) {
         _this.popover.hide();
@@ -4458,8 +4933,23 @@ module.exports = MarketView = (function(_super) {
     });
     this.$el.append(this.popover.$el);
     this.popover.show();
-    if ($(window).width() <= 500) {
+    if ($(window).width() <= 640) {
       return this.appList.hide();
+    }
+  };
+
+  MarketView.prototype.waitApplication = function(appWidget, toggle) {
+    if (toggle == null) {
+      toggle = true;
+    }
+    if (toggle) {
+      appWidget.installInProgress = true;
+      appWidget.$el.spin('large', '#363a46');
+      return appWidget.$el.addClass('install');
+    } else {
+      appWidget.installInProgress = false;
+      appWidget.$el.spin(false);
+      return appWidget.$el.removeClass('install');
     }
   };
 
@@ -4468,7 +4958,9 @@ module.exports = MarketView = (function(_super) {
     if (appWidget.$el != null) {
       return appWidget.$el.fadeOut(function() {
         return setTimeout(function() {
-          return callback();
+          if (typeof callback === 'function') {
+            return callback();
+          }
         }, 600);
       });
     } else {
@@ -4476,12 +4968,16 @@ module.exports = MarketView = (function(_super) {
     }
   };
 
-  MarketView.prototype.runInstallation = function(application, shouldRedirect) {
-    var _this = this;
+  MarketView.prototype.runInstallation = function(application, shouldRedirect, errCallback) {
+    var cb,
+      _this = this;
     if (shouldRedirect == null) {
       shouldRedirect = true;
     }
     this.hideError();
+    if (typeof shouldRedirect === 'function') {
+      cb = shouldRedirect;
+    }
     return application.install({
       ignoreMySocketNotification: true,
       success: function(data) {
@@ -4491,12 +4987,17 @@ module.exports = MarketView = (function(_super) {
           _this.resetForm();
         }
         _this.installedApps.add(application);
-        if (shouldRedirect) {
+        if (cb) {
+          return cb();
+        } else if (shouldRedirect) {
           return typeof app !== "undefined" && app !== null ? app.routers.main.navigate('home', true) : void 0;
         }
       },
       error: function(jqXHR) {
-        return alert(t(JSON.parse(jqXHR.responseText).message));
+        alert(t(JSON.parse(jqXHR.responseText).message));
+        if (typeof errCallback === 'function') {
+          return errCallback();
+        }
       }
     });
   };
@@ -4601,6 +5102,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.afterRender = __bind(this.afterRender, this);
     ApplicationRow.__super__.constructor.call(this);
     this.mouseOut = true;
+    this.installInProgress = false;
   }
 
   ApplicationRow.prototype.afterRender = function() {
@@ -4622,6 +5124,9 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onInstallClicked = function() {
+    if (this.installInProgress) {
+      return;
+    }
     return this.marketView.showDescription(this, this.installButton);
   };
 
@@ -4999,7 +5504,7 @@ module.exports = NotificationsView = (function(_super) {
 });
 
 ;require.register("views/popover_description", function(exports, require, module) {
-var ApplicationCollection, BaseView, PopoverDescriptionView, request, _ref,
+var BaseView, PopoverDescriptionView, request, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -5007,8 +5512,6 @@ var ApplicationCollection, BaseView, PopoverDescriptionView, request, _ref,
 BaseView = require('lib/base_view');
 
 request = require('lib/request');
-
-ApplicationCollection = require('../collections/application');
 
 module.exports = PopoverDescriptionView = (function(_super) {
   __extends(PopoverDescriptionView, _super);
@@ -5042,15 +5545,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.cancelCallback = options.cancel;
     this.label = options.label != null ? options.label : t('install');
     return this.$("#confirmbtn").html(this.label);
-  };
-
-  PopoverDescriptionView.prototype.getRenderData = function() {
-    var app, appsCollection, comment;
-    appsCollection = new ApplicationCollection().fetchFromMarket();
-    app = appsCollection.get(this.model.get('slug'));
-    comment = app != null ? app.get('comment') : 'community contribution';
-    this.model.set('comment', comment);
-    return PopoverDescriptionView.__super__.getRenderData.call(this);
   };
 
   PopoverDescriptionView.prototype.afterRender = function() {
@@ -5119,9 +5613,10 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.$el.addClass('md-show');
     this.overlay.addClass('md-show');
     $('#home-content').addClass('md-open');
-    return setTimeout(function() {
+    setTimeout(function() {
       return _this.$('.md-content').addClass('md-show');
     }, 300);
+    return document.addEventListener('keydown', this.onCancelClicked);
   };
 
   PopoverDescriptionView.prototype.hide = function() {
@@ -5132,10 +5627,14 @@ module.exports = PopoverDescriptionView = (function(_super) {
       _this.$el.removeClass('md-show');
       return _this.remove();
     });
-    return $('#home-content').removeClass('md-open');
+    $('#home-content').removeClass('md-open');
+    return document.removeEventListener('keydown', this.onCancelClicked);
   };
 
-  PopoverDescriptionView.prototype.onCancelClicked = function() {
+  PopoverDescriptionView.prototype.onCancelClicked = function(event) {
+    if ((event.keyCode != null) && event.keyCode !== 27) {
+      return;
+    }
     this.hide();
     return this.cancelCallback(this.model);
   };
@@ -5149,105 +5648,140 @@ module.exports = PopoverDescriptionView = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/tutorial", function(exports, require, module) {
-var BaseView, Tutorial,
+;require.register("views/quicktour_wizard", function(exports, require, module) {
+var QuicktourWizardView, WizardView, _ref,
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+WizardView = require('lib/wizard_view');
+
+module.exports = QuicktourWizardView = (function(_super) {
+  __extends(QuicktourWizardView, _super);
+
+  function QuicktourWizardView() {
+    _ref = QuicktourWizardView.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  QuicktourWizardView.prototype.context = 'quicktourwizard';
+
+  QuicktourWizardView.prototype.initialize = function() {
+    this.steps = [
+      {
+        slug: 'welcome'
+      }, {
+        slug: 'dashboard'
+      }, {
+        slug: 'apps'
+      }, {
+        slug: 'help'
+      }, {
+        slug: 'sync'
+      }
+    ];
+    return QuicktourWizardView.__super__.initialize.apply(this, arguments);
+  };
+
+  QuicktourWizardView.prototype.close = function() {
+    QuicktourWizardView.__super__.close.apply(this, arguments);
+    return window.app.routers.main.navigate('home');
+  };
+
+  return QuicktourWizardView;
+
+})(WizardView);
+});
+
+;require.register("views/update_stack_modal", function(exports, require, module) {
+var ApplicationCollection, BaseView, UpdateStackModal, request, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 BaseView = require('lib/base_view');
 
-module.exports = Tutorial = (function(_super) {
-  __extends(Tutorial, _super);
+request = require('lib/request');
 
-  Tutorial.prototype.id = 'tutorial-view';
+ApplicationCollection = require('../collections/application');
 
-  Tutorial.prototype.template = require('templates/tutorial');
+module.exports = UpdateStackModal = (function(_super) {
+  __extends(UpdateStackModal, _super);
 
-  Tutorial.prototype.events = {
-    'click #files-yes': 'onYesClicked',
-    'click #files-no': 'onNoClicked',
-    'click #emails-yes': 'onYesClicked',
-    'click #emails-no': 'onNoClicked',
-    'click #contacts-yes': 'onYesClicked',
-    'click #contacts-no': 'onNoClicked',
-    'click #calendar-yes': 'onYesClicked',
-    'click #calendar-no': 'onNoClicked',
-    'click #photos-yes': 'onYesClicked',
-    'click #photos-no': 'onNoClicked'
-  };
-
-  Tutorial.prototype.appList = ['files', 'emails', 'contacts', 'calendar', 'photos'];
-
-  Tutorial.prototype.currentAppIndex = 0;
-
-  Tutorial.prototype.appsToInstall = [];
-
-  function Tutorial(options) {
-    Tutorial.__super__.constructor.call(this);
-    this.processInstall = options.processInstall;
-    this.marketApps = options.marketApps;
+  function UpdateStackModal() {
+    _ref = UpdateStackModal.__super__.constructor.apply(this, arguments);
+    return _ref;
   }
 
-  Tutorial.prototype.reset = function() {
-    this.currentAppIndex = 0;
-    this.appsToInstall = [];
-    return this.render();
+  UpdateStackModal.prototype.id = 'market-popover-description-view';
+
+  UpdateStackModal.prototype.className = 'modal md-modal md-effect-1';
+
+  UpdateStackModal.prototype.tagName = 'div';
+
+  UpdateStackModal.prototype.template = require('templates/update_stack_modal');
+
+  UpdateStackModal.prototype.events = {
+    'click #cancelbtn': 'onCancelClicked',
+    'click #confirmbtn': 'onConfirmClicked'
   };
 
-  Tutorial.prototype.afterRender = function() {
-    var app, application, currentApp, _i, _len, _ref, _results;
-    currentApp = this.getCurrentApp();
-    if (currentApp != null) {
-      return this.$("#tuto-" + currentApp).addClass('active');
-    } else {
-      this.$('#end-screen').addClass('active');
-      _ref = this.appsToInstall;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        app = _ref[_i];
-        application = this.marketApps.findWhere({
-          slug: app
-        });
-        _results.push(this.processInstall(application, false));
-      }
-      return _results;
-    }
+  UpdateStackModal.prototype.initialize = function(options) {
+    UpdateStackModal.__super__.initialize.apply(this, arguments);
+    this.confirmCallback = options.confirm;
+    return this.cancelCallback = options.cancel;
   };
 
-  Tutorial.prototype.onYesClicked = function() {
-    this.addCurentToInstallList();
-    return this.goToNextQuestion();
+  UpdateStackModal.prototype.afterRender = function() {
+    var _this = this;
+    this.overlay = $('.md-overlay');
+    this.overlay.click(function() {
+      return _this.hide();
+    });
+    return this.$('.step2').hide();
   };
 
-  Tutorial.prototype.onNoClicked = function() {
-    return this.goToNextQuestion();
+  UpdateStackModal.prototype.handleContentHeight = function() {
+    var _this = this;
+    this.body.css('max-height', "" + ($(window).height() / 2) + "px");
+    return $(window).on('resize', function() {
+      return _this.body.css('max-height', "" + ($(window).height() / 2) + "px");
+    });
   };
 
-  Tutorial.prototype.goToNextQuestion = function() {
-    var currentApp;
-    currentApp = this.getCurrentApp();
-    this.$("#tuto-" + currentApp).removeClass('active');
-    this.currentAppIndex++;
-    return this.afterRender();
+  UpdateStackModal.prototype.show = function() {
+    var _this = this;
+    this.$el.addClass('md-show');
+    this.overlay.addClass('md-show');
+    $('#home-content').addClass('md-open');
+    return setTimeout(function() {
+      return _this.$('.md-content').addClass('md-show');
+    }, 300);
   };
 
-  Tutorial.prototype.addCurentToInstallList = function() {
-    var alreadyInList, currentApp, relatedToSync;
-    currentApp = this.getCurrentApp();
-    this.appsToInstall.push(currentApp);
-    relatedToSync = currentApp === 'calendar' || currentApp === 'contacts';
-    alreadyInList = __indexOf.call(this.appsToInstall, 'sync') >= 0;
-    if (relatedToSync && !alreadyInList) {
-      return this.appsToInstall.push('sync');
-    }
+  UpdateStackModal.prototype.hide = function() {
+    var _this = this;
+    $('.md-content').fadeOut(function() {
+      _this.overlay.removeClass('md-show');
+      _this.$el.removeClass('md-show');
+      return _this.remove();
+    });
+    return $('#home-content').removeClass('md-open');
   };
 
-  Tutorial.prototype.getCurrentApp = function() {
-    return this.appList[this.currentAppIndex];
+  UpdateStackModal.prototype.onCancelClicked = function() {
+    this.hide();
+    return this.cancelCallback();
   };
 
-  return Tutorial;
+  UpdateStackModal.prototype.onConfirmClicked = function() {
+    this.confirmCallback();
+    this.$('.step1').hide();
+    this.$('.step2').show();
+    this.$('#confirmbtn').html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+    this.$('#confirmbtn').spin('small', '#ffffff');
+    return this.$('#cancelbtn').hide();
+  };
+
+  return UpdateStackModal;
 
 })(BaseView);
 });
@@ -5258,11 +5792,12 @@ var ColorButton;
 module.exports = ColorButton = (function() {
   function ColorButton(button) {
     this.button = button;
+    this.label = this.button.find('.label' || this.button);
   }
 
   ColorButton.prototype.displayGrey = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.removeClass("btn-red");
     this.button.removeClass("btn-green");
     return this.button.removeClass("btn-orange");
@@ -5270,7 +5805,7 @@ module.exports = ColorButton = (function() {
 
   ColorButton.prototype.displayOrange = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.removeClass("btn-red");
     this.button.removeClass("btn-green");
     return this.button.addClass("btn-orange");
@@ -5278,7 +5813,7 @@ module.exports = ColorButton = (function() {
 
   ColorButton.prototype.displayGreen = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.addClass("btn-green");
     this.button.removeClass("btn-red");
     return this.button.removeClass("btn-orange");
@@ -5286,7 +5821,7 @@ module.exports = ColorButton = (function() {
 
   ColorButton.prototype.displayRed = function(text) {
     this.button.show();
-    this.button.html(text);
+    this.label.html(text);
     this.button.removeClass("btn-green");
     this.button.addClass("btn-red");
     return this.button.removeClass("btn-orange");

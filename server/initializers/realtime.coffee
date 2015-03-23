@@ -19,7 +19,7 @@ notifhelper = new NotificationsHelper 'home'
 module.exports = (app, callback) ->
 
     eventsToForward = ['notification.*', 'application.*', 'device.*']
-    realtime = RealtimeAdapter app, eventsToForward
+    realtime = RealtimeAdapter app.server, eventsToForward
 
     # also create a notification when an app install is complete
     realtime.on 'application.update', (event, id) ->

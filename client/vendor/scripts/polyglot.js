@@ -21,12 +21,15 @@
   // ### Polyglot class constructor
   function Polyglot(options) {
     options = options || {};
-    this.phrases = options.phrases || {};
+    this.phrases = {};
+    this.extend(options.phrases || {});
     this.currentLocale = options.locale || 'en';
+    this.allowMissing = !!options.allowMissing;
+    this.warn = options.warn || warn;
   }
 
   // ### Version
-  Polyglot.VERSION = '0.2.0';
+  Polyglot.VERSION = '0.4.1';
 
   // ### polyglot.locale([locale])
   //
@@ -48,10 +51,55 @@
   // The key can be any string.  Feel free to call `extend` multiple times;
   // it will override any phrases with the same key, but leave existing phrases
   // untouched.
-  Polyglot.prototype.extend = function(morePhrases) {
+  //
+  // It is also possible to pass nested phrase objects, which get flattened
+  // into an object with the nested keys concatenated using dot notation.
+  //
+  //     polyglot.extend({
+  //       "nav": {
+  //         "hello": "Hello",
+  //         "hello_name": "Hello, %{name}",
+  //         "sidebar": {
+  //           "welcome": "Welcome"
+  //         }
+  //       }
+  //     });
+  //
+  //     console.log(polyglot.phrases);
+  //     // {
+  //     //   'nav.hello': 'Hello',
+  //     //   'nav.hello_name': 'Hello, %{name}',
+  //     //   'nav.sidebar.welcome': 'Welcome'
+  //     // }
+  //
+  // `extend` accepts an optional second argument, `prefix`, which can be used
+  // to prefix every key in the phrases object with some string, using dot
+  // notation.
+  //
+  //     polyglot.extend({
+  //       "hello": "Hello",
+  //       "hello_name": "Hello, %{name}"
+  //     }, "nav");
+  //
+  //     console.log(polyglot.phrases);
+  //     // {
+  //     //   'nav.hello': 'Hello',
+  //     //   'nav.hello_name': 'Hello, %{name}'
+  //     // }
+  //
+  // This feature is used internally to support nested phrase objects.
+  Polyglot.prototype.extend = function(morePhrases, prefix) {
+    var phrase;
+
     for (var key in morePhrases) {
       if (morePhrases.hasOwnProperty(key)) {
-        this.phrases[key] = morePhrases[key];
+        phrase = morePhrases[key];
+        if (prefix) key = prefix + '.' + key;
+        if (typeof phrase === 'object') {
+          this.extend(phrase, key);
+        } else {
+          this.phrases[key] = phrase;
+        }
       }
     }
   };
@@ -103,40 +151,23 @@
   //
   Polyglot.prototype.t = function(key, options) {
     var result;
-    options = options || {};
-    var phrase = this.phrases[key] || options._ || '';
+    options = options == null ? {} : options;
+    // allow number as a pluralization shortcut
+    if (typeof options === 'number') {
+      options = {smart_count: options};
+    }
+    var phrase = this.phrases[key] || options._ || (this.allowMissing ? key : '');
     if (phrase === '') {
-      warn('Missing translation for key: "'+key+'"');
+      this.warn('Missing translation for key: "'+key+'"');
       result = key;
     } else {
       options = clone(options);
-      // This allows you to pass an Array, Backbone.Collection, or anything
-      // with a `length` property as the `smart_count` parameter for pluralization.
-      if (options.smart_count != null && options.smart_count.length != null) {
-        options.smart_count = options.smart_count.length;
-      }
       result = choosePluralForm(phrase, this.currentLocale, options.smart_count);
       result = interpolate(result, options);
     }
     return result;
   };
 
-
-  // ### polylglot.pluralize(noun, count)
-  //
-  // A shortcut for calling `polyglot.t()` with a special `||||`-delimeted phrase.
-  // Works well for the simple case, like "1 car".
-  Polyglot.prototype.pluralize = function(noun, count) {
-    if (count != null && count.length != null) {
-      count = count.length;
-    }
-    var key = pluralizeKey(noun);
-    return this.t(key, {smart_count: count});
-  };
-
-  function pluralizeKey(noun) {
-    return 'shared.pluralize.' + noun;
-  }
 
   // #### Pluralization methods
   // The string that separates the different phrase possibilities.
@@ -155,9 +186,9 @@
 
   // Mapping from pluralization group to individual locales.
   var pluralTypeToLanguages = {
-    chinese:   ['id', 'ja', 'ko', 'ms', 'th', 'tr', 'zh'],
+    chinese:   ['fa', 'id', 'ja', 'ko', 'lo', 'ms', 'th', 'tr', 'zh'],
     german:    ['da', 'de', 'en', 'es', 'fi', 'el', 'he', 'hu', 'it', 'nl', 'no', 'pt', 'sv'],
-    french:    ['fr', 'tl'],
+    french:    ['fr', 'tl', 'pt-br'],
     russian:   ['hr', 'ru'],
     czech:     ['cs'],
     polish:    ['pl'],
@@ -177,7 +208,7 @@
     return ret;
   }
 
-    // Trim a string.
+  // Trim a string.
   function trim(str){
     var trimRe = /^\s+|\s+$/g;
     return str.replace(trimRe, '');
@@ -250,4 +281,3 @@
   }
 
 }(this);
-

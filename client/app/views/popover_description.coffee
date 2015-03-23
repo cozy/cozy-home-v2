@@ -1,6 +1,5 @@
 BaseView = require 'lib/base_view'
 request = require 'lib/request'
-ApplicationCollection = require '../collections/application'
 
 module.exports = class PopoverDescriptionView extends BaseView
     id: 'market-popover-description-view'
@@ -19,16 +18,6 @@ module.exports = class PopoverDescriptionView extends BaseView
         @label = if options.label? then options.label else t 'install'
         @$("#confirmbtn").html @label
 
-    getRenderData: ->
-        # retrieves from market if app is official or not
-        appsCollection = new ApplicationCollection().fetchFromMarket()
-        app = appsCollection.get @model.get('slug')
-
-        # By default, apps are 'community contribution'.
-        # Used for "install from Git"
-        comment = if app? then app.get('comment') else 'community contribution'
-        @model.set 'comment', comment
-        return super()
 
     afterRender: ->
         @model.set "description", ""
@@ -94,6 +83,7 @@ module.exports = class PopoverDescriptionView extends BaseView
         setTimeout =>
             @$('.md-content').addClass 'md-show'
         , 300
+        document.addEventListener 'keydown', @onCancelClicked
 
     hide: =>
         @body.getNiceScroll().hide()
@@ -102,8 +92,10 @@ module.exports = class PopoverDescriptionView extends BaseView
             @$el.removeClass 'md-show'
             @remove()
         $('#home-content').removeClass 'md-open'
+        document.removeEventListener 'keydown', @onCancelClicked
 
-    onCancelClicked: () =>
+    onCancelClicked: (event) =>
+        return if event.keyCode? and event.keyCode isnt 27
         @hide()
         @cancelCallback(@model)
 

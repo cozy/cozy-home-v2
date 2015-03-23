@@ -5,7 +5,8 @@ Application = require 'models/application'
 StackApplication = require 'models/stack_application'
 ConfigApplicationList = require './config_application_list'
 ConfigDeviceList = require './config_device_list'
-
+UpdateStackModal = require './update_stack_modal'
+AppsCollection = require '../collections/application'
 
 module.exports = class exports.ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
@@ -33,11 +34,16 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn = new ColorButton  @$ '.update-stack'
         @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
         @fetch()
-        @applicationList = new ConfigApplicationList @apps
+        @market = new AppsCollection()
+        @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
+        @market.fetchFromMarket ->
+
+    openUpdatePopover: (slug) ->
+        @applicationList.openUpdatePopover slug
 
     displayStackVersion: =>
         for app in @stackApps.models
@@ -69,15 +75,15 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 alert t 'Server error occured, infos cannot be displayed.'
             else
                 @displayMemory data.freeMem, data.totalMem
-                @displayDiskSpace data.usedDiskSpace, data.totalDiskSpace
+                @displayDiskSpace data.usedDiskSpace, data.totalDiskSpace, data.unit
 
     displayMemory: (amount, total) ->
         @memoryFree.find('.amount').html Math.floor((total - amount) / 1000)
         @memoryFree.find('.total').html Math.floor(total / 1000)
 
-    displayDiskSpace: (amount, total) ->
+    displayDiskSpace: (amount, total, unit) ->
         @diskSpace.find('.amount').html amount
-        @diskSpace.find('.total').html total
+        @diskSpace.find('.total').html "#{total} #{unit or 'G'}"
 
     onAppStateChanged: ->
         setTimeout @fetch, 10000
@@ -95,15 +101,22 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
                 Backbone.Mediator.pub 'app-state-changed', true
 
     onUpdateStackClicked: ->
-        @updateStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @updateStackBtn.spin true, '#ffffff'
-        @spanRefresh.show()
-        @stackApplications.updateStack () =>
-            location.reload()
+
+        @popover.hide() if @popover?
+        @popover = new UpdateStackModal
+            confirm: (application) =>
+                @stackApplications.updateStack ->
+                    location.reload()
+            cancel: (application) =>
+                @popover.hide()
+                @popover.remove()
+
+        $("#config-applications-view").append @popover.$el
+        @popover.show()
 
     onRebootStackClicked: ->
         @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         @rebootStackBtn.spin true, '#ffffff'
         @spanRefresh.show()
-        @stackApplications.rebootStack () =>
+        @stackApplications.rebootStack ->
             location.reload()

@@ -45,7 +45,12 @@ To run tests type the following command into the Cozy Home folder:
 
     cake tests
 
-In order to run the tests, you must only have the Data System started.
+In order to run the tests, you must only have the Data System started:
+
+    git clone https://github.com/cozy/cozy-data-system.git
+    cd cozy-data-system/
+    npm install
+    TOKEN=token NODE_ENV=test DB_NAME=home_test npm start
 
 ## Icons
 

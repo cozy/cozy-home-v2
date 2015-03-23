@@ -8,6 +8,7 @@ log = require('printit')
 Application = require '../models/application'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
+market = require '../lib/market'
 autostop = require '../lib/autostop'
 icons = require '../lib/icon'
 
@@ -218,14 +219,7 @@ module.exports =
                 req.body.permissions = manifest.getPermissions()
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
-                req.body.iconPath = manifest.getIconPath()
                 req.body.color = manifest.getColor()
-                try
-                 iconInfos = icons.getIconInfos req.body
-                catch err
-                    console.log err
-                    iconInfos = null
-                req.body.iconType = iconInfos?.extension or null
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
@@ -247,6 +241,16 @@ module.exports =
 
                             msg = "install succeeded on port #{appli.port}"
                             console.info msg
+
+                            appli.iconPath = manifest.getIconPath()
+                            appli.color = manifest.getColor()
+                            try
+                                iconInfos = icons.getIconInfos appli
+                            catch err
+                                console.log err
+                                iconInfos = null
+                            appli.iconType = iconInfos?.extension or null
+
                             appli.updateAttributes updatedData, (err) ->
                                 return sendErrorSocket err if err?
                                 icons.save appli, iconInfos, (err) ->
@@ -424,3 +428,14 @@ module.exports =
                         success: true
                         msg: 'Application stopped'
                         app: req.application
+
+    fetchMarket: (req, res, next) ->
+        market.download (err, data) ->
+            if err?
+                res.send
+                    error: true
+                    success: false
+                    message: err
+                , 500
+            else
+                res.send 200, data

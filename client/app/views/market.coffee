@@ -46,7 +46,7 @@ module.exports = class MarketView extends BaseView
         @listenTo @installedApps, 'reset',  @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps, 'reset',  @onAppListsChanged
-        @marketApps.fetchFromMarket()
+        @marketApps.fetchFromMarket ->
 
     onAppListsChanged: =>
         @$(".cozy-app").remove()
@@ -67,7 +67,7 @@ module.exports = class MarketView extends BaseView
 
     onEnterPressed: (event) =>
         if event.which is 13 and not @popover?.$el.is(':visible')
-            @onInstallClicked()
+            @onInstallClicked(event)
         else if event.which is 13
             @popover?.confirmCallback()
 
@@ -76,7 +76,6 @@ module.exports = class MarketView extends BaseView
 
         @parsedGit data
         event.preventDefault()
-        return false
 
     # parse git url before install application
     parsedGit: (app) ->
@@ -98,7 +97,14 @@ module.exports = class MarketView extends BaseView
                 $('#no-app-message').hide()
                 @popover.hide()
                 @appList.show()
-                @hideApplication appWidget, =>
+                if appWidget.$el
+                    @waitApplication appWidget, true
+                    @runInstallation appWidget.app
+                    , =>
+                        @hideApplication appWidget
+                    , =>
+                        @waitApplication appWidget, false
+                else
                     @runInstallation appWidget.app
             cancel: (application) =>
                 @popover.hide()
@@ -106,8 +112,21 @@ module.exports = class MarketView extends BaseView
         @$el.append @popover.$el
         @popover.show()
 
-        if $(window).width() <= 500
+        if $(window).width() <= 640
             @appList.hide()
+
+
+    waitApplication: (appWidget, toggle = true) ->
+        if toggle
+            appWidget.installInProgress = true
+            appWidget.$el.spin 'large', '#363a46'
+            appWidget.$el.addClass 'install'
+
+        else
+            appWidget.installInProgress = false
+            appWidget.$el.spin false
+            appWidget.$el.removeClass 'install'
+
 
 
     hideApplication: (appWidget, callback) =>
@@ -116,13 +135,15 @@ module.exports = class MarketView extends BaseView
         if appWidget.$el?
             appWidget.$el.fadeOut =>
                 setTimeout =>
-                    callback()
+                    callback() if typeof callback is 'function'
                 , 600
         else
             callback()
 
-    runInstallation: (application, shouldRedirect = true) =>
+    runInstallation: (application, shouldRedirect = true, errCallback) =>
         @hideError()
+
+        cb = shouldRedirect if typeof shouldRedirect is 'function'
 
         application.install
             ignoreMySocketNotification: true
@@ -132,11 +153,14 @@ module.exports = class MarketView extends BaseView
                 else
                     @resetForm()
                 @installedApps.add application
-                if shouldRedirect
+                if cb
+                    cb()
+                else if shouldRedirect
                     app?.routers.main.navigate 'home', true
 
             error: (jqXHR) =>
                 alert t JSON.parse(jqXHR.responseText).message
+                errCallback() if typeof errCallback is 'function'
 
     parseGitUrl: (url) ->
         url = url.trim()

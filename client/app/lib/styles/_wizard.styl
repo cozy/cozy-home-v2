@@ -1,0 +1,174 @@
+dialog
+    display none
+
+    position absolute
+    z-index 100
+    top 50%
+    left 50%
+    transform translateX(-50%) translateY(-50%)
+
+    width 60vw
+    height auto
+    margin 0
+    padding 0
+    @media (max-width: 640px)
+        width 90vw
+
+    border 1px solid darkblue
+    box-shadow 0 0 5px alpha(orangewhite, .55)
+    background-color orangewhite
+
+    font-family "Source Sans Pro", sans-serif
+
+    h1
+        font-family 'Maven Pro', sans-serif
+        font-weight normal
+
+    a
+    button
+    [role=button]
+        font 1em "Source Sans Pro", sans-serif
+
+
+
+dialog[open]
+    display block
+
+    & + .backdrop
+    &::backdrop
+        position absolute
+        z-index 99
+        top 0
+        left 0
+        right 0
+        bottom 0
+
+        background-color rgba(255, 255, 255, .65)
+
+
+.wizard
+    @media (min-width: 501px)
+        top calc(50% + 24px) // Header nav height (48px) div 2
+
+    &[open]
+        display flex
+        flex-direction column
+        justify-content
+
+    [aria-hidden=true]
+        display none
+
+
+    section
+        max-height 70vh
+        display flex
+        flex-direction column
+        flex 2 auto
+
+        .content
+            overflow auto
+            flex 2 auto
+
+        header
+        footer
+            flex 1 auto
+
+
+    footer
+        flex 1 auto
+        padding 1em 0
+
+
+    // we prefer use `ol` as progress element directly rather than wrap it in a
+    // div, but due to inconsistent renders between FF and Chome w/ pseudo-el
+    // and flex spacing, we fix the bug like this.
+    .progress
+        position relative
+
+        &::before
+        &::after
+            content ''
+            position absolute
+            top 50%
+            left 21%
+            right: 21%
+            display block
+            height 4px
+            margin-top -2px
+        &::before
+            background-color lightgrey - 10%
+        &::after
+            background-color blue + 65%
+
+        for percent in (0..100)
+            &.adv-{percent}::after
+                // `after` covers 60% at max (from left: 20% to right: 20%)
+                right ((100 - percent) * .58 + 21) * 1%
+
+        ol
+            list-style-type none
+
+            display flex
+            justify-content space-between
+            margin 0 20%
+            padding 0
+
+        li
+            position relative
+            z-index 1
+            text-indent -9999em
+            width .8em
+            height .8em
+            border-radius 50%
+            background-color lightgrey - 10%
+
+        [aria-selected=true]
+            background-color blue
+
+        .past
+            background-color blue + 65%
+
+
+    header
+        padding .65em 1.5em
+        background-color darkblue
+        color white
+
+
+    section
+        p
+            margin 0
+            padding 0 1.5em 1em
+
+            &:first-child
+                padding-top 1em
+
+        ul
+            padding 0 1.5em 1em 4em
+
+        footer
+            text-align center
+            padding-bottom 0
+
+    button
+        float: none !important
+        margin: 0 1em 1em
+        padding .45em .85em
+        border none
+        border-radius 5px
+        cursor: pointer
+
+        background-color blue
+        color white
+
+        &:focus
+        &:hover
+            background-color orange
+
+        &.action.no
+            background-color transparent
+            color blue
+
+            &:focus
+            &:hover
+                color orange

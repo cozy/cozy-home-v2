@@ -1,18 +1,27 @@
+async = require 'async'
+log = require('printit')
+    prefix: 'lib:auto-stop'
+
 Application = require '../models/application'
 {AppManager} = require "../lib/paas"
 
 applicationTimeout = []
 
+MINUTE = 60 * 1000 # ms
+
 ###
 Mark application broken
    * Update application state in database
 ###
-markBroken = (app, err) ->
-    app.state = "broken"
-    app.password = null
-    app.errormsg = err.message
-    app.save (saveErr) ->
-        return send_error saveErr if saveErr
+module.exports.markBroken = (app, err) ->
+    data =
+        state: "broken"
+        password: null
+        errormsg: err.message
+
+    app.updateAttributes data, (saveErr) ->
+        log.error saveErr if saveErr?
+
 
 ###
 Stop application <app> :
@@ -20,51 +29,61 @@ Stop application <app> :
    * Update application state in database
    * Reset proxy routes
 ###
-stopApp = (app) ->
+module.exports.stopApp = (app) ->
     manager = new AppManager
-    manager.stop app, (err, result) =>
-        return markBroken app, err if err
-        data =
-            state: "stopped"
-            port: 0
-        app.updateAttributes data, (err) =>
-            return send_error err if err
-            manager.resetProxy (err) =>
-                return markBroken app, err if err
+    async.series
+        stop: (next) -> manager.stop app, next
+        update: (next) ->
+            app.updateAttributes state: "stopped", port: 0, next
+        reset: (next) -> manager.resetProxy next
+    , (err) ->
+        module.exports.markBroken app, err if err?
+
 
 ###
 Start timeout for application other than proxy and home
-    * After 3 minutes of inactivity, application are stopped
+    * After 5 minutes of inactivity, application are stopped
     if application is stoppable.
 ###
-startTimeout = (name) ->
-    applicationTimeout[name] = setTimeout () ->
-        if name isnt "home" and name isnt "proxy"
-            Application.all (err, apps) ->
-                for app in apps
-                    if app.slug is name and
-                        app.isStoppable and
-                        app.state is "installed"
-                            console.log "stop : " + name
-                            stopApp app
-    ,5 * 60 * 1000
+module.exports.startTimeout = (slug) ->
+    unless slug in ['home', 'proxy']
+        applicationTimeout[slug] = setTimeout ->
+            Application.all key: slug, (err, apps) ->
+                return log.error err if err?
+                return log.error "App #{slug} not found" unless apps?.length > 0
+
+                app = apps[0]
+                if app.isStoppable and app.state is "installed"
+                    log.info "stopping #{slug}"
+                    module.exports.stopApp app
+        , 5 * MINUTE
+
 
 ###
 Restart tiemout for application.
     * Remove old timeout if it exists
-    * Start new timeout (3 minutes)
+    * Start new timeout
 ###
-module.exports.restartTimeout = (name) ->
-    if applicationTimeout[name]?
-        clearTimeout applicationTimeout[name]
-    startTimeout name
+module.exports.restartTimeout = (slug) ->
+    if applicationTimeout[slug]?
+        clearTimeout applicationTimeout[slug]
+        delete applicationTimeout[slug]
+    module.exports.startTimeout slug
+
 
 ###
 Init timeout
     When home is started, it start timeout for all installed application
 ###
-module.exports.init = () ->
+module.exports.init = (callback = ->) ->
     Application.all (err, apps) ->
-        for app in apps
-            if app.state is 'installed' and app.isStoppable
-                startTimeout app.slug
+
+        if err?
+            log.error err
+            callback err
+        else
+
+            for app in apps when app.state is 'installed' and app.isStoppable
+                module.exports.startTimeout app.slug
+
+            callback()

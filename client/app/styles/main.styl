@@ -1,6 +1,7 @@
 @import 'nib'
 @import '_base'
 @import '_help'
+@import '../lib/styles/_wizard'
 
 *
     outline: none
@@ -72,36 +73,51 @@ body
     height: 48px
     padding: 0
 
-    img
-        width: 32px
-        margin-left: 15px
-        margin-top: 8px
-        opacity: 0.5
-        transition: all 0.3s
+    a
+        opacity .5
+        transition opacity .3s
+
+        &:hover
+            opacity 1
 
     span
         margin: 0
 
-    a
-        color: white
-
-    a:hover
-        color: black
-        margin: 0
-        padding: 0
-
-        img
-            opacity: 1
+    img
+        height 28px
+        vertical-align: middle
+        margin 0
 
 
-    #logout-button
-        margin-right: 10px
-        span
-            display: none
+.logo
+    margin 7px 15px
 
-    #logout-button:hover
-        span
-            display: none
+    font-family 'Maven Pro', sans-serif
+    font-weight normal
+    font-size .8em
+
+    color white
+
+    &:hover
+        color white
+        opacity 1
+
+    span
+        display inline-block !important    // make the beta flag always visible
+        vertical-align super
+
+
+#logout-button
+    margin-right: 15px
+    height: 45px
+    line-height 45px
+
+    span
+        display: none
+
+#logout-button:hover
+    span
+        display: none
 
 /* content */
 
@@ -111,6 +127,11 @@ body
 
 #home-content
     padding: 40px 60px 20px 40px
+
+.wizard section img
+    display inline-block;
+    float left;
+    margin .25em 1em 0 0;
 
 
 /** Notifications */
@@ -124,17 +145,10 @@ body
     padding-right: 5px
     cursor: pointer
     color: white
+    font-family 'Maven Pro', sans-serif
 
     #current-application
         font-weight: normal
-        opacity: 0.5
-
-    #current-application:active
-        color: white
-
-    #current-application:hover
-        color: white
-        opacity: 1
 
     span
         font-size: 28px
@@ -195,37 +209,36 @@ body
             background: #fce9d5
 
 #notifications-toggle
+    display block
     height: 45px
     line-height: 45px
     font-size: 45px
-    width: 60px
+    width: auto
     cursor: pointer
     margin-left: 10px
-    margin-top: 0
-    padding-top: 0
-    padding-left: 5px
-    padding-right: 10px
+    margin: 0
+    padding: 0 10px
     transition: all 0.3s
     position: relative
     transition: all 0.3s
 
-    img
-        padding: 0
-        margin: 0
+    img //position hotfix
+        vertical-align baseline
 
     #notifications-counter
+        position absolute
+        top 3px
+        right 0
+
         height 20px
-        top 5px
-        right 2px
-        line-height 20px
-        padding 0 3px
+        width 20px
+        border-radius 50%
+        line-height 17px
+        font-size 15px
+
         text-align center
-        border none
         background #d9534f
         color #fff
-        position absolute
-        font-size 15px
-        border-radius 10px
         border 2px solid #363a46
 
         &:empty
@@ -267,9 +280,9 @@ body
 #notifications-container
     position: relative
     padding: 0
+    margin-right: 15px
 
     a
-        width: 20px
         color: darkblue
 
     .badge
@@ -443,7 +456,7 @@ body
 
         p
             margin: 0
-            font-family: main
+            font-family: 'Source Sans Pro', sans-serif
             color textcolor
 
         .app-title
@@ -451,7 +464,7 @@ body
             max-height 20px
 
             text-align center
-            font-family main
+            font-family 'Source Sans Pro', sans-serif
             text-transform uppercase
             font-size 15px
             color darkblue
@@ -464,26 +477,9 @@ body
             color: red
 
     // resize mode
-    &.ui-resizable:not(.ui-resizable-disabled)
+    &.edit-mode
         cursor move
         border 3px solid blue //#f7f4f0 - 15%
-
-        .ui-resizable-e
-            width 20px
-            right -10px
-            cursor col-resize
-
-        .ui-resizable-s
-            height 20px
-            bottom -10px
-            cursor row-resize
-
-        .ui-resizable-se
-            width 20px
-            height 20px
-            right -10px
-            bottom -10px
-            cursor nwse-resize
 
         .mask
             display block
@@ -495,31 +491,6 @@ body
             z-index 10
             background grey
             opacity 0.5
-
-        .bottom-handle
-        .bottom-right-handle
-        .right-handle
-            display block
-            position absolute
-            z-index 100
-            width 10px
-            height 10px
-            background blue
-            border 1px solid #fff
-
-        .bottom-handle
-            bottom -6.5px // border + height/2
-            left 50%
-            cursor row-resize
-        .bottom-right-handle
-            bottom -6.5px
-            right -6.5px
-            cursor nwse-resize
-        .right-handle
-            top 50%
-            right -6.5px
-            cursor col-resize
-
 
     &:hover
         background: orangewhite - 10%
@@ -713,6 +684,9 @@ body
     transition: all 0.3s
     text-align: left
 
+    &.install
+        opacity .35
+
     h3
         margin-top: 30px
         margin-bottom: 0
@@ -732,17 +706,20 @@ body
         box-sizing: border-box
         width: 180px
         height: 180px
-        padding: 20px 20px 10px 20px
+        padding: 25px 20px 10px 20px
         margin-right: 10px
 
         img.svg
             border-radius 200px
+            padding 15px
+            width 130px
+            height 130px
 
     .img-btn
-        width: 24px
-        opacity: 0.3
-        margin: 10px 5px
-        display: none
+        width 24px
+        opacity 0.3
+        margin 10px 5px
+        display none
 
     .img-btn:hover
         opacity: 1
@@ -766,7 +743,7 @@ body
 // Config application
 .title-app a.subtitle
     display inline-block
-    font-family styled
+    font-family 'Maven Pro', sans-serif
     font-size 15px
 
 #config-application-list
@@ -774,23 +751,21 @@ body
 
 .config-application
     background: lightgrey
-    padding 10px 10px 0 10px
-    margin-bottom: 5px
+    padding 10px
+    margin-bottom: 10px
     border-radius: 5px
 
     strong
         text-transform: lowercase
         font-size: 20px
 
-    .mod
-        margin-left: 5px
-        display inline-block
-
-    .mod.left
-        margin: 0
-
     .smaller
-        font-family: main
+        font-family: 'Source Sans Pro', sans-serif
+        display flex
+        align-items center
+
+        input
+            margin 0 5px 0
 
     .md-header
         background: transparent
@@ -801,15 +776,64 @@ body
         .btn
             font-weight: normal
 
+    &:hover .buttons
+        display flex
+
+        @media (max-width: 640px)
+            float left
+            clear left
+            margin-top 1em
+
     .buttons
         display: none
+        align-items center
+
+        button
+            position relative
+            margin 0 0 0 5px
+            min-width 24px
+            min-height 24px
+            font-size 12px
+
+            @media (max-width: 640px)
+                margin-right 5px
+
+            &:hover .label
+                display inline
+
+        .label
+            display none
+
+
+        // overrides inline styles
+        .spinner
+            position absolute !important
+            top 50% !important
+            left 50% !important
+            transform translateX(-50%) translateY(-50%)
+
+        .spinner + i
+            opacity .35
 
     .img
         width: 72px
 
-.config-application:hover
-    .buttons
-        display: inline-block
+    .comments
+        clear both
+        float left
+        margin-top 1em
+        font-size 14px
+        line-height 20px
+
+        img
+            display inline-block
+            margin 0 5px 0 0
+
+        a
+            color grey
+
+            @media (max-width: 640px)
+                display none
 
 #config-applications-view
     .stack-app
@@ -843,7 +867,7 @@ body
         margin: 0
 
     .smaller
-        font-family: main
+        font-family: 'Source Sans Pro', sans-serif
 
     .md-header
         background: transparent
@@ -872,7 +896,7 @@ body
         width 60px
     .change-layout a
         color black
-        font-family styled
+        font-family 'Maven Pro', sans-serif
         font-weight normal
         &:hover
             color orange
@@ -967,13 +991,29 @@ body
         position: absolute
 
 .noncozy-warning
-    font-weight: bold
-    font-size: 14px
     margin-top: 20px
-    padding: 5px 10px
-    color: grey
-    background: lightred
+    padding 5px 10px
     border-radius: 5px
+    background lightgreyblue
+
+    .fa
+        float left
+        font-size 28px
+        margin 5px 10px 5px 0
+        color blue
+
+    span
+    a
+        font-weight bold
+        font-size 14px
+        color black
+
+    a
+        color blue
+
+        &:hover
+            color orange
+
 
 .md-body
 
@@ -1022,7 +1062,6 @@ body
 // Responsive
 
 @media (max-width: 850px)
-    #header
 
     #market-view
         span
@@ -1032,6 +1071,7 @@ body
             display: inline
 
 @media (max-width: 800px)
+
     .md-content
         overflow: auto
     .md-modal
@@ -1104,7 +1144,6 @@ body
 
             img
                 margin: 0
-                width: 100px
 
         h3
             margin-bottom: 10px
@@ -1123,7 +1162,7 @@ body
 
         .cozy-app
             width: 100%
-            height: 150px
+            height: 180px
 
 
     #notifications
@@ -1179,9 +1218,21 @@ body
 
 @media (max-width: 640px)
 
+    header#header
+        display: none
+
+    div.home-body
+        padding-top: 0
+        height: 100%
+
     #account-view
+        p
+            margin 10px 0
+
         input
-            max-width: 215px
+        select
+            width: 100%
+            font-size: 16px
 
         // .btn
         //     margin-left: 5px
@@ -1233,16 +1284,9 @@ body
 
 @media (max-width: 500px)
 
-    header#header
-        display: none
-
-    div.home-body
-        padding-top: 0
-        height: 100%
-
     #home-menu
         .logout-menu-icon
-            display: inline
+            display: block
 
     .customize-icon
     .help-icon
@@ -1253,7 +1297,8 @@ body
             margin-bottom: -5px
 
         .app-title
-            font-size: 0.8em
+            margin-top: 4px
+            font-size: 12px
 
     #market-view
         #your-app
@@ -1265,7 +1310,7 @@ body
                 font-size: 16px
 
         .cozy-app
-            height: 200px
+            height: auto
             margin-top: 10px
 
         .app-text
@@ -1275,12 +1320,13 @@ body
             display: block
             padding: 0
             width: 100%
-            height: 60px
+            height: 120px
             text-align: left
 
             img
-                margin: 0
-                width: 50px
+                margin: 10px 0 0 10px
+                width: 100px
+                height: 100px
 
     #notifications-container
         display: none
@@ -1314,4 +1360,3 @@ span.app
 button.btn
     margin-bottom: 4px
     margin-right: 4px
-

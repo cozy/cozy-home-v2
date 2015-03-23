@@ -19,8 +19,7 @@ StackApplication.all = (params, callback) ->
 # callback: function(err, needsUpdate)
 StackApplication::checkForUpdate = (callback) ->
     setFlag = (repoVersion) =>
-        @lastVersion = repoVersion
-        @save (err) =>
+        @updateAttributes lastVersion: repoVersion, (err) =>
             if err
                 callback err
             else
@@ -42,10 +41,8 @@ StackApplication::checkForUpdate = (callback) ->
                 # worst case, the app on the cozy has the same version, but
                 # there's no way we can
                 # figure out.
-                setFlag(repoVersion)
+                setFlag repoVersion
             else if @version isnt repoVersion
-                setFlag(repoVersion)
-            else if @lastVersion isnt repoVersion
-                setFlag(repoVersion)
+                setFlag repoVersion
             else
                 callback null, false
