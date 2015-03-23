@@ -54,14 +54,21 @@ class exports.MemoryManager
     # information)
     getMemoryInfos: (callback) ->
         data = totalMem: os.totalmem() / (1024)
-        exec freeMemCmd, (err, resp) ->
+        # check if free command is available.
+        # Otherwise, use Node native method, which is less accurate
+        exec 'which free', (err, res) ->
             if err
-                callback err
-            else
-                lines = resp.split('\n')
-                line = lines[0]
-                data.freeMem = line
+                data.freeMem = Math.floor os.freemem() / 1000
                 callback null, data
+            else
+                exec freeMemCmd, (err, resp) ->
+                    if err
+                        callback err
+                    else
+                        lines = resp.split('\n')
+                        line = lines[0]
+                        data.freeMem = line
+                        callback null, data
 
     # Try to get disk infos from the Cozy controller (it can access to the
     # couch configuration file and guess on which fs it is located). If it
@@ -78,6 +85,6 @@ class exports.MemoryManager
 
     # Return true if there is at least 60MB of memory free.
     isEnoughMemory: (callback) ->
-        @getMemoryInfos (err, data) =>
+        @getMemoryInfos (err, data) ->
             if err then callback err
             else callback null, data.freeMem > (60 * 1024)
