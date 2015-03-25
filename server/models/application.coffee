@@ -47,7 +47,7 @@ Application::checkForUpdate = (callback) ->
 
     # abort early if the app already has the set flag
     if @needsUpdate
-        callback null, false
+        callback null, true
     else
         # Retrieve manifest
         manifest = new Manifest()

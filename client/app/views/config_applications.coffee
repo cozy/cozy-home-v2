@@ -88,31 +88,47 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     onAppStateChanged: ->
         setTimeout @fetch, 10000
 
-    onUpdateClicked: ->
-        @updateBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        Backbone.Mediator.pub 'app-state-changed', true
-        @updateBtn.spin true, '#ffffff'
-        @applications.updateAll
-            success: =>
-                @updateBtn.displayGreen t "update all"
-                Backbone.Mediator.pub 'app-state-changed', true
-            error: =>
-                @updateBtn.displayGreen t "error during updating"
-                Backbone.Mediator.pub 'app-state-changed', true
-
-    onUpdateStackClicked: ->
-
+    popoverManagement: (action) ->
         @popover.hide() if @popover?
         @popover = new UpdateStackModal
             confirm: (application) =>
-                @stackApplications.updateStack ->
-                    location.reload()
+                action
+                    success: =>
+                        @popover.onSuccess()
+                    error: (err) =>
+                        @popover.onError(err.responseText)
             cancel: (application) =>
                 @popover.hide()
                 @popover.remove()
+            end: (success) ->
+                if success
+                    location.reload()
 
         $("#config-applications-view").append @popover.$el
         @popover.show()
+
+    onUpdateClicked: ->
+        action = (cb) =>
+            {success, error} = cb or {}
+            @applications.updateAll
+                success: =>
+                    @stackApplications.updateStack cb
+                error: (err) =>
+                    @stackApplications.updateStack
+                        success: =>
+                            if error
+                                error err
+                            else
+                                success "ok"
+                        error: (stack_err) =>
+                            err.stack = stack_err
+                            error err if error
+        @popoverManagement action
+
+    onUpdateStackClicked: ->
+        action = (cb) =>
+            @stackApplications.updateStack cb
+        @popoverManagement action
 
     onRebootStackClicked: ->
         @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
