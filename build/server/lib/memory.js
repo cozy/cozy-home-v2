@@ -62,15 +62,22 @@ exports.MemoryManager = (function() {
     data = {
       totalMem: os.totalmem() / 1024.
     };
-    return exec(freeMemCmd, function(err, resp) {
-      var line, lines;
+    return exec('which free', function(err, res) {
       if (err) {
-        return callback(err);
-      } else {
-        lines = resp.split('\n');
-        line = lines[0];
-        data.freeMem = line;
+        data.freeMem = Math.floor(os.freemem() / 1000);
         return callback(null, data);
+      } else {
+        return exec(freeMemCmd, function(err, resp) {
+          var line, lines;
+          if (err) {
+            return callback(err);
+          } else {
+            lines = resp.split('\n');
+            line = lines[0];
+            data.freeMem = line;
+            return callback(null, data);
+          }
+        });
       }
     });
   };
@@ -94,15 +101,13 @@ exports.MemoryManager = (function() {
   };
 
   MemoryManager.prototype.isEnoughMemory = function(callback) {
-    return this.getMemoryInfos((function(_this) {
-      return function(err, data) {
-        if (err) {
-          return callback(err);
-        } else {
-          return callback(null, data.freeMem > (60 * 1024));
-        }
-      };
-    })(this));
+    return this.getMemoryInfos(function(err, data) {
+      if (err) {
+        return callback(err);
+      } else {
+        return callback(null, data.freeMem > (60 * 1024));
+      }
+    });
   };
 
   return MemoryManager;
