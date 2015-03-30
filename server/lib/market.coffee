@@ -1,5 +1,5 @@
 request = require 'request-json'
-logger = require('printit')
+log = require('printit')
     prefix: 'market'
 exec = require('child_process').exec
 fs = require 'fs'
@@ -38,13 +38,17 @@ module.exports.download = (callback) ->
         # Clone market (cannot use github API due to rate limit)
         command =  "git clone #{url} market && " + \
               "cd market && " + \
-              "git checkout #{branch} && " + \
-              "git submodule update --init --recursive"
+              "git checkout #{branch}"
         # Remove old clone
         del './market', (err) ->
+            log.error "[Error] delete market : #{err}" if err?
             exec command, {}, (err, stdout, stderr) ->
+                log.error "[Error] Clone market: #{err}" if err?
+                return callback(err) if err?
                 # Read all files (each app is declared in a file)
                 fs.readdir './market/apps', (err, files) ->
+                    log.error "[Error] Read market: #{err}" if err?
+                    return callback(err) if err?
                     for file in files
                         try
                             # Node js
