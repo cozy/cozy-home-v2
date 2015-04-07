@@ -900,8 +900,8 @@ dialog {
   margin: 0;
   padding: 0;
   border: 1px solid #363a46;
-  -webkit-box-shadow: 0 0 5px 1;
-  box-shadow: 0 0 5px 1;
+  -webkit-box-shadow: 0 0 5px rgba(252,249,245,0.55);
+  box-shadow: 0 0 5px rgba(252,249,245,0.55);
   background-color: #fcf9f5;
   font-family: "Source Sans Pro", sans-serif;
 }
