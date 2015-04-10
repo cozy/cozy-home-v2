@@ -43,11 +43,11 @@ class exports.Application extends BrunchApplication
         if Backbone.history.getFragment() is ''
             @routers.main.navigate 'home', true
 
-        url = window.location.origin
-        pathToSocketIO = "#{window.location.pathname.substring(1)}socket.io"
-        socket = io.connect url, resource: pathToSocketIO
-        socket.on 'installerror', (err) ->
+
+        SocketListener = require 'lib/socket_listener'
+        SocketListener.socket.on 'installerror', (err) ->
             console.log "An error occured while attempting to install app"
             console.log err
+
 
 new exports.Application

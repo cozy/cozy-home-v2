@@ -29,6 +29,23 @@ checkUpdate = (app, callback) ->
         callback shouldBeUpdated
 
 
+# Remove a notification if applications is up to date
+removeAppUpdateNotification = (notifier, app) ->
+    messageKey = 'update available notification'
+    message = localization.t messageKey, appName: app.name
+    notificationSlug = "home_update_notification_app_#{app.name}"
+    notifier.destroy notificationSlug, (err) ->
+        log.error err if err?
+
+# Remove a notification if stack is up to date
+removeStackUpdateNotification = (notifier, app) ->
+    messageKey = 'stack update available notification'
+    message = localization.t messageKey
+    notificationSlug = "home_update_notification_stack"
+    notifier.destroy notificationSlug, (err) ->
+        log.error err if err?
+
+
 # Creates a notification to inform the app can be updated
 createAppUpdateNotification = (notifier, app) ->
     messageKey = 'update available notification'
@@ -76,13 +93,19 @@ checkUpdates = ->
             # Creates an update notification for each app that has a new version
             # available.
             async.filterSeries applications, checkUpdate, (appsToUpdate) ->
-                for application in appsToUpdate
-                    createAppUpdateNotification notifier, application
+                for application in applications
+                    if application in appsToUpdate
+                        createAppUpdateNotification notifier, application
+                    else
+                        removeAppUpdateNotification notifier, application
 
                 # Creates an update notification for the stack, if one of the
                 # stack application has a new version available.
                 async.some stackApplications, checkUpdate, (shouldBeUpdated) ->
-                    createStackUpdateNotification notifier if shouldBeUpdated
+                    if shouldBeUpdated
+                        createStackUpdateNotification notifier
+                    else
+                        removeStackUpdateNotification notifier
 
 
 # Start check update cron.

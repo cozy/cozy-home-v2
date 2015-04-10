@@ -2,10 +2,13 @@ request = require 'request-json'
 fs = require 'fs'
 slugify = require 'cozy-slug'
 {exec} = require 'child_process'
+async = require 'async'
 log = require('printit')
     prefix: "applications"
 
 Application = require '../models/application'
+NotificationsHelper = require 'cozy-notifications-helper'
+localization = require '../lib/localization_manager'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 market = require '../lib/market'
@@ -18,6 +21,15 @@ icons = require '../lib/icon'
 startedApplications = {}
 
 # Helpers
+
+# Remove a notification after an update
+removeAppUpdateNotification = (app) ->
+    notifier = new NotificationsHelper 'home'
+    messageKey = 'update available notification'
+    message = localization.t messageKey, appName: app.name
+    notificationSlug = "home_update_notification_app_#{app.name}"
+    notifier.destroy notificationSlug, (err) ->
+        log.error err if err?
 
 sendError = (res, err, code=500) ->
     err ?=
@@ -74,7 +86,7 @@ updateApp = (app, callback) ->
     if not app.password?
         data.password = randomString 32
     manager.updateApp app, (err, result) ->
-        callback err if err?
+        return callback err if err?
         if app.state isnt "stopped"
             data.state = "installed"
 
@@ -103,6 +115,7 @@ updateApp = (app, callback) ->
                 data.iconType = iconInfos?.extension or null
                 app.updateAttributes data, (err) ->
                     callback err if err?
+                    removeAppUpdateNotification app
                     icons.save app, iconInfos, (err) ->
                         if err then console.log err.stack
                         else console.info 'icon attached'
@@ -295,7 +308,6 @@ module.exports =
     update: (req, res, next) ->
         updateApp req.application, (err) ->
             return markBroken res, req.application, err if err?
-
             res.send
                 success: true
                 msg: 'Application succesfuly updated'
@@ -307,7 +319,8 @@ module.exports =
     # * database
     updateAll: (req, res, next) ->
 
-        broken = (app, err) ->
+        error = {}
+        broken = (app, err, cb) ->
             console.log "Marking app #{app.name} as broken because"
             console.log err.stack
             data =
@@ -319,31 +332,33 @@ module.exports =
                 data.errormsg = err.message + ' :\n' + err.stack
             app.updateAttributes data, (saveErr) ->
                 console.log(saveErr) if saveErr?
+                cb()
 
-        updateApps = (apps, callback) ->
-            if apps.length > 0
-                app = apps.pop()
-                if app.needsUpdate? and app.needsUpdate
-                    switch app.state
-                        when "installed", "stopped"
-                            # Update application
-                            console.log("Update #{app.name} (#{app.state})")
-                            updateApp app, (err) =>
-                                broken app, err if err
-                                updateApps(apps, callback)
-                        else
-                            updateApps(apps, callback)
-                else
-                    updateApps(apps, callback)
+        updateApps = (app, callback) ->
+            if app.needsUpdate? and app.needsUpdate
+                switch app.state
+                    when "installed", "stopped"
+                        # Update application
+                        console.log("Update #{app.name} (#{app.state})")
+                        updateApp app, (err) ->
+                            if err?
+                                error[app.name] = err
+                                broken app, err, callback
+                            else
+                                callback()
+                    else
+                        callback()
             else
                 callback()
 
         Application.all (err, apps) =>
-            updateApps apps, (err) =>
-                sendError res, err if err?
-                res.send
-                    success: true
-                    msg: 'Application succesfuly updated'
+            async.forEachSeries apps, updateApps, () ->
+                if Object.keys(error).length > 0
+                    sendError res, message: error
+                else
+                    res.send
+                        success: true
+                        msg: 'Application succesfuly updated'
 
 
 

@@ -180,26 +180,26 @@ body
         z-index 40
 
     #menu-applications
-        display: none
-        position: absolute
-        left: 5px
-        top: 48px
-        width: 220px
-        z-index: 50
-        margin: 0
-        list-style-type: none
-        padding: 5px
-        color: darkblue
+        display none
+        position absolute
+        left 5px
+        top 48px
+        width 220px
+        z-index 50
+        margin 0
+        list-style-type none
+        padding 5px
+        color darkblue
 
-        text-align: left
-        background: lightgrey - 10%
-        border: 1px solid lightgrey - 20%
-        //box-shadow 1px 1px 2px #CCC
+        text-align left
+        background lightgrey - 10%
+        border 1px solid lightgrey - 20%
 
         .menu-application
             text-transform: lowercase
 
             a
+                opacity 1
                 display:block
                 width: 100%
                 color: darkblue
@@ -266,33 +266,40 @@ body
 
 .active
     #notifications-toggle
-        background: rgba(20, 20, 22, 0.3)
+        background rgba(20, 20, 22, 0.3)
         //height: 47px
         //line-height: 47px
         //font-size: 47px
-        margin-top: 0
-        cursor: pointer
-        box-shadow: inset 2px 2px 2px #000
+        margin-top 0
+        cursor pointer
+        box-shadow inset 2px 2px 2px #000
         .backcolor
             display none
 
 
 #notifications-container
-    position: relative
-    padding: 0
-    margin-right: 15px
+    position relative
+    padding 0
+    margin-right 15px
 
     a
-        color: darkblue
+        color darkblue
+
+    #notifications-toggle.highlight
+        opacity 1
+
+    .notification
+        a
+            opacity 1
 
     .badge
-        padding: 1px 2px 1px 3px
-        position: absolute
-        top: 2px
-        right: 2px
+        padding 1px 2px 1px 3px
+        position absolute
+        top 2px
+        right 2px
 
     .badge:empty
-        display: none
+        display none
 
     #clickcatcher
         position fixed
