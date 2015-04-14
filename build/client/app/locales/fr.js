@@ -80,6 +80,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez que j'utilise pour vous parler.",
   "french": "Français",
   "english": "Anglais",
+  "german": "Allemand",
   "portuguese": "Portugais",
   "change password procedure": "Procédure de changement de mot de passe",
   "current password": "mot de passe actuel",

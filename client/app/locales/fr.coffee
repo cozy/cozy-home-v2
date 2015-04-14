@@ -107,6 +107,7 @@ module.exports =
     """
     "french":"Français"
     "english":"Anglais"
+    "german":"Allemand"
     "portuguese": "Portugais"
     "change password procedure":"Procédure de changement de mot de passe"
     "current password":"mot de passe actuel"
