@@ -17,7 +17,7 @@ module.exports =
     "memory consumption"        : "Utilisation mémoire"
     "disk consumption"          : "Utilisation disque"
     "you have no notifications" : "Vous n'avez aucune notification"
-    "dismiss all"               : "Ignorer toutes"
+    "dismiss all"               : "Tout ignorer"
     "add application"         : "Ajouter l'application ?"
     "install"                   : "Installer"
     "your app"                 : "Votre application !"
