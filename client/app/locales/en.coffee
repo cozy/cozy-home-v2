@@ -164,6 +164,7 @@ module.exports =
         existing apps provided by Cozy Cloud and its friendly developer community.
     """
 
+    "Git url should be of form https://.../my-repo.git": "Git url should be of form https://.../my-repo.git"
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later."
     "package.json not found": "Unable to fetch package.json. Check your repo url."
     "please wait data retrieval": "Please wait while the data is being retrieved…"

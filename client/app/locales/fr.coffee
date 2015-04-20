@@ -178,6 +178,7 @@ module.exports =
         celles proposées par Cozycloud ou d'autres développeurs.
     """
 
+    "Git url should be of form https://.../my-repo.git": "L'url de votre dépôt Git devrait être de la forme https://.../my-repo.git"
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
     "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git."
     "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données…"
