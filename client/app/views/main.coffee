@@ -45,6 +45,8 @@ module.exports = class HomeView extends BaseView
         $("#content").niceScroll()
         @frames = @$ '#app-frames'
         @content = @$ '#content'
+        @backButton = @$ '.back-button'
+        @backButton.hide()
 
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
@@ -66,6 +68,7 @@ module.exports = class HomeView extends BaseView
                 alert 'Server error occured, logout failed.'
 
     displayView: (view) =>
+        @backButton.hide()
         $("#current-application").html 'home'
         displayView = =>
             @frames.hide()
@@ -189,6 +192,7 @@ module.exports = class HomeView extends BaseView
 
         @frames.show()
         @content.hide()
+        @backButton.show()
 
         frame = @$("##{slug}-frame")
         if frame.length is 0

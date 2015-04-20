@@ -33,6 +33,7 @@ module.exports = class AppsMenu extends ViewCollection
         super
 
     windowClicked: =>
+        console.log event
         if event? and @$el.has($(event.target)).length is 0
             @hideAppList()
 
