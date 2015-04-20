@@ -1206,8 +1206,8 @@ module.exports = {
   "stop this app": "Diese App stoppen",
   "update required": "Aktualisierung verfügbar",
   "application is installing": "Eine App wird bereits installiert.\nWarten Sie bis zu dessen Ende, und versuchen Sie erneut.",
-  "no app message": "Zuzeit ist keine App auf Ihrem Cozy installiert.        \nGehen Sie zu <a href=\"#applications\">app store</a> und installieren Sie neue Apps!",
-  "welcome to app store": "Willkommen zu Ihrem Cozy App Store, installieren Sie Ihre eigene App        \nvon hier und fügen Sie eine von der Liste hinzu.",
+  "no app message": "Zuzeit ist keine App auf Ihrem Cozy installiert.\nGehen Sie zu <a href=\"#applications\">app store</a> und installieren Sie neue Apps!",
+  "welcome to app store": "Willkommen zu Ihrem Cozy App Store, installieren Sie Ihre eigene App\nvon hier und fügen Sie eine von der Liste hinzu.",
   "installed everything": "Sie haben bereits alles installiert!",
   "already similarly named app": "Sie haben bereits eine App mit gleichem Namen.",
   "your app list": "Zugriff Ihrer Apps",
@@ -1241,6 +1241,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Wählen Sie die Sprache mit der sich mich nutzen möchten:",
   "french": "Französisch",
   "english": "Englisch",
+  "german": "Deutsch",
   "portuguese": "Portuguisisch",
   "change password procedure": "Schritte um Ihr Passwort zu ändern",
   "current password": "Aktuelles Passwort",
@@ -1459,6 +1460,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choose the language you want me to use with you:",
   "french": "French",
   "english": "English",
+  "german": "German",
   "portuguese": "Portuguese",
   "change password procedure": "Steps to change your password",
   "current password": "current password",
@@ -1614,7 +1616,7 @@ module.exports = {
   "memory consumption": "Utilisation mémoire",
   "disk consumption": "Utilisation disque",
   "you have no notifications": "Vous n'avez aucune notification",
-  "dismiss all": "Ignorer toutes",
+  "dismiss all": "Tout ignorer",
   "add application": "Ajouter l'application ?",
   "install": "Installer",
   "your app": "Votre application !",
@@ -1676,6 +1678,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez que j'utilise pour vous parler.",
   "french": "Français",
   "english": "Anglais",
+  "german": "Allemand",
   "portuguese": "Portugais",
   "change password procedure": "Procédure de changement de mot de passe",
   "current password": "mot de passe actuel",
@@ -2511,8 +2514,8 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="en">');
 var __val__ = t('english')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</option><option value="pt">');
-var __val__ = t('portuguese')
+buf.push('</option><option value="de">');
+var __val__ = t('german')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select><button class="btn">');
 var __val__ = t('save')
@@ -2567,7 +2570,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('<div class="md-overlay"></div><div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');

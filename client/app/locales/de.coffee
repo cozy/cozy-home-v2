@@ -52,12 +52,12 @@ module.exports =
         """
 
     "no app message": """
-	Zuzeit ist keine App auf Ihrem Cozy installiert.        
+	Zuzeit ist keine App auf Ihrem Cozy installiert.
 	Gehen Sie zu <a href="#applications">app store</a> und installieren Sie neue Apps!
         """
 
     "welcome to app store": """
-	Willkommen zu Ihrem Cozy App Store, installieren Sie Ihre eigene App        
+	Willkommen zu Ihrem Cozy App Store, installieren Sie Ihre eigene App
 	von hier und fügen Sie eine von der Liste hinzu.
         """
 
@@ -98,6 +98,7 @@ module.exports =
     "Chose the language you want I use to speak with you:":"Wählen Sie die Sprache mit der sich mich nutzen möchten:"
     "french":"Französisch"
     "english":"Englisch"
+    "german":"Deutsch"
     "portuguese":"Portuguisisch"
     "change password procedure":"Schritte um Ihr Passwort zu ändern"
     "current password":"Aktuelles Passwort"
