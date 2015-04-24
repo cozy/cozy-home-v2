@@ -20,7 +20,7 @@ exports.Manifest = (function() {
 
   Manifest.prototype.download = function(app, callback) {
     var Provider, provider, providerName;
-    if (app.local) {
+    if (app.local || app.git.match(/^\/usr\/local\/cozy/)) {
       this.config = app;
       return callback(null);
     } else if (app.git != null) {

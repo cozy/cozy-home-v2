@@ -59,7 +59,7 @@ icons.getPath = (root, appli) ->
 icons.getIconInfos = (appli) ->
     if appli?
         name = appli.name.toLowerCase()
-        if appli.git?
+        if appli.git? and appli.git.match /^https/
             repoName = (appli.git.split('/')[4]).replace '.git', ''
         else
             repoName = name

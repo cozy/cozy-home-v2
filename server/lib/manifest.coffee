@@ -10,7 +10,7 @@ class exports.Manifest
     download: (app, callback) ->
 
         # If manifest is already part of the app request, use it
-        if app.local
+        if app.local or app.git.match /^\/usr\/local\/cozy/
             @config = app
             callback null
 

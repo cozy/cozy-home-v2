@@ -65,7 +65,7 @@ icons.getIconInfos = function(appli) {
   var basePath, iconInfos, name, repoName, root;
   if (appli != null) {
     name = appli.name.toLowerCase();
-    if (appli.git != null) {
+    if ((appli.git != null) && appli.git.match(/^https/)) {
       repoName = (appli.git.split('/')[4]).replace('.git', '');
     } else {
       repoName = name;

@@ -162,6 +162,7 @@ module.exports = {
   "tasky description": "Un gestionnaire de tâches, basé sur les tags, rapide et simple.",
   "todos description": "Écrivez et ordonnez vos tâches efficacement.",
   "term description": "Un terminal pour votre Cozy.",
+  "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder message": "Rappel : %{message}",
   "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
