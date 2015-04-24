@@ -64,8 +64,12 @@ icons.getPath = function(root, appli) {
 icons.getIconInfos = function(appli) {
   var basePath, iconInfos, name, repoName, root;
   if (appli != null) {
-    repoName = (appli.git.split('/')[4]).replace('.git', '');
     name = appli.name.toLowerCase();
+    if (appli.git != null) {
+      repoName = (appli.git.split('/')[4]).replace('.git', '');
+    } else {
+      repoName = name;
+    }
     basePath = '/' + path.join('usr', 'local', 'cozy', 'apps');
     root = path.join(basePath, name, name, repoName);
     if (!fs.existsSync(root)) {

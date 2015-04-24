@@ -20,7 +20,10 @@ exports.Manifest = (function() {
 
   Manifest.prototype.download = function(app, callback) {
     var Provider, provider, providerName;
-    if (app.git != null) {
+    if (app.local) {
+      this.config = app;
+      return callback(null);
+    } else if (app.git != null) {
       providerName = app.git.match(/(github\.com|gitlab\.cozycloud\.cc)/);
       providerName = providerName[0];
       if (providerName === "gitlab.cozycloud.cc") {
