@@ -1612,6 +1612,9 @@ body {
   text-transform: lowercase;
 }
 #menu-applications-container #menu-applications .menu-application a {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
   display: block;
   width: 100%;
   color: #363a46;
@@ -1708,6 +1711,16 @@ body {
 }
 #notifications-container a {
   color: #363a46;
+}
+#notifications-container #notifications-toggle.highlight {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+#notifications-container .notification a {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 #notifications-container .badge {
   padding: 1px 2px 1px 3px;

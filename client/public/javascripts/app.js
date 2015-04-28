@@ -472,7 +472,7 @@ exports.Application = (function(_super) {
   };
 
   Application.prototype.initialize2 = function() {
-    var err, locales, pathToSocketIO, socket, url;
+    var SocketListener, err, locales;
     try {
       locales = require('locales/' + this.locale);
     } catch (_error) {
@@ -491,12 +491,8 @@ exports.Application = (function(_super) {
     if (Backbone.history.getFragment() === '') {
       this.routers.main.navigate('home', true);
     }
-    url = window.location.origin;
-    pathToSocketIO = "" + (window.location.pathname.substring(1)) + "socket.io";
-    socket = io.connect(url, {
-      resource: pathToSocketIO
-    });
-    return socket.on('installerror', function(err) {
+    SocketListener = require('lib/socket_listener');
+    return SocketListener.socket.on('installerror', function(err) {
       console.log("An error occured while attempting to install app");
       return console.log(err);
     });
@@ -936,7 +932,7 @@ return buf.join("");
 };
 });
 
-require.register("lib/view_collection", function(exports, require, module) {
+;require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1162,6 +1158,225 @@ module.exports = WizardView = (function(_super) {
 })(BaseView);
 });
 
+;require.register("locales/de", function(exports, require, module) {
+module.exports = {
+  "home": "Home",
+  "apps": "Apps",
+  "account": "Account",
+  "email": "E-Mail",
+  "timezone": "Zeitzone",
+  "domain": "Domain",
+  "no domain set": "no.domain.set",
+  "locale": "Sprache",
+  "change password": "Passwort ändern",
+  "input your current password": "Tragen Sie Ihr aktuelles Passwort ein",
+  "enter a new password": "Benutzen Sie das Feld um ein neues Passwort zu erstellen",
+  "confirm new password": "Bestätigen Sie neues PassworT",
+  "send changes": "Speichern",
+  "manage": "Managen",
+  "total": "Total",
+  "memory consumption": "Arbeitsspeicher Verbrauch",
+  "disk consumption": "Speicherplatz Verbrauch",
+  "you have no notifications": "Sie haben keine Mitteilungen",
+  "dismiss all": "Alle wegschicken",
+  "add application": "App hinzufügen?",
+  "install": "Installieren",
+  "your app": "Deine app!",
+  "community contribution": "Community Mitwirkung",
+  "official application": "Offizielle App",
+  "application description": "App Beschreibung",
+  "downloading description": "Herunterladen Beschreibung…",
+  "downloading permissions": "Herunterladen Rechte…",
+  "Cancel": "Abbrechen",
+  "ok": "Ok",
+  "applications permissions": "App Rechte",
+  "confirm": "Bestätigen",
+  "installing": "Installieren",
+  "remove": "Entfernen",
+  "update": "Aktualisieren",
+  "started": "Gestartet",
+  "notifications": "Mitteilungen",
+  "questions and help forum": "Fragen und Hilfe Forum",
+  "sign out": "Abmelden",
+  "open in a new tab": "In neuem Tab öffnen",
+  "disk unit": "GB",
+  "memory unit": "MB",
+  "always on": "Immer eingeschaltet",
+  "keep always on": "Immer eingeschaltet lassen",
+  "stop this app": "Diese App stoppen",
+  "update required": "Aktualisierung verfügbar",
+  "application is installing": "Eine App wird bereits installiert.\nWarten Sie bis zu dessen Ende, und versuchen Sie erneut.",
+  "no app message": "Zuzeit ist keine App auf Ihrem Cozy installiert.\nGehen Sie zu <a href=\"#applications\">app store</a> und installieren Sie neue Apps!",
+  "welcome to app store": "Willkommen zu Ihrem Cozy App Store, installieren Sie Ihre eigene App\nvon hier und fügen Sie eine von der Liste hinzu.",
+  "installed everything": "Sie haben bereits alles installiert!",
+  "already similarly named app": "Sie haben bereits eine App mit gleichem Namen.",
+  "your app list": "Zugriff Ihrer Apps",
+  "customize your cozy": "Ihr Layout anpassen",
+  "manage your apps": "Ihre Apps managen",
+  "choose your apps": "Ihre Apps auswählen",
+  "configure your cozy": "Ihr Cozy konfigurieren",
+  "ask for assistance": "Nach Hilfe fragen",
+  "logout": "Abmelden",
+  "welcome to your cozy": "Willkommen zu Ihrem Cozy!",
+  "you have no apps": "Sie haben kein Apps.",
+  "app management": "App Management",
+  "app store": "App Store",
+  "configuration": "Konfiguration",
+  "assistance": "Unterstützung",
+  "hardware consumption": "Hardware",
+  "hard drive gigabytes": "(Hard Drive)",
+  "memory megabytes": "&nbsp;MB (RAM)",
+  "manage your applications": "Ihre Apps managen",
+  "manage your devices": "Ihre Geräte managen",
+  "synchronized": "synchronisiert",
+  "revoke device access": "Geräte Zugriff aufheben",
+  "no application installed": "Es ist keine App installiert.",
+  "your parameters": "Ihre Einstellungen",
+  "alerts and password recovery email": "Ihre E-Mail Addresse wird benötigt Alarme und Passwort Recovery.",
+  "public name description": "Ihr öffentlicher Name wird von Ihrem Cozy und seinen Apps genutzt um mit Ihnen zu kommunizieren.",
+  "your timezone is required": "Ihre Zeitzone hilft dabei Datums korrekt anzuzeigen.",
+  "domain name for urls and email": "Der Domain Name wird benutzt um URLs via E-Mail zu Ihnen und Ihren Kontakten zu senden.",
+  "save": "Speichern",
+  "saved": "Gespeichert",
+  "Chose the language you want I use to speak with you:": "Wählen Sie die Sprache mit der sich mich nutzen möchten:",
+  "french": "Französisch",
+  "english": "Englisch",
+  "german": "Deutsch",
+  "portuguese": "Portuguisisch",
+  "change password procedure": "Schritte um Ihr Passwort zu ändern",
+  "current password": "Aktuelles Passwort",
+  "new password": "Neues Passwort",
+  "confirm your new password": "Bestägigen Sie in neues Passwort",
+  "save your new password": "Speichern Sie Ihr neues Passwort",
+  "do you want assistance": "Brauchen Sie etwas Hilfe?",
+  "Write an email to our support team at:": "Shoot unserem Support Team eine E-Mail:",
+  "Register and post on our forum: ": "Registieren Sie sich und schreiben in unserem Forum: ",
+  "Ask your question on Twitter: ": "Stellen Fragen auf Twitter: ",
+  "Chat with us on IRC:": "Chatten Sie mit uns auf IRC:",
+  "Visit the project website and learn to build your app:": "Besuchen Sie die Projekt Webseite und lernen Sie Ihre eigene App zu erstellen:",
+  "your own application": "Ihre eigene App",
+  "installed": "Installiert",
+  "updated": "aktualisiert",
+  "updating": "aktualisierung läuft",
+  "update all": "Alle aktualisieren",
+  "update stack": "Aktualsieren",
+  "refresh page": "Bitte warten, Aktualisierung benötigt einige Minuten.",
+  "update stack modal title": "Aktualisieren Sie Ihren Cozy",
+  "update stack modal content": "Sie sind dabei die Plattform zu aktualisieren. Ihr Cozy wird ein Paar Minuten nicht verfügbar sein. Ist das OK?",
+  "update stack modal confirm": "Aktualisierung",
+  "update stack success": "Ihre Applikation wurde aktualisiert, Seite wird neu aufgebaut.",
+  "update stack error": "Ein Fehler ist während der Aktualisierung aufgetreten, Seite wird neu aufgebaut.",
+  "applications broken": "Applikation abgestürtzt",
+  "cozy platform": "Plattform",
+  "reboot stack": "Neustart",
+  "update error": "Ein Fehler ist während der App Aktualisierung aufgetreten",
+  "error update uninstalled app": "Sie können keine App aktualisieren, die nicht installiert ist.",
+  "broken": "Absturz",
+  "start this app": "Diese App starten",
+  "stopped": "Gestoppet",
+  "retry to install": "Installation wiederholen",
+  "cozy account title": "Cozy - Account",
+  "cozy app store title": "Cozy - App Store",
+  "cozy home title": "Cozy - Home",
+  "cozy applications title": "Cozy - App Konfiguration",
+  "running": "Läuft",
+  "cozy help title": "Cozy - Hilfe",
+  "changing locale requires reload": "Ändern Sie das Gebietsschema um die Seite neu zu laden.",
+  "cancel": "Abbrechen",
+  "abort": "Abbruch",
+  "Once updated, this application will require the following permissions:": "Einmal aktualisiert, benötigt diese App folgende Rechte:",
+  "confirm update": "Aktualisierung bestätigen",
+  "confirm install": "Installation bestätigen",
+  "no specific permissions needed": "Diese App benötigt keine Rechte",
+  "removed": "Entfernt",
+  "removing": "Entfernen",
+  "required permissions": "Benötigte Rechte",
+  "finish layout edition": "Speichern",
+  "reset customization": "Rücksetzen",
+  "use widget": "Widget verwenden",
+  "use icon": "Icon verwenden",
+  "change layout": "Layout verändern",
+  "introduction market": "        Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch\n        installieren neuer Apps anpassen.\n        Von hier können Sie eine selbst erstellte App oder schon existierenden Apps;\nbereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinschaft, installieren.",
+  "error connectivity issue": "Ein Fehler ist aufgetreten beim abrufen der Daten.<br />Bitte versuchen Sie später erneut.",
+  "package.json not found": "Abruf von package.json ist nicht möglich. Prüfen Sie Ihre Repoitory URL.",
+  "please wait data retrieval": "Bitte warten während die Daten abgerufen werden…",
+  "revoke device confirmation message": "Dies verhindert den Zugriff des Gerätes auf Ihr Cosy. Sind Sie sicher?",
+  "dashboard": "Dashboard",
+  "calendars description": "Verwalten Sie Ihre Ereignisse und synchronisieren Sie diese mit Ihrem Smartphone.",
+  "contacts description": "Verwalten Sie Ihre Kontakte und synchronisieren Sie diese mit Ihrem Smartphone.",
+  "emails description": "Lesen, senden und sichern Sie Ihre E-Mails.",
+  "files description": "Ihr Online Datei-System, synchronisiert mit Ihren Geräten.",
+  "photos description": "Organisieren Sie Ihre Fotos und teilen Sie diese mit Freunden.",
+  "sync description": "Das Tool ist die Vorausetzung zur Synchronisation Ihrer Kontakte und Kalender mit Ihrem Smartphone.",
+  "bookmark description": "Speichern und verwalten Ihrer Lesezeichen.",
+  "cozic description": "Ein Audio-Player zum hören Ihrer Musik in Ihrem Browser.",
+  "databrowser description": "Durchblättern und visualisieren all Ihrer Daten (RAW Format).",
+  "feeds description": "Sammeln Sie Ihre Feeds und speichern Sie favorisierten Links als Lesezeichen.",
+  "kyou description": "Verbessern Sie Ihre Gesundheit und Zufriedenheit durch Bewertung Ihrer selbst.",
+  "konnectors description": "Daten Import von externen Services (Twitter, Jawbone…).",
+  "kresus description": "Zusätzliche Tools für Ihre private Finanz Verwaltung.",
+  "nirc description": "Zugruff auf Ihre fovorisierten IRC Kanäle von Ihrem Cozy.",
+  "notes description": "Organisieren und schreiben von smarten Notizen.",
+  "owm description": "Wissen wie das Wetter wird, überall auf der Welt.",
+  "pfm description": "Verwalten Ihrer Bank Konten ohne sich jedesmal ein zu buchen  (Nur französische Banken).",
+  "remote storage description": "Ein entferntes Speicher Gerät, zur Speicherung Ihre nicht gehosteten Applikationen.",
+  "tasky description": "Super schneller und einfacher Tag-basierter Aufgaben Verwalter.",
+  "todos description": "Erstellen Sie Ihre Aufgaben, ordnen Sie diese und führen Sie diese effizient aus.",
+  "term description": "Eine Terminal App für Ihr Cozy.",
+  "reminder title email": "Erinnerung",
+  "reminder title email expanded": "Erinnerung: %{description} - %{date} (%{calendar})",
+  "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
+  "reminder message": "Erinnerung: %{message}",
+  "warning unofficial app": "Diese App is eine aus der Gemeinschaft und wird nicht durch das Cozy Team betreut.\nUm einen Bug zu berichten; bitte das Problem beschreiben in <a href='https://forum.cozy.io'>our forum</a>.",
+  "installation message failure": "%{appName}'s Installation fehlgeschlagen.",
+  "update available notification": "Eine neue Version von %{appName} ist verfügbar.",
+  "stack update available notification": "Eine neue Version der Plattform ist verfügbar.",
+  'noapps': {
+    'first steps': "Sie können <a href=\"%{wizard}\">unseren Wizard benutzen</a> um Hilfe bei der Installation und der Konfiguration Ihrer Apps zu erhalten,\noder Sie können eine <a href=\"%{quicktour}\">Quick Tour</a> unternehmen und die Cozy Eigenschaften entdecken.",
+    'customize your cozy': "Sie können außerdem <a href=\"%{account}\">zu den Einstellungen gehen</a> um Ihr Cozy anzupassen,\noder <a href=\"%{appstore}\">den App Store besuchen</a> um Ihre Erste App zu installieren."
+  },
+  'relaunch install wizard': "Installation Wizard neu starten",
+  'installwizard': {
+    'welcome title': "Willkommen zu Ihrem neuen Cozy",
+    'welcome content': "<p>Dieser Wizard wird Ihnen dabei helfen auf Ihrem Cozy, Apps auszuwählen, installieren und einzurichten.</p>\n<p>>Bitte beachten Sie, das Cozy im Moment im Beta Status befindet. Zögern Sie nicht <a href=\"#help\">um mit uns in Kontakt zu treten</a> wenn Probleme auftreten.</p>",
+    'yes': "Aktivieren der %{slug} App",
+    'no': "Nein, Danke",
+    'continue to files': "Meine Apps konfigurieren",
+    'files title': "Files App konfigurieren",
+    'files content': "<p>Möchte Sie eine App zum Speichern Ihrer persönlichen Dateien und Ordner, sicher erreichbar von überall?</p>",
+    'emails title': "Emails App konfigurieren",
+    'emails content': "<p>Möchten Sie einen E-Mail Client der mit all Ihren E-Mail Providern verbunden ist, so haben Sie Zugriff auf einen einheitlichen Briefkasten erreichbar von überall?</p>",
+    'contacts title': "Contacts App konfigurieren",
+    'contacts content': "<p>Möchten Sie eine Kontakt App um Ihr Adressbuch zu verwalten und direkten Zugriff zu Ihren Freunden zu haben?</p>\n<p><small>Aktivieren dieser App ermöglicht auch die Verwendung der Sync App um Daten mit Ihrem Smartphone und den Computer Programmen zu synchronisieren.</small></p>",
+    'calendar title': "Calendar App konfigurieren",
+    'calendar content': "<p>Möchten Sie eine Kalendar App um Ihnen zu helfen Ihr Leben zu organisieren?</p>\n<p><small>Aktivieren dieser App ermöglicht auch die Verwendung der Sync App um Daten mit Ihrem Smartphone und den Computer Programmen zu synchronisieren.</small></p>",
+    'photos title': "Photos App konfigurieren",
+    'photos content': "<p>Möchten Sie eine App um Ihre Fotos und Albums zu speichern, und Ihnen zu helfen diese mit Freunden und Familie zu teilen?</p>\n<p><small>Pro-Tip: Wenn Sie ein Android Gerät verwenden, können Sie unsere App nutzen, um automatisch Fotos zu Ihrem Cozy hochzuladen.</small></p>",
+    'thanks title': "Fertig!",
+    'thanks content': "<p>Es ist so einfach! Sie haben Ihr Cozy mit den folgenden Apps personalisiert:</p>",
+    'go-to-my-cozy': "Ich bin bereit mein Cozy zu benutzen",
+    'show-me-a-quick-tour': "Bitte erzählen Sie mir mehr über mein Cozy"
+  },
+  'quicktourwizard': {
+    'welcome title': "Treffen Sie Ihr Cozy!",
+    'welcome content': "<p>Wilkommen zu Ihrem brand neuen Cozy.</p>\n<p>Diese kurze geführet Tour wird Ihnen die besten Eigenschaften Ihres Cozy vorstellen.</p>\n<p>>Bitte beachten Sie, das Cozy im Moment im Beta Status befindet. Zögern Sie nicht <a href=\"#help\">um mit uns in Kontakt zu treten</a> wenn Probleme auftreten.</p>",
+    'continue to dashboard': "Dashboard entdecken",
+    'dashboard title': "Dashboard entdecken",
+    'dashboard content': "<p>Hier ist eine kleine Führung über alles was in Ihrem Cozy Home verfügbar ist. Alle Eigenschaften können vom Menü in der oberen rechten Ecke erreicht werden.</p>\n<p><img src=\"/img/home-black.png\"><strong>Home: </strong>Dies ist der Platz von dem Sie alle Ihre Apps erreichen</p>",
+    'continue to apps': "Wie können Ihre Apps verwalten werden?",
+    'apps title': "Apps verwalten",
+    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>App Verwaltung: </strong>Hier können Sie den Status Ihrer Apps verwalten: starten, stoppen, entfernen…</p>\n<p><img src=\"/img/apps.png\"><strong>App Store: </strong>Im App Store finden Sie neue Apps zur Installation auf Ihrem Cozy.</p>",
+    'continue to help': "Wie Hilfe bekommen?",
+    'help title': "Hilfe bekommen",
+    'help content': "<p><img src=\"/img/configuration.png\"><strong>Konfiguration: </strong>Um sicher zu stellen, dass Ihr Cozy das macht, was Sie möchten, sehen Sie sich die Einstellungen an.</p>\n<p><img src=\"/img/help.png\"><strong>Hilfe: </strong>Verloren in Ihrem Cozy? Hier sind einiges Links um Ihnen weiter zu helfen.</p>",
+    'continue to sync': "Sync mit Ihrem Smartphone",
+    'sync title': "Get in sync",
+    'sync content': "<p>Um mehr über Daten Synchronisation zu lernen, bitte schauen Sie sich die folgenden Ressourcen an:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Files</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendar</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
+    'close wizard': "Nun bin ich bereit mein Cozy zu verwenden"
+  }
+};
+});
+
 ;require.register("locales/en", function(exports, require, module) {
 module.exports = {
   "home": "Home",
@@ -1245,6 +1460,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choose the language you want me to use with you:",
   "french": "French",
   "english": "English",
+  "german": "German",
   "portuguese": "Portuguese",
   "change password procedure": "Steps to change your password",
   "current password": "current password",
@@ -1400,7 +1616,7 @@ module.exports = {
   "memory consumption": "Utilisation mémoire",
   "disk consumption": "Utilisation disque",
   "you have no notifications": "Vous n'avez aucune notification",
-  "dismiss all": "Ignorer toutes",
+  "dismiss all": "Tout ignorer",
   "add application": "Ajouter l'application ?",
   "install": "Installer",
   "your app": "Votre application !",
@@ -1462,6 +1678,7 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez que j'utilise pour vous parler.",
   "french": "Français",
   "english": "Anglais",
+  "german": "Allemand",
   "portuguese": "Portugais",
   "change password procedure": "Procédure de changement de mot de passe",
   "current password": "mot de passe actuel",
@@ -2297,8 +2514,8 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="en">');
 var __val__ = t('english')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</option><option value="pt">');
-var __val__ = t('portuguese')
+buf.push('</option><option value="de">');
+var __val__ = t('german')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select><button class="btn">');
 var __val__ = t('save')
@@ -2333,7 +2550,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/application_iframe", function(exports, require, module) {
+;require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2347,13 +2564,13 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_application", function(exports, require, module) {
+;require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('<div class="md-overlay"></div><div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
@@ -2397,7 +2614,7 @@ buf.push(attrs({ 'src':("img/happycloud-black.svg"), 'alt':("" + (t(app.comment)
 buf.push('/>');
 }
 buf.push('<a');
-buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href":true,"target":true}));
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
@@ -2407,7 +2624,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_application_list", function(exports, require, module) {
+;require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2418,7 +2635,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_applications", function(exports, require, module) {
+;require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2454,7 +2671,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_device", function(exports, require, module) {
+;require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2472,7 +2689,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/config_device_list", function(exports, require, module) {
+;require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2483,7 +2700,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/help", function(exports, require, module) {
+;require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2516,7 +2733,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/help_url", function(exports, require, module) {
+;require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2533,7 +2750,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/home", function(exports, require, module) {
+;require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2557,7 +2774,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/home_application", function(exports, require, module) {
+;require.register("templates/home_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2572,7 +2789,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/home_application_widget", function(exports, require, module) {
+;require.register("templates/home_application_widget", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2586,7 +2803,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/layout", function(exports, require, module) {
+;require.register("templates/layout", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2619,7 +2836,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/market", function(exports, require, module) {
+;require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2643,7 +2860,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/market_application", function(exports, require, module) {
+;require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2672,7 +2889,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/menu_application", function(exports, require, module) {
+;require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2686,7 +2903,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/menu_applications", function(exports, require, module) {
+;require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2698,7 +2915,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/navbar", function(exports, require, module) {
+;require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2713,7 +2930,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/navbar_app_btn", function(exports, require, module) {
+;require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2729,7 +2946,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/notification", function(exports, require, module) {
+;require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2741,7 +2958,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/notifications", function(exports, require, module) {
+;require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2759,7 +2976,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/popover_description", function(exports, require, module) {
+;require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2789,7 +3006,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/popover_permissions", function(exports, require, module) {
+;require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2822,7 +3039,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/tutorial", function(exports, require, module) {
+;require.register("templates/tutorial", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2897,7 +3114,7 @@ return buf.join("");
 };
 });
 
-require.register("templates/update_stack_modal", function(exports, require, module) {
+;require.register("templates/update_stack_modal", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2933,7 +3150,7 @@ return buf.join("");
 };
 });
 
-require.register("views/account", function(exports, require, module) {
+;require.register("views/account", function(exports, require, module) {
 var BaseView, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,

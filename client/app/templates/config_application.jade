@@ -1,3 +1,4 @@
+.md-overlay
 .clearfix
     span.left
         strong #{app.displayName}
@@ -38,5 +39,7 @@
 
     .comments
         if app.comment === 'official application'
-            img(src="img/happycloud-black.svg", alt="#{t(app.comment)}", width="20")
+            img(src="img/happycloud-black.svg", 
+                alt="#{t(app.comment)}", 
+                width="20")
         a(href="#{app.website}", target="_blank")= app.website
