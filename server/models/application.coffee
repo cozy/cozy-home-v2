@@ -1,6 +1,8 @@
 americano = require 'americano-cozy'
 
 {Manifest} = require '../lib/manifest'
+HttpClient = require("request-json").JsonClient
+dataClient = new HttpClient "http://localhost:9101/"
 
 
 module.exports = Application = americano.getModel 'Application',
@@ -26,6 +28,35 @@ module.exports = Application = americano.getModel 'Application',
     version: String
     needsUpdate: {type: Boolean, default: false}
     _attachments: Object
+
+# Get token from token file if in production mode.
+getToken = ->
+    if process.env.NODE_ENV is 'production'
+        try
+            token = process.env.TOKEN
+            return token
+        catch err
+            console.log err.message
+            console.log err.stack
+            return null
+    else
+        return ""
+
+
+Application.createAccess = (params, callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    params.type = "application"
+    dataClient.post 'access/', params, (err, res, body) ->
+        callback err, new Application(body)
+
+Application::destroyAccess = (callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    dataClient.del "access/#{@id}/", callback
+
+Application::updateAccess = (params, callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    dataClient.put "access/#{@id}/",  params, (err, res, body) ->
+        callback err, new Application(body)
 
 Application.all = (params, callback) ->
     Application.request "bySlug", params, callback

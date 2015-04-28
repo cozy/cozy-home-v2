@@ -83,8 +83,7 @@ randomString = (length) ->
 
 updateApp = (app, callback) ->
     data = {}
-    if not app.password?
-        data.password = randomString 32
+    access = {}
     manager.updateApp app, (err, result) ->
         return callback err if err?
         if app.state isnt "stopped"
@@ -95,7 +94,8 @@ updateApp = (app, callback) ->
             if err?
                 callback err
             else
-                data.permissions = manifest.getPermissions()
+                access.permissions = manifest.getPermissions()
+                access.slug = app.slug
                 data.widget = manifest.getWidget()
                 data.version = manifest.getVersion()
                 data.iconPath = manifest.getIconPath()
@@ -113,13 +113,14 @@ updateApp = (app, callback) ->
                     console.log err
                     iconInfos = null
                 data.iconType = iconInfos?.extension or null
-                app.updateAttributes data, (err) ->
+                app.updateAccess access, (err) ->
                     callback err if err?
-                    removeAppUpdateNotification app
-                    icons.save app, iconInfos, (err) ->
-                        if err then console.log err.stack
-                        else console.info 'icon attached'
-                        manager.resetProxy callback
+                    app.updateAttributes data, (err) ->
+                        removeAppUpdateNotification app
+                        icons.save app, iconInfos, (err) ->
+                            if err then console.log err.stack
+                            else console.info 'icon attached'
+                            manager.resetProxy callback
 
 
 module.exports =
@@ -216,7 +217,8 @@ module.exports =
     install: (req, res, next) ->
         req.body.slug = slugify req.body.name
         req.body.state = "installing"
-        req.body.password = randomString 32
+        access =
+            password: randomString 32
 
         Application.all key: req.body.slug, (err, apps) ->
             return sendError res, err if err
@@ -229,55 +231,60 @@ module.exports =
             manifest = new Manifest()
             manifest.download req.body, (err) ->
                 return sendError res, err if err
-                req.body.permissions = manifest.getPermissions()
+                access.permissions = manifest.getPermissions()
+                access.slug = req.body.slug
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
                 req.body.color = manifest.getColor()
 
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
+                    access.app = appli.id
+                    Application.createAccess access, (err, app) =>
+                        return sendError res, err if err
 
-                    res.send success: true, app: appli, 201
+                        res.send success: true, app: appli, 201
 
-                    infos = JSON.stringify appli
-                    console.info "attempt to install app #{infos}"
-                    manager.installApp appli, (err, result) ->
-                        if err
-                            markBroken res, appli, err
-                            sendErrorSocket err
-                            return
+                        infos = JSON.stringify appli
+                        console.info "attempt to install app #{infos}"
+                        appli.password = access.password
+                        manager.installApp appli, (err, result) ->
+                            if err
+                                markBroken res, appli, err
+                                sendErrorSocket err
+                                return
 
-                        if result.drone?
-                            updatedData =
-                                state: 'installed'
-                                port: result.drone.port
+                            if result.drone?
+                                updatedData =
+                                    state: 'installed'
+                                    port: result.drone.port
 
-                            msg = "install succeeded on port #{appli.port}"
-                            console.info msg
+                                msg = "install succeeded on port #{appli.port}"
+                                console.info msg
 
-                            appli.iconPath = manifest.getIconPath()
-                            appli.color = manifest.getColor()
-                            try
-                                iconInfos = icons.getIconInfos appli
-                            catch err
-                                console.log err
-                                iconInfos = null
-                            appli.iconType = iconInfos?.extension or null
+                                appli.iconPath = manifest.getIconPath()
+                                appli.color = manifest.getColor()
+                                try
+                                    iconInfos = icons.getIconInfos appli
+                                catch err
+                                    console.log err
+                                    iconInfos = null
+                                appli.iconType = iconInfos?.extension or null
 
-                            appli.updateAttributes updatedData, (err) ->
-                                return sendErrorSocket err if err?
-                                icons.save appli, iconInfos, (err) ->
-                                    if err? then console.log err.stack
-                                    else console.info 'icon attached'
-                                    console.info 'saved port in db', appli.port
-                                    manager.resetProxy (err) ->
-                                        return sendErrorSocket err if err?
-                                        console.info 'proxy reset', appli.port
+                                appli.updateAttributes updatedData, (err) ->
+                                    return sendErrorSocket err if err?
+                                    icons.save appli, iconInfos, (err) ->
+                                        if err? then console.log err.stack
+                                        else console.info 'icon attached'
+                                        console.info 'saved port in db', appli.port
+                                        manager.resetProxy (err) ->
+                                            return sendErrorSocket err if err?
+                                            console.info 'proxy reset', appli.port
 
-                        else
-                            err = new Error "Controller has no " + \
-                                            "informations about #{appli.name}"
-                            return sendErrorSocket err if err
+                            else
+                                err = new Error "Controller has no " + \
+                                                "informations about #{appli.name}"
+                                return sendErrorSocket err if err
 
 
     # Remove app from 3 places :
@@ -289,15 +296,17 @@ module.exports =
         manager.uninstallApp req.application, (err, result) ->
             return markBroken res, req.application, err if err
 
-            req.application.destroy (err) ->
+            req.application.destroyAccess (err) ->
                 return sendError res, err if err
-
-                manager.resetProxy (err) ->
+                req.application.destroy (err) ->
                     return sendError res, err if err
 
-                    res.send
-                        success: true
-                        msg: 'Application succesfuly uninstalled'
+                    manager.resetProxy (err) ->
+                        return sendError res, err if err
+
+                        res.send
+                            success: true
+                            msg: 'Application succesfuly uninstalled'
 
 
 
@@ -380,44 +389,48 @@ module.exports =
         unless startedApplications[req.application.id]?
             startedApplications[req.application.id] = true
 
-            manager.start req.application, (err, result) ->
-                if err and err isnt "Not enough Memory"
-                    delete startedApplications[req.application.id]
-                    return markBroken res, req.application, err
-                else if err
-                    delete startedApplications[req.application.id]
-                    data =
-                        errormsg: err
-                        state: 'stopped'
-                    req.application.updateAttributes data, (saveErr) ->
-                        return sendError res, saveErr if saveErr
+            req.application.password = randomString 32
+            data =
+                password: req.application.password
+            req.application.updateAccess data, (err) ->
+                manager.start req.application, (err, result) ->
+                    if err and err isnt "Not enough Memory"
+                        delete startedApplications[req.application.id]
+                        return markBroken res, req.application, err
+                    else if err
+                        delete startedApplications[req.application.id]
+                        data =
+                            errormsg: err
+                            state: 'stopped'
+                        req.application.updateAttributes data, (saveErr) ->
+                            return sendError res, saveErr if saveErr
 
-                        res.send
-                            app: req.application
-                            error: true
-                            success: false
-                            message: err.message
-                            stack: err.stack
-                        , 500
-                else
-                    data =
-                        state: 'installed'
-                        port: result.drone.port
-                    req.application.updateAttributes data, (err) ->
-                        if err
-                            delete startedApplications[req.application.id]
-                            return markBroken res, req.application, err
-
-                        manager.resetProxy (err) ->
-                            delete startedApplications[req.application.id]
-
+                            res.send
+                                app: req.application
+                                error: true
+                                success: false
+                                message: err.message
+                                stack: err.stack
+                            , 500
+                    else
+                        data =
+                            state: 'installed'
+                            port: result.drone.port
+                        req.application.updateAttributes data, (err) ->
                             if err
-                                markBroken res, req.application, err
-                            else
-                                res.send
-                                    success: true
-                                    msg: 'Application running'
-                                    app: req.application
+                                delete startedApplications[req.application.id]
+                                return markBroken res, req.application, err
+
+                            manager.resetProxy (err) ->
+                                delete startedApplications[req.application.id]
+
+                                if err
+                                    markBroken res, req.application, err
+                                else
+                                    res.send
+                                        success: true
+                                        msg: 'Application running'
+                                        app: req.application
 
         else
             res.send
