@@ -84,16 +84,16 @@ module.exports = class Application extends Backbone.Model
         @prepareCallbacks callbacks
         client.post "/api/applications/getMetaData", @toJSON(), callbacks
 
-    getHomePosition: (cols) ->
-        pos = @get 'homeposition'
-        return pos?[cols]
+    # In which of the home section does this application go
+    # returns one of 'other', 'official', 'leave'
+    getSection: ->
+        section = 'other'
+        if @get('name') in ['leave-google', 'konnectors']
+            section = 'leave'
+        else if @get('comment') is 'official application'
+            section = 'official'
 
-    saveHomePosition: (cols, obj, options = {}) ->
-        pos = @get('homeposition') or {}
-        pos[cols] = obj
-        options['patch'] = true
-        options['type'] = 'PUT'
-        @save homeposition: pos, options
+        return section
 
     updateAll: (callbacks) ->
         @prepareCallbacks callbacks

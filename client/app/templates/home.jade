@@ -10,4 +10,35 @@
     p.bigger!= t('noapps.first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
     p.bigger!= t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 
-#app-list.gridster
+#app-list
+    section#apps-official
+        h2= t('core apps')
+    section#apps-leave
+        h2= t('connectors apps')
+    section#apps-other
+        h2= t('installed apps')
+    section#apps-platform
+        h2= t('settings apps')
+        div.application
+            a.application-inner(href="#applications")
+                .vertical-aligner
+                    img.icon(src="img/store.png")
+                    p.app-title= t('choose your apps')
+
+        div.application
+            a.application-inner(href="#config-applications")
+                .vertical-aligner
+                    img.icon.svg(src="img/apps.png")
+                    p.app-title= t('manage your apps')
+
+        div.application
+            a.application-inner(href="#account")
+                .vertical-aligner
+                    img.icon.svg(src="img/configuration.png")
+                    p.app-title= t('configure your cozy')
+
+        div.application
+            a.application-inner(href="#help")
+                .vertical-aligner
+                    img.icon.svg(src="img/help.png")
+                    p.app-title= t('ask for assistance')

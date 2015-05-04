@@ -107,18 +107,6 @@ body
         vertical-align super
 
 
-#logout-button
-    margin-right: 15px
-    height: 45px
-    line-height 45px
-
-    span
-        display: none
-
-#logout-button:hover
-    span
-        display: none
-
 /* content */
 
 #content
@@ -126,6 +114,7 @@ body
     overflow: auto
 
 #home-content
+    height 100%
     padding: 40px 60px 20px 40px
 
 .wizard section img
@@ -341,6 +330,9 @@ body
                 background-color orange + 20%
                 color black
 
+        .separator
+            border-bottom 1px solid lightgrey - 20%
+
         .notification:hover
             a.dismiss
                 cursor: pointer
@@ -381,18 +373,7 @@ body
 
 /** Applications */
 
-#home-edit-close
-    text-align center
-    margin-bottom 10px
-    a
-        display inline-block
-        margin auto
-        padding 5px
-        font-weight normal
-        margin-top 10px
-
 #app-list
-    text-align: center
     margin auto
     margin-bottom: 40px
 
@@ -402,36 +383,28 @@ body
         list-style-type: none
         background-color: orange
 
-    .widget-iframe, .widget-mask
-        position absolute
-        top 0px
-        left 0px
-        width 100%
-        height 100%
+    section
+        float left
+        width 50%
+        height 50%
+        display inline-block
 
-    .widget-mask
-        z-index 10
-        background grey
-        opacity 0.7
-
-    .use-widget
-        display none
-        z-index 20
-        position absolute
-        bottom 10px
-        right 10px
+        h2
+            font-size 1.5em
+            text-transform uppercase
+            color lightgrey - 20%
+            width 95%
+            border-bottom 1px solid lightgrey - 20%
+            margin-bottom 10px
 
 
 .application
     cursor pointer
     transition all 0.3s
     position relative
+    width: 100px
+    float left
 
-    .mask
-    .bottom-handle
-    .bottom-right-handle
-    .right-hanldle
-        display none
 
     .application-inner
         overflow hidden
@@ -443,11 +416,6 @@ body
             height 100%
             width 100%
             vertical-align middle
-
-        &.widget
-            height 100%
-            top 0px
-            bottom 0px
 
         img
             width 70%
@@ -482,22 +450,6 @@ body
             font-size: 18px
             font-weight: normal
             color: red
-
-    // resize mode
-    &.edit-mode
-        cursor move
-        border 3px solid blue //#f7f4f0 - 15%
-
-        .mask
-            display block
-            position absolute
-            top 0px
-            left 0px
-            width 100%
-            height 100%
-            z-index 10
-            background grey
-            opacity 0.5
 
     &:hover
         background: orangewhite - 10%
@@ -1254,7 +1206,7 @@ body
         //         border-radius: 3px
 
     #home-content
-        padding 5px 60px 5px 5px
+        padding 5px
 
     #no-app-message
         width: 100%

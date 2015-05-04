@@ -1,6 +1,5 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
-WidgetTemplate = require 'templates/home_application_widget'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
@@ -14,7 +13,6 @@ module.exports = class ApplicationRow extends BaseView
 
     events:
         "mouseup .application-inner" : "onAppClicked"
-        'click .use-widget'          : 'onUseWidgetClicked'
 
     ### Constructor ####
 
@@ -22,19 +20,6 @@ module.exports = class ApplicationRow extends BaseView
         @id = "app-btn-#{options.model.id}"
         @enabled = true
         super
-
-    enable: ->
-        @enabled = true
-        @$('.widget-mask').hide()
-        @$el.removeClass 'edit-mode'
-        @$('.use-widget').hide()
-
-    disable: ->
-        @enabled = false
-        @$el.addClass 'edit-mode'
-        if @canUseWidget()
-            @$('.widget-mask').show()
-            @$('.use-widget').show()
 
     afterRender: =>
         @icon = @$ 'img'
@@ -60,9 +45,6 @@ module.exports = class ApplicationRow extends BaseView
     ### Listener ###
 
     onAppChanged: (app) =>
-        if @model.get('state') isnt 'installed' or not @canUseWidget()
-            @$('.use-widget').hide()
-
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
@@ -89,8 +71,6 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.show()
                 @icon.removeClass 'stopped'
                 @stateLabel.hide()
-                useWidget = @model.getHomePosition(@getNbCols())?.useWidget
-                @setUseWidget true if @canUseWidget() and useWidget
 
             when 'installing'
                 @icon.hide()
@@ -141,40 +121,6 @@ module.exports = class ApplicationRow extends BaseView
                         msg += " Error was : #{errormsg}" if errormsg
                         alert msg
 
-    setUseWidget: (widget = true) =>
-        widgetUrl = @model.get 'widget'
-        if widget
-            @$('.use-widget').text t 'use icon'
-            @icon.detach()
-            @stateLabel.detach()
-            @title.detach()
-            @$('.application-inner').html WidgetTemplate url: widgetUrl
-            @$('.application-inner').addClass 'widget'
-        else
-            @$('.use-widget').text t 'use widget'
-            @$('.application-inner').empty()
-            @$('.application-inner').append @icon
-            @$('.application-inner').append @title
-            @$('.application-inner').append @stateLabel
-            @$('.application-inner').removeClass 'widget'
-
-    canUseWidget: () =>
-        #@model.has 'widget'
-        false
-
-    getNbCols: ->
-        return window.app.mainView.applicationListView.colsNb
-
-    onUseWidgetClicked: () =>
-        nbCols = @getNbCols()
-        homePosition = @model.getHomePosition nbCols
-
-         # set default value if it doesn't exist
-        homePosition.useWidget = false unless homePosition.useWidget?
-
-        homePosition.useWidget = not homePosition.useWidget
-        @model.saveHomePosition nbCols, homePosition,
-            success: => @setUseWidget homePosition.useWidget
 
     ### Functions ###
 
