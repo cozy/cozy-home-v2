@@ -237,9 +237,9 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        @frames.height $(window).height() - 50
+        @frames.height $(window).height() - 36
 
         if $(window).width() > 640
-            @content.height $(window).height() - 48
+            @content.height $(window).height() - 36
         else
             @content.height $(window).height()

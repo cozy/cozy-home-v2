@@ -13,7 +13,7 @@
     background: bgcolor
     overflow: hidden
     box-sizing: border-box
-    padding-top: 48px
+    padding-top: 36px
 
 body
     box-sizing: border-box
@@ -70,7 +70,7 @@ body
     z-index 1500
     top 0
     width 100%
-    height 48px
+    height 36px
     padding 0
 
     a
@@ -86,11 +86,12 @@ body
     img
         height 28px
         vertical-align middle
-        margin 0
+        margin 2px 0 0 0 
 
 
 .back-button
-    margin 10px 10px
+    margin 2px 8px
+    width 24px
 
     font-family 'Maven Pro', sans-serif
     font-weight normal
@@ -108,9 +109,14 @@ body
 
 
 #logout-button
-    margin-right: 15px
-    height: 45px
-    line-height 45px
+    margin-right 15px
+    margin-top 3px
+    height 24px
+    line-height 24px
+
+    img
+        width 24px
+        height 24px
 
     span
         display: none
@@ -118,6 +124,7 @@ body
 #logout-button:hover
     span
         display: none
+
 
 /* content */
 
@@ -137,100 +144,49 @@ body
 /** Notifications */
 
 #menu-applications-toggle
-    height 46px
-    line-height 42px
-    font-size 42px
-    margin-left 5px
-    padding-left 5px
-    padding-right 5px
-    cursor pointer
+    height 36px
     color white
     font-family 'Maven Pro', sans-serif
     margin auto
     text-transform capitalize
-
-    #current-application
-        font-weight normal
+    opacity 1
 
     span
-        font-size 28px
+        font-size 24px
         padding-top 5px
 
+    #current-application
+        cursor default
+        color white
+        font-weight normal
+        text-transform uppercase
+        line-height 34px
+
 #menu-applications-container
-    max-width 220px
     margin auto
     text-align center
+    height 30px
 
-
-#menu-applications-container.active
-    #menu-applications-toggle
-        background rgba(20, 20, 22, 0.3)
-        cursor pointer
-        box-shadow inset 2px 2px 2px #000
-        height 42px
-        line-height 42px
-        font-size 42px
-
-        span
-            margin-top 2px
-
-#menu-applications-container
-
-    .clickcatcher
-        position relative
-        width 100%
-        height 100%
-        background-color white
-        //opacity 0.001
-        top 48px
-        left 0
-        bottom 0
-        z-index 30
-
-    #menu-application-toggle
-        margin auto
-
-    #menu-applications
-        display none
-        margin auto
-        max-width 220px
-        z-index 50
-        list-style-type none
-        padding 5px
-        color darkgrey
-
-        background lightgrey - 10%
-        border 1px solid lightgrey - 20%
-
-        .menu-application
-            text-transform: capitalize
-
-            a
-                opacity 1
-                display:block
-                width: 100%
-                color: darkblue
-                cursor: pointer
-
-        .menu-application:hover
-            background: #fce9d5
 
 #notifications-toggle
     display block
-    height: 45px
-    line-height: 45px
-    font-size: 45px
-    width: auto
-    cursor: pointer
-    margin-left: 10px
-    margin: 0
-    padding: 0 10px
-    transition: all 0.3s
-    position: relative
-    transition: all 0.3s
+    height 36px
+    line-height 34px
+    font-size 36px
+    width auto
+    cursor pointer
+    margin-left 10px
+    margin 0
+    padding 0 10px
+    transition all 0.3s
+    position relative
+    transition all 0.3s
 
     img //position hotfix
         vertical-align baseline
+        width 24px
+        height 24px
+        margin-top 0
 
     #notifications-counter
         position absolute
@@ -287,7 +243,7 @@ body
 #notifications-container
     position relative
     padding 0
-    margin-right 15px
+    margin-right 10px
 
     a
         color darkblue
@@ -319,20 +275,19 @@ body
         z-index 40
 
     #notifications
-        z-index: 50
-        display: none
-        position: absolute
-        top: 48px
-        right: 0px
-        width: 420px
-        list-style-type: none
-        margin: 0
-        padding: 5px
+        z-index 50
+        display none
+        position absolute
+        top 36px
+        right 0px
+        width 420px
+        list-style-type none
+        margin 0
+        padding 5px
 
-        text-align: left
-        background: lightgrey - 10%
-        border: 1px solid lightgrey - 20%
-        //box-shadow 1px 1px 2px #CCC
+        text-align left
+        background lightgrey - 10%
+        border 1px solid lightgrey - 20%
 
         #dismiss-all
             text-align center
