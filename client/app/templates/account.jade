@@ -12,12 +12,15 @@ h4.pa2.w600.biggest.darkbg.center= t('your parameters')
         input#account-public-name-field
         button.btn= t('save')
     .input
-        p= t('your timezone is required')
-        select#account-timezone-field
-        button.btn= t('save')
-    .input
         p= t('domain name for urls and email')
         input#account-domain-field
+        button.btn= t('save')
+
+    hr
+
+    .input
+        p= t('your timezone is required')
+        select#account-timezone-field
         button.btn= t('save')
 
     .input
@@ -28,8 +31,16 @@ h4.pa2.w600.biggest.darkbg.center= t('your parameters')
             option(value="de")= t('german')
         button.btn= t('save')
 
+    hr
+
+    p
+        p= t('account background selection')
+        .background-list.line
+    hr
+
     p
         button#change-password-button.btn= t('change password')
+
 
     #change-password-form
         p= t('change password procedure')
