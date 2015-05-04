@@ -75,6 +75,7 @@ module.exports =
     "logout":"déconnexion"
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
     "you have no apps":"Vous n'avez aucune application installée."
+    "app management":"Gestion des applications"
     "app store":"Applithèque"
     "configuration":"Configuration"
     "assistance":"Aide"
@@ -89,7 +90,7 @@ module.exports =
     "save":"sauver"
     "saved":"sauvé"
 
-    "your parameters":" Vos paramètres"
+    "your parameters":"Vos paramètres"
     "alerts and password recovery email":"""
         J'ai besoin de votre email pour la récupération de mot de passe ou
         pour vous envoyer des alertes.
@@ -116,8 +117,8 @@ module.exports =
     "save your new password":"sauvegarder votre nouveau mot de passe"
     "do you want assistance":"Est-ce que vous cherchez de l'aide ?"
     "Write an email to our support team at:":"Ecrivez un email à notre équipe support :"
-    "Register and post on our forum: ":"Postez un message sur notre forum : "
-    "Ask your question on Twitter: ":"Posez votre question sur Twitter : "
+    "Register and post on our forum: ":"Postez un message sur notre forum :"
+    "Ask your question on Twitter: ":"Posez votre question sur Twitter :"
     "Chat with us on IRC:":"Discutez avec nous sur IRC :"
     "Visit the project website and learn to build your app:":"""
         Visitez le site du projet et apprenez à créer des applications.
@@ -167,7 +168,6 @@ module.exports =
     "required permissions":"Permissions requises"
     "finish layout edition": "Enregistrer"
     "reset customization": "Remise à zéro"
-    "use widget": "Mode widget"
     "use icon": "Mode icône"
     "change layout": "Modifier la disposition"
 
@@ -201,13 +201,20 @@ module.exports =
     "nirc description": "Accédez à votre canal IRC préféré depuis votre Cozy."
     "notes description": "Écrivez et organisez des notes intelligentes."
     "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !"
-    "pfm description": "Suivez vos comptes bancaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé."
     "remote storage description": "Un module Remote Storage pour vos applications Unhosted."
     "tasky description": "Un gestionnaire de tâches, basé sur les tags, rapide et simple."
     "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
     "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost."
     "reminder title email": "[Cozy-Calendar] Rappel"
+    "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})"
+    "reminder message expanded": """
+    Rappel: %{description}
+    Début: %{start} (%{timezone})
+    Fin: %{end} (%{timezone})
+    Lieu: %{place}
+    Details: %{details}
+    """
     "reminder message": "Rappel : %{message}"
     "warning unofficial app": """
         Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.
