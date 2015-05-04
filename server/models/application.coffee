@@ -24,6 +24,7 @@ module.exports = Application = americano.getModel 'Application',
     homeposition: Object
     widget: String
     version: String
+    comment: String
     needsUpdate: {type: Boolean, default: false}
     _attachments: Object
 
