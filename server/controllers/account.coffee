@@ -14,6 +14,8 @@ EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
 module.exports =
+
+
     updateAccount: (req, res, next) ->
         updateData = (user, body, data, cb) ->
             if body.timezone?
@@ -92,6 +94,7 @@ module.exports =
             else
                 res.send rows: users
 
+
     # Return list of instances
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->
@@ -100,47 +103,51 @@ module.exports =
             else
                 res.send rows: instances
 
-    # Update Cozy Instance domain, create it if it does not exist.
-    updateInstance: (req, res, next) ->
-        domain = req.body.domain
-        locale = req.body.locale
-        helpUrl = req.body.helpUrl
 
-        if domain? or locale? or helpUrl
+    # Update Cozy Instance data, create it if it does not exist.
+    updateInstance: (req, res, next) ->
+        {domain, locale, helpUrl, background} = req.body
+
+        if domain? or locale? or helpUrl? or background?
             CozyInstance.all (err, instances) ->
+                data = {domain, locale, helpUrl, background}
+
                 if err then next err
+
                 else if instances.length is 0
-                    data =
-                        domain: domain
-                        locale: locale
-                        helpUrl: helpUrl
                     CozyInstance.create data, (err, instance) ->
                         if err then next err
                         else
                             res.send success: true, msg: 'Instance updated.'
+
                 else
-                    data = domain: domain, locale: locale, helpUrl: helpUrl
                     instances[0].updateAttributes data, ->
                         res.send success: true, msg: 'Instance updated.'
+
         else
-            res.send 400, error: true, msg: 'No domain or locale given'
+            res.send 400, error: true, msg: 'No accepted parameter given'
+
 
     getUserPreference: (req, res, next) ->
         UserPreference.all (err, preferences) ->
             next err if err?
+
             if preferences.length > 0
                 res.send 200, preferences[0]
+
             else
                 res.send 500, error: 'No user preference found'
 
-    setUserPreference: (req, res, next) ->
 
+    setUserPreference: (req, res, next) ->
         UserPreference.all (err, preferences) ->
             next err if err?
+
             if preferences.length is 0
                 UserPreference.create req.body, (err) ->
                     next err if err?
                     res.send 201, success: true
+
             else
                 preferences[0].updateAttributes req.body, (err) ->
                     next err if err?

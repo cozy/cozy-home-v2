@@ -21,6 +21,9 @@ module.exports = class HomeView extends BaseView
 
     template: require 'templates/layout'
 
+    subscriptions:
+        'backgroundChanged': 'changeBackground'
+
     wizards: ['install', 'quicktour']
 
     constructor: ->
@@ -37,14 +40,18 @@ module.exports = class HomeView extends BaseView
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps
-        @configApplications = new ConfigApplicationsView @apps, @devices, @stackApps
+        @configApplications = new ConfigApplicationsView(
+            @apps, @devices, @stackApps)
         @accountView = new AccountView()
         @helpView = new HelpView()
         @marketView = new MarketView @apps
 
-        $("#content").niceScroll()
         @frames = @$ '#app-frames'
         @content = @$ '#content'
+        @changeBackground window.app.instance.background
+        @content.niceScroll()
+        @backButton = @$ '.back-button'
+        @backButton.hide()
 
         $(window).resize @resetLayoutSizes
         @apps.fetch reset: true
@@ -52,7 +59,20 @@ module.exports = class HomeView extends BaseView
         @stackApps.fetch reset: true
         @resetLayoutSizes()
 
+
     ### Functions ###
+
+
+    # Change the background of the content element. It builds the background
+    # image url with given value. If no param is given of default background is
+    # given, background image is removed.
+    changeBackground: (background) ->
+        if not background? or background is 'background-none'
+            @content.css 'background-image', 'none'
+        else
+            val = "url('/img/backgrounds/#{background.replace '-', '_'}.png')"
+            @content.css 'background-image', val
+
 
     # Send a logout request to server then reload current window to redirect
     # user to automatically redirect user to login page (he's not logged
@@ -66,6 +86,7 @@ module.exports = class HomeView extends BaseView
                 alert 'Server error occured, logout failed.'
 
     displayView: (view) =>
+        @backButton.hide()
         $("#current-application").html 'home'
         displayView = =>
             @frames.hide()
@@ -187,6 +208,7 @@ module.exports = class HomeView extends BaseView
 
         @frames.show()
         @content.hide()
+        @backButton.show()
 
         frame = @$("##{slug}-frame")
         if frame.length is 0
@@ -231,9 +253,9 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        @frames.height $(window).height() - 50
+        @frames.height $(window).height() - 36
 
         if $(window).width() > 640
-            @content.height $(window).height() - 48
+            @content.height $(window).height() - 36
         else
             @content.height $(window).height()

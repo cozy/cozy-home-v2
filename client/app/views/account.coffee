@@ -2,6 +2,8 @@ BaseView = require 'lib/base_view'
 timezones = require('helpers/timezone').timezones
 locales =   require('helpers/locales' ).locales
 request = require 'lib/request'
+BackgroundList = require 'views/background_list'
+Instance = require 'models/instance'
 
 # View describing main screen for user once he is logged
 module.exports = class exports.AccountView extends BaseView
@@ -58,6 +60,17 @@ module.exports = class exports.AccountView extends BaseView
             @accountSubmitButton.spin()
 
 
+    # When background is changed, data are saved and a backgroundChanged event
+    # is emitted. That way the main view can be notified.
+    onBackgroundChanged: (model) =>
+        data = background: model.get('id')
+        @instance.saveData data, (err) ->
+            if err
+                alert t 'account background saved error'
+            else
+                Backbone.Mediator.pub 'backgroundChanged', data.background
+
+
     ### Functions ###
     displayErrors: (msgs) =>
         errorString = ""
@@ -79,8 +92,8 @@ module.exports = class exports.AccountView extends BaseView
             data = {}
             data[fieldName] = fieldWidget.val()
             request.post "api/#{path}", data, (err) ->
-
                 saveButton.spin()
+
                 saveButton.css 'color', 'white'
 
                 if err
@@ -126,6 +139,7 @@ module.exports = class exports.AccountView extends BaseView
 
         $.get "api/instances/", (data) =>
             instance = data.rows?[0]
+            @instance = new Instance instance
             domain = instance?.domain or t('no domain set')
             locale = instance?.locale or 'en'
 
@@ -181,5 +195,9 @@ module.exports = class exports.AccountView extends BaseView
             @timezoneField.append(
                 "<option value=\"#{timezone}\">#{timezone}</option>"
             )
+
+        @backgroundList = new BackgroundList
+            el: @$ '.background-list'
+        @backgroundList.collection.on 'change', @onBackgroundChanged
 
         @fetchData()

@@ -2,10 +2,12 @@
 
 # Expected callbacks: success and error
 exports.request = (type, url, data, callback) ->
+    body = if data? then JSON.stringify data else null
+
     $.ajax
         type: type
         url: url
-        data: if data? then JSON.stringify data else null
+        data: body
         contentType: "application/json"
         dataType: "json"
         success: (data) ->

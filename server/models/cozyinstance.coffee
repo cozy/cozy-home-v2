@@ -4,6 +4,7 @@ module.exports = CozyInstance = americano.getModel 'CozyInstance',
     domain: String
     locale: String
     helpUrl: String
+    background: String
 
 CozyInstance.first = (callback) ->
     CozyInstance.request 'all', (err, instances) ->
