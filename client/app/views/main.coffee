@@ -114,7 +114,6 @@ module.exports = class HomeView extends BaseView
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: (wizard=null) =>
         @displayView @applicationListView
-        @applicationListView.setMode 'view'
         window.document.title = t "cozy home title"
 
         for wiz in @wizards
@@ -132,7 +131,6 @@ module.exports = class HomeView extends BaseView
 
     displayApplicationsListEdit: =>
         @displayView @applicationListView
-        @applicationListView.setMode 'edit'
         window.document.title = t "cozy home title"
 
     # Display application manager page, hides app frames, active home button.

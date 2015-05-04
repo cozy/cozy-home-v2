@@ -33,19 +33,11 @@ module.exports = class MainRouter extends Backbone.Router
         else # no active button
             $('.menu-btn.active').removeClass 'active'
 
-        # dirty trick to prevent the custom menu to stay when doing:
-        # custom view => random view => display application list
-        app.mainView.applicationListView.setMode 'view' if index isnt 3
-
     ## Route behaviors
 
     applicationList: ->
         app.mainView.displayApplicationsList()
         @selectIcon 0 # no highlighted button
-
-    applicationListEdit: ->
-        app.mainView.displayApplicationsListEdit()
-        @selectIcon 3
 
     configApplications: ->
         app.mainView.displayConfigApplications()

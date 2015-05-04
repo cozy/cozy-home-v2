@@ -1,42 +1,59 @@
-(function(/*! Brunch !*/) {
+(function() {
   'use strict';
 
-  var globals = typeof window !== 'undefined' ? window : global;
+  var globals = typeof window === 'undefined' ? global : window;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
+  var has = ({}).hasOwnProperty;
 
-  var has = function(object, name) {
-    return ({}).hasOwnProperty.call(object, name);
+  var aliases = {};
+
+  var endsWith = function(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   };
 
-  var expand = function(root, name) {
-    var results = [], parts, part;
-    if (/^\.\.?(\/|$)/.test(name)) {
-      parts = [root, name].join('/').split('/');
-    } else {
-      parts = name.split('/');
-    }
-    for (var i = 0, length = parts.length; i < length; i++) {
-      part = parts[i];
-      if (part === '..') {
-        results.pop();
-      } else if (part !== '.' && part !== '') {
-        results.push(part);
+  var unalias = function(alias, loaderPath) {
+    var start = 0;
+    if (loaderPath) {
+      if (loaderPath.indexOf('components/' === 0)) {
+        start = 'components/'.length;
+      }
+      if (loaderPath.indexOf('/', start) > 0) {
+        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
       }
     }
-    return results.join('/');
+    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
+    if (result) {
+      return 'components/' + result.substring(0, result.length - '.js'.length);
+    }
+    return alias;
   };
 
+  var expand = (function() {
+    var reg = /^\.\.?(\/|$)/;
+    return function(root, name) {
+      var results = [], parts, part;
+      parts = (reg.test(name) ? root + '/' + name : name).split('/');
+      for (var i = 0, length = parts.length; i < length; i++) {
+        part = parts[i];
+        if (part === '..') {
+          results.pop();
+        } else if (part !== '.' && part !== '') {
+          results.push(part);
+        }
+      }
+      return results.join('/');
+    };
+  })();
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
     return function(name) {
-      var dir = dirname(path);
-      var absolute = expand(dir, name);
+      var absolute = expand(dirname(path), name);
       return globals.require(absolute, path);
     };
   };
@@ -51,21 +68,26 @@
   var require = function(name, loaderPath) {
     var path = expand(name, '.');
     if (loaderPath == null) loaderPath = '/';
+    path = unalias(name, loaderPath);
 
-    if (has(cache, path)) return cache[path].exports;
-    if (has(modules, path)) return initModule(path, modules[path]);
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
-  var define = function(bundle, fn) {
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  require.register = require.define = function(bundle, fn) {
     if (typeof bundle === 'object') {
       for (var key in bundle) {
-        if (has(bundle, key)) {
+        if (has.call(bundle, key)) {
           modules[key] = bundle[key];
         }
       }
@@ -74,21 +96,18 @@
     }
   };
 
-  var list = function() {
+  require.list = function() {
     var result = [];
     for (var item in modules) {
-      if (has(modules, item)) {
+      if (has.call(modules, item)) {
         result.push(item);
       }
     }
     return result;
   };
 
+  require.brunch = true;
   globals.require = require;
-  globals.require.define = define;
-  globals.require.register = define;
-  globals.require.list = list;
-  globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
 var Application, ApplicationCollection, BaseCollection, client, _ref,
@@ -144,6 +163,73 @@ module.exports = ApplicationCollection = (function(_super) {
   };
 
   return ApplicationCollection;
+
+})(BaseCollection);
+});
+
+;require.register("collections/background", function(exports, require, module) {
+var Application, BackgroundCollection, BaseCollection, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseCollection = require('lib/base_collection');
+
+Application = require('models/background');
+
+module.exports = BackgroundCollection = (function(_super) {
+  __extends(BackgroundCollection, _super);
+
+  function BackgroundCollection() {
+    _ref = BackgroundCollection.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  BackgroundCollection.prototype.model = Application;
+
+  BackgroundCollection.prototype.init = function() {
+    return this.add([
+      {
+        id: 'background-none',
+        src: '/img/backgrounds/background_none_th.png',
+        imgSrc: '/img/backgrounds/background_none.png',
+        selected: true
+      }, {
+        id: 'background-01',
+        src: '/img/backgrounds/background_01_th.png',
+        imgSrc: '/img/backgrounds/background_01.png'
+      }, {
+        id: 'background-02',
+        src: '/img/backgrounds/background_02_th.png',
+        imgSrc: '/img/backgrounds/background_02.png'
+      }, {
+        id: 'background-03',
+        src: '/img/backgrounds/background_03_th.png',
+        imgSrc: '/img/backgrounds/background_03.png'
+      }, {
+        id: 'background-04',
+        src: '/img/backgrounds/background_04_th.png',
+        imgSrc: '/img/backgrounds/background_04.png'
+      }, {
+        id: 'background-05',
+        src: '/img/backgrounds/background_05_th.png',
+        imgSrc: '/img/backgrounds/background_05.png'
+      }, {
+        id: 'background-06',
+        src: '/img/backgrounds/background_06_th.png',
+        imgSrc: '/img/backgrounds/background_06.png'
+      }, {
+        id: 'background-07',
+        src: '/img/backgrounds/background_07_th.png',
+        imgSrc: '/img/backgrounds/background_07.png'
+      }, {
+        id: 'background-08',
+        src: '/img/backgrounds/background_08_th.png',
+        imgSrc: '/img/backgrounds/background_08.png'
+      }
+    ]);
+  };
+
+  return BackgroundCollection;
 
 })(BaseCollection);
 });
@@ -250,8 +336,7 @@ exports.BrunchApplication = (function() {
   }
 
   BrunchApplication.prototype.initializeJQueryExtensions = function() {
-    var oldAST, oldGST;
-    $.fn.spin = function(opts, color) {
+    return $.fn.spin = function(opts, color) {
       var presets;
       presets = {
         tiny: {
@@ -315,55 +400,6 @@ exports.BrunchApplication = (function() {
         throw "Spinner class not available.";
         return null;
       }
-    };
-    oldAST = $.Gridster.add_style_tag;
-    $.Gridster.add_style_tag = function(css) {
-      var tag, _i, _len, _ref, _ref1;
-      _ref = this.$style_tags;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tag = _ref[_i];
-        if ((_ref1 = tag.parentNode) != null) {
-          _ref1.removeChild(tag);
-        }
-      }
-      this.$style_tags = $([]);
-      return oldAST.apply(this, arguments);
-    };
-    oldGST = $.Gridster.generate_stylesheets;
-    $.Gridster.generate_stylesheets = function() {
-      $.Gridster.generated_stylesheets = [];
-      return oldGST.apply(this, arguments);
-    };
-    return $.Gridster.resize_widget_dimensions = function(options) {
-      var serializedGrid,
-        _this = this;
-      if (options.width) {
-        this.drag_api.$container.width(options.width);
-        this.container_width = options.width;
-        this.options.container_width = options.width;
-      }
-      if (options.colsNb) {
-        this.options.min_cols = options.colsNb;
-        this.options.max_cols = options.colsNb;
-      }
-      if (options.widget_margins) {
-        this.options.widget_margins = options.widget_margins;
-      }
-      if (options.widget_base_dimensions) {
-        this.options.widget_base_dimensions = options.widget_base_dimensions;
-      }
-      this.min_widget_width = (this.options.widget_margins[0] * 2) + this.options.widget_base_dimensions[0];
-      this.min_widget_height = (this.options.widget_margins[1] * 2) + this.options.widget_base_dimensions[1];
-      serializedGrid = this.serialize();
-      this.$widgets.each($.proxy(function(i, widget) {
-        var data;
-        data = serializedGrid[i];
-        return _this.resize_widget($(widget), data.sizex, data.sizey);
-      }));
-      this.generate_grid_and_stylesheet();
-      this.get_widgets_from_DOM();
-      this.generate_stylesheet(options.styles_for);
-      return false;
     };
   };
 
@@ -649,10 +685,12 @@ exports.del = function(url, callbacks) {
 
 ;require.register("lib/request", function(exports, require, module) {
 exports.request = function(type, url, data, callback) {
+  var body;
+  body = data != null ? JSON.stringify(data) : null;
   return $.ajax({
     type: type,
     url: url,
-    data: data != null ? JSON.stringify(data) : null,
+    data: body,
     contentType: "application/json",
     dataType: "json",
     success: function(data) {
@@ -932,7 +970,7 @@ return buf.join("");
 };
 });
 
-;require.register("lib/view_collection", function(exports, require, module) {
+require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1250,8 +1288,8 @@ module.exports = {
   "save your new password": "Speichern Sie Ihr neues Passwort",
   "do you want assistance": "Brauchen Sie etwas Hilfe?",
   "Write an email to our support team at:": "Shoot unserem Support Team eine E-Mail:",
-  "Register and post on our forum: ": "Registieren Sie sich und schreiben in unserem Forum: ",
-  "Ask your question on Twitter: ": "Stellen Fragen auf Twitter: ",
+  "Register and post on our forum: ": "Registieren Sie sich und schreiben in unserem Forum:",
+  "Ask your question on Twitter: ": "Stellen Fragen auf Twitter:",
   "Chat with us on IRC:": "Chatten Sie mit uns auf IRC:",
   "Visit the project website and learn to build your app:": "Besuchen Sie die Projekt Webseite und lernen Sie Ihre eigene App zu erstellen:",
   "your own application": "Ihre eigene App",
@@ -1293,10 +1331,9 @@ module.exports = {
   "required permissions": "Benötigte Rechte",
   "finish layout edition": "Speichern",
   "reset customization": "Rücksetzen",
-  "use widget": "Widget verwenden",
   "use icon": "Icon verwenden",
   "change layout": "Layout verändern",
-  "introduction market": "        Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch\n        installieren neuer Apps anpassen.\n        Von hier können Sie eine selbst erstellte App oder schon existierenden Apps;\nbereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinschaft, installieren.",
+  "introduction market": "Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch\ninstallieren neuer Apps anpassen.\nVon hier können Sie eine selbst erstellte App oder schon existierenden Apps;\nbereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinschaft, installieren.",
   "error connectivity issue": "Ein Fehler ist aufgetreten beim abrufen der Daten.<br />Bitte versuchen Sie später erneut.",
   "package.json not found": "Abruf von package.json ist nicht möglich. Prüfen Sie Ihre Repoitory URL.",
   "please wait data retrieval": "Bitte warten während die Daten abgerufen werden…",
@@ -1318,7 +1355,6 @@ module.exports = {
   "nirc description": "Zugruff auf Ihre fovorisierten IRC Kanäle von Ihrem Cozy.",
   "notes description": "Organisieren und schreiben von smarten Notizen.",
   "owm description": "Wissen wie das Wetter wird, überall auf der Welt.",
-  "pfm description": "Verwalten Ihrer Bank Konten ohne sich jedesmal ein zu buchen  (Nur französische Banken).",
   "remote storage description": "Ein entferntes Speicher Gerät, zur Speicherung Ihre nicht gehosteten Applikationen.",
   "tasky description": "Super schneller und einfacher Tag-basierter Aufgaben Verwalter.",
   "todos description": "Erstellen Sie Ihre Aufgaben, ordnen Sie diese und führen Sie diese effizient aus.",
@@ -1450,7 +1486,7 @@ module.exports = {
   "synchronized": "synchronized",
   "revoke device access": "Revoke device access",
   "no application installed": "There is no app installed.",
-  "your parameters": " Your settings",
+  "your parameters": "Your settings",
   "alerts and password recovery email": "I need your email address for alerts or password recovery.",
   "public name description": "Your public name will be used by your Cozy and its apps to communicate with you.",
   "your timezone is required": "Your time zone helps display dates properly.",
@@ -1469,8 +1505,8 @@ module.exports = {
   "save your new password": "save your new password",
   "do you want assistance": "Do you need some help?",
   "Write an email to our support team at:": "Shoot our support team an email:",
-  "Register and post on our forum: ": "Register and post to our forum: ",
-  "Ask your question on Twitter: ": "Ask questions on Twitter: ",
+  "Register and post on our forum: ": "Register and post to our forum:",
+  "Ask your question on Twitter: ": "Ask questions on Twitter:",
   "Chat with us on IRC:": "Chat with us on IRC:",
   "Visit the project website and learn to build your app:": "Visit the project website and learn to build your app:",
   "your own application": "your own app",
@@ -1512,7 +1548,6 @@ module.exports = {
   "required permissions": "Required permissions",
   "finish layout edition": "Save",
   "reset customization": "Reset",
-  "use widget": "Use widget",
   "use icon": "Use icon",
   "change layout": "Change the layout",
   "introduction market": "Welcome to the Cozy app store. Here you can customize your Cozy\nby installing new apps.\nFrom here you will be able to install an app you created, or choose from\nexisting apps provided by Cozy Cloud and its friendly developer community.",
@@ -1596,6 +1631,223 @@ module.exports = {
 };
 });
 
+;require.register("locales/es", function(exports, require, module) {
+module.exports = {
+  "home": "Inicio",
+  "apps": "Aplicaciones",
+  "account": "Cuenta",
+  "email": "Correo electrónico",
+  "timezone": "Huso horario",
+  "domain": "Dominio",
+  "no domain set": "no.hay.dominio.definido",
+  "locale": "Idioma",
+  "change password": "Cambiar la contraseña",
+  "input your current password": "Esribir su contraseña actual",
+  "enter a new password": "usar este campo para crear una nueva contraseña",
+  "confirm new password": "confirmar la nueva contraseña",
+  "send changes": "Guardar",
+  "manage": "Administración",
+  "total": "Total",
+  "memory consumption": "Utilización memoria",
+  "disk consumption": "Utilización disco",
+  "you have no notifications": "No hay notificaciones",
+  "dismiss all": "Ignorarlas todas",
+  "add application": "¿Añadir una aplicación?",
+  "install": "Instalar",
+  "your app": "¡Su aplicación!",
+  "community contribution": "Desarrollador independiente",
+  "official application": "Aplicación oficial",
+  "application description": "Descrpción de la aplicación",
+  "downloading description": "Descargar la descrpción",
+  "downloading permissions": "Descargar los permisos...",
+  "Cancel": "Anular",
+  "ok": "Ok",
+  "applications permissions": "Permisos para la aplicación",
+  "confirm": "Confirmar",
+  "installing": "Se está instalando",
+  "remove": "Suprimir",
+  "update": "actualizar",
+  "started": "Se esta ejecutando",
+  "notifications": "Notificaciones",
+  "questions and help forum": "Foro de ayuda",
+  "sign out": "Salir",
+  "open in a new tab": "Abrir en una nueva pestaña",
+  "disk unit": "Go",
+  "memory unit": "Mo",
+  "always on": "Siempre se está ejecutando",
+  "keep always on": "mantener siempre ejecutándose",
+  "stop this app": "pare esta aplicación",
+  "update required": "Actualización disponible",
+  "application is installing": "Se está instalando una aplicación.\nEspere que esté instalada antes de lanzar una nueva.",
+  "no app message": "¡ Usted no ha instalado ninguna aplicación en su Cozy.\nVaya a <a href=\"#applications\">app store</a> para instalar al menos una !",
+  "welcome to app store": "Bienvenido(a) a App store, usted puede instalar su propia aplicación desde aquí\no añadir una que esté en la lista.",
+  "installed everything": "¡Usted ya ha instalado todo!",
+  "already similarly named app": "Una aplicación con nombre similar ya ha sido instalada.",
+  "your app list": "Acceder a sus aplicaciones",
+  "customize your cozy": "Personalizar la presentación",
+  "manage your apps": "Administrar sus aplicaciones",
+  "choose your apps": "Escoger sus aplicaciones",
+  "configure your cozy": "Configurar su Cozy",
+  "ask for assistance": "Pedir ayuda",
+  "logout": "Desconexión",
+  "welcome to your cozy": "Bienvenido(a) a su Cozy",
+  "you have no apps": "Usted no ha instalado niguna aplicación.",
+  "app management": "Gestión de las aplicaciones",
+  "app store": "Apliteca",
+  "configuration": "Configuración",
+  "assistance": "Ayuda",
+  "hardware consumption": "Material",
+  "hard drive gigabytes": "(Disco duro)",
+  "memory megabytes": "&nbsp;Mo (RAM)",
+  "manage your applications": "Administrar sus aplicaciones",
+  "manage your devices": "Administrar sus periféricos",
+  "synchronized": "sincronizado",
+  "revoke device access": "Revocar el acceso al periférico",
+  "no application installed": "No hay aplicaciones instaladas.",
+  "your parameters": "Ajustes",
+  "alerts and password recovery email": "Necesito su correo electrónico  para que usted pueda recuperar la contraseña o para enviarle alertas.",
+  "public name description": "Cozy y sus aplicaciones utilizarán su nombre público para comunicarse con usted.",
+  "your timezone is required": "El huso horario se requiere para visualizar correctamente las fechas y horas.",
+  "domain name for urls and email": "El nombre del dominio se usa para construir las Url enviadas por mail a sus contactos.",
+  "save": "guardar",
+  "saved": "guardado",
+  "Chose the language you want I use to speak with you:": "Escoja el idioma que usted desea que yo utlice para comunicarme con usted:",
+  "french": "Francés",
+  "english": "Inglés",
+  "german": "Alemán",
+  "portuguese": "Portugués",
+  "change password procedure": "Pasos a seguir para cambiar la contraseña",
+  "current password": "contraseña actual",
+  "new password": "nueva contraseña",
+  "confirm your new password": "confirme su nueva contraseña",
+  "save your new password": "guarde su nueva contraseña",
+  "do you want assistance": "¿Quiere ayuda?",
+  "Write an email to our support team at:": "Escriba un correo elctrónico a nuestro equipo de apoyo :",
+  "Register and post on our forum: ": "Inscribase y envíe un mensaje a nuestro foro:",
+  "Ask your question on Twitter: ": "Haga preguntas en Twitter:",
+  "Chat with us on IRC:": "Chatee con nosotros via IRC:",
+  "Visit the project website and learn to build your app:": "Visite el sitio web del Proyecto y aprenda a crear aplicaciones:",
+  "your own application": "su propia aplicación",
+  "installed": "instalada",
+  "updated": "actualizada",
+  "updating": "actualización en curso",
+  "update all": "Actualizar todo",
+  "update stack": "Actualizar",
+  "refresh page": "Por favor, tenga paciencia, la actualización puede tomar algunos minutos.",
+  "update stack modal title": "Actualización de su Cozy",
+  "update stack modal content": "Usted está a punto de actualizar la plataforma. Su Cozy estará indisponible algunos instantes. ¿Está usted seguro(a)?",
+  "update stack modal confirm": "Actualizar",
+  "update stack success": "Sus aplicaciones están actualizadas, la página se va a recargar.",
+  "update stack error": "Se produjo un error durante la actualización, la página se va a recargar",
+  "applications broken": "Aplicaciones averiadas",
+  "cozy platform": "Plataforma",
+  "reboot stack": "Reiniciar",
+  "update error": "Se produjo un error durante la actualización",
+  "error update uninstalled app": "Usted no puede actualizar una aplicación que no esté instalada.",
+  "broken": "averiada",
+  "start this app": "iniciar esta aplicación",
+  "stopped": "interrumpida",
+  "retry to install": "trate de instalarla de nuevo",
+  "cozy account title": "Cozy - Cuenta",
+  "cozy app store title": "Cozy - Apliteca",
+  "cozy home title": "Cozy - Inicio",
+  "cozy applications title": "Cozy - Configuración de Aplicaciones",
+  "running": "ejecutándose",
+  "cozy help title": "Cozy - Ayuda",
+  "changing locale requires reload": "El cambio de idioma requiere que se recargue la página.",
+  "cancel": "anular",
+  "abort": "interrumpir",
+  "Once updated, this application will require the following permissions:": "Una vez actualizada la aplicación requerirá los siguientes permisos:",
+  "confirm update": "confirmar la actualización",
+  "confirm install": "confirmar la instalación",
+  "no specific permissions needed": "Esta aplicacion no requiere permiso alguno",
+  "removed": "suprimida",
+  "removing": "en curso de supresión",
+  "required permissions": "Permisos requeridos",
+  "finish layout edition": "Guardar",
+  "reset customization": "Reiniciar",
+  "use icon": "Modo ícono",
+  "change layout": "Modificar la disposición",
+  "introduction market": "Bienvenido(a) a la tienda de aplicaciones Cozy.\nDesde aquí usted puede instalar una aplicación de su propia creación o escoger entre\nlas que propone Cozycloud u otros desarrolladores.",
+  "error connectivity issue": "Un error se produjo durante la recuperación de los datos. <br/>Por favor, vuelva a ensayar más tarde.",
+  "package.json not found": "Imposible recuperar el archivo package.json. Verifique la url de su depósito git.",
+  "please wait data retrieval": "Por favor, espere que los datos se carguen...",
+  "revoke device confirmation message": "Esta acción impedirá que el periférico asociado acceda a su Cozy. ¿Está usted seguro(a)?",
+  "dashboard": "Tablero de Control",
+  "calendars description": "Administre su agenda y sincronícela con su teléfono.",
+  "contacts description": "Administre sus contactos y sincronícelos con su teléfono.",
+  "emails description": "Lea, envíe y guarde sus mensajes.",
+  "files description": "Su sistema de archivos en línea sincronizados con sus periféricos.",
+  "photos description": "Organice sus fotos y compártalas con sus amigos.",
+  "sync description": "La herramienta necesaria para sincronizar sus contactos y su agenda con su teléfono.",
+  "bookmark description": "Guarde y administre sus enlaces favoritos.",
+  "cozic description": "Un lector audio para escuchar su música en el navegador.",
+  "databrowser description": "Visualice y navegue entre todos sus datos (formato en bruto).",
+  "feeds description": "Añada sus canales RSS y guarde sus enlaces favoritos",
+  "kyou description": "Mejore su salud y su humor cuantificándose usted mismo.",
+  "konnectors description": "Importe datos desde servicios externos (Twitter, Jawbone...).",
+  "kresus description": "Herramientas adicionales para la gestión de sus finanzas personales.",
+  "nirc description": "Acceda a su canal IRC preferido desde su Cozy.",
+  "notes description": "Escriba y organice notas inteligentes.",
+  "owm description": "Informese del estado del tiempo en cualquier parte del mundo.",
+  "remote storage description": "Una aplicacion de Almacenamiento Remoto para guardar datos de sus aplicaciones que no están en el servidor.",
+  "tasky description": "Un gestor de tareas, basado en etiquetas, rápido y simple.",
+  "todos description": "Escriba y ordene sus tareas de manera eficaz.",
+  "term description": "Un terminal para su Cozy.",
+  "reminder title email": "Recordatorio",
+  "reminder title email expanded": "Recordatorio:  %{description} - %{date} (%{calendar})",
+  "reminder message expanded": "Recordatorio: %{description}\nInicio: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLugar: %{place}\nDetalles: %{details}",
+  "reminder message": "Recordatorio: %{message}",
+  "warning unofficial app": "Esta aplicación es una aplicación comunitaria y no la mantiene el equipo Cozy.\nPara señalar un problema, le rogamos llevarlo a <a href='https://forum.cozy.io'>nuestro foro</a>.",
+  "installation message failure": "Falla en la instalación de %{appName}.",
+  "update available notification": "Una nueva versión de %{appName} está disponible.",
+  "stack update available notification": "Una nueva versión de la Plataforma está disponible.",
+  "noapps": {
+    "first steps": "Usted puede <a href=\"%{wizard}\">utilizar nuestro asistente </a> para que lo ayude a instalar y a configurar sus aplicaciones,\no puede abrir <a href=\"%{quicktour}\">primeros pasos </a> para descubrir las funcionalidades de su Cozy.",
+    "customize your cozy": "Puede igualmente <a href=\"%{account}\">ir a configuración </a> para personalizar su Cozy,\no <a href=\"%{appstore}\"> a la Apliteca</a> para instalar su primera aplicación."
+  },
+  "relaunch install wizard": "Reiniciar el asistente de instalación",
+  "installwizard": {
+    "welcome title": "Bienvenido(a) a su Cozy",
+    "welcome content": "<p>Este asistente va a ayudarlo(a) a escoger, instalar y configurar las aplicaciones en su Cozy.</p>\n<p>No olvide que su Cozy está en fase beta. No dude en <a href=\"#help\">contactarnos</a> si encuentra dificultades en su utilización.</p>",
+    "yes": "Activar la aplicación %{slug}",
+    "no": "No, gracias",
+    "continue to files": "Configurar mis aplicaciones",
+    "files title": "Configurar la aplicación Archivos",
+    "files content": "<p>¿Desea usted instalar una aplicación que le permita organizar sus archivos y carpetas personales, así como hacerlos accesibles con seguridad desde donde se encuentre?</p>",
+    "emails title": "Configurar la aplicacion Emails",
+    "emails content": "<p>¿Desea usted un cliente de correo electrónico enlazado con todas sus cuentas que le permita un acceso privado a una sola casilla desde donde se encuentre?",
+    "contacts title": "Configurar la aplicación Contactos",
+    "contacts content": "<p>¿Desea activar una aplicación que le permita administrar su libreta de direcciones y le permita dar acceso inmediato a sus amigos?</p>\n<p><small>La instalación de esta aplicación provocará igualmente la instalación de la aplicación Sincronización que le permitirá sincronizar sus datos con su teléfono y / o su ordenador.</small></p>",
+    "calendar title": "Configurar la aplicación Agenda",
+    "calendar content": "<p>¿Desea activar la aplicación Agenda para que le ayude a organizar sus actividades?</p>\n<p><small>La instalación de esta aplicación provocará igualmente la instalación de la aplicación Sincronización que le permitirá sincronizar sus datos con su teléfono y / o su ordenador.</small></p>",
+    "photos title": "Configurar la aplicación Fotos",
+    "photos content": "<p>¿Desea usted instalar una aplicación que le permita organizar sus fotos y álbumes y compartirlos con sus amigos y su familia?</p>\n<p><small>Pro-tip: Si usted utliza un periférico Android, disponemos de una aplicación que permite cargar automaticamente fotos a su Cozy.</small></p>",
+    "thanks title": "¡Tarea realizada!",
+    "thanks content": "<p>¡Qué fácil es! Usted acaba de configurar su Cozy al instalar las aplicaciones siguientes:</p>",
+    "go-to-my-cozy": "Estoy listo(a) para utilizar mi Cozy",
+    "show-me-a-quick-tour": "Infórmeme más acerca de mi Cozy"
+  },
+  "quicktourwizard": {
+    "welcome title": "¡Conozca su Cozy!",
+    "welcome content": "<p>Bienvenido(a) a su nuevo Cozy.</p>\n<p>Esta visita rápida le presentará las funcionalidades de su Cozy.</p>\n<p>No olvide que su Cozy está en fase beta. No dude en  <a href=\"#help\">consultarnos</a> si encuentra dificultades en su utilización.</p>",
+    "continue to dashboard": "Descubra el Tablero de Control",
+    "dashboard title": "Descubra el Tablero de Control",
+    "dashboard content": "<p>Esta es una pequeña guía que describe las secciones de su Cozy. Usted puede acceder a ellas desde el menú situado en la esquina superior derecha.</p>\n<p><img src=\"/img/home-black.png\"><strong>Inicio: </strong>Este es el lugar de donde usted puede acceder a sus aplicaciones</p>",
+    "continue to apps": "¿Cómo administrar sus aplicaciones?",
+    "apps title": "Administre sus aplicaciones",
+    "apps content": "<p><img src=\"/img/config-apps.png\"><strong>Administración de Aplicaciones: </strong>Aquí usted puede administar el estado de sus aplicaciones: lanzarlas, interrumpirlas, suprimirlas…</p>\n<p><img src=\"/img/apps.png\"><strong>Apliteca: </strong>En la Apliteca, usted encontrará nuevas aplicaciones para instalar en su Cozy.</p>",
+    "continue to help": "¿Cómo obtener ayuda?",
+    "help title": "Obtener ayuda",
+    "help content": "<p><img src=\"/img/configuration.png\"><strong>Configuración: </strong>Para estar seguro que Cozy haga lo que usted quiere, échele una mirada a los posibles ajustes.</p>\n<p><img src=\"/img/help.png\"><strong>Ayuda: </strong>¿Perdido en su Cozy? He aquí algunos enlaces que le serán de utilidad.</p>",
+    "continue to sync": "Sincronizar con su teléfono",
+    "sync title": "Sincronizar",
+    "sync content": "<p>Para obtener información sobre la sincronización de sus periféricos, le aconsejamos las fuentes siguientes:</p>\n<ul>\n<li><a href=\"http://cozy.io/mobile/files.html\">Sinc Archivos</a></li>\n<li><a href=\"http://cozy.io/mobile/calendar.html\">Sinc Agenda</a></li>\n<li><a href=\"http://cozy.io/mobile/contacts.html\">Sinc Contactos</a></li>\n</ul>",
+    "close wizard": "Estoy listo(a) para utilizar mi Cozy"
+  }
+};
+});
+
 ;require.register("locales/fr", function(exports, require, module) {
 module.exports = {
   "home": "Bureau",
@@ -1657,6 +1909,7 @@ module.exports = {
   "logout": "déconnexion",
   "welcome to your cozy": "Bienvenue sur votre Cozy !",
   "you have no apps": "Vous n'avez aucune application installée.",
+  "app management": "Gestion des applications",
   "app store": "Applithèque",
   "configuration": "Configuration",
   "assistance": "Aide",
@@ -1670,7 +1923,7 @@ module.exports = {
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
   "saved": "sauvé",
-  "your parameters": " Vos paramètres",
+  "your parameters": "Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
   "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
   "your timezone is required": "Votre fuseau horaire est nécessaire pour vous afficher les dates correctement.",
@@ -1687,8 +1940,8 @@ module.exports = {
   "save your new password": "sauvegarder votre nouveau mot de passe",
   "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
   "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
-  "Register and post on our forum: ": "Postez un message sur notre forum : ",
-  "Ask your question on Twitter: ": "Posez votre question sur Twitter : ",
+  "Register and post on our forum: ": "Postez un message sur notre forum :",
+  "Ask your question on Twitter: ": "Posez votre question sur Twitter :",
   "Chat with us on IRC:": "Discutez avec nous sur IRC :",
   "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à créer des applications.",
   "your own application": "votre propre application",
@@ -1730,7 +1983,6 @@ module.exports = {
   "required permissions": "Permissions requises",
   "finish layout edition": "Enregistrer",
   "reset customization": "Remise à zéro",
-  "use widget": "Mode widget",
   "use icon": "Mode icône",
   "change layout": "Modifier la disposition",
   "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créée ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs.",
@@ -1755,13 +2007,14 @@ module.exports = {
   "nirc description": "Accédez à votre canal IRC préféré depuis votre Cozy.",
   "notes description": "Écrivez et organisez des notes intelligentes.",
   "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !",
-  "pfm description": "Suivez vos comptes bancaires sans avoir à vous reconnecter à chaque fois. Votre mot de passe est chiffré avant d'être sauvegardé.",
   "remote storage description": "Un module Remote Storage pour vos applications Unhosted.",
   "tasky description": "Un gestionnaire de tâches, basé sur les tags, rapide et simple.",
   "todos description": "Écrivez et ordonnez vos tâches efficacement.",
   "term description": "Un terminal pour votre Cozy.",
   "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
   "reminder title email": "[Cozy-Calendar] Rappel",
+  "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
+  "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
   "reminder message": "Rappel : %{message}",
   "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
   "installation message failure": "Échec de l'installation de %{appName}.",
@@ -1886,7 +2139,7 @@ module.exports = {
   "synchronized": "sincronizado",
   "revoke device access": "Revoke device access",
   "no application installed": "Não há aplicações instaladas.",
-  "your parameters": " Os seus parâmetros",
+  "your parameters": "Os seus parâmetros",
   "alerts and password recovery email": "Necessito do seu email para enviar alertas ou email de recuperação de password.",
   "public name description": "O nome público será utilizado para o Cozy e as aplicações comunicarem consigo.",
   "your timezone is required": "O fuso horário é necessário para mostrar as datas correctamente.",
@@ -1904,8 +2157,8 @@ module.exports = {
   "save your new password": "grave a sua nova password",
   "do you want assistance": "Procura ajuda ?",
   "Write an email to our support team at:": "Escreve um e-mail á equipa de suporte:",
-  "Register and post on our forum: ": "Regista-te no nosso fórum: ",
-  "Ask your question on Twitter: ": "Pergunta-nos no Twitter: ",
+  "Register and post on our forum: ": "Regista-te no nosso fórum:",
+  "Ask your question on Twitter: ": "Pergunta-nos no Twitter:",
   "Chat with us on IRC:": "Chat with us on IRC:",
   "Visit the project website and learn to build your app:": "Visita o site do projecto para aprenderes a fazer a tua aplicação:",
   "your own application": "a tua aplicação",
@@ -1942,7 +2195,6 @@ module.exports = {
   "required permissions": "Permissões necessárias:",
   "finish layout edition": "Guardar",
   "reset customization": "Repo",
-  "use widget": "Usar widget",
   "use icon": "Usar icon",
   "change layout": "Mudar o layout",
   "introduction market": "Bem vindo á loja de aplicações do Cozy. Este é o sitio onde podes personalizar o teu Cozy\nao adicionar aplicações.\nApartir dai podes instalar a aplicação que construiste ou escolher entre\naplicações criadas pela Cozy Cloud e outros programadores.",
@@ -2134,24 +2386,15 @@ module.exports = Application = (function(_super) {
     return client.post("/api/applications/getMetaData", this.toJSON(), callbacks);
   };
 
-  Application.prototype.getHomePosition = function(cols) {
-    var pos;
-    pos = this.get('homeposition');
-    return pos != null ? pos[cols] : void 0;
-  };
-
-  Application.prototype.saveHomePosition = function(cols, obj, options) {
-    var pos;
-    if (options == null) {
-      options = {};
+  Application.prototype.getSection = function() {
+    var section, _ref1;
+    section = 'other';
+    if ((_ref1 = this.get('name')) === 'leave-google' || _ref1 === 'konnectors') {
+      section = 'leave';
+    } else if (this.get('comment') === 'official application') {
+      section = 'official';
     }
-    pos = this.get('homeposition') || {};
-    pos[cols] = obj;
-    options['patch'] = true;
-    options['type'] = 'PUT';
-    return this.save({
-      homeposition: pos
-    }, options);
+    return section;
   };
 
   Application.prototype.updateAll = function(callbacks) {
@@ -2160,6 +2403,24 @@ module.exports = Application = (function(_super) {
   };
 
   return Application;
+
+})(Backbone.Model);
+});
+
+;require.register("models/background", function(exports, require, module) {
+var Background, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+module.exports = Background = (function(_super) {
+  __extends(Background, _super);
+
+  function Background() {
+    _ref = Background.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  return Background;
 
 })(Backbone.Model);
 });
@@ -2182,6 +2443,31 @@ module.exports = Device = (function(_super) {
   Device.prototype.urlRoot = 'api/devices/';
 
   return Device;
+
+})(Backbone.Model);
+});
+
+;require.register("models/instance", function(exports, require, module) {
+var Instance, request, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+request = require('lib/request');
+
+module.exports = Instance = (function(_super) {
+  __extends(Instance, _super);
+
+  function Instance() {
+    _ref = Instance.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  Instance.prototype.saveData = function(data, callback) {
+    this.set(data);
+    return request.post("api/instance", data, callback);
+  };
+
+  return Instance;
 
 })(Backbone.Model);
 });
@@ -2401,23 +2687,15 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.selectIcon = function(index) {
     if (index !== -1) {
       $('.menu-btn.active').removeClass('active');
-      $($('.menu-btn').get(index)).addClass('active');
+      return $($('.menu-btn').get(index)).addClass('active');
     } else {
-      $('.menu-btn.active').removeClass('active');
-    }
-    if (index !== 3) {
-      return app.mainView.applicationListView.setMode('view');
+      return $('.menu-btn.active').removeClass('active');
     }
   };
 
   MainRouter.prototype.applicationList = function() {
     app.mainView.displayApplicationsList();
     return this.selectIcon(0);
-  };
-
-  MainRouter.prototype.applicationListEdit = function() {
-    app.mainView.displayApplicationsListEdit();
-    return this.selectIcon(3);
   };
 
   MainRouter.prototype.configApplications = function() {
@@ -2495,15 +2773,15 @@ buf.push('</p><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div><div class="input"><p>');
-var __val__ = t('your timezone is required')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
-var __val__ = t('save')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="input"><p>');
 var __val__ = t('domain name for urls and email')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><input id="account-domain-field"/><button class="btn">');
+var __val__ = t('save')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div><hr/><div class="input"><p>');
+var __val__ = t('your timezone is required')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div><div class="input"><p>');
@@ -2521,7 +2799,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><p><button id="change-password-button" class="btn">');
+buf.push('</button></div><hr/><p><p>');
+var __val__ = t('account background selection')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><div class="background-list line"></div></p><hr/><p><button id="change-password-button" class="btn">');
 var __val__ = t('change password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p><div id="change-password-form"><p>');
@@ -2551,7 +2832,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/application_iframe", function(exports, require, module) {
+require.register("templates/application_iframe", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2565,7 +2846,32 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application", function(exports, require, module) {
+require.register("templates/background_list", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+}
+return buf.join("");
+};
+});
+
+require.register("templates/background_list_item", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<img');
+buf.push(attrs({ 'src':("" + (model.src) + "") }, {"src":true}));
+buf.push('/>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2625,7 +2931,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_application_list", function(exports, require, module) {
+require.register("templates/config_application_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2636,7 +2942,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_applications", function(exports, require, module) {
+require.register("templates/config_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2672,7 +2978,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device", function(exports, require, module) {
+require.register("templates/config_device", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2690,7 +2996,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/config_device_list", function(exports, require, module) {
+require.register("templates/config_device_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2701,7 +3007,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/help", function(exports, require, module) {
+require.register("templates/help", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2716,25 +3022,25 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></p></div><div class="line pa2"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
-var __val__ = t('Register and post on our forum: ')
+buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
+var __val__ = t('Register and post on our forum: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
-var __val__ = t('Ask your question on Twitter: ')
+buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
+var __val__ = t('Ask your question on Twitter: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
-var __val__ = t('Chat with us on IRC:')
+buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
+var __val__ = t('Chat with us on IRC:') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P><p class="help-text">');
 var __val__ = t('Visit the project website and learn to build your app:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"> <a href="https://cozy.io">cozy.io</a></P></div></div>');
+buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P></div></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/help_url", function(exports, require, module) {
+require.register("templates/help_url", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2751,7 +3057,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/home", function(exports, require, module) {
+require.register("templates/home", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2769,75 +3075,61 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p></div><div id="app-list" class="gridster"></div>');
-}
-return buf.join("");
-};
-});
-
-;require.register("templates/home_application", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<div class="mask"></div><button class="btn use-widget">');
-var __val__ = t('use widget')
+buf.push('</p></div><div id="app-list"><section id="apps-official"><h2>');
+var __val__ = t('core apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
-}
-return buf.join("");
-};
-});
-
-;require.register("templates/home_application_widget", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<div class="widget-mask"></div><iframe');
-buf.push(attrs({ 'src':("" + (url) + ""), "class": ("widget-iframe") }, {"class":true,"src":true}));
-buf.push('></iframe>');
-}
-return buf.join("");
-};
-});
-
-;require.register("templates/layout", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-menu" class="mt3"><div class="txtright menu-btn home-icon"><a href="#home"><span>');
-var __val__ = t('your app list')
+buf.push('</h2></section><section id="apps-leave"><h2>');
+var __val__ = t('connectors apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/home-black.png"/></a></div><div class="txtright menu-btn"><a href="#applications"><span>');
+buf.push('</h2></section><section id="apps-other"><h2>');
+var __val__ = t('installed apps')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2></section><section id="apps-platform"><h2>');
+var __val__ = t('settings apps')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2><div class="application"><a href="#applications" class="application-inner"><div class="vertical-aligner"><img src="img/store.png" class="icon"/><p class="app-title">');
 var __val__ = t('choose your apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/store.png"/></a></div><div class="txtright menu-btn"><a href="#config-applications"><span>');
+buf.push('</p></div></a></div><div class="application"><a href="#config-applications" class="application-inner"><div class="vertical-aligner"><img src="img/apps.png" class="icon svg"/><p class="app-title">');
 var __val__ = t('manage your apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/apps.png"/></a></div><div class="txtright menu-btn customize-icon"><a href="#customize"><span>');
-var __val__ = t('customize your cozy')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/config-apps.png"/></a></div><div class="txtright menu-btn"><a href="#account"><span>');
+buf.push('</p></div></a></div><div class="application"><a href="#account" class="application-inner"><div class="vertical-aligner"><img src="img/configuration.png" class="icon svg"/><p class="app-title">');
 var __val__ = t('configure your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/configuration.png"/></a></div><div class="txtright menu-btn help-icon"><a href="#help"><span>');
+buf.push('</p></div></a></div><div class="application"><a href="#help" class="application-inner"><div class="vertical-aligner"><img src="img/help.png" class="icon svg"/><p class="app-title">');
 var __val__ = t('ask for assistance')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/help.png"/></a></div><div class="txtright menu-btn logout-menu-icon"><a href="#logout"><span>');
-var __val__ = t('sign out')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/logout-black.png"/></a></div></div><div id="home-content"></div></div></div>');
+buf.push('</p></div></a></div></section></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/market", function(exports, require, module) {
+require.register("templates/home_application", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/layout", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2861,7 +3153,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/market_application", function(exports, require, module) {
+require.register("templates/market_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2890,7 +3182,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_application", function(exports, require, module) {
+require.register("templates/menu_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2904,34 +3196,33 @@ return buf.join("");
 };
 });
 
-;require.register("templates/menu_applications", function(exports, require, module) {
+require.register("templates/menu_applications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div class="clickcatcher"></div><div id="menu-applications"><div id="home-btn" class="menu-application"></div></div>');
+buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div id="menu-applications"><div id="home-btn" class="menu-application"></div></div><div class="clickcatcher"></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/navbar", function(exports, require, module) {
+require.register("templates/navbar", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar clearfix"><a href="#home" class="logo left"><img src="img/happycloud-white.svg"/><span>beta</span></a><div id="menu-applications-container" class="left"></div><a id="logout-button" href="#logout" class="right"><span>');
-var __val__ = t('logout')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><img src="img/logout-white.png"/></a><div id="notifications-container" class="right"></div></div>');
+buf.push('<div class="navbar clearfix"><a');
+buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
+buf.push('><img src="img/back.png"/></a><div id="notifications-container" class="right"></div><div id="menu-applications-container"></div></div>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/navbar_app_btn", function(exports, require, module) {
+require.register("templates/navbar_app_btn", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2947,7 +3238,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notification", function(exports, require, module) {
+require.register("templates/notification", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2959,7 +3250,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/notifications", function(exports, require, module) {
+require.register("templates/notifications", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -2971,13 +3262,16 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</li><li id="dismiss-all" class="btn">');
 var __val__ = t('dismiss all')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li></ul>');
+buf.push('</li><li class="separator"></li><li><a id="logout-button" href="#logout"><img src="img/logout.png"/><span>');
+var __val__ = t('logout')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></a></li></ul>');
 }
 return buf.join("");
 };
 });
 
-;require.register("templates/popover_description", function(exports, require, module) {
+require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3007,7 +3301,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/popover_permissions", function(exports, require, module) {
+require.register("templates/popover_permissions", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3040,7 +3334,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/tutorial", function(exports, require, module) {
+require.register("templates/tutorial", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3115,7 +3409,7 @@ return buf.join("");
 };
 });
 
-;require.register("templates/update_stack_modal", function(exports, require, module) {
+require.register("templates/update_stack_modal", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3151,8 +3445,8 @@ return buf.join("");
 };
 });
 
-;require.register("views/account", function(exports, require, module) {
-var BaseView, locales, request, timezones,
+require.register("views/account", function(exports, require, module) {
+var BackgroundList, BaseView, Instance, locales, request, timezones,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -3164,6 +3458,10 @@ timezones = require('helpers/timezone').timezones;
 locales = require('helpers/locales').locales;
 
 request = require('lib/request');
+
+BackgroundList = require('views/background_list');
+
+Instance = require('models/instance');
 
 module.exports = exports.AccountView = (function(_super) {
   __extends(AccountView, _super);
@@ -3177,6 +3475,7 @@ module.exports = exports.AccountView = (function(_super) {
 
   function AccountView() {
     this.displayErrors = __bind(this.displayErrors, this);
+    this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
     this.closePasswordForm = __bind(this.closePasswordForm, this);
     this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);
@@ -3235,6 +3534,20 @@ module.exports = exports.AccountView = (function(_super) {
       }
       _this.accountSubmitButton.css('color', 'white');
       return _this.accountSubmitButton.spin();
+    });
+  };
+
+  AccountView.prototype.onBackgroundChanged = function(model) {
+    var data;
+    data = {
+      background: model.get('id')
+    };
+    return this.instance.saveData(data, function(err) {
+      if (err) {
+        return alert(t('account background saved error'));
+      } else {
+        return Backbone.Mediator.pub('backgroundChanged', data.background);
+      }
     });
   };
 
@@ -3316,6 +3629,7 @@ module.exports = exports.AccountView = (function(_super) {
     return $.get("api/instances/", function(data) {
       var domain, instance, locale, saveDomain, saveLocale, _ref;
       instance = (_ref = data.rows) != null ? _ref[0] : void 0;
+      _this.instance = new Instance(instance);
       domain = (instance != null ? instance.domain : void 0) || t('no domain set');
       locale = (instance != null ? instance.locale : void 0) || 'en';
       saveDomain = _this.getSaveFunction('domain', _this.domainField, 'instance');
@@ -3377,10 +3691,104 @@ module.exports = exports.AccountView = (function(_super) {
       timezone = timezones[_i];
       this.timezoneField.append("<option value=\"" + timezone + "\">" + timezone + "</option>");
     }
+    this.backgroundList = new BackgroundList({
+      el: this.$('.background-list')
+    });
+    this.backgroundList.collection.on('change', this.onBackgroundChanged);
     return this.fetchData();
   };
 
   return AccountView;
+
+})(BaseView);
+});
+
+;require.register("views/background_list", function(exports, require, module) {
+var BackgroundCollection, BackgroundList, BackgroundListItem, ViewCollection, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+ViewCollection = require('lib/view_collection');
+
+BackgroundListItem = require('views/background_list_item');
+
+BackgroundCollection = require('collections/background');
+
+module.exports = BackgroundList = (function(_super) {
+  __extends(BackgroundList, _super);
+
+  function BackgroundList() {
+    _ref = BackgroundList.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  BackgroundList.prototype.itemView = BackgroundListItem;
+
+  BackgroundList.prototype.template = require('templates/background_list');
+
+  BackgroundList.prototype.collection = new BackgroundCollection;
+
+  BackgroundList.prototype.events = {};
+
+  BackgroundList.prototype.afterRender = function() {
+    var _this = this;
+    this.collection.init();
+    return this.collection.on('change', function(changedModel) {
+      return _this.collection.map(function(model) {
+        if (changedModel.cid !== model.cid) {
+          model.set({
+            'selected': false
+          }, {
+            silent: true
+          });
+          return _this.views[model.cid].$el.removeClass('selected');
+        }
+      });
+    });
+  };
+
+  return BackgroundList;
+
+})(ViewCollection);
+});
+
+;require.register("views/background_list_item", function(exports, require, module) {
+var BackgroundListItem, BaseView, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('lib/base_view');
+
+module.exports = BackgroundListItem = (function(_super) {
+  __extends(BackgroundListItem, _super);
+
+  function BackgroundListItem() {
+    _ref = BackgroundListItem.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  BackgroundListItem.prototype.className = "mod w33 left background-button";
+
+  BackgroundListItem.prototype.tagName = "div";
+
+  BackgroundListItem.prototype.template = require('templates/background_list_item');
+
+  BackgroundListItem.prototype.events = {
+    'click': 'onClicked'
+  };
+
+  BackgroundListItem.prototype.afterRender = function() {
+    if (this.model.get('selected')) {
+      return this.$el.addClass('selected');
+    }
+  };
+
+  BackgroundListItem.prototype.onClicked = function() {
+    this.model.set('selected', true);
+    return this.$el.addClass('selected');
+  };
+
+  return BackgroundListItem;
 
 })(BaseView);
 });
@@ -4122,24 +4530,7 @@ module.exports = ApplicationsListView = (function(_super) {
   /* Constructor*/
 
 
-  ApplicationsListView.prototype.events = function() {
-    var _this = this;
-    return {
-      'mouseenter .ui-resizable-handle': function() {
-        return _this.gridster.disable();
-      },
-      'mouseleave .ui-resizable-handle': function() {
-        if (_this.state === 'edit') {
-          return _this.gridster.enable();
-        }
-      }
-    };
-  };
-
   function ApplicationsListView(apps) {
-    this.saveChanges = __bind(this.saveChanges, this);
-    this.resizeGridster = __bind(this.resizeGridster, this);
-    this.onWindowResize = __bind(this.onWindowResize, this);
     this.afterRender = __bind(this.afterRender, this);
     this.initialize = __bind(this.initialize, this);
     this.apps = apps;
@@ -4163,26 +4554,13 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.afterRender = function() {
-    var cid, view, _ref, _results,
-      _this = this;
-    this.appList = this.$("#app-list");
+    var _this = this;
     this.$("#no-app-message").hide();
     $(".menu-btn a").click(function(event) {
       $(".menu-btn").removeClass('active');
       return $(event.target).closest('.menu-btn').addClass('active');
     });
-    this.initGridster();
-    ApplicationsListView.__super__.afterRender.apply(this, arguments);
-    if (this.state === 'view') {
-      this.gridster.disable();
-      _ref = this.views;
-      _results = [];
-      for (cid in _ref) {
-        view = _ref[cid];
-        _results.push(this.view.enable());
-      }
-      return _results;
-    }
+    return ApplicationsListView.__super__.afterRender.apply(this, arguments);
   };
 
   ApplicationsListView.prototype.checkIfEmpty = function() {
@@ -4196,176 +4574,11 @@ module.exports = ApplicationsListView = (function(_super) {
     }
   };
 
-  ApplicationsListView.prototype.computeGridDims = function() {
-    var colsNb, grid_margin, grid_size, grid_step, max_grid_step, smallest_step, width;
-    width = $(window).width();
-    if (width > 640) {
-      width = width - 100;
-    } else {
-      width = width - 65;
-    }
-    grid_margin = 8;
-    smallest_step = 150 + 2 * grid_margin;
-    colsNb = Math.floor(width / smallest_step);
-    if (colsNb < 3) {
-      colsNb = 3;
-    }
-    if ((5 <= colsNb && colsNb <= 7)) {
-      colsNb = 6;
-    }
-    colsNb = colsNb - colsNb % 3;
-    grid_step = width / colsNb;
-    max_grid_step = 150;
-    if (grid_step > max_grid_step) {
-      grid_step = max_grid_step;
-    }
-    grid_size = grid_step - 2 * grid_margin;
-    return {
-      colsNb: colsNb,
-      grid_size: grid_size,
-      grid_margin: grid_margin,
-      grid_step: grid_step
-    };
-  };
-
-  ApplicationsListView.prototype.setMode = function(mode) {
-    var cid, view, _ref, _ref1, _ref2, _ref3, _results, _results1;
-    this.state = mode;
-    if (this.state === 'edit') {
-      if ((_ref = this.gridster) != null) {
-        _ref.enable();
-      }
-      _ref1 = this.views;
-      _results = [];
-      for (cid in _ref1) {
-        view = _ref1[cid];
-        _results.push(view.disable());
-      }
-      return _results;
-    } else {
-      if ((_ref2 = this.gridster) != null) {
-        _ref2.disable();
-      }
-      _ref3 = this.views;
-      _results1 = [];
-      for (cid in _ref3) {
-        view = _ref3[cid];
-        _results1.push(view.enable());
-      }
-      return _results1;
-    }
-  };
-
-  ApplicationsListView.prototype.initGridster = function() {
-    var _ref,
-      _this = this;
-    _ref = this.computeGridDims(), this.colsNb = _ref.colsNb, this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    this.appList.gridster({
-      min_cols: this.colsNb,
-      max_cols: this.colsNb,
-      max_size_x: this.colsNb,
-      widget_selector: 'div.application',
-      widget_margins: [this.grid_margin, this.grid_margin],
-      widget_base_dimensions: [this.grid_size, this.grid_size],
-      autogenerate_stylesheet: false,
-      draggable: {
-        stop: function() {
-          return setTimeout(_this.saveChanges, 300);
-        }
-      },
-      serialize_params: function(el, wgd) {
-        return {
-          slug: el.attr('id').replace('app-btn-', ''),
-          col: wgd.col,
-          row: wgd.row,
-          sizex: wgd.size_x,
-          sizey: wgd.size_y
-        };
-      },
-      resize: {
-        enabled: false
-      }
-    });
-    this.gridster = this.appList.data('gridster');
-    this.gridster.set_dom_grid_height();
-    this.appList.width(this.colsNb * this.grid_step);
-    return this.gridster.generate_stylesheet({
-      cols: 16,
-      rows: 16
-    });
-  };
-
-  ApplicationsListView.prototype.onWindowResize = function() {
-    var oldNb, _ref;
-    oldNb = this.colsNb;
-    _ref = this.computeGridDims(), this.colsNb = _ref.colsNb, this.grid_size = _ref.grid_size, this.grid_margin = _ref.grid_margin, this.grid_step = _ref.grid_step;
-    if (oldNb === this.colsNb) {
-      return this.resizeGridster();
-    } else {
-      this.onReset([]);
-      this.gridster.$widgets = $([]);
-      this.resizeGridster();
-      return this.onReset(this.collection);
-    }
-  };
-
-  ApplicationsListView.prototype.resizeGridster = function() {
-    var _ref;
-    return (_ref = this.gridster) != null ? _ref.resize_widget_dimensions({
-      width: this.colsNb * this.grid_step,
-      colsNb: this.colsNb,
-      styles_for: {
-        cols: 16,
-        rows: 16
-      },
-      widget_margins: [this.grid_margin, this.grid_margin],
-      widget_base_dimensions: [this.grid_size, this.grid_size]
-    }) : void 0;
-  };
-
   ApplicationsListView.prototype.appendView = function(view) {
-    var pos;
-    pos = view.model.getHomePosition(this.colsNb);
-    if (pos == null) {
-      pos = {
-        col: 0,
-        row: 0,
-        sizex: 1,
-        sizey: 1
-      };
-    }
-    this.gridster.add_widget(view.$el, pos.sizex, pos.sizey, pos.col, pos.row);
-    this.gridster.resize_widget(view.$el, pos.sizex, pos.sizey);
-    if (this.state === 'view') {
-      return view.enable();
-    } else {
-      return view.disable();
-    }
-  };
-
-  ApplicationsListView.prototype.removeView = function(view) {
-    this.gridster.remove_widget(view.$el, true);
-    return ApplicationsListView.__super__.removeView.apply(this, arguments);
-  };
-
-  ApplicationsListView.prototype.saveChanges = function() {
-    var items, model, newpos, oldpos, properties, view, _i, _len, _results;
-    properties = ['col', 'row', 'sizex', 'sizey'];
-    items = this.gridster.serialize();
-    _results = [];
-    for (_i = 0, _len = items.length; _i < _len; _i++) {
-      newpos = items[_i];
-      model = this.apps.get(newpos.slug);
-      delete newpos.slug;
-      view = this.views[model.cid];
-      oldpos = model.getHomePosition(this.colsNb);
-      if (_.isEqual(oldpos, newpos)) {
-        continue;
-      }
-      newpos.useWidget = (oldpos != null ? oldpos.useWidget : void 0) || false;
-      _results.push(view.model.saveHomePosition(this.colsNb, newpos));
-    }
-    return _results;
+    var section, sectionName;
+    sectionName = view.model.getSection();
+    section = this.$("section#apps-" + sectionName);
+    return section.append(view.$el);
   };
 
   return ApplicationsListView;
@@ -4374,7 +4587,7 @@ module.exports = ApplicationsListView = (function(_super) {
 });
 
 ;require.register("views/home_application", function(exports, require, module) {
-var ApplicationRow, BaseView, ColorButton, WidgetTemplate,
+var ApplicationRow, BaseView, ColorButton,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -4382,8 +4595,6 @@ var ApplicationRow, BaseView, ColorButton, WidgetTemplate,
 BaseView = require('lib/base_view');
 
 ColorButton = require('widgets/install_button');
-
-WidgetTemplate = require('templates/home_application_widget');
 
 module.exports = ApplicationRow = (function(_super) {
   __extends(ApplicationRow, _super);
@@ -4401,8 +4612,7 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.events = {
-    "mouseup .application-inner": "onAppClicked",
-    'click .use-widget': 'onUseWidgetClicked'
+    "mouseup .application-inner": "onAppClicked"
   };
 
   /* Constructor*/
@@ -4412,9 +4622,6 @@ module.exports = ApplicationRow = (function(_super) {
     this.showSpinner = __bind(this.showSpinner, this);
     this.generateSpinner = __bind(this.generateSpinner, this);
     this.launchApp = __bind(this.launchApp, this);
-    this.onUseWidgetClicked = __bind(this.onUseWidgetClicked, this);
-    this.canUseWidget = __bind(this.canUseWidget, this);
-    this.setUseWidget = __bind(this.setUseWidget, this);
     this.onAppClicked = __bind(this.onAppClicked, this);
     this.onAppChanged = __bind(this.onAppChanged, this);
     this.afterRender = __bind(this.afterRender, this);
@@ -4422,22 +4629,6 @@ module.exports = ApplicationRow = (function(_super) {
     this.enabled = true;
     ApplicationRow.__super__.constructor.apply(this, arguments);
   }
-
-  ApplicationRow.prototype.enable = function() {
-    this.enabled = true;
-    this.$('.widget-mask').hide();
-    this.$el.removeClass('edit-mode');
-    return this.$('.use-widget').hide();
-  };
-
-  ApplicationRow.prototype.disable = function() {
-    this.enabled = false;
-    this.$el.addClass('edit-mode');
-    if (this.canUseWidget()) {
-      this.$('.widget-mask').show();
-      return this.$('.use-widget').show();
-    }
-  };
 
   ApplicationRow.prototype.afterRender = function() {
     var color, slug;
@@ -4461,10 +4652,7 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var color, extension, slug, useWidget, _ref;
-    if (this.model.get('state') !== 'installed' || !this.canUseWidget()) {
-      this.$('.use-widget').hide();
-    }
+    var color, extension, slug;
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
@@ -4490,12 +4678,7 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.hide();
         this.icon.show();
         this.icon.removeClass('stopped');
-        this.stateLabel.hide();
-        useWidget = (_ref = this.model.getHomePosition(this.getNbCols())) != null ? _ref.useWidget : void 0;
-        if (this.canUseWidget() && useWidget) {
-          return this.setUseWidget(true);
-        }
-        break;
+        return this.stateLabel.hide();
       case 'installing':
         this.icon.hide();
         this.showSpinner();
@@ -4556,55 +4739,6 @@ module.exports = ApplicationRow = (function(_super) {
           }
         });
     }
-  };
-
-  ApplicationRow.prototype.setUseWidget = function(widget) {
-    var widgetUrl;
-    if (widget == null) {
-      widget = true;
-    }
-    widgetUrl = this.model.get('widget');
-    if (widget) {
-      this.$('.use-widget').text(t('use icon'));
-      this.icon.detach();
-      this.stateLabel.detach();
-      this.title.detach();
-      this.$('.application-inner').html(WidgetTemplate({
-        url: widgetUrl
-      }));
-      return this.$('.application-inner').addClass('widget');
-    } else {
-      this.$('.use-widget').text(t('use widget'));
-      this.$('.application-inner').empty();
-      this.$('.application-inner').append(this.icon);
-      this.$('.application-inner').append(this.title);
-      this.$('.application-inner').append(this.stateLabel);
-      return this.$('.application-inner').removeClass('widget');
-    }
-  };
-
-  ApplicationRow.prototype.canUseWidget = function() {
-    return false;
-  };
-
-  ApplicationRow.prototype.getNbCols = function() {
-    return window.app.mainView.applicationListView.colsNb;
-  };
-
-  ApplicationRow.prototype.onUseWidgetClicked = function() {
-    var homePosition, nbCols,
-      _this = this;
-    nbCols = this.getNbCols();
-    homePosition = this.model.getHomePosition(nbCols);
-    if (homePosition.useWidget == null) {
-      homePosition.useWidget = false;
-    }
-    homePosition.useWidget = !homePosition.useWidget;
-    return this.model.saveHomePosition(nbCols, homePosition, {
-      success: function() {
-        return _this.setUseWidget(homePosition.useWidget);
-      }
-    });
   };
 
   /* Functions*/
@@ -4792,6 +4926,10 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.template = require('templates/layout');
 
+  HomeView.prototype.subscriptions = {
+    'backgroundChanged': 'changeBackground'
+  };
+
   HomeView.prototype.wizards = ['install', 'quicktour'];
 
   function HomeView() {
@@ -4824,9 +4962,12 @@ module.exports = HomeView = (function(_super) {
     this.accountView = new AccountView();
     this.helpView = new HelpView();
     this.marketView = new MarketView(this.apps);
-    $("#content").niceScroll();
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
+    this.changeBackground(window.app.instance.background);
+    this.content.niceScroll();
+    this.backButton = this.$('.back-button');
+    this.backButton.hide();
     $(window).resize(this.resetLayoutSizes);
     this.apps.fetch({
       reset: true
@@ -4842,6 +4983,16 @@ module.exports = HomeView = (function(_super) {
 
   /* Functions*/
 
+
+  HomeView.prototype.changeBackground = function(background) {
+    var val;
+    if ((background == null) || background === 'background-none') {
+      return this.content.css('background-image', 'none');
+    } else {
+      val = "url('/img/backgrounds/" + (background.replace('-', '_')) + ".png')";
+      return this.content.css('background-image', val);
+    }
+  };
 
   HomeView.prototype.logout = function(event) {
     var user,
@@ -4860,6 +5011,7 @@ module.exports = HomeView = (function(_super) {
   HomeView.prototype.displayView = function(view) {
     var displayView,
       _this = this;
+    this.backButton.hide();
     $("#current-application").html('home');
     displayView = function() {
       _this.frames.hide();
@@ -4892,7 +5044,6 @@ module.exports = HomeView = (function(_super) {
       wizard = null;
     }
     this.displayView(this.applicationListView);
-    this.applicationListView.setMode('view');
     window.document.title = t("cozy home title");
     _ref = this.wizards;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -4918,7 +5069,6 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.displayApplicationsListEdit = function() {
     this.displayView(this.applicationListView);
-    this.applicationListView.setMode('edit');
     return window.document.title = t("cozy home title");
   };
 
@@ -4990,6 +5140,7 @@ module.exports = HomeView = (function(_super) {
     }
     this.frames.show();
     this.content.hide();
+    this.backButton.show();
     frame = this.$("#" + slug + "-frame");
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
@@ -5045,9 +5196,9 @@ module.exports = HomeView = (function(_super) {
 
 
   HomeView.prototype.resetLayoutSizes = function() {
-    this.frames.height($(window).height() - 50);
+    this.frames.height($(window).height() - 36);
     if ($(window).width() > 640) {
-      return this.content.height($(window).height() - 48);
+      return this.content.height($(window).height() - 36);
     } else {
       return this.content.height($(window).height());
     }
@@ -5417,7 +5568,6 @@ module.exports = ApplicationRow = (function(_super) {
 
 ;require.register("views/menu_application", function(exports, require, module) {
 var ApplicationView, BaseView, _ref,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -5427,7 +5577,6 @@ module.exports = ApplicationView = (function(_super) {
   __extends(ApplicationView, _super);
 
   function ApplicationView() {
-    this.onLinkClick = __bind(this.onLinkClick, this);
     _ref = ApplicationView.__super__.constructor.apply(this, arguments);
     return _ref;
   }
@@ -5438,14 +5587,6 @@ module.exports = ApplicationView = (function(_super) {
 
   ApplicationView.prototype.template = require('templates/menu_application');
 
-  ApplicationView.prototype.events = {
-    'click a': 'onLinkClick'
-  };
-
-  ApplicationView.prototype.onLinkClick = function() {
-    return this.menu.hideAppList();
-  };
-
   return ApplicationView;
 
 })(BaseView);
@@ -5453,7 +5594,6 @@ module.exports = ApplicationView = (function(_super) {
 
 ;require.register("views/menu_applications", function(exports, require, module) {
 var AppsMenu, ViewCollection,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -5468,73 +5608,12 @@ module.exports = AppsMenu = (function(_super) {
 
   AppsMenu.prototype.template = require('templates/menu_applications');
 
-  AppsMenu.prototype.events = {
-    "click #menu-applications-toggle": "showAppList",
-    "click .clickcatcher": "hideAppList",
-    "click #home-btn": "hideAppList"
-  };
-
   function AppsMenu(collection) {
     this.collection = collection;
-    this.hideAppList = __bind(this.hideAppList, this);
-    this.showAppList = __bind(this.showAppList, this);
-    this.windowClicked = __bind(this.windowClicked, this);
-    this.remove = __bind(this.remove, this);
-    this.afterRender = __bind(this.afterRender, this);
     AppsMenu.__super__.constructor.apply(this, arguments);
   }
 
-  AppsMenu.prototype.appendView = function(view) {
-    this.appList.append(view.$el);
-    return view.menu = this;
-  };
-
-  AppsMenu.prototype.afterRender = function() {
-    this.clickcatcher = this.$('.clickcatcher');
-    this.clickcatcher.hide();
-    this.appList = this.$('#menu-applications');
-    AppsMenu.__super__.afterRender.apply(this, arguments);
-    this.initializing = true;
-    return $(window).on('click', this.windowClicked);
-  };
-
-  AppsMenu.prototype.remove = function() {
-    $(window).off('click', this.hideAppList);
-    return AppsMenu.__super__.remove.apply(this, arguments);
-  };
-
-  AppsMenu.prototype.windowClicked = function() {
-    if ((typeof event !== "undefined" && event !== null) && this.$el.has($(event.target)).length === 0) {
-      return this.hideAppList();
-    }
-  };
-
-  AppsMenu.prototype.showAppList = function() {
-    if (this.appList.is(':visible')) {
-      this.appList.hide();
-      this.clickcatcher.hide();
-      return this.$el.removeClass('active');
-    } else {
-      if (this.collection.size() > 0) {
-        this.$('#no-app-message').hide();
-      } else {
-        this.$('#no-app-message').show();
-      }
-      this.$el.addClass('active');
-      this.appList.slideDown(100);
-      return this.clickcatcher.show();
-    }
-  };
-
-  AppsMenu.prototype.dismissAll = function() {
-    return this.collection.removeAll();
-  };
-
-  AppsMenu.prototype.hideAppList = function(event) {
-    this.appList.slideUp(100);
-    this.clickcatcher.hide();
-    return this.$el.removeClass('active');
-  };
+  AppsMenu.prototype.appendView = function(view) {};
 
   return AppsMenu;
 
