@@ -8,7 +8,7 @@ ConfigDeviceList = require './config_device_list'
 UpdateStackModal = require './update_stack_modal'
 AppsCollection = require '../collections/application'
 
-module.exports = class exports.ConfigApplicationsView extends BaseView
+module.exports = class ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
     template: require 'templates/config_applications'
 
