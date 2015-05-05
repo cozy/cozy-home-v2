@@ -1,4 +1,13 @@
 node_modules
 *.swp
-market
 *.log
+# the apps fetched from the registry
+market
+# no need to track build twice
+client/public
+# iconizr stuff, could be probably be used / not-generated
+client/app/assets/app-icons/icons
+client/app/assets/app-icons/sprite-svg-sprite.css
+client/app/assets/app-icons/sprite-loader-fragment.html
+client/app/assets/app-icons/sprite-png-sprite.css
+client/app/assets/app-icons/sprite-png-data.css

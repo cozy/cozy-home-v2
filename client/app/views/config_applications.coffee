@@ -8,7 +8,7 @@ ConfigDeviceList = require './config_device_list'
 UpdateStackModal = require './update_stack_modal'
 AppsCollection = require '../collections/application'
 
-module.exports = class exports.ConfigApplicationsView extends BaseView
+module.exports = class ConfigApplicationsView extends BaseView
     id: 'config-applications-view'
     template: require 'templates/config_applications'
 
@@ -20,7 +20,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         "click .update-stack"      : "onUpdateStackClicked"
         "click .reboot-stack"      : "onRebootStackClicked"
 
-    constructor: (@apps, @devices, @stackApps) ->
+    constructor: (@apps, @devices, @stackApps, @market) ->
         @listenTo @devices, 'reset', @displayDevices
         @listenTo @stackApps, 'reset', @displayStackVersion
         super()
@@ -34,13 +34,11 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn = new ColorButton  @$ '.update-stack'
         @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
         @fetch()
-        @market = new AppsCollection()
         @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').after @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
-        @market.fetchFromMarket ->
 
     openUpdatePopover: (slug) ->
         @applicationList.openUpdatePopover slug
@@ -65,7 +63,6 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         if not(@devices.length is 0)
             @$el.find('.title-device').show()
             @$el.find('.title-device').after @deviceList.$el
-
 
     fetch: =>
         @$('.amount').html "--"
@@ -131,8 +128,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @popoverManagement action
 
     onRebootStackClicked: ->
-        @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @rebootStackBtn.spin true, '#ffffff'
+        @rebootStackBtn.spin true
         @spanRefresh.show()
         @stackApplications.rebootStack ->
             location.reload()

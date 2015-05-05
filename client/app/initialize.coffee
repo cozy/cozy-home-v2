@@ -1,26 +1,18 @@
-{BrunchApplication} = require './helpers'
-
 MainRouter = require 'routers/main_router'
 MainView = require 'views/main'
 colorSet = require '../helpers/color-set'
 
-class exports.Application extends BrunchApplication
-    # This callback would be executed on document ready event.
-    # If you have a big application, perhaps it's a good idea to
-    # group things by their type e.g. `@views = {}; @views.home = new HomeView`.
-    initialize: ->
-        @initializeJQueryExtensions()
+class exports.Application
 
-        $.ajax('/api/instances/')
-        .done (instances) =>
-            @instance = instances?.rows?[0]
-            @locale = @instance?.locale or 'en'
-            @initialize2()
-        .fail =>
-            @locale = 'en'
-            @initialize2()
+    constructor: ->
+        # initialize on DOMReady
+        $ @initialize
 
-    initialize2: ->
+    initialize: =>
+
+        @instance = window.cozy_instance
+        @locale = @instance?.locale or 'en'
+
         try
             locales = require 'locales/' + @locale
         catch err

@@ -4,7 +4,7 @@ ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'
 AppCollection = require 'collections/application'
 Application = require 'models/application'
-slugify = require('helpers').slugify
+slugify = require 'helpers/slugify'
 
 REPOREGEX =  /// ^
     (https?://)?                   #protocol
@@ -26,8 +26,8 @@ module.exports = class MarketView extends BaseView
 
     ### Constructor ###
 
-    constructor: (installedApps) ->
-        @marketApps = new AppCollection()
+    constructor: (installedApps, marketApps) ->
+        @marketApps = marketApps
         @installedApps = installedApps
         super()
 
@@ -42,11 +42,11 @@ module.exports = class MarketView extends BaseView
         @errorAlert.hide()
         @noAppMessage = @$ '#no-app-message'
         @installAppButton = new ColorButton @$ "#add-app-submit"
+        @onAppListsChanged()
 
         @listenTo @installedApps, 'reset',  @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps, 'reset',  @onAppListsChanged
-        @marketApps.fetchFromMarket ->
 
     onAppListsChanged: =>
         @$(".cozy-app").remove()

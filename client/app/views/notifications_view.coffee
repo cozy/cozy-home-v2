@@ -15,6 +15,10 @@ module.exports = class NotificationsView extends ViewCollection
         "click #clickcatcher"        : "hideNotifList"
         "click #dismiss-all"         : "dismissAll"
 
+    initialize: ->
+        super
+        @initializing = true
+
     appendView: (view) ->
         @notifList.prepend view.el
         # TODO use visibility.js to only play sound
@@ -34,9 +38,7 @@ module.exports = class NotificationsView extends ViewCollection
         @dismissButton = @$ "#dismiss-all"
 
         super
-        @initializing = true
-        @collection.fetch().always -> @initializing = false
-
+        @initializing = false
         $(window).on 'click', @windowClicked
 
     remove: =>
@@ -72,15 +74,12 @@ module.exports = class NotificationsView extends ViewCollection
             @clickcatcher.show()
 
     dismissAll: () ->
-        @dismissButton.css 'color', 'transparent'
-        @dismissButton.spin 'small'
+        @dismissButton.spin true
         @collection.removeAll
             success: =>
-                @dismissButton.spin()
-                @dismissButton.css 'color', '#333'
+                @dismissButton.spin false
             error: =>
-                @dismissButton.spin()
-                @dismissButton.css 'color', '#333'
+                @dismissButton.spin false
 
     hideNotifList: (event) =>
         @notifList.slideUp 100

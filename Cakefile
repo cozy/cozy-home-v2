@@ -74,17 +74,43 @@ task "lint", "Run Coffeelint", ->
         else
             console.log stdout
 
+buildJade = ->
+    jade = require 'jade'
+    path = require 'path'
+    for file in fs.readdirSync './server/views/'
+        return unless path.extname(file) is '.jade'
+        filename = "./server/views/#{file}"
+        template = fs.readFileSync filename, 'utf8'
+        output = "var jade = require('jade/runtime');\n"
+        output += "module.exports = " + jade.compileClient template, {filename}
+        name = file.replace '.jade', '.js'
+        fs.writeFileSync "./build/server/views/#{name}", output
+
 task 'build', 'Build CoffeeScript to Javascript', ->
     logger.options.prefix = 'cake:build'
     logger.info "Start compilation..."
     command = "coffee -cb --output build/server server && " + \
               "coffee -cb --output build/ server.coffee  && " + \
-              "coffee -cb --output build/client/app/locales client/app/locales"
-
+              "coffee -cb --output build/client/app/locales client/app/locales && " + \
+              "rm -rf build/client/public && " + \
+              "cp -rf client/public build/client/public && " + \
+              "mkdir -p build/server/views/"
     exec command, (err, stdout, stderr) ->
         if err
             logger.error "An error has occurred while compiling:\n" + err
             process.exit 1
         else
+            buildJade()
             logger.info "Compilation succeeded."
             process.exit 0
+
+SVGIMAGES = 'client/app/assets/img/apps'
+
+task 'build-icons', "Sprite the icons in #{SVGIMAGES}", ->
+    Iconizr = require 'iconizr'
+    out = 'client/app/assets/app-icons'
+    Iconizr.createIconKit SVGIMAGES, out,
+        render: css: true
+    , (err, result) ->
+        console.log err if err
+        console.log result

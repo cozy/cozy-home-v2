@@ -1,6 +1,8 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 
+REGEXP_SPRITED_SVG = ///img/apps/(.*)\.svg///
+
 module.exports = class ApplicationRow extends BaseView
     tagName: "div"
     className: "cozy-app"
@@ -11,7 +13,12 @@ module.exports = class ApplicationRow extends BaseView
         "click": "onInstallClicked"
 
     getRenderData: ->
-        app: @app.attributes
+        app = @app.toJSON()
+        if match = app.icon.match(REGEXP_SPRITED_SVG)
+            [all, slug] = match
+            app = _.extend {}, app, svgSpriteSlug: 'svg-' + slug
+
+        return {app}
 
     constructor: (@app, @marketView) ->
         super()
@@ -34,7 +41,7 @@ module.exports = class ApplicationRow extends BaseView
 
             iconNode = @$ '.app-img img'
             iconNode.addClass 'svg'
-            iconNode.css 'background', color
+            iconNode.css 'background-color', color
 
     onInstallClicked: =>
         return if @installInProgress

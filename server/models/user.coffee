@@ -28,5 +28,8 @@ User.validate 'email', emailValidator,
 User.all = (callback) ->
     User.request "all", callback
 
+User.first = (callback) ->
+    User.all (err, users) -> callback err, users?[0]
+
 User.destroyAll = (callback) ->
     User.requestDestroy "all", callback

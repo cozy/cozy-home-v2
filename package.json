@@ -27,7 +27,8 @@
     "rrule": "2.0.1",
     "moment-timezone": "0.3.0",
     "node-polyglot": "0.4.1",
-    "del": "1.1.1"
+    "del": "1.1.1",
+    "jade": "1.9.2"
   },
   "contributors": [
     "Zoe Bellot",
@@ -46,10 +47,14 @@
     "nock": "0.29.0",
     "request": "2.34.0",
     "should": "^4.6.1",
-    "sinon": "^1.12.2"
+    "sinon": "^1.12.2",
+    "iconizr": "^0.2.3"
   },
   "scripts": {
     "test": "cake --use-js tests",
-    "start": "node build/server.js"
+    "start": "node build/server.js",
+    "build:client": "cd client && brunch b",
+    "build:server": "cake build",
+    "build": "npm run build:client && npm run build:server"
   }
 }

@@ -32,14 +32,14 @@ module.exports =
 
     update: (req, res, next) ->
         manager = new AppManager()
-        manager.updateStack (err, res) ->
+        manager.updateStack (err, result) ->
             if err?
                 log.error err
                 sendError res, err
 
     reboot: (req, res, next) ->
         manager = new AppManager()
-        manager.restartController (err, res) ->
+        manager.restartController (err, result) ->
             if err?
                 log.error err
                 sendError res, err

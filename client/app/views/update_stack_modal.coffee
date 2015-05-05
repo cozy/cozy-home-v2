@@ -95,6 +95,5 @@ module.exports = class UpdateStackModal extends BaseView
         @confirmCallback()
         @$('.step1').hide()
         @$('.step2').show()
-        @$('#confirmbtn').html "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @$('#confirmbtn').spin 'small', '#ffffff'
+        @$('#confirmbtn').spin true
         @$('#cancelbtn').hide()

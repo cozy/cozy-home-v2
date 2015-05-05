@@ -27,7 +27,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.addClass 'loading'
         @body.html t('please wait data retrieval') + '<div class="spinner-container" />'
-        @body.find('.spinner-container').spin 'small'
+        @body.find('.spinner-container').spin true
         @model.getMetaData
             success: =>
                 @body.removeClass 'loading'

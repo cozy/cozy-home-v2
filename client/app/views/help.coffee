@@ -9,13 +9,10 @@ module.exports = class exports.AccountView extends BaseView
 
 
     afterRender: ->
-        $.get "api/instances/", (data) =>
-            instance = data.rows?[0]
-            helpUrl = instance?.helpUrl
-
-            if helpUrl?
-                template = require 'templates/help_url'
-                $(@$el.find('.line')[1]).prepend template helpUrl: helpUrl
+        helpUrl = window.app.instance?.helpUrl
+        if helpUrl?
+            template = require 'templates/help_url'
+            $(@$el.find('.line')[1]).prepend template helpUrl: helpUrl
 
 
     displayWizard: (event) ->

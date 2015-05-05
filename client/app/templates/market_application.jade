@@ -5,10 +5,14 @@
         a(href="#{app.website}")
             img(src="img/link.png").img-btn
 .app-img.left
-    img(src="#{app.icon}")
+    if app.svgSpriteSlug
+        img(class=app.svgSpriteSlug)
+    else
+        img(src="#{app.icon}")
+
 
 .app-text
-            
+
     h3 #{app.displayName}
     span.comment= t(app.comment)
     p.par2= t(app.description)
