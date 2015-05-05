@@ -1035,6 +1035,12 @@ body
 
 @media (max-width: 800px)
 
+    .application .application-inner
+        padding 0
+
+        .app-title
+            font-size 14px
+
     .md-content
         overflow: auto
     .md-modal
@@ -1231,8 +1237,19 @@ body
         .w66
             padding-right: 10px
 
+    .application .application-inner
+        .app-title
+            font-size 12px
 
 @media (max-width: 500px)
+
+    #config-applications-view
+        .mod.w25
+        .mod.w75
+        .mod.w33
+        .mod.w66
+        .mod.w50
+            width 100%
 
     #home-menu
         .logout-menu-icon
@@ -1243,12 +1260,14 @@ body
         display: none
 
     .application .application-inner
+        padding 0
+
         img
-            margin-bottom: -5px
+            padding 5px
 
         .app-title
             margin-top: 4px
-            font-size: 12px
+            font-size: 10px
 
     #market-view
         #your-app

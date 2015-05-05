@@ -23,16 +23,6 @@
 
         h4= t('cozy platform')
         .stack-app.mt2.line
-            .mod.buttons.w25.right
-                button.btn.update-stack
-                    i.fa.fa-refresh.mr1
-                    span= t('update stack')
-                button.btn.update-all
-                    i.fa.fa-refresh.mr1
-                    span= t('update all')
-                button.btn.reboot-stack
-                    i.fa.fa-power-off.mr1
-                    span= t('reboot stack')
             .mod.w75.left
                 .line
                     span.app Data System: 
@@ -48,6 +38,16 @@
                     span.controller --
                 .line
                     span.refresh= t('refresh page')
+            .mod.buttons.w25.right
+                button.btn.update-stack
+                    i.fa.fa-refresh.mr1
+                    span= t('update stack')
+                button.btn.update-all
+                    i.fa.fa-refresh.mr1
+                    span= t('update all')
+                button.btn.reboot-stack
+                    i.fa.fa-power-off.mr1
+                    span= t('reboot stack')
 
 
         h4.title-device.h4.mb3= t('manage your devices')
