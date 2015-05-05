@@ -24,12 +24,12 @@ class exports.Application
         @polyglot.extend locales
         window.t = @polyglot.t.bind @polyglot
 
+        # Defines the application's color set once
+        ColorHash.addScheme 'cozy', colorSet
+
         @routers = {}
         @mainView =  new MainView()
         @routers.main = new MainRouter()
-
-        # Defines the application's color set once
-        ColorHash.addScheme 'cozy', colorSet
 
         Backbone.history.start()
         if Backbone.history.getFragment() is ''

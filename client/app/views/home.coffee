@@ -8,17 +8,20 @@ module.exports = class ApplicationsListView extends ViewCollection
 
     ### Constructor ###
 
+
     constructor: (apps) ->
         @apps = apps
         @state = 'view'
         @isLoading = true
         super collection: apps
 
+
     initialize: =>
         @listenTo @collection, 'request', => @isLoading = true
         @listenTo @collection, 'reset', => @isLoading = false
 
         super
+
 
     afterRender: =>
         @$("#no-app-message").hide()
@@ -27,6 +30,7 @@ module.exports = class ApplicationsListView extends ViewCollection
             $(event.target).closest('.menu-btn').addClass 'active'
 
         super
+
 
     checkIfEmpty: ->
         noapps = @apps.size() is 0 and not @isLoading
@@ -39,3 +43,5 @@ module.exports = class ApplicationsListView extends ViewCollection
         sectionName = view.model.getSection()
         section = @$ "section#apps-#{sectionName}"
         section.append view.$el
+        section.addClass 'show'
+        section.show()

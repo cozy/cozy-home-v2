@@ -87,11 +87,21 @@ module.exports = class Application extends Backbone.Model
     # In which of the home section does this application go
     # returns one of 'other', 'official', 'leave'
     getSection: ->
-        section = 'other'
-        if @get('name') in ['leave-google', 'konnectors']
+        section = 'misc'
+        name = @get('slug')
+
+        if name in ['leave-google']
             section = 'leave'
-        else if @get('comment') is 'official application'
-            section = 'official'
+        else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
+            section = 'main'
+        else if name in ['blog', 'feeds', 'bookmarks']
+            section = 'watch'
+        else if name in ['kresus', 'konnectors', 'kyou', 'databrowser']
+            section = 'data'
+        else if name in ['todos', 'notes', 'tasky']
+            section = 'productivity'
+        else if name in ['sync']
+            section = 'platform'
 
         return section
 

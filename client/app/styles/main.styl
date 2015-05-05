@@ -12,6 +12,8 @@
     padding 0
     margin 0
     background bgcolor
+    background #FCFCFC
+    background #F7F4F0 - 10%
     overflow hidden
     box-sizing border-box
     padding-top 36px
@@ -364,20 +366,23 @@ body
         background-color: orange
 
     section
-        display block
-        background rgba(255, 255, 255, 0.8)
+        background rgba(247, 244, 240, 0.8)
+        border-bottom-left-radius 20px
+        border-bottom-right-radius 20px
+        display none
+
+        &.show
+            display block
 
         h2
             font-size 16px
             text-transform uppercase
             color darkgrey
-            background-color white
+            background-color lightgrey
             border-bottom 1px solid lightgrey - 20%
-            border-radius 5px
             padding 5px 10px 2px 10px
-            opacity 0.8
             margin-top 20px
-            margin-bottom 10px
+            margin-bottom 0px
 
 
 .application
@@ -385,25 +390,23 @@ body
     padding 10px
 
     .application-inner
-        background white
         padding-top 5px
         border-radius 200px
-        padding 20px
-
-        &:hover
-            background orange + 20%
+        padding 20px 10px
 
         .vertical-aligner
             height 100%
             width 100%
 
         img
-            width 70%
+            height auto
             display block
+            padding 20px
             margin 0px auto 2% auto
             text-align center
-            max-width 100px
-            max-height 100px
+            border-radius 200px
+            margin-bottom 10px
+            width 100%
 
         p
             margin: 0
@@ -437,7 +440,13 @@ body
 .platform-app
     .application-inner
         img
-            padding 10px
+            padding 25px
+            border-radius 0
+
+        &:hover
+            img
+                background orange + 20%
+                border-radius 50px
 
 .app-tools
     width: 50%
@@ -543,6 +552,10 @@ body
                 border 2px solid #CDF
 
 #help-view
+
+    p.help-text
+        font-size 22px
+        
     .help-section
         border-radius 20px
         margin-bottom 20px
@@ -647,7 +660,8 @@ body
     cursor: pointer
     transition: all 0.3s
     text-align: left
-    border 1px solid lightgrey - 10%
+    border-bottom 1px solid lightgrey - 10%
+    border-right 1px solid lightgrey - 10%
 
     &.install
         opacity .35
@@ -724,7 +738,7 @@ body
 .config-application
     background lightgrey
     border-top 1px solid lightgrey - 10%
-    padding 10px
+    padding 10px 0
     margin-bottom 10px
     border-radius 5px
 
@@ -1271,6 +1285,8 @@ body
 
         #notifications
             left: -180px
+            top 0
+            bottom 0
             width: 310px
 
             .notification

@@ -23,7 +23,7 @@ module.exports = class ApplicationRow extends BaseView
         @background.css 'background', '#FF9D3B'
 
     onMouseOut: ->
-        @background.css 'background', @color
+        @background.css 'background', @color or 'transparent'
 
     constructor: (options) ->
         @id = "app-btn-#{options.model.id}"
@@ -31,10 +31,10 @@ module.exports = class ApplicationRow extends BaseView
         super
 
     afterRender: =>
-        @icon = @$ 'img'
+        @icon = @$ 'img.icon'
         @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
-        @background = @$ '.application-inner'
+        @background = @$ 'img'
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
@@ -46,9 +46,11 @@ module.exports = class ApplicationRow extends BaseView
         if @model.isIconSvg()
 
             # if there is no set color, we use an auto-generated one
+            console.log slug
             unless color?
                 color = ColorHash.getColor slug, 'cozy'
 
+            console.log color
             @color = color
             @icon.addClass 'svg'
             @background.css 'background', color
@@ -167,10 +169,8 @@ module.exports = class ApplicationRow extends BaseView
 
 
     showSpinner: =>
-        @generateSpinner() if not @spinner
-        @$('.vertical-aligner').prepend @spinner.canvas
+        @$('.spinner').show()
 
     hideSpinner: ->
-        @$('.vertical-aligner canvas').remove()
-
+        @$('.spinner').hide()
 
