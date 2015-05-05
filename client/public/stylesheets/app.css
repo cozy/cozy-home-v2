@@ -735,6 +735,10 @@ hr {
 a:hover {
   color: #ff850a;
 }
+h4 {
+  margin: 35px 0 15px 0;
+  border-bottom: 1px solid #ccc;
+}
 iframe {
   width: 100%;
   height: 100%;
@@ -1560,6 +1564,15 @@ body {
   float: left;
   margin: 0.25em 1em 0 0;
 }
+.platform-section {
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 30px 20px 10px 20px;
+  background: #f7f4f0;
+}
 /** Notifications */
 #menu-applications-toggle {
   height: 36px;
@@ -1584,7 +1597,7 @@ body {
 }
 #menu-applications-container {
   margin: auto;
-  max-width: 220px;
+  max-width: 300px;
   text-align: center;
   height: 30px;
 }
@@ -1595,7 +1608,6 @@ body {
   font-size: 36px;
   width: auto;
   cursor: pointer;
-  margin-left: 10px;
   margin: 0;
   padding: 0 10px;
   -webkit-transition: all 0.3s;
@@ -1675,7 +1687,6 @@ body {
 #notifications-container {
   position: relative;
   padding: 0;
-  margin-right: 10px;
 }
 #notifications-container a {
   color: #363a46;
@@ -1789,6 +1800,7 @@ body {
 /** Applications */
 #app-list {
   margin: auto;
+  max-width: 720px;
   margin-bottom: 40px;
 }
 #app-list .preview-holder {
@@ -1798,40 +1810,41 @@ body {
   background-color: #ff850a;
 }
 #app-list section {
-  float: left;
-  width: 50%;
-  height: 50%;
-  display: inline-block;
+  display: block;
+  background: rgba(255,255,255,0.8);
 }
 #app-list section h2 {
-  font-size: 1.5em;
+  font-size: 16px;
   text-transform: uppercase;
-  color: #d5c5b0;
-  width: 95%;
+  color: #333;
+  background-color: #fff;
   border-bottom: 1px solid #d5c5b0;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px 10px 2px 10px;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 .application {
   cursor: pointer;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  transition: all 0.3s;
-  position: relative;
-  width: 100px;
-  float: left;
+  padding: 10px;
 }
 .application .application-inner {
-  overflow: hidden;
-  max-width: 100%;
-  height: 100%;
+  background: #fff;
   padding-top: 5px;
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+  padding: 20px;
+}
+.application .application-inner:hover {
+  background: #ff9d3b;
 }
 .application .application-inner .vertical-aligner {
   height: 100%;
   width: 100%;
-  vertical-align: middle;
 }
 .application .application-inner img {
   width: 70%;
@@ -1840,11 +1853,6 @@ body {
   text-align: center;
   max-width: 100px;
   max-height: 100px;
-}
-.application .application-inner img.svg {
-  -webkit-border-radius: 200px;
-  border-radius: 200px;
-  padding: 5px;
 }
 .application .application-inner p {
   margin: 0;
@@ -1860,18 +1868,12 @@ body {
   font-size: 15px;
   color: #363a46;
   text-decoration: none;
-  margin-top: 12px;
+  margin-top: 2px;
 }
 .application .application-inner .state-label {
   font-size: 18px;
   font-weight: normal;
   color: #f00;
-}
-.application:hover {
-  background: #f1e2cf;
-}
-.application:hover .app-title {
-  color: #854300;
 }
 .application:active {
   -webkit-box-shadow: none;
@@ -1879,6 +1881,9 @@ body {
 }
 .application.broken .broken-notifier {
   display: block;
+}
+.platform-app .application-inner img {
+  padding: 10px;
 }
 .app-tools {
   width: 50%;
@@ -1941,6 +1946,15 @@ body {
   max-width: 490px;
   text-align: left;
   margin-bottom: 10px;
+  font-size: 24px;
+}
+#account-view #account-form {
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 30px 20px 10px 20px;
 }
 #account-view .input .btn {
   height: 55px;
@@ -1963,6 +1977,14 @@ body {
 #account-view .background-list .background-button.selected img {
   border: 2px solid #cdf;
 }
+#help-view .help-section {
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  padding: 30px 20px;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
 #home-view {
   overflow: hidden;
   background: bgcolor;
@@ -1970,9 +1992,6 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
-}
-#change-password-form {
-  margin-top: 50px;
 }
 .app-introduction {
   margin-top: 60px;
@@ -1982,8 +2001,6 @@ body {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background: #f7f4f0;
-  float: left;
   width: 99%;
 }
 #your-app p {
@@ -2068,8 +2085,8 @@ body {
   width: 49%;
   height: 180px;
   background: #f7f4f0;
-  margin-right: 1%;
-  margin-top: 1%;
+  margin-right: 0.5%;
+  margin-top: 0.5%;
   cursor: pointer;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -2077,6 +2094,7 @@ body {
   -ms-transition: all 0.3s;
   transition: all 0.3s;
   text-align: left;
+  border: 1px solid #e6ddd0;
 }
 #market-view #no-app-message.install,
 .cozy-app.install {
@@ -2156,11 +2174,18 @@ body {
   font-family: 'Maven Pro', sans-serif;
   font-size: 15px;
 }
+.sys-infos {
+  padding-right: 20px;
+}
 #config-application-list {
   margin-top: 10px;
 }
+.config-application:first-child {
+  border-top: 0;
+}
 .config-application {
   background: #f7f4f0;
+  border-top: 1px solid #e6ddd0;
   padding: 10px;
   margin-bottom: 10px;
   -webkit-border-radius: 5px;
@@ -2197,23 +2222,7 @@ body {
 .config-application .md-footer .btn {
   font-weight: normal;
 }
-.config-application:hover .buttons {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: box;
-  display: flex;
-}
-@media (max-width: 640px) {
-  .config-application:hover .buttons {
-    float: left;
-    clear: left;
-    margin-top: 1em;
-  }
-}
 .config-application .buttons {
-  display: none;
   -webkit-box-align: center;
   -moz-box-align: center;
   -o-box-align: center;
@@ -2222,22 +2231,13 @@ body {
   align-items: center;
 }
 .config-application .buttons button {
-  position: relative;
+  width: 100%;
+  display: inline-block;
   margin: 0 0 0 5px;
   min-width: 24px;
   min-height: 24px;
   font-size: 12px;
-}
-@media (max-width: 640px) {
-  .config-application .buttons button {
-    margin-right: 5px;
-  }
-}
-.config-application .buttons button:hover .label {
-  display: inline;
-}
-.config-application .buttons .label {
-  display: none;
+  text-align: left;
 }
 .config-application .buttons .spinner {
   position: absolute !important;
@@ -2259,7 +2259,6 @@ body {
 }
 .config-application .comments {
   clear: both;
-  float: left;
   margin-top: 1em;
   font-size: 14px;
   line-height: 20px;
@@ -2279,8 +2278,9 @@ body {
 #config-applications-view .stack-app .app {
   font-weight: normal;
 }
-#config-applications-view .stack-app .line.buttons {
-  margin-top: 20px;
+#config-applications-view .stack-app .btn {
+  width: 100%;
+  text-align: left;
 }
 .title-device {
   display: none;
@@ -2418,7 +2418,7 @@ body {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-  background: rgba(143,140,140,0.8);
+  background: rgba(143,140,140,0.6);
   -webkit-transition: all 0.6s;
   -moz-transition: all 0.6s;
   -o-transition: all 0.6s;
@@ -2700,6 +2700,14 @@ body {
     width: 100%;
     font-size: 16px;
   }
+  #account-view #account-form .btn {
+    width: 100%;
+    margin: 20px 0 0 0;
+    height: 30px;
+  }
+  #account-view select {
+    width: 100%;
+  }
   #home-content {
     padding: 5px;
   }
@@ -2714,14 +2722,6 @@ body {
   }
   #market-view #market-application-list .cozy-app {
     height: 300px;
-  }
-  #account-view #account-form .btn {
-    width: 100%;
-    margin: 20px 0 0 0;
-    height: 30px;
-  }
-  #account-view select {
-    width: 100%;
   }
   #help-view p.help-text {
     font-size: 20px;

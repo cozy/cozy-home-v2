@@ -37,7 +37,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @market = new AppsCollection()
         @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
-        @$el.find('.title-app').append @applicationList.$el
+        @$el.find('.title-app').after @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
         @market.fetchFromMarket ->
@@ -64,7 +64,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
     displayDevices: =>
         if not(@devices.length is 0)
             @$el.find('.title-device').show()
-            @$el.find('.title-device').append @deviceList.$el
+            @$el.find('.title-device').after @deviceList.$el
 
 
     fetch: =>

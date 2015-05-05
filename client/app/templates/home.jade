@@ -11,34 +11,34 @@
     p.bigger!= t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 
 #app-list
-    section#apps-official
+    section#apps-official.line
         h2= t('core apps')
-    section#apps-leave
+    section#apps-leave.line
         h2= t('connectors apps')
-    section#apps-other
+    section#apps-other.line
         h2= t('installed apps')
-    section#apps-platform
+    section#apps-platform.line
         h2= t('settings apps')
-        div.application
-            a.application-inner(href="#applications")
-                .vertical-aligner
-                    img.icon(src="img/store.png")
-                    p.app-title= t('choose your apps')
+        div.application.mod.w20.left.platform-app
+            .application-inner
+                a(href="#applications")
+                    img.icon(src="img/apps/store.svg")
+                    p.app-title= t('app store')
 
-        div.application
-            a.application-inner(href="#config-applications")
-                .vertical-aligner
+        div.application.mod.w20.left.platform-app
+            .application-inner
+                a(href="#config-applications")
                     img.icon.svg(src="img/apps.png")
-                    p.app-title= t('manage your apps')
+                    p.app-title= t('app status')
 
-        div.application
-            a.application-inner(href="#account")
-                .vertical-aligner
-                    img.icon.svg(src="img/configuration.png")
-                    p.app-title= t('configure your cozy')
+        div.application.mod.w20.left.platform-app
+            .application-inner(href="#account")
+                a(href="#account")
+                    img.icon.svg(src="img/apps/settings.svg")
+                    p.app-title= t('settings')
 
-        div.application
-            a.application-inner(href="#help")
-                .vertical-aligner
-                    img.icon.svg(src="img/help.png")
-                    p.app-title= t('ask for assistance')
+        div.application.mod.w20.left.platform-app
+            .application-inner(href="#help")
+                a(href="#help")
+                    img.icon.svg(src="img/apps/help.svg")
+                    p.app-title= t('help')

@@ -3,7 +3,7 @@ ColorButton = require 'widgets/install_button'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
-    className: "application"
+    className: "application w20 mod left"
     tagName: "div"
 
     template: require 'templates/home_application'
@@ -12,9 +12,18 @@ module.exports = class ApplicationRow extends BaseView
         app: @model.attributes
 
     events:
-        "mouseup .application-inner" : "onAppClicked"
+        "mouseup .application-inner": "onAppClicked"
+        "mouseover .application-inner": "onMouseOver"
+        "mouseout .application-inner": "onMouseOut"
 
     ### Constructor ####
+    #
+
+    onMouseOver: ->
+        @background.css 'background', '#FF9D3B'
+
+    onMouseOut: ->
+        @background.css 'background', @color
 
     constructor: (options) ->
         @id = "app-btn-#{options.model.id}"
@@ -25,6 +34,7 @@ module.exports = class ApplicationRow extends BaseView
         @icon = @$ 'img'
         @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
+        @background = @$ '.application-inner'
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
@@ -39,8 +49,10 @@ module.exports = class ApplicationRow extends BaseView
             unless color?
                 color = ColorHash.getColor slug, 'cozy'
 
+            @color = color
             @icon.addClass 'svg'
-            @icon.css 'background', color
+            @background.css 'background', color
+
 
     ### Listener ###
 
@@ -61,7 +73,7 @@ module.exports = class ApplicationRow extends BaseView
                         color = ColorHash.getColor slug, 'cozy'
                     extension = 'svg'
                     @icon.addClass 'svg'
-                    @icon.css 'background', color
+                    @background.css 'background', color
                 else
                     extension = 'png'
                     @icon.removeClass 'svg'

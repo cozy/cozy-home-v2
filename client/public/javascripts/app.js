@@ -1533,7 +1533,7 @@ module.exports = {
   "cozy account title": "Cozy - Account",
   "cozy app store title": "Cozy - App Store",
   "cozy home title": "Cozy - Home",
-  "cozy applications title": "Cozy - App Configuration",
+  "cozy applications title": "Cozy - App States",
   "running": "running",
   "cozy help title": "Cozy - Help",
   "changing locale requires reload": "Changing the locale requires to reload the page.",
@@ -1968,7 +1968,7 @@ module.exports = {
   "cozy account title": "Cozy - Compte",
   "cozy app store title": "Cozy - App Store",
   "cozy home title": "Cozy - Home",
-  "cozy applications title": "Cozy - Configuration d'applications",
+  "cozy applications title": "Cozy - Etats des applications",
   "running": "démarrée",
   "cozy help title": "Cozy - Aide",
   "changing locale requires reload": "Le changement de langue nécessite le rechargement de la page.",
@@ -2757,10 +2757,10 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!--.section-title.darkbg.bigger config--><h4 class="pa2 w600 biggest darkbg center">');
-var __val__ = t('your parameters')
+buf.push('<div id="account-form" class="lightgrey w600 pa2"><h4>');
+var __val__ = t('account identifiers')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div id="account-form" class="lightgrey w600 pa2"><div class="input"><p>');
+buf.push('</h4><div class="input"><p>');
 var __val__ = t('alerts and password recovery email')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><input id="account-email-field"/><button class="btn">');
@@ -2778,7 +2778,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><input id="account-domain-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><hr/><div class="input"><p>');
+buf.push('</button></div><h4>');
+var __val__ = t('account localization')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="input"><p>');
 var __val__ = t('your timezone is required')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
@@ -2796,19 +2799,22 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="de">');
 var __val__ = t('german')
 buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option><option value="es">');
+var __val__ = t('spanish')
+buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><hr/><p><p>');
+buf.push('</button></div><h4>');
+var __val__ = t('account personalization')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><p><p>');
 var __val__ = t('account background selection')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><div class="background-list line"></div></p><hr/><p><button id="change-password-button" class="btn">');
-var __val__ = t('change password')
+buf.push('</p><div class="background-list line"></div></p><h4>');
+var __val__ = t('account password')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><div id="change-password-form"><p>');
-var __val__ = t('change password procedure')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><label>');
+buf.push('</h4><div id="change-password-form"><p><label>');
 var __val__ = t('input your current password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</label></p><input');
@@ -2877,7 +2883,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="md-overlay"></div><div class="clearfix"><span class="left"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('<div class="line"><div class="left mod w75"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
@@ -2900,20 +2906,7 @@ buf.push('<span>&nbsp;</span><img');
 buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
 buf.push('/>');
 }
-buf.push('</span><div class="buttons right"><span class="smaller"><input');
-buf.push(attrs({ 'type':("checkbox"), 'title':("always on"), 'checked':("checked"), 'name':("app-stoppable-" + (app.id) + ""), "class": ("app-stoppable") }, {"class":true,"type":true,"title":true,"checked":true,"name":true}));
-buf.push('/><label');
-buf.push(attrs({ 'for':("app-stoppable-" + (app.id) + "") }, {"for":true}));
-buf.push('>auto stop</label></span><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off"></i> <span class="label">');
-var __val__ = t('stop this app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn update-app"><i class="fa fa-refresh"></i> <span class="label">');
-var __val__ = t('update')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn remove-app"><i class="fa fa-trash"></i> <span class="label">');
-var __val__ = t('remove')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div><div class="comments">');
+buf.push('<div class="comments">');
 if ( app.comment === 'official application')
 {
 buf.push('<img');
@@ -2925,7 +2918,16 @@ buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div></div>');
+buf.push('</a></div></div><div class="buttons left mod w25"><div><button class="btn update-app"><i class="fa fa-refresh mr1"></i> <span class="label">');
+var __val__ = t('update')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div><div><button class="btn remove-app"><i class="fa fa-trash mr1"></i> <span class="label">');
+var __val__ = t('remove')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div><div><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off mr1"></i> <span class="label">');
+var __val__ = t('stop this app')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div></div></div>');
 }
 return buf.join("");
 };
@@ -2948,31 +2950,31 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!--.section-title.darkbg.bigger apps--><div class="txt-center"><div class="line w800"><div class="mod w33 left"><div class="sys-infos line"><div class="mod center-txt"><h4>');
+buf.push('<!--.section-title.darkbg.bigger apps--><div class="md-overlay"></div><div class="txt-center"><div class="line w800 platform-section"><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="disk-space mt2"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div><h4>');
+buf.push('</h4><div class="line"><div class="disk-space mt2 left w50 mod"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2 left w50 mod"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div></div><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="stack-app mt2"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line buttons"><button class="btn update-stack">');
+buf.push('</h4><div class="stack-app mt2 line"><div class="mod buttons w25 right"><button class="btn update-stack"><i class="fa fa-refresh mr1"></i><span>');
 var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><button class="btn reboot-stack">');
-var __val__ = t('reboot stack')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="line"><span class="refresh">');
-var __val__ = t('refresh page')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div></div></div></div><div class="mod w66 right"><div class="title-device h4 mb3">');
-var __val__ = t('manage your devices')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div><div class="mod w66 left"><div class="title-app h4 mb3">');
-var __val__ = t('manage your applications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div><button class="btn update-all">');
+buf.push('</span></button><button class="btn update-all"><i class="fa fa-refresh mr1"></i><span>');
 var __val__ = t('update all')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div></div></div>');
+buf.push('</span></button><button class="btn reboot-stack"><i class="fa fa-power-off mr1"></i><span>');
+var __val__ = t('reboot stack')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div><div class="mod w75 left"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><span class="refresh">');
+var __val__ = t('refresh page')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div></div></div><h4 class="title-device h4 mb3">');
+var __val__ = t('manage your devices')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><h4 class="title-app h4 mb3">');
+var __val__ = t('manage your applications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4></div></div>');
 }
 return buf.join("");
 };
@@ -3013,28 +3015,37 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey"><h4 class="help-text darkbg pa2">');
-var __val__ = t('do you want assistance')
+buf.push('<!--.section-title.darkbg.bigger help--><div class="line w600 lightgrey help-section"><h4>');
+var __val__ = t('help support title')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line pa2"><p class="help-text"><a href="/home/install" class="wizard">');
-var __val__ = t('relaunch install wizard')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></p></div><div class="line pa2"><p class="help-text mt2">');
+buf.push('</h4><div class="line"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
-var __val__ = t('Register and post on our forum: ') + " "
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
 var __val__ = t('Ask your question on Twitter: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
 var __val__ = t('Chat with us on IRC:') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P></div><h4>');
+var __val__ = t('help community title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="line"><p class="help-text">');
+var __val__ = t('Register and post on our forum: ') + " "
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P></div><h4>');
+var __val__ = t('help documentation title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="line"><p class="help-text">');
 var __val__ = t('Visit the project website and learn to build your app:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P></div></div>');
+buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P><p class="help-text">');
+var __val__ = t('or:')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="help-text"><a href="/home/install" class="wizard">');
+var __val__ = t('relaunch install wizard')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></p></div></div>');
 }
 return buf.join("");
 };
@@ -3075,31 +3086,31 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p></div><div id="app-list"><section id="apps-official"><h2>');
+buf.push('</p></div><div id="app-list"><section id="apps-official" class="line"><h2>');
 var __val__ = t('core apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-leave"><h2>');
+buf.push('</h2></section><section id="apps-leave" class="line"><h2>');
 var __val__ = t('connectors apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-other"><h2>');
+buf.push('</h2></section><section id="apps-other" class="line"><h2>');
 var __val__ = t('installed apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-platform"><h2>');
+buf.push('</h2></section><section id="apps-platform" class="line"><h2>');
 var __val__ = t('settings apps')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2><div class="application"><a href="#applications" class="application-inner"><div class="vertical-aligner"><img src="img/store.png" class="icon"/><p class="app-title">');
-var __val__ = t('choose your apps')
+buf.push('</h2><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
+var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div></a></div><div class="application"><a href="#config-applications" class="application-inner"><div class="vertical-aligner"><img src="img/apps.png" class="icon svg"/><p class="app-title">');
-var __val__ = t('manage your apps')
+buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps.png" class="icon svg"/><p class="app-title">');
+var __val__ = t('app status')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div></a></div><div class="application"><a href="#account" class="application-inner"><div class="vertical-aligner"><img src="img/configuration.png" class="icon svg"/><p class="app-title">');
-var __val__ = t('configure your cozy')
+buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
+var __val__ = t('settings')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div></a></div><div class="application"><a href="#help" class="application-inner"><div class="vertical-aligner"><img src="img/help.png" class="icon svg"/><p class="app-title">');
-var __val__ = t('ask for assistance')
+buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div href="#help" class="application-inner"><a href="#help"><img src="img/apps/help.svg" class="icon svg"/><p class="app-title">');
+var __val__ = t('help')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div></a></div></section></div>');
+buf.push('</p></a></div></div></section></div>');
 }
 return buf.join("");
 };
@@ -3135,10 +3146,10 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!--.section-title.darkbg.bigger app store--><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
+buf.push('<div class="platform-section"><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="market-applications-list" class="clearfix"><div id="no-app-message">');
 var __val__ = t('installed everything')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div></div><div class="md-overlay"></div><div class="mt2 mb2"><div id="your-app" class="clearfix"><div class="text"><p>');
+buf.push('</div></div></div><div class="mt2 mb2"><div id="your-app" class="clearfix"><div class="text"><p>');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
@@ -3147,7 +3158,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div>');
+buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div><div class="md-overlay"></div></div>');
 }
 return buf.join("");
 };
@@ -3262,8 +3273,11 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</li><li id="dismiss-all" class="btn">');
 var __val__ = t('dismiss all')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li><li class="separator"></li><li><a id="logout-button" href="#logout"><img src="img/logout.png"/><span>');
-var __val__ = t('logout')
+buf.push('</li><li class="separator"></li><li class="txtcenter"><a id="faq-button" href="https://forum.cozy.io/t/faq-about-cozy-in-english/534" target="_blank" class="btn"><img src="img/help.png"/><span>');
+var __val__ = t('navbar faq')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></a></li><li class="txtcenter"><a id="logout-button" href="#logout" class="btn"><img src="img/logout.png"/><span>');
+var __val__ = t('navbar logout')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></a></li></ul>');
 }
@@ -3679,7 +3693,6 @@ module.exports = exports.AccountView = (function(_super) {
     this.errorAlert = this.$('#account-error');
     this.errorAlert.hide();
     this.changePasswordForm = this.$('#change-password-form');
-    this.changePasswordForm.hide();
     this.changePasswordButton = this.$('#change-password-button');
     this.changePasswordButton.click(this.onChangePasswordClicked);
     this.accountSubmitButton = this.$('#account-form-button');
@@ -4204,7 +4217,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
     this.market = new AppsCollection();
     this.applicationList = new ConfigApplicationList(this.apps, this.market);
     this.deviceList = new ConfigDeviceList(this.devices);
-    this.$el.find('.title-app').append(this.applicationList.$el);
+    this.$el.find('.title-app').after(this.applicationList.$el);
     this.applications = new Application();
     this.stackApplications = new StackApplication();
     return this.market.fetchFromMarket(function() {});
@@ -4245,7 +4258,7 @@ module.exports = exports.ConfigApplicationsView = (function(_super) {
   ConfigApplicationsView.prototype.displayDevices = function() {
     if (!(this.devices.length === 0)) {
       this.$el.find('.title-device').show();
-      return this.$el.find('.title-device').append(this.deviceList.$el);
+      return this.$el.find('.title-device').after(this.deviceList.$el);
     }
   };
 
@@ -4599,7 +4612,7 @@ ColorButton = require('widgets/install_button');
 module.exports = ApplicationRow = (function(_super) {
   __extends(ApplicationRow, _super);
 
-  ApplicationRow.prototype.className = "application";
+  ApplicationRow.prototype.className = "application w20 mod left";
 
   ApplicationRow.prototype.tagName = "div";
 
@@ -4612,11 +4625,21 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.events = {
-    "mouseup .application-inner": "onAppClicked"
+    "mouseup .application-inner": "onAppClicked",
+    "mouseover .application-inner": "onMouseOver",
+    "mouseout .application-inner": "onMouseOut"
   };
 
   /* Constructor*/
 
+
+  ApplicationRow.prototype.onMouseOver = function() {
+    return this.background.css('background', '#FF9D3B');
+  };
+
+  ApplicationRow.prototype.onMouseOut = function() {
+    return this.background.css('background', this.color);
+  };
 
   function ApplicationRow(options) {
     this.showSpinner = __bind(this.showSpinner, this);
@@ -4635,6 +4658,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.icon = this.$('img');
     this.stateLabel = this.$('.state-label');
     this.title = this.$('.app-title');
+    this.background = this.$('.application-inner');
     this.listenTo(this.model, 'change', this.onAppChanged);
     this.onAppChanged(this.model);
     slug = this.model.get('slug');
@@ -4643,8 +4667,9 @@ module.exports = ApplicationRow = (function(_super) {
       if (color == null) {
         color = ColorHash.getColor(slug, 'cozy');
       }
+      this.color = color;
       this.icon.addClass('svg');
-      return this.icon.css('background', color);
+      return this.background.css('background', color);
     }
   };
 
@@ -4669,7 +4694,7 @@ module.exports = ApplicationRow = (function(_super) {
           }
           extension = 'svg';
           this.icon.addClass('svg');
-          this.icon.css('background', color);
+          this.background.css('background', color);
         } else {
           extension = 'png';
           this.icon.removeClass('svg');
@@ -4965,7 +4990,6 @@ module.exports = HomeView = (function(_super) {
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
     this.changeBackground(window.app.instance.background);
-    this.content.niceScroll();
     this.backButton = this.$('.back-button');
     this.backButton.hide();
     $(window).resize(this.resetLayoutSizes);
@@ -5008,17 +5032,29 @@ module.exports = HomeView = (function(_super) {
     });
   };
 
-  HomeView.prototype.displayView = function(view) {
+  HomeView.prototype.displayView = function(view, title) {
     var displayView,
       _this = this;
-    this.backButton.hide();
-    $("#current-application").html('home');
+    if (title != null) {
+      title = title.substring(6);
+    } else {
+      if (title == null) {
+        title = t('home');
+      }
+    }
+    window.document.title = title;
+    $('#current-application').html(title);
+    if (view === this.applicationListView) {
+      this.backButton.hide();
+    } else {
+      this.backButton.show();
+    }
     displayView = function() {
       _this.frames.hide();
       view.$el.hide();
       _this.content.show();
       $('#home-content').append(view.$el);
-      view.$el.fadeIn();
+      view.$el.show();
       _this.currentView = view;
       return _this.resetLayoutSizes();
     };
@@ -5029,10 +5065,9 @@ module.exports = HomeView = (function(_super) {
         this.resetLayoutSizes();
         return;
       }
-      return this.currentView.$el.fadeOut(function() {
-        _this.currentView.$el.detach();
-        return displayView();
-      });
+      this.currentView.$el.hide();
+      this.currentView.$el.detach();
+      return displayView();
     } else {
       return displayView();
     }
@@ -5068,23 +5103,19 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayApplicationsListEdit = function() {
-    this.displayView(this.applicationListView);
-    return window.document.title = t("cozy home title");
+    return this.displayView(this.applicationListView, t("cozy home title"));
   };
 
   HomeView.prototype.displayMarket = function() {
-    this.displayView(this.marketView);
-    return window.document.title = t("cozy app store title");
+    return this.displayView(this.marketView, t("cozy app store title"));
   };
 
   HomeView.prototype.displayAccount = function() {
-    this.displayView(this.accountView);
-    return window.document.title = t('cozy account title');
+    return this.displayView(this.accountView, t('cozy account title'));
   };
 
   HomeView.prototype.displayHelp = function() {
-    this.displayView(this.helpView);
-    return window.document.title = t("cozy help title");
+    return this.displayView(this.helpView, t("cozy help title"));
   };
 
   HomeView.prototype.displayInstallWizard = function() {
@@ -5096,8 +5127,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayConfigApplications = function() {
-    this.displayView(this.configApplications);
-    return window.document.title = t("cozy applications title");
+    return this.displayView(this.configApplications, t("cozy applications title"));
   };
 
   HomeView.prototype.displayUpdateApplication = function(slug) {

@@ -1,49 +1,54 @@
 //.section-title.darkbg.bigger apps
+.md-overlay
 .txt-center
-    .line.w800
-        .mod.w33.left
-            .sys-infos.line
-                .mod.center-txt
-                    h4= t('hardware consumption')
-                    .disk-space.mt2
-                        .line
-                            img(src="img/hard-drive.png")
-                        .line
-                            span.amount 0
-                            |  / 
-                            span.total 0
-                            |  #{t('hard drive gigabytes')}
-                    .memory-free.mt2
-                        .line
-                            img(src="img/ram.png")
-                        .line
-                            span.amount 0
-                            |  / 
-                            span.total 0
-                            |  #{t('memory megabytes')}
-                    h4= t('cozy platform')
-                    .stack-app.mt2
-                        .line
-                            span.app Data System: 
-                            span.data-system --
-                        .line
-                            span.app Proxy: 
-                            span.proxy --
-                        .line
-                            span.app Home: 
-                            span.home --
-                        .line
-                            span.app Controller: 
-                            span.controller --
-                        .line.buttons
-                            button.btn.update-stack= t('update stack')
-                            button.btn.reboot-stack= t('reboot stack')
-                        .line
-                            span.refresh= t('refresh page')
+    .line.w800.platform-section
+        h4= t('hardware consumption')
+        .line
+            .disk-space.mt2.left.w50.mod
+                .line
+                    img(src="img/hard-drive.png")
+                .line
+                    span.amount 0
+                    |  / 
+                    span.total 0
+                    |  #{t('hard drive gigabytes')}
+            .memory-free.mt2.left.w50.mod
+                .line
+                    img(src="img/ram.png")
+                .line
+                    span.amount 0
+                    |  / 
+                    span.total 0
+                    |  #{t('memory megabytes')}
+
+        h4= t('cozy platform')
+        .stack-app.mt2.line
+            .mod.buttons.w25.right
+                button.btn.update-stack
+                    i.fa.fa-refresh.mr1
+                    span= t('update stack')
+                button.btn.update-all
+                    i.fa.fa-refresh.mr1
+                    span= t('update all')
+                button.btn.reboot-stack
+                    i.fa.fa-power-off.mr1
+                    span= t('reboot stack')
+            .mod.w75.left
+                .line
+                    span.app Data System: 
+                    span.data-system --
+                .line
+                    span.app Proxy: 
+                    span.proxy --
+                .line
+                    span.app Home: 
+                    span.home --
+                .line
+                    span.app Controller: 
+                    span.controller --
+                .line
+                    span.refresh= t('refresh page')
 
 
-        .mod.w66.right
-            .title-device.h4.mb3= t('manage your devices')
-        .mod.w66.left
-            .title-app.h4.mb3= t('manage your applications')
-            button.btn.update-all= t('update all')
+        h4.title-device.h4.mb3= t('manage your devices')
+        h4.title-app.h4.mb3= t('manage your applications')

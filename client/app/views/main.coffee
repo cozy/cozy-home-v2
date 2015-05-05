@@ -49,7 +49,7 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
         @changeBackground window.app.instance.background
-        @content.niceScroll()
+        #@content.niceScroll()
         @backButton = @$ '.back-button'
         @backButton.hide()
 
@@ -85,15 +85,28 @@ module.exports = class HomeView extends BaseView
             error: =>
                 alert 'Server error occured, logout failed.'
 
-    displayView: (view) =>
-        @backButton.hide()
-        $("#current-application").html 'home'
+    displayView: (view, title) =>
+
+        if title?
+            title = title.substring 6
+        else
+            title ?= t 'home'
+
+        window.document.title = title
+        $('#current-application').html title
+
+        if view is @applicationListView
+            @backButton.hide()
+        else
+            @backButton.show()
+
+
         displayView = =>
             @frames.hide()
             view.$el.hide()
             @content.show()
             $('#home-content').append view.$el
-            view.$el.fadeIn()
+            view.$el.show()
             @currentView = view
             @resetLayoutSizes()
 
@@ -105,9 +118,9 @@ module.exports = class HomeView extends BaseView
                 @resetLayoutSizes()
                 return
 
-            @currentView.$el.fadeOut =>
-                @currentView.$el.detach()
-                displayView()
+            @currentView.$el.hide()
+            @currentView.$el.detach()
+            displayView()
         else
             displayView()
 
@@ -130,22 +143,18 @@ module.exports = class HomeView extends BaseView
             @[wview].show()
 
     displayApplicationsListEdit: =>
-        @displayView @applicationListView
-        window.document.title = t "cozy home title"
+        @displayView @applicationListView, t "cozy home title"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
-        @displayView @marketView
-        window.document.title = t "cozy app store title"
+        @displayView @marketView, t "cozy app store title"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
-        @displayView @accountView
-        window.document.title = t 'cozy account title'
+        @displayView @accountView, t 'cozy account title'
 
     displayHelp: =>
-        @displayView @helpView
-        window.document.title = t "cozy help title"
+        @displayView @helpView, t "cozy help title"
 
     displayInstallWizard: ->
         @displayApplicationsList 'install'
@@ -154,8 +163,7 @@ module.exports = class HomeView extends BaseView
         @displayApplicationsList 'quicktour'
 
     displayConfigApplications: =>
-        @displayView @configApplications
-        window.document.title = t "cozy applications title"
+        @displayView @configApplications, t "cozy applications title"
 
 
     displayUpdateApplication: (slug) =>

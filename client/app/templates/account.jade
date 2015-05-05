@@ -1,8 +1,8 @@
-//.section-title.darkbg.bigger config
-
-
-h4.pa2.w600.biggest.darkbg.center= t('your parameters')
 #account-form.lightgrey.w600.pa2
+
+
+    h4= t('account identifiers')
+
     .input
         p= t('alerts and password recovery email')
         input#account-email-field
@@ -16,7 +16,8 @@ h4.pa2.w600.biggest.darkbg.center= t('your parameters')
         input#account-domain-field
         button.btn= t('save')
 
-    hr
+
+    h4= t('account localization')
 
     .input
         p= t('your timezone is required')
@@ -29,21 +30,18 @@ h4.pa2.w600.biggest.darkbg.center= t('your parameters')
             option(value="fr")= t('french')
             option(value="en")= t('english')
             option(value="de")= t('german')
+            option(value="es")= t('spanish')
         button.btn= t('save')
 
-    hr
+    h4= t('account personalization')
 
     p
         p= t('account background selection')
         .background-list.line
-    hr
 
-    p
-        button#change-password-button.btn= t('change password')
-
+    h4= t('account password')
 
     #change-password-form
-        p= t('change password procedure')
         p
             label= t('input your current password')
         input#account-password0-field(type="password", placeholder="#{t('current password')}")

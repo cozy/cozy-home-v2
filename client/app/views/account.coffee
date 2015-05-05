@@ -182,7 +182,6 @@ module.exports = class exports.AccountView extends BaseView
         @errorAlert.hide()
 
         @changePasswordForm = @$ '#change-password-form'
-        @changePasswordForm.hide()
         @changePasswordButton = @$ '#change-password-button'
         @changePasswordButton.click @onChangePasswordClicked
         @accountSubmitButton = @$ '#account-form-button'

@@ -1,6 +1,5 @@
-.md-overlay
-.clearfix
-    span.left
+.line
+    .left.mod.w75
         strong #{app.displayName}
         if app.version
             span &nbsp;-&nbsp; #{app.version}
@@ -16,30 +15,27 @@
                 width=16, src="img/notification-orange.png",
                 title="#{t('update required')}", alt="#{t('update required')}")
 
-    .buttons.right
-        span.smaller
-            input(class="app-stoppable",
-                  type="checkbox",
-                  title="always on",
-                  checked="checked",
-                  name="app-stoppable-#{app.id}")
-            label(for="app-stoppable-#{app.id}") auto stop
-        button.btn.btn-large.start-stop-btn
-            i.fa.fa-power-off
-            | 
-            span.label= t('stop this app')
-        button.btn.update-app
-            i.fa.fa-refresh
-            | 
-            span.label= t('update')
-        button.btn.remove-app
-            i.fa.fa-trash
-            | 
-            span.label= t('remove')
+        .comments
+            if app.comment === 'official application'
+                img(src="img/happycloud-black.svg", 
+                    alt="#{t(app.comment)}", 
+                    width="20")
+            a(href="#{app.website}", target="_blank")= app.website
+    .buttons.left.mod.w25
+        div
+            button.btn.update-app
+                i.fa.fa-refresh.mr1
+                | 
+                span.label= t('update')
+        div
+            button.btn.remove-app
+                i.fa.fa-trash.mr1
+                | 
+                span.label= t('remove')
+        div
+            button.btn.btn-large.start-stop-btn
+                i.fa.fa-power-off.mr1
+                | 
+                span.label= t('stop this app')
 
-    .comments
-        if app.comment === 'official application'
-            img(src="img/happycloud-black.svg", 
-                alt="#{t(app.comment)}", 
-                width="20")
-        a(href="#{app.website}", target="_blank")= app.website
+

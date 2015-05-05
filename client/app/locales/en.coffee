@@ -135,7 +135,7 @@ module.exports =
     "cozy account title":"Cozy - Account"
     "cozy app store title":"Cozy - App Store"
     "cozy home title":"Cozy - Home"
-    "cozy applications title":"Cozy - App Configuration"
+    "cozy applications title":"Cozy - App States"
     "running":"running"
     "cozy help title":"Cozy - Help"
     "changing locale requires reload":"Changing the locale requires to reload the page."
