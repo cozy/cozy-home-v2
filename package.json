@@ -47,10 +47,14 @@
     "request": "2.34.0",
     "should": "^4.6.1",
     "sinon": "^1.12.2",
-    "iconizr": "^0.2.3"
+    "iconizr": "^0.2.3",
+    "jade": "^1.9.2"
   },
   "scripts": {
     "test": "cake --use-js tests",
-    "start": "node build/server.js"
+    "start": "node build/server.js",
+    "build:client": "cd client && brunch b",
+    "build:server": "cake build",
+    "build": "npm run build:client && npm run build:server"
   }
 }

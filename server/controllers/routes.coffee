@@ -4,8 +4,12 @@ applications = require './applications'
 stackApplications = require './stack_application'
 devices = require './devices'
 notifications = require './notifications'
+index = require './index'
 
 module.exports =
+
+    '': get: index.index
+
     'slug': param: applications.loadApplication
 
     'api/applications/getPermissions': post: applications.getPermissions
