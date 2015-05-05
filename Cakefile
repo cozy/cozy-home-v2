@@ -88,3 +88,14 @@ task 'build', 'Build CoffeeScript to Javascript', ->
         else
             logger.info "Compilation succeeded."
             process.exit 0
+
+SVGIMAGES = 'client/app/assets/img/apps'
+
+task 'build-icons', "Sprite the icons in #{SVGIMAGES}", ->
+    Iconizr = require 'iconizr'
+    out = 'client/app/assets/app-icons'
+    Iconizr.createIconKit SVGIMAGES, out,
+        render: css: true
+    , (err, result) ->
+        console.log err if err
+        console.log result
