@@ -20,7 +20,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         "click .update-stack"      : "onUpdateStackClicked"
         "click .reboot-stack"      : "onRebootStackClicked"
 
-    constructor: (@apps, @devices, @stackApps) ->
+    constructor: (@apps, @devices, @stackApps, @market) ->
         @listenTo @devices, 'reset', @displayDevices
         @listenTo @stackApps, 'reset', @displayStackVersion
         super()
@@ -34,13 +34,11 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @updateStackBtn = new ColorButton  @$ '.update-stack'
         @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
         @fetch()
-        @market = new AppsCollection()
         @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').append @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
-        @market.fetchFromMarket ->
 
     openUpdatePopover: (slug) ->
         @applicationList.openUpdatePopover slug
@@ -65,7 +63,6 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         if not(@devices.length is 0)
             @$el.find('.title-device').show()
             @$el.find('.title-device').append @deviceList.$el
-
 
     fetch: =>
         @$('.amount').html "--"

@@ -112,54 +112,50 @@ module.exports = class exports.AccountView extends BaseView
     # Fetch data from backend and fill form with collected data.
     fetchData: ->
 
-        $.get "api/users/", (data) =>
-            timezoneData = []
+        userData = window.user or {}
+        @emailField.val userData.email
+        @publicNameField.val userData.public_name
+        @timezoneField.val userData.timezone
 
-            userData = data.rows[0]
-            @emailField.val userData.email
-            @publicNameField.val userData.public_name
-            @timezoneField.val userData.timezone
+        saveEmail = @getSaveFunction 'email', @emailField, 'user'
+        @emailField.on 'keyup', (event) ->
+            saveEmail() if event.keyCode is 13 or event.which is 13
 
-            saveEmail = @getSaveFunction 'email', @emailField, 'user'
-            @emailField.on 'keyup', (event) ->
-                saveEmail() if event.keyCode is 13 or event.which is 13
+        savePublicName = @getSaveFunction 'public_name', \
+                                        @publicNameField, 'user'
+        @emailField.on 'keyup', (event) ->
+            savePublicName() if event.keyCode is 13 or event.which is 13
 
-            savePublicName = @getSaveFunction 'public_name', \
-                                            @publicNameField, 'user'
-            @emailField.on 'keyup', (event) ->
-                savePublicName() if event.keyCode is 13 or event.which is 13
+        saveTimezone = @getSaveFunction 'timezone', @timezoneField, 'user'
+        @timezoneField.change saveTimezone
 
-            saveTimezone = @getSaveFunction 'timezone', @timezoneField, 'user'
-            @timezoneField.change saveTimezone
+        instance = window.cozy_instance or {}
+        @instance = new Instance instance
+        domain = instance?.domain or t('no domain set')
+        locale = instance?.locale or 'en'
 
-        $.get "api/instances/", (data) =>
-            instance = data.rows?[0]
-            @instance = new Instance instance
-            domain = instance?.domain or t('no domain set')
-            locale = instance?.locale or 'en'
+        saveDomain = @getSaveFunction 'domain', @domainField, 'instance'
+        @domainField.on 'keyup', (event) =>
+            saveDomain() if event.keyCode is 13 or event.which is 13
+        @domainField.val domain
 
-            saveDomain = @getSaveFunction 'domain', @domainField, 'instance'
-            @domainField.on 'keyup', (event) =>
-                saveDomain() if event.keyCode is 13 or event.which is 13
-            @domainField.val domain
+        saveLocale = @getSaveFunction 'locale', @localeField, 'instance'
+        @localeField.change saveLocale
+        @localeField.val locale
 
-            saveLocale = @getSaveFunction 'locale', @localeField, 'instance'
-            @localeField.change saveLocale
-            @localeField.val locale
-
-            # Don't know why password fields can't be configured too early...
-            @password0Field = @$('#account-password0-field')
-            @password1Field = @$('#account-password1-field')
-            @password2Field = @$('#account-password2-field')
-            @password0Field.keyup (event) =>
-                if event.keyCode is 13 or event.which is 13
-                    @password1Field.focus()
-            @password1Field.keyup (event) =>
-                if event.keyCode is 13 or event.which is 13
-                    @password2Field.focus()
-            @password2Field.keyup (event) =>
-                if event.keyCode is 13 or event.which is 13
-                    @onNewPasswordSubmit()
+        # Don't know why password fields can't be configured too early...
+        @password0Field = @$('#account-password0-field')
+        @password1Field = @$('#account-password1-field')
+        @password2Field = @$('#account-password2-field')
+        @password0Field.keyup (event) =>
+            if event.keyCode is 13 or event.which is 13
+                @password1Field.focus()
+        @password1Field.keyup (event) =>
+            if event.keyCode is 13 or event.which is 13
+                @password2Field.focus()
+        @password2Field.keyup (event) =>
+            if event.keyCode is 13 or event.which is 13
+                @onNewPasswordSubmit()
 
 
     ### Configuration ###

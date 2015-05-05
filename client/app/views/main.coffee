@@ -27,9 +27,10 @@ module.exports = class HomeView extends BaseView
     wizards: ['install', 'quicktour']
 
     constructor: ->
-        @apps = new AppCollection()
-        @stackApps = new StackAppCollection()
-        @devices = new DeviceCollection()
+        @apps = new AppCollection(window.applications)
+        @stackApps = new StackAppCollection(window.stack_applications)
+        @devices = new DeviceCollection(window.devices)
+        @market = new AppCollection(window.market_applications)
         @notifications = new NotificationCollection()
         SocketListener.watch @apps
         SocketListener.watch @notifications
@@ -41,10 +42,10 @@ module.exports = class HomeView extends BaseView
         @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps
         @configApplications = new ConfigApplicationsView(
-            @apps, @devices, @stackApps)
+            @apps, @devices, @stackApps, @market)
         @accountView = new AccountView()
         @helpView = new HelpView()
-        @marketView = new MarketView @apps
+        @marketView = new MarketView @apps, @market
 
         @frames = @$ '#app-frames'
         @content = @$ '#content'
@@ -54,9 +55,6 @@ module.exports = class HomeView extends BaseView
         @backButton.hide()
 
         $(window).resize @resetLayoutSizes
-        @apps.fetch reset: true
-        @devices.fetch reset: true
-        @stackApps.fetch reset: true
         @resetLayoutSizes()
 
 
