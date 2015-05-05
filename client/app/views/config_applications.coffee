@@ -131,8 +131,7 @@ module.exports = class exports.ConfigApplicationsView extends BaseView
         @popoverManagement action
 
     onRebootStackClicked: ->
-        @rebootStackBtn.displayGrey "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        @rebootStackBtn.spin true, '#ffffff'
+        @rebootStackBtn.spin true
         @spanRefresh.show()
         @stackApplications.rebootStack ->
             location.reload()

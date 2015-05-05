@@ -72,15 +72,12 @@ module.exports = class NotificationsView extends ViewCollection
             @clickcatcher.show()
 
     dismissAll: () ->
-        @dismissButton.css 'color', 'transparent'
-        @dismissButton.spin 'small'
+        @dismissButton.spin true
         @collection.removeAll
             success: =>
-                @dismissButton.spin()
-                @dismissButton.css 'color', '#333'
+                @dismissButton.spin false
             error: =>
-                @dismissButton.spin()
-                @dismissButton.css 'color', '#333'
+                @dismissButton.spin false
 
     hideNotifList: (event) =>
         @notifList.slideUp 100

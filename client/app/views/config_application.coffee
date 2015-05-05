@@ -90,8 +90,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onRemoveClicked: (event) =>
         event.preventDefault()
-        @removeButton.displayGrey ""
-        @removeButton.spin true, '#ffffff'
+        @removeButton.spin true
         @stateLabel.html t 'removing'
         @model.uninstall
             success: =>
@@ -124,8 +123,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onStartStopClicked: (event) =>
         event.preventDefault()
-        @startStopBtn.displayGrey ""
-        @startStopBtn.spin true, '#ffffff'
+        @startStopBtn.spin true
         if(@model.isRunning())
             @model.stop
                 success: =>
@@ -161,8 +159,7 @@ module.exports = class ApplicationRow extends BaseView
 
     updateApp: ->
         Backbone.Mediator.pub 'app-state-changed', true
-        @updateButton.displayGrey ""
-        @updateButton.spin 'small', '#ffffff'
+        @updateButton.spin true
         if @model.get('state') isnt 'broken'
             @stateLabel.html t 'updating'
         else

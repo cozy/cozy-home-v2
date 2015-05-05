@@ -36,8 +36,7 @@ module.exports = class exports.AccountView extends BaseView
         @infoAlert.hide()
         @errorAlert.hide()
 
-        @accountSubmitButton.spin 'small'
-        @accountSubmitButton.css 'color', 'transparent'
+        @accountSubmitButton.spin true
         request.post 'api/user', form, (err, data) =>
             if err
                 @password0Field.val null
@@ -56,8 +55,7 @@ module.exports = class exports.AccountView extends BaseView
                     @password2Field.val null
                 else
                     @displayErrors data.msg
-            @accountSubmitButton.css 'color', 'white'
-            @accountSubmitButton.spin()
+            @accountSubmitButton.spin false
 
 
     # When background is changed, data are saved and a backgroundChanged event
@@ -86,15 +84,12 @@ module.exports = class exports.AccountView extends BaseView
     getSaveFunction: (fieldName, fieldWidget, path) ->
         saveButton = fieldWidget.parent().find('.btn')
         saveFunction = ->
-            saveButton.css 'color', 'transparent'
-            saveButton.spin 'small', 'white'
+            saveButton.spin true
 
             data = {}
             data[fieldName] = fieldWidget.val()
             request.post "api/#{path}", data, (err) ->
-                saveButton.spin()
-
-                saveButton.css 'color', 'white'
+                saveButton.spin false
 
                 if err
                     saveButton.addClass 'red'
