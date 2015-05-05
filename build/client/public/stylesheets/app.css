@@ -2551,6 +2551,12 @@ body {
   }
 }
 @media (max-width: 800px) {
+  .application .application-inner {
+    padding: 0;
+  }
+  .application .application-inner .app-title {
+    font-size: 14px;
+  }
   .md-content {
     overflow: auto;
   }
@@ -2732,8 +2738,18 @@ body {
   #config-applications-view .w66 {
     padding-right: 10px;
   }
+  .application .application-inner .app-title {
+    font-size: 12px;
+  }
 }
 @media (max-width: 500px) {
+  #config-applications-view .mod.w25,
+  #config-applications-view .mod.w75,
+  #config-applications-view .mod.w33,
+  #config-applications-view .mod.w66,
+  #config-applications-view .mod.w50 {
+    width: 100%;
+  }
   #home-menu .logout-menu-icon {
     display: block;
   }
@@ -2741,12 +2757,15 @@ body {
   .help-icon {
     display: none;
   }
+  .application .application-inner {
+    padding: 0;
+  }
   .application .application-inner img {
-    margin-bottom: -5px;
+    padding: 5px;
   }
   .application .application-inner .app-title {
     margin-top: 4px;
-    font-size: 12px;
+    font-size: 10px;
   }
   #market-view #your-app .btn {
     height: 30px;
