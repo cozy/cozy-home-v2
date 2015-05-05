@@ -21,5 +21,3 @@ module.exports =
         bySlug: allSlug
     stack_application:
         all: americano.defaultRequests.all
-    user_preference:
-        all: americano.defaultRequests.all

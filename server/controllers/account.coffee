@@ -2,7 +2,6 @@ utils = require '../lib/passport_utils'
 Adapter = require '../lib/adapter'
 User = require '../models/user'
 CozyInstance = require '../models/cozyinstance'
-UserPreference = require '../models/user_preference'
 
 adapter = new Adapter()
 
@@ -126,30 +125,3 @@ module.exports =
 
         else
             res.send 400, error: true, msg: 'No accepted parameter given'
-
-
-    getUserPreference: (req, res, next) ->
-        UserPreference.all (err, preferences) ->
-            next err if err?
-
-            if preferences.length > 0
-                res.send 200, preferences[0]
-
-            else
-                res.send 500, error: 'No user preference found'
-
-
-    setUserPreference: (req, res, next) ->
-        UserPreference.all (err, preferences) ->
-            next err if err?
-
-            if preferences.length is 0
-                UserPreference.create req.body, (err) ->
-                    next err if err?
-                    res.send 201, success: true
-
-            else
-                preferences[0].updateAttributes req.body, (err) ->
-                    next err if err?
-                    res.send success: true
-

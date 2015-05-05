@@ -45,11 +45,6 @@ module.exports =
     'api/user': post: account.updateAccount
     'api/instances': get: account.instances
     'api/instance': post: account.updateInstance
-    'api/preference':
-        get: account.getUserPreference
-        post: account.setUserPreference
-    'api/preference/:id':
-        put: account.setUserPreference
 
     'api/notifications':
         get: notifications.all
