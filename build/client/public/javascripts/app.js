@@ -399,10 +399,10 @@ exports.Application = (function() {
     this.polyglot = new Polyglot();
     this.polyglot.extend(locales);
     window.t = this.polyglot.t.bind(this.polyglot);
+    ColorHash.addScheme('cozy', colorSet);
     this.routers = {};
     this.mainView = new MainView();
     this.routers.main = new MainRouter();
-    ColorHash.addScheme('cozy', colorSet);
     Backbone.history.start();
     if (Backbone.history.getFragment() === '') {
       this.routers.main.navigate('home', true);
@@ -2267,12 +2267,21 @@ module.exports = Application = (function(_super) {
   };
 
   Application.prototype.getSection = function() {
-    var section, _ref1;
-    section = 'other';
-    if ((_ref1 = this.get('name')) === 'leave-google' || _ref1 === 'konnectors') {
+    var name, section;
+    section = 'misc';
+    name = this.get('slug');
+    if (name === 'leave-google') {
       section = 'leave';
-    } else if (this.get('comment') === 'official application') {
-      section = 'official';
+    } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
+      section = 'main';
+    } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks') {
+      section = 'watch';
+    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser') {
+      section = 'data';
+    } else if (name === 'todos' || name === 'notes' || name === 'tasky') {
+      section = 'productivity';
+    } else if (name === 'sync') {
+      section = 'platform';
     }
     return section;
   };
@@ -2786,24 +2795,7 @@ buf.push('<span>&nbsp;</span><img');
 buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
 buf.push('/>');
 }
-<<<<<<< HEAD:client/public/javascripts/app.js
 buf.push('<div class="comments">');
-=======
-buf.push('</span><div class="buttons right"><span class="smaller"><input');
-buf.push(attrs({ 'type':("checkbox"), 'title':("always on"), 'checked':("checked"), 'name':("app-stoppable-" + (app.id) + ""), "class": ("app-stoppable") }, {"class":true,"type":true,"title":true,"checked":true,"name":true}));
-buf.push('/><label');
-buf.push(attrs({ 'for':("app-stoppable-" + (app.id) + "") }, {"for":true}));
-buf.push('>auto stop</label></span></div><div class="buttons left"><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off"></i><span class="label">');
-var __val__ = t('stop this app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn update-app"><i class="fa fa-refresh"></i><span class="label">');
-var __val__ = t('update')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn remove-app"><i class="fa fa-trash"></i><span class="label">');
-var __val__ = t('remove')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div><div class="comments">');
->>>>>>> 2a99117460b3968385123350ae4f87cbc0ebda41:build/client/public/javascripts/app.js
 if ( app.comment === 'official application')
 {
 buf.push('<img');
@@ -2983,22 +2975,31 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p></div><div id="app-list"><section id="apps-official" class="line"><h2>');
-var __val__ = t('core apps')
+buf.push('</p></div><div id="app-list"><section id="apps-leave" class="line"><h2>');
+var __val__ = t('home section leave')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-leave" class="line"><h2>');
-var __val__ = t('connectors apps')
+buf.push('</h2></section><section id="apps-main" class="line"><h2>');
+var __val__ = t('home section main')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-other" class="line"><h2>');
-var __val__ = t('installed apps')
+buf.push('</h2></section><section id="apps-productivty" class="line"><h2>');
+var __val__ = t('home section productivity')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-platform" class="line"><h2>');
-var __val__ = t('settings apps')
+buf.push('</h2></section><section id="apps-data" class="line"><h2>');
+var __val__ = t('home section data management')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2></section><section id="apps-watch" class="line"><h2>');
+var __val__ = t('home section personal watch')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2></section><section id="apps-misc" class="line"><h2>');
+var __val__ = t('home section misc')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2></section><section id="apps-platform" class="line show"><h2>');
+var __val__ = t('home section platform')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps.png" class="icon svg"/><p class="app-title">');
+buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/state.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('app status')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
@@ -3019,7 +3020,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
+buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><img src="/img/spinner.svg" class="spinner"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
 }
 return buf.join("");
 };
@@ -3726,9 +3727,14 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.template = require('templates/config_application');
 
   ApplicationRow.prototype.getRenderData = function() {
+    var gitName;
+    gitName = this.model.get('git');
+    if (gitName != null) {
+      gitName = gitName.slice(0, -4);
+    }
     return {
       app: _.extend({}, this.model.attributes, {
-        website: this.model.get('website') || this.model.get('git').slice(0, -4)
+        website: this.model.get('website') || gitName
       })
     };
   };
@@ -4478,7 +4484,9 @@ module.exports = ApplicationsListView = (function(_super) {
     var section, sectionName;
     sectionName = view.model.getSection();
     section = this.$("section#apps-" + sectionName);
-    return section.append(view.$el);
+    section.append(view.$el);
+    section.addClass('show');
+    return section.show();
   };
 
   return ApplicationsListView;
@@ -4525,7 +4533,7 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.onMouseOut = function() {
-    return this.background.css('background', this.color);
+    return this.background.css('background', this.color || 'transparent');
   };
 
   function ApplicationRow(options) {
@@ -4542,18 +4550,20 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.afterRender = function() {
     var color, slug;
-    this.icon = this.$('img');
+    this.icon = this.$('img.icon');
     this.stateLabel = this.$('.state-label');
     this.title = this.$('.app-title');
-    this.background = this.$('.application-inner');
+    this.background = this.$('img');
     this.listenTo(this.model, 'change', this.onAppChanged);
     this.onAppChanged(this.model);
     slug = this.model.get('slug');
     color = this.model.get('color');
     if (this.model.isIconSvg()) {
+      console.log(slug);
       if (color == null) {
         color = ColorHash.getColor(slug, 'cozy');
       }
+      console.log(color);
       this.color = color;
       this.icon.addClass('svg');
       return this.background.css('background', color);
@@ -4683,14 +4693,11 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.showSpinner = function() {
-    if (!this.spinner) {
-      this.generateSpinner();
-    }
-    return this.$('.vertical-aligner').prepend(this.spinner.canvas);
+    return this.$('.spinner').show();
   };
 
   ApplicationRow.prototype.hideSpinner = function() {
-    return this.$('.vertical-aligner canvas').remove();
+    return this.$('.spinner').hide();
   };
 
   return ApplicationRow;

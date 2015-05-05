@@ -1422,6 +1422,8 @@ dialog[open]::backdrop {
   padding: 0;
   margin: 0;
   background: bgcolor;
+  background: #fcfcfc;
+  background: #e6ddd0;
   overflow: hidden;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1810,49 +1812,47 @@ body {
   background-color: #ff850a;
 }
 #app-list section {
+  background: rgba(247,244,240,0.8);
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  display: none;
+}
+#app-list section.show {
   display: block;
-  background: rgba(255,255,255,0.8);
 }
 #app-list section h2 {
   font-size: 16px;
   text-transform: uppercase;
   color: #333;
-  background-color: #fff;
-  border-bottom: 1px solid #d5c5b0;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  padding: 5px 10px 2px 10px;
-  opacity: 0.8;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-  filter: alpha(opacity=80);
+  background-color: transparent;
+  padding: 5px 10px 2px 20px;
   margin-top: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 .application {
   cursor: pointer;
   padding: 10px;
 }
 .application .application-inner {
-  background: #fff;
   padding-top: 5px;
   -webkit-border-radius: 200px;
   border-radius: 200px;
-  padding: 20px;
-}
-.application .application-inner:hover {
-  background: #ff9d3b;
+  padding: 20px 10px;
 }
 .application .application-inner .vertical-aligner {
   height: 100%;
   width: 100%;
 }
 .application .application-inner img {
-  width: 70%;
+  height: auto;
   display: block;
+  padding: 20px;
   margin: 0px auto 2% auto;
   text-align: center;
-  max-width: 100px;
-  max-height: 100px;
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 .application .application-inner p {
   margin: 0;
@@ -1883,7 +1883,14 @@ body {
   display: block;
 }
 .platform-app .application-inner img {
-  padding: 10px;
+  padding: 25px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.platform-app .application-inner:hover img {
+  background: #ff9d3b;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
 }
 .app-tools {
   width: 50%;
@@ -1957,6 +1964,7 @@ body {
   padding: 30px 20px 10px 20px;
 }
 #account-view .input .btn {
+  display: inline-block;
   height: 55px;
   width: 55px;
   margin-left: 10px;
@@ -1976,6 +1984,9 @@ body {
 }
 #account-view .background-list .background-button.selected img {
   border: 2px solid #cdf;
+}
+#help-view p.help-text {
+  font-size: 22px;
 }
 #help-view .help-section {
   -webkit-border-radius: 20px;
@@ -2094,7 +2105,8 @@ body {
   -ms-transition: all 0.3s;
   transition: all 0.3s;
   text-align: left;
-  border: 1px solid #e6ddd0;
+  border-bottom: 1px solid #e6ddd0;
+  border-right: 1px solid #e6ddd0;
 }
 #market-view #no-app-message.install,
 .cozy-app.install {
@@ -2136,7 +2148,6 @@ body {
   border-radius: 200px;
   display: block;
   background-position: center;
-  padding: 15px;
   width: 130px;
   height: 130px;
 }
@@ -2188,7 +2199,7 @@ body {
 .config-application {
   background: #f7f4f0;
   border-top: 1px solid #e6ddd0;
-  padding: 10px;
+  padding: 10px 0;
   margin-bottom: 10px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -2225,15 +2236,6 @@ body {
   font-weight: normal;
 }
 .config-application .buttons {
-<<<<<<< HEAD:client/public/stylesheets/app.css
-=======
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: box;
-  display: flex;
->>>>>>> 2a99117460b3968385123350ae4f87cbc0ebda41:build/client/public/stylesheets/app.css
   -webkit-box-align: center;
   -moz-box-align: center;
   -o-box-align: center;
@@ -2242,7 +2244,6 @@ body {
   align-items: center;
 }
 .config-application .buttons button {
-<<<<<<< HEAD:client/public/stylesheets/app.css
   width: 100%;
   display: inline-block;
   margin: 0 0 0 5px;
@@ -2250,40 +2251,6 @@ body {
   min-height: 24px;
   font-size: 12px;
   text-align: left;
-}
-.config-application .buttons .spinner {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -o-transform: translateX(-50%) translateY(-50%);
-  -ms-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
-}
-.config-application .buttons .spinner + i {
-  opacity: 0.35;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=35)";
-  filter: alpha(opacity=35);
-=======
-  position: relative;
-  display: inline;
-  margin: 0 5px 0 0;
-  min-width: 24px;
-  min-height: 24px;
-  font-size: 12px;
-}
-@media (max-width: 640px) {
-  .config-application .buttons button {
-    margin-right: 5px;
-  }
-}
-.config-application .buttons button:hover .label {
-  display: inline;
-}
-.config-application .buttons .label {
-  margin-left: 5px;
->>>>>>> 2a99117460b3968385123350ae4f87cbc0ebda41:build/client/public/stylesheets/app.css
 }
 .config-application .buttons.left {
   margin-top: 5px;
@@ -2313,6 +2280,10 @@ body {
 #config-applications-view .stack-app .btn {
   width: 100%;
   text-align: left;
+  margin-bottom: 2px;
+}
+#config-applications-view .stack-app .btn .fa {
+  margin-top: 2px;
 }
 .title-device {
   display: none;
@@ -2807,6 +2778,8 @@ body {
   }
   #notifications-container #notifications {
     left: -180px;
+    top: 0;
+    bottom: 0;
     width: 310px;
   }
   #notifications-container #notifications .notification a.doaction {
