@@ -739,12 +739,13 @@ body
             margin-top 1em
 
     .buttons
-        display: none
+        display: flex
         align-items center
 
         button
             position relative
-            margin 0 0 0 5px
+            display inline
+            margin 0 5px 0 0
             min-width 24px
             min-height 24px
             font-size 12px
@@ -756,21 +757,10 @@ body
                 display inline
 
         .label
-            display none
+            margin-left 5px
 
-
-        // overrides inline styles
-        .spinner
-            position absolute !important
-            top 50% !important
-            left 50% !important
-            transform translateX(-50%) translateY(-50%)
-
-        .spinner + i
-            opacity .35
-
-    .img
-        width: 72px
+    .buttons.left
+        margin-top 5px
 
     .comments
         clear both
@@ -780,6 +770,7 @@ body
         line-height 20px
 
         img
+            overflow hidden
             display inline-block
             margin 0 5px 0 0
 

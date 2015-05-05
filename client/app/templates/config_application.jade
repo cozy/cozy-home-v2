@@ -15,7 +15,6 @@
             img.update-notification-icon(
                 width=16, src="img/notification-orange.png",
                 title="#{t('update required')}", alt="#{t('update required')}")
-
     .buttons.right
         span.smaller
             input(class="app-stoppable",
@@ -24,22 +23,21 @@
                   checked="checked",
                   name="app-stoppable-#{app.id}")
             label(for="app-stoppable-#{app.id}") auto stop
+
+    .buttons.left
         button.btn.btn-large.start-stop-btn
             i.fa.fa-power-off
-            | 
             span.label= t('stop this app')
         button.btn.update-app
             i.fa.fa-refresh
-            | 
             span.label= t('update')
         button.btn.remove-app
             i.fa.fa-trash
-            | 
             span.label= t('remove')
 
     .comments
         if app.comment === 'official application'
-            img(src="img/happycloud-black.svg", 
-                alt="#{t(app.comment)}", 
+            img(src="img/happycloud-black.svg",
+                alt="#{t(app.comment)}",
                 width="20")
         a(href="#{app.website}", target="_blank")= app.website
