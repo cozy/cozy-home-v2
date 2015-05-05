@@ -19,8 +19,6 @@ module.exports = class ApplicationsListView extends ViewCollection
         @listenTo @collection, 'reset', => @isLoading = false
 
         super
-        # onWindowResize when the user is done resizing
-        $(window).on 'resize', _.debounce @onWindowResize, 300
 
     afterRender: =>
         @$("#no-app-message").hide()
