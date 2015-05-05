@@ -27,7 +27,8 @@
     "rrule": "2.0.1",
     "moment-timezone": "0.3.0",
     "node-polyglot": "0.4.1",
-    "del": "1.1.1"
+    "del": "1.1.1",
+    "jade": "1.9.2"
   },
   "contributors": [
     "Zoe Bellot",
@@ -48,7 +49,6 @@
     "should": "^4.6.1",
     "sinon": "^1.12.2",
     "iconizr": "^0.2.3",
-    "jade": "^1.9.2"
   },
   "scripts": {
     "test": "cake --use-js tests",
