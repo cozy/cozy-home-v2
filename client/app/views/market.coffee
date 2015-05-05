@@ -4,7 +4,7 @@ ApplicationRow = require 'views/market_application'
 ColorButton = require 'widgets/install_button'
 AppCollection = require 'collections/application'
 Application = require 'models/application'
-slugify = require('helpers').slugify
+slugify = require 'helpers/slugify'
 
 REPOREGEX =  /// ^
     (https?://)?                   #protocol
