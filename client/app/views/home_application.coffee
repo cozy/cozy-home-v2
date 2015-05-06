@@ -46,11 +46,9 @@ module.exports = class ApplicationRow extends BaseView
         if @model.isIconSvg()
 
             # if there is no set color, we use an auto-generated one
-            console.log slug
             unless color?
                 color = ColorHash.getColor slug, 'cozy'
 
-            console.log color
             @color = color
             @icon.addClass 'svg'
             @background.css 'background', color

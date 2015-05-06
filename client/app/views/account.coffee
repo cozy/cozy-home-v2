@@ -112,7 +112,7 @@ module.exports = class exports.AccountView extends BaseView
     # Fetch data from backend and fill form with collected data.
     fetchData: ->
 
-        userData = window.user or {}
+        userData = window.cozy_user or {}
         @emailField.val userData.email
         @publicNameField.val userData.public_name
         @timezoneField.val userData.timezone
@@ -123,7 +123,7 @@ module.exports = class exports.AccountView extends BaseView
 
         savePublicName = @getSaveFunction 'public_name', \
                                         @publicNameField, 'user'
-        @emailField.on 'keyup', (event) ->
+        @publicNameField.on 'keyup', (event) ->
             savePublicName() if event.keyCode is 13 or event.which is 13
 
         saveTimezone = @getSaveFunction 'timezone', @timezoneField, 'user'
