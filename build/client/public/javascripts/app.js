@@ -1352,7 +1352,8 @@ module.exports = {
   "choose your apps": "Choose your apps",
   "configure your cozy": "Configure your cozy",
   "ask for assistance": "Ask for help",
-  "logout": "sign out",
+  "logout": "Sign out",
+  "navbar logout": "Sign out",
   "welcome to your cozy": "Welcome to your Cozy!",
   "you have no apps": "You have no apps.",
   "app management": "App management",
@@ -2673,22 +2674,22 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
 var __val__ = t('alerts and password recovery email')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><input id="account-email-field"/><button class="btn">');
+buf.push('</p><p><input id="account-email-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="input"><p>');
+buf.push('</button></p></div><div class="input"><p>');
 var __val__ = t('public name description')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><input id="account-public-name-field"/><button class="btn">');
+buf.push('</p><p><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="input"><p>');
+buf.push('</button></p></div><div class="input"><p>');
 var __val__ = t('domain name for urls and email')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><input id="account-domain-field"/><button class="btn">');
+buf.push('</p><p><input id="account-domain-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><h4>');
+buf.push('</button></p></div><h4>');
 var __val__ = t('account localization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
@@ -2984,7 +2985,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!-- .section-title.darkbg.bigger home--><div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+buf.push('<div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('welcome to your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><p class="bigger">');
@@ -3053,7 +3054,16 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<header id="header" class="navbar"></header><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
+buf.push('<header id="header" class="navbar"></header><div id="notifications"><ul id="notifications-list"><li id="no-notif-msg">');
+var __val__ = t('you have no notifications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</li><li class="separator"></li></ul><div class="buttons"><div id="dismiss-all" class="spin-black btn">');
+var __val__ = t('dismiss all')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div><a id="logout-button" href="#logout" class="btn"><span>');
+var __val__ = t('navbar logout')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></a></div></div><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
 }
 return buf.join("");
 };
@@ -3155,9 +3165,9 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar clearfix"><a');
+buf.push('<div class="navbar clearfix"><div id="notifications-container" class="right"></div><a');
 buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
-buf.push('><img src="img/back.png"/></a><div id="notifications-container" class="right"></div><div id="menu-applications-container"></div></div>');
+buf.push('><img src="img/back.png"/></a><div id="menu-applications-container"></div></div>');
 }
 return buf.join("");
 };
@@ -3197,19 +3207,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a id="notifications-toggle"><span class="backcolor"></span><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div><ul id="notifications"><li id="no-notif-msg">');
-var __val__ = t('you have no notifications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li><li id="dismiss-all" class="spin-black btn">');
-var __val__ = t('dismiss all')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li><li class="separator"></li><li class="txtcenter"><a id="faq-button" href="https://forum.cozy.io/t/faq-about-cozy-in-english/534" target="_blank" class="btn"><img src="img/help.png"/><span>');
-var __val__ = t('navbar faq')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a></li><li class="txtcenter"><a id="logout-button" href="#logout" class="btn"><img src="img/logout.png"/><span>');
-var __val__ = t('navbar logout')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a></li></ul>');
+buf.push('<a id="notifications-toggle"><span class="backcolor"></span><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div>');
 }
 return buf.join("");
 };
@@ -3545,7 +3543,7 @@ module.exports = exports.AccountView = (function(_super) {
   AccountView.prototype.fetchData = function() {
     var domain, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, userData,
       _this = this;
-    userData = window.user || {};
+    userData = window.cozy_user || {};
     this.emailField.val(userData.email);
     this.publicNameField.val(userData.public_name);
     this.timezoneField.val(userData.timezone);
@@ -3556,7 +3554,7 @@ module.exports = exports.AccountView = (function(_super) {
       }
     });
     savePublicName = this.getSaveFunction('public_name', this.publicNameField, 'user');
-    this.emailField.on('keyup', function(event) {
+    this.publicNameField.on('keyup', function(event) {
       if (event.keyCode === 13 || event.which === 13) {
         return savePublicName();
       }
@@ -4580,11 +4578,9 @@ module.exports = ApplicationRow = (function(_super) {
     slug = this.model.get('slug');
     color = this.model.get('color');
     if (this.model.isIconSvg()) {
-      console.log(slug);
       if (color == null) {
         color = ColorHash.getColor(slug, 'cozy');
       }
-      console.log(color);
       this.color = color;
       this.icon.addClass('svg');
       return this.background.css('background', color);
@@ -5696,6 +5692,7 @@ module.exports = NotificationsView = (function(_super) {
 
   function NotificationsView() {
     this.hideNotifList = __bind(this.hideNotifList, this);
+    this.dismissAll = __bind(this.dismissAll, this);
     this.windowClicked = __bind(this.windowClicked, this);
     this.checkIfEmpty = __bind(this.checkIfEmpty, this);
     this.remove = __bind(this.remove, this);
@@ -5712,8 +5709,7 @@ module.exports = NotificationsView = (function(_super) {
 
   NotificationsView.prototype.events = {
     "click #notifications-toggle": "showNotifList",
-    "click #clickcatcher": "hideNotifList",
-    "click #dismiss-all": "dismissAll"
+    "click #clickcatcher": "hideNotifList"
   };
 
   NotificationsView.prototype.initialize = function() {
@@ -5722,6 +5718,9 @@ module.exports = NotificationsView = (function(_super) {
   };
 
   NotificationsView.prototype.appendView = function(view) {
+    if (this.notifList == null) {
+      this.notifList = $('#notifications-list');
+    }
     this.notifList.prepend(view.el);
     if (!this.initializing) {
       this.sound.play();
@@ -5735,25 +5734,25 @@ module.exports = NotificationsView = (function(_super) {
     this.counter.html('10');
     this.clickcatcher = this.$('#clickcatcher');
     this.clickcatcher.hide();
-    this.noNotifMsg = this.$('#no-notif-msg');
-    this.notifList = this.$('#notifications');
-    this.sound = this.$('#notification-sound')[0];
-    this.dismissButton = this.$("#dismiss-all");
+    this.noNotifMsg = $('#no-notif-msg');
+    this.notifList = $('#notifications-list');
+    this.sound = $('#notification-sound')[0];
+    this.dismissButton = $("#dismiss-all");
+    this.dismissButton.click(this.dismissAll);
     NotificationsView.__super__.afterRender.apply(this, arguments);
     this.initializing = false;
-    return $(window).on('click', this.windowClicked);
+    return this.collection.fetch();
   };
 
   NotificationsView.prototype.remove = function() {
-    $(window).off('click', this.hideNotifList);
     return NotificationsView.__super__.remove.apply(this, arguments);
   };
 
   NotificationsView.prototype.checkIfEmpty = function() {
     var imgPath, newCount;
     newCount = this.collection.length;
-    this.$('#no-notif-msg').toggle(newCount === 0);
-    this.$('#dismiss-all').toggle(newCount !== 0);
+    this.noNotifMsg.toggle(newCount === 0);
+    this.dismissButton.toggle(newCount !== 0);
     if (newCount === 0) {
       this.counter.html("");
       this.counter.hide();
@@ -5779,7 +5778,7 @@ module.exports = NotificationsView = (function(_super) {
       return this.$el.removeClass('active');
     } else {
       this.$el.addClass('active');
-      this.notifList.slideDown(100);
+      this.notifList.show();
       return this.clickcatcher.show();
     }
   };
@@ -5798,7 +5797,7 @@ module.exports = NotificationsView = (function(_super) {
   };
 
   NotificationsView.prototype.hideNotifList = function(event) {
-    this.notifList.slideUp(100);
+    this.notifList.hide();
     this.clickcatcher.hide();
     return this.$el.removeClass('active');
   };

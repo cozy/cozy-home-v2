@@ -111,22 +111,29 @@ body
         vertical-align super
 
 
+#dismiss-all
+    position absolute
+    bottom 55px
+    width 406px
+
 #logout-button
-    margin-right 15px
-    margin-top 3px
-    height 24px
-    line-height 24px
+    position absolute
+    bottom 10px
+    text-align center
+    background-color orangewhite - 20%
+    margin-top 5px
+    padding-top 5px
+    color black
+    cursor pointer
+    width 406px
+
+    &:hover
+        background-color orange + 20%
+        color black
 
     img
         width 24px
         height 24px
-
-    span
-        display: none
-
-#logout-button:hover
-    span
-        display: none
 
 
 /* content */
@@ -279,72 +286,78 @@ body
         background-color red
         opacity 0.001
         top 40px
-        left 0px
-        z-index 40
+        left -420px
+        z-index 10
 
-    #notifications
-        z-index 50
-        display none
-        position absolute
-        top 36px
-        right 0px
-        width 420px
-        list-style-type none
+#notifications
+    z-index 50
+    position absolute
+    display none
+    right 0
+    top 36px
+    bottom 0px
+    width 420px
+    padding 5px
+    text-align left
+    background lightgrey
+
+    ul
         margin 0
-        padding 5px
+        padding 10px
+        overflow-y auto
+        overflow-x hidden
 
-        text-align left
-        background lightgrey - 10%
-        border 1px solid lightgrey - 20%
+        li
+            list-style-type none
 
-        #dismiss-all
-            text-align center
-            background-color orangewhite - 20%
-            margin-top 5px
-            padding-top 5px
-            clear both
-            line-height 25px
+    #dismiss-all
+        text-align center
+        background-color orangewhite - 20%
+        margin-top 5px
+        padding-top 5px
+        clear both
+        line-height 25px
+        color black
+        cursor pointer
+
+        &:hover
+            background-color orange + 20%
             color black
-            cursor pointer
 
-            &:hover
-                background-color orange + 20%
-                color black
+    .separator
+        border-bottom 1px solid lightgrey - 20%
 
-        .separator
-            border-bottom 1px solid lightgrey - 20%
+    .notification:hover
+        a.dismiss
+            cursor: pointer
+            display: inline
+            color: darkblue
 
-        .notification:hover
-            a.dismiss
-                cursor: pointer
-                display: inline
-                color: darkblue
+        a.dismiss:hover
+            opacity: 1
 
-            a.dismiss:hover
-                opacity: 1
+    .notification
+        a.dismiss
+            display: none
+            float: right
+            line-height 20px
+            padding 5px
+            opacity: 0.5
 
-        .notification
-            a.dismiss
-                display: none
-                float: right
-                line-height 20px
-                padding 5px
-                opacity: 0.5
+        a.doaction
+            float: left
+            line-height 20px
+            padding 5px
+            color: darkblue
+            max-width: 360px
+            width: 360px
+            cursor: pointer
 
-            a.doaction
-                float: left
-                line-height 20px
-                padding 5px
-                color: darkblue
-                max-width: 360px
-                width: 360px
-                cursor: pointer
-
-            &.new
-                background: #8f9b9b + 20%
-            &.transition
-                background-color: #8f9b9b
-                transition: background-color 3s
+        &.new
+            background: #8f9b9b + 20%
+        &.transition
+            background-color: #8f9b9b
+            transition: background-color 3s
 
 @media screen and (-webkit-min-device-pixel-ratio:0)
 

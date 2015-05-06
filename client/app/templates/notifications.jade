@@ -6,16 +6,3 @@ audio#notification-sound(src="sounds/notification.wav", preload)
 
 #clickcatcher
 
-ul#notifications
-    li#no-notif-msg= t('you have no notifications')
-    li#dismiss-all.spin-black.btn= t('dismiss all')
-    li.separator
-
-    li.txtcenter
-        a#faq-button.btn(href="https://forum.cozy.io/t/faq-about-cozy-in-english/534", target="_blank")
-            img(src="img/help.png")
-            span=t('navbar faq')
-    li.txtcenter
-        a#logout-button.btn(href="#logout")
-            img(src="img/logout.png")
-            span=t('navbar logout')

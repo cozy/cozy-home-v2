@@ -13,16 +13,14 @@ module.exports = class NotificationsView extends ViewCollection
     events:
         "click #notifications-toggle": "showNotifList"
         "click #clickcatcher"        : "hideNotifList"
-        "click #dismiss-all"         : "dismissAll"
 
     initialize: ->
         super
         @initializing = true
 
     appendView: (view) ->
+        @notifList ?= $ '#notifications-list'
         @notifList.prepend view.el
-        # TODO use visibility.js to only play sound
-        # when window is not visible
         @sound.play() unless @initializing
         @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
         @$('#notifications-toggle').addClass 'highlight'
@@ -32,23 +30,25 @@ module.exports = class NotificationsView extends ViewCollection
         @counter.html '10'
         @clickcatcher = @$ '#clickcatcher'
         @clickcatcher.hide()
-        @noNotifMsg = @$ '#no-notif-msg'
-        @notifList  = @$ '#notifications'
-        @sound      = @$('#notification-sound')[0]
-        @dismissButton = @$ "#dismiss-all"
+        @noNotifMsg = $ '#no-notif-msg'
+        @notifList  = $ '#notifications-list'
+        @sound      = $('#notification-sound')[0]
+        @dismissButton = $ "#dismiss-all"
+        @dismissButton.click @dismissAll
 
         super
         @initializing = false
-        $(window).on 'click', @windowClicked
+        @collection.fetch()
+        #$(window).on 'click', @windowClicked
 
     remove: =>
-        $(window).off 'click', @hideNotifList
+        #$(window).off 'click', @hideNotifList
         super
 
     checkIfEmpty: =>
         newCount = @collection.length
-        @$('#no-notif-msg').toggle(newCount is 0)
-        @$('#dismiss-all').toggle(newCount isnt 0)
+        @noNotifMsg.toggle(newCount is 0)
+        @dismissButton.toggle(newCount isnt 0)
         if newCount is 0 #hide 0 counter
             @counter.html ""
             @counter.hide()
@@ -70,10 +70,10 @@ module.exports = class NotificationsView extends ViewCollection
             @$el.removeClass 'active'
         else
             @$el.addClass 'active'
-            @notifList.slideDown 100
+            @notifList.show()
             @clickcatcher.show()
 
-    dismissAll: () ->
+    dismissAll: =>
         @dismissButton.spin true
         @collection.removeAll
             success: =>
@@ -82,6 +82,6 @@ module.exports = class NotificationsView extends ViewCollection
                 @dismissButton.spin false
 
     hideNotifList: (event) =>
-        @notifList.slideUp 100
+        @notifList.hide()
         @clickcatcher.hide()
         @$el.removeClass 'active'

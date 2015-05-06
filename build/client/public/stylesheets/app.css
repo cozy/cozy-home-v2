@@ -1536,21 +1536,29 @@ body {
   display: inline-block !important;
   vertical-align: super;
 }
+#dismiss-all {
+  position: absolute;
+  bottom: 55px;
+  width: 406px;
+}
 #logout-button {
-  margin-right: 15px;
-  margin-top: 3px;
-  height: 24px;
-  line-height: 24px;
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  background-color: #e5cba9;
+  margin-top: 5px;
+  padding-top: 5px;
+  color: #000;
+  cursor: pointer;
+  width: 406px;
+}
+#logout-button:hover {
+  background-color: #ff9d3b;
+  color: #000;
 }
 #logout-button img {
   width: 24px;
   height: 24px;
-}
-#logout-button span {
-  display: none;
-}
-#logout-button:hover span {
-  display: none;
 }
 /* content */
 #content {
@@ -1721,24 +1729,31 @@ body {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   top: 40px;
-  left: 0px;
-  z-index: 40;
+  left: -420px;
+  z-index: 10;
 }
-#notifications-container #notifications {
+#notifications {
   z-index: 50;
-  display: none;
   position: absolute;
+  display: none;
+  right: 0;
   top: 36px;
-  right: 0px;
+  bottom: 0px;
   width: 420px;
-  list-style-type: none;
-  margin: 0;
   padding: 5px;
   text-align: left;
-  background: #e6ddd0;
-  border: 1px solid #d5c5b0;
+  background: #f7f4f0;
 }
-#notifications-container #notifications #dismiss-all {
+#notifications ul {
+  margin: 0;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#notifications ul li {
+  list-style-type: none;
+}
+#notifications #dismiss-all {
   text-align: center;
   background-color: #e5cba9;
   margin-top: 5px;
@@ -1748,24 +1763,24 @@ body {
   color: #000;
   cursor: pointer;
 }
-#notifications-container #notifications #dismiss-all:hover {
+#notifications #dismiss-all:hover {
   background-color: #ff9d3b;
   color: #000;
 }
-#notifications-container #notifications .separator {
+#notifications .separator {
   border-bottom: 1px solid #d5c5b0;
 }
-#notifications-container #notifications .notification:hover a.dismiss {
+#notifications .notification:hover a.dismiss {
   cursor: pointer;
   display: inline;
   color: #363a46;
 }
-#notifications-container #notifications .notification:hover a.dismiss:hover {
+#notifications .notification:hover a.dismiss:hover {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
-#notifications-container #notifications .notification a.dismiss {
+#notifications .notification a.dismiss {
   display: none;
   float: right;
   line-height: 20px;
@@ -1774,7 +1789,7 @@ body {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-#notifications-container #notifications .notification a.doaction {
+#notifications .notification a.doaction {
   float: left;
   line-height: 20px;
   padding: 5px;
@@ -1783,10 +1798,10 @@ body {
   width: 360px;
   cursor: pointer;
 }
-#notifications-container #notifications .notification.new {
+#notifications .notification.new {
   background: #a5afaf;
 }
-#notifications-container #notifications .notification.transition {
+#notifications .notification.transition {
   background-color: #8f9b9b;
   -webkit-transition: background-color 3s;
   -moz-transition: background-color 3s;
