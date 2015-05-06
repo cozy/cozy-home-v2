@@ -11,7 +11,7 @@ class exports.Manifest
 
         # If manifest is already part of the app request, use it
         if app.local or app.git.match /^\/usr\/local\/cozy/
-            @config = app
+            @config = require "#{app.git}/package.json"
             callback null
 
         # Or fetch it from git
