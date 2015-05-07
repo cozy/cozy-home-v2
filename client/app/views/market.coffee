@@ -49,17 +49,22 @@ module.exports = class MarketView extends BaseView
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps, 'reset',  @onAppListsChanged
 
+    # Display only apps with state equals to installed or broken.
     onAppListsChanged: =>
-        @noAppMessage.show()
         installedApps = new AppCollection @installedApps.filter (app) ->
             app.get('state') in ['installed', 'broken']
         installeds = installedApps.pluck 'slug'
+
         @marketApps.each (app) =>
             slug = app.get 'slug'
             if installeds.indexOf(slug) is -1
-                @addApplication app
+                if @$("#market-app-#{app.get 'slug'}").length is 0
+                    @addApplication app
             else
-                @$("#market-app-#{app.get 'id'}").remove()
+                @$("#market-app-#{app.get 'slug'}").remove()
+
+        if @$('.cozy-app').length is 0
+            @noAppMessage.show()
 
 
     # Add an application row to the app list.
@@ -106,7 +111,7 @@ module.exports = class MarketView extends BaseView
                     @waitApplication appWidget, true
                     @runInstallation appWidget.app
                     , =>
-                        @hideApplication appWidget
+                        console.log 'application installed', appWidget.app
                     , =>
                         @waitApplication appWidget, false
                 else
@@ -156,7 +161,7 @@ module.exports = class MarketView extends BaseView
                     alert data.message
                 else
                     @resetForm()
-                @installedApps.add application
+
                 if cb
                     cb()
                 else if shouldRedirect
