@@ -5210,21 +5210,27 @@ module.exports = MarketView = (function(_super) {
     this.installAppButton = new ColorButton(this.$("#add-app-submit"));
     this.onAppListsChanged();
     this.listenTo(this.installedApps, 'reset', this.onAppListsChanged);
+    this.listenTo(this.installedApps, 'change', this.onAppListsChanged);
     this.listenTo(this.installedApps, 'remove', this.onAppListsChanged);
     return this.listenTo(this.marketApps, 'reset', this.onAppListsChanged);
   };
 
   MarketView.prototype.onAppListsChanged = function() {
-    var installeds,
+    var installedApps, installeds,
       _this = this;
-    this.$(".cozy-app").remove();
     this.noAppMessage.show();
-    installeds = this.installedApps.pluck('slug');
+    installedApps = new AppCollection(this.installedApps.filter(function(app) {
+      var _ref;
+      return (_ref = app.get('state')) === 'installed' || _ref === 'broken';
+    }));
+    installeds = installedApps.pluck('slug');
     return this.marketApps.each(function(app) {
       var slug;
       slug = app.get('slug');
       if (installeds.indexOf(slug) === -1) {
         return _this.addApplication(app);
+      } else {
+        return _this.$("#market-app-" + (app.get('id'))).remove();
       }
     });
   };
@@ -5308,11 +5314,10 @@ module.exports = MarketView = (function(_super) {
     }
     if (toggle) {
       appWidget.installInProgress = true;
-      appWidget.$el.spin('large', '#363a46');
-      return appWidget.$el.addClass('install');
+      return appWidget.$('.app-img img').attr('src', '/img/spinner.svg');
     } else {
       appWidget.installInProgress = false;
-      appWidget.$el.spin(false);
+      appWidget.$('.app-img img').attr('src', '');
       return appWidget.$el.removeClass('install');
     }
   };
@@ -5481,6 +5486,7 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.afterRender = function() {
     var color, iconNode, slug;
+    this.$el.attr('id', this.app.get('slug'));
     this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
     if (this.app.get('comment') === 'official application') {
       this.$el.addClass('official');
