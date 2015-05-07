@@ -26,9 +26,6 @@ body
     z-index 50
     right 0
 
-    .logout-menu-icon
-        display none
-
     .menu-btn
         z-index 50
         height 52px
@@ -114,26 +111,8 @@ body
 #dismiss-all
     position absolute
     bottom 55px
-    width 406px
-
-#logout-button
-    position absolute
-    bottom 10px
-    text-align center
-    background-color orangewhite - 20%
-    margin-top 5px
-    padding-top 5px
-    color black
-    cursor pointer
-    width 406px
-
-    &:hover
-        background-color orange + 20%
-        color black
-
-    img
-        width 24px
-        height 24px
+    left 15px
+    width 386px
 
 
 /* content */
@@ -147,9 +126,9 @@ body
     padding: 40px 60px 20px 40px
 
 .wizard section img
-    display inline-block;
-    float left;
-    margin .25em 1em 0 0;
+    display inline-block
+    float left
+    margin .25em 1em 0 0
 
 .platform-section
     border-radius 20px
@@ -196,8 +175,6 @@ body
     cursor pointer
     margin 0
     padding 0 10px
-    transition all 0.3s
-    position relative
     transition all 0.3s
 
     img //position hotfix
@@ -290,16 +267,17 @@ body
         z-index 10
 
 #notifications
-    z-index 50
-    position absolute
-    display none
+    position fixed
     right 0
     top 36px
     bottom 0px
     width 420px
     padding 5px
+    z-index 50
+    overflow-y auto
     text-align left
-    background lightgrey
+    background #338CF7
+    color white
 
     ul
         margin 0
@@ -312,7 +290,7 @@ body
 
     #dismiss-all
         text-align center
-        background-color orangewhite - 20%
+        background-color #338CF7 - 20%
         margin-top 5px
         padding-top 5px
         clear both
@@ -324,8 +302,28 @@ body
             background-color orange + 20%
             color black
 
+    #logout-button
+        position absolute
+        bottom 10px
+        text-align center
+        background-color #338CF7 - 20%
+        margin-top 5px
+        padding-top 5px
+        cursor pointer
+        width 406px
+        left 15px
+        width 386px
+
+        &:hover
+            background-color orange + 20%
+            color black
+
+        img
+            width 24px
+            height 24px
+
     .separator
-        border-bottom 1px solid lightgrey - 20%
+        border-bottom 1px solid #338CF7 + 30%
 
     .notification:hover
         a.dismiss
@@ -437,9 +435,9 @@ body
             margin-top 2px
 
         .state-label
-            font-size: 18px
-            font-weight: normal
-            color: red
+            font-size 18px
+            font-weight normal
+            color red
 
     &:active
         box-shadow none
