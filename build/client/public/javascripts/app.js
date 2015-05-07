@@ -5218,21 +5218,25 @@ module.exports = MarketView = (function(_super) {
   MarketView.prototype.onAppListsChanged = function() {
     var installedApps, installeds,
       _this = this;
-    this.noAppMessage.show();
     installedApps = new AppCollection(this.installedApps.filter(function(app) {
       var _ref;
       return (_ref = app.get('state')) === 'installed' || _ref === 'broken';
     }));
     installeds = installedApps.pluck('slug');
-    return this.marketApps.each(function(app) {
+    this.marketApps.each(function(app) {
       var slug;
       slug = app.get('slug');
       if (installeds.indexOf(slug) === -1) {
-        return _this.addApplication(app);
+        if (_this.$("#market-app-" + (app.get('slug'))).length === 0) {
+          return _this.addApplication(app);
+        }
       } else {
-        return _this.$("#market-app-" + (app.get('id'))).remove();
+        return _this.$("#market-app-" + (app.get('slug'))).remove();
       }
     });
+    if (this.$('.cozy-app').length === 0) {
+      return this.noAppMessage.show();
+    }
   };
 
   MarketView.prototype.addApplication = function(application) {
@@ -5288,7 +5292,7 @@ module.exports = MarketView = (function(_super) {
         if (appWidget.$el) {
           _this.waitApplication(appWidget, true);
           return _this.runInstallation(appWidget.app, function() {
-            return _this.hideApplication(appWidget);
+            return console.log('application installed', appWidget.app);
           }, function() {
             return _this.waitApplication(appWidget, false);
           });
@@ -5355,7 +5359,6 @@ module.exports = MarketView = (function(_super) {
         } else {
           _this.resetForm();
         }
-        _this.installedApps.add(application);
         if (cb) {
           return cb();
         } else if (shouldRedirect) {
@@ -5486,7 +5489,7 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.afterRender = function() {
     var color, iconNode, slug;
-    this.$el.attr('id', this.app.get('slug'));
+    this.$el.attr('id', "market-app-" + (this.app.get('slug')));
     this.installButton = new ColorButton(this.$("#add-" + this.app.id + "-install"));
     if (this.app.get('comment') === 'official application') {
       this.$el.addClass('official');
