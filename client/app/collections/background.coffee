@@ -12,7 +12,6 @@ module.exports = class BackgroundCollection extends BaseCollection
                 id: 'background-none'
                 src: '/img/backgrounds/background_none_th.png'
                 imgSrc: '/img/backgrounds/background_none.png'
-                selected: true
             ,
                 id: 'background-01'
                 src: '/img/backgrounds/background_01_th.png'
@@ -46,3 +45,7 @@ module.exports = class BackgroundCollection extends BaseCollection
                 src: '/img/backgrounds/background_08_th.png'
                 imgSrc: '/img/backgrounds/background_08.png'
         ]
+        selected = @findWhere id: window.app.instance.background
+        selected ?= @at 0
+        selected.set 'selected': true
+
