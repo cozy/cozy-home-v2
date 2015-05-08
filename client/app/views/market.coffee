@@ -45,17 +45,27 @@ module.exports = class MarketView extends BaseView
         @onAppListsChanged()
 
         @listenTo @installedApps, 'reset',  @onAppListsChanged
+        @listenTo @installedApps, 'change',  @onAppListsChanged
         @listenTo @installedApps, 'remove', @onAppListsChanged
         @listenTo @marketApps, 'reset',  @onAppListsChanged
 
+    # Display only apps with state equals to installed or broken.
     onAppListsChanged: =>
-        @$(".cozy-app").remove()
-        @noAppMessage.show()
-        installeds = @installedApps.pluck('slug')
+        installedApps = new AppCollection @installedApps.filter (app) ->
+            app.get('state') in ['installed', 'broken']
+        installeds = installedApps.pluck 'slug'
+
         @marketApps.each (app) =>
             slug = app.get 'slug'
             if installeds.indexOf(slug) is -1
-                @addApplication app
+                if @$("#market-app-#{app.get 'slug'}").length is 0
+                    @addApplication app
+            else
+                @$("#market-app-#{app.get 'slug'}").remove()
+
+        if @$('.cozy-app').length is 0
+            @noAppMessage.show()
+
 
     # Add an application row to the app list.
     addApplication: (application) =>
@@ -101,7 +111,7 @@ module.exports = class MarketView extends BaseView
                     @waitApplication appWidget, true
                     @runInstallation appWidget.app
                     , =>
-                        @hideApplication appWidget
+                        console.log 'application installed', appWidget.app
                     , =>
                         @waitApplication appWidget, false
                 else
@@ -119,12 +129,11 @@ module.exports = class MarketView extends BaseView
     waitApplication: (appWidget, toggle = true) ->
         if toggle
             appWidget.installInProgress = true
-            appWidget.$el.spin 'large', '#363a46'
-            appWidget.$el.addClass 'install'
+            appWidget.$('.app-img img').attr 'src', '/img/spinner.svg'
 
         else
             appWidget.installInProgress = false
-            appWidget.$el.spin false
+            appWidget.$('.app-img img').attr 'src', ''
             appWidget.$el.removeClass 'install'
 
 
@@ -152,7 +161,7 @@ module.exports = class MarketView extends BaseView
                     alert data.message
                 else
                     @resetForm()
-                @installedApps.add application
+
                 if cb
                     cb()
                 else if shouldRedirect

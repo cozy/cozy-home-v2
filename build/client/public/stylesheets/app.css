@@ -862,6 +862,9 @@ select:focus {
   -ms-transition: all 0.3s;
   transition: all 0.3s;
 }
+.btn.btn-green {
+  background-color: #5c5;
+}
 .btn:hover {
   color: #fff;
   background: #ff850a;
@@ -2153,11 +2156,9 @@ body {
   border-bottom: 1px solid #e6ddd0;
   border-right: 1px solid #e6ddd0;
 }
-#market-view #no-app-message.install,
-.cozy-app.install {
-  opacity: 0.35;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=35)";
-  filter: alpha(opacity=35);
+#market-view #no-app-message.install .app-img,
+.cozy-app.install .app-img {
+  width: 50%;
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {

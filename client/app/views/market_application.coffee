@@ -26,6 +26,7 @@ module.exports = class ApplicationRow extends BaseView
         @installInProgress = false
 
     afterRender: =>
+        @$el.attr 'id', "market-app-#{@app.get 'slug'}"
         @installButton = new ColorButton(@$ "#add-#{@app.id}-install")
         if @app.get('comment') is 'official application'
             @$el.addClass 'official'
