@@ -164,7 +164,7 @@ module.exports =
     "finish layout edition": "Save"
     "reset customization": "Reset"
     "use icon": "Use icon"
-    "home section leave": "leave services"
+    "home section leave": "Leave services"
     "home section main": "Basics"
     "home section productivity": "Productivity"
     "home section data management": "Data"
@@ -180,7 +180,7 @@ module.exports =
     "introduction market": """
         Welcome to the Cozy app store!
         Here, you can install
-        apps provided by Cozy Cloud, apps from the community or apps you built yourself.
+        apps provided by Cozy Cloud, apps from the community or apps built by yourself!
     """
 
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later."
