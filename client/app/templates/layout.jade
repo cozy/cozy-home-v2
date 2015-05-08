@@ -1,15 +1,13 @@
 header#header.navbar
 
 
-#notifications
+#notifications.right-menu
     ul#notifications-list
         li#no-notif-msg= t('you have no notifications')
-        li.separator
 
-    .buttons
-        #dismiss-all.spin-black.btn= t('dismiss all')
-        a#logout-button.btn(href="#logout")
-            span=t('navbar logout')
+#notifications-buttons.right-menu
+    button#dismiss-all.spin-black.btn= t('dismiss all')
+    a#logout-button.btn(href="#logout")= t('navbar logout')
 
 
 .home-body

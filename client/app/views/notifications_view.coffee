@@ -11,7 +11,7 @@ module.exports = class NotificationsView extends ViewCollection
     template: require 'templates/notifications'
 
     events:
-        #"click #notifications-toggle": "showNotifList"
+        "click #notifications-toggle": "showNotifList"
         "click #clickcatcher": "hideNotifList"
 
     initialize: ->
@@ -22,7 +22,6 @@ module.exports = class NotificationsView extends ViewCollection
         @notifList ?= $ '#notifications-list'
         @notifList.prepend view.el
         @sound.play() unless @initializing
-        @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
 
     afterRender: =>
         @counter    = @$ '#notifications-counter'
@@ -33,23 +32,20 @@ module.exports = class NotificationsView extends ViewCollection
         @notifList  = $ '#notifications-list'
         @hideNotifList()
         @sound      = $('#notification-sound')[0]
-        @$('#notifications-toggle').click @showNotifList
         @dismissButton = $ "#dismiss-all"
         @dismissButton.click @dismissAll
 
         super
         @initializing = false
         @collection.fetch()
-        #$(window).on 'click', @windowClicked
 
     remove: =>
-        #$(window).off 'click', @hideNotifList
         super
 
     checkIfEmpty: =>
         newCount = @collection.length
         @noNotifMsg.toggle(newCount is 0)
-        @dismissButton.toggle(newCount isnt 0)
+        #@dismissButton.toggle(newCount isnt 0)
         if newCount is 0 #hide 0 counter
             @counter.html ""
             @counter.hide()
@@ -65,15 +61,15 @@ module.exports = class NotificationsView extends ViewCollection
             @hideNotifList()
 
     showNotifList: () =>
-        if $('#notifications').is ':visible'
+        if $('.right-menu').is ':visible'
             @hideNotifList()
         else
-            $('#notifications').show() #'slide', direction: 'right', 200)
+            $('.right-menu').show()#'slide', direction: 'right', 200)
             @clickcatcher.show()
             @$('#notifications-toggle').addClass 'highlight'
 
     hideNotifList: (event) =>
-        $('#notifications').hide() #'slide', direction: 'right', 200)
+        $('.right-menu').hide() #'slide', direction: 'right', 200)
         @clickcatcher.hide()
         @$('#notifications-toggle').removeClass 'highlight'
 

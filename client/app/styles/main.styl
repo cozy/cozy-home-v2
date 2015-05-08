@@ -73,13 +73,6 @@ body
     height 36px
     padding 0
 
-    a
-        opacity .5
-        transition opacity .3s
-
-        &:hover
-            opacity 1
-
     span
         margin 0
 
@@ -108,13 +101,6 @@ body
         vertical-align super
 
 
-#dismiss-all
-    position absolute
-    bottom 55px
-    left 15px
-    width 386px
-
-
 /* content */
 
 #content
@@ -138,6 +124,17 @@ body
     padding 30px 20px 10px 20px
     background #F7F4F0
 
+    .buttons
+        button.btn
+            display block
+        .fa
+            width 10px
+            display inline
+
+        span
+            display inline
+            width auto
+
 /** Notifications */
 
 #menu-applications-toggle
@@ -149,7 +146,7 @@ body
     opacity 1
 
     span
-        font-size 24px
+        font-size 22px
         padding-top 5px
 
     #current-application
@@ -157,7 +154,7 @@ body
         color white
         font-weight normal
         text-transform uppercase
-        line-height 34px
+        line-height 32px
 
 #menu-applications-container
     margin auto
@@ -167,15 +164,20 @@ body
 
 
 #notifications-toggle
+    transition all 0.3s
     display block
     height 36px
     line-height 34px
-    font-size 36px
     width auto
     cursor pointer
     margin 0
     padding 0 10px
-    transition all 0.3s
+    width 36px
+    height 36px
+    background url('/img/notification.png')
+
+    &:hover
+        background url('/img/notification-orange.png')
 
     img //position hotfix
         vertical-align baseline
@@ -215,8 +217,6 @@ body
         opacity 0
         transition all 0.3s
 
-    &:hover
-        background: rgba(220, 220, 222, 0.3)
 
 #notifications-toggle.highlight
     img
@@ -270,92 +270,94 @@ body
     position fixed
     right 0
     top 36px
-    bottom 0px
-    width 420px
+    bottom 100px
     padding 5px
+    width 420px
     z-index 50
-    overflow-y auto
-    text-align left
-    background #338CF7
     color white
+    text-align left
+    background #333
+    overflow-y auto
 
     ul
         margin 0
         padding 10px
-        overflow-y auto
-        overflow-x hidden
 
         li
             list-style-type none
-
-    #dismiss-all
-        text-align center
-        background-color #338CF7 - 20%
-        margin-top 5px
-        padding-top 5px
-        clear both
-        line-height 25px
-        color black
-        cursor pointer
-
-        &:hover
-            background-color orange + 20%
-            color black
-
-    #logout-button
-        position absolute
-        bottom 10px
-        text-align center
-        background-color #338CF7 - 20%
-        margin-top 5px
-        padding-top 5px
-        cursor pointer
-        width 406px
-        left 15px
-        width 386px
-
-        &:hover
-            background-color orange + 20%
-            color black
-
-        img
-            width 24px
-            height 24px
+            border-bottom 1px solid #555
+            padding 10px 0
 
     .separator
         border-bottom 1px solid #338CF7 + 30%
 
     .notification:hover
         a.dismiss
-            cursor: pointer
-            display: inline
-            color: darkblue
+            cursor pointer
+            display inline
+            opacity 1
 
         a.dismiss:hover
-            opacity: 1
+            color orange
 
     .notification
         a.dismiss
-            display: none
-            float: right
+            display none
+            float right
             line-height 20px
             padding 5px
-            opacity: 0.5
 
         a.doaction
-            float: left
+            float left
             line-height 20px
             padding 5px
-            color: darkblue
-            max-width: 360px
-            width: 360px
-            cursor: pointer
+            color white
+            max-width 330px
+            cursor pointer
 
         &.new
             background: #8f9b9b + 20%
         &.transition
             background-color: #8f9b9b
             transition: background-color 3s
+
+
+#notifications-buttons
+    position fixed
+    bottom 0px
+    right 0px
+    height 100px
+    width 420px
+    padding 10px
+    z-index 50
+    overflow-y none
+    background #333
+
+    #dismiss-all.btn
+        display block
+        text-align center
+        background-color #338CF7
+        margin-bottom 10px
+        cursor pointer
+        font-size 16px
+        padding 5px
+        width 100%
+
+        &:hover
+            background-color orange + 20%
+
+    #logout-button.btn
+        display block
+        text-align center
+        background-color #338CF7
+        cursor pointer
+        font-size 16px
+        padding 5px
+        width 100%
+
+        &:hover
+            background-color orange + 20%
+
 
 @media screen and (-webkit-min-device-pixel-ratio:0)
 
@@ -673,7 +675,6 @@ body
     border-right 1px solid lightgrey - 10%
 
     &.install
-        //opacity .35
         .app-img
             width 50%
 
@@ -780,14 +781,11 @@ body
         button
             width 100%
             display inline-block
-            margin 0 0 0 5px
+            margin 0 0 2px
             min-width 24px
             min-height 24px
             font-size 12px
             text-align left
-
-    .buttons.left
-        margin-top 5px
 
     .comments
         clear both
@@ -1009,8 +1007,8 @@ body
         margin-top: 0
 
     h4
-        margin-bottom: 20px
-        font-size: 20px
+        margin-bottom 20px
+        font-size 20px
 
 .md-footer
     background: lightgrey
@@ -1200,13 +1198,6 @@ body
 
 @media (max-width: 640px)
 
-    header#header
-        display: none
-
-    div.home-body
-        padding-top: 0
-        height: 100%
-
     #account-view
         p
             margin 10px 0
@@ -1268,10 +1259,6 @@ body
         .logout-menu-icon
             display: block
 
-    .customize-icon
-    .help-icon
-        display: none
-
     .application .application-inner
         padding 0
 
@@ -1310,18 +1297,13 @@ body
                 width: 100px
                 height: 100px
 
-    #notifications-container
-        display: none
+    #notifications
+    #notifications-buttons
+        width 310px
 
-        #notifications
-            left: -180px
-            top 0
-            bottom 0
-            width: 310px
-
-            .notification
-                a.doaction
-                    width 260px
+        .notification
+            a.doaction
+                width 260px
 
     #config-applications-view
         .config-application
