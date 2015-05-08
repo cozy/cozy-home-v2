@@ -39,6 +39,7 @@ module.exports = class ConfigApplicationsView extends BaseView
         @$el.find('.title-app').after @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
+        @stackApps.fetch()
         @displayDevices()
 
     openUpdatePopover: (slug) ->
