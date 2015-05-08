@@ -82,8 +82,9 @@ module.exports =
     "hardware consumption":"Matériel"
     "hard drive gigabytes":"(Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
-    "manage your applications":"Gérez vos applications"
-    "manage your devices":"Gérez vos appareils"
+    "manage your applications":"Applications"
+    "manage your devices":"Mobiles et tablettes"
+    "status no device": "Aucun appareil enregistré pour synchronisation."
     "revoke device access": "Révoquer l'accès à l'appareil"
     "synchronized": "synchronisé"
     "no application installed":"Il n'y a pas d'applications installées."
@@ -309,7 +310,7 @@ module.exports =
             <p><img src="/img/home-black.png"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>
         """
         'continue to apps': "Comment gérer mes applications ?"
-        'apps title': "Gérer mes applications"
+        'apps title': "Applications"
         'apps content': """
             <p><img src="/img/config-apps.png"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>
             <p><img src="/img/apps.png"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>

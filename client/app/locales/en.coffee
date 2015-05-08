@@ -126,6 +126,7 @@ module.exports =
     "update all": "Update all"
     "update stack": "Update"
     "refresh page": "Wait please, update takes several minutes."
+    "status no device": "No device registered for synchronization."
     "update stack modal title": "Updating your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?"
     "update stack modal confirm": "Update"
