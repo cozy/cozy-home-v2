@@ -3057,7 +3057,7 @@ var interp;
 buf.push('<header id="header" class="navbar"></header><div id="notifications"><ul id="notifications-list"><li id="no-notif-msg">');
 var __val__ = t('you have no notifications')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li><li class="separator"></li></ul><div class="buttons"><div id="dismiss-all" class="spin-black btn">');
+buf.push('</li></ul><div class="buttons"><div id="dismiss-all" class="spin-black btn">');
 var __val__ = t('dismiss all')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><a id="logout-button" href="#logout" class="btn"><span>');
@@ -5589,7 +5589,7 @@ AppsMenu = require('./menu_applications');
 module.exports = NavbarView = (function(_super) {
   __extends(NavbarView, _super);
 
-  NavbarView.prototype.el = '#header';
+  NavbarView.prototype.el = '.navbar';
 
   NavbarView.prototype.template = require('templates/navbar');
 
@@ -5700,8 +5700,9 @@ module.exports = NotificationsView = (function(_super) {
   __extends(NotificationsView, _super);
 
   function NotificationsView() {
-    this.hideNotifList = __bind(this.hideNotifList, this);
     this.dismissAll = __bind(this.dismissAll, this);
+    this.hideNotifList = __bind(this.hideNotifList, this);
+    this.showNotifList = __bind(this.showNotifList, this);
     this.windowClicked = __bind(this.windowClicked, this);
     this.checkIfEmpty = __bind(this.checkIfEmpty, this);
     this.remove = __bind(this.remove, this);
@@ -5717,7 +5718,6 @@ module.exports = NotificationsView = (function(_super) {
   NotificationsView.prototype.template = require('templates/notifications');
 
   NotificationsView.prototype.events = {
-    "click #notifications-toggle": "showNotifList",
     "click #clickcatcher": "hideNotifList"
   };
 
@@ -5734,8 +5734,7 @@ module.exports = NotificationsView = (function(_super) {
     if (!this.initializing) {
       this.sound.play();
     }
-    this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
-    return this.$('#notifications-toggle').addClass('highlight');
+    return this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
   };
 
   NotificationsView.prototype.afterRender = function() {
@@ -5745,7 +5744,9 @@ module.exports = NotificationsView = (function(_super) {
     this.clickcatcher.hide();
     this.noNotifMsg = $('#no-notif-msg');
     this.notifList = $('#notifications-list');
+    this.hideNotifList();
     this.sound = $('#notification-sound')[0];
+    this.$('#notifications-toggle').click(this.showNotifList);
     this.dismissButton = $("#dismiss-all");
     this.dismissButton.click(this.dismissAll);
     NotificationsView.__super__.afterRender.apply(this, arguments);
@@ -5781,15 +5782,19 @@ module.exports = NotificationsView = (function(_super) {
   };
 
   NotificationsView.prototype.showNotifList = function() {
-    if (this.notifList.is(':visible')) {
-      this.notifList.hide();
-      this.clickcatcher.hide();
-      return this.$el.removeClass('active');
+    if ($('#notifications').is(':visible')) {
+      return this.hideNotifList();
     } else {
-      this.$el.addClass('active');
-      this.notifList.show();
-      return this.clickcatcher.show();
+      $('#notifications').show();
+      this.clickcatcher.show();
+      return this.$('#notifications-toggle').addClass('highlight');
     }
+  };
+
+  NotificationsView.prototype.hideNotifList = function(event) {
+    $('#notifications').hide();
+    this.clickcatcher.hide();
+    return this.$('#notifications-toggle').removeClass('highlight');
   };
 
   NotificationsView.prototype.dismissAll = function() {
@@ -5803,12 +5808,6 @@ module.exports = NotificationsView = (function(_super) {
         return _this.dismissButton.spin(false);
       }
     });
-  };
-
-  NotificationsView.prototype.hideNotifList = function(event) {
-    this.notifList.hide();
-    this.clickcatcher.hide();
-    return this.$el.removeClass('active');
   };
 
   return NotificationsView;

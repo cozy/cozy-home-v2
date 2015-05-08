@@ -1443,9 +1443,6 @@ body {
   z-index: 50;
   right: 0;
 }
-#home-menu .logout-menu-icon {
-  display: none;
-}
 #home-menu .menu-btn {
   z-index: 50;
   height: 52px;
@@ -1542,26 +1539,8 @@ body {
 #dismiss-all {
   position: absolute;
   bottom: 55px;
-  width: 406px;
-}
-#logout-button {
-  position: absolute;
-  bottom: 10px;
-  text-align: center;
-  background-color: #e5cba9;
-  margin-top: 5px;
-  padding-top: 5px;
-  color: #000;
-  cursor: pointer;
-  width: 406px;
-}
-#logout-button:hover {
-  background-color: #ff9d3b;
-  color: #000;
-}
-#logout-button img {
-  width: 24px;
-  height: 24px;
+  left: 15px;
+  width: 386px;
 }
 /* content */
 #content {
@@ -1623,12 +1602,6 @@ body {
   cursor: pointer;
   margin: 0;
   padding: 0 10px;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  transition: all 0.3s;
-  position: relative;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1736,16 +1709,17 @@ body {
   z-index: 10;
 }
 #notifications {
-  z-index: 50;
-  position: absolute;
-  display: none;
+  position: fixed;
   right: 0;
   top: 36px;
   bottom: 0px;
   width: 420px;
   padding: 5px;
+  z-index: 50;
+  overflow-y: auto;
   text-align: left;
-  background: #f7f4f0;
+  background: #338cf7;
+  color: #fff;
 }
 #notifications ul {
   margin: 0;
@@ -1758,30 +1732,51 @@ body {
 }
 #notifications #dismiss-all {
   text-align: center;
-  background-color: #e5cba9;
+  background-color: #096de5;
   margin-top: 5px;
   padding-top: 5px;
   clear: both;
   line-height: 25px;
-  color: #000;
+  color: #fff;
   cursor: pointer;
 }
 #notifications #dismiss-all:hover {
   background-color: #ff9d3b;
   color: #000;
 }
+#notifications #logout-button {
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  background-color: #096de5;
+  margin-top: 5px;
+  padding-top: 5px;
+  cursor: pointer;
+  width: 406px;
+  left: 15px;
+  width: 386px;
+}
+#notifications #logout-button:hover {
+  background-color: #ff9d3b;
+  color: #000;
+}
+#notifications #logout-button img {
+  width: 24px;
+  height: 24px;
+}
 #notifications .separator {
-  border-bottom: 1px solid #d5c5b0;
+  border-bottom: 1px solid #70aff9;
 }
 #notifications .notification:hover a.dismiss {
   cursor: pointer;
   display: inline;
   color: #363a46;
-}
-#notifications .notification:hover a.dismiss:hover {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+#notifications .notification:hover a.dismiss:hover {
+  color: #ff850a;
 }
 #notifications .notification a.dismiss {
   display: none;
@@ -1796,7 +1791,7 @@ body {
   float: left;
   line-height: 20px;
   padding: 5px;
-  color: #363a46;
+  color: #fff;
   max-width: 360px;
   width: 360px;
   cursor: pointer;
