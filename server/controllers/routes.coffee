@@ -1,14 +1,18 @@
-monitor = require './monitor'
-account = require './account'
-applications = require './applications'
+monitor           = require './monitor'
+account           = require './account'
+applications      = require './applications'
 stackApplications = require './stack_application'
-devices = require './devices'
-notifications = require './notifications'
-index = require './index'
+index             = require './index'
+devices           = require './devices'
+notifications     = require './notifications'
+file              = require './file'
+proxy             = require './proxy'
 
 module.exports =
-
     '': get: index.index
+
+    'fileid':
+        param: file.fetch
 
     'slug': param: applications.loadApplication
 
@@ -43,6 +47,7 @@ module.exports =
 
     'api/users': get: account.users
     'api/user': post: account.updateAccount
+
     'api/instances': get: account.instances
     'api/instance': post: account.updateInstance
 
@@ -53,7 +58,24 @@ module.exports =
         get: notifications.show
         delete: notifications.delete
 
+    'api/proxy/':
+        get: proxy.get
+
     'notifications': post: notifications.create
     'notifications/:app/:ref':
         put: notifications.updateOrCreate
         delete: notifications.destroy
+
+    'files/photo/range/:skip/:limit':
+        get: file.photoRange
+    'files/photo/thumbs/:fileid':
+        get: file.photoThumb
+    'files/photo/thumbs/fast/:file_id':
+        get: file.photoThumbFast
+    'files/photo/screens/:fileid':
+        get: file.photoScreen
+    'files/photo/monthdistribution':
+        get: file.photoMonthDistribution
+    'files/photo/:fileid':
+        get: file.photo
+

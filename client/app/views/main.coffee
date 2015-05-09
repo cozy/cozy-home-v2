@@ -1,19 +1,19 @@
-BaseView = require 'lib/base_view'
-appIframeTemplate = require 'templates/application_iframe'
-AppCollection = require 'collections/application'
-StackAppCollection = require 'collections/stackApplication'
+BaseView               = require 'lib/base_view'
+appIframeTemplate      = require 'templates/application_iframe'
+AppCollection          = require 'collections/application'
+StackAppCollection     = require 'collections/stackApplication'
 NotificationCollection = require 'collections/notifications'
-DeviceCollection = require 'collections/device'
-NavbarView = require 'views/navbar'
-AccountView = require 'views/account'
-HelpView = require 'views/help'
+DeviceCollection       = require 'collections/device'
+NavbarView             = require 'views/navbar'
+AccountView            = require 'views/account'
+HelpView               = require 'views/help'
 ConfigApplicationsView = require 'views/config_applications'
-MarketView = require 'views/market'
-ApplicationsListView = require 'views/home'
-SocketListener = require 'lib/socket_listener'
-
-User = require 'models/user'
-
+MarketView             = require 'views/market'
+ApplicationsListView   = require 'views/home'
+SocketListener         = require 'lib/socket_listener'
+User                   = require 'models/user'
+IntentManager          = require 'lib/intentManager'
+ThumbPreloader         = require 'lib/thumb_preloader'
 
 # View describing main screen for user once he is logged
 module.exports = class HomeView extends BaseView
@@ -27,16 +27,18 @@ module.exports = class HomeView extends BaseView
     wizards: ['install', 'quicktour']
 
     constructor: ->
-        @apps = new AppCollection(window.applications)
-        @stackApps = new StackAppCollection(window.stack_applications)
-        @devices = new DeviceCollection(window.devices)
-        @market = new AppCollection(window.market_applications)
+        @apps          = new AppCollection(window.applications)
+        @stackApps     = new StackAppCollection(window.stack_applications)
+        @devices       = new DeviceCollection(window.devices)
+        @market        = new AppCollection(window.market_applications)
         @notifications = new NotificationCollection()
+        @intentManager = new IntentManager()
         SocketListener.watch @apps
         SocketListener.watch @notifications
         SocketListener.watch @devices
-
         super
+        thumbPreloader = new ThumbPreloader()
+        thumbPreloader.start()
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
@@ -243,14 +245,20 @@ module.exports = class HomeView extends BaseView
         # prepends '#' only if there is an actual hash
         hash = "##{hash}" if hash?.length > 0
 
-        @frames.append appIframeTemplate(id: slug, hash:hash)
-        frame = @$("##{slug}-frame")
-        $(frame.prop('contentWindow')).on 'hashchange', =>
-            location = frame.prop('contentWindow').location
-            newhash = location.hash.replace '#', ''
+        iframeHTML = appIframeTemplate(id: slug, hash:hash)
+        iframe     = @frames.append(iframeHTML)[0].lastChild
+        iframe$    = $(iframe)
+        iframe$.prop('contentWindow').addEventListener 'hashchange', =>
+            location = iframe$.prop('contentWindow').location
+            newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
         @resetLayoutSizes()
-        return frame
+        # declare the iframe to the intent manager.
+        # TODO : when each iFrame will
+        # have its own domain, then precise it
+        # (ex : https://app1.joe.cozycloud.cc:8080)
+        @intentManager.registerIframe(iframe,'*')
+        return iframe$
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp

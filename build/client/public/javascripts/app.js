@@ -572,6 +572,54 @@ exports.del = function(url, callbacks) {
 };
 });
 
+;require.register("lib/intentManager", function(exports, require, module) {
+var IntentManager, ObjectPicker,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+ObjectPicker = require('views/object-picker');
+
+module.exports = IntentManager = (function() {
+  function IntentManager() {
+    this.handleIntent = __bind(this.handleIntent, this);
+  }
+
+  IntentManager.prototype.registerIframe = function(iframe, remoteOrigin) {
+    var talker;
+    talker = new Talker(iframe.contentWindow, remoteOrigin);
+    return talker.onMessage = this.handleIntent;
+  };
+
+  IntentManager.prototype.handleIntent = function(message) {
+    var intent;
+    intent = message.data;
+    switch (intent.type) {
+      case 'goto':
+        return window.app.routers.main.navigate("apps/" + intent.params, true);
+      case 'pickObject':
+        return new ObjectPicker(intent.params, function(newPhotoChosen, dataUrl) {
+          return message.respond({
+            newPhotoChosen: newPhotoChosen,
+            dataUrl: dataUrl
+          });
+        });
+    }
+  };
+
+  return IntentManager;
+
+})();
+});
+
+;require.register("lib/proxyclient", function(exports, require, module) {
+var request;
+
+request = require('lib/request');
+
+exports.get = function(url, callback) {
+  return request.request('get', 'api/proxy', url, callback);
+};
+});
+
 ;require.register("lib/request", function(exports, require, module) {
 exports.request = function(type, url, data, callback) {
   var body;
@@ -1541,7 +1589,15 @@ module.exports = {
     'sync title': "Get in sync",
     'sync content': "<p>To learn more about data synchronization, please have a look at the following resources:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Files</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendar</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
     'close wizard': "Now I'm ready to use my Cozy"
-  }
+  },
+  "pick from files": "Choose one photo",
+  "photo-modal chooseAgain": "Choose another photo",
+  "modal ok": "OK",
+  "modal cancel": "Cancel",
+  "no image": "There is no image on your Cozy",
+  "ObjPicker upload btn": "Upload a local file",
+  "drop a file": "Drag & drop a file",
+  "url of an image": "URL of an image on the web"
 };
 });
 
@@ -2002,7 +2058,16 @@ module.exports = {
     'sync title': "Synchronisation",
     'sync content': "<p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
     'close wizard': "Je suis prêt à utiliser mon Cozy"
-  }
+  },
+  "pick from files": "Choisir une photo",
+  "photo-modal chooseAgain": "Changer de photo",
+  "modal ok": "OK",
+  "modal cancel": "Annuler",
+  "no image": "Il n'y a pas d'image sur votre Cozy",
+  "ObjPicker upload btn": "Sélectionnez un fichier local",
+  "more thumbs": "Plus de photo",
+  "drop a file": "Glissez et déposez un fichier",
+  "url of an image": "URL d'une image sur le web"
 };
 });
 
@@ -2443,6 +2508,66 @@ module.exports = Notification = (function(_super) {
 })(BaseModel);
 });
 
+;require.register("models/photo", function(exports, require, module) {
+var Photo, client, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+client = require('../lib/client');
+
+module.exports = Photo = (function(_super) {
+  __extends(Photo, _super);
+
+  function Photo() {
+    _ref = Photo.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  Photo.prototype.defaults = function() {
+    return {
+      thumbsrc: 'img/loading.gif',
+      src: '',
+      orientation: 1
+    };
+  };
+
+  Photo.prototype.url = function() {
+    return Photo.__super__.url.apply(this, arguments) + app.urlKey;
+  };
+
+  Photo.prototype.parse = function(attrs) {
+    if (!attrs.id) {
+      return attrs;
+    } else {
+      return _.extend(attrs, {
+        thumbsrc: ("photos/thumbs/" + attrs.id + ".jpg") + app.urlKey,
+        src: ("photos/" + attrs.id + ".jpg") + app.urlKey,
+        orientation: attrs.orientation
+      });
+    }
+  };
+
+  Photo.prototype.getPrevSrc = function() {
+    return "photos/" + (this.get('id')) + ".jpg";
+  };
+
+  return Photo;
+
+})(Backbone.Model);
+
+Photo.getMonthdistribution = function(callback) {
+  return client.get("files/photo/monthdistribution", callback);
+};
+
+Photo.listFromFiles = function(skip, limit, callback) {
+  return client.get("files/photo/range/" + skip + "/" + limit, callback);
+};
+
+Photo.makeFromFile = function(fileid, attr, callback) {
+  return client.post("files/" + fileid + "/toPhoto", attr, callback);
+};
+});
+
 ;require.register("models/stack_application", function(exports, require, module) {
 var StackApplication, client, _ref,
   __hasProp = {}.hasOwnProperty,
@@ -2586,9 +2711,11 @@ module.exports = User = (function(_super) {
 });
 
 ;require.register("routers/main_router", function(exports, require, module) {
-var MainRouter, _ref,
+var MainRouter, ObjectPickerCroper, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+ObjectPickerCroper = require('../views/object-picker');
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
@@ -2627,6 +2754,11 @@ module.exports = MainRouter = (function(_super) {
       switch (intent.action) {
         case 'goto':
           return _this.navigate("apps/" + intent.params, true);
+        case void 0:
+          if (JSON.parse(intent).type !== 'application/x-talkerjs-v1+json') {
+            return console.log("WEIRD INTENT", intent);
+          }
+          break;
         default:
           return console.log("WEIRD INTENT", intent);
       }
@@ -2639,6 +2771,17 @@ module.exports = MainRouter = (function(_super) {
       return $($('.menu-btn').get(index)).addClass('active');
     } else {
       return $('.menu-btn.active').removeClass('active');
+    }
+  };
+
+  MainRouter.prototype.objectPicker = function(intent) {
+    var _this = this;
+    switch (intent.objectType) {
+      case 'singlePhoto':
+        console.log("home : singlePhoto modal launched");
+        return new ObjectPickerCroper(function(newPhotoChosen, dataUrl) {
+          return console.log("home : singlePhoto modal closed");
+        });
     }
   };
 
@@ -2801,6 +2944,7 @@ return buf.join("");
 };
 });
 
+<<<<<<< HEAD:build/client/public/javascripts/app.js
 require.register("templates/background_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -2826,6 +2970,8 @@ return buf.join("");
 };
 });
 
+=======
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
 require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -3035,6 +3181,7 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
+<<<<<<< HEAD:build/client/public/javascripts/app.js
 buf.push('</p></div><div id="app-list"><section id="apps-leave" class="line"><h2>');
 var __val__ = t('home section leave')
 buf.push(escape(null == __val__ ? "" : __val__));
@@ -3055,6 +3202,22 @@ var __val__ = t('home section misc')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-platform" class="line show"><h2>');
 var __val__ = t('home section platform')
+=======
+buf.push('</p></div><div id="app-list" class="gridster"></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/home_application", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="mask"></div><button class="btn use-widget">');
+var __val__ = t('use widget')
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
@@ -3074,7 +3237,11 @@ return buf.join("");
 };
 });
 
+<<<<<<< HEAD:build/client/public/javascripts/app.js
 require.register("templates/home_application", function(exports, require, module) {
+=======
+require.register("templates/home_application_widget", function(exports, require, module) {
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3107,6 +3274,21 @@ return buf.join("");
 };
 });
 
+<<<<<<< HEAD:build/client/public/javascripts/app.js
+=======
+require.register("templates/long_list_image", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="viewPort"><div class="thumbs"></div></div><div class="index"></div>');
+}
+return buf.join("");
+};
+});
+
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
 require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -3254,6 +3436,47 @@ return buf.join("");
 };
 });
 
+<<<<<<< HEAD:build/client/public/javascripts/app.js
+=======
+require.register("templates/object-picker-photoURL", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="bloc-container"><div class="img-container"><div class="url-preview"></div></div><input');
+buf.push(attrs({ 'placeholder':("" + (t('url of an image')) + ""), 'value':(""), "class": ('modal-url-input') }, {"placeholder":true,"value":true}));
+buf.push('/></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/object-picker-upload", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<button class="modal-uploadBtn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button><div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div></div></div><input type="file" style="display:none" class="uploader"/>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/object-picker", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="objectPickerCont"><nav class="fp-nav-tabs"><div class="tabMarginTop"></div><div role="tablist" aria-controls="objectPickerCont"></div><div class="tabMarginBottom"></div></nav></div><div class="croperCont"><table><tbody><tr><td><img id="img-to-crop"/></td><td><div id="frame-img-preview"><img id="img-preview"/></div></td></tr></tbody></table><a class="chooseAgain">' + escape((interp = t('photo-modal chooseAgain')) == null ? '' : interp) + '</a></div>');
+}
+return buf.join("");
+};
+});
+
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
 require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -3429,7 +3652,11 @@ return buf.join("");
 });
 
 require.register("views/account", function(exports, require, module) {
+<<<<<<< HEAD:build/client/public/javascripts/app.js
 var BackgroundList, BaseView, Instance, locales, request, timezones,
+=======
+var BaseView, locales, request, timezones,
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -4875,48 +5102,69 @@ module.exports = InstallWizardView = (function(_super) {
 })(WizardView);
 });
 
-;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+;require.register("views/long-list-images", function(exports, require, module) {
+var CELL_PADDING, COEF_SECURITY, LongList, MAX_SPEED, MONTH_HEADER_HEIGHT, Photo, THROTTLE,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-BaseView = require('lib/base_view');
+Photo = require('../models/photo');
 
-appIframeTemplate = require('templates/application_iframe');
+THROTTLE = 350;
 
-AppCollection = require('collections/application');
+MAX_SPEED = 2.5 * THROTTLE / 1000;
 
-StackAppCollection = require('collections/stackApplication');
+COEF_SECURITY = 1.5;
 
-NotificationCollection = require('collections/notifications');
+MONTH_HEADER_HEIGHT = 40;
 
-DeviceCollection = require('collections/device');
+CELL_PADDING = 4;
 
-NavbarView = require('views/navbar');
+module.exports = LongList = (function() {
+  function LongList(externalViewPort$) {
+    var _this = this;
+    this.externalViewPort$ = externalViewPort$;
+    this._unselectAll = __bind(this._unselectAll, this);
+    this._clickHandler = __bind(this._clickHandler, this);
+    this.getSelectedID = __bind(this.getSelectedID, this);
+    this.init = __bind(this.init, this);
+    this.state = {
+      selected: {}
+    };
+    this.viewPort$ = document.createElement('div');
+    this.viewPort$.classList.add('viewport');
+    this.externalViewPort$.appendChild(this.viewPort$);
+    this.thumbs$ = document.createElement('div');
+    this.thumbs$.classList.add('thumbs');
+    this.viewPort$.appendChild(this.thumbs$);
+    this.index$ = document.createElement('div');
+    this.index$.classList.add('long-list-index');
+    this.externalViewPort$.appendChild(this.index$);
+    this.viewPort$.style.position = 'relative';
+    this.index$.style.position = 'absolute';
+    this.index$.style.top = 0;
+    this.index$.style.bottom = 0;
+    this.index$.style.right = this.getScrollBarWidth() + 'px';
+    this._initBuffer();
+    this._lastSelectedCol = null;
+    this.isInited = this.isPhotoArrayLoaded = false;
+    Photo.getMonthdistribution(function(error, res) {
+      _this.isPhotoArrayLoaded = true;
+      _this.months = res;
+      if (_this.isInited && _this.isPhotoArrayLoaded) {
+        _this._DOM_controlerInit();
+      }
+      return true;
+    });
+  }
 
-AccountView = require('views/account');
+  LongList.prototype.init = function() {
+    this.isInited = true;
+    if (this.isInited && this.isPhotoArrayLoaded) {
+      this._DOM_controlerInit();
+    }
+    return true;
+  };
 
-HelpView = require('views/help');
-
-ConfigApplicationsView = require('views/config_applications');
-
-MarketView = require('views/market');
-
-ApplicationsListView = require('views/home');
-
-SocketListener = require('lib/socket_listener');
-
-User = require('models/user');
-
-module.exports = HomeView = (function(_super) {
-  __extends(HomeView, _super);
-
-  HomeView.prototype.el = 'body';
-
-  HomeView.prototype.template = require('templates/layout');
-
+<<<<<<< HEAD:build/client/public/javascripts/app.js
   HomeView.prototype.subscriptions = {
     'backgroundChanged': 'changeBackground'
   };
@@ -4961,11 +5209,113 @@ module.exports = HomeView = (function(_super) {
     this.backButton.hide();
     $(window).resize(this.resetLayoutSizes);
     return this.resetLayoutSizes();
+=======
+  LongList.prototype.getSelectedID = function() {
+    var k, thumb$, _ref;
+    _ref = this.state.selected;
+    for (k in _ref) {
+      thumb$ = _ref[k];
+      if (thumb$) {
+        return k;
+      }
+    }
+    return null;
   };
 
-  /* Functions*/
+  LongList.prototype.keyHandler = function(e) {
+    console.log('LongList.keyHandler', e.which);
+    switch (e.which) {
+      case 39:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectNextThumb();
+        break;
+      case 37:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectPreviousThumb();
+        break;
+      case 38:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectThumbUp();
+        break;
+      case 40:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectThumbDown();
+        break;
+      case 36:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectStartLineThumb();
+        break;
+      case 35:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectEndLineThumb();
+        break;
+      case 34:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectPageDownThumb();
+        break;
+      case 33:
+        e.stopPropagation();
+        e.preventDefault();
+        this._selectPageUpThumb();
+        break;
+      default:
+        return false;
+    }
+  };
+
+  LongList.prototype._initBuffer = function() {
+    var thumb, thumb$;
+    thumb$ = document.createElement('img');
+    this.thumbs$.appendChild(thumb$);
+    thumb$.setAttribute('class', 'long-list-thumb');
+    thumb = {
+      prev: null,
+      next: null,
+      el: thumb$,
+      rank: null,
+      id: null
+    };
+    thumb.prev = thumb;
+    thumb.next = thumb;
+    return this.buffer = {
+      first: thumb,
+      firstRk: -1,
+      last: thumb,
+      lastRk: -1,
+      nThumbs: 1,
+      nextLastRk: null,
+      nextLastCol: null,
+      nextLastY: null,
+      nextLastMonthRk: null,
+      nextFirstCol: null,
+      nextFirstMonthRk: null,
+      nextFirstRk: null,
+      nextFirstY: null
+    };
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
+  };
+
+  /**
+   * This is the main procedure. Its scope contains all the functions used to
+   * update the buffer and the shared variables between those functions. This
+   * approach has been chosen for performance reasons (acces to scope
+   * variables faster than to nested properties of objects). It's not an
+   * obvious choice.
+   * Called only when both LongList.init() has been called and that we also
+   * got from the server the month distribution (Photo.getMonthdistribution)
+   *
+   * @return {[type]} [description]
+  */
 
 
+<<<<<<< HEAD:build/client/public/javascripts/app.js
   HomeView.prototype.changeBackground = function(background) {
     var val;
     if (background == null) {
@@ -4981,15 +5331,54 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.logout = function(event) {
     var user,
+=======
+  LongList.prototype._DOM_controlerInit = function() {
+    var buffer, cellPadding, colWidth, counter_speed_avoided, counter_speed_ok, indexHeight, isDefaultToSelect, lastOnScroll_Y, marginLeft, monthHeaderHeight, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInSafeZone, nThumbsPerRow, rowHeight, safeZone, thumbDim, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _createThumbsBottom, _getBufferNextFirst, _getBufferNextLast, _indexClickHandler, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _resizeHandler, _scrollHandler, _updateThumb,
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
       _this = this;
-    user = new User();
-    return user.logout({
-      success: function(data) {
-        return window.location = window.location.origin + '/login/';
-      },
-      error: function() {
-        return alert('Server error occured, logout failed.');
+    months = this.months;
+    buffer = this.buffer;
+    cellPadding = CELL_PADDING;
+    monthHeaderHeight = MONTH_HEADER_HEIGHT;
+    monthTopPadding = monthHeaderHeight + cellPadding;
+    marginLeft = null;
+    thumbWidth = null;
+    thumbHeight = null;
+    colWidth = null;
+    rowHeight = null;
+    nThumbsPerRow = null;
+    nRowsInSafeZoneMargin = null;
+    nThumbsInSafeZone = null;
+    viewPortHeight = null;
+    indexHeight = null;
+    thumbs$Height = null;
+    lastOnScroll_Y = null;
+    safeZone = {
+      firstRk: null,
+      firstMonthRk: null,
+      firstInMonthRow: null,
+      firstCol: null,
+      firstVisibleRk: null,
+      firstY: null,
+      lastRk: null,
+      endCol: null,
+      endMonthRk: null,
+      endY: null,
+      firstThumbToUpdate: null,
+      firstThumbRkToUpdate: null
+    };
+    isDefaultToSelect = true;
+    _scrollHandler = function(e) {
+      if (_this.noScrollScheduled) {
+        lastOnScroll_Y = _this.viewPort$.scrollTop;
+        setTimeout(_adaptBuffer, THROTTLE);
+        _this.noScrollScheduled = false;
       }
+      if (_this.noIndexScrollScheduled) {
+        setTimeout(_adaptIndex, 50);
+        return _this.noIndexScrollScheduled = false;
+      }
+<<<<<<< HEAD:build/client/public/javascripts/app.js
     });
   };
 
@@ -5018,6 +5407,1280 @@ module.exports = HomeView = (function(_super) {
       view.$el.show();
       _this.currentView = view;
       return _this.resetLayoutSizes();
+=======
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
+    };
+    this._scrollHandler = _scrollHandler;
+    _resizeHandler = function() {
+      var MONTH_LABEL_HEIGHT, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInViewPort, nThumbsInSafeZoneMargin, nThumbsInViewPort, nextY, rk, txt, width, y, _i, _j, _len, _len1, _ref, _ref1, _results;
+      width = _this.viewPort$.clientWidth;
+      viewPortHeight = _this.viewPort$.clientHeight;
+      nThumbsPerRow = Math.floor((width - cellPadding) / colWidth);
+      marginLeft = cellPadding + Math.round((width - nThumbsPerRow * colWidth - cellPadding) / 2);
+      nRowsInViewPort = Math.ceil(viewPortHeight / rowHeight);
+      nRowsInSafeZoneMargin = Math.round(COEF_SECURITY * nRowsInViewPort);
+      nThumbsInSafeZoneMargin = nRowsInSafeZoneMargin * nThumbsPerRow;
+      nThumbsInViewPort = nRowsInViewPort * nThumbsPerRow;
+      nThumbsInSafeZone = nThumbsInSafeZoneMargin * 2 + nThumbsInViewPort;
+      nextY = 0;
+      nPhotos = 0;
+      minMonthHeight = Infinity;
+      minMonthNphotos = Infinity;
+      _ref = _this.months;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        month = _ref[_i];
+        nPhotosInMonth = month.nPhotos;
+        month.nRows = Math.ceil(nPhotosInMonth / nThumbsPerRow);
+        month.height = monthTopPadding + month.nRows * rowHeight;
+        month.y = nextY;
+        month.yBottom = nextY + month.height;
+        month.firstRk = nPhotos;
+        month.lastRk = nPhotos + nPhotosInMonth - 1;
+        month.lastThumbCol = (nPhotosInMonth - 1) % nThumbsPerRow;
+        nextY += month.height;
+        nPhotos += nPhotosInMonth;
+        minMonthHeight = Math.min(minMonthHeight, month.height);
+        minMonthNphotos = Math.min(minMonthNphotos, month.nPhotos);
+      }
+      _this.nPhotos = nPhotos;
+      thumbs$Height = nextY;
+      _this.thumbs$.style.setProperty('height', thumbs$Height + 'px');
+      MONTH_LABEL_HEIGHT = 27;
+      minimumIndexHeight = _this.months.length * MONTH_LABEL_HEIGHT;
+      if (minimumIndexHeight * 1.3 <= viewPortHeight) {
+        indexHeight = viewPortHeight;
+      } else {
+        indexHeight = 1.5 * minimumIndexHeight;
+      }
+      y = 0;
+      c = indexHeight - _this.months.length * MONTH_LABEL_HEIGHT;
+      d = nPhotos - minMonthNphotos * _this.months.length;
+      _ref1 = _this.months;
+      _results = [];
+      for (rk = _j = 0, _len1 = _ref1.length; _j < _len1; rk = ++_j) {
+        month = _ref1[rk];
+        txt = month.month;
+        txt = txt.slice(0, 4) + txt.slice(4);
+        label$ = $("<div style='top:" + y + "px; right:0px'>" + txt + "</div>")[0];
+        h = c * (month.nPhotos - minMonthNphotos);
+        h = h / d;
+        h += MONTH_LABEL_HEIGHT;
+        y += h;
+        label$.dataset.monthRk = rk;
+        _results.push(_this.index$.appendChild(label$));
+      }
+      return _results;
+    };
+    _adaptIndex = function() {
+      var C, C_bis, H, td_a, td_b, vph, y;
+      y = _this.viewPort$.scrollTop;
+      H = thumbs$Height;
+      vph = viewPortHeight;
+      C = (H - vph) / (indexHeight - vph);
+      td_a = Math.round((vph * C - vph) / 2);
+      td_b = H - td_a - vph;
+      C_bis = (indexHeight - vph) / (td_b - td_a);
+      if (td_a < y && y < td_b) {
+        _this.index$.style.top = -Math.round(C_bis * (y - td_a)) + 'px';
+        return;
+      }
+<<<<<<< HEAD:build/client/public/javascripts/app.js
+      this.currentView.$el.hide();
+      this.currentView.$el.detach();
+      return displayView();
+=======
+      if (td_a > y) {
+        _this.index$.style.top = 0;
+        return;
+      }
+      if (td_b < y) {
+        return _this.index$.style.top = -(indexHeight - vph) + 'px';
+      }
+    };
+    /**
+     * Adapt the buffer when the viewport has moved
+     * Launched at init and by _scrollHandler
+     * Steps :
+    */
+
+    counter_speed_avoided = 0;
+    counter_speed_ok = 0;
+    _adaptBuffer = function() {
+      var bufr, nAvailable, nToCreate, nToFind, nToMove, previous_firstThumbRkToUpdate, previous_firstThumbToUpdate, speed, targetCol, targetMonthRk, targetRk, targetY, _ref, _ref1;
+      _this.noScrollScheduled = true;
+      _this.noIndexScrollScheduled = true;
+      speed = Math.abs(_this.viewPort$.scrollTop - lastOnScroll_Y) / viewPortHeight;
+      if (speed > MAX_SPEED) {
+        counter_speed_avoided += 1;
+        console.log('too fasts!');
+        console.log('speed ok nb:', counter_speed_ok);
+        console.log('speed nok nb:', counter_speed_avoided);
+        _scrollHandler();
+        return;
+      } else {
+        counter_speed_ok += 1;
+        console.log('speed ok, update buffer');
+        console.log('speed ok nb:', counter_speed_ok);
+        console.log('speed nok nb:', counter_speed_avoided);
+      }
+      bufr = buffer;
+      safeZone.firstRk = null;
+      safeZone.firstMonthRk = null;
+      safeZone.firstInMonthRow = null;
+      safeZone.firstCol = null;
+      safeZone.firstVisibleRk = null;
+      safeZone.firstY = null;
+      safeZone.lastRk = null;
+      safeZone.endCol = null;
+      safeZone.endMonthRk = null;
+      safeZone.endY = null;
+      previous_firstThumbToUpdate = safeZone.firstThumbToUpdate;
+      safeZone.firstThumbToUpdate = null;
+      previous_firstThumbRkToUpdate = safeZone.firstThumbRkToUpdate;
+      safeZone.firstThumbRkToUpdate = null;
+      _computeSafeZone();
+      console.log('\n======_adaptBuffer==beginning=======');
+      console.log('safeZone', JSON.stringify(safeZone, 2));
+      console.log('bufr', bufr);
+      if (safeZone.lastRk > bufr.lastRk) {
+        nToFind = Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone);
+        nAvailable = safeZone.firstRk - bufr.firstRk;
+        if (nAvailable < 0) {
+          nAvailable = 0;
+        }
+        if (nAvailable > bufr.nThumbs) {
+          nAvailable = bufr.nThumbs;
+        }
+        nToCreate = Math.max(nToFind - nAvailable, 0);
+        nToMove = nToFind - nToCreate;
+        if (safeZone.firstRk <= bufr.lastRk) {
+          _getBufferNextLast();
+          targetRk = bufr.nextLastRk;
+          targetMonthRk = bufr.nextLastMonthRk;
+          targetCol = bufr.nextLastCol;
+          targetY = bufr.nextLastY;
+        } else {
+          targetRk = safeZone.firstRk;
+          targetMonthRk = safeZone.firstMonthRk;
+          targetCol = safeZone.firstCol;
+          targetY = safeZone.firstY;
+        }
+        console.log('direction: DOWN', 'nToFind:' + nToFind, 'nAvailable:' + nAvailable, 'nToCreate:' + nToCreate, 'nToMove:' + nToMove, 'targetRk:' + targetRk, 'targetCol' + targetCol, 'targetY' + targetY);
+        if (nToFind > 0) {
+          Photo.listFromFiles(targetRk, nToFind, function(error, res) {
+            if (Error) {
+              console.log(Error);
+            }
+            return _updateThumb(res.files, res.firstRank);
+          });
+        }
+        if (nToCreate > 0) {
+          _ref = _createThumbsBottom(nToCreate, targetRk, targetCol, targetY, targetMonthRk), targetY = _ref[0], targetCol = _ref[1], targetMonthRk = _ref[2];
+          targetRk += nToCreate;
+        }
+        if (nToMove > 0) {
+          _moveBufferToBottom(nToMove, targetRk, targetCol, targetY, targetMonthRk);
+        }
+      } else if (safeZone.firstRk < bufr.firstRk) {
+        nToFind = Math.min(bufr.firstRk - safeZone.firstRk, nThumbsInSafeZone);
+        nAvailable = bufr.lastRk - safeZone.lastRk;
+        if (nAvailable < 0) {
+          nAvailable = 0;
+        }
+        if (nAvailable > bufr.nThumbs) {
+          nAvailable = bufr.nThumbs;
+        }
+        nToCreate = Math.max(nToFind - nAvailable, 0);
+        nToMove = nToFind - nToCreate;
+        if (safeZone.lastRk >= bufr.firstRk) {
+          _getBufferNextFirst();
+          targetRk = bufr.nextFirstRk;
+          targetMonthRk = bufr.nextFirstMonthRk;
+          targetCol = bufr.nextFirstCol;
+          targetY = bufr.nextFirstY;
+        } else {
+          targetRk = safeZone.lastRk;
+          targetCol = safeZone.endCol;
+          targetMonthRk = safeZone.endMonthRk;
+          targetY = safeZone.endY;
+        }
+        console.log('direction: UP', 'nToFind:' + nToFind, 'nAvailable:' + nAvailable, 'nToCreate:' + nToCreate, 'nToMove:' + nToMove, 'targetRk:' + targetRk, 'targetCol' + targetCol, 'targetY' + targetY);
+        if (nToFind > 0) {
+          Photo.listFromFiles(targetRk - nToFind + 1, nToFind, function(error, res) {
+            if (Error) {
+              console.log(Error);
+            }
+            return _updateThumb(res.files, res.firstRank);
+          });
+        }
+        if (nToCreate > 0) {
+          throw new Error('It should not be used in the current implementation');
+          _ref1 = _createThumbsTop(nToCreate, targetRk, targetCol, targetY, targetMonthRk), targetY = _ref1[0], targetCol = _ref1[1], targetMonthRk = _ref1[2];
+          targetRk += nToCreate;
+        }
+        if (nToMove > 0) {
+          _moveBufferToTop(nToMove, targetRk, targetCol, targetY, targetMonthRk);
+        }
+      }
+      if (nToFind == null) {
+        console.log('buffer inside safe zone, no modification of the buffer');
+        safeZone.firstThumbToUpdate = previous_firstThumbToUpdate;
+        safeZone.firstThumbRkToUpdate = previous_firstThumbRkToUpdate;
+      }
+      console.log('======_adaptBuffer==ending=');
+      console.log('bufr', bufr);
+      return console.log('======_adaptBuffer==ended=======');
+    };
+    /**
+     * Called when we get from the server the ids of the thumbs that have
+     * been created or moved
+     * @param  {Array} files     [{id},..,{id}] in chronological order
+     * @param  {Integer} fstFileRk The rank of the first file of files
+    */
+
+    _updateThumb = function(files, fstFileRk) {
+      var bufr, file, fileId, file_i, first, firstThumbRkToUpdate, firstThumbToUpdate, last, lstFileRk, th, thumb, thumb$, _i, _j, _ref, _ref1, _ref2;
+      console.log('\n======_updateThumb started =================');
+      lstFileRk = fstFileRk + files.length - 1;
+      bufr = buffer;
+      thumb = bufr.first;
+      firstThumbToUpdate = safeZone.firstThumbToUpdate;
+      firstThumbRkToUpdate = firstThumbToUpdate.rank;
+      last = bufr.last;
+      first = bufr.first;
+      if (firstThumbRkToUpdate < fstFileRk) {
+        th = firstThumbToUpdate.prev;
+        while (true) {
+          if (th === bufr.first) {
+            return;
+          }
+          if (th.rank === fstFileRk) {
+            firstThumbToUpdate = th;
+            firstThumbRkToUpdate = th.rank;
+            break;
+          }
+          th = th.prev;
+        }
+      }
+      if (lstFileRk < firstThumbRkToUpdate) {
+        th = firstThumbToUpdate.next;
+        while (true) {
+          if (th === bufr.last) {
+            return;
+          }
+          if (th.rank === lstFileRk) {
+            firstThumbToUpdate = th;
+            firstThumbRkToUpdate = th.rank;
+            break;
+          }
+          th = th.next;
+        }
+      }
+      if (firstThumbRkToUpdate <= lstFileRk) {
+        console.log(" update forward: " + firstThumbRkToUpdate + "->" + lstFileRk);
+        console.log("   firstThumbRkToUpdate", firstThumbRkToUpdate, "nFiles", files.length, "fstFileRk", fstFileRk, "lstFileRk", lstFileRk);
+      } else {
+        console.log(" update forward: none");
+      }
+      thumb = firstThumbToUpdate;
+      for (file_i = _i = _ref = firstThumbRkToUpdate - fstFileRk, _ref1 = files.length - 1; _i <= _ref1; file_i = _i += 1) {
+        file = files[file_i];
+        fileId = file.id;
+        thumb$ = thumb.el;
+        thumb$.src = "files/photo/thumbs/" + fileId + ".jpg";
+        thumb$.dataset.id = fileId;
+        thumb.id = fileId;
+        thumb = thumb.prev;
+        if (_this.state.selected[fileId]) {
+          thumb$.classList.add('selectedThumb');
+        } else {
+          thumb$.classList.remove('selectedThumb');
+        }
+      }
+      if (firstThumbRkToUpdate > fstFileRk) {
+        console.log(" update backward " + (firstThumbRkToUpdate - 1) + "->" + fstFileRk);
+        console.log("   firstThumbRkToUpdate", firstThumbRkToUpdate, "nFiles", files.length, "fstFileRk", fstFileRk, "lstFileRk", lstFileRk);
+      } else {
+        console.log(" update backward: none");
+      }
+      thumb = firstThumbToUpdate.next;
+      for (file_i = _j = _ref2 = firstThumbRkToUpdate - fstFileRk - 1; _j >= 0; file_i = _j += -1) {
+        file = files[file_i];
+        fileId = file.id;
+        thumb$ = thumb.el;
+        thumb$.src = "files/photo/thumbs/" + fileId + ".jpg";
+        thumb$.dataset.id = fileId;
+        thumb.id = fileId;
+        thumb = thumb.next;
+        if (_this.state.selected[fileId]) {
+          thumb$.classList.add('selectedThumb');
+        } else {
+          thumb$.classList.remove('selectedThumb');
+        }
+      }
+      if (isDefaultToSelect) {
+        _this._toggleOnThumb$(bufr.first.el);
+        isDefaultToSelect = false;
+      }
+      return console.log('======_updateThumb finished =================');
+    };
+    _getBufferNextFirst = function() {
+      var bufr, inMonthRow, initMonthRk, localRk, month, monthRk, nextFirstRk, _i;
+      bufr = buffer;
+      nextFirstRk = bufr.firstRk - 1;
+      if (nextFirstRk === -1) {
+        return;
+      }
+      bufr.nextFirstRk = nextFirstRk;
+      initMonthRk = safeZone.endMonthRk;
+      for (monthRk = _i = initMonthRk; _i >= 0; monthRk = _i += -1) {
+        month = months[monthRk];
+        if (month.firstRk <= nextFirstRk) {
+          break;
+        }
+      }
+      bufr.nextFirstMonthRk = monthRk;
+      localRk = nextFirstRk - month.firstRk;
+      inMonthRow = Math.floor(localRk / nThumbsPerRow);
+      bufr.nextFirstY = month.y + monthTopPadding + inMonthRow * rowHeight;
+      return bufr.nextFirstCol = localRk % nThumbsPerRow;
+    };
+    _getBufferNextLast = function() {
+      var bufr, inMonthRow, initMonthRk, localRk, month, monthRk, nextLastRk, _i, _ref;
+      bufr = buffer;
+      nextLastRk = bufr.lastRk + 1;
+      if (nextLastRk === _this.nPhotos) {
+        return;
+      }
+      bufr.nextLastRk = nextLastRk;
+      initMonthRk = safeZone.firstMonthRk;
+      for (monthRk = _i = initMonthRk, _ref = months.length - 1; _i <= _ref; monthRk = _i += 1) {
+        month = months[monthRk];
+        if (nextLastRk <= month.lastRk) {
+          break;
+        }
+      }
+      bufr.nextLastMonthRk = monthRk;
+      localRk = nextLastRk - month.firstRk;
+      inMonthRow = Math.floor(localRk / nThumbsPerRow);
+      bufr.nextLastY = month.y + monthTopPadding + inMonthRow * rowHeight;
+      return bufr.nextLastCol = localRk % nThumbsPerRow;
+    };
+    /**
+     * [_computeSafeZone description]
+     * @return {[type]} [description]
+    */
+
+    _computeSafeZone = function() {
+      var hasReachedLastPhoto;
+      _SZ_initStartPoint();
+      _SZ_setMarginAtStart();
+      hasReachedLastPhoto = _SZ_initEndPoint();
+      if (hasReachedLastPhoto) {
+        return _SZ_bottomCase();
+      }
+    };
+    _SZ_initStartPoint = function() {
+      var SZ, Y, inMonthRow, month, monthRk, _i, _len, _ref;
+      SZ = safeZone;
+      Y = _this.viewPort$.scrollTop;
+      _ref = _this.months;
+      for (monthRk = _i = 0, _len = _ref.length; _i < _len; monthRk = ++_i) {
+        month = _ref[monthRk];
+        if (month.yBottom > Y) {
+          break;
+        }
+      }
+      inMonthRow = Math.floor((Y - month.y - monthTopPadding) / rowHeight);
+      if (inMonthRow < 0) {
+        inMonthRow = 0;
+      }
+      SZ.firstRk = month.firstRk + inMonthRow * nThumbsPerRow;
+      SZ.firstY = month.y + monthTopPadding + inMonthRow * rowHeight;
+      SZ.firstMonthRk = monthRk;
+      SZ.firstCol = 0;
+      SZ.firstThumbToUpdate = null;
+      SZ.firstInMonthRow = inMonthRow;
+      return SZ.firstVisibleRk = SZ.firstRk;
+    };
+    _SZ_setMarginAtStart = function() {
+      var SZ, inMonthRow, j, month, rowsSeen, _i, _ref;
+      SZ = safeZone;
+      inMonthRow = SZ.firstInMonthRow - nRowsInSafeZoneMargin;
+      if (inMonthRow >= 0) {
+        month = _this.months[SZ.firstMonthRk];
+        SZ.firstRk = month.firstRk + inMonthRow * nThumbsPerRow;
+        SZ.firstY = month.y + monthTopPadding + inMonthRow * rowHeight;
+        SZ.firstInMonthRow = inMonthRow;
+        return;
+      } else {
+        rowsSeen = SZ.firstInMonthRow;
+        for (j = _i = _ref = SZ.firstMonthRk - 1; _i >= 0; j = _i += -1) {
+          month = _this.months[j];
+          if (rowsSeen + month.nRows >= nRowsInSafeZoneMargin) {
+            inMonthRow = month.nRows - nRowsInSafeZoneMargin + rowsSeen;
+            SZ.firstRk = month.firstRk + inMonthRow * nThumbsPerRow;
+            SZ.firstY = month.y + monthTopPadding + inMonthRow * rowHeight;
+            SZ.firstInMonthRow = inMonthRow;
+            SZ.firstMonthRk = j;
+            return;
+          } else {
+            rowsSeen += month.nRows;
+          }
+        }
+      }
+      SZ.firstRk = 0;
+      SZ.firstMonthRk = 0;
+      SZ.firstInMonthRow = 0;
+      SZ.firstCol = 0;
+      return SZ.firstY = monthTopPadding;
+    };
+    /**
+     * Finds the end point of the safeZone.
+     * Returns true if the safeZone end pointer should be after the last
+     * thumb
+    */
+
+    _SZ_initEndPoint = function() {
+      var SZ, inMonthRk, inMonthRow, lastRk, month, monthRk, _i, _ref, _ref1;
+      SZ = safeZone;
+      lastRk = SZ.firstRk + nThumbsInSafeZone - 1;
+      if (lastRk >= _this.nPhotos) {
+        lastRk = _this.nPhotos - 1;
+        safeZone.lastRk = lastRk;
+        return true;
+      }
+      for (monthRk = _i = _ref = SZ.firstMonthRk, _ref1 = months.length - 1; _ref <= _ref1 ? _i <= _ref1 : _i >= _ref1; monthRk = _ref <= _ref1 ? ++_i : --_i) {
+        month = months[monthRk];
+        if (lastRk <= month.lastRk) {
+          break;
+        }
+      }
+      inMonthRk = lastRk - month.firstRk;
+      inMonthRow = Math.floor(inMonthRk / nThumbsPerRow);
+      safeZone.lastRk = lastRk;
+      safeZone.endMonthRk = monthRk;
+      safeZone.endCol = inMonthRk % nThumbsPerRow;
+      safeZone.endY = month.y + monthTopPadding + inMonthRow * rowHeight;
+      return false;
+    };
+    _SZ_bottomCase = function() {
+      var SZ, inMonthRk, inMonthRow, month, monthRk, rk, thumbsSeen, thumbsTarget, _i;
+      SZ = safeZone;
+      months = _this.months;
+      monthRk = months.length - 1;
+      thumbsSeen = 0;
+      thumbsTarget = nThumbsInSafeZone;
+      for (monthRk = _i = monthRk; _i >= 0; monthRk = _i += -1) {
+        month = months[monthRk];
+        thumbsSeen += month.nPhotos;
+        if (thumbsSeen >= thumbsTarget) {
+          break;
+        }
+      }
+      if (thumbsSeen < thumbsTarget) {
+        SZ.firstMonthRk = 0;
+        SZ.firstInMonthRow = 0;
+        SZ.firstRk = 0;
+        return SZ.firstY = month.y + cellPadding + monthHeaderHeight;
+      } else {
+        rk = _this.nPhotos - thumbsTarget;
+        inMonthRk = rk - month.firstRk;
+        inMonthRow = Math.floor(inMonthRk / nThumbsPerRow);
+        SZ.firstMonthRk = monthRk;
+        SZ.firstInMonthRow = inMonthRow;
+        SZ.firstCol = inMonthRk % nThumbsPerRow;
+        SZ.firstRk = rk;
+        return SZ.firstY = month.y + cellPadding + monthHeaderHeight + inMonthRow * rowHeight;
+      }
+    };
+    _createThumbsBottom = function(nToCreate, startRk, startCol, startY, monthRk) {
+      var bufr, col, lastLast, localRk, month, rk, rowY, style, thumb, thumb$, _i, _ref;
+      bufr = buffer;
+      rowY = startY;
+      col = startCol;
+      month = _this.months[monthRk];
+      localRk = startRk - month.firstRk;
+      lastLast = bufr.last;
+      for (rk = _i = startRk, _ref = startRk + nToCreate - 1; _i <= _ref; rk = _i += 1) {
+        if (localRk === 0) {
+          _insertMonthLabel(month);
+        }
+        thumb$ = document.createElement('img');
+        thumb$.dataset.rank = rk;
+        thumb$.setAttribute('class', 'long-list-thumb');
+        thumb = {
+          next: bufr.last,
+          prev: bufr.first,
+          el: thumb$,
+          rank: rk,
+          id: null
+        };
+        if (rk === safeZone.firstVisibleRk) {
+          safeZone.firstThumbToUpdate = thumb;
+        }
+        bufr.first.next = thumb;
+        bufr.last.prev = thumb;
+        bufr.last = thumb;
+        thumb$.textContent = rk + ' ' + month.month.slice(0, 4) + '-' + month.month.slice(4);
+        style = thumb$.style;
+        style.top = rowY + 'px';
+        style.left = (marginLeft + col * colWidth) + 'px';
+        _this.thumbs$.appendChild(thumb$);
+        localRk += 1;
+        if (localRk === month.nPhotos) {
+          monthRk += 1;
+          month = _this.months[monthRk];
+          localRk = 0;
+          col = 0;
+          rowY += rowHeight + monthTopPadding;
+        } else {
+          col += 1;
+          if (col === nThumbsPerRow) {
+            rowY += rowHeight;
+            col = 0;
+          }
+        }
+      }
+      bufr.lastRk = rk - 1;
+      bufr.nThumbs += nToCreate;
+      if (safeZone.firstThumbToUpdate === null) {
+        safeZone.firstThumbToUpdate = lastLast.prev;
+      }
+      bufr.nextLastRk = rk;
+      bufr.nextLastCol = col;
+      bufr.nextLastY = rowY;
+      bufr.nextLastMonthRk = monthRk;
+      return [rowY, col, monthRk];
+    };
+    _moveBufferToBottom = function(nToMove, startRk, startCol, startY, monthRk) {
+      var col, localRk, month, monthRk_initial, rk, rowY, style, thumb, thumb$, _i, _ref;
+      monthRk_initial = monthRk;
+      rowY = startY;
+      col = startCol;
+      month = _this.months[monthRk];
+      localRk = startRk - month.firstRk;
+      if (safeZone.firstThumbToUpdate === null) {
+        safeZone.firstThumbToUpdate = buffer.first;
+      }
+      for (rk = _i = startRk, _ref = startRk + nToMove - 1; _i <= _ref; rk = _i += 1) {
+        if (localRk === 0) {
+          _insertMonthLabel(month);
+        }
+        thumb = buffer.first;
+        thumb$ = thumb.el;
+        thumb$.dataset.rank = rk;
+        thumb.rank = rk;
+        thumb$.src = '';
+        thumb$.dataset.id = '';
+        style = thumb$.style;
+        style.top = rowY + 'px';
+        style.left = (marginLeft + col * colWidth) + 'px';
+        if (rk === safeZone.firstVisibleRk) {
+          safeZone.firstThumbToUpdate = thumb;
+        }
+        buffer.last = buffer.first;
+        buffer.first = buffer.first.prev;
+        buffer.firstRk = buffer.first.rank;
+        buffer.last.rank = rk;
+        localRk += 1;
+        if (localRk === month.nPhotos) {
+          monthRk += 1;
+          month = _this.months[monthRk];
+          localRk = 0;
+          col = 0;
+          rowY += rowHeight + monthTopPadding;
+        } else {
+          col += 1;
+          if (col === nThumbsPerRow) {
+            rowY += rowHeight;
+            col = 0;
+          }
+        }
+      }
+      console.log('firstThumbToUpdate (_moveBufferToBottom)', safeZone.firstThumbToUpdate.el);
+      buffer.lastRk = rk - 1;
+      buffer.firstRk = buffer.first.rank;
+      buffer.nextLastRk = rk;
+      buffer.nextLastCol = col;
+      buffer.nextLastY = rowY;
+      return buffer.nextLastMonthRk = monthRk;
+    };
+    _moveBufferToTop = function(nToMove, startRk, startCol, startY, monthRk) {
+      var col, localRk, month, rk, rowY, style, thumb, thumb$, _i, _ref;
+      rowY = startY;
+      col = startCol;
+      month = _this.months[monthRk];
+      localRk = startRk - month.firstRk;
+      if (safeZone.firstThumbToUpdate === null) {
+        safeZone.firstThumbToUpdate = buffer.last;
+      }
+      for (rk = _i = startRk, _ref = startRk - nToMove + 1; _i >= _ref; rk = _i += -1) {
+        thumb = buffer.last;
+        thumb$ = thumb.el;
+        thumb$.dataset.rank = rk;
+        thumb.rank = rk;
+        thumb$.src = '';
+        thumb$.dataset.id = '';
+        style = thumb$.style;
+        style.top = rowY + 'px';
+        style.left = (marginLeft + col * colWidth) + 'px';
+        if (rk === safeZone.firstVisibleRk) {
+          safeZone.firstThumbToUpdate = thumb;
+        }
+        buffer.first = buffer.last;
+        buffer.last = buffer.last.next;
+        buffer.lastRk = buffer.last.rank;
+        buffer.first.rank = rk;
+        localRk -= 1;
+        if (localRk === -1) {
+          if (rk === 0) {
+            rk = -1;
+            break;
+          }
+          _insertMonthLabel(month);
+          monthRk -= 1;
+          month = _this.months[monthRk];
+          localRk = month.nPhotos - 1;
+          col = month.lastThumbCol;
+          rowY -= cellPadding + monthHeaderHeight + rowHeight;
+        } else {
+          col -= 1;
+          if (col === -1) {
+            rowY -= rowHeight;
+            col = nThumbsPerRow - 1;
+          }
+        }
+      }
+      console.log('firstThumbToUpdate (_moveBufferToTop)', safeZone.firstThumbToUpdate.el);
+      buffer.firstRk = rk + 1;
+      return buffer.lastRk = buffer.last.rank;
+    };
+    _insertMonthLabel = function(month) {
+      var label$;
+      if (month.label$) {
+        label$ = month.label$;
+      } else {
+        label$ = document.createElement('div');
+        label$.classList.add('long-list-month-label');
+        _this.thumbs$.appendChild(label$);
+        month.label$ = label$;
+      }
+      label$.textContent = month.month.slice(0, 4) + '-' + month.month.slice(-2);
+      label$.style.top = (month.y + monthTopPadding - 21) + 'px';
+      return label$.style.left = '7px';
+    };
+    _indexClickHandler = function(e) {
+      var monthRk;
+      monthRk = e.target.dataset.monthRk;
+      if (monthRk) {
+        return _this.viewPort$.scrollTop = _this.months[monthRk].y;
+      }
+    };
+    thumbDim = this.buffer.first.el.getBoundingClientRect();
+    thumbWidth = thumbDim.width;
+    colWidth = thumbWidth + cellPadding;
+    thumbHeight = thumbDim.height;
+    this.thumbHeight = thumbHeight;
+    rowHeight = thumbHeight + cellPadding;
+    _resizeHandler();
+    _adaptBuffer();
+    isDefaultToSelect = true;
+    this.thumbs$.addEventListener('click', this._clickHandler);
+    this.viewPort$.addEventListener('scroll', _scrollHandler);
+    return this.index$.addEventListener('click', _indexClickHandler);
+  };
+
+  LongList.prototype._clickHandler = function(e) {
+    var th, thBottomY, thTopY, viewPortBottomY, viewPortTopY;
+    th = e.target;
+    this._lastSelectedCol = this._coordonate.left(th);
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    viewPortTopY = this.viewPort$.scrollTop;
+    viewPortBottomY = viewPortTopY + this.viewPort$.clientHeight;
+    thTopY = this._coordonate.top(th);
+    thBottomY = thTopY + this.thumbHeight;
+    if (viewPortBottomY < thBottomY) {
+      th.scrollIntoView(false);
+    }
+    if (thTopY < viewPortTopY) {
+      return th.scrollIntoView(true);
+    }
+  };
+
+  /**
+   * toogles on a thumb.
+   * Returns null if the thumb is already selected or if there is no image id
+   * associated yet
+  */
+
+
+  LongList.prototype._toggleOnThumb$ = function(thumb$) {
+    if (thumb$.dataset.id === '') {
+      return null;
+    }
+    if (this.state.selected[thumb$.dataset.id]) {
+      return null;
+    }
+    this._unselectAll();
+    thumb$.classList.add('selectedThumb');
+    return this.state.selected[thumb$.dataset.id] = thumb$;
+  };
+
+  LongList.prototype._unselectAll = function() {
+    var id, thumb$, _ref, _results;
+    _ref = this.state.selected;
+    _results = [];
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (typeof thumb$ === 'object') {
+        thumb$.classList.remove('selectedThumb');
+        _results.push(this.state.selected[id] = false);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  LongList.prototype._getSelectedThumb$ = function() {
+    var id, thumb$, _ref;
+    _ref = this.state.selected;
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (typeof thumb$ === 'object') {
+        return thumb$;
+      }
+    }
+    return null;
+  };
+
+  LongList.prototype._selectNextThumb = function() {
+    var id, nextThumb$, thumb$, _ref;
+    _ref = this.state.selected;
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (typeof thumb$ === 'object') {
+        break;
+      }
+    }
+    nextThumb$ = this._getNextThumb$(thumb$);
+    if (nextThumb$ === null) {
+      return null;
+    }
+    this._lastSelectedCol = this._coordonate.left(nextThumb$);
+    if (!this._toggleOnThumb$(nextThumb$)) {
+      return null;
+    }
+    return this._moveViewportToBottomOfThumb$(nextThumb$);
+  };
+
+  LongList.prototype._selectPreviousThumb = function() {
+    var prevThumb$, thumb$;
+    thumb$ = this._getSelectedThumb$();
+    prevThumb$ = this._getPreviousThumb$(thumb$);
+    if (prevThumb$ === null) {
+      return null;
+    }
+    this._lastSelectedCol = this._coordonate.left(prevThumb$);
+    if (!this._toggleOnThumb$(prevThumb$)) {
+      return null;
+    }
+    return this._moveViewportToTopOfThumb$(prevThumb$);
+  };
+
+  LongList.prototype._selectThumbUp = function() {
+    var left, th, thumb$, top;
+    thumb$ = this._getSelectedThumb$();
+    if (thumb$ === null) {
+      return null;
+    }
+    if (thumb$.dataset.rank === '0') {
+      return null;
+    }
+    if (this._lastSelectedCol === null) {
+      left = this._coordonate.left(thumb$);
+    } else {
+      left = this._lastSelectedCol;
+    }
+    top = thumb$.style.top;
+    th = this._getPreviousThumb$(thumb$);
+    if (th === null) {
+      return null;
+    }
+    while (th.style.left !== left) {
+      if (th.dataset.rank === '0') {
+        this._lastSelectedCol = this._coordonate.left(th);
+        if (!this._toggleOnThumb$(th)) {
+          return null;
+        }
+        this._moveViewportToTopOfThumb$(th);
+        return th;
+      }
+      if (th.style.top !== top) {
+        if (this._coordonate.left(th) <= left) {
+          if (!this._toggleOnThumb$(th)) {
+            return null;
+          }
+          this._moveViewportToTopOfThumb$(th);
+          return th;
+        }
+      }
+      th = this._getPreviousThumb$(th);
+      if (th === null) {
+        return null;
+      }
+    }
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    this._moveViewportToTopOfThumb$(th);
+    return th;
+  };
+
+  LongList.prototype._selectThumbDown = function() {
+    var hasAlreadyChangedOfRow, left, th, thumb$, top;
+    thumb$ = this._getSelectedThumb$();
+    if (thumb$ === null) {
+      return null;
+    }
+    if (this._coordonate.rank(thumb$) === this.nPhotos - 1) {
+      return null;
+    }
+    if (this._lastSelectedCol === null) {
+      left = this._coordonate.left(thumb$);
+    } else {
+      left = this._lastSelectedCol;
+    }
+    top = thumb$.style.top;
+    th = this._getNextThumb$(thumb$);
+    if (th === null) {
+      return null;
+    }
+    hasAlreadyChangedOfRow = false;
+    while (this._coordonate.left(th) !== left) {
+      if (this._coordonate.rank(th) === this.nPhotos - 1) {
+        this._lastSelectedCol = this._coordonate.left(th);
+        if (!this._toggleOnThumb$(th)) {
+          return null;
+        }
+        this._moveViewportToBottomOfThumb$(th);
+        return th;
+      }
+      if (th.style.top !== top) {
+        if (hasAlreadyChangedOfRow) {
+          th = this._getPreviousThumb$(th);
+          if (th === null) {
+            return null;
+          }
+          if (!this._toggleOnThumb$(th)) {
+            return null;
+          }
+          this._moveViewportToBottomOfThumb$(th);
+          return th;
+        }
+        hasAlreadyChangedOfRow = true;
+        top = th.style.top;
+        if (this._coordonate.left(th) >= left) {
+          if (!this._toggleOnThumb$(th)) {
+            return null;
+          }
+          this._moveViewportToBottomOfThumb$(th);
+          return th;
+        }
+      }
+      th = this._getNextThumb$(th);
+      if (th === null) {
+        return null;
+      }
+    }
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    this._moveViewportToBottomOfThumb$(th);
+    return th;
+  };
+
+  LongList.prototype._selectEndLineThumb = function() {
+    var left, th, thumb$, top;
+    thumb$ = this._getSelectedThumb$();
+    if (thumb$ === null) {
+      return;
+    }
+    if (this._coordonate.rank(thumb$) === this.nPhotos - 1) {
+      return;
+    }
+    if (this._lastSelectedCol === null) {
+      left = this._coordonate.left(thumb$);
+    } else {
+      left = this._lastSelectedCol;
+    }
+    top = thumb$.style.top;
+    th = this._getNextThumb$(thumb$);
+    if (th === null) {
+      return null;
+    }
+    while (th.style.top === top) {
+      if (this._coordonate.rank(th) === this.nPhotos - 1) {
+        this._lastSelectedCol = this._coordonate.left(th);
+        if (!this._toggleOnThumb$(th)) {
+          return null;
+        }
+        this._moveViewportToBottomOfThumb$(th);
+        return;
+      }
+      th = this._getNextThumb$(th);
+      if (th === null) {
+        return null;
+      }
+    }
+    th = this._getPreviousThumb$(th);
+    if (th === null) {
+      return null;
+    }
+    this._lastSelectedCol = this._coordonate.left(th);
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    this._moveViewportToBottomOfThumb$(th);
+  };
+
+  LongList.prototype._selectStartLineThumb = function() {
+    var left, th, thumb$, top;
+    thumb$ = this._getSelectedThumb$();
+    if (thumb$ === null) {
+      return;
+    }
+    if (Number(thumb$.dataset.rank) === 0) {
+      return;
+    }
+    if (this._lastSelectedCol === null) {
+      left = this._coordonate.left(thumb$);
+    } else {
+      left = this._lastSelectedCol;
+    }
+    top = thumb$.style.top;
+    th = this._getPreviousThumb$(thumb$);
+    if (th === null) {
+      return null;
+    }
+    while (th.style.top === top) {
+      if (this._coordonate.rank(th) === 0) {
+        this._lastSelectedCol = this._coordonate.left(th);
+        if (!this._toggleOnThumb$(th)) {
+          return null;
+        }
+        this._moveViewportToBottomOfThumb$(th);
+        return;
+      }
+      th = this._getPreviousThumb$(th);
+    }
+    th = this._getNextThumb$(th);
+    if (th === null) {
+      return null;
+    }
+    this._lastSelectedCol = this._coordonate.left(th);
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    this._moveViewportToBottomOfThumb$(th);
+  };
+
+  LongList.prototype._coordonate = {
+    top: function(thumb$) {
+      return Number(thumb$.style.top.slice(0, -2));
+    },
+    left: function(thumb$) {
+      return Number(thumb$.style.left.slice(0, -2));
+    },
+    rank: function(thumb$) {
+      return Number(thumb$.dataset.rank);
+    }
+  };
+
+  LongList.prototype._selectPageDownThumb = function() {
+    var th, thBottomY, thTopY, thumb$, viewPortBottomY;
+    viewPortBottomY = this.viewPort$.scrollTop + this.viewPort$.clientHeight;
+    thumb$ = this._getSelectedThumb$();
+    if (thumb$ === null) {
+      return;
+    }
+    th = thumb$;
+    thTopY = this._coordonate.top(th);
+    thBottomY = thTopY + this.thumbHeight;
+    while (thBottomY <= viewPortBottomY) {
+      th = this._selectThumbDown();
+      if (th === null) {
+        return;
+      }
+      thTopY = this._coordonate.top(th);
+      thBottomY = thTopY + this.thumbHeight;
+    }
+    return th.scrollIntoView(true);
+  };
+
+  LongList.prototype._selectPageUpThumb = function() {
+    var th, thTopY, thumb$, viewPortTopY;
+    viewPortTopY = this.viewPort$.scrollTop;
+    thumb$ = this._getSelectedThumb$();
+    th = thumb$;
+    thTopY = this._coordonate.top(th);
+    while (thTopY >= viewPortTopY) {
+      th = this._selectThumbUp();
+      if (th === null) {
+        return;
+      }
+      thTopY = this._coordonate.top(th);
+    }
+    return th.scrollIntoView(false);
+  };
+
+  LongList.prototype._moveViewportToBottomOfThumb$ = function(thumb$) {
+    var thumb$Bottom, thumb$Top, viewPortBottomY;
+    thumb$Top = this._coordonate.top(thumb$);
+    thumb$Bottom = thumb$Top + this.thumbHeight;
+    viewPortBottomY = this.viewPort$.scrollTop + this.viewPort$.clientHeight;
+    if (viewPortBottomY < thumb$Bottom) {
+      thumb$.scrollIntoView(false);
+      return this._scrollHandler();
+    }
+  };
+
+  LongList.prototype._moveViewportToTopOfThumb$ = function(thumb$) {
+    var thumb$Top, viewPortTop;
+    thumb$Top = this._coordonate.top(thumb$);
+    viewPortTop = this.viewPort$.scrollTop;
+    if (thumb$Top < viewPortTop) {
+      thumb$.scrollIntoView(true);
+      this._scrollHandler();
+      return this._scrollHandler();
+    }
+  };
+
+  /**
+   * @param  {Element} thumb$ # the element corresponding to the thumb
+   * @return {null}        # return null if on first thumb
+   * @return {Element}     # the previous element thumb or null if on first
+   *                         thumb of first of the buffer
+  */
+
+
+  LongList.prototype._getPreviousThumb$ = function(thumbEl) {
+    var th;
+    if (thumbEl.dataset.rank === '0') {
+      return null;
+    }
+    if (th === this.buffer.first.el) {
+      return null;
+    }
+    th = thumbEl.previousElementSibling;
+    if (th === null) {
+      th = thumbEl.parentNode.lastElementChild;
+      if (th === thumbEl) {
+        return null;
+      }
+    }
+    while (th.nodeName === 'DIV') {
+      th = th.previousElementSibling;
+      if (th === null) {
+        th = thumbEl.parentNode.lastElementChild;
+        if (th === thumbEl) {
+          return null;
+        }
+      }
+    }
+    return th;
+  };
+
+  /**
+   *
+   * @param  {Element} thumb$ [description]
+   * @return {Element|null}   # returns an element or null if on the last
+   *                            thumb or the last of the buffer
+  */
+
+
+  LongList.prototype._getNextThumb$ = function(thumb$) {
+    var th;
+    if (this._coordonate.rank(thumb$) === this.nPhotos - 1) {
+      return null;
+    }
+    if (th === this.buffer.last.el) {
+      return null;
+    }
+    th = thumb$.nextElementSibling;
+    if (th === null) {
+      th = thumb$.parentNode.firstElementChild;
+      if (th === thumb$) {
+        return null;
+      }
+    }
+    while (th.nodeName === 'DIV') {
+      th = th.nextElementSibling;
+      if (th === null) {
+        th = thumb$.parentNode.firstElementChild;
+        if (th === thumb$) {
+          return null;
+        }
+      }
+    }
+    return th;
+  };
+
+  LongList.prototype.getScrollBarWidth = function() {
+    var inner, outer, w1, w2;
+    inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+    outer = document.createElement('div');
+    outer.style.position = "absolute";
+    outer.style.top = "0px";
+    outer.style.left = "0px";
+    outer.style.visibility = "hidden";
+    outer.style.width = "200px";
+    outer.style.height = "150px";
+    outer.style.overflow = "hidden";
+    outer.appendChild(inner);
+    document.body.appendChild(outer);
+    w1 = inner.offsetWidth;
+    outer.style.overflow = 'scroll';
+    w2 = inner.offsetWidth;
+    if (w1 === w2) {
+      w2 = outer.clientWidth;
+    }
+    document.body.removeChild(outer);
+    return w1 - w2;
+  };
+
+  return LongList;
+
+})();
+});
+
+;require.register("views/main", function(exports, require, module) {
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+BaseView = require('lib/base_view');
+
+appIframeTemplate = require('templates/application_iframe');
+
+AppCollection = require('collections/application');
+
+StackAppCollection = require('collections/stackApplication');
+
+NotificationCollection = require('collections/notifications');
+
+DeviceCollection = require('collections/device');
+
+NavbarView = require('views/navbar');
+
+AccountView = require('views/account');
+
+HelpView = require('views/help');
+
+ConfigApplicationsView = require('views/config_applications');
+
+MarketView = require('views/market');
+
+ApplicationsListView = require('views/home');
+
+SocketListener = require('lib/socket_listener');
+
+User = require('models/user');
+
+IntentManager = require('lib/intentManager');
+
+module.exports = HomeView = (function(_super) {
+  __extends(HomeView, _super);
+
+  HomeView.prototype.el = 'body';
+
+  HomeView.prototype.template = require('templates/layout');
+
+  HomeView.prototype.wizards = ['install', 'quicktour'];
+
+  function HomeView() {
+    this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
+    this.onAppHashChanged = __bind(this.onAppHashChanged, this);
+    this.displayUpdateApplication = __bind(this.displayUpdateApplication, this);
+    this.displayConfigApplications = __bind(this.displayConfigApplications, this);
+    this.displayHelp = __bind(this.displayHelp, this);
+    this.displayAccount = __bind(this.displayAccount, this);
+    this.displayMarket = __bind(this.displayMarket, this);
+    this.displayApplicationsListEdit = __bind(this.displayApplicationsListEdit, this);
+    this.displayApplicationsList = __bind(this.displayApplicationsList, this);
+    this.displayView = __bind(this.displayView, this);
+    this.logout = __bind(this.logout, this);
+    this.afterRender = __bind(this.afterRender, this);
+    this.apps = new AppCollection();
+    this.stackApps = new StackAppCollection();
+    this.devices = new DeviceCollection();
+    this.notifications = new NotificationCollection();
+    this.intentManager = new IntentManager();
+    SocketListener.watch(this.apps);
+    SocketListener.watch(this.notifications);
+    SocketListener.watch(this.devices);
+    HomeView.__super__.constructor.apply(this, arguments);
+  }
+
+  HomeView.prototype.afterRender = function() {
+    this.navbar = new NavbarView(this.apps, this.notifications);
+    this.applicationListView = new ApplicationsListView(this.apps);
+    this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
+    this.accountView = new AccountView();
+    this.helpView = new HelpView();
+    this.marketView = new MarketView(this.apps);
+    $("#content").niceScroll();
+    this.frames = this.$('#app-frames');
+    this.content = this.$('#content');
+    $(window).resize(this.resetLayoutSizes);
+    this.apps.fetch({
+      reset: true
+    });
+    this.devices.fetch({
+      reset: true
+    });
+    this.stackApps.fetch({
+      reset: true
+    });
+    return this.resetLayoutSizes();
+  };
+
+  /* Functions*/
+
+
+  HomeView.prototype.logout = function(event) {
+    var user,
+      _this = this;
+    user = new User();
+    return user.logout({
+      success: function(data) {
+        return window.location = window.location.origin + '/login/';
+      },
+      error: function() {
+        return alert('Server error occured, logout failed.');
+      }
+    });
+  };
+
+  HomeView.prototype.displayView = function(view) {
+    var displayView,
+      _this = this;
+    $("#current-application").html('home');
+    displayView = function() {
+      _this.frames.hide();
+      view.$el.hide();
+      _this.content.show();
+      $('#home-content').append(view.$el);
+      view.$el.fadeIn();
+      _this.currentView = view;
+      return _this.resetLayoutSizes();
     };
     if (this.currentView != null) {
       if (view === this.currentView) {
@@ -5026,9 +6689,11 @@ module.exports = HomeView = (function(_super) {
         this.resetLayoutSizes();
         return;
       }
-      this.currentView.$el.hide();
-      this.currentView.$el.detach();
-      return displayView();
+      return this.currentView.$el.fadeOut(function() {
+        _this.currentView.$el.detach();
+        return displayView();
+      });
+>>>>>>> fusion of many small commits:client/public/javascripts/app.js
     } else {
       return displayView();
     }
@@ -5151,7 +6816,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.createApplicationIframe = function(slug, hash) {
-    var frame,
+    var iframe, iframe$, iframeHTML,
       _this = this;
     if (hash == null) {
       hash = "";
@@ -5159,19 +6824,21 @@ module.exports = HomeView = (function(_super) {
     if ((hash != null ? hash.length : void 0) > 0) {
       hash = "#" + hash;
     }
-    this.frames.append(appIframeTemplate({
+    iframeHTML = appIframeTemplate({
       id: slug,
       hash: hash
-    }));
-    frame = this.$("#" + slug + "-frame");
-    $(frame.prop('contentWindow')).on('hashchange', function() {
+    });
+    iframe = this.frames.append(iframeHTML)[0].lastChild;
+    iframe$ = $(iframe);
+    iframe$.prop('contentWindow').addEventListener('hashchange', function() {
       var location, newhash;
-      location = frame.prop('contentWindow').location;
+      location = iframe$.prop('contentWindow').location;
       newhash = location.hash.replace('#', '');
       return _this.onAppHashChanged(slug, newhash);
     });
     this.resetLayoutSizes();
-    return frame;
+    this.intentManager.registerIframe(iframe, '*');
+    return iframe$;
   };
 
   HomeView.prototype.onAppHashChanged = function(slug, newhash) {
@@ -5631,6 +7298,173 @@ module.exports = AppsMenu = (function(_super) {
 })(ViewCollection);
 });
 
+;require.register("views/modal", function(exports, require, module) {
+var Modal, _ref,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Modal = (function(_super) {
+  __extends(Modal, _super);
+
+  function Modal() {
+    this.onKeyStroke = __bind(this.onKeyStroke, this);
+    _ref = Modal.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  Modal.prototype.id = 'modal-dialog';
+
+  Modal.prototype.className = 'modalCY fade';
+
+  Modal.prototype.attributes = {
+    'data-backdrop': "static",
+    'data-keyboard': "false"
+  };
+
+  Modal.prototype.initialize = function(options) {
+    var _this = this;
+    if (this.title == null) {
+      this.title = options.title;
+    }
+    if (this.content == null) {
+      this.content = options.content;
+    }
+    if (this.yes == null) {
+      this.yes = options.yes || 'ok';
+    }
+    if (this.no == null) {
+      this.no = options.no || 'cancel';
+    }
+    if (this.cb == null) {
+      this.cb = options.cb || function() {};
+    }
+    this.render();
+    if (options.cssSpaceName != null) {
+      this.el.classList.add(options.cssSpaceName);
+    }
+    this.saving = false;
+    this.el.tabIndex = 0;
+    this.el.focus();
+    this.$('button.close').click(function(event) {
+      event.stopPropagation();
+      return _this.onNo();
+    });
+    return this.$el.on('keyup', this.onKeyStroke);
+  };
+
+  Modal.prototype.events = function() {
+    return {
+      "click #modal-dialog-no": 'onNo',
+      "click #modal-dialog-yes": 'onYes',
+      'click': 'onClickAnywhere'
+    };
+  };
+
+  Modal.prototype.onNo = function() {
+    this.close();
+    return this.cb(false);
+  };
+
+  Modal.prototype.onYes = function() {
+    this.close();
+    return this.cb(true);
+  };
+
+  Modal.prototype.close = function() {
+    var _this = this;
+    if (this.closing) {
+      return;
+    }
+    this.closing = true;
+    this.backdrop.parentElement.removeChild(this.backdrop);
+    this.el.classList.remove('in');
+    this.el.classList.add('out');
+    return setTimeout((function() {
+      return _this.remove();
+    }), 500);
+  };
+
+  Modal.prototype.onKeyStroke = function(e) {
+    e.stopPropagation();
+    if (e.which === 27) {
+      this.onNo();
+      return false;
+    }
+  };
+
+  Modal.prototype.remove = function() {
+    this.$el.off('keyup', this.onKeyStroke);
+    return Modal.__super__.remove.apply(this, arguments);
+  };
+
+  Modal.prototype.render = function() {
+    var body, close, foot, head, title, yesBtn;
+    close = $('<button class="close" type="button" data-dismiss="modal">×</button>');
+    title = $('<p>').text(this.title);
+    head = $('<div class="modalCY-header">').append(close, title);
+    body = $('<div class="modalCY-body"></div>').append(this.renderContent());
+    yesBtn = $('<button id="modal-dialog-yes" class="btn btn-cozy">').text(this.yes);
+    foot = $('<div class="modalCY-footer">').append(yesBtn);
+    if (this.no) {
+      foot.prepend($('<button id="modal-dialog-no" class="btn btn-link">').text(this.no));
+    }
+    this.backdrop = document.createElement('div');
+    this.backdrop.classList.add('modalCY-backdrop');
+    $("body").append(this.backdrop);
+    $("body").append(this.$el.append(head, body, foot));
+    window.getComputedStyle(this.el).opacity;
+    window.getComputedStyle(this.el).top;
+    return this.$el.addClass('in');
+  };
+
+  Modal.prototype.renderContent = function() {
+    return this.content;
+  };
+
+  Modal.prototype.onClickAnywhere = function(event) {
+    if (event.target.id === this.id) {
+      return this.onNo();
+    }
+  };
+
+  return Modal;
+
+})(Backbone.View);
+
+Modal.alert = function(title, content, cb) {
+  return new Modal({
+    title: title,
+    content: content,
+    yes: 'ok',
+    no: null,
+    cb: cb
+  });
+};
+
+Modal.confirm = function(title, content, yesMsg, noMsg, cb) {
+  return new Modal({
+    title: title,
+    content: content,
+    yes: yesMsg,
+    no: noMsg,
+    cb: cb
+  });
+};
+
+Modal.error = function(text, cb) {
+  return new Modal({
+    title: t('modal error'),
+    content: text,
+    yes: t('modal ok'),
+    no: false,
+    cb: cb
+  });
+};
+
+module.exports = Modal;
+});
+
 ;require.register("views/navbar", function(exports, require, module) {
 var AppsMenu, BaseView, NavbarView, NotificationsView, appButtonTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -5872,6 +7706,497 @@ module.exports = NotificationsView = (function(_super) {
 })(ViewCollection);
 });
 
+;require.register("views/object-picker-image", function(exports, require, module) {
+var BaseView, LongList, ObjectPickerImage, Photo, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Photo = require('../models/photo');
+
+LongList = require('views/long-list-images');
+
+BaseView = require('lib/base_view');
+
+module.exports = ObjectPickerImage = (function(_super) {
+  __extends(ObjectPickerImage, _super);
+
+  function ObjectPickerImage() {
+    _ref = ObjectPickerImage.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  ObjectPickerImage.prototype.tagName = "section";
+
+  ObjectPickerImage.prototype.initialize = function() {
+    this.name = 'thumbPicker';
+    this.tabLabel = 'image';
+    this.tab = $("<div>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    this.panel.addEventListener('dblclick', this._validateDblClick);
+    this.longList = new LongList(this.panel);
+    return this.longList.init();
+  };
+
+  ObjectPickerImage.prototype.getObject = function() {
+    return "files/photo/screens/" + (this.longList.getSelectedID()) + ".jpg";
+  };
+
+  ObjectPickerImage.prototype.setFocusIfExpected = function() {
+    return false;
+  };
+
+  ObjectPickerImage.prototype.keyHandler = function(e) {
+    console.log('ObjectPickerImage.keyHandler', e.which);
+    this.longList.keyHandler(e);
+  };
+
+  return ObjectPickerImage;
+
+})(BaseView);
+});
+
+;require.register("views/object-picker-photoURL", function(exports, require, module) {
+var BaseView, ObjectPickerPhotoURL, proxyclient, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+proxyclient = require('lib/proxyclient');
+
+BaseView = require('lib/base_view');
+
+module.exports = ObjectPickerPhotoURL = (function(_super) {
+  __extends(ObjectPickerPhotoURL, _super);
+
+  function ObjectPickerPhotoURL() {
+    _ref = ObjectPickerPhotoURL.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  ObjectPickerPhotoURL.prototype.template = require('../templates/object-picker-photoURL');
+
+  ObjectPickerPhotoURL.prototype.tagName = 'section';
+
+  ObjectPickerPhotoURL.prototype.initialize = function() {
+    this.render();
+    this.name = 'urlPhotoUpload';
+    this.tabLabel = 'url';
+    this.tab = $("<div>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    this.img = this.panel.querySelector('.url-preview');
+    this.blocContainer = this.panel.querySelector('.bloc-container');
+    this.url = void 0;
+    this.input = this.panel.querySelector('.modal-url-input');
+    return this._setupInput();
+  };
+
+  ObjectPickerPhotoURL.prototype.getObject = function() {
+    if (this.url) {
+      return this.url;
+    } else {
+      return false;
+    }
+  };
+
+  ObjectPickerPhotoURL.prototype.setFocusIfExpected = function() {
+    this.input.focus();
+    this.input.select();
+    return true;
+  };
+
+  ObjectPickerPhotoURL.prototype.keyHandler = function(e) {
+    return false;
+  };
+
+  /**
+   * manages the url typed in the input and update image
+  */
+
+
+  ObjectPickerPhotoURL.prototype._setupInput = function() {
+    var img, imgTmp, preloadImage, urlRegexp,
+      _this = this;
+    img = this.img;
+    urlRegexp = /\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i;
+    imgTmp = new Image();
+    imgTmp.onerror = function() {
+      img.style.backgroundImage = "";
+      return this.url = void 0;
+    };
+    imgTmp.onload = function() {
+      img.style.maxWidth = imgTmp.naturalWidth + 'px';
+      img.style.maxHeight = imgTmp.naturalHeight + 'px';
+      img.parentElement.style.display = 'flex';
+      img.style.backgroundImage = 'url(' + imgTmp.src + ')';
+      _this.url = imgTmp.src;
+      return _this.blocContainer.style.height = (imgTmp.naturalHeight + 40) + 'px';
+    };
+    preloadImage = function(src) {
+      return imgTmp.src = src;
+    };
+    return this.input.addEventListener('input', function(e) {
+      var newurl, url;
+      newurl = e.target.value;
+      if (urlRegexp.test(newurl)) {
+        url = 'api/proxy/?url=' + encodeURIComponent(newurl);
+        return preloadImage(url);
+      } else {
+        img.style.backgroundImage = "";
+        return this.url = void 0;
+      }
+    }, false);
+  };
+
+  return ObjectPickerPhotoURL;
+
+})(BaseView);
+});
+
+;require.register("views/object-picker-upload", function(exports, require, module) {
+var BaseView, ObjectPickerUpload, _ref,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('lib/base_view');
+
+module.exports = ObjectPickerUpload = (function(_super) {
+  __extends(ObjectPickerUpload, _super);
+
+  function ObjectPickerUpload() {
+    this._handleFile = __bind(this._handleFile, this);
+    this._handleUploaderChange = __bind(this._handleUploaderChange, this);
+    this._changePhotoFromUpload = __bind(this._changePhotoFromUpload, this);
+    this.keyHandler = __bind(this.keyHandler, this);
+    _ref = ObjectPickerUpload.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  ObjectPickerUpload.prototype.template = require('../templates/object-picker-upload');
+
+  ObjectPickerUpload.prototype.tagName = "section";
+
+  ObjectPickerUpload.prototype.initialize = function() {
+    var btn;
+    this.render();
+    this.objectPicker = objectPicker;
+    this.name = 'photoUpload';
+    this.tabLabel = 'upload';
+    this.tab = this._createTab();
+    this.panel = this.el;
+    this._bindFileDropZone();
+    btn = this.panel.querySelector('.modal-uploadBtn');
+    btn.addEventListener('click', this._changePhotoFromUpload);
+    this.btn = btn;
+    this.uploader = this.panel.querySelector('.uploader');
+    return this.uploader.addEventListener('change', this._handleUploaderChange);
+  };
+
+  ObjectPickerUpload.prototype.getObject = function() {
+    return this.dataURL;
+  };
+
+  ObjectPickerUpload.prototype.setFocusIfExpected = function() {
+    this.btn.focus();
+    return true;
+  };
+
+  ObjectPickerUpload.prototype.keyHandler = function(e) {
+    return false;
+  };
+
+  ObjectPickerUpload.prototype._createTab = function() {
+    return $("<div>" + this.tabLabel + "</div>")[0];
+  };
+
+  ObjectPickerUpload.prototype._bindFileDropZone = function() {
+    var dragenter, dragover, drop, dropbox, hasEnteredText,
+      _this = this;
+    dropbox = this.panel.querySelector(".modal-file-drop-zone>div");
+    hasEnteredText = false;
+    dropbox.addEventListener("dragenter", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      return dropbox.classList.add('dragging');
+    }, false);
+    dropbox.addEventListener("dragleave", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      return dropbox.classList.remove('dragging');
+    }, false);
+    dragenter = function(e) {
+      e.stopPropagation();
+      return e.preventDefault();
+    };
+    drop = function(e) {
+      var dt, files;
+      e.stopPropagation();
+      e.preventDefault();
+      dt = e.dataTransfer;
+      files = dt.files;
+      return _this._handleFile(files[0]);
+    };
+    dragover = dragenter;
+    dropbox.addEventListener("dragover", dragover, false);
+    return dropbox.addEventListener("drop", drop, false);
+  };
+
+  ObjectPickerUpload.prototype._changePhotoFromUpload = function() {
+    this.uploadPopupOpened = true;
+    return this.uploader.click();
+  };
+
+  ObjectPickerUpload.prototype._handleUploaderChange = function() {
+    var file;
+    file = this.uploader.files[0];
+    return this._handleFile(file);
+  };
+
+  ObjectPickerUpload.prototype._handleFile = function(file) {
+    var img, reader,
+      _this = this;
+    if (!file.type.match(/image\/.*/)) {
+      return alert(t('This is not an image'));
+    }
+    reader = new FileReader();
+    img = new Image();
+    reader.readAsDataURL(file);
+    return reader.onloadend = function() {
+      _this.dataURL = reader.result;
+      return _this.objectPicker.onYes();
+    };
+  };
+
+  return ObjectPickerUpload;
+
+})(BaseView);
+});
+
+;require.register("views/object-picker", function(exports, require, module) {
+var Modal, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, tabControler, template, _ref,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Modal = require('../views/modal');
+
+template = require('../templates/object-picker');
+
+ObjectPickerPhotoURL = require('./object-picker-photoURL');
+
+ObjectPickerUpload = require('./object-picker-upload');
+
+ObjectPickerImage = require('./object-picker-image');
+
+tabControler = require('views/tab-controler');
+
+module.exports = PhotoPickerCroper = (function(_super) {
+  __extends(PhotoPickerCroper, _super);
+
+  function PhotoPickerCroper() {
+    this._updateCropedPreview = __bind(this._updateCropedPreview, this);
+    this._onImgToCropLoaded = __bind(this._onImgToCropLoaded, this);
+    _ref = PhotoPickerCroper.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  PhotoPickerCroper.prototype.events = function() {
+    return _.extend(PhotoPickerCroper.__super__.events.apply(this, arguments), {
+      'click    a.next': 'displayMore',
+      'click    a.prev': 'displayPrevPage',
+      'click    .chooseAgain': '_chooseAgain'
+    });
+  };
+
+  PhotoPickerCroper.prototype.initialize = function(params, cb) {
+    var body;
+    this.id = 'object-picker';
+    this.title = t('pick from files');
+    this.config = {
+      cssSpaceName: "object-picker",
+      singleSelection: true,
+      numPerPage: 50,
+      yes: t('modal ok'),
+      no: t('modal cancel'),
+      cb: cb,
+      target_h: 100,
+      target_w: 100
+    };
+    this.state = {
+      currentStep: 'objectPicker',
+      img_naturalW: 0,
+      img_naturalH: 0
+    };
+    PhotoPickerCroper.__super__.initialize.call(this, this.config);
+    body = this.el.querySelector('.modalCY-body');
+    body.innerHTML = template();
+    this.body = body;
+    this.objectPickerCont = body.querySelector('.objectPickerCont');
+    this.tablist = body.querySelector('[role=tablist]');
+    this.cropper$ = this.el.querySelector('.croperCont');
+    this.imgToCrop = this.cropper$.querySelector('#img-to-crop');
+    this.imgPreview = this.cropper$.querySelector('#img-preview');
+    this.panelsControlers = {};
+    this.imagePanel = new ObjectPickerImage();
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
+    this.panelsControlers[this.imagePanel.name] = this.imagePanel;
+    this.photoURLpanel = new ObjectPickerPhotoURL();
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
+    this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
+    tabControler.initializeTabs(body);
+    this._listenTabsSelection();
+    this._selectDefaultTab(this.imagePanel.name);
+    this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
+    this.cropper$.style.display = 'none';
+    return true;
+  };
+
+  PhotoPickerCroper.prototype.onYes = function() {
+    var d, r, s, url;
+    if (this.state.currentStep === 'objectPicker') {
+      url = this.state.activePanel.getObject();
+      if (url) {
+        return this._showCropingTool(url);
+      }
+    } else {
+      s = this.imgPreview.style;
+      r = this.state.img_naturalW / this.imgPreview.width;
+      d = {
+        sx: Math.round(-parseInt(s.marginLeft) * r),
+        sy: Math.round(-parseInt(s.marginTop) * r),
+        sWidth: Math.round(this.config.target_h * r),
+        sHeight: Math.round(this.config.target_w * r)
+      };
+      if (d.sx < 0) {
+        d.sx = 0;
+      }
+      if (d.sy < 0) {
+        d.sy = 0;
+      }
+      if (d.sx + d.sWidth > this.imgPreview.naturalWidth) {
+        d.sWidth = this.imgPreview.naturalWidth - d.sx;
+      }
+      if (d.sy + d.sHeight > this.imgPreview.naturalHeight) {
+        d.sHeight = this.imgPreview.naturalHeight - d.sy;
+      }
+      this.cb(true, this._getResultDataURL(this.imgPreview, d));
+      return this.close();
+    }
+  };
+
+  PhotoPickerCroper.prototype._getResultDataURL = function(img, dimensions) {
+    var IMAGE_DIMENSION, canvas, ctx, d, dataUrl;
+    IMAGE_DIMENSION = 600;
+    canvas = document.createElement('canvas');
+    canvas.height = canvas.width = IMAGE_DIMENSION;
+    ctx = canvas.getContext('2d');
+    d = dimensions;
+    ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
+    return dataUrl = canvas.toDataURL('image/jpeg');
+  };
+
+  PhotoPickerCroper.prototype.onKeyStroke = function(e) {
+    if (e.which === 13) {
+      e.stopPropagation();
+      this.onYes();
+      return;
+    }
+    if (e.which === 27) {
+      e.stopPropagation();
+      if (this.state.currentStep === 'croper') {
+        this._chooseAgain();
+      } else {
+        this.onNo();
+      }
+      return;
+    }
+    return this.state.activePanel.keyHandler(e);
+  };
+
+  PhotoPickerCroper.prototype._showCropingTool = function(url) {
+    this.state.currentStep = 'croper';
+    this.currentPhotoScroll = this.body.scrollTop;
+    this.objectPickerCont.style.display = 'none';
+    this.cropper$.style.display = '';
+    this.imgToCrop.src = url;
+    return this.imgPreview.src = url;
+  };
+
+  PhotoPickerCroper.prototype._onImgToCropLoaded = function() {
+    var img_h, img_w, options, selection_w, t, x, y;
+    img_w = this.imgToCrop.width;
+    img_h = this.imgToCrop.height;
+    this.img_w = img_w;
+    this.img_h = img_h;
+    this.state.img_naturalW = this.imgToCrop.naturalWidth;
+    this.state.img_naturalH = this.imgToCrop.naturalHeight;
+    selection_w = Math.round(Math.min(img_h, img_w) * 1);
+    x = Math.round((img_w - selection_w) / 2);
+    y = Math.round((img_h - selection_w) / 2);
+    options = {
+      onChange: this._updateCropedPreview,
+      onSelect: this._updateCropedPreview,
+      aspectRatio: 1,
+      setSelect: [x, y, x + selection_w, y + selection_w]
+    };
+    t = this;
+    $(this.imgToCrop).Jcrop(options, function() {
+      return t.jcrop_api = this;
+    });
+    return t.jcrop_api.focus();
+  };
+
+  PhotoPickerCroper.prototype._updateCropedPreview = function(coords) {
+    var prev_h, prev_w, prev_x, prev_y, s;
+    prev_w = this.img_w / coords.w * this.config.target_w;
+    prev_h = this.img_h / coords.h * this.config.target_h;
+    prev_x = this.config.target_w / coords.w * coords.x;
+    prev_y = this.config.target_h / coords.h * coords.y;
+    s = this.imgPreview.style;
+    s.width = Math.round(prev_w) + 'px';
+    s.height = Math.round(prev_h) + 'px';
+    s.marginLeft = '-' + Math.round(prev_x) + 'px';
+    s.marginTop = '-' + Math.round(prev_y) + 'px';
+    return true;
+  };
+
+  PhotoPickerCroper.prototype._chooseAgain = function() {
+    this.state.currentStep = 'objectPicker';
+    this.jcrop_api.destroy();
+    this.imgToCrop.removeAttribute('style');
+    this.imgToCrop.src = '';
+    this.objectPickerCont.style.display = '';
+    this.cropper$.style.display = 'none';
+    this.body.scrollTop = this.currentPhotoScroll;
+    return this._setFocus();
+  };
+
+  PhotoPickerCroper.prototype._setFocus = function() {
+    if (!this.state.activePanel.setFocusIfExpected()) {
+      return this.el.focus();
+    }
+  };
+
+  PhotoPickerCroper.prototype._listenTabsSelection = function() {
+    var _this = this;
+    return this.objectPickerCont.addEventListener('panelSelect', function(event) {
+      return _this._activatePanel(event.target.className);
+    });
+  };
+
+  PhotoPickerCroper.prototype._selectDefaultTab = function(panelClassName) {
+    return this.tablist.querySelector("[aria-controls=" + panelClassName + "]").click();
+  };
+
+  PhotoPickerCroper.prototype._activatePanel = function(panelClassName) {
+    this.state.activePanel = this.panelsControlers[panelClassName];
+    return this._setFocus();
+  };
+
+  return PhotoPickerCroper;
+
+})(Modal);
+});
+
 ;require.register("views/popover_description", function(exports, require, module) {
 var BaseView, PopoverDescriptionView, request, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -6059,6 +8384,73 @@ module.exports = QuicktourWizardView = (function(_super) {
   return QuicktourWizardView;
 
 })(WizardView);
+});
+
+;require.register("views/tab-controler", function(exports, require, module) {
+var tabControler;
+
+module.exports = tabControler = {
+  initializeTabs: function(element) {
+    var tablists;
+    tablists = element.querySelectorAll('[role=tablist]');
+    return Array.prototype.forEach.call(tablists, function(tablist) {
+      var panelList,
+        _this = this;
+      panelList = tablist.getAttribute('aria-controls');
+      panelList = document.querySelector("." + panelList);
+      return tablist.addEventListener('click', function(event) {
+        var pan, panel, panelSelectEvt, tab, _i, _j, _len, _len1, _ref, _ref1, _results;
+        if (event.target.getAttribute('role') !== 'tab') {
+          return;
+        }
+        panel = event.target.getAttribute('aria-controls');
+        panel = panelList.querySelector("." + panel);
+        _ref = panelList.children;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          pan = _ref[_i];
+          if (pan.getAttribute('role') !== 'tabpanel') {
+            continue;
+          }
+          if (pan !== panel) {
+            pan.setAttribute('aria-hidden', true);
+          } else {
+            pan.setAttribute('aria-hidden', false);
+            panelSelectEvt = new Event('panelSelect', {
+              bubbles: true,
+              cancelable: false
+            });
+            pan.dispatchEvent(panelSelectEvt);
+          }
+        }
+        _ref1 = tablist.querySelectorAll('[role=tab]');
+        _results = [];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          tab = _ref1[_j];
+          if (tab === event.target) {
+            _results.push(event.target.setAttribute('aria-selected', true));
+          } else {
+            _results.push(tab.setAttribute('aria-selected', false));
+          }
+        }
+        return _results;
+      });
+    });
+  },
+  addTab: function(panelsContainer, tabsContainer, params) {
+    var panel, tab;
+    tab = params.tab;
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-controls', params.name);
+    tab.setAttribute('aria-selected', false);
+    tabsContainer.appendChild(tab);
+    panel = params.panel;
+    panel.classList.add(params.name);
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-hidden', true);
+    panel.setAttribute('aria-selected', true);
+    return panelsContainer.appendChild(panel);
+  }
+};
 });
 
 ;require.register("views/update_stack_modal", function(exports, require, module) {

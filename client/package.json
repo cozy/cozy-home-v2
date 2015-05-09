@@ -22,7 +22,10 @@
     "stylus-brunch": "1.8.0",
     "jade-brunch": "1.5.1",
     "uglify-js-brunch": "1.7.6",
-    "clean-css-brunch": "1.7.1"
+    "clean-css-brunch": "1.7.1",
+
+    "browser-sync-brunch": "*"
+
   },
   "devDependencies": {
     "chai": "1.9.0",

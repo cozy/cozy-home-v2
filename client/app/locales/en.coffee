@@ -318,3 +318,13 @@ module.exports =
             </ul>
         """
         'close wizard': "Now I'm ready to use my Cozy"
+
+    # object picker
+    "pick from files"         : "Choose one photo"
+    "photo-modal chooseAgain" : "Choose another photo"
+    "modal ok"                : "OK"
+    "modal cancel"            : "Cancel"
+    "no image"                : "There is no image on your Cozy"
+    "ObjPicker upload btn"    : "Upload a local file"
+    "drop a file"             : "Drag & drop a file"
+    "url of an image"         : "URL of an image on the web"
