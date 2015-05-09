@@ -73,8 +73,8 @@ module.exports =
     "choose your apps":"Choose your apps"
     "configure your cozy":"Configure your cozy"
     "ask for assistance":"Ask for help"
-    "logout":"Sign out"
-    "navbar logout":"Sign out"
+    "logout": "Sign out"
+    "navbar logout": "Sign out"
     "welcome to your cozy":"Welcome to your Cozy!"
     "you have no apps":"You have no apps."
     "app management":"App management"
@@ -177,6 +177,7 @@ module.exports =
     "settings": "Settings"
     "help": "Help"
     "change layout": "Change the layout"
+    "market app install": "Installing..."
 
     "introduction market": """
         Welcome to the Cozy app store!
@@ -211,6 +212,7 @@ module.exports =
     "todos description": "Write your tasks, order them and complete them efficiently."
     "term description": "A terminal app for your Cozy."
     "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform."
+    "leave google description": "An app to import your current data from your Google account."
     "reminder title email": "Reminder"
     "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """

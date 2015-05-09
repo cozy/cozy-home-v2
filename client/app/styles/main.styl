@@ -91,6 +91,7 @@ body
     font-size .8em
 
     color white
+    opacity 0.5
 
     &:hover
         color white
@@ -622,6 +623,7 @@ body
 #app-market-list
     box-sizing: border-box
     margin-top: 20px
+
     .app-install-button
         button
         div
@@ -661,35 +663,43 @@ body
 
 #market-view #no-app-message,
 .cozy-app
-    box-sizing: border-box
-    float: left
-    width: 49%
-    height: 180px
-    background: lightgrey
-    margin-right: 0.5%
-    margin-top: 0.5%
-    cursor: pointer
-    transition: all 0.3s
-    text-align: left
+    box-sizing border-box
+    float left
+    width 49%
+    height 200px
+    background lightgrey
+    margin-right 0.5%
+    margin-top 0.5%
+    cursor pointer
+    transition all 0.3s
+    text-align left
     border-bottom 1px solid lightgrey - 10%
     border-right 1px solid lightgrey - 10%
 
     &.install
-        .app-img
-            width 50%
+        .app-text
+            h3, span, p
+                opacity 0.4
+
+        .installing-label
+            display inline
+
+    .installing-label
+        display none
+        margin-bottom 10px
 
     h3
-        margin-top: 30px
-        margin-bottom: 0
-        padding-bottom: 0
-        line-height: 30px
+        margin-top 30px
+        margin-bottom 0
+        padding-bottom 0
+        line-height 30px
 
     .comment
-        font-size: 14px
+        font-size 14px
 
     .btn
-        float: right
-        margin: 10px 10px 10px 10px
+        float right
+        margin 10px 10px 10px 10px
 
     .app-img
         text-align center
@@ -697,7 +707,7 @@ body
         box-sizing border-box
         width 180px
         height 180px
-        padding 25px 20px 10px 20px
+        padding 25px 20px 10px 25px
         margin-right 10px
 
         img.svg

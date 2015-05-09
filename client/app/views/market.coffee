@@ -109,6 +109,7 @@ module.exports = class MarketView extends BaseView
                 @appList.show()
                 if appWidget.$el
                     @waitApplication appWidget, true
+                    appWidget.$el.addClass 'install'
                     @runInstallation appWidget.app
                     , =>
                         console.log 'application installed', appWidget.app

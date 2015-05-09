@@ -444,6 +444,7 @@ module.exports =
                         msg: 'Application stopped'
                         app: req.application
 
+
     fetchMarket: (req, res, next) ->
         market.download (err, data) ->
             if err?

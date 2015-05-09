@@ -90,6 +90,7 @@ module.exports =
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
     "saved":"sauvé"
+    "market app install": "Installation..."
 
     "your parameters":"Vos paramètres"
     "alerts and password recovery email":"""
@@ -227,6 +228,7 @@ module.exports =
     "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
     "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost."
+    "leave google description": "Une application pour importer vos données de votre compte Google."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """
