@@ -27,7 +27,7 @@ sendError = function(res, err, code) {
       message: "Server error occured"
     };
   }
-  console.log("Sending error to client :");
+  console.log("Sending error to client:");
   console.log(err.stack);
   return res.send(code, {
     error: true,

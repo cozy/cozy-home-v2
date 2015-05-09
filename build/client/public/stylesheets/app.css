@@ -1512,6 +1512,9 @@ body {
   font-weight: normal;
   font-size: 0.8em;
   color: #fff;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
 }
 .back-button:hover {
   color: #fff;
@@ -1527,10 +1530,17 @@ body {
 #content {
   height: 100%;
   overflow: auto;
+  margin-bottom: 10px;
 }
 #home-content {
   height: 100%;
   padding: 40px 60px 20px 40px;
+}
+#home-content #applications-view,
+#home-content #market-view,
+#home-content #config-applications-view,
+#home-content #help-view {
+  padding-bottom: 10px;
 }
 .wizard section img {
   display: inline-block;
@@ -2098,7 +2108,7 @@ body {
   box-sizing: border-box;
   float: left;
   width: 49%;
-  height: 180px;
+  height: 200px;
   background: #f7f4f0;
   margin-right: 0.5%;
   margin-top: 0.5%;
@@ -2112,9 +2122,24 @@ body {
   border-bottom: 1px solid #e6ddd0;
   border-right: 1px solid #e6ddd0;
 }
-#market-view #no-app-message.install .app-img,
-.cozy-app.install .app-img {
-  width: 50%;
+#market-view #no-app-message.install .app-text h3,
+.cozy-app.install .app-text h3,
+#market-view #no-app-message.install .app-text span,
+.cozy-app.install .app-text span,
+#market-view #no-app-message.install .app-text p,
+.cozy-app.install .app-text p {
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+#market-view #no-app-message.install .installing-label,
+.cozy-app.install .installing-label {
+  display: inline;
+}
+#market-view #no-app-message .installing-label,
+.cozy-app .installing-label {
+  display: none;
+  margin-bottom: 10px;
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {
@@ -2141,7 +2166,7 @@ body {
   box-sizing: border-box;
   width: 180px;
   height: 180px;
-  padding: 25px 20px 10px 20px;
+  padding: 25px 20px 10px 25px;
   margin-right: 10px;
 }
 #market-view #no-app-message .app-img img.svg,
@@ -2538,12 +2563,14 @@ body {
 #tutorial-view #end-screen ul {
   margin: 10px 150px;
 }
+@media (max-width: 1100px) {
+  #market-view .cozy-app {
+    width: 100%;
+  }
+}
 @media (max-width: 850px) {
   #market-view span {
     display: none;
-  }
-  #market-view #notificaction-counter {
-    display: inline;
   }
 }
 @media (max-width: 800px) {
@@ -2761,6 +2788,10 @@ body {
   #market-view .cozy-app {
     height: auto;
     margin-top: 10px;
+    padding: 20px 10px;
+  }
+  #market-view .cozy-app h3 {
+    font-size: 26px;
   }
   #market-view .app-text {
     padding: 10px;

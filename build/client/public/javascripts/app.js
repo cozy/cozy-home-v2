@@ -1462,6 +1462,7 @@ module.exports = {
   "settings": "Settings",
   "help": "Help",
   "change layout": "Change the layout",
+  "market app install": "Installing...",
   "introduction market": "Welcome to the Cozy app store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
@@ -1489,6 +1490,7 @@ module.exports = {
   "todos description": "Write your tasks, order them and complete them efficiently.",
   "term description": "A terminal app for your Cozy.",
   "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform.",
+  "leave google description": "An app to import your current data from your Google account.",
   "reminder title email": "Reminder",
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
@@ -1836,6 +1838,7 @@ module.exports = {
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
   "saved": "sauvé",
+  "market app install": "Installation...",
   "your parameters": "Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations:",
   "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts:",
@@ -1948,6 +1951,7 @@ module.exports = {
   "todos description": "Écrivez et ordonnez vos tâches efficacement.",
   "term description": "Un terminal pour votre Cozy.",
   "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
+  "leave google description": "Une application pour importer vos données de votre compte Google.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
@@ -3037,7 +3041,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-main" class="line"><h2>');
 var __val__ = t('home section main')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-productivty" class="line"><h2>');
+buf.push('</h2></section><section id="apps-productivity" class="line"><h2>');
 var __val__ = t('home section productivity')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-data" class="line"><h2>');
@@ -3155,7 +3159,10 @@ buf.push('<img');
 buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
 buf.push('/>');
 }
-buf.push('</div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
+buf.push('<span class="installing-label">');
+var __val__ = t("market app install")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
 var __val__ = t(app.comment)
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><p class="par2">');
@@ -4174,6 +4181,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.$el.find('.title-app').after(this.applicationList.$el);
     this.applications = new Application();
     this.stackApplications = new StackApplication();
+    this.stackApps.fetch();
     return this.displayDevices();
   };
 
@@ -4493,6 +4501,7 @@ module.exports = ApplicationsListView = (function(_super) {
 
 
   function ApplicationsListView(apps) {
+    this.onAppRemoved = __bind(this.onAppRemoved, this);
     this.afterRender = __bind(this.afterRender, this);
     this.initialize = __bind(this.initialize, this);
     this.apps = apps;
@@ -4511,6 +4520,7 @@ module.exports = ApplicationsListView = (function(_super) {
     this.listenTo(this.collection, 'reset', function() {
       return _this.isLoading = false;
     });
+    this.collection.on('remove', this.onAppRemoved);
     return ApplicationsListView.__super__.initialize.apply(this, arguments);
   };
 
@@ -4542,6 +4552,15 @@ module.exports = ApplicationsListView = (function(_super) {
     section.append(view.$el);
     section.addClass('show');
     return section.show();
+  };
+
+  ApplicationsListView.prototype.onAppRemoved = function(model) {
+    var section, sectionName;
+    sectionName = model.getSection();
+    section = this.$("section#apps-" + sectionName);
+    if (section.children().length === 2) {
+      return section.hide();
+    }
   };
 
   return ApplicationsListView;
@@ -4949,10 +4968,13 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.changeBackground = function(background) {
     var val;
-    if ((background == null) || background === 'background-none') {
+    if (background == null) {
+      this.content.css('background_07.jpg', 'none');
+    }
+    if (background === 'background-none') {
       return this.content.css('background-image', 'none');
     } else {
-      val = "url('/img/backgrounds/" + (background.replace('-', '_')) + ".png')";
+      val = "url('/img/backgrounds/" + (background.replace('-', '_')) + ".jpg')";
       return this.content.css('background-image', val);
     }
   };
@@ -5327,6 +5349,7 @@ module.exports = MarketView = (function(_super) {
         _this.appList.show();
         if (appWidget.$el) {
           _this.waitApplication(appWidget, true);
+          appWidget.$el.addClass('install');
           return _this.runInstallation(appWidget.app, function() {
             return console.log('application installed', appWidget.app);
           }, function() {
