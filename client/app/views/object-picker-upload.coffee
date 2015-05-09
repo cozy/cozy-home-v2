@@ -6,9 +6,9 @@ module.exports = class ObjectPickerUpload extends BaseView
     template : require '../templates/object-picker-upload'
     tagName  : "section"
 
+
 ####################
 ## PUBLIC SECTION ##
-#
 #
     constructor: (objectPicker) ->
         super()
@@ -32,7 +32,7 @@ module.exports = class ObjectPickerUpload extends BaseView
 
 
     getObject : () ->
-        return @dataURL
+        return dataUrl: @dataUrl
 
     setFocusIfExpected : () ->
         @btn.focus()
@@ -106,6 +106,6 @@ module.exports = class ObjectPickerUpload extends BaseView
         img = new Image()
         reader.readAsDataURL file
         reader.onloadend = =>
-            @dataURL = reader.result
+            @dataUrl = reader.result
             @objectPicker.onYes()
 

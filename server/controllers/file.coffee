@@ -8,8 +8,13 @@ fs              = require('fs')
 module.exports.fetch = (req, res, next, id) ->
     id = id.substring 0, id.length - 4 if id.indexOf('.jpg') > 0
     File.find id, (err, file) =>
-        return res.error 500, 'An error occured', err if err
-        return res.error 404, 'File not found' if not file
+        if err
+            return res.error 500, 'An error occured', err
+        if not file
+            console.log 'not file in fetch id'
+            console.log id
+            # console.log req
+            return res.error 404, 'File not found'
 
         req.file = file
         next()
@@ -57,6 +62,7 @@ module.exports.photoRange = (req, res, next) ->
  * [{nPhotos:`number`, month:'YYYYMM'}, ...]
 ###
 module.exports.photoMonthDistribution = (req, res, next) ->
+    console.log 'enter photoMonthDistribution'
     File.imageByMonth {group : true , group_level : 2 , reduce: true }, (error, distribution_raw) ->
         distribution = []
         for k in [distribution_raw.length-1..0]
@@ -154,7 +160,7 @@ module.exports.photoThumb = (req, res, next) ->
 
 
 ###*
- * Returns thumb for given file.
+ * Returns thumb (binary) for given file.
  * TO BE TESTED AND THEN REPLACE photoThumb
 ###
 module.exports.photoThumbFast = (req, res, next) ->
@@ -166,10 +172,19 @@ module.exports.photoThumbFast = (req, res, next) ->
 
 
 ###*
- * Returns screen for given file.
+ * Returns screen (binary) for given file.
 ###
 module.exports.photoScreen = (req, res, next) ->
     which = if req.file.binary.screen then 'screen' else 'file'
     stream = req.file.getBinary which, (err) ->
+        return next err if err
+    stream.pipe res
+
+###*
+ * Returns binary of the photo
+###
+module.exports.photo = (req, res, next) ->
+    console.log 'get raw photo reached'
+    stream = req.file.getBinary 'file', (err) ->
         return next err if err
     stream.pipe res

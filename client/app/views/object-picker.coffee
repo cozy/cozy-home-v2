@@ -84,20 +84,26 @@ module.exports = class PhotoPickerCroper extends Modal
         return true
 
 
-    onYes: ()->
     # overload the modal behavour : "ok" leads to the cropping step
+    onYes: ()->
+        # expected object :
+        #    {dataUrl:string}
+        # or {id:file.id, docType: 'file', name:file.name}
+        # or {urlToFetch: string}
+        obj = @state.activePanel.getObject()
+
+        # cropping is not requested by the app, directly transmit the result
         if !@params.isCropped
-            url = @state.activePanel.getObject()
-            @imgResult.src = url
+            @_sendResult(obj)
             return
 
-
+        # cropping is requested by the app, go to the cropping step
         if @state.currentStep == 'objectPicker'
-            url = @state.activePanel.getObject()
+            url = @_getUrlForCropping(obj)
             if url
                 @_showCropingTool(url)
         else
-            # get the coordonates to cropp into the original photo ()
+            # get the coordonates to cropp into the original photo
             dimension = @_getCroppedDimensions()
             # send result
             @cb(true,@_getResultDataURL(@imgPreview, dimension))
@@ -107,6 +113,31 @@ module.exports = class PhotoPickerCroper extends Modal
 ################################################################################
 ## PRIVATE SECTION ##
 #
+
+    _sendResult: (obj) ->
+        if obj.dataUrl
+            @cb(true,obj.dataUrl)
+            @close()
+            return
+        if obj.urlToFetch
+            @imgResult.src = obj.urlToFetch
+            # _onImgResultLoaded will then send the response
+            return
+        if obj.docType? and obj.docType == 'file' and obj.id?
+            if obj.id
+                @imgResult.src = "files/photo/#{obj.id}.jpg"
+                # _onImgResultLoaded will then send the response
+                return
+
+
+    _getUrlForCropping: (obj) ->
+        if obj.urlToFetch
+            return obj.urlToFetch
+        if obj.dataUrl
+            return obj.dataUrl
+        if obj.docType? and obj.docType == 'file' and obj.id?
+            return "files/photo/screens/#{obj.id}.jpg"
+
 
     _onImgResultLoaded: (e) =>
         @cb(true,@_getResultDataURL(@imgResult, null))
@@ -151,8 +182,8 @@ module.exports = class PhotoPickerCroper extends Modal
             ctx.drawImage( img, d.sx, d.sy, d.sWidth,
                            d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION)
         else
-            canvas.width  = img.width;
-            canvas.height = img.height;
+            canvas.width  = img.width
+            canvas.height = img.height
             ctx.drawImage( img, 0, 0)
         return dataUrl =  canvas.toDataURL 'image/jpeg'
 

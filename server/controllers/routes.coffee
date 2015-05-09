@@ -76,4 +76,6 @@ module.exports =
         get: file.photoScreen
     'files/photo/monthdistribution':
         get: file.photoMonthDistribution
+    'files/photo/:fileid':
+        get: file.photo
 

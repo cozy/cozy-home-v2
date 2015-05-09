@@ -24,7 +24,7 @@ module.exports = class ObjectPickerPhotoURL extends BaseView
 
     getObject : () ->
         if @url
-            return @url
+            return urlToFetch: @url
         else
             return false
 
@@ -71,3 +71,13 @@ module.exports = class ObjectPickerPhotoURL extends BaseView
                 img.style.backgroundImage = ""
                 @url = undefined
         ,false)
+
+
+    # _getDataUrl: () ->
+    #     canvas = document.createElement 'canvas'
+    #     ctx = canvas.getContext '2d'
+    #     canvas.width  = @img.width;
+    #     canvas.height = @img.height;
+    #     ctx.drawImage( @img, 0, 0)
+    #     return canvas.toDataURL 'image/jpeg'
+

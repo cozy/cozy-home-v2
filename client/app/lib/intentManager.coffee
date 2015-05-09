@@ -33,7 +33,8 @@ module.exports = class IntentManager
                                     dataUrl        :dataUrl
                                 )
                             )
-
+            # usefull to check from the client (app) that the home is there and
+            # has the intent manager available
             when 'ping'
                 message.respond('pong')
 

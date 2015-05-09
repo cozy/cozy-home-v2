@@ -32,7 +32,10 @@ module.exports = class ObjectPickerImage extends BaseView
 
 
     getObject : () ->
-        return "files/photo/screens/#{@longList.getSelectedID()}.jpg"
+        file = @longList.getSelectedFile()
+        if file
+            return id:file.id, docType: 'file', name:file.name
+        return false
 
 
     setFocusIfExpected : () ->

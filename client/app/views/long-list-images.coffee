@@ -175,10 +175,10 @@ module.exports = class LongList
         return true
 
 
-    getSelectedID : () =>
+    getSelectedFile : () =>
         for k, thumb$ of @state.selected
             if thumb$
-                return k
+                return thumb$.file
         return null
 
 
@@ -509,9 +509,9 @@ module.exports = class LongList
 
             _computeSafeZone()
 
-            console.log '\n======_adaptBuffer==beginning======='
-            console.log 'safeZone', JSON.stringify(safeZone,2)
-            console.log 'bufr', bufr
+            # console.log '\n======_adaptBuffer==beginning======='
+            # console.log 'safeZone', JSON.stringify(safeZone,2)
+            # console.log 'bufr', bufr
             if safeZone.lastRk > bufr.lastRk
                 # 1/ the safeZone is going down and the bottom of the safeZone
                 # is bellow the bottom of the buffer
@@ -551,14 +551,14 @@ module.exports = class LongList
                     targetCol     = safeZone.firstCol
                     targetY       = safeZone.firstY
 
-                console.log 'direction: DOWN',         \
-                            'nToFind:'   + nToFind,    \
-                            'nAvailable:'+ nAvailable, \
-                            'nToCreate:' + nToCreate,  \
-                            'nToMove:'   + nToMove,    \
-                            'targetRk:'  + targetRk,   \
-                            'targetCol'  + targetCol,  \
-                            'targetY'    + targetY
+                # console.log 'direction: DOWN',         \
+                #             'nToFind:'   + nToFind,    \
+                #             'nAvailable:'+ nAvailable, \
+                #             'nToCreate:' + nToCreate,  \
+                #             'nToMove:'   + nToMove,    \
+                #             'targetRk:'  + targetRk,   \
+                #             'targetCol'  + targetCol,  \
+                #             'targetY'    + targetY
 
                 if nToFind > 0
                     Photo.listFromFiles targetRk, nToFind, (error, res) ->
@@ -624,23 +624,24 @@ module.exports = class LongList
                     targetMonthRk = safeZone.endMonthRk
                     targetY       = safeZone.endY
 
-                console.log 'direction: UP',           \
-                            'nToFind:'   + nToFind,    \
-                            'nAvailable:'+ nAvailable, \
-                            'nToCreate:' + nToCreate,  \
-                            'nToMove:'   + nToMove,    \
-                            'targetRk:'  + targetRk,   \
-                            'targetCol'  + targetCol,  \
-                            'targetY'    + targetY
+                # console.log 'direction: UP',           \
+                #             'nToFind:'   + nToFind,    \
+                #             'nAvailable:'+ nAvailable, \
+                #             'nToCreate:' + nToCreate,  \
+                #             'nToMove:'   + nToMove,    \
+                #             'targetRk:'  + targetRk,   \
+                #             'targetCol'  + targetCol,  \
+                #             'targetY'    + targetY
 
                 if nToFind > 0
                     Photo.listFromFiles targetRk - nToFind + 1 , nToFind, (error, res) ->
-                        if Error
-                            console.log Error
+                        if error
+                            console.log error
                         _updateThumb(res.files, res.firstRank)
 
                 if nToCreate > 0
-                    throw new Error('It should not be used in the current implementation')
+                    throw new Error('It should not be used in the
+                        current implementation')
                     [targetY, targetCol, targetMonthRk] =
                         _createThumbsTop(  nToCreate    ,
                                            targetRk     ,
@@ -656,13 +657,14 @@ module.exports = class LongList
                                       targetY       ,
                                       targetMonthRk  )
             if !nToFind?
-                console.log 'buffer inside safe zone, no modification of the buffer'
+                # console.log 'buffer inside safe zone,
+                #     no modification of the buffer'
                 safeZone.firstThumbToUpdate   = previous_firstThumbToUpdate
                 safeZone.firstThumbRkToUpdate = previous_firstThumbRkToUpdate
 
-            console.log '======_adaptBuffer==ending='
-            console.log 'bufr', bufr
-            console.log '======_adaptBuffer==ended======='
+            # console.log '======_adaptBuffer==ending='
+            # console.log 'bufr', bufr
+            # console.log '======_adaptBuffer==ended======='
 
 
         ###*
@@ -672,7 +674,7 @@ module.exports = class LongList
          * @param  {Integer} fstFileRk The rank of the first file of files
         ###
         _updateThumb = (files, fstFileRk)=>
-            console.log '\n======_updateThumb started ================='
+            # console.log '\n======_updateThumb started ================='
             lstFileRk = fstFileRk + files.length - 1
             bufr      = buffer
             thumb     = bufr.first
@@ -707,20 +709,21 @@ module.exports = class LongList
                     th = th.next
             ##
             # 2/ update src of thumbs that are after the firstThumbRkToUpdate
-            if firstThumbRkToUpdate <= lstFileRk
-                console.log " update forward: #{firstThumbRkToUpdate}->
-                    #{lstFileRk}"
-                console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,   \
-                               'nFiles', files.length,                         \
-                               'fstFileRk', fstFileRk,                         \
-                               'lstFileRk',lstFileRk
-            else
-                console.log ' update forward: none'
+            # if firstThumbRkToUpdate <= lstFileRk
+            #     console.log " update forward: #{firstThumbRkToUpdate}->
+            #         #{lstFileRk}"
+            #     console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,   \
+            #                    'nFiles', files.length,                         \
+            #                    'fstFileRk', fstFileRk,                         \
+            #                    'lstFileRk',lstFileRk
+            # else
+            #     console.log ' update forward: none'
             thumb = firstThumbToUpdate
             for file_i in [firstThumbRkToUpdate-fstFileRk..files.length-1] by 1
                 file    = files[file_i]
                 fileId = file.id
                 thumb$            = thumb.el
+                thumb$.file       = file
                 thumb$.src        = "files/photo/thumbs/#{fileId}.jpg"
                 # thumb$.src        = 'files/photo/thumbs/fast/#{fileId}'
                 thumb$.dataset.id = fileId
@@ -732,20 +735,21 @@ module.exports = class LongList
                     thumb$.classList.remove('selectedThumb')
             ##
             # 3/ update src of thumbs that are before the firstThumbRkToUpdate
-            if firstThumbRkToUpdate > fstFileRk
-                console.log " update backward #{firstThumbRkToUpdate-1}->
-                    #{fstFileRk}"
-                console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,
-                               'nFiles', files.length,
-                               'fstFileRk', fstFileRk,
-                               'lstFileRk',lstFileRk
-            else
-                console.log ' update backward: none'
+            # if firstThumbRkToUpdate > fstFileRk
+            #     console.log " update backward #{firstThumbRkToUpdate-1}->
+            #         #{fstFileRk}"
+            #     console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,
+            #                    'nFiles', files.length,
+            #                    'fstFileRk', fstFileRk,
+            #                    'lstFileRk',lstFileRk
+            # else
+            #     console.log ' update backward: none'
             thumb = firstThumbToUpdate.next
             for file_i in [firstThumbRkToUpdate-fstFileRk-1..0] by -1
                 file   = files[file_i]
                 fileId = file.id
                 thumb$            = thumb.el
+                thumb$.file       = file
                 thumb$.src        = "files/photo/thumbs/#{fileId}.jpg"
                 # thumb$.src        = "files/photo/thumbs/fast/#{fileId}"
                 thumb$.dataset.id = fileId
@@ -762,7 +766,7 @@ module.exports = class LongList
                 @_toggleOnThumb$(bufr.first.el)
                 isDefaultToSelect = false
 
-            console.log '======_updateThumb finished ================='
+            # console.log '======_updateThumb finished ================='
 
 
         _getBufferNextFirst = ()=>
@@ -803,8 +807,7 @@ module.exports = class LongList
             bufr.nextLastCol     = localRk % nThumbsPerRow
 
         ###*
-         * [_computeSafeZone description]
-         * @return {[type]} [description]
+         * after a scroll throttle, will compute the safe zone
         ###
         _computeSafeZone = () =>
             # 1/ init the start of the safe zone at the start of the viewport
@@ -1047,7 +1050,7 @@ module.exports = class LongList
                         rowY += rowHeight
                         col   = 0
 
-            console.log 'firstThumbToUpdate (_moveBufferToBottom)', safeZone.firstThumbToUpdate.el
+            # console.log 'firstThumbToUpdate (_moveBufferToBottom)', safeZone.firstThumbToUpdate.el
             buffer.lastRk  = rk - 1
             buffer.firstRk = buffer.first.rank
             # store the parameters of the thumb that is just after the last one
@@ -1105,7 +1108,8 @@ module.exports = class LongList
                         rowY -= rowHeight
                         col   = nThumbsPerRow - 1
 
-            console.log 'firstThumbToUpdate (_moveBufferToTop)', safeZone.firstThumbToUpdate.el
+            # console.log 'firstThumbToUpdate (_moveBufferToTop)',
+            #             safeZone.firstThumbToUpdate.el
             buffer.firstRk = rk + 1
             buffer.lastRk  = buffer.last.rank
 

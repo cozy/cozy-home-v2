@@ -13,6 +13,7 @@ ApplicationsListView   = require 'views/home'
 SocketListener         = require 'lib/socket_listener'
 User                   = require 'models/user'
 IntentManager          = require 'lib/intentManager'
+ThumbPreloader         = require 'lib/thumb_preloader'
 
 # View describing main screen for user once he is logged
 module.exports = class HomeView extends BaseView
@@ -36,6 +37,8 @@ module.exports = class HomeView extends BaseView
         SocketListener.watch @notifications
         SocketListener.watch @devices
         super
+        thumbPreloader = new ThumbPreloader()
+        thumbPreloader.start()
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
