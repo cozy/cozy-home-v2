@@ -12,7 +12,7 @@ module.exports = class NotificationsView extends ViewCollection
 
     events:
         "click #notifications-toggle": "showNotifList"
-        "click #clickcatcher"        : "hideNotifList"
+        "click #clickcatcher": "hideNotifList"
 
     initialize: ->
         super
@@ -22,8 +22,6 @@ module.exports = class NotificationsView extends ViewCollection
         @notifList ?= $ '#notifications-list'
         @notifList.prepend view.el
         @sound.play() unless @initializing
-        @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
-        @$('#notifications-toggle').addClass 'highlight'
 
     afterRender: =>
         @counter    = @$ '#notifications-counter'
@@ -32,6 +30,7 @@ module.exports = class NotificationsView extends ViewCollection
         @clickcatcher.hide()
         @noNotifMsg = $ '#no-notif-msg'
         @notifList  = $ '#notifications-list'
+        @hideNotifList()
         @sound      = $('#notification-sound')[0]
         @dismissButton = $ "#dismiss-all"
         @dismissButton.click @dismissAll
@@ -39,16 +38,14 @@ module.exports = class NotificationsView extends ViewCollection
         super
         @initializing = false
         @collection.fetch()
-        #$(window).on 'click', @windowClicked
 
     remove: =>
-        #$(window).off 'click', @hideNotifList
         super
 
     checkIfEmpty: =>
         newCount = @collection.length
         @noNotifMsg.toggle(newCount is 0)
-        @dismissButton.toggle(newCount isnt 0)
+        #@dismissButton.toggle(newCount isnt 0)
         if newCount is 0 #hide 0 counter
             @counter.html ""
             @counter.hide()
@@ -63,15 +60,18 @@ module.exports = class NotificationsView extends ViewCollection
         if event? and @$el.has($(event.target)).length is 0
             @hideNotifList()
 
-    showNotifList: () ->
-        if @notifList.is ':visible'
-            @notifList.hide()
-            @clickcatcher.hide()
-            @$el.removeClass 'active'
+    showNotifList: () =>
+        if $('.right-menu').is ':visible'
+            @hideNotifList()
         else
-            @$el.addClass 'active'
-            @notifList.show()
+            $('.right-menu').show()#'slide', direction: 'right', 200)
             @clickcatcher.show()
+            @$('#notifications-toggle').addClass 'highlight'
+
+    hideNotifList: (event) =>
+        $('.right-menu').hide() #'slide', direction: 'right', 200)
+        @clickcatcher.hide()
+        @$('#notifications-toggle').removeClass 'highlight'
 
     dismissAll: =>
         @dismissButton.spin true
@@ -81,7 +81,3 @@ module.exports = class NotificationsView extends ViewCollection
             error: =>
                 @dismissButton.spin false
 
-    hideNotifList: (event) =>
-        @notifList.hide()
-        @clickcatcher.hide()
-        @$el.removeClass 'active'

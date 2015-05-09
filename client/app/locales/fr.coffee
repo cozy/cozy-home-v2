@@ -8,8 +8,8 @@ module.exports =
     "no domain set"             : "pas.de.domaine.défini"
     "locale"                    : "Langue"
     "change password"           : "Changer de mot de passe"
-    "input your current password" : "Mot de passe actuel"
-    "enter a new password" : "Nouveau mot de passe"
+    "input your current password": "Par sécurité il faut votre mot de passe actuel:"
+    "current password": "Mot de passe actuel"
     "confirm new password"       : "Confirmer le nouveau mot de passe"
     "send changes"              : "Enregistrer"
     "manage"                    : "Gestion"
@@ -82,8 +82,9 @@ module.exports =
     "hardware consumption":"Matériel"
     "hard drive gigabytes":"(Disque Dur)"
     "memory megabytes":"&nbsp;Mo (RAM)"
-    "manage your applications":"Gérez vos applications"
-    "manage your devices":"Gérez vos appareils"
+    "manage your applications":"Applications"
+    "manage your devices":"Mobiles et tablettes"
+    "status no device": "Aucun appareil enregistré pour synchronisation."
     "revoke device access": "Révoquer l'accès à l'appareil"
     "synchronized": "synchronisé"
     "no application installed":"Il n'y a pas d'applications installées."
@@ -93,35 +94,35 @@ module.exports =
     "your parameters":"Vos paramètres"
     "alerts and password recovery email":"""
         J'ai besoin de votre email pour la récupération de mot de passe ou
-        pour vous envoyer des alertes.
+        pour vous envoyer des informations:
     """
-    "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous."
+    "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts:"
     "your timezone is required":"""
-        Votre fuseau horaire est nécessaire pour vous afficher les dates correctement.
+        Votre fuseau horaire est nécessaire pour vous afficher les dates correctement:
     """
     "domain name for urls and email":"""
-        Le nom de domaine est utilisé pour construire les URL
-        envoyées par mail à vos contacts.
+        Le nom de domaine est utilisé pour construire les URL de partage
+        envoyées par mail à vos contacts:
     """
     "Chose the language you want I use to speak with you:":"""
-        Choisissez la langue que vous souhaitez que j'utilise pour vous parler.
+        Choisissez la langue que vous souhaitez pour votre Cozy:
     """
     "french":"Français"
     "english":"Anglais"
     "german":"Allemand"
     "portuguese": "Portugais"
     "change password procedure":"Procédure de changement de mot de passe"
-    "current password":"mot de passe actuel"
-    "new password":"nouveau mot de passe"
-    "confirm your new password":"confirmez votre nouveau mot de passe"
-    "save your new password":"sauvegarder votre nouveau mot de passe"
+    "enter a new password": "Votre nouveau mot de passe:"
+    "new password": "Nouveau mot de passe"
+    "confirm your new password":"Confirmez votre nouveau mot de passe:"
+    "save your new password":"Sauvegarder votre nouveau mot de passe"
     "do you want assistance":"Est-ce que vous cherchez de l'aide ?"
     "Write an email to our support team at:":"Ecrivez un email à notre équipe support :"
     "Register and post on our forum: ":"Postez un message sur notre forum :"
     "Ask your question on Twitter: ":"Posez votre question sur Twitter :"
     "Chat with us on IRC:":"Discutez avec nous sur IRC :"
     "Visit the project website and learn to build your app:":"""
-        Visitez le site du projet et apprenez à créer des applications.
+        Visitez le site du projet et trouvez les guides pour synchroniser vos périphériques.
     """
     "your own application":"votre propre application"
     "broken":"cassée"
@@ -144,10 +145,10 @@ module.exports =
     "start this app":"démarrer cette application"
     "stopped":"stoppée"
     "retry to install":"nouvel essai d'installation"
-    "cozy account title":"Cozy - Compte"
-    "cozy app store title":"Cozy - App Store"
-    "cozy home title":"Cozy - Home"
-    "cozy applications title":"Cozy - Etats des applications"
+    "cozy account title":"Cozy - Paramètres"
+    "cozy app store title": "Cozy - Applithèque"
+    "cozy home title":"Cozy - Bureau"
+    "cozy applications title":"Cozy - Etats"
     "running":"démarrée"
     "cozy help title":"Cozy - Aide"
     "changing locale requires reload":"""
@@ -170,12 +171,32 @@ module.exports =
     "reset customization": "Remise à zéro"
     "use icon": "Mode icône"
     "change layout": "Modifier la disposition"
+    "home section leave": "Quittez vos fournisseurs"
+    "home section main": "Apps Principales"
+    "home section productivity": "Apps Productivité"
+    "home section data management": "Apps Données"
+    "home section personal watch": "Apps Veille"
+    "home section misc": "Divers"
+    "home section platform": "Plateforme"
+    "navbar back button title": "Retour"
+    "navbar logout": "Déconnexion"
+    "or:": "ou:"
+    "app status": "Etats"
+    "app store": "Applithèque"
+    "settings": "Paramètres"
+    "help": "Aide"
+    "account identifiers": "Identifiants"
+    "account localization": "Régionalisation"
+    "spanish": "espagnol"
+    "account personalization": "Personalisation"
+    "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy:"
+    "account password": "Changement de mot de passe"
+    "help support title": "Support officiel"
+    "help community title": "Support via la communauté"
+    "help documentation title": "Documentation"
 
     "introduction market": """
-        Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez
-        personnaliser votre Cozy en y ajoutant des applications.
-        Vous pouvez installer l'application que vous avez créée ou choisir parmi
-        celles proposées par Cozycloud ou d'autres développeurs.
+        Bienvenue sur le marché d'application Cozy. Vous pouvez ajouter des applications proposées par Cozy Cloud, d'autres développeurs ou même votre propre application !
     """
 
     "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement."
@@ -234,7 +255,7 @@ module.exports =
             ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
         """
 
-    'relaunch install wizard': "Relancer l'assistant d'installation"
+    'relaunch install wizard': "Relancer l'assistant d'embarquement"
 
     'installwizard':
         'welcome title': "Bienvenue dans votre Cozy"
@@ -289,7 +310,7 @@ module.exports =
             <p><img src="/img/home-black.png"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>
         """
         'continue to apps': "Comment gérer mes applications ?"
-        'apps title': "Gérer mes applications"
+        'apps title': "Applications"
         'apps content': """
             <p><img src="/img/config-apps.png"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>
             <p><img src="/img/apps.png"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>

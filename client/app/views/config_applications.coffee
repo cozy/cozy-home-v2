@@ -39,6 +39,7 @@ module.exports = class ConfigApplicationsView extends BaseView
         @$el.find('.title-app').after @applicationList.$el
         @applications = new Application()
         @stackApplications = new StackApplication()
+        @displayDevices()
 
     openUpdatePopover: (slug) ->
         @applicationList.openUpdatePopover slug
@@ -61,8 +62,9 @@ module.exports = class ConfigApplicationsView extends BaseView
 
     displayDevices: =>
         if not(@devices.length is 0)
-            @$el.find('.title-device').show()
             @$el.find('.title-device').after @deviceList.$el
+        else
+            @$el.find('.title-device').after "<p>#{t 'status no device'}</p>"
 
     fetch: =>
         @$('.amount').html "--"

@@ -126,6 +126,7 @@ module.exports =
     "update all": "Update all"
     "update stack": "Update"
     "refresh page": "Wait please, update takes several minutes."
+    "status no device": "No device registered for synchronization."
     "update stack modal title": "Updating your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?"
     "update stack modal confirm": "Update"
@@ -164,7 +165,7 @@ module.exports =
     "finish layout edition": "Save"
     "reset customization": "Reset"
     "use icon": "Use icon"
-    "home section leave": "leave services"
+    "home section leave": "Leave services"
     "home section main": "Basics"
     "home section productivity": "Productivity"
     "home section data management": "Data"
@@ -180,7 +181,7 @@ module.exports =
     "introduction market": """
         Welcome to the Cozy app store!
         Here, you can install
-        apps provided by Cozy Cloud, apps from the community or apps you built yourself.
+        apps provided by Cozy Cloud, apps from the community or apps built by yourself!
     """
 
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later."

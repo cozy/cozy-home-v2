@@ -174,12 +174,12 @@ module.exports = BackgroundCollection = (function(_super) {
   BackgroundCollection.prototype.model = Application;
 
   BackgroundCollection.prototype.init = function() {
-    return this.add([
+    var selected;
+    this.add([
       {
         id: 'background-none',
         src: '/img/backgrounds/background_none_th.png',
-        imgSrc: '/img/backgrounds/background_none.png',
-        selected: true
+        imgSrc: '/img/backgrounds/background_none.png'
       }, {
         id: 'background-01',
         src: '/img/backgrounds/background_01_th.png',
@@ -214,6 +214,15 @@ module.exports = BackgroundCollection = (function(_super) {
         imgSrc: '/img/backgrounds/background_08.png'
       }
     ]);
+    selected = this.findWhere({
+      id: window.app.instance.background
+    });
+    if (selected == null) {
+      selected = this.at(0);
+    }
+    return selected.set({
+      'selected': true
+    });
   };
 
   return BackgroundCollection;
@@ -1452,6 +1461,7 @@ module.exports = {
   "update all": "Update all",
   "update stack": "Update",
   "refresh page": "Wait please, update takes several minutes.",
+  "status no device": "No device registered for synchronization.",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
@@ -1488,7 +1498,7 @@ module.exports = {
   "finish layout edition": "Save",
   "reset customization": "Reset",
   "use icon": "Use icon",
-  "home section leave": "leave services",
+  "home section leave": "Leave services",
   "home section main": "Basics",
   "home section productivity": "Productivity",
   "home section data management": "Data",
@@ -1500,7 +1510,7 @@ module.exports = {
   "settings": "Settings",
   "help": "Help",
   "change layout": "Change the layout",
-  "introduction market": "Welcome to the Cozy app store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps you built yourself.",
+  "introduction market": "Welcome to the Cozy app store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
   "please wait data retrieval": "Please wait while the data is being retrieved…",
@@ -1817,8 +1827,8 @@ module.exports = {
   "no domain set": "pas.de.domaine.défini",
   "locale": "Langue",
   "change password": "Changer de mot de passe",
-  "input your current password": "Mot de passe actuel",
-  "enter a new password": "Nouveau mot de passe",
+  "input your current password": "Par sécurité il faut votre mot de passe actuel:",
+  "current password": "Mot de passe actuel",
   "confirm new password": "Confirmer le nouveau mot de passe",
   "send changes": "Enregistrer",
   "manage": "Gestion",
@@ -1874,34 +1884,35 @@ module.exports = {
   "hardware consumption": "Matériel",
   "hard drive gigabytes": "(Disque Dur)",
   "memory megabytes": "&nbsp;Mo (RAM)",
-  "manage your applications": "Gérez vos applications",
-  "manage your devices": "Gérez vos appareils",
+  "manage your applications": "Applications",
+  "manage your devices": "Mobiles et tablettes",
+  "status no device": "Aucun appareil enregistré pour synchronisation.",
   "revoke device access": "Révoquer l'accès à l'appareil",
   "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
   "saved": "sauvé",
   "your parameters": "Vos paramètres",
-  "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des alertes.",
-  "public name description": "Votre nom public sera utilisé par votre Cozy et ses applications pour communiquer avec vous.",
-  "your timezone is required": "Votre fuseau horaire est nécessaire pour vous afficher les dates correctement.",
-  "domain name for urls and email": "Le nom de domaine est utilisé pour construire les URL\nenvoyées par mail à vos contacts.",
-  "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez que j'utilise pour vous parler.",
+  "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations:",
+  "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts:",
+  "your timezone is required": "Votre fuseau horaire est nécessaire pour vous afficher les dates correctement:",
+  "domain name for urls and email": "Le nom de domaine est utilisé pour construire les URL de partage\nenvoyées par mail à vos contacts:",
+  "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez pour votre Cozy:",
   "french": "Français",
   "english": "Anglais",
   "german": "Allemand",
   "portuguese": "Portugais",
   "change password procedure": "Procédure de changement de mot de passe",
-  "current password": "mot de passe actuel",
-  "new password": "nouveau mot de passe",
-  "confirm your new password": "confirmez votre nouveau mot de passe",
-  "save your new password": "sauvegarder votre nouveau mot de passe",
+  "enter a new password": "Votre nouveau mot de passe:",
+  "new password": "Nouveau mot de passe",
+  "confirm your new password": "Confirmez votre nouveau mot de passe:",
+  "save your new password": "Sauvegarder votre nouveau mot de passe",
   "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
   "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
   "Register and post on our forum: ": "Postez un message sur notre forum :",
   "Ask your question on Twitter: ": "Posez votre question sur Twitter :",
   "Chat with us on IRC:": "Discutez avec nous sur IRC :",
-  "Visit the project website and learn to build your app:": "Visitez le site du projet et apprenez à créer des applications.",
+  "Visit the project website and learn to build your app:": "Visitez le site du projet et trouvez les guides pour synchroniser vos périphériques.",
   "your own application": "votre propre application",
   "broken": "cassée",
   "installed": "installée",
@@ -1923,10 +1934,10 @@ module.exports = {
   "start this app": "démarrer cette application",
   "stopped": "stoppée",
   "retry to install": "nouvel essai d'installation",
-  "cozy account title": "Cozy - Compte",
-  "cozy app store title": "Cozy - App Store",
-  "cozy home title": "Cozy - Home",
-  "cozy applications title": "Cozy - Etats des applications",
+  "cozy account title": "Cozy - Paramètres",
+  "cozy app store title": "Cozy - Applithèque",
+  "cozy home title": "Cozy - Bureau",
+  "cozy applications title": "Cozy - Etats",
   "running": "démarrée",
   "cozy help title": "Cozy - Aide",
   "changing locale requires reload": "Le changement de langue nécessite le rechargement de la page.",
@@ -1943,7 +1954,30 @@ module.exports = {
   "reset customization": "Remise à zéro",
   "use icon": "Mode icône",
   "change layout": "Modifier la disposition",
-  "introduction market": "Bienvenue sur le marché d'application Cozy. C'est ici que vous pouvez\npersonnaliser votre Cozy en y ajoutant des applications.\nVous pouvez installer l'application que vous avez créée ou choisir parmi\ncelles proposées par Cozycloud ou d'autres développeurs.",
+  "home section leave": "Quittez vos fournisseurs",
+  "home section main": "Apps Principales",
+  "home section productivity": "Apps Productivité",
+  "home section data management": "Apps Données",
+  "home section personal watch": "Apps Veille",
+  "home section misc": "Divers",
+  "home section platform": "Plateforme",
+  "navbar back button title": "Retour",
+  "navbar logout": "Déconnexion",
+  "or:": "ou:",
+  "app status": "Etats",
+  "app store": "Applithèque",
+  "settings": "Paramètres",
+  "help": "Aide",
+  "account identifiers": "Identifiants",
+  "account localization": "Régionalisation",
+  "spanish": "espagnol",
+  "account personalization": "Personalisation",
+  "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy:",
+  "account password": "Changement de mot de passe",
+  "help support title": "Support officiel",
+  "help community title": "Support via la communauté",
+  "help documentation title": "Documentation",
+  "introduction market": "Bienvenue sur le marché d'application Cozy. Vous pouvez ajouter des applications proposées par Cozy Cloud, d'autres développeurs ou même votre propre application !",
   "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
   "package.json not found": "Impossible de récupérer le fichier package.json. Vérifiez l'url de votre dépôt git.",
   "please wait data retrieval": "Merci de bien vouloir patienter pendant la récupération des données…",
@@ -1982,7 +2016,7 @@ module.exports = {
     'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
     'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'Applithèque</a> pour installer votre première application."
   },
-  'relaunch install wizard': "Relancer l'assistant d'installation",
+  'relaunch install wizard': "Relancer l'assistant d'embarquement",
   'installwizard': {
     'welcome title': "Bienvenue dans votre Cozy",
     'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
@@ -2011,7 +2045,7 @@ module.exports = {
     'dashboard title': "Découvrez le Tableau de bord",
     'dashboard content': "<p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>\n<p><img src=\"/img/home-black.png\"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>",
     'continue to apps': "Comment gérer mes applications ?",
-    'apps title': "Gérer mes applications",
+    'apps title': "Applications",
     'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
     'continue to help': "Comment trouver de l'aide ?",
     'help title': "Obtenir de l'aide",
@@ -3081,16 +3115,16 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
 var __val__ = t('Ask your question on Twitter: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P><p class="help-text">');
-var __val__ = t('Chat with us on IRC:') + " "
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P></div><h4>');
+buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div><h4>');
 var __val__ = t('help community title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
 var __val__ = t('Register and post on our forum: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P></div><h4>');
+buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
+var __val__ = t('Chat with us on IRC:') + " "
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P></div><h4>');
 var __val__ = t('help documentation title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
@@ -3221,16 +3255,16 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<header id="header" class="navbar"></header><div id="notifications"><ul id="notifications-list"><li id="no-notif-msg">');
+buf.push('<header id="header" class="navbar"></header><div id="notifications" class="right-menu"><ul id="notifications-list"><li id="no-notif-msg">');
 var __val__ = t('you have no notifications')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li><li class="separator"></li></ul><div class="buttons"><div id="dismiss-all" class="spin-black btn">');
+buf.push('</li></ul></div><div id="notifications-buttons" class="right-menu"><button id="dismiss-all" class="spin-black btn">');
 var __val__ = t('dismiss all')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div><a id="logout-button" href="#logout" class="btn"><span>');
+buf.push('</button><a id="logout-button" href="#logout" class="btn">');
 var __val__ = t('navbar logout')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a></div></div><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
+buf.push('</a></div><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
 }
 return buf.join("");
 };
@@ -3389,7 +3423,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a id="notifications-toggle"><span class="backcolor"></span><img src="img/notification-white.png"/><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div>');
+buf.push('<a id="notifications-toggle"><span class="backcolor"></span><!--img(src="img/notification-white.png")--><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div>');
 }
 return buf.join("");
 };
@@ -4366,7 +4400,8 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.deviceList = new ConfigDeviceList(this.devices);
     this.$el.find('.title-app').after(this.applicationList.$el);
     this.applications = new Application();
-    return this.stackApplications = new StackApplication();
+    this.stackApplications = new StackApplication();
+    return this.displayDevices();
   };
 
   ConfigApplicationsView.prototype.openUpdatePopover = function(slug) {
@@ -4403,8 +4438,9 @@ module.exports = ConfigApplicationsView = (function(_super) {
 
   ConfigApplicationsView.prototype.displayDevices = function() {
     if (!(this.devices.length === 0)) {
-      this.$el.find('.title-device').show();
       return this.$el.find('.title-device').after(this.deviceList.$el);
+    } else {
+      return this.$el.find('.title-device').after("<p>" + (t('status no device')) + "</p>");
     }
   };
 
@@ -7423,7 +7459,7 @@ AppsMenu = require('./menu_applications');
 module.exports = NavbarView = (function(_super) {
   __extends(NavbarView, _super);
 
-  NavbarView.prototype.el = '#header';
+  NavbarView.prototype.el = '.navbar';
 
   NavbarView.prototype.template = require('templates/navbar');
 
@@ -7534,8 +7570,9 @@ module.exports = NotificationsView = (function(_super) {
   __extends(NotificationsView, _super);
 
   function NotificationsView() {
-    this.hideNotifList = __bind(this.hideNotifList, this);
     this.dismissAll = __bind(this.dismissAll, this);
+    this.hideNotifList = __bind(this.hideNotifList, this);
+    this.showNotifList = __bind(this.showNotifList, this);
     this.windowClicked = __bind(this.windowClicked, this);
     this.checkIfEmpty = __bind(this.checkIfEmpty, this);
     this.remove = __bind(this.remove, this);
@@ -7566,10 +7603,8 @@ module.exports = NotificationsView = (function(_super) {
     }
     this.notifList.prepend(view.el);
     if (!this.initializing) {
-      this.sound.play();
+      return this.sound.play();
     }
-    this.$('#notifications-toggle img').attr('src', 'img/notification-orange.png');
-    return this.$('#notifications-toggle').addClass('highlight');
   };
 
   NotificationsView.prototype.afterRender = function() {
@@ -7579,6 +7614,7 @@ module.exports = NotificationsView = (function(_super) {
     this.clickcatcher.hide();
     this.noNotifMsg = $('#no-notif-msg');
     this.notifList = $('#notifications-list');
+    this.hideNotifList();
     this.sound = $('#notification-sound')[0];
     this.dismissButton = $("#dismiss-all");
     this.dismissButton.click(this.dismissAll);
@@ -7595,7 +7631,6 @@ module.exports = NotificationsView = (function(_super) {
     var imgPath, newCount;
     newCount = this.collection.length;
     this.noNotifMsg.toggle(newCount === 0);
-    this.dismissButton.toggle(newCount !== 0);
     if (newCount === 0) {
       this.counter.html("");
       this.counter.hide();
@@ -7615,15 +7650,19 @@ module.exports = NotificationsView = (function(_super) {
   };
 
   NotificationsView.prototype.showNotifList = function() {
-    if (this.notifList.is(':visible')) {
-      this.notifList.hide();
-      this.clickcatcher.hide();
-      return this.$el.removeClass('active');
+    if ($('.right-menu').is(':visible')) {
+      return this.hideNotifList();
     } else {
-      this.$el.addClass('active');
-      this.notifList.show();
-      return this.clickcatcher.show();
+      $('.right-menu').show();
+      this.clickcatcher.show();
+      return this.$('#notifications-toggle').addClass('highlight');
     }
+  };
+
+  NotificationsView.prototype.hideNotifList = function(event) {
+    $('.right-menu').hide();
+    this.clickcatcher.hide();
+    return this.$('#notifications-toggle').removeClass('highlight');
   };
 
   NotificationsView.prototype.dismissAll = function() {
@@ -7637,12 +7676,6 @@ module.exports = NotificationsView = (function(_super) {
         return _this.dismissButton.spin(false);
       }
     });
-  };
-
-  NotificationsView.prototype.hideNotifList = function(event) {
-    this.notifList.hide();
-    this.clickcatcher.hide();
-    return this.$el.removeClass('active');
   };
 
   return NotificationsView;
