@@ -108,11 +108,12 @@ MAX_SPEED           = 1.5 * THROTTLE / 1000
 COEF_SECURITY       = 3
 # unit used for the dimensions (px,em or rem)
 THUMB_DIM_UNIT      = 'em'
-# space between 2 months (in pixels)
+# space between 2 months
 MONTH_HEADER_HEIGHT = 2.5
 # padding in pixels between thumbs
 CELL_PADDING        = 0.4
 THUMB_HEIGHT        = 10
+# height from top of the month to the top of the month label
 MONTH_LABEL_TOP     = 1.8
 
 
@@ -456,48 +457,37 @@ module.exports = class LongList
                 @index$.style.top = - (indexHeight - vph) + 'px'
 
         ###*
-         *
+         * modify the apperence of the index label corresponding of the first
+         * month displayed in the viewPort
         ###
         _selectCurrentIndex = (monthRk) =>
             @index$.children[currentIndexRkSelected].classList.remove('current')
             @index$.children[monthRk].classList.add('current')
             currentIndexRkSelected = monthRk
 
-
-        hideIndex = () =>
-            @index$.classList.remove('visible')
-            indexVisible = false
-
-
-        lazyHideIndex =  _.debounce(hideIndex, 2000)
-
+        ###*
+         * will hide the index 2s after its last call
+        ###
+        lazyHideIndex =  _.debounce () =>
+                @index$.classList.remove('visible')
+                indexVisible = false
+            , 2000
 
         ###*
          * Adapt the buffer when the viewport has moved
          * Launched at init and by _scrollHandler
          * Steps :
         ###
-        counter_speed_avoided = 0
-        counter_speed_ok      = 0
         _adaptBuffer = () =>
             @noScrollScheduled      = true
             @noIndexScrollScheduled = true
             lazyHideIndex()
 
-            # test speed
+            # test speed, if too high, relaunch a _scrollHandler
             speed = Math.abs(@viewPort$.scrollTop - lastOnScroll_Y) / viewPortHeight
             if speed > MAX_SPEED
-                counter_speed_avoided += 1
-                console.log 'too fasts!'
-                console.log 'speed ok nb:', counter_speed_ok
-                console.log 'speed nok nb:', counter_speed_avoided
                 _scrollHandler()
                 return
-            else
-                counter_speed_ok += 1
-                console.log 'speed ok, update buffer'
-                console.log 'speed ok nb:', counter_speed_ok
-                console.log 'speed nok nb:', counter_speed_avoided
 
             bufr = buffer
             # re init safeZone but keep a reference on the
@@ -529,7 +519,8 @@ module.exports = class LongList
                 # nToFind = number of thumbs to find (by reusing thumbs from the
                 # buffer or by creation new ones) in order to fill the bottom of
                 # the safeZone
-                nToFind = Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone)
+                nToFind = \
+                    Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone)
                 # the  available thumbs are the ones in the buffer and above
                 # the safeZone
                 # (rank greater than buffer.firstRk but lower
@@ -571,8 +562,8 @@ module.exports = class LongList
 
                 if nToFind > 0
                     Photo.listFromFiles targetRk, nToFind, (error, res) ->
-                        if Error
-                            console.log Error
+                        if error
+                            console.log error
                         _updateThumb(res.files, res.firstRank)
 
                 if nToCreate > 0
@@ -717,17 +708,21 @@ module.exports = class LongList
             ##
             # 2/ update src of thumbs that are after the firstThumbRkToUpdate
             if firstThumbRkToUpdate <= lstFileRk
-                console.log " update forward: #{firstThumbRkToUpdate}->#{lstFileRk}"
-                console.log "   firstThumbRkToUpdate", firstThumbRkToUpdate, "nFiles", files.length, "fstFileRk", fstFileRk, "lstFileRk",lstFileRk
+                console.log " update forward: #{firstThumbRkToUpdate}->
+                    #{lstFileRk}"
+                console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,   \
+                               'nFiles', files.length,                         \
+                               'fstFileRk', fstFileRk,                         \
+                               'lstFileRk',lstFileRk
             else
-                console.log " update forward: none"
+                console.log ' update forward: none'
             thumb = firstThumbToUpdate
             for file_i in [firstThumbRkToUpdate-fstFileRk..files.length-1] by 1
                 file    = files[file_i]
                 fileId = file.id
                 thumb$            = thumb.el
                 thumb$.src        = "files/photo/thumbs/#{fileId}.jpg"
-                # thumb$.src        = "files/photo/thumbs/fast/#{fileId}"
+                # thumb$.src        = 'files/photo/thumbs/fast/#{fileId}'
                 thumb$.dataset.id = fileId
                 thumb.id          = fileId
                 thumb             = thumb.prev
@@ -738,10 +733,14 @@ module.exports = class LongList
             ##
             # 3/ update src of thumbs that are before the firstThumbRkToUpdate
             if firstThumbRkToUpdate > fstFileRk
-                console.log " update backward #{firstThumbRkToUpdate-1}->#{fstFileRk}"
-                console.log "   firstThumbRkToUpdate", firstThumbRkToUpdate, "nFiles", files.length, "fstFileRk", fstFileRk, "lstFileRk",lstFileRk
+                console.log " update backward #{firstThumbRkToUpdate-1}->
+                    #{fstFileRk}"
+                console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,
+                               'nFiles', files.length,
+                               'fstFileRk', fstFileRk,
+                               'lstFileRk',lstFileRk
             else
-                console.log " update backward: none"
+                console.log ' update backward: none'
             thumb = firstThumbToUpdate.next
             for file_i in [firstThumbRkToUpdate-fstFileRk-1..0] by -1
                 file   = files[file_i]
@@ -965,7 +964,6 @@ module.exports = class LongList
                 bufr.first.next = thumb
                 bufr.last.prev  = thumb
                 bufr.last       = thumb
-                # thumb$.textContent = rk + ' ' + month.month.slice(0,4) + '-' + month.month.slice(4)
                 style        = thumb$.style
                 style.top    = rowY + 'px'
                 style.left   = (marginLeft + col*colWidth) + 'px'

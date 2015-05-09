@@ -36,6 +36,7 @@ module.exports = class PhotoPickerCroper extends Modal
             cb              : cb  # will be called by onYes
             target_h        : 100 # height of the img-preview div
             target_w        : 100 # width  of the img-preview div
+        @params = params
         @state =
             currentStep : 'objectPicker' # 2 states : 'croper' & 'objectPicker'
             img_naturalW: 0  # natural width  (px) of the selected file
@@ -48,6 +49,7 @@ module.exports = class PhotoPickerCroper extends Modal
         @body             = body
         @objectPickerCont = body.querySelector('.objectPickerCont')
         @tablist          = body.querySelector('[role=tablist]')
+        @imgResult        = body.querySelector('#img-result')
         @cropper$         = @el.querySelector('.croperCont')
         @imgToCrop        = @cropper$.querySelector('#img-to-crop')
         @imgPreview       = @cropper$.querySelector('#img-preview')
@@ -74,18 +76,53 @@ module.exports = class PhotoPickerCroper extends Modal
         # init the cropper
         @imgToCrop.addEventListener('load', @_onImgToCropLoaded, false)
         @cropper$.style.display = 'none'
+        ####
+        # detect when the result image is loaded, then send the corresponding
+        # data url as a response
+        @imgResult.addEventListener('load', @_onImgResultLoaded, false)
 
         return true
 
 
     onYes: ()->
     # overload the modal behavour : "ok" leads to the cropping step
-        # console.log "onYes", @state.currentStep, @state.activePanel
+        if !@params.isCropped
+            url = @state.activePanel.getObject()
+            @imgResult.src = url
+            return
+
+
         if @state.currentStep == 'objectPicker'
             url = @state.activePanel.getObject()
             if url
                 @_showCropingTool(url)
         else
+            # get the coordonates to cropp into the original photo ()
+            dimension = @_getCroppedDimensions()
+            # send result
+            @cb(true,@_getResultDataURL(@imgPreview, dimension))
+            @close()
+
+
+################################################################################
+## PRIVATE SECTION ##
+#
+
+    _onImgResultLoaded: (e) =>
+        @cb(true,@_getResultDataURL(@imgResult, null))
+        @close()
+
+
+    ###*
+     * returns the coordonates of the region to cropp into the original image
+     * (imgPreview)
+     * @return {Object} #
+     *   # sx      : x of the top left corner
+     *   # sy      : y of the top left corner
+     *   # sWidth  : widht of the region to crop
+     *   # sHeight : height of the region to crop
+    ###
+    _getCroppedDimensions: ()->
             s = @imgPreview.style
             r = @state.img_naturalW / @imgPreview.width
             d =
@@ -100,24 +137,23 @@ module.exports = class PhotoPickerCroper extends Modal
                 d.sWidth = @imgPreview.naturalWidth - d.sx
             if d.sy + d.sHeight > @imgPreview.naturalHeight
                 d.sHeight = @imgPreview.naturalHeight - d.sy
-            # send result
-            @cb(true,@_getResultDataURL(@imgPreview, d))
-            @close()
+            return d
 
-
-################################################################################
-## PRIVATE SECTION ##
-#
 
     _getResultDataURL:(img, dimensions)->
         IMAGE_DIMENSION = 600
         # use canvas to resize the image and return the urldata
         canvas = document.createElement 'canvas'
-        canvas.height = canvas.width = IMAGE_DIMENSION
         ctx = canvas.getContext '2d'
-        d = dimensions
-        ctx.drawImage( img, d.sx, d.sy, d.sWidth,
-                       d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION)
+        if dimensions
+            canvas.height = canvas.width = IMAGE_DIMENSION
+            d = dimensions
+            ctx.drawImage( img, d.sx, d.sy, d.sWidth,
+                           d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION)
+        else
+            canvas.width  = img.width;
+            canvas.height = img.height;
+            ctx.drawImage( img, 0, 0)
         return dataUrl =  canvas.toDataURL 'image/jpeg'
 
 

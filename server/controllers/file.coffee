@@ -113,16 +113,44 @@ module.exports.photoThumb = (req, res, next) ->
 
     #     req.on 'close', () ->
     #         console.log "reQ.on close"
+    #         stream.destroy()
+    #         stream.abort()
+
+    #     req.connection.on 'close', () ->
+    #         console.log 'reQ.connection.on close'
+    #         stream.destroy()
+    #         stream.abort()
+
+    #     req.on 'end', () ->
+    #         console.log 'reQ.on end'
+    #         stream.destroy()
     #         stream.abort()
 
     #     res.on 'close', () ->
     #         console.log "reS.on close"
     #         stream.abort()
+    #         stream.destroy()
+    #         stream.abort()
+
+    #     res.connection.on 'close', () ->
+    #         console.log 'reS.connection.on close'
+    #         stream.destroy()
+    #         stream.abort()
+
+    #     res.on 'end', () ->
+    #         console.log 'reS.on end'
+    #         stream.destroy()
+    #         stream.abort()
+
+    #     stream.on 'close', () ->
+    #         console.log 'stream.on close'
+    #         stream.destroy()
+    #         stream.abort()
 
     #     stream.pipe res
-    # , 1000
+    # , 5000
     # )
-    ##
+    #
 
 
 ###*
