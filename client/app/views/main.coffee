@@ -65,10 +65,12 @@ module.exports = class HomeView extends BaseView
     # image url with given value. If no param is given of default background is
     # given, background image is removed.
     changeBackground: (background) ->
-        if not background? or background is 'background-none'
+        if not background?
+            @content.css 'background_07.jpg', 'none'
+        if background is 'background-none'
             @content.css 'background-image', 'none'
         else
-            val = "url('/img/backgrounds/#{background.replace '-', '_'}.png')"
+            val = "url('/img/backgrounds/#{background.replace '-', '_'}.jpg')"
             @content.css 'background-image', val
 
 
