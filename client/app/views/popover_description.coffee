@@ -66,7 +66,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @handleContentHeight()
         @body.slideDown()
-        @body.niceScroll() # must be done in the end to avoid weird render
+        #@body.niceScroll() # must be done in the end to avoid weird render
 
     handleContentHeight: ->
         @body.css 'max-height', "#{$(window).height() / 2}px"
