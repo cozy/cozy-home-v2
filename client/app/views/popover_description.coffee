@@ -48,8 +48,6 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.html ""
 
-        @$('.repo-stars').html @model.get('stars')
-
         description = @model.get "description"
         @header.parent().append "<p class=\"line left\"> #{description} </p>"
 
