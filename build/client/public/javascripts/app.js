@@ -3372,7 +3372,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div><div class="md-overlay"></div></div>');
+buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div></div><div class="md-overlay"></div>');
 }
 return buf.join("");
 };
@@ -8453,7 +8453,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
     var _this = this;
     this.$el.addClass('md-show');
     this.overlay.addClass('md-show');
-    $('#home-content').addClass('md-open');
     setTimeout(function() {
       return _this.$('.md-content').addClass('md-show');
     }, 300);
