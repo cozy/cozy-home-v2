@@ -1,5 +1,5 @@
 File            = require '../models/file'
-onThumbCreation = require('../../init').onThumbCreation
+#onThumbCreation = require('../../init').onThumbCreation
 fs              = require('fs')
 
 ###*
@@ -34,27 +34,27 @@ module.exports.photoRange = (req, res, next) ->
     else
         limit = 100
 
-    [onCreation, percent] = onThumbCreation()
+    #[onCreation, percent] = onThumbCreation()
 
-    if onCreation
-        res.send "percent": percent
+    #if onCreation
+        #res.send "percent": percent
 
-    else
+    #else
 
-        dates = {}
-        options =
-            limit      : limit
-            skip       : skip
-            descending : true
-        File.imageByDate options, (err, photos) =>
-            if err
-                return res.error 500, 'An error occured', err
+    dates = {}
+    options =
+        limit      : limit
+        skip       : skip
+        descending : true
+    File.imageByDate options, (err, photos) =>
+        if err
+            return res.error 500, 'An error occured', err
+        else
+            if photos.length == limit
+                hasNext = true
             else
-                if photos.length == limit
-                    hasNext = true
-                else
-                    hasNext = false
-                res.send {files: photos, firstRank: skip}, 200
+                hasNext = false
+            res.send {files: photos, firstRank: skip}, 200
 
 ###*
  * Gets an array that gives the number of photo for each month, from the most
