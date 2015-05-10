@@ -3545,11 +3545,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
-buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
-buf.push('>&nbsp;</a><a');
-buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
-buf.push('><img src="img/star-white.png"/></a></div></div>');
+buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.displayName) == null ? '' : interp) + '</h3></div>');
 if ( (model.comment !== 'official application'))
 {
 buf.push('<div class="line noncozy-warning"><i class="fa fa-info-circle"></i><span>');
@@ -8393,7 +8389,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.model.set("description", "");
     this.body = this.$(".md-body");
     this.header = this.$(".md-header h3");
-    this.header.html(this.model.get('name'));
+    this.header.html(this.model.get('displayName'));
     this.body.addClass('loading');
     this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
     this.body.find('.spinner-container').spin(true);
@@ -8421,7 +8417,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
   PopoverDescriptionView.prototype.renderDescription = function() {
     var description, docType, permission, permissionsDiv, _ref1;
     this.body.html("");
-    this.$('.repo-stars').html(this.model.get('stars'));
     description = this.model.get("description");
     this.header.parent().append("<p class=\"line left\"> " + description + " </p>");
     if (Object.keys(this.model.get("permissions")).length === 0) {
