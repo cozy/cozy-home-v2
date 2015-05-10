@@ -1572,6 +1572,8 @@ module.exports = {
   "update stack error": "An error occured during update, page will refresh.",
   "applications broken": "Applications broken",
   "cozy platform": "Platform",
+  "navbar back button title": "Back to Home",
+  "or:": "or:",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the app",
   "error update uninstRlled app": "You can't update an app that is not installed.",
@@ -2067,7 +2069,7 @@ module.exports = {
   "home section personal watch": "Apps Veille",
   "home section misc": "Divers",
   "home section platform": "Plateforme",
-  "navbar back button title": "Retour",
+  "navbar back button title": "Retour au bureau",
   "navbar logout": "Déconnexion",
   "or:": "ou:",
   "app status": "Etats",
@@ -8432,8 +8434,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
       }
     }
     this.handleContentHeight();
-    this.body.slideDown();
-    return this.body.niceScroll();
+    return this.body.slideDown();
   };
 
   PopoverDescriptionView.prototype.handleContentHeight = function() {

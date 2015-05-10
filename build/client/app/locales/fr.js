@@ -144,7 +144,7 @@ module.exports = {
   "home section personal watch": "Apps Veille",
   "home section misc": "Divers",
   "home section platform": "Plateforme",
-  "navbar back button title": "Retour",
+  "navbar back button title": "Retour au bureau",
   "navbar logout": "Déconnexion",
   "or:": "ou:",
   "app status": "Etats",

@@ -2440,8 +2440,6 @@ body {
   transition: all 3s;
   background: #fcf9f5;
   position: relative;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
   margin: 0 auto;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -2555,7 +2553,8 @@ body {
 .md-body {
   background: #f7f4f0;
   padding: 20px;
-  color: #363a46;
+  color: #333;
+  overflow-y: auto;
 }
 .md-body.loading {
   text-align: center;
