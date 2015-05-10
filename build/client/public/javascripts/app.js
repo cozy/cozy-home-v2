@@ -3497,7 +3497,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a id="notifications-toggle"><span class="backcolor"></span><!--img(src="img/notification-white.png")--><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div>');
+buf.push('<a id="notifications-toggle"><span class="backcolor"></span><!--img(src="img/notification-white.png")--><span id="notifications-counter"></span></a><div id="clickcatcher"></div>');
 }
 return buf.join("");
 };
