@@ -165,7 +165,7 @@ module.exports =
     "finish layout edition": "Save"
     "reset customization": "Reset"
     "use icon": "Use icon"
-    "home section leave": "Leave services"
+    "home section leave": "Import"
     "home section main": "Basics"
     "home section productivity": "Productivity"
     "home section data management": "Data"

@@ -172,7 +172,7 @@ module.exports =
     "reset customization": "Remise à zéro"
     "use icon": "Mode icône"
     "change layout": "Modifier la disposition"
-    "home section leave": "Quittez vos fournisseurs"
+    "home section leave": "Service d'import"
     "home section main": "Apps Principales"
     "home section productivity": "Apps Productivité"
     "home section data management": "Apps Données"
