@@ -79,7 +79,6 @@ module.exports = class PopoverDescriptionView extends BaseView
     show: =>
         @$el.addClass 'md-show'
         @overlay.addClass 'md-show'
-        $('#home-content').addClass 'md-open'
         setTimeout =>
             @$('.md-content').addClass 'md-show'
         , 300
