@@ -325,7 +325,7 @@ module.exports = class LongList
         _resizeHandler= ()=>
 
             ##
-            # Get dimensions.
+            # 1/ GET DIMENSIONS.
             # It is possible only when the longList is inserted into the DOM, that's
             # why we had to wait for _init() which occurs after both the reception
             # of the array of photo and after the parent view has launched init().
@@ -354,7 +354,8 @@ module.exports = class LongList
             nThumbsInSZ_Margin    = nRowsInSafeZoneMargin * nThumbsPerRow
             nThumbsInViewPort     = nRowsInViewPort * nThumbsPerRow
             nThumbsInSafeZone     = nThumbsInSZ_Margin*2 + nThumbsInViewPort
-
+            ##
+            # 2/ COMPUTE THE PROPERTIES OF EACH MONTH
             nextY   = 0
             nPhotos = 0
             minMonthHeight  = Infinity
@@ -377,7 +378,7 @@ module.exports = class LongList
             thumbs$Height = nextY
             @thumbs$.style.setProperty('height', thumbs$Height + 'px')
             ##
-            #
+            # 3/ POSITION INDEX
             MONTH_LABEL_HEIGHT = 27
             minimumIndexHeight = @months.length * MONTH_LABEL_HEIGHT
             if minimumIndexHeight*1.3 <= viewPortHeight

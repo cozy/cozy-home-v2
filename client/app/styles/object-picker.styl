@@ -206,6 +206,26 @@
     a.chooseAgain
       cursor:pointer
 
+
+// album picker panel
+
+.albumPicker
+  display:flex
+  align-items:stretch
+  .albums
+    margin-left:0.5em
+    margin-right:0.5em
+  .label
+    text-align:center
+  .albumLabel:hover
+    cursor:pointer
+    .label
+      text-decoration: underline
+
+  .thumbs
+    flex-grow:1
+    background-color:grey
+
 .long-list-thumb
   max-width:none
   background-color: #F5F5F5
@@ -214,6 +234,9 @@
   opacity:1
   border:0
 
+
+
+// image long list for image picker
 
 .long-list-thumb.selectedThumb
   color:blue
@@ -254,5 +277,4 @@
     color:rgba(255, 255, 255, 1)
     background-color:rgba(0, 0, 0, 0.6)
   .current
-    // color:blue
     font-weight:bold

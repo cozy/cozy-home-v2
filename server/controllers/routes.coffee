@@ -7,75 +7,88 @@ devices           = require './devices'
 notifications     = require './notifications'
 file              = require './file'
 proxy             = require './proxy'
+album             = require './album'
 
 module.exports =
     '': get: index.index
 
-    'fileid':
-        param: file.fetch
+    # Fetch on params
+    'albumid': param: album.fetch
+    'fileid' : param: file.fetch
+    'slug'   : param: applications.loadApplication
 
-    'slug': param: applications.loadApplication
+    # Application routes
+    'api/applications/getPermissions' : post: applications.getPermissions
+    'api/applications/getDescription' : post: applications.getDescription
+    'api/applications/getMetaData'    : post: applications.getMetaData
 
-    'api/applications/getPermissions': post: applications.getPermissions
-    'api/applications/getDescription': post: applications.getDescription
-    'api/applications/getMetaData': post: applications.getMetaData
-
-    'api/applications': get: applications.applications
-    'api/applications/byid/:id':
+    'api/applications'                : get: applications.applications
+    'api/applications/byid/:id'       :
         get: applications.read
         put: applications.updatestoppable
-    'api/applications/install': post: applications.install
-    'api/applications/:slug.png': get: applications.icon
-    'api/applications/:slug.svg': get: applications.icon
-    'api/applications/:slug/start': post: applications.start
-    'api/applications/:slug/stop': post: applications.stop
+    'api/applications/install'        : post: applications.install
+    'api/applications/:slug.png'      : get: applications.icon
+    'api/applications/:slug.svg'      : get: applications.icon
+    'api/applications/:slug/start'    : post: applications.start
+    'api/applications/:slug/stop'     : post: applications.stop
     'api/applications/:slug/uninstall': delete: applications.uninstall
-    'api/applications/:slug/update': put: applications.update
-    'api/applications/update/all': put: applications.updateAll
+    'api/applications/:slug/update'   : put: applications.update
+    'api/applications/update/all'     : put: applications.updateAll
 
-    'api/applications/market': get: applications.fetchMarket
+    'api/applications/market'         : get: applications.fetchMarket
 
-    'api/applications/stack': get: stackApplications.get
-    'api/applications/update/stack': put: stackApplications.update
-    'api/applications/reboot/stack': put: stackApplications.reboot
+    'api/applications/stack'          : get: stackApplications.get
+    'api/applications/update/stack'   : put: stackApplications.update
+    'api/applications/reboot/stack'   : put: stackApplications.reboot
 
 
-    'api/devices': get: devices.devices
+    # Devices routes
+    'api/devices'    : get: devices.devices
     'api/devices/:id': delete: devices.remove
 
+    # Devices routes
     'api/sys-data': get: monitor.sysData
 
-    'api/users': get: account.users
-    'api/user': post: account.updateAccount
+    # Users routes
+    'api/users' : get: account.users
+    'api/user'  : post: account.updateAccount
 
-    'api/instances': get: account.instances
-    'api/instance': post: account.updateInstance
+    # Instances routes
+    'api/instances' : get: account.instances
+    'api/instance'  : post: account.updateInstance
 
+    # Notifications routes
     'api/notifications':
         get: notifications.all
         delete: notifications.deleteAll
     'api/notifications/:id':
         get: notifications.show
         delete: notifications.delete
-
-    'api/proxy/':
-        get: proxy.get
-
     'notifications': post: notifications.create
     'notifications/:app/:ref':
         put: notifications.updateOrCreate
         delete: notifications.destroy
 
-    'files/photo/range/:skip/:limit':
-        get: file.photoRange
-    'files/photo/thumbs/:fileid':
-        get: file.photoThumb
-    'files/photo/thumbs/fast/:file_id':
-        get: file.photoThumbFast
-    'files/photo/screens/:fileid':
-        get: file.photoScreen
-    'files/photo/monthdistribution':
-        get: file.photoMonthDistribution
-    'files/photo/:fileid':
-        get: file.photo
+    # Proxy routes
+    'api/proxy/':
+        get: proxy.get
+
+    # Photo routes
+    'files/photo/range/:skip/:limit'  : get: file.photoRange
+    'files/photo/thumbs/:fileid'      : get: file.photoThumb
+    'files/photo/thumbs/fast/:file_id': get: file.photoThumbFast
+    'files/photo/screens/:fileid'     : get: file.photoScreen
+    'files/photo/monthdistribution'   : get: file.photoMonthDistribution
+    'files/photo/:fileid'             : get: file.photo
+
+
+    # Album routes
+    # 'albums/index': get: album.index
+    'albums/?':
+        get  : album.list
+    #     post : album.create
+    # 'albums/:albumid/?':
+    #     get    : album.read
+    #     put    : album.update
+    #     delete : album.delete
 

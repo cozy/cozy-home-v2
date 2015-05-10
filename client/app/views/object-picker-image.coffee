@@ -45,7 +45,7 @@ module.exports = class ObjectPickerImage extends BaseView
 
 
     keyHandler : (e)->
-        console.log 'ObjectPickerImage.keyHandler', e.which
+        # console.log 'ObjectPickerImage.keyHandler', e.which
         @longList.keyHandler(e)
         return
 

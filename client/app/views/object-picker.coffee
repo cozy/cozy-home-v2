@@ -3,6 +3,7 @@ template             = require '../templates/object-picker'
 ObjectPickerPhotoURL = require './object-picker-photoURL'
 ObjectPickerUpload   = require './object-picker-upload'
 ObjectPickerImage    = require './object-picker-image'
+ObjectPickerAlbum    = require './object-picker-album'
 tabControler         = require 'views/tab-controler'
 
 
@@ -47,12 +48,12 @@ module.exports = class PhotoPickerCroper extends Modal
         body              = @el.querySelector('.modalCY-body')
         body.innerHTML    = template()
         @body             = body
-        @objectPickerCont = body.querySelector('.objectPickerCont')
-        @tablist          = body.querySelector('[role=tablist]')
-        @imgResult        = body.querySelector('#img-result')
-        @cropper$         = @el.querySelector('.croperCont')
-        @imgToCrop        = @cropper$.querySelector('#img-to-crop')
-        @imgPreview       = @cropper$.querySelector('#img-preview')
+        @objectPickerCont = body.querySelector(     '.objectPickerCont')
+        @tablist          = body.querySelector(     '[role=tablist]'   )
+        @imgResult        = body.querySelector(     '#img-result'      )
+        @cropper$         = @el.querySelector(      '.croperCont'      )
+        @imgToCrop        = @cropper$.querySelector('#img-to-crop'     )
+        @imgPreview       = @cropper$.querySelector('#img-preview'     )
         ####
         # initialise tabs and panels
         @panelsControlers = {} # {tab1.name : tab1Controler, tab2... }
@@ -60,6 +61,10 @@ module.exports = class PhotoPickerCroper extends Modal
         @imagePanel = new ObjectPickerImage(this)
         tabControler.addTab @objectPickerCont, @tablist, @imagePanel
         @panelsControlers[@imagePanel.name] = @imagePanel
+        # album panel
+        @albumPanel = new ObjectPickerAlbum(this)
+        tabControler.addTab @objectPickerCont, @tablist, @albumPanel
+        @panelsControlers[@albumPanel.name] = @albumPanel
         # photoURL panel
         @photoURLpanel = new ObjectPickerPhotoURL()
         tabControler.addTab @objectPickerCont, @tablist, @photoURLpanel
