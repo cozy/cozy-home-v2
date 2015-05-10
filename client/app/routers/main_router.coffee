@@ -1,21 +1,23 @@
+ObjectPickerCroper = require '../views/object-picker'
+
 module.exports = class MainRouter extends Backbone.Router
 
     routes :
-        "home": "applicationList"
-        "customize": "applicationListEdit"
-        "applications": "market"
-        "config-applications": "configApplications"
-        "account": "account"
-        "help": "help"
-        "home/install": "installWizard"
-        "home/quicktour": "quickTourWizard"
-        "logout": "logout"
-        "update/:slug": "updateApp"
-        "update-stack": "updateStack"
-        "apps/:slug" : "application"
-        "apps/:slug/*hash" : "application"
-        "*path": "applicationList"
-        '*notFound': 'applicationList'
+        "home"                : "applicationList"
+        "customize"           : "applicationListEdit"
+        "applications"        : "market"
+        "config-applications" : "configApplications"
+        "account"             : "account"
+        "help"                : "help"
+        "home/install"        : "installWizard"
+        "home/quicktour"      : "quickTourWizard"
+        "logout"              : "logout"
+        "update/:slug"        : "updateApp"
+        "update-stack"        : "updateStack"
+        "apps/:slug"          : "application"
+        "apps/:slug/*hash"    : "application"
+        "*path"               : "applicationList"
+        '*notFound'           : 'applicationList'
 
     initialize: ->
         # expect applications to send intents
@@ -24,6 +26,9 @@ module.exports = class MainRouter extends Backbone.Router
             intent = event.data
             switch intent.action
                 when 'goto' then @navigate "apps/#{intent.params}", true
+                when undefined
+                    if JSON.parse(intent).type != 'application/x-talkerjs-v1+json'
+                        console.log "WEIRD INTENT", intent
                 else console.log "WEIRD INTENT", intent
 
     selectIcon: (index) ->
@@ -32,6 +37,7 @@ module.exports = class MainRouter extends Backbone.Router
             $($('.menu-btn').get(index)).addClass 'active'
         else # no active button
             $('.menu-btn.active').removeClass 'active'
+
 
     ## Route behaviors
 

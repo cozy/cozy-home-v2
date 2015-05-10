@@ -137,7 +137,7 @@ module.exports = {
   "reset customization": "Remise à zéro",
   "use icon": "Mode icône",
   "change layout": "Modifier la disposition",
-  "home section leave": "Quittez vos fournisseurs",
+  "home section leave": "Service d'import",
   "home section main": "Apps Principales",
   "home section productivity": "Apps Productivité",
   "home section data management": "Apps Données",
@@ -238,5 +238,14 @@ module.exports = {
     'sync title': "Synchronisation",
     'sync content': "<p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
     'close wizard': "Je suis prêt à utiliser mon Cozy"
-  }
+  },
+  "pick from files": "Choisir une photo",
+  "photo-modal chooseAgain": "Changer de photo",
+  "modal ok": "OK",
+  "modal cancel": "Annuler",
+  "no image": "Il n'y a pas d'image sur votre Cozy",
+  "ObjPicker upload btn": "Sélectionnez un fichier local",
+  "more thumbs": "Plus de photo",
+  "drop a file": "Glissez et déposez un fichier",
+  "url of an image": "URL d'une image sur le web"
 };

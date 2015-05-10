@@ -1,11 +1,12 @@
 americano = require 'americano'
-fs = require 'fs'
-path = require 'path'
+fs        = require 'fs'
+path      = require 'path'
 
-clientPath = path.resolve(__dirname, '..', 'client', 'public')
+clientPath   = path.resolve(__dirname, '..', 'client', 'public')
 useBuildView = fs.existsSync path.resolve(__dirname, 'views', 'index.js')
 
 config =
+
     common:
         set:
             'view engine': if useBuildView then 'js' else 'jade'
@@ -22,12 +23,15 @@ config =
             americano.static clientPath,
                 maxAge: 86400000
         ]
+
     development: [
         americano.logger 'dev'
     ]
+
     production: [
         americano.logger 'short'
     ]
+
     plugins: [
         'americano-cozy'
     ]

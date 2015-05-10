@@ -1,6 +1,6 @@
 MainRouter = require 'routers/main_router'
-MainView = require 'views/main'
-colorSet = require '../helpers/color-set'
+MainView   = require 'views/main'
+colorSet   = require '../helpers/color-set'
 
 class exports.Application
 
@@ -10,7 +10,7 @@ class exports.Application
 
     initialize: =>
 
-        @instance = window.cozy_instance
+        @instance = window.cozy_instance or {}
         @locale = @instance?.locale or 'en'
 
         try
@@ -20,9 +20,13 @@ class exports.Application
 
         window.app = @
 
+        # Translation
         @polyglot = new Polyglot()
         @polyglot.extend locales
         window.t = @polyglot.t.bind @polyglot
+
+        # Date parser and format library
+        moment.locale(@locale)
 
         # Defines the application's color set once
         ColorHash.addScheme 'cozy', colorSet
