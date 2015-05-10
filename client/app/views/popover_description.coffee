@@ -23,7 +23,7 @@ module.exports = class PopoverDescriptionView extends BaseView
         @model.set "description", ""
         @body = @$ ".md-body"
         @header = @$ ".md-header h3"
-        @header.html @model.get 'name'
+        @header.html @model.get 'displayName'
 
         @body.addClass 'loading'
         @body.html t('please wait data retrieval') + '<div class="spinner-container" />'
