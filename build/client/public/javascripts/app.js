@@ -6698,6 +6698,9 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.changeBackground = function(background) {
     var val;
+    if (background == null) {
+      background = 'background_07';
+    }
     if (background === void 0 || background === null) {
       this.content.css('background_07.jpg', 'none');
     }

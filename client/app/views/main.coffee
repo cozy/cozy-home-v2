@@ -66,7 +66,7 @@ module.exports = class HomeView extends BaseView
     # Change the background of the content element. It builds the background
     # image url with given value. If no param is given of default background is
     # given, background image is removed.
-    changeBackground: (background) ->
+    changeBackground: (background='background_07') ->
         if background is undefined or background is null
             @content.css 'background_07.jpg', 'none'
         if background is 'background-none'
