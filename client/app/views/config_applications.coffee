@@ -38,8 +38,7 @@ module.exports = class ConfigApplicationsView extends BaseView
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').after @applicationList.$el
         @applications = new Application()
-        @stackApplications = new StackApplication()
-        @stackApps.fetch()
+        @stackApps.fetch reset: true
         @displayDevices()
 
     openUpdatePopover: (slug) ->
