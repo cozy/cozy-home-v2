@@ -17,18 +17,18 @@ module.exports = class ApplicationRow extends BaseView
         "mouseout .application-inner": "onMouseOut"
 
     ### Constructor ####
-    #
 
     onMouseOver: ->
-        @background.css 'background', '#FF9D3B'
+        @background.css 'background-color', '#FF9D3B'
 
     onMouseOut: ->
-        @background.css 'background', @color or 'transparent'
+        @background.css 'background-color', @color or 'transparent'
 
     constructor: (options) ->
         @id = "app-btn-#{options.model.id}"
         @enabled = true
         super
+        @inMarket = options.market.findWhere slug: @model.get('slug')
 
     afterRender: =>
         @icon = @$ 'img.icon'
@@ -39,19 +39,12 @@ module.exports = class ApplicationRow extends BaseView
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
 
-        slug = @model.get 'slug'
-        color = @model.get 'color'
-
         # Only set a background color for SVG icons
         if @model.isIconSvg()
 
             # if there is no set color, we use an auto-generated one
-            unless color?
-                color = ColorHash.getColor slug, 'cozy'
-
-            @color = color
+            @setBackgroundColor()
             @icon.addClass 'svg'
-            @background.css 'background', color
 
 
     ### Listener ###
@@ -67,14 +60,9 @@ module.exports = class ApplicationRow extends BaseView
             when 'installed'
                 @hideSpinner()
                 if @model.isIconSvg()
-                    slug = @model.get 'slug'
-                    color = @model.get 'color'
-                    unless color?
-                        color = ColorHash.getColor slug, 'cozy'
+                    @setBackgroundColor()
                     extension = 'svg'
                     @icon.addClass 'svg'
-                    @color = color
-                    @background.css 'background', color
                 else
                     extension = 'png'
                     @icon.removeClass 'svg'
@@ -89,6 +77,7 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.hide()
                 @showSpinner()
                 @stateLabel.show().text 'installing'
+                @setBackgroundColor()
 
             when 'stopped'
 
@@ -165,6 +154,18 @@ module.exports = class ApplicationRow extends BaseView
                 ['arc', 20, 20, 20, 0, 360]
             ]
         @spinner.play()
+
+
+    setBackgroundColor: ->
+        slug = @model.get 'slug'
+        color = @model.get 'color'
+        unless color?
+            hashColor = ColorHash.getColor slug, 'cozy'
+
+            # By default, look for the color in the market.
+            color = @inMarket?.get('color') or hashColor
+        @color = color
+        @background.css 'background-color', color
 
 
     showSpinner: =>
