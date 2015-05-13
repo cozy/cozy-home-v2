@@ -6,13 +6,16 @@ module.exports = class ApplicationsListView extends ViewCollection
     template: require 'templates/home'
     itemView: require 'views/home_application'
 
+
     ### Constructor ###
 
 
-    constructor: (apps) ->
+    constructor: (apps, market) ->
         @apps = apps
+        @market = market
         @state = 'view'
         @isLoading = true
+        @itemViewOptions = => market: @market
         super collection: apps
 
 

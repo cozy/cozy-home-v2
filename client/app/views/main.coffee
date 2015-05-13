@@ -42,7 +42,7 @@ module.exports = class HomeView extends BaseView
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
-        @applicationListView = new ApplicationsListView @apps
+        @applicationListView = new ApplicationsListView @apps, @market
         @configApplications = new ConfigApplicationsView(
             @apps, @devices, @stackApps, @market)
         @accountView = new AccountView()
