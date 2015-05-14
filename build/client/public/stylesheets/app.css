@@ -2362,7 +2362,7 @@ body {
 }
 .config-device {
   background: #f7f4f0;
-  padding: 10px;
+  padding: 0;
   margin-bottom: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -2372,7 +2372,6 @@ body {
 }
 .config-device strong,
 .config-device .mod {
-  margin-left: 5px;
   display: inline-block;
 }
 .config-device .mod.left {
