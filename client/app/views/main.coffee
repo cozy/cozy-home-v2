@@ -109,8 +109,10 @@ module.exports = class HomeView extends BaseView
             @content.show()
             $('#home-content').append view.$el
             view.$el.show()
+
             @currentView = view
             @resetLayoutSizes()
+            @content.scrollTop 0
 
         if @currentView?
 
