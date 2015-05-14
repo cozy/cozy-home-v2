@@ -3176,10 +3176,10 @@ var interp;
 buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span><span class="state-label">');
 var __val__ = t('synchronized')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div><div class="buttons right"><i class="fa fa-trash mr1"></i> <button class="remove-device btn">');
+buf.push('</span></div><div class="buttons right"><button class="remove-device btn"><i class="fa fa-trash mr1"></i> <span class="label">');
 var __val__ = t('revoke device access')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div></div>');
+buf.push('</span></button></div></div>');
 }
 return buf.join("");
 };
