@@ -27,7 +27,7 @@ module.exports = class NotificationView extends BaseView
             url = null
 
         window.app.routers.main.navigate url, true if url
-        @dismiss() if @model.get('type') is 'temporary'
+        #@dismiss() if @model.get('type') is 'temporary'
 
     dismiss: (event) ->
         event?.preventDefault()

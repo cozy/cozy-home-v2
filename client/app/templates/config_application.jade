@@ -11,9 +11,7 @@
                 | #{app.state}
         if app.needsUpdate
             span &nbsp;
-            img.update-notification-icon(
-                width=16, src="img/notification-orange.png",
-                title="#{t('update required')}", alt="#{t('update required')}")
+            span.to-update-label= t('update required')
         .comments
             if app.comment === 'official application'
                 img(src="img/happycloud-black.svg", 
