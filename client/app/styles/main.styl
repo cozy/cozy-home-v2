@@ -418,7 +418,7 @@ body
             height 100%
             width 100%
 
-        img
+        img:not(.spinner)
             height auto
             display block
             padding 20px
@@ -427,6 +427,13 @@ body
             border-radius 200px
             margin-bottom 10px
             width 100%
+
+        img.svg.spinner
+            border-radius 200px
+            display block
+            background-position center
+            width 130px
+            height 105px
 
         p
             margin: 0
@@ -575,7 +582,7 @@ body
 
     p.help-text
         font-size 22px
-        
+
     .help-section
         border-radius 20px
         margin-bottom 20px
@@ -759,7 +766,7 @@ body
     font-size 15px
 
 .sys-infos
-   padding-right 20px 
+   padding-right 20px
 
 #config-application-list
     margin-top 10px
