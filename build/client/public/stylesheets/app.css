@@ -1890,7 +1890,7 @@ body {
   height: 100%;
   width: 100%;
 }
-.application .application-inner img {
+.application .application-inner img:not(.spinner) {
   height: auto;
   display: block;
   padding: 20px;
@@ -1900,6 +1900,14 @@ body {
   border-radius: 200px;
   margin-bottom: 10px;
   width: 100%;
+}
+.application .application-inner img.svg.spinner {
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+  display: block;
+  background-position: center;
+  width: 130px;
+  height: 105px;
 }
 .application .application-inner p {
   margin: 0;
@@ -2330,6 +2338,16 @@ body {
   .config-application .comments a {
     display: none;
   }
+}
+.config-application .to-update-label {
+  background: #333;
+  color: #fcf9f5;
+  padding: 3px 6px;
+  font-size: 12px;
+  margin-left: 10px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  text-transform: lowercase;
 }
 #config-applications-view .stack-app .app {
   font-weight: normal;

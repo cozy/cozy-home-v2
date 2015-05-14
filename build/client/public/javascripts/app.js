@@ -2128,7 +2128,7 @@ module.exports = {
   'relaunch install wizard': "Relancer l'assistant d'embarquement",
   'installwizard': {
     'welcome title': "Bienvenue dans votre Cozy",
-    'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
+    'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des difficultés dans votre utilisation.</p>",
     'yes': "Activer l'application %{slug}",
     'no': "Non, merci",
     'continue to files': "Configurer mes applicatons",
@@ -3088,9 +3088,10 @@ buf.push('<span class="state-label">' + escape((interp = app.state) == null ? ''
 }
 if ( app.needsUpdate)
 {
-buf.push('<span>&nbsp;</span><img');
-buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
-buf.push('/>');
+buf.push('<span>&nbsp;</span><span class="to-update-label">');
+var __val__ = t('update required')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span>');
 }
 buf.push('<div class="comments">');
 if ( app.comment === 'official application')
@@ -3317,7 +3318,9 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><img src="/img/spinner.svg" class="spinner"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
+buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><img');
+buf.push(attrs({ 'src':("/img/spinner.svg"), "class": ('spinner') + ' ' + ("svg svg-" + app.slug) }, {"class":true,"src":true}));
+buf.push('/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
 }
 return buf.join("");
 };
@@ -3485,7 +3488,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a class="doaction">' + escape((interp = model.text) == null ? '' : interp) + '</a><a class="dismiss">&times;</a>');
+buf.push('<a class="dismiss">&times;</a><div class="notification-text">' + escape((interp = model.text) == null ? '' : interp) + '</div><a class="doaction btn">t(\'model.actionText\')</a>');
 }
 return buf.join("");
 };
@@ -4463,8 +4466,9 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.deviceList = new ConfigDeviceList(this.devices);
     this.$el.find('.title-app').after(this.applicationList.$el);
     this.applications = new Application();
-    this.stackApplications = new StackApplication();
-    this.stackApps.fetch();
+    this.stackApps.fetch({
+      reset: true
+    });
     return this.displayDevices();
   };
 
@@ -4783,13 +4787,20 @@ module.exports = ApplicationsListView = (function(_super) {
   /* Constructor*/
 
 
-  function ApplicationsListView(apps) {
+  function ApplicationsListView(apps, market) {
     this.onAppRemoved = __bind(this.onAppRemoved, this);
     this.afterRender = __bind(this.afterRender, this);
     this.initialize = __bind(this.initialize, this);
+    var _this = this;
     this.apps = apps;
+    this.market = market;
     this.state = 'view';
     this.isLoading = true;
+    this.itemViewOptions = function() {
+      return {
+        market: _this.market
+      };
+    };
     ApplicationsListView.__super__.constructor.call(this, {
       collection: apps
     });
@@ -4886,11 +4897,11 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onMouseOver = function() {
-    return this.background.css('background', '#FF9D3B');
+    return this.background.css('background-color', '#FF9D3B');
   };
 
   ApplicationRow.prototype.onMouseOut = function() {
-    return this.background.css('background', this.color || 'transparent');
+    return this.background.css('background-color', this.color || 'transparent');
   };
 
   function ApplicationRow(options) {
@@ -4903,25 +4914,21 @@ module.exports = ApplicationRow = (function(_super) {
     this.id = "app-btn-" + options.model.id;
     this.enabled = true;
     ApplicationRow.__super__.constructor.apply(this, arguments);
+    this.inMarket = options.market.findWhere({
+      slug: this.model.get('slug')
+    });
   }
 
   ApplicationRow.prototype.afterRender = function() {
-    var color, slug;
     this.icon = this.$('img.icon');
     this.stateLabel = this.$('.state-label');
     this.title = this.$('.app-title');
     this.background = this.$('img');
     this.listenTo(this.model, 'change', this.onAppChanged);
     this.onAppChanged(this.model);
-    slug = this.model.get('slug');
-    color = this.model.get('color');
     if (this.model.isIconSvg()) {
-      if (color == null) {
-        color = ColorHash.getColor(slug, 'cozy');
-      }
-      this.color = color;
-      this.icon.addClass('svg');
-      return this.background.css('background', color);
+      this.setBackgroundColor();
+      return this.icon.addClass('svg');
     }
   };
 
@@ -4929,7 +4936,7 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var color, extension, slug;
+    var extension;
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
@@ -4939,14 +4946,9 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installed':
         this.hideSpinner();
         if (this.model.isIconSvg()) {
-          slug = this.model.get('slug');
-          color = this.model.get('color');
-          if (color == null) {
-            color = ColorHash.getColor(slug, 'cozy');
-          }
+          this.setBackgroundColor();
           extension = 'svg';
           this.icon.addClass('svg');
-          this.background.css('background', color);
         } else {
           extension = 'png';
           this.icon.removeClass('svg');
@@ -4959,7 +4961,8 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installing':
         this.icon.hide();
         this.showSpinner();
-        return this.stateLabel.show().text('installing');
+        this.stateLabel.show().text('installing');
+        return this.setBackgroundColor();
       case 'stopped':
         if (this.model.isIconSvg()) {
           extension = 'svg';
@@ -5045,6 +5048,18 @@ module.exports = ApplicationRow = (function(_super) {
       path: [['arc', 20, 20, 20, 0, 360]]
     });
     return this.spinner.play();
+  };
+
+  ApplicationRow.prototype.setBackgroundColor = function() {
+    var color, hashColor, slug, _ref;
+    slug = this.model.get('slug');
+    color = this.model.get('color');
+    if (color == null) {
+      hashColor = ColorHash.getColor(slug, 'cozy');
+      color = ((_ref = this.inMarket) != null ? _ref.get('color') : void 0) || hashColor;
+    }
+    this.color = color;
+    return this.background.css('background-color', color);
   };
 
   ApplicationRow.prototype.showSpinner = function() {
@@ -6679,7 +6694,7 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.afterRender = function() {
     this.navbar = new NavbarView(this.apps, this.notifications);
-    this.applicationListView = new ApplicationsListView(this.apps);
+    this.applicationListView = new ApplicationsListView(this.apps, this.market);
     this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps, this.market);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
@@ -7621,10 +7636,7 @@ module.exports = NotificationView = (function(_super) {
       url = null;
     }
     if (url) {
-      window.app.routers.main.navigate(url, true);
-    }
-    if (this.model.get('type') === 'temporary') {
-      return this.dismiss();
+      return window.app.routers.main.navigate(url, true);
     }
   };
 
