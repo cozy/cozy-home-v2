@@ -1577,6 +1577,9 @@ module.exports = {
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the app",
   "error update uninstRlled app": "You can't update an app that is not installed.",
+  "notification open application": "Open application",
+  "notification update stack": "Update the platform",
+  "notification update application": "Update application",
   "broken": "broken",
   "start this app": "Start this app",
   "stopped": "stopped",
@@ -1985,7 +1988,7 @@ module.exports = {
   "welcome to your cozy": "Bienvenue sur votre Cozy !",
   "you have no apps": "Vous n'avez aucune application installée.",
   "app management": "Gestion des applications",
-  "app store": "Applithèque",
+  "app store": "App Store",
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
@@ -2024,7 +2027,7 @@ module.exports = {
   "your own application": "votre propre application",
   "broken": "cassée",
   "installed": "installée",
-  "updated": "m.à.j",
+  "updated": "mis à jour réussie",
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour",
@@ -2043,7 +2046,7 @@ module.exports = {
   "stopped": "stoppée",
   "retry to install": "nouvel essai d'installation",
   "cozy account title": "Cozy - Paramètres",
-  "cozy app store title": "Cozy - Applithèque",
+  "cozy app store title": "Cozy - App Store",
   "cozy home title": "Cozy - Bureau",
   "cozy applications title": "Cozy - Etats",
   "running": "démarrée",
@@ -2073,7 +2076,7 @@ module.exports = {
   "navbar logout": "Déconnexion",
   "or:": "ou:",
   "app status": "Etats",
-  "app store": "Applithèque",
+  "app store": "App Store",
   "settings": "Paramètres",
   "help": "Aide",
   "account identifiers": "Identifiants",
@@ -2119,11 +2122,14 @@ module.exports = {
   "reminder message": "Rappel : %{message}",
   "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
   "installation message failure": "Échec de l'installation de %{appName}.",
+  "notification open application": "Ouvrir l'application",
+  "notification update stack": "Mettre à jour la plateforme",
+  "notification update application": "Mettre à jour l'application",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
   'noapps': {
     'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
-    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'Applithèque</a> pour installer votre première application."
+    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'App Store</a> pour installer votre première application."
   },
   'relaunch install wizard': "Relancer l'assistant d'embarquement",
   'installwizard': {
@@ -2155,7 +2161,7 @@ module.exports = {
     'dashboard content': "<p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>\n<p><img src=\"/img/home-black.png\"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>",
     'continue to apps': "Comment gérer mes applications ?",
     'apps title': "Applications",
-    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
+    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>App Store: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
     'continue to help': "Comment trouver de l'aide ?",
     'help title': "Obtenir de l'aide",
     'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
@@ -3341,7 +3347,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><a id="logout-button" href="#logout" class="btn">');
 var __val__ = t('navbar logout')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
+buf.push('</a></div><div class="home-body"><div id="app-frames"></div><div id="content"><!-- Preload spinners--><img src="/img/spinner.svg" class="hidden"/><img src="/img/spinner-white.svg" class="hidden"/><div id="home-content"></div></div></div>');
 }
 return buf.join("");
 };
@@ -3488,7 +3494,14 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a class="dismiss">&times;</a><div class="notification-text">' + escape((interp = model.text) == null ? '' : interp) + '</div><a class="doaction btn">t(\'model.actionText\')</a>');
+buf.push('<a class="dismiss">&times;</a><div class="notification-text">' + escape((interp = model.text) == null ? '' : interp) + '</div><div class="notification-date">' + escape((interp = model.date) == null ? '' : interp) + '</div>');
+if ( model.actionText !== undefined && model.actionText !== null)
+{
+buf.push('<a class="doaction btn">');
+var __val__ = t(model.actionText)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>');
+}
 }
 return buf.join("");
 };
@@ -6765,7 +6778,8 @@ module.exports = HomeView = (function(_super) {
       $('#home-content').append(view.$el);
       view.$el.show();
       _this.currentView = view;
-      return _this.resetLayoutSizes();
+      _this.resetLayoutSizes();
+      return _this.content.scrollTop(0);
     };
     if (this.currentView != null) {
       if (view === this.currentView) {
@@ -7610,15 +7624,37 @@ module.exports = NotificationView = (function(_super) {
   NotificationView.prototype.template = require('templates/notification');
 
   NotificationView.prototype.events = {
-    "click .doaction": "doaction",
-    "click .dismiss": "dismiss"
+    "click .doaction": "onActionClicked",
+    "click .dismiss": "onDismissClicked"
+  };
+
+  NotificationView.prototype.getRenderData = function() {
+    return {
+      model: _.extend(this.model.attributes, {
+        actionText: this.actionText || null,
+        date: moment(parseInt(this.model.get('publishDate'))).fromNow()
+      })
+    };
   };
 
   NotificationView.prototype.initialize = function() {
-    return this.listenTo(this.model, 'change', this.render);
+    var action;
+    this.listenTo(this.model, 'change', this.render);
+    action = this.model.get('resource');
+    if (action != null) {
+      if ((action.app != null) && action.app !== 'home') {
+        return this.actionText = 'notification open application';
+      } else if (action.url != null) {
+        if (action.url.indexOf('update-stack') >= 0) {
+          return this.actionText = 'notification update stack';
+        } else if (action.url.indexOf('update') >= 0) {
+          return this.actionText = 'notification update application';
+        }
+      }
+    }
   };
 
-  NotificationView.prototype.doaction = function() {
+  NotificationView.prototype.onActionClicked = function() {
     var action, url;
     action = this.model.get('resource');
     if (action == null) {
@@ -7640,7 +7676,7 @@ module.exports = NotificationView = (function(_super) {
     }
   };
 
-  NotificationView.prototype.dismiss = function(event) {
+  NotificationView.prototype.onDismissClicked = function(event) {
     if (event != null) {
       event.preventDefault();
     }

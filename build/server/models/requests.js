@@ -34,7 +34,9 @@ module.exports = {
     all: americano.defaultRequests.all
   },
   notification: {
-    all: americano.defaultRequests.all,
+    all: function(doc) {
+      return emit(doc.publishDate, doc);
+    },
     byApps: byApps
   },
   application: {

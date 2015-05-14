@@ -1780,30 +1780,32 @@ body {
 #notifications .notification:hover a.dismiss:hover {
   color: #ff850a;
 }
+#notifications .notification .notification-date {
+  color: #ccc;
+  font-size: 12px;
+}
 #notifications .notification a.dismiss {
   display: none;
   float: right;
   line-height: 20px;
   padding: 5px;
+  color: #338cf7;
 }
 #notifications .notification a.doaction {
-  float: left;
-  line-height: 20px;
-  padding: 5px;
+  display: none;
   color: #fff;
-  max-width: 330px;
   cursor: pointer;
+  margin-top: 5px;
+  font-size: 12px;
+  padding: 3px;
+  background: #338cf7;
+  text-align: center;
 }
-#notifications .notification.new {
-  background: #a5afaf;
+#notifications .notification a.doaction:hover {
+  background: #ff9123;
 }
-#notifications .notification.transition {
-  background-color: #8f9b9b;
-  -webkit-transition: background-color 3s;
-  -moz-transition: background-color 3s;
-  -o-transition: background-color 3s;
-  -ms-transition: background-color 3s;
-  transition: background-color 3s;
+#notifications .notification:hover a.doaction {
+  display: block;
 }
 #notifications-buttons {
   position: fixed;
@@ -1827,7 +1829,7 @@ body {
   width: 100%;
 }
 #notifications-buttons #dismiss-all.btn:hover {
-  background-color: #ff9d3b;
+  background-color: #ff9123;
 }
 #notifications-buttons #logout-button.btn {
   display: block;
@@ -1839,7 +1841,7 @@ body {
   width: 100%;
 }
 #notifications-buttons #logout-button.btn:hover {
-  background-color: #ff9d3b;
+  background-color: #ff9123;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   #menu-applications-toggle span {
@@ -2389,12 +2391,6 @@ body {
 .config-device .md-footer .btn {
   font-weight: normal;
 }
-.config-device .buttons {
-  display: none;
-}
-.config-device:hover .buttons {
-  display: block;
-}
 .config-device:hover .dataLine {
   text-shadow: none;
 }
@@ -2612,7 +2608,13 @@ body {
 #tutorial-view #end-screen ul {
   margin: 10px 150px;
 }
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
+  #home-content {
+    padding-top: 10px;
+  }
+  .application .application-inner {
+    padding: 0px 10px;
+  }
   #market-view .cozy-app {
     width: 100%;
   }
