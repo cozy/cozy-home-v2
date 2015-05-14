@@ -1,5 +1,6 @@
 BaseView = require 'lib/base_view'
 
+
 module.exports = class NotificationView extends BaseView
 
     tagName: 'li'
@@ -9,8 +10,26 @@ module.exports = class NotificationView extends BaseView
         "click .doaction": "doaction"
         "click .dismiss" : "dismiss"
 
+
+    getRenderData: ->
+        model: _.extend @model.attributes,
+            actionText: @actionText or null
+            date: moment(parseInt @model.get 'publishDate').fromNow()
+
+
     initialize: ->
         @listenTo @model, 'change', @render
+
+        action = @model.get 'resource'
+        if action?
+            if action.app? and action.app isnt 'home'
+                @actionText = 'notification open application'
+            else if action.url?
+                if action.url.indexOf('update-stack') >= 0
+                    @actionText = 'notification update stack'
+                else if action.url.indexOf('update') >= 0
+                    @actionText = 'notification update application'
+
 
     doaction: ->
         action = @model.get 'resource'
@@ -27,7 +46,7 @@ module.exports = class NotificationView extends BaseView
             url = null
 
         window.app.routers.main.navigate url, true if url
-        #@dismiss() if @model.get('type') is 'temporary'
+
 
     dismiss: (event) ->
         event?.preventDefault()

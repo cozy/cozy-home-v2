@@ -23,7 +23,8 @@ module.exports =
         all: americano.defaultRequests.all
 
     notification:
-        all: americano.defaultRequests.all
+        all: (doc) ->
+            emit doc.publishDate, doc
         byApps: byApps
 
     application:

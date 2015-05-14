@@ -76,7 +76,7 @@ module.exports =
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
     "you have no apps":"Vous n'avez aucune application installée."
     "app management":"Gestion des applications"
-    "app store":"Applithèque"
+    "app store":"App Store"
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
@@ -147,7 +147,7 @@ module.exports =
     "stopped":"stoppée"
     "retry to install":"nouvel essai d'installation"
     "cozy account title":"Cozy - Paramètres"
-    "cozy app store title": "Cozy - Applithèque"
+    "cozy app store title": "Cozy - App Store"
     "cozy home title":"Cozy - Bureau"
     "cozy applications title":"Cozy - Etats"
     "running":"démarrée"
@@ -183,7 +183,7 @@ module.exports =
     "navbar logout": "Déconnexion"
     "or:": "ou:"
     "app status": "Etats"
-    "app store": "Applithèque"
+    "app store": "App Store"
     "settings": "Paramètres"
     "help": "Aide"
     "account identifiers": "Identifiants"
@@ -244,6 +244,9 @@ module.exports =
         Pour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.
     """
     "installation message failure": "Échec de l'installation de %{appName}."
+    "notification open application": "Ouvrir l'application"
+    "notification update stack": "Mettre à jour la plateforme"
+    "notification update application": "Mettre à jour l'application"
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
 
@@ -254,7 +257,7 @@ module.exports =
         """
         'customize your cozy': """
             Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
-            ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
+            ou <a href="%{appstore}">vous rendre dans l'App Store</a> pour installer votre première application.
         """
 
     'relaunch install wizard': "Relancer l'assistant d'embarquement"
@@ -315,7 +318,7 @@ module.exports =
         'apps title': "Applications"
         'apps content': """
             <p><img src="/img/config-apps.png"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>
-            <p><img src="/img/apps.png"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>
+            <p><img src="/img/apps.png"><strong>App Store: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>
         """
         'continue to help': "Comment trouver de l'aide ?"
         'help title': "Obtenir de l'aide"
