@@ -128,7 +128,7 @@ module.exports =
     "your own application":"votre propre application"
     "broken":"cassée"
     "installed":"installée"
-    "updated":"m.à.j"
+    "updated":"mis à jour réussie"
     "updating":"m.à.j en cours"
     "update all": "Mettre tout à jour"
     "update stack": "Mettre à jour"
