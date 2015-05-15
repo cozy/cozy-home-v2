@@ -3235,7 +3235,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P><p class="help-text">');
 var __val__ = t('or:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="help-text"><a href="/home/install" class="wizard">');
+buf.push('</p><p class="help-text"><a href="/home/quicktour" class="wizard">');
 var __val__ = t('relaunch install wizard')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></p></div></div>');
@@ -3324,9 +3324,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><img');
-buf.push(attrs({ 'src':("/img/spinner.svg"), "class": ('spinner') + ' ' + ("svg svg-" + app.slug) }, {"class":true,"src":true}));
-buf.push('/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
+buf.push('<div class="application-inner"><div class="vertical-aligner"><img src="" class="icon"/><img src="/img/spinner.svg" class="spinner"/><p class="app-title">' + escape((interp = app.displayName) == null ? '' : interp) + '</p></div></div>');
 }
 return buf.join("");
 };
@@ -7042,7 +7040,7 @@ module.exports = MarketView = (function(_super) {
       _this = this;
     installedApps = new AppCollection(this.installedApps.filter(function(app) {
       var _ref;
-      return (_ref = app.get('state')) === 'installed' || _ref === 'broken';
+      return (_ref = app.get('state')) === 'installed' || _ref === 'stopped' || _ref === 'broken';
     }));
     installeds = installedApps.pluck('slug');
     this.marketApps.each(function(app) {

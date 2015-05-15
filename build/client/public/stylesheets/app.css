@@ -1892,7 +1892,7 @@ body {
   height: 100%;
   width: 100%;
 }
-.application .application-inner img:not(.spinner) {
+.application .application-inner img.icon {
   height: auto;
   display: block;
   padding: 20px;
@@ -1903,13 +1903,14 @@ body {
   margin-bottom: 10px;
   width: 100%;
 }
-.application .application-inner img.svg.spinner {
+.application .application-inner img.spinner {
   -webkit-border-radius: 200px;
   border-radius: 200px;
   display: block;
   background-position: center;
-  width: 130px;
-  height: 105px;
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 0px;
 }
 .application .application-inner p {
   margin: 0;
@@ -2823,7 +2824,7 @@ body {
   .application .application-inner {
     padding: 0;
   }
-  .application .application-inner img {
+  .application .application-inner img.icon {
     padding: 5px;
   }
   .application .application-inner .app-title {
