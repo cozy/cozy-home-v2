@@ -45,12 +45,13 @@
   "devDependencies": {
     "chai": "1.9.0",
     "coffee-script": "latest",
+    "iconizr": "^0.2.3",
     "mocha": "1.17.1",
     "nock": "0.29.0",
+    "numeral": "^1.5.3",
     "request": "2.34.0",
     "should": "^4.6.1",
-    "sinon": "^1.12.2",
-    "iconizr": "^0.2.3"
+    "sinon": "^1.12.2"
   },
   "scripts": {
     "test": "cake --use-js tests",
