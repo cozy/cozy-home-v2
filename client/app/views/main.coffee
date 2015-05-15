@@ -24,7 +24,7 @@ module.exports = class HomeView extends BaseView
     subscriptions:
         'backgroundChanged': 'changeBackground'
 
-    wizards: ['quicktour']
+    wizards: ['install', 'quicktour']
 
     constructor: ->
         @apps          = new AppCollection(window.applications)
