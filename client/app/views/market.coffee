@@ -52,7 +52,7 @@ module.exports = class MarketView extends BaseView
     # Display only apps with state equals to installed or broken.
     onAppListsChanged: =>
         installedApps = new AppCollection @installedApps.filter (app) ->
-            app.get('state') in ['installed', 'broken']
+            app.get('state') in ['installed', 'stopped', 'broken']
         installeds = installedApps.pluck 'slug'
 
         @marketApps.each (app) =>
