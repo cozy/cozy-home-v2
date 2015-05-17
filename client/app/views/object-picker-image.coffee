@@ -28,7 +28,6 @@ module.exports = class ObjectPickerImage extends BaseView
         ####
         # construct the long list of images
         @longList = new LongList(@panel, @modal)
-        @longList.init()
 
 
     getObject : () ->
@@ -43,10 +42,17 @@ module.exports = class ObjectPickerImage extends BaseView
         # makes thumbs scroll
         return false
 
+    setInitialDimensions : (width, heigth) ->
+        @longList.setInitialDimensions(width, heigth)
+
+
 
     keyHandler : (e)->
         # console.log 'ObjectPickerImage.keyHandler', e.which
         @longList.keyHandler(e)
         return
 
+
+    resizeHandler: () ->
+        @longList.resizeHandler()
 

@@ -52,16 +52,18 @@ module.exports.list = (req, res, next) ->
 
     Album.listWithThumbs (err, albums) ->
         return next err if err
+        # res.send visible
+        res.send albums
 
-        visible = []
-        async.each albums, (album, callback) =>
-            sharing.checkPermissions album, req, (err, isAllowed) =>
-                visible.push album if isAllowed and not err
-                callback null
+        # visible = []
+        # async.each albums, (album, callback) =>
+        #     sharing.checkPermissions album, req, (err, isAllowed) =>
+        #         visible.push album if isAllowed and not err
+        #         callback null
 
-        , (err) ->
-            return next err if err
-            res.send visible
+        # , (err) ->
+        #     return next err if err
+        #     res.send visible
 
 # # Create new photo album.
 # module.exports.create = (req, res, next) ->
@@ -73,21 +75,21 @@ module.exports.list = (req, res, next) ->
 
 
 # Read given photo album if rights are not broken.
-# module.exports.read = (req, res, next) ->
+module.exports.read = (req, res, next) ->
 
-#     sharing.checkPermissions req.album, req, (err, isAllowed) ->
-#         if not isAllowed
-#             next NotAllowed()
+    sharing.checkPermissions req.album, req, (err, isAllowed) ->
+        if not isAllowed
+            next NotAllowed()
 
-#         else
-#             Photo.fromAlbum req.album, (err, photos) ->
-#                 return next err if err
+        else
+            Photo.fromAlbum req.album, (err, photos) ->
+                return next err if err
 
-#                 # JugglingDb doesn't let you add attributes to the model
-#                 out = req.album.toObject()
-#                 out.photos = photos
+                # JugglingDb doesn't let you add attributes to the model
+                out = req.album.toObject()
+                out.photos = photos
 
-#                 res.send out
+                res.send out
 
 
 # Generate a zip archive containing all photo attached to photo docs of give

@@ -8,12 +8,14 @@ notifications     = require './notifications'
 file              = require './file'
 proxy             = require './proxy'
 album             = require './album'
+photo             = require './photo'
 
 module.exports =
     '': get: index.index
 
     # Fetch on params
     'albumid': param: album.fetch
+    'photoid': param: photo.fetch
     'fileid' : param: file.fetch
     'slug'   : param: applications.loadApplication
 
@@ -87,8 +89,11 @@ module.exports =
     'albums/?':
         get  : album.list
     #     post : album.create
-    # 'albums/:albumid/?':
-    #     get    : album.read
+    'albums/:albumid/?':
+        get    : album.read
     #     put    : album.update
     #     delete : album.delete
+    'photos/thumbs/:photoid.jpg' : get : photo.thumb
+    'photos/raws/:photoid.jpg'   :
+        get : photo.raw
 
