@@ -14,8 +14,6 @@ module.exports = class QuicktourWizardView extends WizardView
             slug: 'sync'
         ,
             slug: 'import'
-        ,
-            slug: 'help'
         ]
         super
 
