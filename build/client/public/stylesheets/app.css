@@ -1542,6 +1542,9 @@ body {
   font-weight: normal;
   font-size: 0.8em;
   color: #fff;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
 }
 .back-button:hover {
   color: #fff;
@@ -1557,10 +1560,20 @@ body {
 #content {
   height: 100%;
   overflow: auto;
+  margin-bottom: 10px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
 }
 #home-content {
   height: 100%;
   padding: 40px 60px 20px 40px;
+}
+#home-content #applications-view,
+#home-content #market-view,
+#home-content #config-applications-view,
+#home-content #help-view {
+  padding-bottom: 10px;
 }
 .wizard section img {
   display: inline-block;
@@ -1767,30 +1780,32 @@ body {
 #notifications .notification:hover a.dismiss:hover {
   color: #ff850a;
 }
+#notifications .notification .notification-date {
+  color: #ccc;
+  font-size: 12px;
+}
 #notifications .notification a.dismiss {
   display: none;
   float: right;
   line-height: 20px;
   padding: 5px;
+  color: #338cf7;
 }
 #notifications .notification a.doaction {
-  float: left;
-  line-height: 20px;
-  padding: 5px;
+  display: none;
   color: #fff;
-  max-width: 330px;
   cursor: pointer;
+  margin-top: 5px;
+  font-size: 12px;
+  padding: 3px;
+  background: #338cf7;
+  text-align: center;
 }
-#notifications .notification.new {
-  background: #a5afaf;
+#notifications .notification a.doaction:hover {
+  background: #ff9123;
 }
-#notifications .notification.transition {
-  background-color: #8f9b9b;
-  -webkit-transition: background-color 3s;
-  -moz-transition: background-color 3s;
-  -o-transition: background-color 3s;
-  -ms-transition: background-color 3s;
-  transition: background-color 3s;
+#notifications .notification:hover a.doaction {
+  display: block;
 }
 #notifications-buttons {
   position: fixed;
@@ -1814,7 +1829,7 @@ body {
   width: 100%;
 }
 #notifications-buttons #dismiss-all.btn:hover {
-  background-color: #ff9d3b;
+  background-color: #ff9123;
 }
 #notifications-buttons #logout-button.btn {
   display: block;
@@ -1826,7 +1841,7 @@ body {
   width: 100%;
 }
 #notifications-buttons #logout-button.btn:hover {
-  background-color: #ff9d3b;
+  background-color: #ff9123;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   #menu-applications-toggle span {
@@ -1877,7 +1892,7 @@ body {
   height: 100%;
   width: 100%;
 }
-.application .application-inner img {
+.application .application-inner img.icon {
   height: auto;
   display: block;
   padding: 20px;
@@ -1887,6 +1902,15 @@ body {
   border-radius: 200px;
   margin-bottom: 10px;
   width: 100%;
+}
+.application .application-inner img.spinner {
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+  display: block;
+  background-position: center;
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 0px;
 }
 .application .application-inner p {
   margin: 0;
@@ -2128,7 +2152,7 @@ body {
   box-sizing: border-box;
   float: left;
   width: 49%;
-  height: 180px;
+  height: 200px;
   background: #f7f4f0;
   margin-right: 0.5%;
   margin-top: 0.5%;
@@ -2142,9 +2166,24 @@ body {
   border-bottom: 1px solid #e6ddd0;
   border-right: 1px solid #e6ddd0;
 }
-#market-view #no-app-message.install .app-img,
-.cozy-app.install .app-img {
-  width: 50%;
+#market-view #no-app-message.install .app-text h3,
+.cozy-app.install .app-text h3,
+#market-view #no-app-message.install .app-text span,
+.cozy-app.install .app-text span,
+#market-view #no-app-message.install .app-text p,
+.cozy-app.install .app-text p {
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+#market-view #no-app-message.install .installing-label,
+.cozy-app.install .installing-label {
+  display: inline;
+}
+#market-view #no-app-message .installing-label,
+.cozy-app .installing-label {
+  display: none;
+  margin-bottom: 10px;
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {
@@ -2171,7 +2210,7 @@ body {
   box-sizing: border-box;
   width: 180px;
   height: 180px;
-  padding: 25px 20px 10px 20px;
+  padding: 25px 20px 10px 25px;
   margin-right: 10px;
 }
 #market-view #no-app-message .app-img img.svg,
@@ -2303,6 +2342,16 @@ body {
     display: none;
   }
 }
+.config-application .to-update-label {
+  background: #333;
+  color: #fcf9f5;
+  padding: 3px 6px;
+  font-size: 12px;
+  margin-left: 10px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  text-transform: lowercase;
+}
 #config-applications-view .stack-app .app {
   font-weight: normal;
 }
@@ -2316,7 +2365,7 @@ body {
 }
 .config-device {
   background: #f7f4f0;
-  padding: 10px;
+  padding: 0;
   margin-bottom: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -2326,7 +2375,6 @@ body {
 }
 .config-device strong,
 .config-device .mod {
-  margin-left: 5px;
   display: inline-block;
 }
 .config-device .mod.left {
@@ -2343,12 +2391,6 @@ body {
 }
 .config-device .md-footer .btn {
   font-weight: normal;
-}
-.config-device .buttons {
-  display: none;
-}
-.config-device:hover .buttons {
-  display: block;
 }
 .config-device:hover .dataLine {
   text-shadow: none;
@@ -2412,8 +2454,6 @@ body {
   transition: all 3s;
   background: #fcf9f5;
   position: relative;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
   margin: 0 auto;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -2457,7 +2497,7 @@ body {
 }
 .md-header {
   padding: 10px 20px;
-  background: #363a46;
+  background: #333;
 }
 .md-header h3 {
   color: #fff;
@@ -2527,7 +2567,8 @@ body {
 .md-body {
   background: #f7f4f0;
   padding: 20px;
-  color: #363a46;
+  color: #333;
+  overflow-y: auto;
 }
 .md-body.loading {
   text-align: center;
@@ -2568,12 +2609,20 @@ body {
 #tutorial-view #end-screen ul {
   margin: 10px 150px;
 }
+@media (max-width: 1200px) {
+  #home-content {
+    padding-top: 10px;
+  }
+  .application .application-inner {
+    padding: 0px 10px;
+  }
+  #market-view .cozy-app {
+    width: 100%;
+  }
+}
 @media (max-width: 850px) {
   #market-view span {
     display: none;
-  }
-  #market-view #notificaction-counter {
-    display: inline;
   }
 }
 @media (max-width: 800px) {
@@ -2775,7 +2824,7 @@ body {
   .application .application-inner {
     padding: 0;
   }
-  .application .application-inner img {
+  .application .application-inner img.icon {
     padding: 5px;
   }
   .application .application-inner .app-title {
@@ -2791,6 +2840,10 @@ body {
   #market-view .cozy-app {
     height: auto;
     margin-top: 10px;
+    padding: 20px 10px;
+  }
+  #market-view .cozy-app h3 {
+    font-size: 26px;
   }
   #market-view .app-text {
     padding: 10px;
@@ -2907,8 +2960,7 @@ button.btn .spinholder img {
 .modalCY .modalCY-header p {
   margin: 0;
 }
-.modalCY button.close {
-  padding: 0;
+.modalCY .modalCY-header button {
   cursor: pointer;
   background: transparent;
   border: 0;
@@ -2931,6 +2983,9 @@ button.btn .spinholder img {
   background-color: #f5f5f5;
   text-align: right;
   padding: 14px 15px 15px;
+}
+.modalCY .modalCY-footer button {
+  margin-right: 0.3em;
 }
 @media (max-height: 38em) {
   .modalCY {
@@ -3020,15 +3075,15 @@ button.btn .spinholder img {
 .object-picker [aria-selected='true'] {
   background-color: #fff;
 }
+.object-picker .thumbPicker {
+  position: relative;
+  display: flex;
+}
 .object-picker [aria-hidden="true"] {
   display: none;
 }
 .object-picker [role='tabpanel'] {
   flex-grow: 1;
-}
-.object-picker .thumbPicker {
-  position: relative;
-  display: flex;
 }
 .object-picker .viewport {
   overflow-y: scroll;
@@ -3185,30 +3240,41 @@ button.btn .spinholder img {
   cursor: pointer;
 }
 .long-list-thumb {
-  width: 5em;
-  height: 5em;
   max-width: none;
-  border: 1px solid #000;
+  background-color: #f5f5f5;
+  cursor: pointer;
   position: absolute;
+  opacity: 1;
+  border: 0;
 }
 .long-list-thumb.selectedThumb {
   color: #00f;
-  border-color: #00f;
-  border-width: 4px;
+  border: 4px solid #00f;
 }
 .long-list-month-label {
   position: absolute;
   color: #fff;
   z-index: 1;
-  background-color: #000;
+  background-color: #9e9e9e;
   width: 4em;
-  padding-left: 0.3em;
+  padding: 0.3em;
+  border-radius: 0.3em;
+  width: 8em;
+  text-align: center;
+}
+.long-list-index.visible {
+  opacity: 1;
+}
+.long-list-index.hardVisible {
+  opacity: 1;
 }
 .long-list-index {
-  transition: top 1s;
+  opacity: 0;
+  transition: opacity 1s, top 0.5s;
 }
 .long-list-index div {
-  position: absolute;
+  position: static;
+  text-align: right;
   color: #4d4d4d;
   background-color: rgba(255,255,255,0.65);
   border-bottom-left-radius: 0.4em;
@@ -3218,9 +3284,11 @@ button.btn .spinholder img {
   cursor: pointer;
 }
 .long-list-index div:hover {
-  color: #00f5ff;
   color: #fff;
-  background-color: rgba(0,0,0,0.43);
+  background-color: rgba(0,0,0,0.6);
+}
+.long-list-index .current {
+  font-weight: bold;
 }
 
 

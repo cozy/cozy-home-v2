@@ -13,7 +13,7 @@ sendError = (res, err, code=500) ->
         stack:   null
         message: "Server error occured"
 
-    console.log "Sending error to client :"
+    console.log "Sending error to client:"
     console.log err.stack
 
     res.send code,

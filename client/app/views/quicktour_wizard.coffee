@@ -9,13 +9,13 @@ module.exports = class QuicktourWizardView extends WizardView
         @steps = [
             slug: 'welcome'
         ,
-            slug: 'dashboard'
-        ,
             slug: 'apps'
         ,
-            slug: 'help'
-        ,
             slug: 'sync'
+        ,
+            slug: 'import'
+        ,
+            slug: 'help'
         ]
         super
 

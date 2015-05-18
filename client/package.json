@@ -22,17 +22,13 @@
     "stylus-brunch": "1.8.0",
     "jade-brunch": "1.5.1",
     "uglify-js-brunch": "1.7.6",
-    "clean-css-brunch": "1.7.1",
-
-    "browser-sync-brunch": "*"
-
+    "clean-css-brunch": "1.7.1"
   },
   "devDependencies": {
     "chai": "1.9.0",
-    "sinon": "1.8.1",
-    "sinon-chai": "2.5.0",
+    "jquery": "2.1.0",
     "request": "2.33.0",
-    "jquery": "2.1.0"
+    "sinon": "1.8.1",
+    "sinon-chai": "2.5.0"
   }
 }
-

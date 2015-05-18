@@ -76,7 +76,7 @@ module.exports =
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
     "you have no apps":"Vous n'avez aucune application installée."
     "app management":"Gestion des applications"
-    "app store":"Applithèque"
+    "app store":"App Store"
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
@@ -90,6 +90,7 @@ module.exports =
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
     "saved":"sauvé"
+    "market app install": "Installation..."
 
     "your parameters":"Vos paramètres"
     "alerts and password recovery email":"""
@@ -127,7 +128,7 @@ module.exports =
     "your own application":"votre propre application"
     "broken":"cassée"
     "installed":"installée"
-    "updated":"m.à.j"
+    "updated":"mis à jour réussie"
     "updating":"m.à.j en cours"
     "update all": "Mettre tout à jour"
     "update stack": "Mettre à jour"
@@ -146,7 +147,7 @@ module.exports =
     "stopped":"stoppée"
     "retry to install":"nouvel essai d'installation"
     "cozy account title":"Cozy - Paramètres"
-    "cozy app store title": "Cozy - Applithèque"
+    "cozy app store title": "Cozy - App Store"
     "cozy home title":"Cozy - Bureau"
     "cozy applications title":"Cozy - Etats"
     "running":"démarrée"
@@ -171,18 +172,18 @@ module.exports =
     "reset customization": "Remise à zéro"
     "use icon": "Mode icône"
     "change layout": "Modifier la disposition"
-    "home section leave": "Quittez vos fournisseurs"
+    "home section leave": "Service d'import"
     "home section main": "Apps Principales"
     "home section productivity": "Apps Productivité"
     "home section data management": "Apps Données"
     "home section personal watch": "Apps Veille"
     "home section misc": "Divers"
     "home section platform": "Plateforme"
-    "navbar back button title": "Retour"
+    "navbar back button title": "Retour au bureau"
     "navbar logout": "Déconnexion"
     "or:": "ou:"
     "app status": "Etats"
-    "app store": "Applithèque"
+    "app store": "App Store"
     "settings": "Paramètres"
     "help": "Aide"
     "account identifiers": "Identifiants"
@@ -227,6 +228,7 @@ module.exports =
     "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
     "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost."
+    "leave google description": "Une application pour importer vos données de votre compte Google."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """
@@ -242,6 +244,9 @@ module.exports =
         Pour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.
     """
     "installation message failure": "Échec de l'installation de %{appName}."
+    "notification open application": "Ouvrir l'application"
+    "notification update stack": "Mettre à jour la plateforme"
+    "notification update application": "Mettre à jour l'application"
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
 
@@ -252,7 +257,7 @@ module.exports =
         """
         'customize your cozy': """
             Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
-            ou <a href="%{appstore}">vous rendre dans l'Applithèque</a> pour installer votre première application.
+            ou <a href="%{appstore}">vous rendre dans l'App Store</a> pour installer votre première application.
         """
 
     'relaunch install wizard': "Relancer l'assistant d'embarquement"
@@ -261,7 +266,7 @@ module.exports =
         'welcome title': "Bienvenue dans votre Cozy"
         'welcome content': """
             <p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>
-            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>
+            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des difficultés dans votre utilisation.</p>
         """
         'yes': "Activer l'application %{slug}"
         'no': "Non, merci"
@@ -313,7 +318,7 @@ module.exports =
         'apps title': "Applications"
         'apps content': """
             <p><img src="/img/config-apps.png"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>
-            <p><img src="/img/apps.png"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>
+            <p><img src="/img/apps.png"><strong>App Store: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>
         """
         'continue to help': "Comment trouver de l'aide ?"
         'help title': "Obtenir de l'aide"

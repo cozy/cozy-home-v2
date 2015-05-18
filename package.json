@@ -22,17 +22,17 @@
     "cozy-clearance": "0.1.19",
     "americano": "0.3.11",
     "americano-cozy": "0.2.11",
-    "printit": "0.1.3",
-    "bcrypt": "0.7.7",
     "async": "0.2.10",
-
+    "bcrypt": "0.7.7",
+    "del": "1.1.1",
     "imagemagick": "0.1.3",
-    "request-json": "0.4.6",
-    "rrule": "2.0.1",
+    "jade": "1.9.2",
     "moment-timezone": "0.3.0",
     "node-polyglot": "0.4.1",
-    "del": "1.1.1",
-    "jade": "1.9.2"
+    "printit": "0.1.3",
+    "request": "^2.55.0",
+    "request-json": "0.4.6",
+    "rrule": "2.0.1"
   },
   "contributors": [
     "Zoe Bellot",
@@ -47,12 +47,13 @@
   "devDependencies": {
     "chai": "1.9.0",
     "coffee-script": "latest",
+    "iconizr": "^0.2.3",
     "mocha": "1.17.1",
     "nock": "0.29.0",
+    "numeral": "^1.5.3",
     "request": "2.34.0",
     "should": "^4.6.1",
-    "sinon": "^1.12.2",
-    "iconizr": "^0.2.3"
+    "sinon": "^1.12.2"
   },
   "scripts": {
     "test": "cake --use-js tests",

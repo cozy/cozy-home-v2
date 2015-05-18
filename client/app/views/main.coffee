@@ -24,7 +24,7 @@ module.exports = class HomeView extends BaseView
     subscriptions:
         'backgroundChanged': 'changeBackground'
 
-    wizards: ['install', 'quicktour']
+    wizards: ['quicktour']
 
     constructor: ->
         @apps          = new AppCollection(window.applications)
@@ -42,7 +42,7 @@ module.exports = class HomeView extends BaseView
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
-        @applicationListView = new ApplicationsListView @apps
+        @applicationListView = new ApplicationsListView @apps, @market
         @configApplications = new ConfigApplicationsView(
             @apps, @devices, @stackApps, @market)
         @accountView = new AccountView()
@@ -66,11 +66,13 @@ module.exports = class HomeView extends BaseView
     # Change the background of the content element. It builds the background
     # image url with given value. If no param is given of default background is
     # given, background image is removed.
-    changeBackground: (background) ->
-        if not background? or background is 'background-none'
+    changeBackground: (background='background_07') ->
+        if background is undefined or background is null
+            @content.css 'background_07.jpg', 'none'
+        if background is 'background-none'
             @content.css 'background-image', 'none'
         else
-            val = "url('/img/backgrounds/#{background.replace '-', '_'}.png')"
+            val = "url('/img/backgrounds/#{background.replace '-', '_'}.jpg')"
             @content.css 'background-image', val
 
 
@@ -107,8 +109,10 @@ module.exports = class HomeView extends BaseView
             @content.show()
             $('#home-content').append view.$el
             view.$el.show()
+
             @currentView = view
             @resetLayoutSizes()
+            @content.scrollTop 0
 
         if @currentView?
 

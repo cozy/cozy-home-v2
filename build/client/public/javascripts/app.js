@@ -351,7 +351,7 @@ exports.del = function(url, callbacks) {
 });
 
 ;require.register("helpers/color-set", function(exports, require, module) {
-module.exports = ['ead1ad', 'fbf0c2', '3cd7c3', '59b5f8', 'B4AED9', '78dc9a', '8DED2A', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', 'ff9c56', 'ffb1be', 'DD99CE', 'E26987', '8CB1FF', 'f5dd16', 'f1fab8', 'ffbe56', '6EE1C8', 'C4BEE9', '49b5f8', 'EC8E73', '8BEE8C'];
+module.exports = ['ead1ad', 'fbf0c2', '3cd7c3', '8FBAff', 'B4AED9', '78dc9a', '8DED2A', '8eecB9', 'bbcaA9', 'cdb19b', 'ec7e63', '8cec56', 'ffb1be', 'DD99CE', 'E26987', '8CB1FF', 'f5dd16', 'f1fab8', 'ffbe56', '6EE1C8', 'C4BEE9', '59C1ef', 'EC7E63', '8BEE8C'];
 });
 
 ;require.register("helpers/locales", function(exports, require, module) {
@@ -396,7 +396,7 @@ exports.Application = (function() {
 
   Application.prototype.initialize = function() {
     var SocketListener, err, locales, _ref;
-    this.instance = window.cozy_instance;
+    this.instance = window.cozy_instance || {};
     this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
     try {
       locales = require('locales/' + this.locale);
@@ -408,6 +408,7 @@ exports.Application = (function() {
     this.polyglot = new Polyglot();
     this.polyglot.extend(locales);
     window.t = this.polyglot.t.bind(this.polyglot);
+    moment.locale(this.locale);
     ColorHash.addScheme('cozy', colorSet);
     this.routers = {};
     this.mainView = new MainView();
@@ -596,12 +597,27 @@ module.exports = IntentManager = (function() {
       case 'goto':
         return window.app.routers.main.navigate("apps/" + intent.params, true);
       case 'pickObject':
-        return new ObjectPicker(intent.params, function(newPhotoChosen, dataUrl) {
-          return message.respond({
-            newPhotoChosen: newPhotoChosen,
-            dataUrl: dataUrl
-          });
-        });
+        switch (intent.params.objectType) {
+          case 'singlePhoto':
+            if (intent.params.isCropped) {
+              return new ObjectPicker(intent.params, function(newPhotoChosen, dataUrl) {
+                return message.respond({
+                  newPhotoChosen: newPhotoChosen,
+                  dataUrl: dataUrl
+                });
+              });
+            } else {
+              return new ObjectPicker(intent.params, function(newPhotoChosen, dataUrl) {
+                return message.respond({
+                  newPhotoChosen: newPhotoChosen,
+                  dataUrl: dataUrl
+                });
+              });
+            }
+        }
+        break;
+      case 'ping':
+        return message.respond('pong');
     }
   };
 
@@ -907,7 +923,94 @@ return buf.join("");
 };
 });
 
-require.register("lib/view_collection", function(exports, require, module) {
+require.register("lib/thumb_preloader", function(exports, require, module) {
+var NUMBER_OF_PRELOAD, Photo, TIME_BEFORE_START, TIME_BETWEEN_LOADS,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+Photo = require('../models/photo');
+
+/**
+ * preloads n thumbs so that the modal inits faster
+*/
+
+
+NUMBER_OF_PRELOAD = 200;
+
+TIME_BEFORE_START = 500;
+
+TIME_BETWEEN_LOADS = 80;
+
+module.exports = (function() {
+  function _Class() {
+    this.imgLoaded = __bind(this.imgLoaded, this);
+    this.lazyDownload = __bind(this.lazyDownload, this);
+    this.getPhotoList = __bind(this.getPhotoList, this);
+  }
+
+  _Class.prototype.images = [];
+
+  _Class.prototype.imagesId = {};
+
+  _Class.prototype.tries = 0;
+
+  _Class.prototype.start = function() {
+    console.log('start of preload !');
+    return setTimeout(this.getPhotoList, TIME_BEFORE_START);
+  };
+
+  _Class.prototype.getPhotoList = function() {
+    var _this = this;
+    return Photo.listFromFiles(0, NUMBER_OF_PRELOAD, function(error, res) {
+      if (error) {
+        console.log(error);
+      }
+      _this.filesList = res.files;
+      _this.nextFileRkToLoad = 0;
+      return window.setTimeout(_this.lazyDownload, 1000);
+    });
+  };
+
+  _Class.prototype.lazyDownload = function() {
+    var fileId, img;
+    if (this.nextFileRkToLoad >= this.filesList.length) {
+      return;
+    }
+    this.lastFile = this.filesList[this.nextFileRkToLoad];
+    fileId = this.lastFile.id;
+    this.imagesId[fileId] = true;
+    img = new Image();
+    img.onload = this.imgLoaded;
+    img.src = "files/photo/thumbs/" + fileId + ".jpg";
+    this.t0 = performance.now();
+    this.images.push(img);
+    return this.nextFileRkToLoad += 1;
+  };
+
+  _Class.prototype.imgLoaded = function() {
+    var bandwidth, d, s;
+    s = this.lastFile.size;
+    d = performance.now() - this.t0;
+    bandwidth = s / d;
+    if (bandwidth > 100) {
+      this.tries = 0;
+      return window.setTimeout(this.lazyDownload, TIME_BETWEEN_LOADS);
+    } else {
+      if (this.tries < 10) {
+        this.tries += 1;
+        return window.setTimeout(this.lazyDownload, 1000);
+      } else {
+        window.setTimeout(this.lazyDownload, 300000);
+        return this.tries = 0;
+      }
+    }
+  };
+
+  return _Class;
+
+})();
+});
+
+;require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1469,9 +1572,14 @@ module.exports = {
   "update stack error": "An error occured during update, page will refresh.",
   "applications broken": "Applications broken",
   "cozy platform": "Platform",
+  "navbar back button title": "Back to Home",
+  "or:": "or:",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the app",
   "error update uninstRlled app": "You can't update an app that is not installed.",
+  "notification open application": "Open application",
+  "notification update stack": "Update the platform",
+  "notification update application": "Update application",
   "broken": "broken",
   "start this app": "Start this app",
   "stopped": "stopped",
@@ -1498,7 +1606,7 @@ module.exports = {
   "finish layout edition": "Save",
   "reset customization": "Reset",
   "use icon": "Use icon",
-  "home section leave": "Leave services",
+  "home section leave": "Import",
   "home section main": "Basics",
   "home section productivity": "Productivity",
   "home section data management": "Data",
@@ -1510,6 +1618,7 @@ module.exports = {
   "settings": "Settings",
   "help": "Help",
   "change layout": "Change the layout",
+  "market app install": "Installing...",
   "introduction market": "Welcome to the Cozy app store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
@@ -1537,6 +1646,7 @@ module.exports = {
   "todos description": "Write your tasks, order them and complete them efficiently.",
   "term description": "A terminal app for your Cozy.",
   "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform.",
+  "leave google description": "An app to import your current data from your Google account.",
   "reminder title email": "Reminder",
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
@@ -1878,7 +1988,7 @@ module.exports = {
   "welcome to your cozy": "Bienvenue sur votre Cozy !",
   "you have no apps": "Vous n'avez aucune application installée.",
   "app management": "Gestion des applications",
-  "app store": "Applithèque",
+  "app store": "App Store",
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
@@ -1892,6 +2002,7 @@ module.exports = {
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "sauver",
   "saved": "sauvé",
+  "market app install": "Installation...",
   "your parameters": "Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations:",
   "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts:",
@@ -1916,7 +2027,7 @@ module.exports = {
   "your own application": "votre propre application",
   "broken": "cassée",
   "installed": "installée",
-  "updated": "m.à.j",
+  "updated": "mis à jour réussie",
   "updating": "m.à.j en cours",
   "update all": "Mettre tout à jour",
   "update stack": "Mettre à jour",
@@ -1935,7 +2046,7 @@ module.exports = {
   "stopped": "stoppée",
   "retry to install": "nouvel essai d'installation",
   "cozy account title": "Cozy - Paramètres",
-  "cozy app store title": "Cozy - Applithèque",
+  "cozy app store title": "Cozy - App Store",
   "cozy home title": "Cozy - Bureau",
   "cozy applications title": "Cozy - Etats",
   "running": "démarrée",
@@ -1954,18 +2065,18 @@ module.exports = {
   "reset customization": "Remise à zéro",
   "use icon": "Mode icône",
   "change layout": "Modifier la disposition",
-  "home section leave": "Quittez vos fournisseurs",
+  "home section leave": "Service d'import",
   "home section main": "Apps Principales",
   "home section productivity": "Apps Productivité",
   "home section data management": "Apps Données",
   "home section personal watch": "Apps Veille",
   "home section misc": "Divers",
   "home section platform": "Plateforme",
-  "navbar back button title": "Retour",
+  "navbar back button title": "Retour au bureau",
   "navbar logout": "Déconnexion",
   "or:": "ou:",
   "app status": "Etats",
-  "app store": "Applithèque",
+  "app store": "App Store",
   "settings": "Paramètres",
   "help": "Aide",
   "account identifiers": "Identifiants",
@@ -2004,22 +2115,26 @@ module.exports = {
   "todos description": "Écrivez et ordonnez vos tâches efficacement.",
   "term description": "Un terminal pour votre Cozy.",
   "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
+  "leave google description": "Une application pour importer vos données de votre compte Google.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
   "reminder message": "Rappel : %{message}",
   "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
   "installation message failure": "Échec de l'installation de %{appName}.",
+  "notification open application": "Ouvrir l'application",
+  "notification update stack": "Mettre à jour la plateforme",
+  "notification update application": "Mettre à jour l'application",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
   'noapps': {
     'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
-    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'Applithèque</a> pour installer votre première application."
+    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'App Store</a> pour installer votre première application."
   },
   'relaunch install wizard': "Relancer l'assistant d'embarquement",
   'installwizard': {
     'welcome title': "Bienvenue dans votre Cozy",
-    'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
+    'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des difficultés dans votre utilisation.</p>",
     'yes': "Activer l'application %{slug}",
     'no': "Non, merci",
     'continue to files': "Configurer mes applicatons",
@@ -2046,7 +2161,7 @@ module.exports = {
     'dashboard content': "<p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>\n<p><img src=\"/img/home-black.png\"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>",
     'continue to apps': "Comment gérer mes applications ?",
     'apps title': "Applications",
-    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>Applithèque: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
+    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>App Store: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
     'continue to help': "Comment trouver de l'aide ?",
     'help title': "Obtenir de l'aide",
     'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
@@ -2770,17 +2885,6 @@ module.exports = MainRouter = (function(_super) {
     }
   };
 
-  MainRouter.prototype.objectPicker = function(intent) {
-    var _this = this;
-    switch (intent.objectType) {
-      case 'singlePhoto':
-        console.log("home : singlePhoto modal launched");
-        return new ObjectPickerCroper(function(newPhotoChosen, dataUrl) {
-          return console.log("home : singlePhoto modal closed");
-        });
-    }
-  };
-
   MainRouter.prototype.applicationList = function() {
     app.mainView.displayApplicationsList();
     return this.selectIcon(0);
@@ -2940,7 +3044,6 @@ return buf.join("");
 };
 });
 
-<<<<<<< HEAD:build/client/public/javascripts/app.js
 require.register("templates/background_list", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -2966,8 +3069,6 @@ return buf.join("");
 };
 });
 
-=======
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
 require.register("templates/config_application", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -2993,9 +3094,10 @@ buf.push('<span class="state-label">' + escape((interp = app.state) == null ? ''
 }
 if ( app.needsUpdate)
 {
-buf.push('<span>&nbsp;</span><img');
-buf.push(attrs({ 'width':(16), 'src':("img/notification-orange.png"), 'title':("" + (t('update required')) + ""), 'alt':("" + (t('update required')) + ""), "class": ('update-notification-icon') }, {"width":true,"src":true,"title":true,"alt":true}));
-buf.push('/>');
+buf.push('<span>&nbsp;</span><span class="to-update-label">');
+var __val__ = t('update required')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span>');
 }
 buf.push('<div class="comments">');
 if ( app.comment === 'official application')
@@ -3080,10 +3182,10 @@ var interp;
 buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong><span>&nbsp;-&nbsp;</span><span class="state-label">');
 var __val__ = t('synchronized')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div><div class="buttons right"><button class="remove-device btn">');
+buf.push('</span></div><div class="buttons right"><button class="remove-device btn"><i class="fa fa-trash mr1"></i> <span class="label">');
 var __val__ = t('revoke device access')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div></div>');
+buf.push('</span></button></div></div>');
 }
 return buf.join("");
 };
@@ -3133,7 +3235,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P><p class="help-text">');
 var __val__ = t('or:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="help-text"><a href="/home/install" class="wizard">');
+buf.push('</p><p class="help-text"><a href="/home/quicktour" class="wizard">');
 var __val__ = t('relaunch install wizard')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></p></div></div>');
@@ -3177,14 +3279,13 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
-<<<<<<< HEAD:build/client/public/javascripts/app.js
 buf.push('</p></div><div id="app-list"><section id="apps-leave" class="line"><h2>');
 var __val__ = t('home section leave')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-main" class="line"><h2>');
 var __val__ = t('home section main')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-productivty" class="line"><h2>');
+buf.push('</h2></section><section id="apps-productivity" class="line"><h2>');
 var __val__ = t('home section productivity')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-data" class="line"><h2>');
@@ -3198,22 +3299,6 @@ var __val__ = t('home section misc')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-platform" class="line show"><h2>');
 var __val__ = t('home section platform')
-=======
-buf.push('</p></div><div id="app-list" class="gridster"></div>');
-}
-return buf.join("");
-};
-});
-
-require.register("templates/home_application", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<div class="mask"></div><button class="btn use-widget">');
-var __val__ = t('use widget')
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
@@ -3233,11 +3318,7 @@ return buf.join("");
 };
 });
 
-<<<<<<< HEAD:build/client/public/javascripts/app.js
 require.register("templates/home_application", function(exports, require, module) {
-=======
-require.register("templates/home_application_widget", function(exports, require, module) {
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3264,14 +3345,12 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><a id="logout-button" href="#logout" class="btn">');
 var __val__ = t('navbar logout')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div><div class="home-body"><div id="app-frames"></div><div id="content"><div id="home-content"></div></div></div>');
+buf.push('</a></div><div class="home-body"><div id="app-frames"></div><div id="content"><!-- Preload spinners--><img src="/img/spinner.svg" class="hidden"/><img src="/img/spinner-white.svg" class="hidden"/><div id="home-content"></div></div></div>');
 }
 return buf.join("");
 };
 });
 
-<<<<<<< HEAD:build/client/public/javascripts/app.js
-=======
 require.register("templates/long_list_image", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -3284,7 +3363,6 @@ return buf.join("");
 };
 });
 
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
 require.register("templates/market", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -3303,7 +3381,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div><div class="md-overlay"></div></div>');
+buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div></div><div class="md-overlay"></div>');
 }
 return buf.join("");
 };
@@ -3337,7 +3415,10 @@ buf.push('<img');
 buf.push(attrs({ 'src':("" + (app.icon) + "") }, {"src":true}));
 buf.push('/>');
 }
-buf.push('</div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
+buf.push('<span class="installing-label">');
+var __val__ = t("market app install")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
 var __val__ = t(app.comment)
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><p class="par2">');
@@ -3411,7 +3492,14 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a class="doaction">' + escape((interp = model.text) == null ? '' : interp) + '</a><a class="dismiss">&times;</a>');
+buf.push('<a class="dismiss">&times;</a><div class="notification-text">' + escape((interp = model.text) == null ? '' : interp) + '</div><div class="notification-date">' + escape((interp = model.date) == null ? '' : interp) + '</div>');
+if ( model.actionText !== undefined && model.actionText !== null)
+{
+buf.push('<a class="doaction btn">');
+var __val__ = t(model.actionText)
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>');
+}
 }
 return buf.join("");
 };
@@ -3423,14 +3511,12 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a id="notifications-toggle"><span class="backcolor"></span><!--img(src="img/notification-white.png")--><span id="notifications-counter"></span></a><audio id="notification-sound" src="sounds/notification.wav" preload="preload"></audio><div id="clickcatcher"></div>');
+buf.push('<a id="notifications-toggle"><span class="backcolor"></span><!--img(src="img/notification-white.png")--><span id="notifications-counter"></span></a><div id="clickcatcher"></div>');
 }
 return buf.join("");
 };
 });
 
-<<<<<<< HEAD:build/client/public/javascripts/app.js
-=======
 require.register("templates/object-picker-photoURL", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
@@ -3463,24 +3549,19 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="objectPickerCont"><nav class="fp-nav-tabs"><div class="tabMarginTop"></div><div role="tablist" aria-controls="objectPickerCont"></div><div class="tabMarginBottom"></div></nav></div><div class="croperCont"><table><tbody><tr><td><img id="img-to-crop"/></td><td><div id="frame-img-preview"><img id="img-preview"/></div></td></tr></tbody></table><a class="chooseAgain">' + escape((interp = t('photo-modal chooseAgain')) == null ? '' : interp) + '</a></div>');
+buf.push('<img id="img-result" style="position:fixed"/><!-- never displayed, just for downloading.--><div class="objectPickerCont"><nav class="fp-nav-tabs"><div class="tabMarginTop"></div><div role="tablist" aria-controls="objectPickerCont"></div><div class="tabMarginBottom"></div></nav></div><div class="croperCont"><table><tbody><tr><td><img id="img-to-crop"/></td><td><div id="frame-img-preview"><img id="img-preview"/></div></td></tr></tbody></table><a class="chooseAgain">' + escape((interp = t('photo-modal chooseAgain')) == null ? '' : interp) + '</a></div>');
 }
 return buf.join("");
 };
 });
 
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
 require.register("templates/popover_description", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.name) == null ? '' : interp) + '</h3><div class="right"><a');
-buf.push(attrs({ 'href':("" + (model.git) + ""), "class": ('repo-stars') }, {"href":true}));
-buf.push('>&nbsp;</a><a');
-buf.push(attrs({ 'href':("" + (model.git) + "") }, {"href":true}));
-buf.push('><img src="img/star-white.png"/></a></div></div>');
+buf.push('<div class="md-content"><div class="md-header clearfix"><div class="line"><h3 class="left">' + escape((interp = model.displayName) == null ? '' : interp) + '</h3></div>');
 if ( (model.comment !== 'official application'))
 {
 buf.push('<div class="line noncozy-warning"><i class="fa fa-info-circle"></i><span>');
@@ -3645,11 +3726,7 @@ return buf.join("");
 });
 
 require.register("views/account", function(exports, require, module) {
-<<<<<<< HEAD:build/client/public/javascripts/app.js
 var BackgroundList, BaseView, Instance, locales, request, timezones,
-=======
-var BaseView, locales, request, timezones,
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -4400,7 +4477,9 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.deviceList = new ConfigDeviceList(this.devices);
     this.$el.find('.title-app').after(this.applicationList.$el);
     this.applications = new Application();
-    this.stackApplications = new StackApplication();
+    this.stackApps.fetch({
+      reset: true
+    });
     return this.displayDevices();
   };
 
@@ -4719,12 +4798,20 @@ module.exports = ApplicationsListView = (function(_super) {
   /* Constructor*/
 
 
-  function ApplicationsListView(apps) {
+  function ApplicationsListView(apps, market) {
+    this.onAppRemoved = __bind(this.onAppRemoved, this);
     this.afterRender = __bind(this.afterRender, this);
     this.initialize = __bind(this.initialize, this);
+    var _this = this;
     this.apps = apps;
+    this.market = market;
     this.state = 'view';
     this.isLoading = true;
+    this.itemViewOptions = function() {
+      return {
+        market: _this.market
+      };
+    };
     ApplicationsListView.__super__.constructor.call(this, {
       collection: apps
     });
@@ -4738,6 +4825,7 @@ module.exports = ApplicationsListView = (function(_super) {
     this.listenTo(this.collection, 'reset', function() {
       return _this.isLoading = false;
     });
+    this.collection.on('remove', this.onAppRemoved);
     return ApplicationsListView.__super__.initialize.apply(this, arguments);
   };
 
@@ -4769,6 +4857,15 @@ module.exports = ApplicationsListView = (function(_super) {
     section.append(view.$el);
     section.addClass('show');
     return section.show();
+  };
+
+  ApplicationsListView.prototype.onAppRemoved = function(model) {
+    var section, sectionName;
+    sectionName = model.getSection();
+    section = this.$("section#apps-" + sectionName);
+    if (section.children().length === 2) {
+      return section.hide();
+    }
   };
 
   return ApplicationsListView;
@@ -4811,11 +4908,11 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onMouseOver = function() {
-    return this.background.css('background', '#FF9D3B');
+    return this.background.css('background-color', '#FF9D3B');
   };
 
   ApplicationRow.prototype.onMouseOut = function() {
-    return this.background.css('background', this.color || 'transparent');
+    return this.background.css('background-color', this.color || 'transparent');
   };
 
   function ApplicationRow(options) {
@@ -4828,25 +4925,21 @@ module.exports = ApplicationRow = (function(_super) {
     this.id = "app-btn-" + options.model.id;
     this.enabled = true;
     ApplicationRow.__super__.constructor.apply(this, arguments);
+    this.inMarket = options.market.findWhere({
+      slug: this.model.get('slug')
+    });
   }
 
   ApplicationRow.prototype.afterRender = function() {
-    var color, slug;
     this.icon = this.$('img.icon');
     this.stateLabel = this.$('.state-label');
     this.title = this.$('.app-title');
     this.background = this.$('img');
     this.listenTo(this.model, 'change', this.onAppChanged);
     this.onAppChanged(this.model);
-    slug = this.model.get('slug');
-    color = this.model.get('color');
     if (this.model.isIconSvg()) {
-      if (color == null) {
-        color = ColorHash.getColor(slug, 'cozy');
-      }
-      this.color = color;
-      this.icon.addClass('svg');
-      return this.background.css('background', color);
+      this.setBackgroundColor();
+      return this.icon.addClass('svg');
     }
   };
 
@@ -4854,7 +4947,7 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onAppChanged = function(app) {
-    var color, extension, slug;
+    var extension;
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
@@ -4864,14 +4957,9 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installed':
         this.hideSpinner();
         if (this.model.isIconSvg()) {
-          slug = this.model.get('slug');
-          color = this.model.get('color');
-          if (color == null) {
-            color = ColorHash.getColor(slug, 'cozy');
-          }
+          this.setBackgroundColor();
           extension = 'svg';
           this.icon.addClass('svg');
-          this.background.css('background', color);
         } else {
           extension = 'png';
           this.icon.removeClass('svg');
@@ -4884,7 +4972,8 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installing':
         this.icon.hide();
         this.showSpinner();
-        return this.stateLabel.show().text('installing');
+        this.stateLabel.show().text('installing');
+        return this.setBackgroundColor();
       case 'stopped':
         if (this.model.isIconSvg()) {
           extension = 'svg';
@@ -4970,6 +5059,18 @@ module.exports = ApplicationRow = (function(_super) {
       path: [['arc', 20, 20, 20, 0, 360]]
     });
     return this.spinner.play();
+  };
+
+  ApplicationRow.prototype.setBackgroundColor = function() {
+    var color, hashColor, slug, _ref;
+    slug = this.model.get('slug');
+    color = this.model.get('color');
+    if (color == null) {
+      hashColor = ColorHash.getColor(slug, 'cozy');
+      color = ((_ref = this.inMarket) != null ? _ref.get('color') : void 0) || hashColor;
+    }
+    this.color = color;
+    return this.background.css('background-color', color);
   };
 
   ApplicationRow.prototype.showSpinner = function() {
@@ -5084,28 +5185,36 @@ module.exports = InstallWizardView = (function(_super) {
 });
 
 ;require.register("views/long-list-images", function(exports, require, module) {
-var CELL_PADDING, COEF_SECURITY, LongList, MAX_SPEED, MONTH_HEADER_HEIGHT, Photo, THROTTLE,
+var CELL_PADDING, COEF_SECURITY, LongList, MAX_SPEED, MONTH_HEADER_HEIGHT, MONTH_LABEL_TOP, Photo, THROTTLE, THUMB_DIM_UNIT, THUMB_HEIGHT,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Photo = require('../models/photo');
 
-THROTTLE = 350;
+THROTTLE = 450;
 
-MAX_SPEED = 2.5 * THROTTLE / 1000;
+MAX_SPEED = 1.5 * THROTTLE / 1000;
 
-COEF_SECURITY = 1.5;
+COEF_SECURITY = 3;
 
-MONTH_HEADER_HEIGHT = 40;
+THUMB_DIM_UNIT = 'em';
 
-CELL_PADDING = 4;
+MONTH_HEADER_HEIGHT = 2.5;
+
+CELL_PADDING = 0.4;
+
+THUMB_HEIGHT = 10;
+
+MONTH_LABEL_TOP = 1.8;
 
 module.exports = LongList = (function() {
-  function LongList(externalViewPort$) {
+  function LongList(externalViewPort$, modal) {
     var _this = this;
     this.externalViewPort$ = externalViewPort$;
+    this.modal = modal;
     this._unselectAll = __bind(this._unselectAll, this);
+    this._dblclickHandler = __bind(this._dblclickHandler, this);
     this._clickHandler = __bind(this._clickHandler, this);
-    this.getSelectedID = __bind(this.getSelectedID, this);
+    this.getSelectedFile = __bind(this.getSelectedFile, this);
     this.init = __bind(this.init, this);
     this.state = {
       selected: {}
@@ -5124,7 +5233,6 @@ module.exports = LongList = (function() {
     this.index$.style.top = 0;
     this.index$.style.bottom = 0;
     this.index$.style.right = this.getScrollBarWidth() + 'px';
-    this._initBuffer();
     this._lastSelectedCol = null;
     this.isInited = this.isPhotoArrayLoaded = false;
     Photo.getMonthdistribution(function(error, res) {
@@ -5145,59 +5253,13 @@ module.exports = LongList = (function() {
     return true;
   };
 
-<<<<<<< HEAD:build/client/public/javascripts/app.js
-  HomeView.prototype.subscriptions = {
-    'backgroundChanged': 'changeBackground'
-  };
-
-  HomeView.prototype.wizards = ['install', 'quicktour'];
-
-  function HomeView() {
-    this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
-    this.onAppHashChanged = __bind(this.onAppHashChanged, this);
-    this.displayUpdateApplication = __bind(this.displayUpdateApplication, this);
-    this.displayConfigApplications = __bind(this.displayConfigApplications, this);
-    this.displayHelp = __bind(this.displayHelp, this);
-    this.displayAccount = __bind(this.displayAccount, this);
-    this.displayMarket = __bind(this.displayMarket, this);
-    this.displayApplicationsListEdit = __bind(this.displayApplicationsListEdit, this);
-    this.displayApplicationsList = __bind(this.displayApplicationsList, this);
-    this.displayView = __bind(this.displayView, this);
-    this.logout = __bind(this.logout, this);
-    this.afterRender = __bind(this.afterRender, this);
-    this.apps = new AppCollection(window.applications);
-    this.stackApps = new StackAppCollection(window.stack_applications);
-    this.devices = new DeviceCollection(window.devices);
-    this.market = new AppCollection(window.market_applications);
-    this.notifications = new NotificationCollection();
-    SocketListener.watch(this.apps);
-    SocketListener.watch(this.notifications);
-    SocketListener.watch(this.devices);
-    HomeView.__super__.constructor.apply(this, arguments);
-  }
-
-  HomeView.prototype.afterRender = function() {
-    this.navbar = new NavbarView(this.apps, this.notifications);
-    this.applicationListView = new ApplicationsListView(this.apps);
-    this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps, this.market);
-    this.accountView = new AccountView();
-    this.helpView = new HelpView();
-    this.marketView = new MarketView(this.apps, this.market);
-    this.frames = this.$('#app-frames');
-    this.content = this.$('#content');
-    this.changeBackground(window.app.instance.background);
-    this.backButton = this.$('.back-button');
-    this.backButton.hide();
-    $(window).resize(this.resetLayoutSizes);
-    return this.resetLayoutSizes();
-=======
-  LongList.prototype.getSelectedID = function() {
+  LongList.prototype.getSelectedFile = function() {
     var k, thumb$, _ref;
     _ref = this.state.selected;
     for (k in _ref) {
       thumb$ = _ref[k];
       if (thumb$) {
-        return k;
+        return thumb$.file;
       }
     }
     return null;
@@ -5251,38 +5313,6 @@ module.exports = LongList = (function() {
     }
   };
 
-  LongList.prototype._initBuffer = function() {
-    var thumb, thumb$;
-    thumb$ = document.createElement('img');
-    this.thumbs$.appendChild(thumb$);
-    thumb$.setAttribute('class', 'long-list-thumb');
-    thumb = {
-      prev: null,
-      next: null,
-      el: thumb$,
-      rank: null,
-      id: null
-    };
-    thumb.prev = thumb;
-    thumb.next = thumb;
-    return this.buffer = {
-      first: thumb,
-      firstRk: -1,
-      last: thumb,
-      lastRk: -1,
-      nThumbs: 1,
-      nextLastRk: null,
-      nextLastCol: null,
-      nextLastY: null,
-      nextLastMonthRk: null,
-      nextFirstCol: null,
-      nextFirstMonthRk: null,
-      nextFirstRk: null,
-      nextFirstY: null
-    };
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
-  };
-
   /**
    * This is the main procedure. Its scope contains all the functions used to
    * update the buffer and the shared variables between those functions. This
@@ -5296,29 +5326,14 @@ module.exports = LongList = (function() {
   */
 
 
-<<<<<<< HEAD:build/client/public/javascripts/app.js
-  HomeView.prototype.changeBackground = function(background) {
-    var val;
-    if ((background == null) || background === 'background-none') {
-      return this.content.css('background-image', 'none');
-    } else {
-      val = "url('/img/backgrounds/" + (background.replace('-', '_')) + ".png')";
-      return this.content.css('background-image', val);
-    }
-  };
-
-  HomeView.prototype.logout = function(event) {
-    var user,
-=======
   LongList.prototype._DOM_controlerInit = function() {
-    var buffer, cellPadding, colWidth, counter_speed_avoided, counter_speed_ok, indexHeight, isDefaultToSelect, lastOnScroll_Y, marginLeft, monthHeaderHeight, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInSafeZone, nThumbsPerRow, rowHeight, safeZone, thumbDim, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _createThumbsBottom, _getBufferNextFirst, _getBufferNextLast, _indexClickHandler, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _resizeHandler, _scrollHandler, _updateThumb,
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
+    var buffer, cellPadding, colWidth, currentIndexRkSelected, emToPixels, getElementFontSize, indexHeight, indexVisible, isDefaultToSelect, lastOnScroll_Y, lazyHideIndex, marginLeft, monthHeaderHeight, monthLabelTop, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInSafeZone, nThumbsPerRow, remToPixels, rowHeight, safeZone, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _createThumbsBottom, _getBufferNextFirst, _getBufferNextLast, _getDimInPixels, _indexClickHandler, _indexMouseEnter, _indexMouseLeave, _initBuffer, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _resizeHandler, _scrollHandler, _selectCurrentIndex, _updateThumb,
       _this = this;
     months = this.months;
-    buffer = this.buffer;
-    cellPadding = CELL_PADDING;
-    monthHeaderHeight = MONTH_HEADER_HEIGHT;
-    monthTopPadding = monthHeaderHeight + cellPadding;
+    buffer = null;
+    cellPadding = null;
+    monthHeaderHeight = null;
+    monthTopPadding = null;
     marginLeft = null;
     thumbWidth = null;
     thumbHeight = null;
@@ -5329,7 +5344,10 @@ module.exports = LongList = (function() {
     nThumbsInSafeZone = null;
     viewPortHeight = null;
     indexHeight = null;
+    indexVisible = null;
+    currentIndexRkSelected = 0;
     thumbs$Height = null;
+    monthLabelTop = null;
     lastOnScroll_Y = null;
     safeZone = {
       firstRk: null,
@@ -5353,53 +5371,56 @@ module.exports = LongList = (function() {
         _this.noScrollScheduled = false;
       }
       if (_this.noIndexScrollScheduled) {
-        setTimeout(_adaptIndex, 50);
-        return _this.noIndexScrollScheduled = false;
+        setTimeout(_adaptIndex, 250);
+        _this.noIndexScrollScheduled = false;
       }
-<<<<<<< HEAD:build/client/public/javascripts/app.js
-    });
-  };
-
-  HomeView.prototype.displayView = function(view, title) {
-    var displayView,
-      _this = this;
-    if (title != null) {
-      title = title.substring(6);
-    } else {
-      if (title == null) {
-        title = t('home');
+      if (!indexVisible) {
+        _this.index$.classList.add('visible');
+        return indexVisible = true;
       }
-    }
-    window.document.title = title;
-    $('#current-application').html(title);
-    if (view === this.applicationListView) {
-      this.backButton.hide();
-    } else {
-      this.backButton.show();
-    }
-    displayView = function() {
-      _this.frames.hide();
-      view.$el.hide();
-      _this.content.show();
-      $('#home-content').append(view.$el);
-      view.$el.show();
-      _this.currentView = view;
-      return _this.resetLayoutSizes();
-=======
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
     };
     this._scrollHandler = _scrollHandler;
+    getElementFontSize = function(context) {
+      return parseFloat(getComputedStyle(context || document.documentElement).fontSize);
+    };
+    remToPixels = function(value) {
+      return emToPixels(value);
+    };
+    emToPixels = function(value, context) {
+      return Math.round(value * getElementFontSize(context));
+    };
+    _getDimInPixels = function(value) {
+      switch (THUMB_DIM_UNIT) {
+        case 'px':
+          return value;
+        case 'em':
+          return emToPixels(value, _this.viewPort$);
+        case 'rem':
+          return remToPixels(value);
+      }
+    };
     _resizeHandler = function() {
-      var MONTH_LABEL_HEIGHT, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInViewPort, nThumbsInSafeZoneMargin, nThumbsInViewPort, nextY, rk, txt, width, y, _i, _j, _len, _len1, _ref, _ref1, _results;
-      width = _this.viewPort$.clientWidth;
+      var MONTH_LABEL_HEIGHT, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInViewPort, nThumbsInSZ_Margin, nThumbsInViewPort, nextY, rk, txt, width, y, _i, _j, _len, _len1, _ref, _ref1, _results;
+      thumbHeight = _getDimInPixels(THUMB_HEIGHT);
+      cellPadding = _getDimInPixels(CELL_PADDING);
+      _this.thumbHeight = thumbHeight;
+      thumbWidth = thumbHeight;
+      colWidth = thumbWidth + cellPadding;
+      rowHeight = thumbHeight + cellPadding;
       viewPortHeight = _this.viewPort$.clientHeight;
+      monthHeaderHeight = _getDimInPixels(MONTH_HEADER_HEIGHT);
+      monthTopPadding = monthHeaderHeight + cellPadding;
+      monthLabelTop = _getDimInPixels(MONTH_LABEL_TOP);
+      _this.monthLabelTop = monthLabelTop;
+      width = _this.viewPort$.clientWidth;
       nThumbsPerRow = Math.floor((width - cellPadding) / colWidth);
+      _this.nThumbsPerRow = nThumbsPerRow;
       marginLeft = cellPadding + Math.round((width - nThumbsPerRow * colWidth - cellPadding) / 2);
       nRowsInViewPort = Math.ceil(viewPortHeight / rowHeight);
       nRowsInSafeZoneMargin = Math.round(COEF_SECURITY * nRowsInViewPort);
-      nThumbsInSafeZoneMargin = nRowsInSafeZoneMargin * nThumbsPerRow;
+      nThumbsInSZ_Margin = nRowsInSafeZoneMargin * nThumbsPerRow;
       nThumbsInViewPort = nRowsInViewPort * nThumbsPerRow;
-      nThumbsInSafeZone = nThumbsInSafeZoneMargin * 2 + nThumbsInViewPort;
+      nThumbsInSafeZone = nThumbsInSZ_Margin * 2 + nThumbsInViewPort;
       nextY = 0;
       nPhotos = 0;
       minMonthHeight = Infinity;
@@ -5415,6 +5436,7 @@ module.exports = LongList = (function() {
         month.firstRk = nPhotos;
         month.lastRk = nPhotos + nPhotosInMonth - 1;
         month.lastThumbCol = (nPhotosInMonth - 1) % nThumbsPerRow;
+        month.date = moment(month.month, 'YYYYMM');
         nextY += month.height;
         nPhotos += nPhotosInMonth;
         minMonthHeight = Math.min(minMonthHeight, month.height);
@@ -5437,18 +5459,55 @@ module.exports = LongList = (function() {
       _results = [];
       for (rk = _j = 0, _len1 = _ref1.length; _j < _len1; rk = ++_j) {
         month = _ref1[rk];
-        txt = month.month;
-        txt = txt.slice(0, 4) + txt.slice(4);
-        label$ = $("<div style='top:" + y + "px; right:0px'>" + txt + "</div>")[0];
+        txt = month.date.format('MMM YYYY');
         h = c * (month.nPhotos - minMonthNphotos);
         h = h / d;
         h += MONTH_LABEL_HEIGHT;
         y += h;
+        label$ = $("<div style='height:" + h + "px; right:0px'>" + txt + "</div>")[0];
         label$.dataset.monthRk = rk;
         _results.push(_this.index$.appendChild(label$));
       }
       return _results;
     };
+    _initBuffer = function() {
+      var thumb, thumb$;
+      thumb$ = document.createElement('img');
+      thumb$.setAttribute('class', 'long-list-thumb');
+      thumb$.style.height = thumbHeight + 'px';
+      thumb$.style.width = thumbHeight + 'px';
+      _this.thumbs$.appendChild(thumb$);
+      thumb = {
+        prev: null,
+        next: null,
+        el: thumb$,
+        rank: null,
+        id: null
+      };
+      thumb.prev = thumb;
+      thumb.next = thumb;
+      buffer = {
+        first: thumb,
+        firstRk: -1,
+        last: thumb,
+        lastRk: -1,
+        nThumbs: 1,
+        nextLastRk: null,
+        nextLastCol: null,
+        nextLastY: null,
+        nextLastMonthRk: null,
+        nextFirstCol: null,
+        nextFirstMonthRk: null,
+        nextFirstRk: null,
+        nextFirstY: null
+      };
+      return _this.buffer = buffer;
+    };
+    /**
+     * called by onscroll (throttled), adapt the position of the index (top)
+     * according to the new scroll position
+    */
+
     _adaptIndex = function() {
       var C, C_bis, H, td_a, td_b, vph, y;
       y = _this.viewPort$.scrollTop;
@@ -5462,11 +5521,6 @@ module.exports = LongList = (function() {
         _this.index$.style.top = -Math.round(C_bis * (y - td_a)) + 'px';
         return;
       }
-<<<<<<< HEAD:build/client/public/javascripts/app.js
-      this.currentView.$el.hide();
-      this.currentView.$el.detach();
-      return displayView();
-=======
       if (td_a > y) {
         _this.index$.style.top = 0;
         return;
@@ -5476,30 +5530,38 @@ module.exports = LongList = (function() {
       }
     };
     /**
+     * modify the apperence of the index label corresponding of the first
+     * month displayed in the viewPort
+    */
+
+    _selectCurrentIndex = function(monthRk) {
+      _this.index$.children[currentIndexRkSelected].classList.remove('current');
+      _this.index$.children[monthRk].classList.add('current');
+      return currentIndexRkSelected = monthRk;
+    };
+    /**
+     * will hide the index 2s after its last call
+    */
+
+    lazyHideIndex = _.debounce(function() {
+      _this.index$.classList.remove('visible');
+      return indexVisible = false;
+    }, 2000);
+    /**
      * Adapt the buffer when the viewport has moved
      * Launched at init and by _scrollHandler
      * Steps :
     */
 
-    counter_speed_avoided = 0;
-    counter_speed_ok = 0;
     _adaptBuffer = function() {
       var bufr, nAvailable, nToCreate, nToFind, nToMove, previous_firstThumbRkToUpdate, previous_firstThumbToUpdate, speed, targetCol, targetMonthRk, targetRk, targetY, _ref, _ref1;
       _this.noScrollScheduled = true;
       _this.noIndexScrollScheduled = true;
+      lazyHideIndex();
       speed = Math.abs(_this.viewPort$.scrollTop - lastOnScroll_Y) / viewPortHeight;
       if (speed > MAX_SPEED) {
-        counter_speed_avoided += 1;
-        console.log('too fasts!');
-        console.log('speed ok nb:', counter_speed_ok);
-        console.log('speed nok nb:', counter_speed_avoided);
         _scrollHandler();
         return;
-      } else {
-        counter_speed_ok += 1;
-        console.log('speed ok, update buffer');
-        console.log('speed ok nb:', counter_speed_ok);
-        console.log('speed nok nb:', counter_speed_avoided);
       }
       bufr = buffer;
       safeZone.firstRk = null;
@@ -5517,9 +5579,6 @@ module.exports = LongList = (function() {
       previous_firstThumbRkToUpdate = safeZone.firstThumbRkToUpdate;
       safeZone.firstThumbRkToUpdate = null;
       _computeSafeZone();
-      console.log('\n======_adaptBuffer==beginning=======');
-      console.log('safeZone', JSON.stringify(safeZone, 2));
-      console.log('bufr', bufr);
       if (safeZone.lastRk > bufr.lastRk) {
         nToFind = Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone);
         nAvailable = safeZone.firstRk - bufr.firstRk;
@@ -5543,11 +5602,10 @@ module.exports = LongList = (function() {
           targetCol = safeZone.firstCol;
           targetY = safeZone.firstY;
         }
-        console.log('direction: DOWN', 'nToFind:' + nToFind, 'nAvailable:' + nAvailable, 'nToCreate:' + nToCreate, 'nToMove:' + nToMove, 'targetRk:' + targetRk, 'targetCol' + targetCol, 'targetY' + targetY);
         if (nToFind > 0) {
           Photo.listFromFiles(targetRk, nToFind, function(error, res) {
-            if (Error) {
-              console.log(Error);
+            if (error) {
+              console.log(error);
             }
             return _updateThumb(res.files, res.firstRank);
           });
@@ -5582,17 +5640,17 @@ module.exports = LongList = (function() {
           targetMonthRk = safeZone.endMonthRk;
           targetY = safeZone.endY;
         }
-        console.log('direction: UP', 'nToFind:' + nToFind, 'nAvailable:' + nAvailable, 'nToCreate:' + nToCreate, 'nToMove:' + nToMove, 'targetRk:' + targetRk, 'targetCol' + targetCol, 'targetY' + targetY);
         if (nToFind > 0) {
           Photo.listFromFiles(targetRk - nToFind + 1, nToFind, function(error, res) {
-            if (Error) {
-              console.log(Error);
+            if (error) {
+              console.log(error);
             }
             return _updateThumb(res.files, res.firstRank);
           });
         }
         if (nToCreate > 0) {
-          throw new Error('It should not be used in the current implementation');
+          throw new Error('It should not be used in the\
+                        current implementation');
           _ref1 = _createThumbsTop(nToCreate, targetRk, targetCol, targetY, targetMonthRk), targetY = _ref1[0], targetCol = _ref1[1], targetMonthRk = _ref1[2];
           targetRk += nToCreate;
         }
@@ -5601,13 +5659,9 @@ module.exports = LongList = (function() {
         }
       }
       if (nToFind == null) {
-        console.log('buffer inside safe zone, no modification of the buffer');
         safeZone.firstThumbToUpdate = previous_firstThumbToUpdate;
-        safeZone.firstThumbRkToUpdate = previous_firstThumbRkToUpdate;
+        return safeZone.firstThumbRkToUpdate = previous_firstThumbRkToUpdate;
       }
-      console.log('======_adaptBuffer==ending=');
-      console.log('bufr', bufr);
-      return console.log('======_adaptBuffer==ended=======');
     };
     /**
      * Called when we get from the server the ids of the thumbs that have
@@ -5618,7 +5672,6 @@ module.exports = LongList = (function() {
 
     _updateThumb = function(files, fstFileRk) {
       var bufr, file, fileId, file_i, first, firstThumbRkToUpdate, firstThumbToUpdate, last, lstFileRk, th, thumb, thumb$, _i, _j, _ref, _ref1, _ref2;
-      console.log('\n======_updateThumb started =================');
       lstFileRk = fstFileRk + files.length - 1;
       bufr = buffer;
       thumb = bufr.first;
@@ -5654,17 +5707,12 @@ module.exports = LongList = (function() {
           th = th.next;
         }
       }
-      if (firstThumbRkToUpdate <= lstFileRk) {
-        console.log(" update forward: " + firstThumbRkToUpdate + "->" + lstFileRk);
-        console.log("   firstThumbRkToUpdate", firstThumbRkToUpdate, "nFiles", files.length, "fstFileRk", fstFileRk, "lstFileRk", lstFileRk);
-      } else {
-        console.log(" update forward: none");
-      }
       thumb = firstThumbToUpdate;
       for (file_i = _i = _ref = firstThumbRkToUpdate - fstFileRk, _ref1 = files.length - 1; _i <= _ref1; file_i = _i += 1) {
         file = files[file_i];
         fileId = file.id;
         thumb$ = thumb.el;
+        thumb$.file = file;
         thumb$.src = "files/photo/thumbs/" + fileId + ".jpg";
         thumb$.dataset.id = fileId;
         thumb.id = fileId;
@@ -5675,17 +5723,12 @@ module.exports = LongList = (function() {
           thumb$.classList.remove('selectedThumb');
         }
       }
-      if (firstThumbRkToUpdate > fstFileRk) {
-        console.log(" update backward " + (firstThumbRkToUpdate - 1) + "->" + fstFileRk);
-        console.log("   firstThumbRkToUpdate", firstThumbRkToUpdate, "nFiles", files.length, "fstFileRk", fstFileRk, "lstFileRk", lstFileRk);
-      } else {
-        console.log(" update backward: none");
-      }
       thumb = firstThumbToUpdate.next;
       for (file_i = _j = _ref2 = firstThumbRkToUpdate - fstFileRk - 1; _j >= 0; file_i = _j += -1) {
         file = files[file_i];
         fileId = file.id;
         thumb$ = thumb.el;
+        thumb$.file = file;
         thumb$.src = "files/photo/thumbs/" + fileId + ".jpg";
         thumb$.dataset.id = fileId;
         thumb.id = fileId;
@@ -5698,9 +5741,8 @@ module.exports = LongList = (function() {
       }
       if (isDefaultToSelect) {
         _this._toggleOnThumb$(bufr.first.el);
-        isDefaultToSelect = false;
+        return isDefaultToSelect = false;
       }
-      return console.log('======_updateThumb finished =================');
     };
     _getBufferNextFirst = function() {
       var bufr, inMonthRow, initMonthRk, localRk, month, monthRk, nextFirstRk, _i;
@@ -5745,8 +5787,7 @@ module.exports = LongList = (function() {
       return bufr.nextLastCol = localRk % nThumbsPerRow;
     };
     /**
-     * [_computeSafeZone description]
-     * @return {[type]} [description]
+     * after a scroll throttle, will compute the safe zone
     */
 
     _computeSafeZone = function() {
@@ -5779,7 +5820,8 @@ module.exports = LongList = (function() {
       SZ.firstCol = 0;
       SZ.firstThumbToUpdate = null;
       SZ.firstInMonthRow = inMonthRow;
-      return SZ.firstVisibleRk = SZ.firstRk;
+      SZ.firstVisibleRk = SZ.firstRk;
+      return _selectCurrentIndex(monthRk);
     };
     _SZ_setMarginAtStart = function() {
       var SZ, inMonthRow, j, month, rowsSeen, _i, _ref;
@@ -5900,10 +5942,11 @@ module.exports = LongList = (function() {
         bufr.first.next = thumb;
         bufr.last.prev = thumb;
         bufr.last = thumb;
-        thumb$.textContent = rk + ' ' + month.month.slice(0, 4) + '-' + month.month.slice(4);
         style = thumb$.style;
         style.top = rowY + 'px';
         style.left = (marginLeft + col * colWidth) + 'px';
+        style.height = thumbHeight + 'px';
+        style.width = thumbHeight + 'px';
         _this.thumbs$.appendChild(thumb$);
         localRk += 1;
         if (localRk === month.nPhotos) {
@@ -5976,7 +6019,6 @@ module.exports = LongList = (function() {
           }
         }
       }
-      console.log('firstThumbToUpdate (_moveBufferToBottom)', safeZone.firstThumbToUpdate.el);
       buffer.lastRk = rk - 1;
       buffer.firstRk = buffer.first.rank;
       buffer.nextLastRk = rk;
@@ -6030,7 +6072,6 @@ module.exports = LongList = (function() {
           }
         }
       }
-      console.log('firstThumbToUpdate (_moveBufferToTop)', safeZone.firstThumbToUpdate.el);
       buffer.firstRk = rk + 1;
       return buffer.lastRk = buffer.last.rank;
     };
@@ -6044,38 +6085,49 @@ module.exports = LongList = (function() {
         _this.thumbs$.appendChild(label$);
         month.label$ = label$;
       }
-      label$.textContent = month.month.slice(0, 4) + '-' + month.month.slice(-2);
-      label$.style.top = (month.y + monthTopPadding - 21) + 'px';
-      return label$.style.left = '7px';
+      label$.textContent = month.date.format('MMMM YYYY');
+      label$.style.top = (month.y + monthLabelTop) + 'px';
+      return label$.style.left = Math.round(marginLeft / 2) + 'px';
     };
     _indexClickHandler = function(e) {
       var monthRk;
       monthRk = e.target.dataset.monthRk;
       if (monthRk) {
-        return _this.viewPort$.scrollTop = _this.months[monthRk].y;
+        _this.viewPort$.scrollTop = _this.months[monthRk].y;
+        return _adaptIndex();
       }
     };
-    thumbDim = this.buffer.first.el.getBoundingClientRect();
-    thumbWidth = thumbDim.width;
-    colWidth = thumbWidth + cellPadding;
-    thumbHeight = thumbDim.height;
-    this.thumbHeight = thumbHeight;
-    rowHeight = thumbHeight + cellPadding;
+    _indexMouseEnter = function() {
+      _this.index$.classList.add('hardVisible');
+      return indexVisible = false;
+    };
+    _indexMouseLeave = function() {
+      _this.index$.classList.add('visible');
+      _this.index$.classList.remove('hardVisible');
+      return lazyHideIndex();
+    };
     _resizeHandler();
+    _initBuffer();
     _adaptBuffer();
     isDefaultToSelect = true;
     this.thumbs$.addEventListener('click', this._clickHandler);
+    this.thumbs$.addEventListener('dblclick', this._dblclickHandler);
     this.viewPort$.addEventListener('scroll', _scrollHandler);
-    return this.index$.addEventListener('click', _indexClickHandler);
+    this.index$.addEventListener('click', _indexClickHandler);
+    this.index$.addEventListener('mouseenter', _indexMouseEnter);
+    return this.index$.addEventListener('mouseleave', _indexMouseLeave);
   };
 
   LongList.prototype._clickHandler = function(e) {
     var th, thBottomY, thTopY, viewPortBottomY, viewPortTopY;
     th = e.target;
-    this._lastSelectedCol = this._coordonate.left(th);
+    if (!th.classList.contains('long-list-thumb')) {
+      return;
+    }
     if (!this._toggleOnThumb$(th)) {
       return null;
     }
+    this._lastSelectedCol = this._coordonate.left(th);
     viewPortTopY = this.viewPort$.scrollTop;
     viewPortBottomY = viewPortTopY + this.viewPort$.clientHeight;
     thTopY = this._coordonate.top(th);
@@ -6086,6 +6138,17 @@ module.exports = LongList = (function() {
     if (thTopY < viewPortTopY) {
       return th.scrollIntoView(true);
     }
+  };
+
+  LongList.prototype._dblclickHandler = function(e) {
+    var th;
+    th = e.target;
+    if (!th.classList.contains('long-list-thumb')) {
+      return null;
+    }
+    this._toggleOnThumb$(th);
+    this._lastSelectedCol = this._coordonate.left(th);
+    return this.modal.onYes();
   };
 
   /**
@@ -6396,7 +6459,8 @@ module.exports = LongList = (function() {
       thTopY = this._coordonate.top(th);
       thBottomY = thTopY + this.thumbHeight;
     }
-    return th.scrollIntoView(true);
+    th.scrollIntoView(true);
+    return this._moveViewportToTopOfThumb$(th);
   };
 
   LongList.prototype._selectPageUpThumb = function() {
@@ -6426,14 +6490,36 @@ module.exports = LongList = (function() {
     }
   };
 
+  /**
+   * will move the viewport so that the top of the given thumb is at the top
+   * of the viewport, but only if the top of the thumb is above the viewport
+   * @param  {element} thumb$ # the thumb
+  */
+
+
   LongList.prototype._moveViewportToTopOfThumb$ = function(thumb$) {
-    var thumb$Top, viewPortTop;
+    var inMonthRow, month, monthRk, thumb$Top, thumbRk, viewPortTop, _i, _len, _ref;
     thumb$Top = this._coordonate.top(thumb$);
     viewPortTop = this.viewPort$.scrollTop;
-    if (thumb$Top < viewPortTop) {
-      thumb$.scrollIntoView(true);
-      this._scrollHandler();
-      return this._scrollHandler();
+    thumbRk = parseInt(thumb$.dataset.rank);
+    _ref = this.months;
+    for (monthRk = _i = 0, _len = _ref.length; _i < _len; monthRk = ++_i) {
+      month = _ref[monthRk];
+      if (thumbRk <= month.lastRk) {
+        break;
+      }
+    }
+    inMonthRow = Math.floor((thumbRk - month.firstRk) / this.nThumbsPerRow);
+    if (inMonthRow === 0) {
+      if (month.y + this.monthLabelTop < this.viewPort$.scrollTop) {
+        this.viewPort$.scrollTop = month.y + this.monthLabelTop;
+        return this._scrollHandler();
+      }
+    } else {
+      if (thumb$Top < viewPortTop) {
+        thumb$.scrollIntoView(true);
+        this._scrollHandler();
+      }
     }
   };
 
@@ -6445,26 +6531,26 @@ module.exports = LongList = (function() {
   */
 
 
-  LongList.prototype._getPreviousThumb$ = function(thumbEl) {
+  LongList.prototype._getPreviousThumb$ = function(thumb$) {
     var th;
-    if (thumbEl.dataset.rank === '0') {
+    if (thumb$.dataset.rank === '0') {
       return null;
     }
-    if (th === this.buffer.first.el) {
+    if (thumb$ === this.buffer.first.el) {
       return null;
     }
-    th = thumbEl.previousElementSibling;
+    th = thumb$.previousElementSibling;
     if (th === null) {
-      th = thumbEl.parentNode.lastElementChild;
-      if (th === thumbEl) {
+      th = thumb$.parentNode.lastElementChild;
+      if (th === thumb$) {
         return null;
       }
     }
     while (th.nodeName === 'DIV') {
       th = th.previousElementSibling;
       if (th === null) {
-        th = thumbEl.parentNode.lastElementChild;
-        if (th === thumbEl) {
+        th = thumb$.parentNode.lastElementChild;
+        if (th === thumb$) {
           return null;
         }
       }
@@ -6474,7 +6560,7 @@ module.exports = LongList = (function() {
 
   /**
    *
-   * @param  {Element} thumb$ [description]
+   * @param  {Element} thumb$ # the start thumb element
    * @return {Element|null}   # returns an element or null if on the last
    *                            thumb or the last of the buffer
   */
@@ -6485,7 +6571,7 @@ module.exports = LongList = (function() {
     if (this._coordonate.rank(thumb$) === this.nPhotos - 1) {
       return null;
     }
-    if (th === this.buffer.last.el) {
+    if (thumb$ === this.buffer.last.el) {
       return null;
     }
     th = thumb$.nextElementSibling;
@@ -6538,7 +6624,7 @@ module.exports = LongList = (function() {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, ThumbPreloader, User, appIframeTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -6574,6 +6660,8 @@ User = require('models/user');
 
 IntentManager = require('lib/intentManager');
 
+ThumbPreloader = require('lib/thumb_preloader');
+
 module.exports = HomeView = (function(_super) {
   __extends(HomeView, _super);
 
@@ -6581,7 +6669,11 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.template = require('templates/layout');
 
-  HomeView.prototype.wizards = ['install', 'quicktour'];
+  HomeView.prototype.subscriptions = {
+    'backgroundChanged': 'changeBackground'
+  };
+
+  HomeView.prototype.wizards = ['quicktour'];
 
   function HomeView() {
     this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
@@ -6596,42 +6688,55 @@ module.exports = HomeView = (function(_super) {
     this.displayView = __bind(this.displayView, this);
     this.logout = __bind(this.logout, this);
     this.afterRender = __bind(this.afterRender, this);
-    this.apps = new AppCollection();
-    this.stackApps = new StackAppCollection();
-    this.devices = new DeviceCollection();
+    var thumbPreloader;
+    this.apps = new AppCollection(window.applications);
+    this.stackApps = new StackAppCollection(window.stack_applications);
+    this.devices = new DeviceCollection(window.devices);
+    this.market = new AppCollection(window.market_applications);
     this.notifications = new NotificationCollection();
     this.intentManager = new IntentManager();
     SocketListener.watch(this.apps);
     SocketListener.watch(this.notifications);
     SocketListener.watch(this.devices);
     HomeView.__super__.constructor.apply(this, arguments);
+    thumbPreloader = new ThumbPreloader();
+    thumbPreloader.start();
   }
 
   HomeView.prototype.afterRender = function() {
     this.navbar = new NavbarView(this.apps, this.notifications);
-    this.applicationListView = new ApplicationsListView(this.apps);
-    this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps);
+    this.applicationListView = new ApplicationsListView(this.apps, this.market);
+    this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps, this.market);
     this.accountView = new AccountView();
     this.helpView = new HelpView();
-    this.marketView = new MarketView(this.apps);
-    $("#content").niceScroll();
+    this.marketView = new MarketView(this.apps, this.market);
     this.frames = this.$('#app-frames');
     this.content = this.$('#content');
+    this.changeBackground(window.app.instance.background);
+    this.backButton = this.$('.back-button');
+    this.backButton.hide();
     $(window).resize(this.resetLayoutSizes);
-    this.apps.fetch({
-      reset: true
-    });
-    this.devices.fetch({
-      reset: true
-    });
-    this.stackApps.fetch({
-      reset: true
-    });
     return this.resetLayoutSizes();
   };
 
   /* Functions*/
 
+
+  HomeView.prototype.changeBackground = function(background) {
+    var val;
+    if (background == null) {
+      background = 'background_07';
+    }
+    if (background === void 0 || background === null) {
+      this.content.css('background_07.jpg', 'none');
+    }
+    if (background === 'background-none') {
+      return this.content.css('background-image', 'none');
+    } else {
+      val = "url('/img/backgrounds/" + (background.replace('-', '_')) + ".jpg')";
+      return this.content.css('background-image', val);
+    }
+  };
 
   HomeView.prototype.logout = function(event) {
     var user,
@@ -6647,18 +6752,32 @@ module.exports = HomeView = (function(_super) {
     });
   };
 
-  HomeView.prototype.displayView = function(view) {
+  HomeView.prototype.displayView = function(view, title) {
     var displayView,
       _this = this;
-    $("#current-application").html('home');
+    if (title != null) {
+      title = title.substring(6);
+    } else {
+      if (title == null) {
+        title = t('home');
+      }
+    }
+    window.document.title = title;
+    $('#current-application').html(title);
+    if (view === this.applicationListView) {
+      this.backButton.hide();
+    } else {
+      this.backButton.show();
+    }
     displayView = function() {
       _this.frames.hide();
       view.$el.hide();
       _this.content.show();
       $('#home-content').append(view.$el);
-      view.$el.fadeIn();
+      view.$el.show();
       _this.currentView = view;
-      return _this.resetLayoutSizes();
+      _this.resetLayoutSizes();
+      return _this.content.scrollTop(0);
     };
     if (this.currentView != null) {
       if (view === this.currentView) {
@@ -6667,11 +6786,9 @@ module.exports = HomeView = (function(_super) {
         this.resetLayoutSizes();
         return;
       }
-      return this.currentView.$el.fadeOut(function() {
-        _this.currentView.$el.detach();
-        return displayView();
-      });
->>>>>>> fusion of many small commits:client/public/javascripts/app.js
+      this.currentView.$el.hide();
+      this.currentView.$el.detach();
+      return displayView();
     } else {
       return displayView();
     }
@@ -6923,7 +7040,7 @@ module.exports = MarketView = (function(_super) {
       _this = this;
     installedApps = new AppCollection(this.installedApps.filter(function(app) {
       var _ref;
-      return (_ref = app.get('state')) === 'installed' || _ref === 'broken';
+      return (_ref = app.get('state')) === 'installed' || _ref === 'stopped' || _ref === 'broken';
     }));
     installeds = installedApps.pluck('slug');
     this.marketApps.each(function(app) {
@@ -6994,6 +7111,7 @@ module.exports = MarketView = (function(_super) {
         _this.appList.show();
         if (appWidget.$el) {
           _this.waitApplication(appWidget, true);
+          appWidget.$el.addClass('install');
           return _this.runInstallation(appWidget.app, function() {
             return console.log('application installed', appWidget.app);
           }, function() {
@@ -7504,15 +7622,37 @@ module.exports = NotificationView = (function(_super) {
   NotificationView.prototype.template = require('templates/notification');
 
   NotificationView.prototype.events = {
-    "click .doaction": "doaction",
-    "click .dismiss": "dismiss"
+    "click .doaction": "onActionClicked",
+    "click .dismiss": "onDismissClicked"
+  };
+
+  NotificationView.prototype.getRenderData = function() {
+    return {
+      model: _.extend(this.model.attributes, {
+        actionText: this.actionText || null,
+        date: moment(parseInt(this.model.get('publishDate'))).fromNow()
+      })
+    };
   };
 
   NotificationView.prototype.initialize = function() {
-    return this.listenTo(this.model, 'change', this.render);
+    var action;
+    this.listenTo(this.model, 'change', this.render);
+    action = this.model.get('resource');
+    if (action != null) {
+      if ((action.app != null) && action.app !== 'home') {
+        return this.actionText = 'notification open application';
+      } else if (action.url != null) {
+        if (action.url.indexOf('update-stack') >= 0) {
+          return this.actionText = 'notification update stack';
+        } else if (action.url.indexOf('update') >= 0) {
+          return this.actionText = 'notification update application';
+        }
+      }
+    }
   };
 
-  NotificationView.prototype.doaction = function() {
+  NotificationView.prototype.onActionClicked = function() {
     var action, url;
     action = this.model.get('resource');
     if (action == null) {
@@ -7530,14 +7670,11 @@ module.exports = NotificationView = (function(_super) {
       url = null;
     }
     if (url) {
-      window.app.routers.main.navigate(url, true);
-    }
-    if (this.model.get('type') === 'temporary') {
-      return this.dismiss();
+      return window.app.routers.main.navigate(url, true);
     }
   };
 
-  NotificationView.prototype.dismiss = function(event) {
+  NotificationView.prototype.onDismissClicked = function(event) {
     if (event != null) {
       event.preventDefault();
     }
@@ -7684,7 +7821,7 @@ module.exports = NotificationsView = (function(_super) {
 });
 
 ;require.register("views/object-picker-image", function(exports, require, module) {
-var BaseView, LongList, ObjectPickerImage, Photo, _ref,
+var BaseView, LongList, ObjectPickerImage, Photo,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -7697,25 +7834,33 @@ BaseView = require('lib/base_view');
 module.exports = ObjectPickerImage = (function(_super) {
   __extends(ObjectPickerImage, _super);
 
-  function ObjectPickerImage() {
-    _ref = ObjectPickerImage.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
   ObjectPickerImage.prototype.tagName = "section";
+
+  function ObjectPickerImage(modal) {
+    this.modal = modal;
+    ObjectPickerImage.__super__.constructor.call(this);
+  }
 
   ObjectPickerImage.prototype.initialize = function() {
     this.name = 'thumbPicker';
     this.tabLabel = 'image';
     this.tab = $("<div>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
-    this.panel.addEventListener('dblclick', this._validateDblClick);
-    this.longList = new LongList(this.panel);
+    this.longList = new LongList(this.panel, this.modal);
     return this.longList.init();
   };
 
   ObjectPickerImage.prototype.getObject = function() {
-    return "files/photo/screens/" + (this.longList.getSelectedID()) + ".jpg";
+    var file;
+    file = this.longList.getSelectedFile();
+    if (file) {
+      return {
+        id: file.id,
+        docType: 'file',
+        name: file.name
+      };
+    }
+    return false;
   };
 
   ObjectPickerImage.prototype.setFocusIfExpected = function() {
@@ -7768,7 +7913,9 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
 
   ObjectPickerPhotoURL.prototype.getObject = function() {
     if (this.url) {
-      return this.url;
+      return {
+        urlToFetch: this.url
+      };
     } else {
       return false;
     }
@@ -7829,7 +7976,7 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
 });
 
 ;require.register("views/object-picker-upload", function(exports, require, module) {
-var BaseView, ObjectPickerUpload, _ref,
+var BaseView, ObjectPickerUpload,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -7839,23 +7986,22 @@ BaseView = require('lib/base_view');
 module.exports = ObjectPickerUpload = (function(_super) {
   __extends(ObjectPickerUpload, _super);
 
-  function ObjectPickerUpload() {
-    this._handleFile = __bind(this._handleFile, this);
-    this._handleUploaderChange = __bind(this._handleUploaderChange, this);
-    this._changePhotoFromUpload = __bind(this._changePhotoFromUpload, this);
-    this.keyHandler = __bind(this.keyHandler, this);
-    _ref = ObjectPickerUpload.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
   ObjectPickerUpload.prototype.template = require('../templates/object-picker-upload');
 
   ObjectPickerUpload.prototype.tagName = "section";
 
+  function ObjectPickerUpload(objectPicker) {
+    this._handleFile = __bind(this._handleFile, this);
+    this._handleUploaderChange = __bind(this._handleUploaderChange, this);
+    this._changePhotoFromUpload = __bind(this._changePhotoFromUpload, this);
+    this.keyHandler = __bind(this.keyHandler, this);
+    ObjectPickerUpload.__super__.constructor.call(this);
+    this.objectPicker = objectPicker;
+  }
+
   ObjectPickerUpload.prototype.initialize = function() {
     var btn;
     this.render();
-    this.objectPicker = objectPicker;
     this.name = 'photoUpload';
     this.tabLabel = 'upload';
     this.tab = this._createTab();
@@ -7869,7 +8015,9 @@ module.exports = ObjectPickerUpload = (function(_super) {
   };
 
   ObjectPickerUpload.prototype.getObject = function() {
-    return this.dataURL;
+    return {
+      dataUrl: this.dataUrl
+    };
   };
 
   ObjectPickerUpload.prototype.setFocusIfExpected = function() {
@@ -7938,7 +8086,7 @@ module.exports = ObjectPickerUpload = (function(_super) {
     img = new Image();
     reader.readAsDataURL(file);
     return reader.onloadend = function() {
-      _this.dataURL = reader.result;
+      _this.dataUrl = reader.result;
       return _this.objectPicker.onYes();
     };
   };
@@ -7972,6 +8120,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
   function PhotoPickerCroper() {
     this._updateCropedPreview = __bind(this._updateCropedPreview, this);
     this._onImgToCropLoaded = __bind(this._onImgToCropLoaded, this);
+    this._onImgResultLoaded = __bind(this._onImgResultLoaded, this);
     _ref = PhotoPickerCroper.__super__.constructor.apply(this, arguments);
     return _ref;
   }
@@ -7998,6 +8147,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
       target_h: 100,
       target_w: 100
     };
+    this.params = params;
     this.state = {
       currentStep: 'objectPicker',
       img_naturalW: 0,
@@ -8009,65 +8159,132 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.body = body;
     this.objectPickerCont = body.querySelector('.objectPickerCont');
     this.tablist = body.querySelector('[role=tablist]');
+    this.imgResult = body.querySelector('#img-result');
     this.cropper$ = this.el.querySelector('.croperCont');
     this.imgToCrop = this.cropper$.querySelector('#img-to-crop');
     this.imgPreview = this.cropper$.querySelector('#img-preview');
     this.panelsControlers = {};
-    this.imagePanel = new ObjectPickerImage();
+    this.imagePanel = new ObjectPickerImage(this);
     tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
     this.panelsControlers[this.imagePanel.name] = this.imagePanel;
     this.photoURLpanel = new ObjectPickerPhotoURL();
     tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
     this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
+    this.uploadPanel = new ObjectPickerUpload(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.uploadPanel);
+    this.panelsControlers[this.uploadPanel.name] = this.uploadPanel;
     tabControler.initializeTabs(body);
     this._listenTabsSelection();
     this._selectDefaultTab(this.imagePanel.name);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
     this.cropper$.style.display = 'none';
+    this.imgResult.addEventListener('load', this._onImgResultLoaded, false);
     return true;
   };
 
   PhotoPickerCroper.prototype.onYes = function() {
-    var d, r, s, url;
+    var dimension, obj, url;
+    obj = this.state.activePanel.getObject();
+    if (!this.params.isCropped) {
+      this._sendResult(obj);
+      return;
+    }
     if (this.state.currentStep === 'objectPicker') {
-      url = this.state.activePanel.getObject();
+      url = this._getUrlForCropping(obj);
       if (url) {
         return this._showCropingTool(url);
       }
     } else {
-      s = this.imgPreview.style;
-      r = this.state.img_naturalW / this.imgPreview.width;
-      d = {
-        sx: Math.round(-parseInt(s.marginLeft) * r),
-        sy: Math.round(-parseInt(s.marginTop) * r),
-        sWidth: Math.round(this.config.target_h * r),
-        sHeight: Math.round(this.config.target_w * r)
-      };
-      if (d.sx < 0) {
-        d.sx = 0;
-      }
-      if (d.sy < 0) {
-        d.sy = 0;
-      }
-      if (d.sx + d.sWidth > this.imgPreview.naturalWidth) {
-        d.sWidth = this.imgPreview.naturalWidth - d.sx;
-      }
-      if (d.sy + d.sHeight > this.imgPreview.naturalHeight) {
-        d.sHeight = this.imgPreview.naturalHeight - d.sy;
-      }
-      this.cb(true, this._getResultDataURL(this.imgPreview, d));
+      dimension = this._getCroppedDimensions();
+      this.cb(true, this._getResultDataURL(this.imgPreview, dimension));
       return this.close();
     }
+  };
+
+  PhotoPickerCroper.prototype._sendResult = function(obj) {
+    if (obj.dataUrl) {
+      this.cb(true, obj.dataUrl);
+      this.close();
+      return;
+    }
+    if (obj.urlToFetch) {
+      this.imgResult.src = obj.urlToFetch;
+      return;
+    }
+    if ((obj.docType != null) && obj.docType === 'file' && (obj.id != null)) {
+      if (obj.id) {
+        this.imgResult.src = "files/photo/" + obj.id + ".jpg";
+      }
+    }
+  };
+
+  PhotoPickerCroper.prototype._getUrlForCropping = function(obj) {
+    if (obj.urlToFetch) {
+      return obj.urlToFetch;
+    }
+    if (obj.dataUrl) {
+      return obj.dataUrl;
+    }
+    if ((obj.docType != null) && obj.docType === 'file' && (obj.id != null)) {
+      return "files/photo/screens/" + obj.id + ".jpg";
+    }
+  };
+
+  PhotoPickerCroper.prototype._onImgResultLoaded = function(e) {
+    this.cb(true, this._getResultDataURL(this.imgResult, null));
+    return this.close();
+  };
+
+  /**
+   * returns the coordonates of the region to cropp into the original image
+   * (imgPreview)
+   * @return {Object} #
+   *   # sx      : x of the top left corner
+   *   # sy      : y of the top left corner
+   *   # sWidth  : widht of the region to crop
+   *   # sHeight : height of the region to crop
+  */
+
+
+  PhotoPickerCroper.prototype._getCroppedDimensions = function() {
+    var d, r, s;
+    s = this.imgPreview.style;
+    r = this.state.img_naturalW / this.imgPreview.width;
+    d = {
+      sx: Math.round(-parseInt(s.marginLeft) * r),
+      sy: Math.round(-parseInt(s.marginTop) * r),
+      sWidth: Math.round(this.config.target_h * r),
+      sHeight: Math.round(this.config.target_w * r)
+    };
+    if (d.sx < 0) {
+      d.sx = 0;
+    }
+    if (d.sy < 0) {
+      d.sy = 0;
+    }
+    if (d.sx + d.sWidth > this.imgPreview.naturalWidth) {
+      d.sWidth = this.imgPreview.naturalWidth - d.sx;
+    }
+    if (d.sy + d.sHeight > this.imgPreview.naturalHeight) {
+      d.sHeight = this.imgPreview.naturalHeight - d.sy;
+    }
+    return d;
   };
 
   PhotoPickerCroper.prototype._getResultDataURL = function(img, dimensions) {
     var IMAGE_DIMENSION, canvas, ctx, d, dataUrl;
     IMAGE_DIMENSION = 600;
     canvas = document.createElement('canvas');
-    canvas.height = canvas.width = IMAGE_DIMENSION;
     ctx = canvas.getContext('2d');
-    d = dimensions;
-    ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
+    if (dimensions) {
+      canvas.height = canvas.width = IMAGE_DIMENSION;
+      d = dimensions;
+      ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
+    } else {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+    }
     return dataUrl = canvas.toDataURL('image/jpeg');
   };
 
@@ -8223,7 +8440,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
     this.model.set("description", "");
     this.body = this.$(".md-body");
     this.header = this.$(".md-header h3");
-    this.header.html(this.model.get('name'));
+    this.header.html(this.model.get('displayName'));
     this.body.addClass('loading');
     this.body.html(t('please wait data retrieval') + '<div class="spinner-container" />');
     this.body.find('.spinner-container').spin(true);
@@ -8251,7 +8468,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
   PopoverDescriptionView.prototype.renderDescription = function() {
     var description, docType, permission, permissionsDiv, _ref1;
     this.body.html("");
-    this.$('.repo-stars').html(this.model.get('stars'));
     description = this.model.get("description");
     this.header.parent().append("<p class=\"line left\"> " + description + " </p>");
     if (Object.keys(this.model.get("permissions")).length === 0) {
@@ -8267,8 +8483,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
       }
     }
     this.handleContentHeight();
-    this.body.slideDown();
-    return this.body.niceScroll();
+    return this.body.slideDown();
   };
 
   PopoverDescriptionView.prototype.handleContentHeight = function() {
@@ -8283,7 +8498,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
     var _this = this;
     this.$el.addClass('md-show');
     this.overlay.addClass('md-show');
-    $('#home-content').addClass('md-open');
     setTimeout(function() {
       return _this.$('.md-content').addClass('md-show');
     }, 300);
@@ -8341,13 +8555,13 @@ module.exports = QuicktourWizardView = (function(_super) {
       {
         slug: 'welcome'
       }, {
-        slug: 'dashboard'
-      }, {
         slug: 'apps'
       }, {
-        slug: 'help'
-      }, {
         slug: 'sync'
+      }, {
+        slug: 'import'
+      }, {
+        slug: 'help'
       }
     ];
     return QuicktourWizardView.__super__.initialize.apply(this, arguments);
