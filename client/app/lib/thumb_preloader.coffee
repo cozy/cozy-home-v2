@@ -4,7 +4,7 @@ Photo  = require '../models/photo'
  * preloads n thumbs so that the modal inits faster
 ###
 
-NUMBER_OF_PRELOAD  = 200 # number of photo to preload
+NUMBER_OF_PRELOAD  = 100 # number of photo to preload
 TIME_BEFORE_START  = 500 # ms
 TIME_BETWEEN_LOADS = 80 # ms
 

@@ -382,11 +382,21 @@ nous vous invitons à consulter nos deux didacticiels:
 
     # object picker
     "pick from files"         : "Choisir une photo"
-    "photo-modal chooseAgain" : "Changer de photo"
+    "Crop the photo"          : "Recadrez l'image ("
+    "chooseAgain"             : "changer de photo"
     "modal ok"                : "OK"
     "modal cancel"            : "Annuler"
     "no image"                : "Il n'y a pas d'image sur votre Cozy"
     "ObjPicker upload btn"    : "Sélectionnez un fichier local"
-    "more thumbs"             : "Plus de photo"
+    "or"                      : "ou"
     "drop a file"             : "Glissez et déposez un fichier"
     "url of an image"         : "URL d'une image sur le web"
+    "you have no album"       : """
+        <p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>
+        <p>Create some with the
+            <a href="/#applications" target='_blank'>Photo application</a>
+            <br>
+            and use photo from your phone with the
+            <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)
+    """

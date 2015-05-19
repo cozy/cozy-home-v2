@@ -24,7 +24,7 @@ module.exports = class ObjectPickerUpload extends BaseView
         @panel    = @el
         # bind events
         @_bindFileDropZone()
-        btn = @panel.querySelector('.modal-uploadBtn')
+        btn = @panel.querySelector('.photoUpload-btn')
         btn.addEventListener('click', @_changePhotoFromUpload)
         @btn = btn
         @uploader = @panel.querySelector('.uploader')

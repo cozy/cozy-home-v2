@@ -358,10 +358,22 @@ You can synchronize both contacts and calendars through the CalDAV and CardDAV p
 
     # object picker
     "pick from files"         : "Choose one photo"
-    "photo-modal chooseAgain" : "Choose another photo"
+    "Crop the photo"          : "Crop the image ("
+    "chooseAgain"             : "choose another photo"
     "modal ok"                : "OK"
     "modal cancel"            : "Cancel"
     "no image"                : "There is no image on your Cozy"
     "ObjPicker upload btn"    : "Upload a local file"
+    "or"                      : "or"
     "drop a file"             : "Drag & drop a file"
     "url of an image"         : "URL of an image on the web"
+    "you have no album"       : """
+        <p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>
+        <p>Créez en à partir de
+            <a href="/#applications" target='_blank'>l'application Photo</a>
+            <br>
+            et utilisez les photo de votre téléphone via
+            <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)
+    """
+

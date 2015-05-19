@@ -53,19 +53,21 @@ module.exports = tabControler =
             tablist.addEventListener 'click', (event) =>
                 if event.target.getAttribute('role') != 'tab'
                     return
-                panel = event.target.getAttribute 'aria-controls'
-                panel = panelList.querySelector(".#{panel}")
+                panelName = event.target.getAttribute 'aria-controls'
+                panel     = panelList.querySelector(".#{panelName}")
+                # hide the panels that are not selected
                 for pan in panelList.children
                     if pan.getAttribute('role') != 'tabpanel'
                         continue
                     if pan != panel
                         pan.setAttribute('aria-hidden',true)
-                    else
-                        pan.setAttribute('aria-hidden',false)
-                        panelSelectEvt = new Event('panelSelect',
-                                                    bubbles:true,
-                                                    cancelable:false)
-                        pan.dispatchEvent(panelSelectEvt)
+                # show the selected panel
+                panel.setAttribute('aria-hidden',false)
+                panelSelectEvt = new Event('panelSelect',
+                                            bubbles:true,
+                                            cancelable:false)
+                panel.dispatchEvent(panelSelectEvt)
+                # hide or show the tabs
                 for tab in tablist.querySelectorAll('[role=tab]')
                     if tab == event.target
                         event.target.setAttribute('aria-selected',true)
