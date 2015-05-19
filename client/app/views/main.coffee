@@ -52,7 +52,6 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
         @changeBackground window.app.instance.background
-        #@content.niceScroll()
         @backButton = @$ '.back-button'
         @backButton.hide()
 

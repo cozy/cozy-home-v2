@@ -106,11 +106,11 @@ module.exports =
 
     # Update Cozy Instance data, create it if it does not exist.
     updateInstance: (req, res, next) ->
-        {domain, locale, helpUrl, background} = req.body
+        {domain, locale, helpUrl, background, connectedOnce} = req.body
 
-        if domain? or locale? or helpUrl? or background?
+        if domain? or locale? or helpUrl? or background? or connectedOnce?
             CozyInstance.all (err, instances) ->
-                data = {domain, locale, helpUrl, background}
+                data = {domain, locale, helpUrl, background, connectedOnce}
 
                 if err then next err
 
