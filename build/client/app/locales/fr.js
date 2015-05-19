@@ -227,29 +227,31 @@ module.exports = {
     'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
   },
   'quicktourwizard': {
-    'welcome title': "Bienvenue dans votre nouveau Cozy !",
-    'welcome content': "<p>Vous voilà enfin prêt à utiliser votre Cozy !</p>\n<p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. A travers un simple navigateur web vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Ainsi vous pouvez accédez à vos outils depuis n'importe où sans utiliser la machine d'un autre. </p>\n<p>Voici les avantages d'avoir son propre cloud:</p>\n<ul>\n  <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>\n  <li>Vous ne recevez plus de publicité ciblée.</li>\n  <li>Vous n'avez à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>\n  <li>Fini de re-rentrer les mêmes informations pour chaque outil, les données sont partagées par les applications.</li>\n</ul>\n<p></p>",
+    'welcome title': "Bienvenue sur votre Cozy !",
+    'welcome content': "<p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. Vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Grâce à un navigateur web, vous pourrez accéder à vos outils depuis n'importe où sans pour autant compromettre votre vie privée. </p>\n<p>Voici les avantages d'avoir son propre cloud:</p>\n<ul>\n  <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>\n  <li>Vous ne recevez plus de publicité ciblée.</li>\n  <li>Vous n'avez plus à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>\n  <li>Plus besoin de rentrer les même informations dans chaque outil: les données sont partagées par les applications.</li>\n</ul>\n<p></p>",
     'continue to apps': "Quelles sont les applications disponibles ?",
     'apps title': "Les applications disponibles",
-    'apps content': "<p>Par défaut Cozy propose cinq applications :</p>\n<ul>\n  <li>Calendar: Pour gérer vos événements importants</li>\n  <li>Contacts: Votre carnet d'adresses et de téléphones.</li>\n  <li>Files: Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>\n  <li>Emails: Pour centraliser votre boites mails en ligne.</li>\n  <li>Photos: Pour créer et partager des albums photos.</li>\n</ul>\n<p>A côté de ça vous pourrez découvrir les applications réalisées\npar la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Pour les installer\nvous devrez vous rendre dans l'App Store de Cozy en cliquant sur cette icône:</p>\n<p>\n<img width=\"80\" src=\"/img/apps/store.svg\" />\n</p>",
+    'apps content': "<p>Par défaut Cozy propose cinq applications :</p>\n<ul>\n  <li>Calendar: Pour gérer vos événements importants</li>\n  <li>Contacts: Votre carnet d'adresses et de téléphones.</li>\n  <li>Files: Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>\n  <li>Emails: Pour centraliser votre boites mails en ligne.</li>\n  <li>Photos: Pour créer et partager des albums photos.</li>\n</ul>\n<p>A côté de ça, vous pourrez découvrir les applications réalisées\npar la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Rendez vous dans l'app store pour découvrir le catalogue.\n</p>",
     'continue to help': "Comment trouver de l'aide ?",
     'help title': "Obtenir de l'aide",
     'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
     'continue to sync': "Comment synchroniser votre mobile ?",
-    'sync title': "Synchronisation",
-    'sync content': "<p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
+    'sync title': "Synchronisation du mobile",
+    'sync content': "<p><strong>Contacts et Calendriers</strong></p>\n<p>\nVous pouvez synchroniser vos contacts et calendriers à travers les protocoles\nCalDAV et CardDAV. Sous ces noms exotiques se cachent deux standards qui permettent de synchroniser votre Cozy avec la plupart des logiciels de gestion de contacts\net de calendriers disponibles. Cela permet également de synchroniser\nun smartphone Android ou iOS avec votre Cozy. Pour configurer votre téléphone\nnous vous invitons à consulter nos deux didacticiels:\n<ul>\n<li><a href=\"http://cozy.io/fr/mobile/contacts.html\">Comment synchroniser ses contacts</a></li>\n<li><a href=\"http://cozy.io/fr/mobile/calendar.html\">Comment synchroniser ses calendriers</a></li>\n</ul>\n</p>\n<p><strong>Fichiers et Photos (Android seulement)</strong></p>\n<p>\n  Avec Cozy vous pouvez sauvegarder automatiquement vos photos dans votre Cozy. Inversement vous pouvez consulter les fichiers de votre Cozy depuis votre mobile et les sauvegarder pour y accéder même quand votre connexion est coupée.\n</p>\n<p>Pour installer l'application Cozy pour Android. Vous pouvez lire notre <a href=\"http://cozy.io/fr/mobile/files.html\">tutorial</a> ou récupérer notre application sur le <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">PlayStore</a>\n</p>",
     'continue to import': "Comment importer mes données ?",
-    'import title': "Import de ses données",
-    'import content': "<p>Pour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. Vous trouverez des outils d'importation. dans les applications\nContacts et Calendrier.</p>\n<p>\n<img width=\"80\" src=\"/img/apps/leave-google.svg\" />\n</p>",
-    'close wizard': "Démarrer avec mon Cozy!"
+    'import title': "Import des données de contacts et calendriers",
+    'import content': "<p>\nPour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. La plupart des outils proposent un export à ce format.\nEnsuite, vous trouverez des outils d'importation. dans les applications\nContacts et Calendrier.\n</p>\n<p>\nYour traditional files can be directly through the Files application UI.\n</p>\n<p>\nNous mettrons également bientôt à disposition une application vous permettant de récupérer toute vos données Google très facilement dans votre Cozy.\n</p>\n<p>\nVoilà maintenant l'introduction à Cozy est terminée. Vous savez déjà\ntout ce qu'il faut pour démarrer. Nous vous laissons découvrir\nles applications disponibles.\n</p>",
+    'close wizard': "Démarrer avec mon Cozy !"
   },
   "pick from files": "Choisir une photo",
-  "photo-modal chooseAgain": "Changer de photo",
+  "Crop the photo": "Recadrez l'image (",
+  "chooseAgain": "changer de photo",
   "modal ok": "OK",
   "modal cancel": "Annuler",
   "no image": "Il n'y a pas d'image sur votre Cozy",
   "ObjPicker upload btn": "Sélectionnez un fichier local",
-  "more thumbs": "Plus de photo",
+  "or": "ou",
   "drop a file": "Glissez et déposez un fichier",
-  "url of an image": "URL d'une image sur le web"
+  "url of an image": "URL d'une image sur le web",
+  "you have no album": "<p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Create some with the\n    <a href=\"/#applications\" target='_blank'>Photo application</a>\n    <br>\n    and use photo from your phone with the\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 };
