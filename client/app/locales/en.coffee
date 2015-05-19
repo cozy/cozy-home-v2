@@ -235,6 +235,15 @@ module.exports =
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
     "stack update available notification": "A new version of the platform is available."
+    "application broken": '''
+                This app is broken. Can you try install again.
+                
+                If error persists, you can contact us at contact@cozycloud.cc 
+                or on IRC #cozycloud on irc.freenode.net.
+
+                More details :
+
+                '''
 
     'noapps':
         'first steps': """

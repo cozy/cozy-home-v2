@@ -249,6 +249,15 @@ module.exports =
     "notification update application": "Mettre à jour l'application"
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
+    "application broken": '''
+                Cette application est cassée. Vous pouvez essayer de la réinstaller.
+
+                Si l'erreur persiste, vous pouvez nous contacter à contact@cozycloud.cc 
+                ou sur IRC #cozycloud sur irc.freenode.net.
+
+                Plus de  détails :
+
+                '''
 
     'noapps':
         'first steps': """

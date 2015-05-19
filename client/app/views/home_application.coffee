@@ -99,7 +99,7 @@ module.exports = class ApplicationRow extends BaseView
         return null unless @enabled
         switch @model.get 'state'
             when 'broken'
-                msg = 'This app is broken. Try install again.'
+                msg = t('application broken')
                 errormsg = @model.get 'errormsg'
                 msg += " Error was : #{errormsg}" if errormsg
                 alert msg

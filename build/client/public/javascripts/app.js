@@ -1,59 +1,42 @@
-(function() {
+(function(/*! Brunch !*/) {
   'use strict';
 
-  var globals = typeof window === 'undefined' ? global : window;
+  var globals = typeof window !== 'undefined' ? window : global;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
-  var has = ({}).hasOwnProperty;
 
-  var aliases = {};
-
-  var endsWith = function(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  var has = function(object, name) {
+    return ({}).hasOwnProperty.call(object, name);
   };
 
-  var unalias = function(alias, loaderPath) {
-    var start = 0;
-    if (loaderPath) {
-      if (loaderPath.indexOf('components/' === 0)) {
-        start = 'components/'.length;
-      }
-      if (loaderPath.indexOf('/', start) > 0) {
-        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
+    }
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
       }
     }
-    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
-    if (result) {
-      return 'components/' + result.substring(0, result.length - '.js'.length);
-    }
-    return alias;
+    return results.join('/');
   };
 
-  var expand = (function() {
-    var reg = /^\.\.?(\/|$)/;
-    return function(root, name) {
-      var results = [], parts, part;
-      parts = (reg.test(name) ? root + '/' + name : name).split('/');
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part === '..') {
-          results.pop();
-        } else if (part !== '.' && part !== '') {
-          results.push(part);
-        }
-      }
-      return results.join('/');
-    };
-  })();
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
     return function(name) {
-      var absolute = expand(dirname(path), name);
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
       return globals.require(absolute, path);
     };
   };
@@ -68,26 +51,21 @@
   var require = function(name, loaderPath) {
     var path = expand(name, '.');
     if (loaderPath == null) loaderPath = '/';
-    path = unalias(name, loaderPath);
 
-    if (has.call(cache, path)) return cache[path].exports;
-    if (has.call(modules, path)) return initModule(path, modules[path]);
+    if (has(cache, path)) return cache[path].exports;
+    if (has(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+    if (has(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
-  require.alias = function(from, to) {
-    aliases[to] = from;
-  };
-
-  require.register = require.define = function(bundle, fn) {
+  var define = function(bundle, fn) {
     if (typeof bundle === 'object') {
       for (var key in bundle) {
-        if (has.call(bundle, key)) {
+        if (has(bundle, key)) {
           modules[key] = bundle[key];
         }
       }
@@ -96,18 +74,21 @@
     }
   };
 
-  require.list = function() {
+  var list = function() {
     var result = [];
     for (var item in modules) {
-      if (has.call(modules, item)) {
+      if (has(modules, item)) {
         result.push(item);
       }
     }
     return result;
   };
 
-  require.brunch = true;
   globals.require = require;
+  globals.require.define = define;
+  globals.require.register = define;
+  globals.require.list = list;
+  globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
 var Application, ApplicationCollection, BaseCollection, client, _ref,
@@ -1655,6 +1636,7 @@ module.exports = {
   "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
+  "application broken": 'This app is broken. Can you try install again.\n\nIf error persists, you can contact us at contact@cozycloud.cc \nor on IRC #cozycloud on irc.freenode.net.\n\nMore details :\n',
   'noapps': {
     'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help with installing and configuring your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> and discover your Cozy features.",
     'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -2127,6 +2109,7 @@ module.exports = {
   "notification update application": "Mettre à jour l'application",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
+  "application broken": 'Cette application est cassée. Vous pouvez essayer de la réinstaller.\n\nSi l\'erreur persiste, vous pouvez nous contacter à contact@cozycloud.cc \nou sur IRC #cozycloud sur irc.freenode.net.\n\nPlus de  détails :\n',
   'noapps': {
     'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
     'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'App Store</a> pour installer votre première application."
@@ -2154,21 +2137,21 @@ module.exports = {
     'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
   },
   'quicktourwizard': {
-    'welcome title': "Découvrez votre Cozy !",
-    'welcome content': "<p>Bienvenue sur votre nouveau Cozy.</p>\n<p>Ce tour rapide vous présentera les fonctionnalités de votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>",
-    'continue to dashboard': "Découvrez le Tableau de bord",
-    'dashboard title': "Découvrez le Tableau de bord",
-    'dashboard content': "<p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>\n<p><img src=\"/img/home-black.png\"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>",
-    'continue to apps': "Comment gérer mes applications ?",
-    'apps title': "Applications",
-    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>\n<p><img src=\"/img/apps.png\"><strong>App Store: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>",
+    'welcome title': "Bienvenue dans votre nouveau Cozy !",
+    'welcome content': "<p>Vous voilà enfin prêt à utiliser votre Cozy !</p>\n<p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. A travers un simple navigateur web vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Ainsi vous pouvez accédez à vos outils depuis n'importe où sans utiliser la machine d'un autre. </p>\n<p>Voici les avantages d'avoir son propre cloud:</p>\n<ul>\n  <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>\n  <li>Vous ne recevez plus de publicité ciblée.</li>\n  <li>Vous n'avez à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>\n  <li>Fini de re-rentrer les mêmes informations pour chaque outil, les données sont partagées par les applications.</li>\n</ul>\n<p></p>",
+    'continue to apps': "Quelles sont les applications disponibles ?",
+    'apps title': "Les applications disponibles",
+    'apps content': "<p>Par défaut Cozy propose cinq applications :</p>\n<ul>\n  <li>Calendar: Pour gérer vos événements importants</li>\n  <li>Contacts: Votre carnet d'adresses et de téléphones.</li>\n  <li>Files: Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>\n  <li>Emails: Pour centraliser votre boites mails en ligne.</li>\n  <li>Photos: Pour créer et partager des albums photos.</li>\n</ul>\n<p>A côté de ça vous pourrez découvrir les applications réalisées\npar la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Pour les installer\nvous devrez vous rendre dans l'App Store de Cozy en cliquant sur cette icône:</p>\n<p>\n<img width=\"80\" src=\"/img/apps/store.svg\" />\n</p>",
     'continue to help': "Comment trouver de l'aide ?",
     'help title': "Obtenir de l'aide",
     'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
-    'continue to sync': "Synchronisez vos données",
+    'continue to sync': "Comment synchroniser votre mobile ?",
     'sync title': "Synchronisation",
     'sync content': "<p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
-    'close wizard': "Je suis prêt à utiliser mon Cozy"
+    'continue to import': "Comment importer mes données ?",
+    'import title': "Import de ses données",
+    'import content': "<p>Pour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. Vous trouverez des outils d'importation. dans les applications\nContacts et Calendrier.</p>\n<p>\n<img width=\"80\" src=\"/img/apps/leave-google.svg\" />\n</p>",
+    'close wizard': "Démarrer avec mon Cozy!"
   },
   "pick from files": "Choisir une photo",
   "photo-modal chooseAgain": "Changer de photo",
@@ -4999,7 +4982,7 @@ module.exports = ApplicationRow = (function(_super) {
     }
     switch (this.model.get('state')) {
       case 'broken':
-        msg = 'This app is broken. Try install again.';
+        msg = t('application broken');
         errormsg = this.model.get('errormsg');
         if (errormsg) {
           msg += " Error was : " + errormsg;
@@ -7094,6 +7077,9 @@ module.exports = MarketView = (function(_super) {
     } else {
       this.hideError();
       application = new Application(parsed);
+      if (this.marketApps._byId[application.id]) {
+        application.attributes.icon = this.marketApps._byId[application.id].get('icon');
+      }
       data = {
         app: application
       };
@@ -7118,6 +7104,7 @@ module.exports = MarketView = (function(_super) {
             return _this.waitApplication(appWidget, false);
           });
         } else {
+          appWidget.app;
           return _this.runInstallation(appWidget.app);
         }
       },
@@ -8560,8 +8547,6 @@ module.exports = QuicktourWizardView = (function(_super) {
         slug: 'sync'
       }, {
         slug: 'import'
-      }, {
-        slug: 'help'
       }
     ];
     return QuicktourWizardView.__super__.initialize.apply(this, arguments);
