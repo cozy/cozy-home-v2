@@ -101,7 +101,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'broken'
                 msg = t('application broken')
                 errormsg = @model.get 'errormsg'
-                msg += " Error was : #{errormsg}" if errormsg
+                msg += errormsg if errormsg
                 alert msg
             when 'installed'
                 @launchApp(event)

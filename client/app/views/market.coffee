@@ -96,7 +96,8 @@ module.exports = class MarketView extends BaseView
             @hideError()
             application = new Application(parsed)
             if @marketApps._byId[application.id]
-                application.attributes.icon = @marketApps._byId[application.id].get 'icon'
+                icon = @marketApps._byId[application.id].get 'icon'
+                application.set 'icon', icon
             data =
                 app: application
             @showDescription data
