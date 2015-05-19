@@ -311,23 +311,36 @@ module.exports =
         'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
 
     'quicktourwizard':
-        'welcome title': "Découvrez votre Cozy !"
+        'welcome title': "Bienvenue dans votre nouveau Cozy !"
         'welcome content': """
-            <p>Bienvenue sur votre nouveau Cozy.</p>
-            <p>Ce tour rapide vous présentera les fonctionnalités de votre Cozy.</p>
-            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>
+            <p>Vous voilà enfin prêt à utiliser votre Cozy !</p>
+            <p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. A travers un simple navigateur web vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Ainsi vous pouvez accédez à vos outils depuis n'importe où sans utiliser la machine d'un autre. </p>
+            <p>Voici les avantages d'avoir son propre cloud:</p>
+            <ul>
+              <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>
+              <li>Vous ne recevez plus de publicité ciblée.</li>
+              <li>Vous n'avez à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>
+              <li>Fini de re-rentrer les mêmes informations pour chaque outil, les données sont partagées par les applications.</li>
+            </ul>
+            <p></p>
         """
-        'continue to dashboard': "Découvrez le Tableau de bord"
-        'dashboard title': "Découvrez le Tableau de bord"
-        'dashboard content': """
-            <p>Si c'est votre première fois sur Cozy, vous trouverez dans la suite un petit guide décrivant les sections de votre Cozy. Elles peuvent toutes être atteintes depuis le menu en haut à droite de l'accueil Cozy.</p>
-            <p><img src="/img/home-black.png"><strong>Bureau: </strong>C'est ici que vous pouvez accéder à toutes vos applications.</p>
-        """
-        'continue to apps': "Comment gérer mes applications ?"
-        'apps title': "Applications"
+        'continue to apps': "Quelles sont les applications disponibles ?"
+        'apps title': "Les applications disponibles"
         'apps content': """
-            <p><img src="/img/config-apps.png"><strong>Gestion des applications: </strong>Ici vous pouvez gérer l'état de vos applications&nbsp;: les lancer, les interrompre, les supprimer…</p>
-            <p><img src="/img/apps.png"><strong>App Store: </strong>Dans l'app store, vous trouverez de nouvelles applications à installer sur votre Cozy.</p>
+            <p>Par défaut Cozy propose cinq applications :</p>
+            <ul>
+              <li>Calendar: Pour gérer vos événements importants</li>
+              <li>Contacts: Votre carnet d'adresses et de téléphones.</li>
+              <li>Files: Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>
+              <li>Emails: Pour centraliser votre boites mails en ligne.</li>
+              <li>Photos: Pour créer et partager des albums photos.</li>
+            </ul>
+            <p>A côté de ça vous pourrez découvrir les applications réalisées
+            par la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Pour les installer
+            vous devrez vous rendre dans l'App Store de Cozy en cliquant sur cette icône:</p>
+            <p>
+            <img width="80" src="/img/apps/store.svg" />
+            </p>
         """
         'continue to help': "Comment trouver de l'aide ?"
         'help title': "Obtenir de l'aide"
@@ -335,7 +348,7 @@ module.exports =
             <p><img src="/img/configuration.png"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>
             <p><img src="/img/help.png"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>
         """
-        'continue to sync': "Synchronisez vos données"
+        'continue to sync': "Comment synchroniser votre mobile ?"
         'sync title': "Synchronisation"
         'sync content': """
             <p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>
@@ -345,7 +358,17 @@ module.exports =
                 <li><a href="http://cozy.io/mobile/contacts.html">Sync Contacts</a></li>
             </ul>
         """
-        'close wizard': "Je suis prêt à utiliser mon Cozy"
+        'continue to import': "Comment importer mes données ?"
+        'import title': "Import de ses données"
+        'import content': """
+        <p>Pour importer vos données vous pouvez utiliser les format ICAL, ou
+        CardDAV. Vous trouverez des outils d'importation. dans les applications
+        Contacts et Calendrier.</p>
+        <p>
+        <img width="80" src="/img/apps/leave-google.svg" />
+        </p>
+        """
+        'close wizard': "Démarrer avec mon Cozy!"
 
     # object picker
     "pick from files"         : "Choisir une photo"
