@@ -43,7 +43,8 @@ module.exports =
             newPassword2 = body.password2
 
             unless newPassword? and newPassword.length > 0
-                return cb null
+                errors.push "The new password is too short."
+                return cb null, errors
 
             errors = []
 

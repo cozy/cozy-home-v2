@@ -20,65 +20,58 @@ module.exports = class MainRouter extends Backbone.Router
         '*notFound'           : 'applicationList'
 
     initialize: ->
-        # expect applications to send intents
+
+        # Wait for applications to send intents. Intents are sent trough
+        # messages. Messages between app and home are possible only when the
+        # app is displayed with the home top bar.
         window.addEventListener 'message', (event) =>
+
             return false unless event.origin is window.location.origin
+
             intent = event.data
             switch intent.action
-                when 'goto' then @navigate "apps/#{intent.params}", true
+                when 'goto'
+                    @navigate "apps/#{intent.params}", true
                 when undefined
-                    if JSON.parse(intent).type != 'application/x-talkerjs-v1+json'
-                        console.log "WEIRD INTENT", intent
-                else console.log "WEIRD INTENT", intent
-
-    selectIcon: (index) ->
-        unless index is -1
-            $('.menu-btn.active').removeClass 'active'
-            $($('.menu-btn').get(index)).addClass 'active'
-        else # no active button
-            $('.menu-btn.active').removeClass 'active'
+                    intentType = 'application/x-talkerjs-v1+json'
+                    if JSON.parse(intent).type isnt  intentType
+                        console.log "Weird intent, cannot handle it.", intent
+                else
+                    console.log "Weird intent, cannot handle it.", intent
 
 
     ## Route behaviors
 
     applicationList: ->
         app.mainView.displayApplicationsList()
-        @selectIcon 0 # no highlighted button
 
     configApplications: ->
         app.mainView.displayConfigApplications()
-        @selectIcon 2
 
     updateApp: (slug) ->
         app.mainView.displayUpdateApplication slug
-        @selectIcon 2
 
     updateStack: ->
         app.mainView.displayUpdateStack()
-        @selectIcon 2
 
     help: ->
         app.mainView.displayHelp()
-        @selectIcon 5
 
     market: ->
         app.mainView.displayMarket()
-        @selectIcon 1
 
     account: ->
         app.mainView.displayAccount()
-        @selectIcon 4
 
     application: (slug, hash) ->
         app.mainView.displayApplication slug, hash
 
     installWizard: ->
         app.mainView.displayInstallWizard()
-        @selectIcon 0 # no highlighted button
 
     quickTourWizard: ->
         app.mainView.displayQuickTourWizard()
-        @selectIcon 0 # no highlighted button
 
     logout: ->
         app.mainView.logout()
+

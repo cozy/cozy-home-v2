@@ -15,16 +15,6 @@ module.exports = class exports.AccountView extends BaseView
     constructor: ->
         super()
 
-    onChangePasswordClicked: =>
-        @changePasswordButton.fadeOut =>
-            @changePasswordForm.fadeIn =>
-                @password0Field.focus()
-                $(window).trigger 'resize'
-
-    closePasswordForm: =>
-        @changePasswordForm.fadeOut =>
-            @changePasswordButton.fadeIn()
-
     # When data are submited, it sends a request to backend to save them.
     # If an error occurs, message is displayed.
     onNewPasswordSubmit: (event) =>
@@ -161,7 +151,6 @@ module.exports = class exports.AccountView extends BaseView
     ### Configuration ###
 
     afterRender: ->
-        # app.views.home.selectNavButton app.views.home.accountButton
         @emailField = @$ '#account-email-field'
         @publicNameField = @$ '#account-public-name-field'
         @timezoneField = @$ '#account-timezone-field'
@@ -173,10 +162,7 @@ module.exports = class exports.AccountView extends BaseView
         @errorAlert.hide()
 
         @changePasswordForm = @$ '#change-password-form'
-        @changePasswordButton = @$ '#change-password-button'
-        @changePasswordButton.click @onChangePasswordClicked
         @accountSubmitButton = @$ '#account-form-button'
-
         @accountSubmitButton.click (event) =>
             event.preventDefault()
             @onNewPasswordSubmit()
