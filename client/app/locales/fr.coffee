@@ -302,16 +302,15 @@ module.exports =
         'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
 
     'quicktourwizard':
-        'welcome title': "Bienvenue dans votre nouveau Cozy !"
+        'welcome title': "Bienvenue sur votre Cozy !"
         'welcome content': """
-            <p>Vous voilà enfin prêt à utiliser votre Cozy !</p>
-            <p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. A travers un simple navigateur web vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Ainsi vous pouvez accédez à vos outils depuis n'importe où sans utiliser la machine d'un autre. </p>
+            <p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. Vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Grâce à un navigateur web, vous pourrez accéder à vos outils depuis n'importe où sans pour autant compromettre votre vie privée. </p>
             <p>Voici les avantages d'avoir son propre cloud:</p>
             <ul>
               <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>
               <li>Vous ne recevez plus de publicité ciblée.</li>
-              <li>Vous n'avez à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>
-              <li>Fini de re-rentrer les mêmes informations pour chaque outil, les données sont partagées par les applications.</li>
+              <li>Vous n'avez plus à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>
+              <li>Plus besoin de rentrer les même informations dans chaque outil: les données sont partagées par les applications.</li>
             </ul>
             <p></p>
         """
@@ -326,11 +325,8 @@ module.exports =
               <li>Emails: Pour centraliser votre boites mails en ligne.</li>
               <li>Photos: Pour créer et partager des albums photos.</li>
             </ul>
-            <p>A côté de ça vous pourrez découvrir les applications réalisées
-            par la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Pour les installer
-            vous devrez vous rendre dans l'App Store de Cozy en cliquant sur cette icône:</p>
-            <p>
-            <img width="80" src="/img/apps/store.svg" />
+            <p>A côté de ça, vous pourrez découvrir les applications réalisées
+            par la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Rendez vous dans l'app store pour découvrir le catalogue.
             </p>
         """
         'continue to help': "Comment trouver de l'aide ?"
@@ -340,26 +336,49 @@ module.exports =
             <p><img src="/img/help.png"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>
         """
         'continue to sync': "Comment synchroniser votre mobile ?"
-        'sync title': "Synchronisation"
+        'sync title': "Synchronisation du mobile"
         'sync content': """
-            <p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>
-            <ul>
-                <li><a href="http://cozy.io/mobile/files.html">Sync Fichiers</a></li>
-                <li><a href="http://cozy.io/mobile/calendar.html">Sync Calendrier</a></li>
-                <li><a href="http://cozy.io/mobile/contacts.html">Sync Contacts</a></li>
-            </ul>
+            <p><strong>Contacts et Calendriers</strong></p>
+<p>
+Vous pouvez synchroniser vos contacts et calendriers à travers les protocoles
+CalDAV et CardDAV. Sous ces noms exotiques se cachent deux standards qui permettent de synchroniser votre Cozy avec la plupart des logiciels de gestion de contacts
+et de calendriers disponibles. Cela permet également de synchroniser
+un smartphone Android ou iOS avec votre Cozy. Pour configurer votre téléphone
+nous vous invitons à consulter nos deux didacticiels:
+<ul>
+<li><a href="http://cozy.io/fr/mobile/contacts.html">Comment synchroniser ses contacts</a></li>
+<li><a href="http://cozy.io/fr/mobile/calendar.html">Comment synchroniser ses calendriers</a></li>
+</ul>
+</p>
+            <p><strong>Fichiers et Photos (Android seulement)</strong></p>
+            <p>
+              Avec Cozy vous pouvez sauvegarder automatiquement vos photos dans votre Cozy. Inversement vous pouvez consulter les fichiers de votre Cozy depuis votre mobile et les sauvegarder pour y accéder même quand votre connexion est coupée.
+            </p>
+            <p>Pour installer l'application Cozy pour Android. Vous pouvez lire notre <a href="http://cozy.io/fr/mobile/files.html">tutorial</a> ou récupérer notre application sur le <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">PlayStore</a>
+            </p>
         """
         'continue to import': "Comment importer mes données ?"
-        'import title': "Import de ses données"
+        'import title': "Import des données de contacts et calendriers"
         'import content': """
-        <p>Pour importer vos données vous pouvez utiliser les format ICAL, ou
-        CardDAV. Vous trouverez des outils d'importation. dans les applications
-        Contacts et Calendrier.</p>
         <p>
-        <img width="80" src="/img/apps/leave-google.svg" />
+        Pour importer vos données vous pouvez utiliser les format ICAL, ou
+        CardDAV. La plupart des outils proposent un export à ce format.
+        Ensuite, vous trouverez des outils d'importation. dans les applications
+        Contacts et Calendrier.
+        </p>
+        <p>
+        Your traditional files can be directly through the Files application UI.
+        </p>
+        <p>
+        Nous mettrons également bientôt à disposition une application vous permettant de récupérer toute vos données Google très facilement dans votre Cozy.
+        </p>
+        <p>
+        Voilà maintenant l'introduction à Cozy est terminée. Vous savez déjà
+        tout ce qu'il faut pour démarrer. Nous vous laissons découvrir
+        les applications disponibles.
         </p>
         """
-        'close wizard': "Démarrer avec mon Cozy!"
+        'close wizard': "Démarrer avec mon Cozy !"
 
     # object picker
     "pick from files"         : "Choisir une photo"
