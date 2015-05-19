@@ -252,7 +252,7 @@ module.exports =
     "application broken": '''
                 Cette application est cassée. Vous pouvez essayer de la réinstaller.
 
-                Si l'erreur persiste, vous pouvez nous contacter à contact@cozycloud.cc 
+                Si l'erreur persiste, vous pouvez nous contacter à contact@cozycloud.cc
                 ou sur IRC #cozycloud sur irc.freenode.net.
 
                 Plus de  détails :
@@ -376,7 +376,7 @@ nous vous invitons à consulter nos deux didacticiels:
         Contacts et Calendrier.
         </p>
         <p>
-        Your traditional files can be directly through the Files application UI.
+        Quant à vos fichiers classiques, ils peuvent être uploadés directement depuis l'interface de l'application Files.
         </p>
         <p>
         Nous mettrons également bientôt à disposition une application vous permettant de récupérer toute vos données Google très facilement dans votre Cozy.

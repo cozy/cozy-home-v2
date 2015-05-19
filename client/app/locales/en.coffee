@@ -237,8 +237,8 @@ module.exports =
     "stack update available notification": "A new version of the platform is available."
     "application broken": '''
                 This app is broken. Can you try install again.
-                
-                If error persists, you can contact us at contact@cozycloud.cc 
+
+                If error persists, you can contact us at contact@cozycloud.cc
                 or on IRC #cozycloud on irc.freenode.net.
 
                 More details :
@@ -355,6 +355,9 @@ You can synchronize both contacts and calendars through the CalDAV and CardDAV p
         'import title': "Contacts and Calendars import"
         'import content': """
         <p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.
+        </p>
+        <p>
+        Your traditional files can be uploaded directly through the Files application UI.
         </p>
         <p>
         We are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.
