@@ -1,42 +1,59 @@
-(function(/*! Brunch !*/) {
+(function() {
   'use strict';
 
-  var globals = typeof window !== 'undefined' ? window : global;
+  var globals = typeof window === 'undefined' ? global : window;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
+  var has = ({}).hasOwnProperty;
 
-  var has = function(object, name) {
-    return ({}).hasOwnProperty.call(object, name);
+  var aliases = {};
+
+  var endsWith = function(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   };
 
-  var expand = function(root, name) {
-    var results = [], parts, part;
-    if (/^\.\.?(\/|$)/.test(name)) {
-      parts = [root, name].join('/').split('/');
-    } else {
-      parts = name.split('/');
-    }
-    for (var i = 0, length = parts.length; i < length; i++) {
-      part = parts[i];
-      if (part === '..') {
-        results.pop();
-      } else if (part !== '.' && part !== '') {
-        results.push(part);
+  var unalias = function(alias, loaderPath) {
+    var start = 0;
+    if (loaderPath) {
+      if (loaderPath.indexOf('components/' === 0)) {
+        start = 'components/'.length;
+      }
+      if (loaderPath.indexOf('/', start) > 0) {
+        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
       }
     }
-    return results.join('/');
+    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
+    if (result) {
+      return 'components/' + result.substring(0, result.length - '.js'.length);
+    }
+    return alias;
   };
 
+  var expand = (function() {
+    var reg = /^\.\.?(\/|$)/;
+    return function(root, name) {
+      var results = [], parts, part;
+      parts = (reg.test(name) ? root + '/' + name : name).split('/');
+      for (var i = 0, length = parts.length; i < length; i++) {
+        part = parts[i];
+        if (part === '..') {
+          results.pop();
+        } else if (part !== '.' && part !== '') {
+          results.push(part);
+        }
+      }
+      return results.join('/');
+    };
+  })();
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
     return function(name) {
-      var dir = dirname(path);
-      var absolute = expand(dir, name);
+      var absolute = expand(dirname(path), name);
       return globals.require(absolute, path);
     };
   };
@@ -51,21 +68,26 @@
   var require = function(name, loaderPath) {
     var path = expand(name, '.');
     if (loaderPath == null) loaderPath = '/';
+    path = unalias(name, loaderPath);
 
-    if (has(cache, path)) return cache[path].exports;
-    if (has(modules, path)) return initModule(path, modules[path]);
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
-  var define = function(bundle, fn) {
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  require.register = require.define = function(bundle, fn) {
     if (typeof bundle === 'object') {
       for (var key in bundle) {
-        if (has(bundle, key)) {
+        if (has.call(bundle, key)) {
           modules[key] = bundle[key];
         }
       }
@@ -74,21 +96,18 @@
     }
   };
 
-  var list = function() {
+  require.list = function() {
     var result = [];
     for (var item in modules) {
-      if (has(modules, item)) {
+      if (has.call(modules, item)) {
         result.push(item);
       }
     }
     return result;
   };
 
+  require.brunch = true;
   globals.require = require;
-  globals.require.define = define;
-  globals.require.register = define;
-  globals.require.list = list;
-  globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
 var Application, ApplicationCollection, BaseCollection, client, _ref,
@@ -360,12 +379,14 @@ exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Af
 });
 
 ;require.register("initialize", function(exports, require, module) {
-var MainRouter, MainView, colorSet,
+var Instance, MainRouter, MainView, colorSet,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 MainRouter = require('routers/main_router');
 
 MainView = require('views/main');
+
+Instance = require('models/instance');
 
 colorSet = require('../helpers/color-set');
 
@@ -376,7 +397,7 @@ exports.Application = (function() {
   }
 
   Application.prototype.initialize = function() {
-    var SocketListener, err, locales, _ref;
+    var SocketListener, data, err, instance, locales, _ref;
     this.instance = window.cozy_instance || {};
     this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
     try {
@@ -395,7 +416,17 @@ exports.Application = (function() {
     this.mainView = new MainView();
     this.routers.main = new MainRouter();
     Backbone.history.start();
-    if (Backbone.history.getFragment() === '') {
+    if (!window.cozy_instance.connectedOnce) {
+      this.routers.main.navigate('home/quicktour', true);
+      data = {
+        connectedOnce: true
+      };
+      instance = new Instance(window.cozy_instance);
+      instance.saveData(data, function(err) {
+        console.log('connectedOnce saved');
+        return console.log(err);
+      });
+    } else if (Backbone.history.getFragment() === '') {
       this.routers.main.navigate('home', true);
     }
     SocketListener = require('lib/socket_listener');
@@ -915,7 +946,7 @@ Photo = require('../models/photo');
 */
 
 
-NUMBER_OF_PRELOAD = 200;
+NUMBER_OF_PRELOAD = 100;
 
 TIME_BEFORE_START = 500;
 
@@ -1645,7 +1676,7 @@ module.exports = {
   'installwizard': {
     'welcome title': "Welcome to your new Cozy",
     'welcome content': "<p>This wizard will help you choose, install and configure apps for your Cozy.</p>\n<p>Please remember that Cozy is currently in beta. Don't hesitate to <a href=\"#help\">get in touch</a> if you run into trouble.</p>",
-    'yes': "Activate the %{slug} app",
+    'yes': "Activate the %{slug}^B app",
     'no': "No, thanks",
     'continue to files': "Configure my apps",
     'files title': "Configure Files app",
@@ -1664,30 +1695,30 @@ module.exports = {
     'show-me-a-quick-tour': "Please tell me more about my Cozy"
   },
   'quicktourwizard': {
-    'welcome title': "Meet your Cozy!",
-    'welcome content': "<p>Welcome to your brand new Cozy.</p>\n<p>This short guided tour will show you the best features of your Cozy.</p>\n<p>Please remember that Cozy is currently in beta. Don't hesitate to <a href=\"#help\">get in touch</a> if you run into trouble.</p>",
-    'continue to dashboard': "Discover the Dashboard",
-    'dashboard title': "Discover the Dashboard",
-    'dashboard content': "<p>Here is a little guide about everything available in your Cozy Home. All features can be reached from the menu on the top right corner.</p>\n<p><img src=\"/img/home-black.png\"><strong>Home: </strong>This is the place where you can access your apps</p>",
-    'continue to apps': "How to manage your apps?",
-    'apps title': "Applications",
-    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>App management: </strong>Here you can manage the state of your apps: start, stop, remove…</p>\n<p><img src=\"/img/apps.png\"><strong>App store: </strong>In the app store, you will find new apps to install in your Cozy.</p>",
-    'continue to help': "How to get help?",
-    'help title': "Get help",
-    'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>To make sure your Cozy does what you want, have a look at the settings.</p>\n<p><img src=\"/img/help.png\"><strong>Help: </strong>Lost in your Cozy? Here are some links to help you out.</p>",
-    'continue to sync': "Sync with your smartphone",
-    'sync title': "Get in sync",
-    'sync content': "<p>To learn more about data synchronization, please have a look at the following resources:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Files</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendar</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
-    'close wizard': "Now I'm ready to use my Cozy"
+    'welcome title': "Welcome to your Cozy!",
+    'welcome content': "<p>\nCozy is an operating system for your personal cloud. It allows\nto manage simply your distant own machine. You will be able to\ninstall applications that manage your data. Through a web browser\nyou will be able to access to your data without compromising your\nprivacy.</p>\n<p>Here are the many benefits of a personal cloud with Cozy:</p>\n<ul>\n  <li>Your data stay confidential and are stored on a hardware of your own.</li>\n  <li>You will not have targeted ads anymore.</li>\n  <li>You don't need to connect on 10 different accounts to use your own tools.</li>\n  <li>No need to push the same data for each tool: the data are shared within the applications.</li>\n</ul>\n<p></p>",
+    'continue to apps': "What applications are available ?",
+    'apps title': "Available Applications",
+    'apps content': "<p>By default Cozy proposes five applications :</p>\n<ul>\n  <li>Calendar: To manage your events</li>\n  <li>Contacts: To handle your address and phone books.</li>\n  <li>Files: To store files and share the big ones.</li>\n  <li>Emails: To centralize your mailbox online.</li>\n  <li>Photos: To create and share photo albums.</li>\n</ul>\n<p>Aside of these main applications you can discover applications\nbuilt by the community. You will find apps like a bank account\nmanager, a feed reader, a todo-list manager and many more!\nGo to the app store to discover the full list of application.\n</p>",
+    'continue to sync': "How to sync my mobile?",
+    'sync title': "Mobile Synchronization",
+    'sync content': "<p><strong>Contacts and Calendars</strong></p>\n<p>\nYou can synchronize both contacts and calendars through the CalDAV and CardDAV protocols. Behind these exotic names, you will find two standards that allow to sync your Cozy with many contact and calendars managers. That means you can sync your Cozy with the native applications of your smartphone. Here are two tutorials that will help you achieving that:\n<ul>\n<li><a href=\"http://cozy.io/fr/mobile/contacts.html\">Comment synchroniser ses contacts</a></li>\n<li><a href=\"http://cozy.io/fr/mobile/calendar.html\">Comment synchroniser ses calendriers</a></li>\n</ul>\n</p>\n<p><strong>File and Pictures (Android)</strong></p>\n<p>\n  With Cozy you can both backup your photos and see your online file\n  on your mobile. You can cache the file you want always with you\n  and see them while your mobile is offline.\n</p>\n<p>To install the Cozy application. You can read our <a href=\"http://cozy.io/fr/mobile/files.html\">tutorial</a> or go directly to the <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">PlayStore</a>\n</p>",
+    'continue to import': "How to import my data ?",
+    'import title': "Contacts and Calendars import",
+    'import content': "<p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.\n</p>\n<p>\nWe are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.\n</p>\n<p>\nThis introduction to Cozy is finished. You already know everything you need to start with Cozy. We let you discover the platform and the available applications!\n</p>",
+    'close wizard': "Start using my Cozy!"
   },
   "pick from files": "Choose one photo",
-  "photo-modal chooseAgain": "Choose another photo",
+  "Crop the photo": "Crop the image (",
+  "chooseAgain": "choose another photo",
   "modal ok": "OK",
   "modal cancel": "Cancel",
   "no image": "There is no image on your Cozy",
   "ObjPicker upload btn": "Upload a local file",
+  "or": "or",
   "drop a file": "Drag & drop a file",
-  "url of an image": "URL of an image on the web"
+  "url of an image": "URL of an image on the web",
+  "you have no album": "<p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n    <a href=\"/#applications\" target='_blank'>l'application Photo</a>\n    <br>\n    et utilisez les photo de votre téléphone via\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 };
 });
 
@@ -2137,31 +2168,33 @@ module.exports = {
     'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
   },
   'quicktourwizard': {
-    'welcome title': "Bienvenue dans votre nouveau Cozy !",
-    'welcome content': "<p>Vous voilà enfin prêt à utiliser votre Cozy !</p>\n<p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. A travers un simple navigateur web vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Ainsi vous pouvez accédez à vos outils depuis n'importe où sans utiliser la machine d'un autre. </p>\n<p>Voici les avantages d'avoir son propre cloud:</p>\n<ul>\n  <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>\n  <li>Vous ne recevez plus de publicité ciblée.</li>\n  <li>Vous n'avez à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>\n  <li>Fini de re-rentrer les mêmes informations pour chaque outil, les données sont partagées par les applications.</li>\n</ul>\n<p></p>",
+    'welcome title': "Bienvenue sur votre Cozy !",
+    'welcome content': "<p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. Vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Grâce à un navigateur web, vous pourrez accéder à vos outils depuis n'importe où sans pour autant compromettre votre vie privée. </p>\n<p>Voici les avantages d'avoir son propre cloud:</p>\n<ul>\n  <li>Votre confidentialité est respectée, vos données sont stockées sur une machine à vous.</li>\n  <li>Vous ne recevez plus de publicité ciblée.</li>\n  <li>Vous n'avez plus à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>\n  <li>Plus besoin de rentrer les même informations dans chaque outil: les données sont partagées par les applications.</li>\n</ul>\n<p></p>",
     'continue to apps': "Quelles sont les applications disponibles ?",
     'apps title': "Les applications disponibles",
-    'apps content': "<p>Par défaut Cozy propose cinq applications :</p>\n<ul>\n  <li>Calendar: Pour gérer vos événements importants</li>\n  <li>Contacts: Votre carnet d'adresses et de téléphones.</li>\n  <li>Files: Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>\n  <li>Emails: Pour centraliser votre boites mails en ligne.</li>\n  <li>Photos: Pour créer et partager des albums photos.</li>\n</ul>\n<p>A côté de ça vous pourrez découvrir les applications réalisées\npar la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Pour les installer\nvous devrez vous rendre dans l'App Store de Cozy en cliquant sur cette icône:</p>\n<p>\n<img width=\"80\" src=\"/img/apps/store.svg\" />\n</p>",
+    'apps content': "<p>Par défaut Cozy propose cinq applications :</p>\n<ul>\n  <li>Calendar: Pour gérer vos événements importants</li>\n  <li>Contacts: Votre carnet d'adresses et de téléphones.</li>\n  <li>Files: Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>\n  <li>Emails: Pour centraliser votre boites mails en ligne.</li>\n  <li>Photos: Pour créer et partager des albums photos.</li>\n</ul>\n<p>A côté de ça, vous pourrez découvrir les applications réalisées\npar la communauté. Vous trouverez des applications comme un gestionnaire banquaire, un lecteur de flux RSS, un gestionnaire de todo-list et bien d'autres encore ! Rendez vous dans l'app store pour découvrir le catalogue.\n</p>",
     'continue to help': "Comment trouver de l'aide ?",
     'help title': "Obtenir de l'aide",
     'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Positionnez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
     'continue to sync': "Comment synchroniser votre mobile ?",
-    'sync title': "Synchronisation",
-    'sync content': "<p>Pour obtenir des informations sur la synchronisation de vos périphériques, nous vous conseillons les ressources suivantes :</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
+    'sync title': "Synchronisation du mobile",
+    'sync content': "<p><strong>Contacts et Calendriers</strong></p>\n<p>\nVous pouvez synchroniser vos contacts et calendriers à travers les protocoles\nCalDAV et CardDAV. Sous ces noms exotiques se cachent deux standards qui permettent de synchroniser votre Cozy avec la plupart des logiciels de gestion de contacts\net de calendriers disponibles. Cela permet également de synchroniser\nun smartphone Android ou iOS avec votre Cozy. Pour configurer votre téléphone\nnous vous invitons à consulter nos deux didacticiels:\n<ul>\n<li><a href=\"http://cozy.io/fr/mobile/contacts.html\">Comment synchroniser ses contacts</a></li>\n<li><a href=\"http://cozy.io/fr/mobile/calendar.html\">Comment synchroniser ses calendriers</a></li>\n</ul>\n</p>\n<p><strong>Fichiers et Photos (Android seulement)</strong></p>\n<p>\n  Avec Cozy vous pouvez sauvegarder automatiquement vos photos dans votre Cozy. Inversement vous pouvez consulter les fichiers de votre Cozy depuis votre mobile et les sauvegarder pour y accéder même quand votre connexion est coupée.\n</p>\n<p>Pour installer l'application Cozy pour Android. Vous pouvez lire notre <a href=\"http://cozy.io/fr/mobile/files.html\">tutorial</a> ou récupérer notre application sur le <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">PlayStore</a>\n</p>",
     'continue to import': "Comment importer mes données ?",
-    'import title': "Import de ses données",
-    'import content': "<p>Pour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. Vous trouverez des outils d'importation. dans les applications\nContacts et Calendrier.</p>\n<p>\n<img width=\"80\" src=\"/img/apps/leave-google.svg\" />\n</p>",
-    'close wizard': "Démarrer avec mon Cozy!"
+    'import title': "Import des données de contacts et calendriers",
+    'import content': "<p>\nPour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. La plupart des outils proposent un export à ce format.\nEnsuite, vous trouverez des outils d'importation. dans les applications\nContacts et Calendrier.\n</p>\n<p>\nYour traditional files can be directly through the Files application UI.\n</p>\n<p>\nNous mettrons également bientôt à disposition une application vous permettant de récupérer toute vos données Google très facilement dans votre Cozy.\n</p>\n<p>\nVoilà maintenant l'introduction à Cozy est terminée. Vous savez déjà\ntout ce qu'il faut pour démarrer. Nous vous laissons découvrir\nles applications disponibles.\n</p>",
+    'close wizard': "Démarrer avec mon Cozy !"
   },
   "pick from files": "Choisir une photo",
-  "photo-modal chooseAgain": "Changer de photo",
+  "Crop the photo": "Recadrez l'image (",
+  "chooseAgain": "changer de photo",
   "modal ok": "OK",
   "modal cancel": "Annuler",
   "no image": "Il n'y a pas d'image sur votre Cozy",
   "ObjPicker upload btn": "Sélectionnez un fichier local",
-  "more thumbs": "Plus de photo",
+  "or": "ou",
   "drop a file": "Glissez et déposez un fichier",
-  "url of an image": "URL d'une image sur le web"
+  "url of an image": "URL d'une image sur le web",
+  "you have no album": "<p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Create some with the\n    <a href=\"/#applications\" target='_blank'>Photo application</a>\n    <br>\n    and use photo from your phone with the\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 };
 });
 
@@ -2840,7 +2873,7 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.initialize = function() {
     var _this = this;
     return window.addEventListener('message', function(event) {
-      var intent;
+      var intent, intentType;
       if (event.origin !== window.location.origin) {
         return false;
       }
@@ -2849,58 +2882,43 @@ module.exports = MainRouter = (function(_super) {
         case 'goto':
           return _this.navigate("apps/" + intent.params, true);
         case void 0:
-          if (JSON.parse(intent).type !== 'application/x-talkerjs-v1+json') {
-            return console.log("WEIRD INTENT", intent);
+          intentType = 'application/x-talkerjs-v1+json';
+          if (JSON.parse(intent).type !== intentType) {
+            return console.log("Weird intent, cannot handle it.", intent);
           }
           break;
         default:
-          return console.log("WEIRD INTENT", intent);
+          return console.log("Weird intent, cannot handle it.", intent);
       }
     });
   };
 
-  MainRouter.prototype.selectIcon = function(index) {
-    if (index !== -1) {
-      $('.menu-btn.active').removeClass('active');
-      return $($('.menu-btn').get(index)).addClass('active');
-    } else {
-      return $('.menu-btn.active').removeClass('active');
-    }
-  };
-
   MainRouter.prototype.applicationList = function() {
-    app.mainView.displayApplicationsList();
-    return this.selectIcon(0);
+    return app.mainView.displayApplicationsList();
   };
 
   MainRouter.prototype.configApplications = function() {
-    app.mainView.displayConfigApplications();
-    return this.selectIcon(2);
+    return app.mainView.displayConfigApplications();
   };
 
   MainRouter.prototype.updateApp = function(slug) {
-    app.mainView.displayUpdateApplication(slug);
-    return this.selectIcon(2);
+    return app.mainView.displayUpdateApplication(slug);
   };
 
   MainRouter.prototype.updateStack = function() {
-    app.mainView.displayUpdateStack();
-    return this.selectIcon(2);
+    return app.mainView.displayUpdateStack();
   };
 
   MainRouter.prototype.help = function() {
-    app.mainView.displayHelp();
-    return this.selectIcon(5);
+    return app.mainView.displayHelp();
   };
 
   MainRouter.prototype.market = function() {
-    app.mainView.displayMarket();
-    return this.selectIcon(1);
+    return app.mainView.displayMarket();
   };
 
   MainRouter.prototype.account = function() {
-    app.mainView.displayAccount();
-    return this.selectIcon(4);
+    return app.mainView.displayAccount();
   };
 
   MainRouter.prototype.application = function(slug, hash) {
@@ -2908,13 +2926,11 @@ module.exports = MainRouter = (function(_super) {
   };
 
   MainRouter.prototype.installWizard = function() {
-    app.mainView.displayInstallWizard();
-    return this.selectIcon(0);
+    return app.mainView.displayInstallWizard();
   };
 
   MainRouter.prototype.quickTourWizard = function() {
-    app.mainView.displayQuickTourWizard();
-    return this.selectIcon(0);
+    return app.mainView.displayQuickTourWizard();
   };
 
   MainRouter.prototype.logout = function() {
@@ -3008,6 +3024,18 @@ buf.push('/><p><button id="account-form-button" class="btn">');
 var __val__ = t('save your new password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text"></div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text"></div></div></p></div></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/album_thumb", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="albumLabel"><img class="cover"/><div class="label"></div></div>');
 }
 return buf.join("");
 };
@@ -3520,7 +3548,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<button class="modal-uploadBtn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button><div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div></div></div><input type="file" style="display:none" class="uploader"/>');
+buf.push('<div class="photoUpload-btn"><button class="btn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button></div><div class="photoUpload-or"><div>' + escape((interp = t('or')) == null ? '' : interp) + '</div></div><div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div></div></div><input type="file" style="display:none" class="uploader"/>');
 }
 return buf.join("");
 };
@@ -3532,7 +3560,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<img id="img-result" style="position:fixed"/><!-- never displayed, just for downloading.--><div class="objectPickerCont"><nav class="fp-nav-tabs"><div class="tabMarginTop"></div><div role="tablist" aria-controls="objectPickerCont"></div><div class="tabMarginBottom"></div></nav></div><div class="croperCont"><table><tbody><tr><td><img id="img-to-crop"/></td><td><div id="frame-img-preview"><img id="img-preview"/></div></td></tr></tbody></table><a class="chooseAgain">' + escape((interp = t('photo-modal chooseAgain')) == null ? '' : interp) + '</a></div>');
+buf.push('<img id="img-result" style="position:fixed"/><!-- never displayed, just for downloading.--><div class="objectPickerCont"><nav class="fp-nav-tabs"><div class="tabMarginTop"></div><div role="tablist" aria-controls="objectPickerCont"></div><div class="tabMarginBottom"></div></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div class="chooseAgain"><span>' + escape((interp = t('Crop the photo')) == null ? '' : interp) + '</span><a>' + escape((interp = t('chooseAgain')) == null ? '' : interp) + '</a>)</div><div id="frame-preview"><img id="img-preview"/></div></div>');
 }
 return buf.join("");
 };
@@ -3740,27 +3768,8 @@ module.exports = exports.AccountView = (function(_super) {
     this.displayErrors = __bind(this.displayErrors, this);
     this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
-    this.closePasswordForm = __bind(this.closePasswordForm, this);
-    this.onChangePasswordClicked = __bind(this.onChangePasswordClicked, this);
     AccountView.__super__.constructor.call(this);
   }
-
-  AccountView.prototype.onChangePasswordClicked = function() {
-    var _this = this;
-    return this.changePasswordButton.fadeOut(function() {
-      return _this.changePasswordForm.fadeIn(function() {
-        _this.password0Field.focus();
-        return $(window).trigger('resize');
-      });
-    });
-  };
-
-  AccountView.prototype.closePasswordForm = function() {
-    var _this = this;
-    return this.changePasswordForm.fadeOut(function() {
-      return _this.changePasswordButton.fadeIn();
-    });
-  };
 
   AccountView.prototype.onNewPasswordSubmit = function(event) {
     var form,
@@ -3932,8 +3941,6 @@ module.exports = exports.AccountView = (function(_super) {
     this.errorAlert = this.$('#account-error');
     this.errorAlert.hide();
     this.changePasswordForm = this.$('#change-password-form');
-    this.changePasswordButton = this.$('#change-password-button');
-    this.changePasswordButton.click(this.onChangePasswordClicked);
     this.accountSubmitButton = this.$('#account-form-button');
     this.accountSubmitButton.click(function(event) {
       event.preventDefault();
@@ -5183,22 +5190,22 @@ THUMB_DIM_UNIT = 'em';
 
 MONTH_HEADER_HEIGHT = 2.5;
 
-CELL_PADDING = 0.4;
+CELL_PADDING = 0.6;
 
 THUMB_HEIGHT = 10;
 
-MONTH_LABEL_TOP = 1.8;
+MONTH_LABEL_TOP = 0.8;
 
 module.exports = LongList = (function() {
   function LongList(externalViewPort$, modal) {
     var _this = this;
     this.externalViewPort$ = externalViewPort$;
     this.modal = modal;
+    this._moveViewportToBottomOfThumb$ = __bind(this._moveViewportToBottomOfThumb$, this);
     this._unselectAll = __bind(this._unselectAll, this);
     this._dblclickHandler = __bind(this._dblclickHandler, this);
     this._clickHandler = __bind(this._clickHandler, this);
     this.getSelectedFile = __bind(this.getSelectedFile, this);
-    this.init = __bind(this.init, this);
     this.state = {
       selected: {}
     };
@@ -5221,19 +5228,15 @@ module.exports = LongList = (function() {
     Photo.getMonthdistribution(function(error, res) {
       _this.isPhotoArrayLoaded = true;
       _this.months = res;
-      if (_this.isInited && _this.isPhotoArrayLoaded) {
-        _this._DOM_controlerInit();
-      }
+      _this._DOM_controlerInit();
       return true;
     });
   }
 
-  LongList.prototype.init = function() {
-    this.isInited = true;
-    if (this.isInited && this.isPhotoArrayLoaded) {
-      this._DOM_controlerInit();
-    }
-    return true;
+  LongList.prototype.setInitialDimensions = function(width, heigth) {
+    this.initialWidth = width;
+    this.initialHeight = heigth;
+    return this._resizeHandler();
   };
 
   LongList.prototype.getSelectedFile = function() {
@@ -5297,6 +5300,13 @@ module.exports = LongList = (function() {
   };
 
   /**
+   * Must be called when the goemetry of the parent of the long list changes.
+  */
+
+
+  LongList.prototype.resizeHandler = function() {};
+
+  /**
    * This is the main procedure. Its scope contains all the functions used to
    * update the buffer and the shared variables between those functions. This
    * approach has been chosen for performance reasons (acces to scope
@@ -5310,10 +5320,12 @@ module.exports = LongList = (function() {
 
 
   LongList.prototype._DOM_controlerInit = function() {
-    var buffer, cellPadding, colWidth, currentIndexRkSelected, emToPixels, getElementFontSize, indexHeight, indexVisible, isDefaultToSelect, lastOnScroll_Y, lazyHideIndex, marginLeft, monthHeaderHeight, monthLabelTop, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInSafeZone, nThumbsPerRow, remToPixels, rowHeight, safeZone, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _createThumbsBottom, _getBufferNextFirst, _getBufferNextLast, _getDimInPixels, _indexClickHandler, _indexMouseEnter, _indexMouseLeave, _initBuffer, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _resizeHandler, _scrollHandler, _selectCurrentIndex, _updateThumb,
+    var buffer, bufferAlreadyAdapted, cellPadding, colWidth, currentIndexRkSelected, emToPixels, getElementFontSize, indexHeight, indexVisible, isDefaultToSelect, lastOnScroll_Y, lazyHideIndex, marginLeft, monthHeaderHeight, monthLabelTop, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInSafeZone, nThumbsPerRow, previousWidth, remToPixels, rowHeight, safeZone, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _createThumbsBottom, _getBufferNextFirst, _getBufferNextLast, _getDimInPixels, _getStaticDimensions, _indexClickHandler, _indexMouseEnter, _indexMouseLeave, _initBuffer, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _rePositionThumbs, _resizeHandler, _scrollHandler, _selectCurrentIndex, _updateThumb,
       _this = this;
     months = this.months;
     buffer = null;
+    previousWidth = null;
+    bufferAlreadyAdapted = false;
     cellPadding = null;
     monthHeaderHeight = null;
     monthTopPadding = null;
@@ -5382,23 +5394,55 @@ module.exports = LongList = (function() {
           return remToPixels(value);
       }
     };
-    _resizeHandler = function() {
-      var MONTH_LABEL_HEIGHT, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInViewPort, nThumbsInSZ_Margin, nThumbsInViewPort, nextY, rk, txt, width, y, _i, _j, _len, _len1, _ref, _ref1, _results;
+    /**
+     * called once for all during _DOM_controlerInit
+     * computes the static parameters of the geometry
+    */
+
+    _getStaticDimensions = function() {
       thumbHeight = _getDimInPixels(THUMB_HEIGHT);
       cellPadding = _getDimInPixels(CELL_PADDING);
       _this.thumbHeight = thumbHeight;
       thumbWidth = thumbHeight;
       colWidth = thumbWidth + cellPadding;
       rowHeight = thumbHeight + cellPadding;
-      viewPortHeight = _this.viewPort$.clientHeight;
       monthHeaderHeight = _getDimInPixels(MONTH_HEADER_HEIGHT);
       monthTopPadding = monthHeaderHeight + cellPadding;
       monthLabelTop = _getDimInPixels(MONTH_LABEL_TOP);
-      _this.monthLabelTop = monthLabelTop;
-      width = _this.viewPort$.clientWidth;
-      nThumbsPerRow = Math.floor((width - cellPadding) / colWidth);
+      return _this.monthLabelTop = monthLabelTop;
+    };
+    /**
+     * Compute all the geometry after a resize or when the list in inserted
+     * in the DOM.
+     * _adaptBuffer will be executed at the end if
+     *     1- the distribution array of photo has not been received.
+     *     2- the geometry could not be computed (for instance if the widht
+     *     of the list is null when the list is not visible)
+    */
+
+    _resizeHandler = function() {
+      var MONTH_LABEL_HEIGHT, VP_width, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInViewPort, nThumbsInSZ_Margin, nThumbsInViewPort, nextY, rk, txt, y, _i, _j, _len, _len1, _ref, _ref1;
+      if (!_this.isPhotoArrayLoaded) {
+        return;
+      }
+      viewPortHeight = _this.viewPort$.clientHeight;
+      VP_width = _this.viewPort$.clientWidth;
+      if (VP_width <= 0 || viewPortHeight <= 0) {
+        if (_this.initialWidth && _this.initialHeight) {
+          VP_width = _this.initialWidth;
+          viewPortHeight = _this.initialHeight;
+        } else {
+          return false;
+        }
+      }
+      if (VP_width === previousWidth) {
+        _adaptBuffer();
+        return;
+      }
+      previousWidth = VP_width;
+      nThumbsPerRow = Math.floor((VP_width - cellPadding) / colWidth);
       _this.nThumbsPerRow = nThumbsPerRow;
-      marginLeft = cellPadding + Math.round((width - nThumbsPerRow * colWidth - cellPadding) / 2);
+      marginLeft = cellPadding + Math.round((VP_width - nThumbsPerRow * colWidth - cellPadding) / 2);
       nRowsInViewPort = Math.ceil(viewPortHeight / rowHeight);
       nRowsInSafeZoneMargin = Math.round(COEF_SECURITY * nRowsInViewPort);
       nThumbsInSZ_Margin = nRowsInSafeZoneMargin * nThumbsPerRow;
@@ -5439,7 +5483,6 @@ module.exports = LongList = (function() {
       c = indexHeight - _this.months.length * MONTH_LABEL_HEIGHT;
       d = nPhotos - minMonthNphotos * _this.months.length;
       _ref1 = _this.months;
-      _results = [];
       for (rk = _j = 0, _len1 = _ref1.length; _j < _len1; rk = ++_j) {
         month = _ref1[rk];
         txt = month.date.format('MMM YYYY');
@@ -5449,10 +5492,15 @@ module.exports = LongList = (function() {
         y += h;
         label$ = $("<div style='height:" + h + "px; right:0px'>" + txt + "</div>")[0];
         label$.dataset.monthRk = rk;
-        _results.push(_this.index$.appendChild(label$));
+        _this.index$.appendChild(label$);
       }
-      return _results;
+      if (bufferAlreadyAdapted) {
+        _rePositionThumbs();
+      }
+      bufferAlreadyAdapted = true;
+      return _adaptBuffer();
     };
+    this.resizeHandler = _resizeHandler;
     _initBuffer = function() {
       var thumb, thumb$;
       thumb$ = document.createElement('img');
@@ -5500,13 +5548,16 @@ module.exports = LongList = (function() {
       td_a = Math.round((vph * C - vph) / 2);
       td_b = H - td_a - vph;
       C_bis = (indexHeight - vph) / (td_b - td_a);
+      if (td_b < td_a) {
+        td_a = Math.round((H - vph) / 2);
+        td_b = td_a;
+      }
       if (td_a < y && y < td_b) {
         _this.index$.style.top = -Math.round(C_bis * (y - td_a)) + 'px';
         return;
       }
-      if (td_a > y) {
+      if (y < td_a) {
         _this.index$.style.top = 0;
-        return;
       }
       if (td_b < y) {
         return _this.index$.style.top = -(indexHeight - vph) + 'px';
@@ -5537,7 +5588,7 @@ module.exports = LongList = (function() {
     */
 
     _adaptBuffer = function() {
-      var bufr, nAvailable, nToCreate, nToFind, nToMove, previous_firstThumbRkToUpdate, previous_firstThumbToUpdate, speed, targetCol, targetMonthRk, targetRk, targetY, _ref, _ref1;
+      var bufr, nAvailable, nToCreate, nToFind, nToMove, previous_firstThumbToUpdate, speed, targetCol, targetMonthRk, targetRk, targetY, _ref, _ref1;
       _this.noScrollScheduled = true;
       _this.noIndexScrollScheduled = true;
       lazyHideIndex();
@@ -5559,7 +5610,6 @@ module.exports = LongList = (function() {
       safeZone.endY = null;
       previous_firstThumbToUpdate = safeZone.firstThumbToUpdate;
       safeZone.firstThumbToUpdate = null;
-      previous_firstThumbRkToUpdate = safeZone.firstThumbRkToUpdate;
       safeZone.firstThumbRkToUpdate = null;
       _computeSafeZone();
       if (safeZone.lastRk > bufr.lastRk) {
@@ -5642,8 +5692,57 @@ module.exports = LongList = (function() {
         }
       }
       if (nToFind == null) {
-        safeZone.firstThumbToUpdate = previous_firstThumbToUpdate;
-        return safeZone.firstThumbRkToUpdate = previous_firstThumbRkToUpdate;
+        return safeZone.firstThumbToUpdate = previous_firstThumbToUpdate;
+      }
+    };
+    _rePositionThumbs = function() {
+      var bufr, col, deltaTop, firstVisibleThumb, lastLast, localRk, month, monthRk, rk, row, rowY, scrollTop, startRk, style, thumb, thumb$, _i, _ref;
+      console.log("== _rePositionThumbs");
+      bufr = buffer;
+      thumb = bufr.first;
+      thumb$ = thumb.el;
+      monthRk = thumb.monthRk;
+      scrollTop = _this.viewPort$.scrollTop;
+      month = months[monthRk];
+      startRk = thumb.rank;
+      localRk = startRk - monthRk;
+      row = Math.floor(localRk / nThumbsPerRow);
+      rowY = month.y + monthTopPadding + row * rowHeight;
+      col = localRk % nThumbsPerRow;
+      firstVisibleThumb = null;
+      lastLast = bufr.last;
+      for (rk = _i = 0, _ref = buffer.nThumbs - 1; _i <= _ref; rk = _i += 1) {
+        if (localRk === 0) {
+          _insertMonthLabel(month);
+        }
+        if (!firstVisibleThumb && parseInt(thumb.el.style.top) > scrollTop) {
+          firstVisibleThumb = {
+            top: parseInt(thumb.el.style.top),
+            el: thumb.el
+          };
+        }
+        style = thumb.el.style;
+        style.top = rowY + 'px';
+        style.left = (marginLeft + col * colWidth) + 'px';
+        localRk += 1;
+        if (localRk === month.nPhotos) {
+          monthRk += 1;
+          month = months[monthRk];
+          localRk = 0;
+          col = 0;
+          rowY += rowHeight + monthTopPadding;
+        } else {
+          col += 1;
+          if (col === nThumbsPerRow) {
+            rowY += rowHeight;
+            col = 0;
+          }
+        }
+        thumb = thumb.prev;
+      }
+      if (firstVisibleThumb) {
+        deltaTop = firstVisibleThumb.top - parseInt(firstVisibleThumb.el.style.top);
+        return _this.viewPort$.scrollTop -= deltaTop;
       }
     };
     /**
@@ -5702,6 +5801,7 @@ module.exports = LongList = (function() {
         thumb = thumb.prev;
         if (_this.state.selected[fileId]) {
           thumb$.classList.add('selectedThumb');
+          _this.state.selected[fileId] = thumb$;
         } else {
           thumb$.classList.remove('selectedThumb');
         }
@@ -5718,6 +5818,7 @@ module.exports = LongList = (function() {
         thumb = thumb.next;
         if (_this.state.selected[fileId]) {
           thumb$.classList.add('selectedThumb');
+          _this.state.selected[fileId] = thumb$;
         } else {
           thumb$.classList.remove('selectedThumb');
         }
@@ -5917,6 +6018,7 @@ module.exports = LongList = (function() {
           prev: bufr.first,
           el: thumb$,
           rank: rk,
+          monthRk: monthRk,
           id: null
         };
         if (rk === safeZone.firstVisibleRk) {
@@ -5975,6 +6077,7 @@ module.exports = LongList = (function() {
         thumb$ = thumb.el;
         thumb$.dataset.rank = rk;
         thumb.rank = rk;
+        thumb.monthRk = monthRk;
         thumb$.src = '';
         thumb$.dataset.id = '';
         style = thumb$.style;
@@ -6023,6 +6126,7 @@ module.exports = LongList = (function() {
         thumb$ = thumb.el;
         thumb$.dataset.rank = rk;
         thumb.rank = rk;
+        thumb.monthRk = monthRk;
         thumb$.src = '';
         thumb$.dataset.id = '';
         style = thumb$.style;
@@ -6089,9 +6193,9 @@ module.exports = LongList = (function() {
       _this.index$.classList.remove('hardVisible');
       return lazyHideIndex();
     };
-    _resizeHandler();
+    _getStaticDimensions();
     _initBuffer();
-    _adaptBuffer();
+    _resizeHandler();
     isDefaultToSelect = true;
     this.thumbs$.addEventListener('click', this._clickHandler);
     this.thumbs$.addEventListener('dblclick', this._dblclickHandler);
@@ -7807,6 +7911,231 @@ module.exports = NotificationsView = (function(_super) {
 })(ViewCollection);
 });
 
+;require.register("views/object-picker-album", function(exports, require, module) {
+var BaseView, ObjectPickerAlbum, Photo, client,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Photo = require('../models/photo');
+
+BaseView = require('lib/base_view');
+
+client = require('../lib/client');
+
+module.exports = ObjectPickerAlbum = (function(_super) {
+  __extends(ObjectPickerAlbum, _super);
+
+  ObjectPickerAlbum.prototype.tagName = "section";
+
+  function ObjectPickerAlbum(modal) {
+    this._updateThumbs = __bind(this._updateThumbs, this);
+    this._getAlbumPhotos = __bind(this._getAlbumPhotos, this);
+    this._initAlbum = __bind(this._initAlbum, this);
+    this._unselectAll = __bind(this._unselectAll, this);
+    this._toggleOnThumb$ = __bind(this._toggleOnThumb$, this);
+    this._clickHandler = __bind(this._clickHandler, this);
+    this._dblclickHandler = __bind(this._dblclickHandler, this);
+    this.modal = modal;
+    ObjectPickerAlbum.__super__.constructor.call(this);
+  }
+
+  ObjectPickerAlbum.prototype.initialize = function() {
+    this.name = 'albumPicker';
+    this.tabLabel = 'album';
+    this.tab = $("<div>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    this.albums$ = $('<div class="albums"></div>')[0];
+    this.thumbs$ = $('<div class="thumbs"><img></img></div>')[0];
+    this.panel.appendChild(this.albums$);
+    this.panel.appendChild(this.thumbs$);
+    this._getAlbums();
+    this.selectedThumbs = {};
+    this.thumbs$.addEventListener('click', this._clickHandler);
+    return this.thumbs$.addEventListener('dblclick', this._dblclickHandler);
+  };
+
+  ObjectPickerAlbum.prototype.getObject = function() {
+    var id, photo, res, thumb$, _ref;
+    _ref = this.selectedThumbs;
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (thumb$) {
+        break;
+      }
+    }
+    photo = thumb$.photo;
+    res = {
+      id: photo.id,
+      docType: 'photo',
+      name: photo.title,
+      urlToFetch: "photos/raws/" + photo.id + ".jpg"
+    };
+    return res;
+  };
+
+  ObjectPickerAlbum.prototype.setFocusIfExpected = function() {
+    return false;
+  };
+
+  ObjectPickerAlbum.prototype.keyHandler = function(e) {};
+
+  ObjectPickerAlbum.prototype.resizeHandler = function() {
+    var colWidth, margin, thumbStyle, width;
+    thumbStyle = window.getComputedStyle(this.thumbs$.children[0]);
+    colWidth = parseInt(thumbStyle.width) + parseInt(thumbStyle.marginLeft) + parseInt(thumbStyle.marginRight) + 2;
+    width = this.thumbs$.clientWidth;
+    margin = Math.floor((width % colWidth) / 2);
+    return this.thumbs$.style.paddingLeft = margin + 'px';
+  };
+
+  ObjectPickerAlbum.prototype._dblclickHandler = function(e) {
+    var thumb$;
+    console.log('dblClick', e.target);
+    thumb$ = e.target;
+    if (!this._toggleOnThumb$(thumb$)) {
+      return;
+    }
+    return this.modal.onYes();
+  };
+
+  ObjectPickerAlbum.prototype._clickHandler = function(e) {
+    var th;
+    console.log('click', e.target);
+    th = e.target;
+    if (th.nodeName !== 'IMG') {
+      return;
+    }
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    return th.classList.add('selected');
+  };
+
+  ObjectPickerAlbum.prototype._toggleOnThumb$ = function(thumb$) {
+    if (thumb$.classList.contains('selected')) {
+      return true;
+    }
+    if (thumb$.nodeName !== 'IMG') {
+      return false;
+    }
+    this._unselectAll();
+    thumb$.classList.add('selected');
+    this.selectedThumbs[thumb$.dataset.id] = thumb$;
+    return true;
+  };
+
+  ObjectPickerAlbum.prototype._unselectAll = function() {
+    var id, thumb$, _ref, _results;
+    _ref = this.selectedThumbs;
+    _results = [];
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (typeof thumb$ === 'object') {
+        thumb$.classList.remove('selected');
+        _results.push(this.selectedThumbs[id] = false);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  ObjectPickerAlbum.prototype._getAlbums = function() {
+    var _this = this;
+    return client.get("albums/?", function(err, res) {
+      var album, albumLabel$, n, _i, _len;
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (res.length === 0) {
+        _this.panel.removeChild(_this.albums$);
+        _this.panel.removeChild(_this.thumbs$);
+        _this.panel.classList.add('noAlbum');
+        $(_this.panel).append("<div></div><div class='noAlbumDisclaimer'>" + (t('you have no album')) + "</div><div></div>");
+        return;
+      }
+      n = 0;
+      for (_i = 0, _len = res.length; _i < _len; _i++) {
+        album = res[_i];
+        albumLabel$ = _this._initAlbum(album);
+        if (n === 0) {
+          _this.previousSelectedAlbum$ = albumLabel$;
+          albumLabel$.classList.add('selectedAlbum');
+          _this._getAlbumPhotos(album.id);
+        }
+        n += 1;
+      }
+      return _this.resizeHandler();
+    });
+  };
+
+  ObjectPickerAlbum.prototype._initAlbum = function(album) {
+    var cover, el, label,
+      _this = this;
+    el = $(require('../templates/album_thumb')())[0];
+    cover = el.querySelector('.cover');
+    label = el.querySelector('.label');
+    cover.src = "photos/thumbs/" + album.coverPicture + ".jpg";
+    label.textContent = album.title;
+    this.albums$.appendChild(el);
+    el.addEventListener('click', function(event) {
+      _this.previousSelectedAlbum$.classList.remove('selectedAlbum');
+      el.classList.add('selectedAlbum');
+      _this.previousSelectedAlbum$ = el;
+      return _this._getAlbumPhotos(album.id);
+    });
+    return el;
+  };
+
+  ObjectPickerAlbum.prototype._getAlbumPhotos = function(albumId) {
+    var _this = this;
+    return client.get("albums/" + albumId, function(err, res) {
+      if (err) {
+        return;
+      }
+      _this._updateThumbs(res);
+      return _this._toggleOnThumb$(_this.thumbs$.children[0]);
+    });
+  };
+
+  ObjectPickerAlbum.prototype._updateThumbs = function(res) {
+    var nPhoto, photoId, photoRank, photos, thumb, _i, _j, _len, _ref, _ref1, _results;
+    photos = res.photos;
+    nPhoto = photos.length;
+    photoRank = 0;
+    _ref = this.thumbs$.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      thumb = _ref[_i];
+      if (photoRank >= nPhoto) {
+        thumb.classList.add("hide");
+        thumb.src = '';
+        thumb.dataset.id = '';
+        thumb.photo = null;
+      } else {
+        thumb.classList.remove("hide");
+        thumb.dataset.id = photoId = photos[photoRank].id;
+        thumb.src = "photos/thumbs/" + photoId + ".jpg";
+        thumb.photo = photos[photoRank];
+      }
+      photoRank += 1;
+    }
+    _results = [];
+    for (photoRank = _j = photoRank, _ref1 = nPhoto - 1; _j <= _ref1; photoRank = _j += 1) {
+      thumb = document.createElement('img');
+      thumb.src = "photos/thumbs/" + photos[photoRank].id + ".jpg";
+      thumb.photo = photos[photoRank];
+      _results.push(this.thumbs$.appendChild(thumb));
+    }
+    return _results;
+  };
+
+  return ObjectPickerAlbum;
+
+})(BaseView);
+});
+
 ;require.register("views/object-picker-image", function(exports, require, module) {
 var BaseView, LongList, ObjectPickerImage, Photo,
   __hasProp = {}.hasOwnProperty,
@@ -7833,8 +8162,7 @@ module.exports = ObjectPickerImage = (function(_super) {
     this.tabLabel = 'image';
     this.tab = $("<div>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
-    this.longList = new LongList(this.panel, this.modal);
-    return this.longList.init();
+    return this.longList = new LongList(this.panel, this.modal);
   };
 
   ObjectPickerImage.prototype.getObject = function() {
@@ -7854,9 +8182,16 @@ module.exports = ObjectPickerImage = (function(_super) {
     return false;
   };
 
+  ObjectPickerImage.prototype.setInitialDimensions = function(width, heigth) {
+    return this.longList.setInitialDimensions(width, heigth);
+  };
+
   ObjectPickerImage.prototype.keyHandler = function(e) {
-    console.log('ObjectPickerImage.keyHandler', e.which);
     this.longList.keyHandler(e);
+  };
+
+  ObjectPickerImage.prototype.resizeHandler = function() {
+    return this.longList.resizeHandler();
   };
 
   return ObjectPickerImage;
@@ -7994,7 +8329,7 @@ module.exports = ObjectPickerUpload = (function(_super) {
     this.tab = this._createTab();
     this.panel = this.el;
     this._bindFileDropZone();
-    btn = this.panel.querySelector('.modal-uploadBtn');
+    btn = this.panel.querySelector('.photoUpload-btn');
     btn.addEventListener('click', this._changePhotoFromUpload);
     this.btn = btn;
     this.uploader = this.panel.querySelector('.uploader');
@@ -8084,7 +8419,7 @@ module.exports = ObjectPickerUpload = (function(_super) {
 });
 
 ;require.register("views/object-picker", function(exports, require, module) {
-var Modal, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, tabControler, template, _ref,
+var CHOOSE_AGAIN_MARGIN, MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8099,7 +8434,17 @@ ObjectPickerUpload = require('./object-picker-upload');
 
 ObjectPickerImage = require('./object-picker-image');
 
+ObjectPickerAlbum = require('./object-picker-album');
+
 tabControler = require('views/tab-controler');
+
+MARGIN_BETWEEN_IMG_AND_CROPED = 30;
+
+THUMB_WIDTH = 100;
+
+THUMB_HEIGHT = 100;
+
+CHOOSE_AGAIN_MARGIN = 17;
 
 module.exports = PhotoPickerCroper = (function(_super) {
   __extends(PhotoPickerCroper, _super);
@@ -8107,7 +8452,9 @@ module.exports = PhotoPickerCroper = (function(_super) {
   function PhotoPickerCroper() {
     this._updateCropedPreview = __bind(this._updateCropedPreview, this);
     this._onImgToCropLoaded = __bind(this._onImgToCropLoaded, this);
+    this._showCropingTool = __bind(this._showCropingTool, this);
     this._onImgResultLoaded = __bind(this._onImgResultLoaded, this);
+    this.resizeHandler = __bind(this.resizeHandler, this);
     _ref = PhotoPickerCroper.__super__.constructor.apply(this, arguments);
     return _ref;
   }
@@ -8121,7 +8468,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
   };
 
   PhotoPickerCroper.prototype.initialize = function(params, cb) {
-    var body;
+    var body, previewTops;
     this.id = 'object-picker';
     this.title = t('pick from files');
     this.config = {
@@ -8148,12 +8495,18 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.tablist = body.querySelector('[role=tablist]');
     this.imgResult = body.querySelector('#img-result');
     this.cropper$ = this.el.querySelector('.croperCont');
+    this.framePreview = this.cropper$.querySelector('#frame-preview');
+    this.frameToCrop = this.cropper$.querySelector('.frame-to-crop');
     this.imgToCrop = this.cropper$.querySelector('#img-to-crop');
     this.imgPreview = this.cropper$.querySelector('#img-preview');
+    this.chooseAgain = this.cropper$.querySelector('.chooseAgain');
     this.panelsControlers = {};
     this.imagePanel = new ObjectPickerImage(this);
     tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
     this.panelsControlers[this.imagePanel.name] = this.imagePanel;
+    this.albumPanel = new ObjectPickerAlbum(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.albumPanel);
+    this.panelsControlers[this.albumPanel.name] = this.albumPanel;
     this.photoURLpanel = new ObjectPickerPhotoURL();
     tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
     this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
@@ -8164,8 +8517,14 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this._listenTabsSelection();
     this._selectDefaultTab(this.imagePanel.name);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
-    this.cropper$.style.display = 'none';
+    this.cropper$.style.visibility = 'hidden';
+    this.framePreview.style.width = THUMB_WIDTH + 'px';
+    this.framePreview.style.height = THUMB_HEIGHT + 'px';
+    previewTops = this.cropper$.clientHeight - this.chooseAgain.offsetHeight - CHOOSE_AGAIN_MARGIN - THUMB_HEIGHT;
+    this.framePreview.style.top = Math.round(previewTops / 2) + 'px';
+    this.framePreview.style.right = 0;
     this.imgResult.addEventListener('load', this._onImgResultLoaded, false);
+    window.addEventListener('resize', this.resizeHandler);
     return true;
   };
 
@@ -8185,6 +8544,12 @@ module.exports = PhotoPickerCroper = (function(_super) {
       dimension = this._getCroppedDimensions();
       this.cb(true, this._getResultDataURL(this.imgPreview, dimension));
       return this.close();
+    }
+  };
+
+  PhotoPickerCroper.prototype.resizeHandler = function(event) {
+    if (this.state.activePanel.resizeHandler) {
+      return this.state.activePanel.resizeHandler();
     }
   };
 
@@ -8296,23 +8661,60 @@ module.exports = PhotoPickerCroper = (function(_super) {
   PhotoPickerCroper.prototype._showCropingTool = function(url) {
     this.state.currentStep = 'croper';
     this.currentPhotoScroll = this.body.scrollTop;
-    this.objectPickerCont.style.display = 'none';
-    this.cropper$.style.display = '';
-    this.imgToCrop.src = url;
+    this.objectPickerCont.style.visibility = 'hidden';
+    this.cropper$.style.visibility = '';
+    this._imgToCropTemp = new Image();
+    this._imgToCropTemp.id = 'img-to-crop';
+    this._imgToCropTemp.addEventListener('load', this._onImgToCropLoaded, false);
+    this._imgToCropTemp.src = url;
     return this.imgPreview.src = url;
   };
 
+  /**
+   * triggered when the image to crop is loaded, will compute the geometry
+   * and initialize jCrop
+  */
+
+
   PhotoPickerCroper.prototype._onImgToCropLoaded = function() {
-    var img_h, img_w, options, selection_w, t, x, y;
-    img_w = this.imgToCrop.width;
-    img_h = this.imgToCrop.height;
+    var cropTop, frame_H, frame_W, img_h, img_w, margin, natural_h, natural_w, options, selection_w, t, x, y;
+    natural_h = this._imgToCropTemp.naturalHeight;
+    natural_w = this._imgToCropTemp.naturalWidth;
+    frame_H = this.cropper$.clientHeight - this.chooseAgain.offsetHeight - CHOOSE_AGAIN_MARGIN;
+    frame_W = this.cropper$.clientWidth - MARGIN_BETWEEN_IMG_AND_CROPED - THUMB_WIDTH;
+    if (frame_H < natural_h || frame_W < natural_w) {
+      if (frame_H / frame_W > natural_h / natural_w) {
+        img_w = Math.round(frame_W);
+        img_h = Math.round(frame_W * natural_h / natural_w);
+      } else {
+        img_h = Math.round(frame_H);
+        img_w = Math.round(frame_H * natural_w / natural_h);
+      }
+      this._imgToCropTemp.style.width = img_w + 'px';
+      this._imgToCropTemp.style.height = img_h + 'px';
+    } else {
+      img_w = natural_w;
+      img_h = natural_h;
+    }
+    this.frameToCrop.style.width = img_w + 'px';
+    this.frameToCrop.style.height = img_h + 'px';
     this.img_w = img_w;
     this.img_h = img_h;
-    this.state.img_naturalW = this.imgToCrop.naturalWidth;
-    this.state.img_naturalH = this.imgToCrop.naturalHeight;
-    selection_w = Math.round(Math.min(img_h, img_w) * 1);
-    x = Math.round((img_w - selection_w) / 2);
-    y = Math.round((img_h - selection_w) / 2);
+    this.state.img_naturalW = natural_w;
+    this.state.img_naturalH = natural_h;
+    this.imgToCrop.parentElement.appendChild(this._imgToCropTemp);
+    this.imgToCrop.parentElement.removeChild(this.imgToCrop);
+    this.imgToCrop = this._imgToCropTemp;
+    margin = Math.round((frame_W - img_w) / 2);
+    this.frameToCrop.style.left = margin + 'px';
+    cropTop = Math.round((frame_H - img_h) / 2);
+    this.frameToCrop.style.top = cropTop + 'px';
+    this.framePreview.style.right = margin + 'px';
+    this.chooseAgain.style.top = cropTop + img_h + CHOOSE_AGAIN_MARGIN + 'px';
+    this.chooseAgain.style.left = margin + 'px';
+    selection_w = Math.round(Math.min(this.img_h, this.img_w) * 1);
+    x = Math.round((this.img_w - selection_w) / 2);
+    y = Math.round((this.img_h - selection_w) / 2);
     options = {
       onChange: this._updateCropedPreview,
       onSelect: this._updateCropedPreview,
@@ -8320,6 +8722,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
       setSelect: [x, y, x + selection_w, y + selection_w]
     };
     t = this;
+    this.imgToCrop.offsetHeight;
     $(this.imgToCrop).Jcrop(options, function() {
       return t.jcrop_api = this;
     });
@@ -8345,13 +8748,16 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.jcrop_api.destroy();
     this.imgToCrop.removeAttribute('style');
     this.imgToCrop.src = '';
-    this.objectPickerCont.style.display = '';
-    this.cropper$.style.display = 'none';
+    this.objectPickerCont.style.visibility = '';
+    this.cropper$.style.visibility = 'hidden';
     this.body.scrollTop = this.currentPhotoScroll;
     return this._setFocus();
   };
 
   PhotoPickerCroper.prototype._setFocus = function() {
+    if (!this.state.activePanel.setFocusIfExpected) {
+      return;
+    }
     if (!this.state.activePanel.setFocusIfExpected()) {
       return this.el.focus();
     }
@@ -8360,7 +8766,8 @@ module.exports = PhotoPickerCroper = (function(_super) {
   PhotoPickerCroper.prototype._listenTabsSelection = function() {
     var _this = this;
     return this.objectPickerCont.addEventListener('panelSelect', function(event) {
-      return _this._activatePanel(event.target.className);
+      console.log('event panelSelect');
+      return _this._activatePanel(event.target.classList[0]);
     });
   };
 
@@ -8370,6 +8777,9 @@ module.exports = PhotoPickerCroper = (function(_super) {
 
   PhotoPickerCroper.prototype._activatePanel = function(panelClassName) {
     this.state.activePanel = this.panelsControlers[panelClassName];
+    if (this.state.activePanel.resizeHandler) {
+      this.state.activePanel.resizeHandler();
+    }
     return this._setFocus();
   };
 
@@ -8575,12 +8985,12 @@ module.exports = tabControler = {
       panelList = tablist.getAttribute('aria-controls');
       panelList = document.querySelector("." + panelList);
       return tablist.addEventListener('click', function(event) {
-        var pan, panel, panelSelectEvt, tab, _i, _j, _len, _len1, _ref, _ref1, _results;
+        var pan, panel, panelName, panelSelectEvt, tab, _i, _j, _len, _len1, _ref, _ref1, _results;
         if (event.target.getAttribute('role') !== 'tab') {
           return;
         }
-        panel = event.target.getAttribute('aria-controls');
-        panel = panelList.querySelector("." + panel);
+        panelName = event.target.getAttribute('aria-controls');
+        panel = panelList.querySelector("." + panelName);
         _ref = panelList.children;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           pan = _ref[_i];
@@ -8589,15 +8999,14 @@ module.exports = tabControler = {
           }
           if (pan !== panel) {
             pan.setAttribute('aria-hidden', true);
-          } else {
-            pan.setAttribute('aria-hidden', false);
-            panelSelectEvt = new Event('panelSelect', {
-              bubbles: true,
-              cancelable: false
-            });
-            pan.dispatchEvent(panelSelectEvt);
           }
         }
+        panel.setAttribute('aria-hidden', false);
+        panelSelectEvt = new Event('panelSelect', {
+          bubbles: true,
+          cancelable: false
+        });
+        panel.dispatchEvent(panelSelectEvt);
         _ref1 = tablist.querySelectorAll('[role=tab]');
         _results = [];
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
