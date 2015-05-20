@@ -4363,16 +4363,24 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
-    var index, sortedViews, views;
+    var index, previous, sortedViews, views;
     if (this.$el.is(':empty')) {
       return this.$el.append(view.el);
     } else {
       views = _.values(this.views);
       sortedViews = _.sortBy(views, function(view) {
-        return view.model.get('displayName').toLowerCase();
+        var _ref;
+        if ((view != null ? (_ref = view.model) != null ? _ref.get('displayName') : void 0 : void 0) != null) {
+          return view.model.get('displayName').toLowerCase();
+        } else {
+          return 'unknown';
+        }
       });
       index = _.indexOf(sortedViews, view) - 1;
-      return view.$el.insertAfter(this.$el.find(".config-application:eq(" + index + ")"));
+      if (index >= 0) {
+        previous = this.$el.find(".config-application:eq(" + index + ")");
+        return view.$el.insertAfter(previous);
+      }
     }
   };
 
