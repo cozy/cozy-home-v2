@@ -17,6 +17,7 @@ module.exports = Application = americano.getModel 'Application',
     color: {type: String, default: null}
     git: String
     errormsg: String
+    errorcode: String
     branch: String
     port: Number
     permissions: Object

@@ -249,15 +249,18 @@ module.exports =
     "notification update application": "Mettre à jour l'application"
     "update available notification": "Une nouvelle version de %{appName} est disponible."
     "stack update available notification": "Une nouvelle version de la plateforme est disponible."
-    "application broken": '''
-                Cette application est cassée. Vous pouvez essayer de la réinstaller.
-
-                Si l'erreur persiste, vous pouvez nous contacter à contact@cozycloud.cc 
-                ou sur IRC #cozycloud sur irc.freenode.net.
-
-                Plus de  détails :
-
-                '''
+    "app broken title": 'Application cassée'
+    "app broken": 'Cette application est cassée. Vous pouvez essayer de la réinstaller: '
+    "reinstall broken app": "réinstallation."
+    "error git": "Nous n'arrivons pas à récuperer le code source."
+    "error github repo": "Le dépot de l'application ne semble pas disponible."
+    "error github": 'Github semble indisponible. Vous pouvez vérifier son status sur https://status.github.com/.'
+    'error npm': "L'installation des dépendances a échouée."
+    'error user linux': "La création de l'utilisateur pour cette application a échouée."
+    'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application."
+    "app msg":  """Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc 
+                ou sur IRC #cozycloud sur irc.freenode.net."""
+    'more details': "Plus de détails"
 
     'noapps':
         'first steps': """
