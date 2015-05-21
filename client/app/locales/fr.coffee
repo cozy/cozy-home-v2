@@ -206,6 +206,7 @@ module.exports =
     "tasky description": "Un gestionnaire de tâches, basé sur les tags, rapide et simple."
     "todos description": "Écrivez et ordonnez vos tâches efficacement."
     "term description": "Un terminal pour votre Cozy."
+    "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder message": "Rappel : %{message}"
     "warning unofficial app": """
@@ -232,7 +233,7 @@ module.exports =
         'welcome title': "Bienvenue dans votre Cozy"
         'welcome content': """
             <p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>
-            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des diffcultés dans votre utilisation.</p>
+            <p>N'oubliez pas que Cozy est en phase beta, n'hésitez pas à <a href="#help">nous contacter</a> si vous rencontrez des difficultés dans votre utilisation.</p>
         """
         'yes': "Activer l'application %{slug}"
         'no': "Non, merci"
