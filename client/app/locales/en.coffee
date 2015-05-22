@@ -289,7 +289,7 @@ module.exports =
         """
         'photos title': "Configure Photos app"
         'photos content': """
-            <p>Do you want an app to store your photos and albums, and helps you share them with your friends and family?</p>
+            <p>Do you want an app to store your photos and albums, and help you share them with your friends and family?</p>
             <p><small>Pro-tip: If you use an Android device, we have an app you can use to automatically upload photos to your Cozy.</small></p>
         """
         'thanks title': "Done!"
@@ -306,14 +306,14 @@ module.exports =
             Cozy is an operating system for your personal cloud. It allows
             to manage simply your distant own machine. You will be able to
             install applications that manage your data. Through a web browser
-            you will be able to access to your data without compromising your
+            you will be able to access your data without compromising your
             privacy.</p>
             <p>Here are the many benefits of a personal cloud with Cozy:</p>
             <ul>
-              <li>Your data stay confidential and are stored on a hardware of your own.</li>
+              <li>Your data stays confidential and is stored on a hardware of your own.</li>
               <li>You will not have targeted ads anymore.</li>
               <li>You don't need to connect on 10 different accounts to use your own tools.</li>
-              <li>No need to push the same data for each tool: the data are shared within the applications.</li>
+              <li>No need to push the same data for each tool: the data is shared within the applications.</li>
             </ul>
             <p></p>
         """
@@ -341,23 +341,26 @@ module.exports =
 <p>
 You can synchronize both contacts and calendars through the CalDAV and CardDAV protocols. Behind these exotic names, you will find two standards that allow to sync your Cozy with many contact and calendars managers. That means you can sync your Cozy with the native applications of your smartphone. Here are two tutorials that will help you achieving that:
 <ul>
-<li><a href="http://cozy.io/fr/mobile/contacts.html">Comment synchroniser ses contacts</a></li>
-<li><a href="http://cozy.io/fr/mobile/calendar.html">Comment synchroniser ses calendriers</a></li>
+<li><a href="http://cozy.io/en/mobile/contacts.html">Contacts synchronization</a></li>
+<li><a href="http://cozy.io/en/mobile/calendar.html">Calendar synchronization</a></li>
 </ul>
 </p>
-            <p><strong>File and Pictures (Android)</strong></p>
+            <p><strong>Files and Pictures (Android)</strong></p>
             <p>
               With Cozy you can both backup your photos and see your online file
-              on your mobile. You can cache the file you want always with you
+              on your mobile. You can cache the files you want always with you
               and see them while your mobile is offline.
             </p>
-            <p>To install the Cozy application. You can read our <a href="http://cozy.io/fr/mobile/files.html">tutorial</a> or go directly to the <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">PlayStore</a>
+            <p>To install the Cozy application. You can read our <a href="http://cozy.io/en/mobile/files.html">tutorial</a> or go directly to the <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">PlayStore</a>
             </p>
         """
-        'continue to import': "How to import my data ?"
+        'continue to import': "How to import my data?"
         'import title': "Contacts and Calendars import"
         'import content': """
         <p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.
+        </p>
+        <p>
+        Your traditional files can be uploaded directly through the Files application UI.
         </p>
         <p>
         We are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.

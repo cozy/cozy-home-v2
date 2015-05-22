@@ -28,6 +28,7 @@ module.exports = Application = americano.getModel('Application', {
   },
   git: String,
   errormsg: String,
+  errorcode: String,
   branch: String,
   port: Number,
   permissions: Object,

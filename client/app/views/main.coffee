@@ -37,8 +37,10 @@ module.exports = class HomeView extends BaseView
         SocketListener.watch @notifications
         SocketListener.watch @devices
         super
-        thumbPreloader = new ThumbPreloader()
-        thumbPreloader.start()
+
+        # Disable preload for now.
+        #thumbPreloader = new ThumbPreloader()
+        #thumbPreloader.start()
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
@@ -52,7 +54,6 @@ module.exports = class HomeView extends BaseView
         @frames = @$ '#app-frames'
         @content = @$ '#content'
         @changeBackground window.app.instance.background
-        #@content.niceScroll()
         @backButton = @$ '.back-button'
         @backButton.hide()
 

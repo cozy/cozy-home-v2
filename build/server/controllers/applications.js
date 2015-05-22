@@ -88,17 +88,11 @@ markBroken = function(res, app, err) {
   } else {
     data.errormsg = err;
   }
+  data.errorcode = err.code;
   return app.updateAttributes(data, function(saveErr) {
     if (saveErr) {
-      return sendError(res, saveErr);
+      return log.error(saveErr);
     }
-    return res.send({
-      app: app,
-      error: true,
-      success: false,
-      message: err.message,
-      stack: err.stack
-    }, 500);
   });
 };
 

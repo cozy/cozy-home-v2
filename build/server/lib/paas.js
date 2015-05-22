@@ -121,7 +121,7 @@ AppManager = (function() {
         return _this.client.start(manifest, function(err, res, body) {
           if (!status2XX(res)) {
             if (err == null) {
-              err = body.error;
+              err = body;
             }
           }
           if (err) {
