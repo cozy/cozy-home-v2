@@ -31,7 +31,7 @@ module.exports = Application = americano.getModel 'Application',
 
 # Get token from token file if in production mode.
 getToken = ->
-    if process.env.NODE_ENV is 'production'
+    if process.env.NODE_ENV is 'production' or process.env.NODE_ENV is 'test'
         try
             token = process.env.TOKEN
             return token

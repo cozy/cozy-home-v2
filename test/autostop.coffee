@@ -441,48 +441,58 @@ describe "Auto-stop manager", ->
             @proxy.listen 9104
 
         before ->
+            @sandbox = null
             @client = helpers.getClient TESTPORT, @
-            @sandbox = sinon.sandbox.create useFakeTimers: true
 
-        after -> @sandbox.restore()
         after ->
             @controller.close()
             @proxy.close()
         after helpers.takeDown
 
         it "When I start an auto-stoppable application", (done) ->
-            app = new Application
+            app =
+                name: "My App",
+                description: "description",
+                git: "https://github.com/mycozycloud/my-app.git"
                 name: "Test App"
-                state: "installed"
-                index: 0
-                slug: "test-app"
-                password: "test-app"
-                permissions:
-                    Event: description: 'access the events'
                 isStoppable: true
+            @client.post "api/applications/install", app, (err, res, app) =>
+                #console.log err
+                #console.log app
+                #@client.put "api/application/byId/#{app.id}", app, (err) ->
+                done()
 
-            app.save done
+        it "Then I wait for 4 minutes", (done) ->
+            @timeout 25 * 1000
+            setTimeout () =>
+                done()
+            , 20 * 1000
 
-        it "Then I wait for 4 minutes", ->
+        it "Then I wait 4 minutes", =>
+            @sandbox = sinon.sandbox.create useFakeTimers: true
             @sandbox.clock.tick 4 * minute
 
+
         it "Then it should still be running", (done) ->
-            Application.all key: 'test-app', (err, apps) ->
-                should.not.exist err
-                should.exist apps
-                apps[0].state.should.equal 'installed'
-                done()
+            Application.all key:"test-app", (err, apps) =>
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'home', 'token'
+                ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    should.not.exist err
+                    should.exist body
+                    @password = body[0].value.token
+                    done()
 
         it "Then the application does a request to the Data System", (done) ->
             ds = new Client "http://localhost:9101/"
-            ds.setBasicAuth 'test-app', 'test-app'
+            ds.setBasicAuth 'test-app', @password
             data =
-                docType: 'Event'
+                docType: 'contact'
                 description: 'blablabla'
             ds.post 'data/', data, (err, res, body) ->
                 done()
 
-        it "Then I wait for 4 minutes", ->
+        it "Then I wait for 4 minutes", =>
             @sandbox.clock.tick 4 * minute
 
         it "Then it should still be running", ->
@@ -491,7 +501,7 @@ describe "Auto-stop manager", ->
                 should.exist apps
                 apps[0].state.should.equal 'installed'
 
-        it "Then I wait for one more minute", ->
+        it "Then I wait for one more minute", =>
             @sandbox.clock.tick 2 * minute
             @sandbox.clock.restore()
 
@@ -499,7 +509,8 @@ describe "Auto-stop manager", ->
             @timeout 4500
             setTimeout done, 4000
 
-        it "Then the application should be stopped", (done) ->
+        it "Then the application should be stopped", (done) =>
+            @sandbox.restore()
             Application.all key: 'test-app', (err, apps) ->
                 should.not.exist err
                 should.exist apps
