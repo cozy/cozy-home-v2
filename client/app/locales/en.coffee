@@ -235,15 +235,18 @@ module.exports =
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
     "stack update available notification": "A new version of the platform is available."
-    "application broken": '''
-                This app is broken. Can you try install again.
-
-                If error persists, you can contact us at contact@cozycloud.cc
-                or on IRC #cozycloud on irc.freenode.net.
-
-                More details:
-
-                '''
+    "app broken title": 'Broken application'
+    "app broken": 'This application is broken. Can you try install again: '
+    "reinstall broken app": "reinstall it."
+    "error git": "We can't retrieve source code."
+    "error github repo": 'Application repository seems unavailable.'
+    "error github": 'Github seems unavailable. You can check its status on https://status.github.com/.'
+    'error npm': "We can't installed application dependencies."
+    'error user linux': "We can't create specific linux user for this application."
+    'error start': "Application can't start. You can find more details in log application."
+    "app msg":  'If error persists, you can contact us at contact@cozycloud.cc' +
+                'or on IRC #cozycloud on irc.freenode.net.'
+    'more details': "More details"
 
     'noapps':
         'first steps': """

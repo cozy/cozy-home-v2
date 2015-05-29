@@ -101,7 +101,7 @@ reseting routes"
             return callback err if err
 
             @client.start manifest, (err, res, body) ->
-                err ?= body.error unless status2XX res
+                err ?= body unless status2XX res
 
                 if err
                     console.log "Error spawning app: #{app.name}"

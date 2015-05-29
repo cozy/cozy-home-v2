@@ -62,16 +62,9 @@ markBroken = (res, app, err) ->
         data.errormsg = err.message + ' :\n' + err.stack
     else
         data.errormsg = err
+    data.errorcode = err.code
     app.updateAttributes data, (saveErr) ->
-        return sendError res, saveErr if saveErr
-
-        res.send
-            app: app
-            error: true
-            success: false
-            message: err.message
-            stack: err.stack
-        , 500
+        log.error saveErr if saveErr
 
 # Define random function for application's token
 randomString = (length) ->
