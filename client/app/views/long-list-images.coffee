@@ -20,12 +20,14 @@ Photo  = require '../models/photo'
 #
 # -- SEMANTIC / CONVENTIONS --
 #
+#
 # 1/ syntax
 #   . a variable name ending with a '$' is a reference to a node in the DOM
 #   . in a variable name, "Rk" means "rank"
 #   . in a variable name, Pt means "Pointer". The safe zone is define by a
 #     start pointer and an end pointer, themselves defined
 #     by a rank, y monthRk and inMonthRk
+#
 #
 # 2/ @months
 #   [ {nPhotos:45, month:"201503"}, ... ]
@@ -43,18 +45,31 @@ Photo  = require '../models/photo'
 #   lastRk  : integer, rank of the last  photo of the month
 # }
 #
+#
 # 3/ @nPhotos
 #   Total number of images in the long list.
+#
 #
 # 4/ "rank"
 #   all images are indexed by their rank being their position in the ordered
 #   list of images.
 #   The most recent image rank is 0, the oldest rank is nPhoto - 1
 #
+#
 # 5/ inMonthRank
 #   The rank of the image in the chronological list of images of the same month
 #
-# 6/ buffer
+#
+# 6/ buffer :
+#
+#   The buffer lists all the created thumbs, keep a reference on the first (top
+#   most) and the last (bottom most) cells.
+#   The data structure of the buffer is a closed double linked chain.
+#   Each element of the chain is a "thumb" with a previous (prev) and next
+#   (next) element.
+#   "closed" means that buffer.last.prev == buffer.first
+#
+#   data structure :
 #      first   : {thumb}   # top most thumb
 #      firstRk : {integer} # rank of the first image of the buffer
 #      last    : {thumb}   # bottom most thumb
@@ -72,10 +87,7 @@ Photo  = require '../models/photo'
 #      nextFirstMonthRk : {integer}
 #      nextFirstRk      : {integer}
 #      nextFirstY       : {integer}
-#   Lists all the created thumbs, keep a reference on the first (top
-#   most) and the last (bottom most) cells. The data structure of the buffer
-#   is a doubled linked list.
-#   each element of the list is an object
+#
 #
 # 7/ thumb
 #      prev    : {thumb}   # previous thumb in the buffer    : older, lower in the list
@@ -86,6 +98,7 @@ Photo  = require '../models/photo'
 #      id      : {integer} # id of the corresponding image
 #   Element of the buffer, keeps a reference (el) to the thumb element inserted
 #   in the DOM.
+#
 #
 # 8/ safeZone
 #      firstCol             : {integer}
@@ -100,7 +113,6 @@ Photo  = require '../models/photo'
 #      endCol               : {integer}
 #      endMonthRk           : {integer}
 #      endY                 : {integer}
-
 #
 #
 ################################################################################
@@ -266,8 +278,6 @@ module.exports = class LongList
      * obvious choice.
      * Called only when both LongList.init() has been called and that we also
      * got from the server the month distribution (Photo.getMonthdistribution)
-     *
-     * @return {[type]} [description]
     ###
     _DOM_controlerInit: () ->
 
@@ -295,6 +305,7 @@ module.exports = class LongList
         thumbs$Height          = null
         monthLabelTop          = null
         lastOnScroll_Y         = null
+        current_scrollTop      = null
         safeZone =
             firstRk              : null
             firstMonthRk         : null
@@ -327,7 +338,12 @@ module.exports = class LongList
 
         @_scrollHandler = _scrollHandler
 
-
+        ###*
+         * returns the font-size in px of a given element (context) or of the
+         * root element of the document if no context is provided.
+         * @param  {element} context Optionnal: an elemment to get the font-size
+         * @return {integer}         the font-size
+        ###
         getElementFontSize=( context )->
             # Returns a number
             return parseFloat(
@@ -377,7 +393,7 @@ module.exports = class LongList
         ###*
          * Compute all the geometry after a resize or when the list in inserted
          * in the DOM.
-         * _adaptBuffer will be executed at the end if
+         * _adaptBuffer will be executed at the end except if
          *     1- the distribution array of photo has not been received.
          *     2- the geometry could not be computed (for instance if the widht
          *     of the list is null when the list is not visible)
@@ -462,7 +478,9 @@ module.exports = class LongList
                 label$.dataset.monthRk = rk
                 @index$.appendChild(label$)
             ##
-            #
+            # the first call of _resizeHandler it is not necessary to
+            # positionnate the thumbs. After the first call, the thumbs are
+            # always repositionated
             if bufferAlreadyAdapted
                 _rePositionThumbs()
             bufferAlreadyAdapted = true
@@ -471,7 +489,16 @@ module.exports = class LongList
         @resizeHandler = _resizeHandler
 
 
-
+        ###*
+         * Initialize the buffer.
+         * The buffer lists all the created thumbs, keep a reference on the
+         * first (top most) and the last (bottom most) thumb.
+         * The buffer is a closed double linked chain.
+         * Each element of the chain is a "thumb" with a previous (prev) and
+         * next (next) element.
+         * "closed" means that buffer.last.prev == buffer.first
+         * data structure : see the beginning of this file.
+        ###
         _initBuffer = ()=>
 
             thumb$ = document.createElement('img')
@@ -480,13 +507,11 @@ module.exports = class LongList
             thumb$.style.width  = thumbHeight + 'px'
             @thumbs$.appendChild(thumb$)
             thumb =
-                prev : null
-                next : null
+                prev : thumb
+                next : thumb
                 el   : thumb$
                 rank : null
                 id   : null
-            thumb.prev = thumb
-            thumb.next = thumb
 
             buffer =
                     first   : thumb  # top most thumb
@@ -550,7 +575,7 @@ module.exports = class LongList
             , 2000
 
         ###*
-         * Adapt the buffer when the viewport has moved
+         * Adapt the buffer when the viewport has moved.
          * Launched at init and by _scrollHandler
          * Steps :
         ###
@@ -560,7 +585,8 @@ module.exports = class LongList
             lazyHideIndex()
 
             # test speed, if too high, relaunch a _scrollHandler
-            speed = Math.abs(@viewPort$.scrollTop - lastOnScroll_Y) / viewPortHeight
+            current_scrollTop = @viewPort$.scrollTop
+            speed = Math.abs(current_scrollTop - lastOnScroll_Y) / viewPortHeight
             if speed > MAX_SPEED
                 _scrollHandler()
                 return
@@ -952,7 +978,7 @@ module.exports = class LongList
 
         _SZ_initStartPoint = ()=>
             SZ = safeZone
-            Y = @viewPort$.scrollTop
+            Y = current_scrollTop
             for month, monthRk in @months
                 if month.yBottom > Y
                     break
