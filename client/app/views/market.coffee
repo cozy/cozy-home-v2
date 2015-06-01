@@ -95,6 +95,9 @@ module.exports = class MarketView extends BaseView
         else
             @hideError()
             application = new Application(parsed)
+            if @marketApps._byId[application.id]
+                icon = @marketApps._byId[application.id].get 'icon'
+                application.set 'icon', icon
             data =
                 app: application
             @showDescription data
@@ -116,6 +119,7 @@ module.exports = class MarketView extends BaseView
                     , =>
                         @waitApplication appWidget, false
                 else
+                    appWidget.app
                     @runInstallation appWidget.app
             cancel: (application) =>
                 @popover.hide()

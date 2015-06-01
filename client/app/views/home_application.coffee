@@ -1,5 +1,6 @@
 BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
+Modal = require './error_modal'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
@@ -99,10 +100,27 @@ module.exports = class ApplicationRow extends BaseView
         return null unless @enabled
         switch @model.get 'state'
             when 'broken'
-                msg = 'This app is broken. Try install again.'
+                errortype = ''
+                if @model.get('errorcode')?
+                    errorcode = @model.get 'errorcode'
+                    switch errorcode[0]
+                        when '1' then msg += '\n' + t('error user linux')
+                        when '2'
+                            errortype = t('error git')
+                            switch errorcode[1]
+                                when '0'
+                                    errortype += '\n' + t('error github repo')
+                                when '1'
+                                    errortype += '\n' + t('error github')
+                        when '3' then errortype = t('error npm')
+                        when '4' then errortype = t('error start')
                 errormsg = @model.get 'errormsg'
-                msg += " Error was : #{errormsg}" if errormsg
-                alert msg
+                modal = new Modal
+                    title: 'Broken application'
+                    errortype: errortype
+                    details: errormsg
+                $("##{@id}").append modal.$el
+                modal.show()
             when 'installed'
                 @launchApp(event)
             when 'installing'

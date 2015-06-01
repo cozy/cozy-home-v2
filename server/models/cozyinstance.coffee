@@ -5,6 +5,7 @@ module.exports = CozyInstance = americano.getModel 'CozyInstance',
     locale: String
     helpUrl: String
     background: String
+    connectedOnce: Boolean
 
 CozyInstance.first = (callback) ->
     CozyInstance.request 'all', (err, instances) ->

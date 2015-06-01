@@ -43,7 +43,8 @@ module.exports =
             newPassword2 = body.password2
 
             unless newPassword? and newPassword.length > 0
-                return cb null
+                errors.push "The new password is too short."
+                return cb null, errors
 
             errors = []
 
@@ -105,11 +106,11 @@ module.exports =
 
     # Update Cozy Instance data, create it if it does not exist.
     updateInstance: (req, res, next) ->
-        {domain, locale, helpUrl, background} = req.body
+        {domain, locale, helpUrl, background, connectedOnce} = req.body
 
-        if domain? or locale? or helpUrl? or background?
+        if domain? or locale? or helpUrl? or background? or connectedOnce?
             CozyInstance.all (err, instances) ->
-                data = {domain, locale, helpUrl, background}
+                data = {domain, locale, helpUrl, background, connectedOnce}
 
                 if err then next err
 

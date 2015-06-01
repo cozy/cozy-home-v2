@@ -235,6 +235,18 @@ module.exports =
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
     "stack update available notification": "A new version of the platform is available."
+    "app broken title": 'Broken application'
+    "app broken": 'This application is broken. Can you try install again: '
+    "reinstall broken app": "reinstall it."
+    "error git": "We can't retrieve source code."
+    "error github repo": 'Application repository seems unavailable.'
+    "error github": 'Github seems unavailable. You can check its status on https://status.github.com/.'
+    'error npm': "We can't installed application dependencies."
+    'error user linux': "We can't create specific linux user for this application."
+    'error start': "Application can't start. You can find more details in log application."
+    "app msg":  'If error persists, you can contact us at contact@cozycloud.cc' +
+                'or on IRC #cozycloud on irc.freenode.net.'
+    'more details': "More details"
 
     'noapps':
         'first steps': """
@@ -254,7 +266,7 @@ module.exports =
             <p>This wizard will help you choose, install and configure apps for your Cozy.</p>
             <p>Please remember that Cozy is currently in beta. Don't hesitate to <a href="#help">get in touch</a> if you run into trouble.</p>
         """
-        'yes': "Activate the %{slug} app"
+        'yes': "Activate the %{slug}^B app"
         'no': "No, thanks"
         'continue to files': "Configure my apps"
         'files title': "Configure Files app"
@@ -277,7 +289,7 @@ module.exports =
         """
         'photos title': "Configure Photos app"
         'photos content': """
-            <p>Do you want an app to store your photos and albums, and helps you share them with your friends and family?</p>
+            <p>Do you want an app to store your photos and albums, and help you share them with your friends and family?</p>
             <p><small>Pro-tip: If you use an Android device, we have an app you can use to automatically upload photos to your Cozy.</small></p>
         """
         'thanks title': "Done!"
@@ -288,41 +300,76 @@ module.exports =
         'show-me-a-quick-tour': "Please tell me more about my Cozy"
 
     'quicktourwizard':
-        'welcome title': "Meet your Cozy!"
+        'welcome title': "Welcome to your Cozy!"
         'welcome content': """
-            <p>Welcome to your brand new Cozy.</p>
-            <p>This short guided tour will show you the best features of your Cozy.</p>
-            <p>Please remember that Cozy is currently in beta. Don't hesitate to <a href="#help">get in touch</a> if you run into trouble.</p>
-        """
-        'continue to dashboard': "Discover the Dashboard"
-        'dashboard title': "Discover the Dashboard"
-        'dashboard content': """
-            <p>Here is a little guide about everything available in your Cozy Home. All features can be reached from the menu on the top right corner.</p>
-            <p><img src="/img/home-black.png"><strong>Home: </strong>This is the place where you can access your apps</p>
-        """
-        'continue to apps': "How to manage your apps?"
-        'apps title': "Applications"
-        'apps content': """
-            <p><img src="/img/config-apps.png"><strong>App management: </strong>Here you can manage the state of your apps: start, stop, remove…</p>
-            <p><img src="/img/apps.png"><strong>App store: </strong>In the app store, you will find new apps to install in your Cozy.</p>
-        """
-        'continue to help': "How to get help?"
-        'help title': "Get help"
-        'help content': """
-            <p><img src="/img/configuration.png"><strong>Configuration: </strong>To make sure your Cozy does what you want, have a look at the settings.</p>
-            <p><img src="/img/help.png"><strong>Help: </strong>Lost in your Cozy? Here are some links to help you out.</p>
-        """
-        'continue to sync': "Sync with your smartphone"
-        'sync title': "Get in sync"
-        'sync content': """
-            <p>To learn more about data synchronization, please have a look at the following resources:</p>
+            <p>
+            Cozy is an operating system for your personal cloud. It allows
+            to manage simply your distant own machine. You will be able to
+            install applications that manage your data. Through a web browser
+            you will be able to access your data without compromising your
+            privacy.</p>
+            <p>Here are the many benefits of a personal cloud with Cozy:</p>
             <ul>
-                <li><a href="http://cozy.io/mobile/files.html">Sync Files</a></li>
-                <li><a href="http://cozy.io/mobile/calendar.html">Sync Calendar</a></li>
-                <li><a href="http://cozy.io/mobile/contacts.html">Sync Contacts</a></li>
+              <li>Your data stays confidential and is stored on a hardware of your own.</li>
+              <li>You will not have targeted ads anymore.</li>
+              <li>You don't need to connect on 10 different accounts to use your own tools.</li>
+              <li>No need to push the same data for each tool: the data is shared within the applications.</li>
             </ul>
+            <p></p>
         """
-        'close wizard': "Now I'm ready to use my Cozy"
+        'continue to apps': "What applications are available ?"
+        'apps title': "Available Applications"
+        'apps content': """
+            <p>By default Cozy proposes five applications :</p>
+            <ul>
+              <li>Calendar: To manage your events</li>
+              <li>Contacts: To handle your address and phone books.</li>
+              <li>Files: To store files and share the big ones.</li>
+              <li>Emails: To centralize your mailbox online.</li>
+              <li>Photos: To create and share photo albums.</li>
+            </ul>
+            <p>Aside of these main applications you can discover applications
+            built by the community. You will find apps like a bank account
+            manager, a feed reader, a todo-list manager and many more!
+            Go to the app store to discover the full list of application.
+            </p>
+        """
+        'continue to sync': "How to sync my mobile?"
+        'sync title': "Mobile Synchronization"
+        'sync content': """
+            <p><strong>Contacts and Calendars</strong></p>
+<p>
+You can synchronize both contacts and calendars through the CalDAV and CardDAV protocols. Behind these exotic names, you will find two standards that allow to sync your Cozy with many contact and calendars managers. That means you can sync your Cozy with the native applications of your smartphone. Here are two tutorials that will help you achieving that:
+<ul>
+<li><a href="http://cozy.io/en/mobile/contacts.html">Contacts synchronization</a></li>
+<li><a href="http://cozy.io/en/mobile/calendar.html">Calendar synchronization</a></li>
+</ul>
+</p>
+            <p><strong>Files and Pictures (Android)</strong></p>
+            <p>
+              With Cozy you can both backup your photos and see your online file
+              on your mobile. You can cache the files you want always with you
+              and see them while your mobile is offline.
+            </p>
+            <p>To install the Cozy application. You can read our <a href="http://cozy.io/en/mobile/files.html">tutorial</a> or go directly to the <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">PlayStore</a>
+            </p>
+        """
+        'continue to import': "How to import my data?"
+        'import title': "Contacts and Calendars import"
+        'import content': """
+        <p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.
+        </p>
+        <p>
+        Your traditional files can be uploaded directly through the Files application UI.
+        </p>
+        <p>
+        We are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.
+        </p>
+        <p>
+        This introduction to Cozy is finished. You already know everything you need to start with Cozy. We let you discover the platform and the available applications!
+        </p>
+        """
+        'close wizard': "Start using my Cozy!"
 
     # object picker
     "pick from files"         : "Choose one photo"
