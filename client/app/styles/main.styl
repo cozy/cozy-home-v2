@@ -112,13 +112,6 @@ body
 
 #home-content
     height 100%
-    padding: 40px 60px 20px 40px
-
-    #applications-view
-    #market-view
-    #config-applications-view
-    #help-view
-        padding-bottom 10px
 
 .wizard
     max-width 800px
@@ -140,11 +133,11 @@ body
     margin .25em 1em 0 0
 
 .platform-section
-    border-radius 20px
-    margin-bottom 20px
+    height 100%
+    border-radius 0
     border-right 1px solid #DDD
     border-bottom 1px solid #DDD
-    padding 30px 20px 10px 20px
+    padding 20px
     background #F7F4F0
 
     .buttons
@@ -577,11 +570,9 @@ body
         font-size 24px
 
     #account-form
-        border-radius 20px
-        margin-bottom 20px
+        padding 20px
         border-right 1px solid #DDD
         border-bottom 1px solid #DDD
-        padding 30px 20px 10px 20px
 
     .input
         .btn
@@ -611,16 +602,22 @@ body
                 border 2px solid #CDF
 
 #help-view
+    height 100%
 
     p.help-text
-        font-size 22px
+        font-size 20px
+        text-align left
 
     .help-section
-        border-radius 20px
-        margin-bottom 20px
-        padding 30px 20px
-        border-right 1px solid #DDD
-        border-bottom 1px solid #DDD
+        height 100%
+
+        .w600
+            background inherit
+            padding 20px
+            border-left 1px solid lightgrey - 10%
+            border-right 1px solid lightgrey - 10%
+            border-bottom 1px solid lightgrey - 10%
+            margin-bottom 30px
 
 #home-view
     overflow hidden
@@ -924,6 +921,9 @@ body
         text-shadow none
 
 #config-applications-view
+    .w50
+        padding 20px
+
     .change-layout img
         margin-left 5px
         margin-bottom 7px
@@ -1096,9 +1096,6 @@ body
 // Responsive
 
 @media (max-width: 1200px)
-    #home-content
-        padding-top 10px
-
     .application .application-inner
         padding 0px 10px
 
@@ -1106,6 +1103,12 @@ body
 
         .cozy-app
             width 100%
+
+    #account-view
+    #config-applications-view
+        .w50
+            width 100%
+
 
 @media (max-width: 850px)
 
@@ -1138,6 +1141,20 @@ body
 
 
 @media (max-width: 800px)
+    .pa2
+        padding 10px
+
+    #account-view
+        #account-form
+            padding 10px
+
+    #config-applications-view
+        .w50
+            padding 10px
+
+    .platform-section
+        padding 10px
+
 
     .application .application-inner
         padding 0
@@ -1310,13 +1327,13 @@ body
             width: 100%
 
     #home-content
-        padding 5px
+        padding 0
 
     #no-app-message
         width 100%
 
     #market-view
-        padding 10px 0 10px 10px
+        padding 0
 
         .right
             img
@@ -1434,7 +1451,7 @@ span.app
     font-weight: bold
 
 button.btn
-    display: inline-flex
+    display inline-flex
     vertical-align top
     text-align center
 

@@ -1,26 +1,27 @@
 //.section-title.darkbg.bigger help
-.line.w600.lightgrey.help-section
-    h4= t('help support title')
-    .line
-        p.help-text.mt2= t('Write an email to our support team at:')
-        P.help-text
-            a(href="mailto:support@cozycloud.cc") support@cozycloud.cc
-        p.help-text= t('Ask your question on Twitter: ') + " "
-        P.help-text
-            a(href="https://twitter.com/mycozycloud") @mycozycloud
-    h4= t('help community title')
-    .line
-        p.help-text= t('Register and post on our forum: ') + " "
-        P.help-text
-            a(href="https://forum.cozy.io") forum.cozy.io
-        p.help-text= t('Chat with us on IRC:') + " "
-        P.help-text
-            a(href="https://webchat.freenode.net/?channels=cozycloud") #cozycloud on irc.freenode.net
-    h4= t('help documentation title')
-    .line
-        p.help-text= t('Visit the project website and learn to build your app:')
-        P.help-text
-            a(href="https://cozy.io") cozy.io
-        p.help-text= t('or:')
-        p.help-text
-            a.wizard(href="/home/quicktour")= t('relaunch install wizard')
+.line.lightgrey.help-section
+    .w600
+        h4= t('help support title')
+        .line
+            p.help-text.mt2= t('Write an email to our support team at:')
+            P.help-text
+                a(href="mailto:support@cozycloud.cc") support@cozycloud.cc
+            p.help-text= t('Ask your question on Twitter: ') + " "
+            P.help-text
+                a(href="https://twitter.com/mycozycloud") @mycozycloud
+        h4= t('help community title')
+        .line
+            p.help-text= t('Register and post on our forum: ') + " "
+            P.help-text
+                a(href="https://forum.cozy.io") forum.cozy.io
+            p.help-text= t('Chat with us on IRC:') + " "
+            P.help-text
+                a(href="https://webchat.freenode.net/?channels=cozycloud") #cozycloud on irc.freenode.net
+        h4= t('help documentation title')
+        .line
+            p.help-text= t('Visit the project website and learn to build your app:')
+            P.help-text
+                a(href="https://cozy.io") cozy.io
+            p.help-text= t('or:')
+            p.help-text
+                a.wizard(href="/home/quicktour")= t('relaunch install wizard')
