@@ -87,7 +87,7 @@ module.exports =
     "manage your applications":"Applications"
     "manage your devices":"Manage your devices"
     "synchronized": "synchronized"
-    "revoke device access": "Revoke device access"
+    "revoke device access": "Revoke device"
     "no application installed":"There is no app installed."
 
     "your parameters":"Your settings"

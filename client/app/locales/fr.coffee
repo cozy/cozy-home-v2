@@ -85,7 +85,7 @@ module.exports =
     "manage your applications":"Applications"
     "manage your devices":"Mobiles et tablettes"
     "status no device": "Aucun appareil enregistré pour synchronisation."
-    "revoke device access": "Révoquer l'accès à l'appareil"
+    "revoke device access": "Révoquer l'appareil"
     "synchronized": "synchronisé"
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"sauver"
@@ -258,7 +258,7 @@ module.exports =
     'error npm': "L'installation des dépendances a échouée."
     'error user linux': "La création de l'utilisateur pour cette application a échouée."
     'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application."
-    "app msg":  """Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc 
+    "app msg":  """Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc
                 ou sur IRC #cozycloud sur irc.freenode.net."""
     'more details': "Plus de détails"
 
