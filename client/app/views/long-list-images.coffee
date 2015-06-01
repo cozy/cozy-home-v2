@@ -507,11 +507,13 @@ module.exports = class LongList
             thumb$.style.width  = thumbHeight + 'px'
             @thumbs$.appendChild(thumb$)
             thumb =
-                prev : thumb
-                next : thumb
+                prev : null
+                next : null
                 el   : thumb$
                 rank : null
                 id   : null
+            thumb.prev = thumb
+            thumb.next = thumb
 
             buffer =
                     first   : thumb  # top most thumb
