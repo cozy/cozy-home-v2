@@ -172,8 +172,7 @@ module.exports = class HomeView extends BaseView
 
 
     displayUpdateApplication: (slug) =>
-        @displayView @configApplications
-        window.document.title = t "cozy applications title"
+        @displayView @configApplications, t "cozy applications title"
         window.app.routers.main.navigate 'config-applications', false
 
         # When the route is called on browser loading, it must wait for
