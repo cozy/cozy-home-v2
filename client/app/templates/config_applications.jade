@@ -49,6 +49,18 @@
                     button.btn.reboot-stack
                         i.fa.fa-power-off.mr1
                         span= t('reboot stack')
+                    a.btn.btn-large(href="/logs/home", target="_blank")
+                        i.fa.fa-cog.mr1
+                        | 
+                        span= t('show home logs')
+                    a.btn.btn-large(href="/logs/data-system", target="_blank")
+                        i.fa.fa-cog.mr1
+                        | 
+                        span= t('show data system logs')
+                    a.btn.btn-large(href="/logs/proxy", target="_blank")
+                        i.fa.fa-cog.mr1
+                        | 
+                        span= t('show proxy logs')
 
             h4.title-device.h4.mb3= t('manage your devices')
 

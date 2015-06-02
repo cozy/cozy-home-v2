@@ -1,23 +1,25 @@
 .line
     .left.mod.w75
-        strong #{app.displayName}
-        if app.version
-            span &nbsp;-&nbsp; #{app.version}
-        span &nbsp;-&nbsp;
-        if app.state === 'installed'
-            span.state-label= t('running')
-        else
-            span.state-label
-                | #{app.state}
-        if app.needsUpdate
-            span &nbsp;
-            span.to-update-label= t('update required')
-        .comments
-            if app.comment === 'official application'
-                img(src="img/happycloud-black.svg", 
-                    alt="#{t(app.comment)}", 
-                    width="20")
-            a(href="#{app.website}", target="_blank")= app.website
+        .line
+            strong #{app.displayName}
+            if app.version
+                span &nbsp;-&nbsp; #{app.version}
+            span &nbsp;-&nbsp;
+            if app.state === 'installed'
+                span.state-label= t('running')
+            else
+                span.state-label
+                    | #{app.state}
+        .line
+            if app.needsUpdate
+                span.to-update-label= t('update required')
+        .line
+            .comments
+                if app.comment === 'official application'
+                    img(src="img/happycloud-black.svg", 
+                        alt="#{t(app.comment)}", 
+                        width="20")
+                a(href="#{app.website}", target="_blank")= app.website
     .buttons.left.mod.w25
         div
             button.btn.update-app
@@ -34,4 +36,8 @@
                 i.fa.fa-power-off.mr1
                 | 
                 span.label= t('stop this app')
-
+        div
+            a.btn.btn-large(href="/logs/#{app.slug}", target="_blank")
+                i.fa.fa-cog.mr1
+                | 
+                span.label= t('show logs')

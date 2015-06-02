@@ -9,6 +9,7 @@ file              = require './file'
 proxy             = require './proxy'
 album             = require './album'
 photo             = require './photo'
+logs              = require './logs'
 
 module.exports =
     '': get: index.index
@@ -75,6 +76,9 @@ module.exports =
     'api/proxy/':
         get: proxy.get
 
+    'logs/:moduleslug':
+        get: logs.logs
+
     # Photo routes
     'files/photo/range/:skip/:limit'  : get: file.photoRange
     'files/photo/thumbs/:fileid'      : get: file.photoThumb
@@ -83,17 +87,12 @@ module.exports =
     'files/photo/monthdistribution'   : get: file.photoMonthDistribution
     'files/photo/:fileid'             : get: file.photo
 
-
-    # Album routes
-    # 'albums/index': get: album.index
     'albums/?':
         get  : album.list
-    #     post : album.create
+
     'albums/:albumid/?':
         get    : album.read
-    #     put    : album.update
-    #     delete : album.delete
+
     'photos/thumbs/:photoid.jpg' : get : photo.thumb
     'photos/raws/:photoid.jpg'   :
         get : photo.raw
-
