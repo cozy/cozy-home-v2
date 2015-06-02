@@ -21,8 +21,6 @@ module.exports = Application = americano.getModel 'Application',
     errormsg: String
     branch: String
     port: Number
-    permissions: Object
-    password: String
     homeposition: Object
     widget: String
     version: String

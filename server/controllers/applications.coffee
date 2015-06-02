@@ -269,7 +269,7 @@ module.exports =
                                     port: result.drone.port
 
                                 msg = "install succeeded on port #{appli.port}"
-                                console.info msg
+                                delete appli.password
 
                                 appli.iconPath = manifest.getIconPath()
                                 appli.color = manifest.getColor()
