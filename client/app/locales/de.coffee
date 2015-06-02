@@ -181,7 +181,7 @@ module.exports =
     "feeds description": "Sammeln Sie Ihre Feeds und speichern Sie favorisierten Links als Lesezeichen."
     "kyou description": "Verbessern Sie Ihre Gesundheit und Zufriedenheit durch Bewertung Ihrer selbst."
     "konnectors description": "Daten Import von externen Services (Twitter, Jawbone…)."
-    "kresus description": "Zusätzliches Tool für Ihre private Finanz Verwaltung."
+    "kresus description": "Zusätzliches Tool für Ihre private Finanzverwaltung."
     "nirc description": "Zugriff auf Ihre favorisierten IRC Kanäle von Ihrem Cozy."
     "notes description": "Organisieren und schreiben von Notizen."
     "owm description": "Wissen wie das Wetter wird, überall auf der Welt."
