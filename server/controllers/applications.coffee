@@ -94,8 +94,10 @@ updateApp = (app, callback) ->
             if err?
                 callback err
             else
+                # Retrieve access
                 access.permissions = manifest.getPermissions()
                 access.slug = app.slug
+                # Retrieve application
                 data.widget = manifest.getWidget()
                 data.version = manifest.getVersion()
                 data.iconPath = manifest.getIconPath()
@@ -113,8 +115,10 @@ updateApp = (app, callback) ->
                     console.log err
                     iconInfos = null
                 data.iconType = iconInfos?.extension or null
+                # Update access
                 app.updateAccess access, (err) ->
                     callback err if err?
+                    # Update application
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
                         icons.save app, iconInfos, (err) ->
@@ -231,15 +235,19 @@ module.exports =
             manifest = new Manifest()
             manifest.download req.body, (err) ->
                 return sendError res, err if err
+                # Retrieve access
                 access.permissions = manifest.getPermissions()
                 access.slug = req.body.slug
+                # Retrieve application
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
                 req.body.color = manifest.getColor()
 
+                # Create application in database
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
                     access.app = appli.id
+                    # Create application access in database
                     Application.createAccess access, (err, app) =>
                         return sendError res, err if err
 
@@ -248,6 +256,7 @@ module.exports =
                         infos = JSON.stringify appli
                         console.info "attempt to install app #{infos}"
                         appli.password = access.password
+                        # Install / Start application
                         manager.installApp appli, (err, result) ->
                             if err
                                 markBroken res, appli, err
@@ -271,12 +280,14 @@ module.exports =
                                     iconInfos = null
                                 appli.iconType = iconInfos?.extension or null
 
+                                # Manage state and icon for application
                                 appli.updateAttributes updatedData, (err) ->
                                     return sendErrorSocket err if err?
                                     icons.save appli, iconInfos, (err) ->
                                         if err? then console.log err.stack
                                         else console.info 'icon attached'
                                         console.info 'saved port in db', appli.port
+                                        # Reset proxy
                                         manager.resetProxy (err) ->
                                             return sendErrorSocket err if err?
                                             console.info 'proxy reset', appli.port
@@ -293,14 +304,16 @@ module.exports =
     # * database
     uninstall: (req, res, next) ->
         req.body.slug = req.params.slug
+        # Uninstall application from controller
         manager.uninstallApp req.application, (err, result) ->
             return markBroken res, req.application, err if err
-
+            # Remove application access
             req.application.destroyAccess (err) ->
                 return sendError res, err if err
+                # Remove application
                 req.application.destroy (err) ->
                     return sendError res, err if err
-
+                    # Reset proxy
                     manager.resetProxy (err) ->
                         return sendError res, err if err
 
@@ -392,7 +405,9 @@ module.exports =
             req.application.password = randomString 32
             data =
                 password: req.application.password
+            # Update access
             req.application.updateAccess data, (err) ->
+                # Start application
                 manager.start req.application, (err, result) ->
                     if err and err isnt "Not enough Memory"
                         delete startedApplications[req.application.id]
@@ -402,6 +417,7 @@ module.exports =
                         data =
                             errormsg: err
                             state: 'stopped'
+                        # Update state application
                         req.application.updateAttributes data, (saveErr) ->
                             return sendError res, saveErr if saveErr
 
@@ -416,11 +432,13 @@ module.exports =
                         data =
                             state: 'installed'
                             port: result.drone.port
+                        # Update state application
                         req.application.updateAttributes data, (err) ->
                             if err
                                 delete startedApplications[req.application.id]
                                 return markBroken res, req.application, err
 
+                            # Reset proxy
                             manager.resetProxy (err) ->
                                 delete startedApplications[req.application.id]
 
@@ -440,16 +458,17 @@ module.exports =
 
 
     stop: (req, res, next) ->
+        # Stop application
         manager.stop req.application, (err, result) ->
             return markBroken res, req.application, err if err
 
             data =
                 state: 'stopped'
                 port : 0
-
+            # Update application state
             req.application.updateAttributes data, (err) ->
                 return sendError res, err if err
-
+                # Reset proxy
                 manager.resetProxy (err) ->
                     return markBroken res, req.application, err if err
                     res.send

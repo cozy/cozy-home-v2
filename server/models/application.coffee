@@ -42,20 +42,27 @@ getToken = ->
     else
         return ""
 
-
-Application.createAccess = (params, callback) ->
+# Create application access
+#   access contains :
+#       * password
+#       * login
+#       * permissions
+Application.createAccess = (access, callback) ->
     dataClient.setBasicAuth 'home', getToken()
-    params.type = "application"
-    dataClient.post 'access/', params, (err, res, body) ->
+    access.type = "application"
+    dataClient.post 'access/', access, (err, res, body) ->
         callback err, new Application(body)
 
+# Remove application access
 Application::destroyAccess = (callback) ->
     dataClient.setBasicAuth 'home', getToken()
     dataClient.del "access/#{@id}/", callback
 
-Application::updateAccess = (params, callback) ->
+# Update application access
+Application::updateAccess = (access, callback) ->
     dataClient.setBasicAuth 'home', getToken()
-    dataClient.put "access/#{@id}/",  params, (err, res, body) ->
+    access.type = "application"
+    dataClient.put "access/#{@id}/",  access, (err, res, body) ->
         callback err, new Application(body)
 
 Application.all = (params, callback) ->
