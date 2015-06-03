@@ -117,7 +117,7 @@ updateApp = (app, callback) ->
                 data.iconType = iconInfos?.extension or null
                 # Update access
                 app.updateAccess access, (err) ->
-                    callback err if err?
+                    return callback err if err?
                     # Update application
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
@@ -269,7 +269,7 @@ module.exports =
                                     port: result.drone.port
 
                                 msg = "install succeeded on port #{appli.port}"
-                                delete appli.password
+                                console.info msg
 
                                 appli.iconPath = manifest.getIconPath()
                                 appli.color = manifest.getColor()
@@ -475,6 +475,7 @@ module.exports =
                         success: true
                         msg: 'Application stopped'
                         app: req.application
+
 
     fetchMarket: (req, res, next) ->
         market.download (err, data) ->

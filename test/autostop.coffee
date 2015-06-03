@@ -457,16 +457,7 @@ describe "Auto-stop manager", ->
                 name: "Test App"
                 isStoppable: true
             @client.post "api/applications/install", app, (err, res, app) =>
-                #console.log err
-                #console.log app
-                #@client.put "api/application/byId/#{app.id}", app, (err) ->
                 done()
-
-        it "Then I wait for 4 minutes", (done) ->
-            @timeout 25 * 1000
-            setTimeout () =>
-                done()
-            , 20 * 1000
 
         it "Then I wait 4 minutes", =>
             @sandbox = sinon.sandbox.create useFakeTimers: true

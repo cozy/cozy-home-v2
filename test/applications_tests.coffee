@@ -124,7 +124,7 @@ describe "Applications management", ->
                     should.not.exist body.error
                     done()
 
-            it 'Then application can access to contact', (done) ->
+            it "Then application can't access to other doctype", (done) ->
                 ds = new Client "http://localhost:9101/"
                 ds.setBasicAuth 'my-app', @password
                 data =
@@ -193,7 +193,7 @@ describe "Applications management", ->
                     should.not.exist body.error
                     done()
 
-            it 'Then application can access to contact', (done) ->
+            it "Then application can't access to other docType", (done) ->
                 ds = new Client "http://localhost:9101/"
                 ds.setBasicAuth 'my-app', @password
                 data =
@@ -279,7 +279,7 @@ describe "Applications management", ->
                     should.not.exist body.error
                     done()
 
-            it 'Then application can access to contact', (done) ->
+            it "Then application can't access to other docType", (done) ->
                 ds = new Client "http://localhost:9101/"
                 ds.setBasicAuth 'my-app', @password
                 data =
