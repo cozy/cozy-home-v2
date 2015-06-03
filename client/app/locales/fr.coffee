@@ -200,6 +200,13 @@ module.exports =
     "help support title": "Support officiel"
     "help community title": "Support via la communauté"
     "help documentation title": "Documentation"
+    "help send message title": "Ecrire directement à l'équipe Cozy"
+    "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utilisier le champ texte en dessous. Vous pouvez également nous envoyer des retours, rapporter des bugs et bien sûr demander de l'assistance !"
+    "help send message action": "Send message to the Cozy Support Team"
+    "send message success": "Message successfully sent!"
+    "help send message action": "Envoyer un message à l'équipe support de Cozy"
+    "send message success": "Message envoyé avec succès !"
+    "send message error": "Une erreur est survenue lors de l'envoi du message. Essayez d'envoyer ce message à directement avec un client mail en écrivant à support@cozycloud.cc."
 
     "introduction market": """
         Bienvenue sur le marché d'applications Cozy. Vous pouvez ajouter des applications proposées par Cozy Cloud, d'autres développeurs ou même votre propre application !
