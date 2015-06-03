@@ -42,26 +42,29 @@ module.exports =
             newPassword = body.password1
             newPassword2 = body.password2
 
-            unless newPassword? and newPassword.length > 0
-                errors.push "The new password is too short."
-                return cb null, errors
-
             errors = []
 
-            unless utils.checkPassword oldPassword, user.password
-                errors.push "The current password is incorrect."
+            if newPassword?
+                if newPassword.length < 5
+                    errors.push "The new password is too short."
+                    return cb null, errors
 
-            unless newPassword is newPassword2
-                errors.push "The new passwords don't match."
+                unless utils.checkPassword oldPassword, user.password
+                    errors.push "The current password is incorrect."
 
-            unless newPassword.length > 5
-                errors.push "The new password is too short."
+                unless newPassword is newPassword2
+                    errors.push "The new passwords don't match."
 
-            if errors.length
-                return cb null, errors
+                unless newPassword.length > 5
+                    errors.push "The new password is too short."
 
-            data.password = utils.cryptPassword newPassword
-            adapter.updateKeys newPassword, cb
+                if errors.length
+                    return cb null, errors
+
+                data.password = utils.cryptPassword newPassword
+                adapter.updateKeys newPassword, cb
+            else
+                cb()
 
 
         User.all (err, users) ->

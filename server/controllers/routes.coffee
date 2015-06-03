@@ -10,6 +10,7 @@ proxy             = require './proxy'
 album             = require './album'
 photo             = require './photo'
 logs              = require './logs'
+help              = require './help'
 
 module.exports =
     '': get: index.index
@@ -78,6 +79,9 @@ module.exports =
 
     'logs/:moduleslug':
         get: logs.logs
+
+    'help/message':
+        post: help.message
 
     # Photo routes
     'files/photo/range/:skip/:limit'  : get: file.photoRange
