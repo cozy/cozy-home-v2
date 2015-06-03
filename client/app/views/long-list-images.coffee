@@ -121,8 +121,10 @@ Photo  = require '../models/photo'
 ################################################################################
 ## CONSTANTS ##
 #
-# minimum duration between two refresh (_adaptBuffer)
+# minimum duration between two refresh of the buffer (_adaptBuffer)
 THROTTLE            = 450
+# minimum duration between two refresh of the index (_adaptIndex)
+THROTTLE_INDEX      = 300
 # n = max number of viewport height by seconds
 MAX_SPEED           = 1.5 * THROTTLE / 1000
 # number of "screens" before and after the viewport
@@ -149,9 +151,7 @@ module.exports = class LongList
     constructor: (@externalViewPort$, @modal) ->
         ####
         # init state
-        @state =
-            selected : {} # selected.photoID = thumb = {rank, id,name,thumbEl}
-            # todo BJA supprimer le @state
+        @selected = {} # selected.photoID = thumb = {rank, id,name,thumbEl}
         ####
         # get elements (name ends with '$')
         @viewPort$ = document.createElement('div')
@@ -169,13 +169,13 @@ module.exports = class LongList
         @index$.style.position    = 'absolute'
         @index$.style.top         = 0
         @index$.style.bottom      = 0
-        @index$.style.right       = @getScrollBarWidth()+'px'
+        @index$.style.right       = @_getScrollBarWidth()+'px'
         ####
         # keep track of the last selected column during navigation with keyboard
         @_lastSelectedCol = null
         ####
-        # adapt buffer to the initial geometry when we receive the array of
-        # photos
+        # Get from the server the array of distribution of the photos and then
+        # adapt the buffer to the initial geometry
         @isInited = @isPhotoArrayLoaded = false
         Photo.getMonthdistribution (error, res) =>
             @isPhotoArrayLoaded = true
@@ -184,38 +184,39 @@ module.exports = class LongList
             return true
 
 
+
+    ###*
+     * To compute the geometry we mus know the the width and height of the
+     * externalViewPort$.
+     * This is possible only if this element is inserted in the DOM of we give
+     * the dimension that will be available with the following function.
+     * @param {Integer} width  in px of the externalViewPort$ when it will be
+     *                  inserted
+     * @param {Integer} heigth in px of the externalViewPort$ when it will be
+     *                  inserted
+    ###
     setInitialDimensions : (width, heigth)->
         @initialWidth  = width
         @initialHeight = heigth
         @_resizeHandler()
 
 
-    # ###*
-    #  * must be called when the long list is inserted in the DOM of that the list
-    #  * was hiddend (display:none) and is now displayed.
-    # ###
-    # init : () =>
-    #     # means that init has been called when the long list is inserted or
-    #     # showed lately
-    #     if @isInited and @isPhotoArrayLoaded
-    #         @_resizeHandler()
-    #         return
-    #     # otherwise : means that the init process has never been done completly
-    #     @isInited = true
-    #     if @isInited and @isPhotoArrayLoaded
-    #         ####
-    #         # create DOM_controler
-    #         @_DOM_controlerInit()
-    #     return true
-
-
+    ###*
+     * returns the selected "file", ie the same document as in Couch
+     * {id, name, path, lastModification, binary, class, docType, mime,
+     * creationDate, size, tags}
+    ###
     getSelectedFile : () =>
-        for k, thumb$ of @state.selected
+        for k, thumb$ of @.selected
             if thumb$
                 return thumb$.file
         return null
 
-
+    ###*
+     * There is an event delegation, so the parent (externalViewPort$ or above)
+     * are in charge of listening and transmitting the event with this function.
+     * @param  {Event} e Event
+    ###
     keyHandler : (e)->
         console.log 'LongList.keyHandler', e.which
         switch e.which
@@ -256,11 +257,12 @@ module.exports = class LongList
         return
 
     ###*
-     * Must be called when the goemetry of the parent of the long list changes.
+     * Must be called when the goemetry of the parent (externalViewPort$) of the
+     * long list changes.
     ###
     resizeHandler: () ->
-        # will be defined during _DOM_controlerInit, when we get the distribution
-        # array of photos.
+        # will be defined during _DOM_controlerInit, when we get the
+        # distribution array of photos.
         # If it is called too early, don't do anything, a resizeHandler call
         # will occur when the distribution array will arrive.
 
@@ -276,8 +278,8 @@ module.exports = class LongList
      * approach has been chosen for performance reasons (acces to scope
      * variables faster than to nested properties of objects). It's not an
      * obvious choice.
-     * Called only when both LongList.init() has been called and that we also
-     * got from the server the month distribution (Photo.getMonthdistribution)
+     * Called only when we get from the server the month distribution
+     * (Photo.getMonthdistribution)
     ###
     _DOM_controlerInit: () ->
 
@@ -320,56 +322,30 @@ module.exports = class LongList
             firstThumbToUpdate   : null
             firstThumbRkToUpdate : null
 
+        # should the first thumb be selected right after instanciation ? (could
+        # be an option)
         isDefaultToSelect = true
 
 
+
+        ###*
+         * called after a scroll, will launch _adaptBuffer and _adaptIndex
+         * (both throttled)
+        ###
         _scrollHandler = (e) =>
             if @noScrollScheduled
                 lastOnScroll_Y = @viewPort$.scrollTop
                 setTimeout(_adaptBuffer,THROTTLE)
                 @noScrollScheduled = false
             if @noIndexScrollScheduled
-                setTimeout(_adaptIndex,250)
+                setTimeout(_adaptIndex,THROTTLE_INDEX)
                 @noIndexScrollScheduled = false
             if !indexVisible
                 @index$.classList.add('visible')
                 indexVisible = true
 
-
         @_scrollHandler = _scrollHandler
 
-        ###*
-         * returns the font-size in px of a given element (context) or of the
-         * root element of the document if no context is provided.
-         * @param  {element} context Optionnal: an elemment to get the font-size
-         * @return {integer}         the font-size
-        ###
-        getElementFontSize=( context )->
-            # Returns a number
-            return parseFloat(
-                # of the computed font-size, so in px
-                    # for the given context
-                    # or the root <html> element
-                getComputedStyle( context or document.documentElement ).fontSize
-            )
-
-
-        remToPixels=(value)->
-            return emToPixels(value)
-
-
-        emToPixels=(value, context)->
-            return Math.round(value * getElementFontSize(context))
-
-
-        _getDimInPixels = (value)=>
-            switch THUMB_DIM_UNIT
-                when 'px'
-                    return value
-                when 'em'
-                    return emToPixels(value, @viewPort$)
-                when 'rem'
-                    return remToPixels(value)
 
 
         ###*
@@ -391,11 +367,49 @@ module.exports = class LongList
 
 
         ###*
+         * returns the font-size in px of a given element (context) or of the
+         * root element of the document if no context is provided.
+         * @param  {element} context Optionnal: an elemment to get the font-size
+         * @return {integer}         the font-size
+        ###
+        _getElementFontSize=( context )->
+            # Returns a number
+            return parseFloat(
+                # of the computed font-size, so in px
+                    # for the given context
+                    # or the root <html> element
+                getComputedStyle( context or document.documentElement ).fontSize
+            )
+
+
+
+        _remToPixels=(value)->
+            return _emToPixels(value)
+
+
+
+        _emToPixels=(value, context)->
+            return Math.round(value * _getElementFontSize(context))
+
+
+
+        _getDimInPixels = (value)=>
+            switch THUMB_DIM_UNIT
+                when 'px'
+                    return value
+                when 'em'
+                    return _emToPixels(value, @viewPort$)
+                when 'rem'
+                    return _remToPixels(value)
+
+
+
+        ###*
          * Compute all the geometry after a resize or when the list in inserted
          * in the DOM.
          * _adaptBuffer will be executed at the end except if
          *     1- the distribution array of photo has not been received.
-         *     2- the geometry could not be computed (for instance if the widht
+         *     2- the geometry could not be computed (for instance if the width
          *     of the list is null when the list is not visible)
         ###
         _resizeHandler= ()=>
@@ -422,6 +436,7 @@ module.exports = class LongList
                 _adaptBuffer()
                 return
             previousWidth  = VP_width
+            # compute thumbs per row & margin
             nThumbsPerRow  = Math.floor((VP_width-cellPadding)/colWidth)
             @nThumbsPerRow = nThumbsPerRow
             marginLeft = cellPadding +                                         \
@@ -434,6 +449,8 @@ module.exports = class LongList
             nThumbsInSZ_Margin    = nRowsInSafeZoneMargin * nThumbsPerRow
             nThumbsInViewPort     = nRowsInViewPort * nThumbsPerRow
             nThumbsInSafeZone     = nThumbsInSZ_Margin*2 + nThumbsInViewPort
+            # compute the buffer margin
+
             ##
             # 2/ COMPUTE THE PROPERTIES OF EACH MONTH
             nextY   = 0
@@ -452,14 +469,14 @@ module.exports = class LongList
                 month.date         = moment(month.month,'YYYYMM')
                 nextY   += month.height
                 nPhotos += nPhotosInMonth
-                minMonthHeight = Math.min(minMonthHeight,month.height)
+                minMonthHeight  = Math.min(minMonthHeight,month.height)
                 minMonthNphotos = Math.min(minMonthNphotos,month.nPhotos)
             @nPhotos = nPhotos
             thumbs$Height = nextY
             @thumbs$.style.setProperty('height', thumbs$Height + 'px')
             ##
             # 3/ POSITION INDEX
-            MONTH_LABEL_HEIGHT = 27
+            MONTH_LABEL_HEIGHT = 27 # TODO : should be computed live, not static
             minimumIndexHeight = @months.length * MONTH_LABEL_HEIGHT
             if minimumIndexHeight*1.3 <= viewPortHeight
                 indexHeight = viewPortHeight
@@ -487,6 +504,7 @@ module.exports = class LongList
             _adaptBuffer()
 
         @resizeHandler = _resizeHandler
+
 
 
         ###*
@@ -534,6 +552,12 @@ module.exports = class LongList
                     nextFirstRk      : null
                     nextFirstY       : null
             @buffer = buffer
+            # _createThumbsBottom = (nToCreate, startRk, startCol, startY, monthRk) =>
+            # Photo.listFromFiles targetRk, nToFind, (error, res) ->
+            #     if error
+            #         console.log error
+            #     _updateThumb(res.files, res.firstRank)
+
 
 
         ###*
@@ -559,6 +583,8 @@ module.exports = class LongList
             if td_b < y
                 @index$.style.top = - (indexHeight - vph) + 'px'
 
+
+
         ###*
          * modify the apperence of the index label corresponding of the first
          * month displayed in the viewPort
@@ -576,10 +602,11 @@ module.exports = class LongList
                 indexVisible = false
             , 2000
 
+
+
         ###*
          * Adapt the buffer when the viewport has moved.
          * Launched at init and by _scrollHandler
-         * Steps :
         ###
         _adaptBuffer = () =>
             @noScrollScheduled      = true
@@ -883,9 +910,9 @@ module.exports = class LongList
                 thumb$.dataset.id = fileId
                 thumb.id          = fileId
                 thumb             = thumb.prev
-                if @state.selected[fileId]
+                if @.selected[fileId]
                     thumb$.classList.add('selectedThumb')
-                    @state.selected[fileId] = thumb$
+                    @selected[fileId] = thumb$
                 else
                     thumb$.classList.remove('selectedThumb')
             ##
@@ -910,13 +937,13 @@ module.exports = class LongList
                 thumb$.dataset.id = fileId
                 thumb.id          = fileId
                 thumb             = thumb.next
-                if @state.selected[fileId]
+                if @selected[fileId]
                     thumb$.classList.add('selectedThumb')
-                    @state.selected[fileId] = thumb$
+                    @selected[fileId] = thumb$
                 else
                     thumb$.classList.remove('selectedThumb')
             ##
-            # 3/ default selection management : can not be done befor the id of
+            # 3/ default selection management : can not be done before the id of
             # the first thumb is given by the server, that's why it is done here
             if isDefaultToSelect
                 @_toggleOnThumb$(bufr.first.el)
@@ -977,10 +1004,12 @@ module.exports = class LongList
             if hasReachedLastPhoto
                 _SZ_bottomCase()
 
-
+        ###*
+         * set the start of the safe zone on the top of the viewport.
+        ###
         _SZ_initStartPoint = ()=>
             SZ = safeZone
-            Y = current_scrollTop
+            Y  = current_scrollTop
             for month, monthRk in @months
                 if month.yBottom > Y
                     break
@@ -998,6 +1027,10 @@ module.exports = class LongList
             _selectCurrentIndex(monthRk)
 
 
+        ###*
+         * move up the start of the safe zone of 'nRowsInSafeZoneMargin' rows
+         * @return {[type]} [description]
+        ###
         _SZ_setMarginAtStart= () =>
             SZ = safeZone
             inMonthRow = SZ.firstInMonthRow - nRowsInSafeZoneMargin
@@ -1036,7 +1069,9 @@ module.exports = class LongList
 
 
         ###*
-         * Finds the end point of the safeZone.
+         * Finds the end point of the safeZone, which is 'nThumbsInSafeZone'
+         * after the first thumb of the SZ (the number of thumb in the safe zone
+         * and in the buffer is constant)
          * Returns true if the safeZone end pointer should be after the last
          * thumb
         ###
@@ -1065,7 +1100,9 @@ module.exports = class LongList
                                   inMonthRow*rowHeight
             return false
 
-
+        ###*
+         * if the safe zone is bellow the last thumb => move up the safe zone
+        ###
         _SZ_bottomCase = ()=>
             SZ = safeZone
             months       = @months
@@ -1308,7 +1345,6 @@ module.exports = class LongList
         _getStaticDimensions()
         _initBuffer()
         _resizeHandler()
-        isDefaultToSelect = true
 
         ####
         # bind events
@@ -1356,23 +1392,23 @@ module.exports = class LongList
         if thumb$.dataset.id == ''
             return null
         # the thums is already selected => we can't select it again
-        if @state.selected[thumb$.dataset.id]
+        if @selected[thumb$.dataset.id]
             return null
         # otherwise we can toggle
         @_unselectAll()
         thumb$.classList.add('selectedThumb')
-        @state.selected[thumb$.dataset.id] = thumb$
+        @selected[thumb$.dataset.id] = thumb$
 
 
     _unselectAll: () =>
-        for id, thumb$ of @state.selected
+        for id, thumb$ of @selected
             if typeof(thumb$) == 'object'
                 thumb$.classList.remove('selectedThumb')
-                @state.selected[id] = false
+                @selected[id] = false
 
 
     _getSelectedThumb$: ()->
-        for id, thumb$ of @state.selected
+        for id, thumb$ of @selected
             if typeof(thumb$) == 'object'
                 return thumb$
         return null
@@ -1380,7 +1416,7 @@ module.exports = class LongList
 
     _selectNextThumb: ()->
         # 1/ look for the selected thumb element
-        for id, thumb$ of @state.selected
+        for id, thumb$ of @selected
             if typeof(thumb$) == 'object'
                 break
         # 2/ get next thumb$ and toggle
@@ -1536,11 +1572,11 @@ module.exports = class LongList
 
     _coordonate:
         top: (thumb$)->
-            return Number(thumb$.style.top.slice(0,-2))
+            return parseInt(thumb$.style.top, 10)
         left: (thumb$)->
-            return Number(thumb$.style.left.slice(0,-2))
+            return parseInt(thumb$.style.left, 10)
         rank: (thumb$)->
-            return Number(thumb$.dataset.rank)
+            return thumb$.dataset.rank
 
 
     _selectPageDownThumb: () ->
@@ -1679,7 +1715,11 @@ module.exports = class LongList
                     return null
         return th
 
-    getScrollBarWidth : ()->
+    ###*
+     * a helper in charge of getting the width in px of the scrollbar this one
+     * appears
+    ###
+    _getScrollBarWidth : ()->
       inner = document.createElement('p')
       inner.style.width  = "100%"
       inner.style.height = "200px"
