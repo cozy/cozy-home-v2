@@ -1,11 +1,11 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
-module.exports = File = americano.getModel 'File',
+module.exports = File = cozydb.getModel 'File',
     id                : String
     name              : String
     path              : String
     lastModification  : String
-    binary            : Object
+    binary            : cozydb.NoSchema
     class             : String
 
 File.imageByMonth = (options, callback) ->

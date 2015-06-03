@@ -1,6 +1,6 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
-module.exports = Alarm = americano.getModel 'Alarm',
+module.exports = Alarm = cozydb.getModel 'Alarm',
     action: type: String, default: 'DISPLAY'
     trigg: String
     rrule: String
