@@ -18,8 +18,8 @@ Photo  = require '../models/photo'
 #   # when the geometry of the parent :
 #       longList.resizeHandler()
 #
-# -- SEMANTIC / CONVENTIONS --
 #
+# -- SEMANTIC & CONVENTIONS --
 #
 # 1/ syntax
 #   . a variable name ending with a '$' is a reference to a node in the DOM
@@ -101,6 +101,10 @@ Photo  = require '../models/photo'
 #
 #
 # 8/ safeZone
+#   A range of thumbs starting before the viewport and going after. The number
+#   of thumbs before and after the viewport depends of SAFE_ZONE_COEF.
+#   The safe zone is computed by _adaptBuffer
+#   data structure :
 #      firstCol             : {integer}
 #      firstInMonthRow      : {integer}
 #      firstMonthRk         : {integer}
@@ -127,15 +131,21 @@ THROTTLE            = 450
 THROTTLE_INDEX      = 300
 # n = max number of viewport height by seconds
 MAX_SPEED           = 1.5 * THROTTLE / 1000
-# number of "screens" before and after the viewport
+# number of "screens" before and after the viewport in the buffer.
 # (ex : 1.5 => 1+2*1.5=4 screens always ready)
-COEF_SECURITY       = 3
+BUFFER_COEF         = 3
+# number of "screens" before and after the viewport corresponding to
+# the safe zone. The Safe Zone is the rows where viewport can go
+# without trigering the movement of the buffer.
+# ! !  Must be smaller than BUFFER_COEF  ! !
+SAFE_ZONE_COEF      = 2
 # unit used for the dimensions (px,em or rem)
 THUMB_DIM_UNIT      = 'em'
 # space between 2 months
 MONTH_HEADER_HEIGHT = 2.5
 # padding in pixels between thumbs
 CELL_PADDING        = 0.6
+# guess :-)
 THUMB_HEIGHT        = 10
 # height from top of the month to the top of the month label
 MONTH_LABEL_TOP     = 0.8
@@ -184,7 +194,6 @@ module.exports = class LongList
             return true
 
 
-
     ###*
      * To compute the geometry we mus know the the width and height of the
      * externalViewPort$.
@@ -212,13 +221,14 @@ module.exports = class LongList
                 return thumb$.file
         return null
 
+
     ###*
      * There is an event delegation, so the parent (externalViewPort$ or above)
      * are in charge of listening and transmitting the event with this function.
      * @param  {Event} e Event
     ###
     keyHandler : (e)->
-        console.log 'LongList.keyHandler', e.which
+        # console.log 'LongList.keyHandler', e.which
         switch e.which
             when 39 # right key
                 e.stopPropagation()
@@ -255,6 +265,7 @@ module.exports = class LongList
             else
                 return false
         return
+
 
     ###*
      * Must be called when the goemetry of the parent (externalViewPort$) of the
@@ -300,6 +311,8 @@ module.exports = class LongList
         nThumbsPerRow          = null
         nRowsInSafeZoneMargin  = null
         nThumbsInSafeZone      = null
+        nThumbsInBufferMargin  = null
+        nThumbsInBuffer        = null
         viewPortHeight         = null
         indexHeight            = null
         indexVisible           = null
@@ -445,12 +458,14 @@ module.exports = class LongList
                          )
             # compute the safe zone margin
             nRowsInViewPort       = Math.ceil(viewPortHeight/rowHeight)
-            nRowsInSafeZoneMargin = Math.round(COEF_SECURITY * nRowsInViewPort)
+            nRowsInSafeZoneMargin = Math.round(SAFE_ZONE_COEF * nRowsInViewPort)
             nThumbsInSZ_Margin    = nRowsInSafeZoneMargin * nThumbsPerRow
             nThumbsInViewPort     = nRowsInViewPort * nThumbsPerRow
             nThumbsInSafeZone     = nThumbsInSZ_Margin*2 + nThumbsInViewPort
             # compute the buffer margin
-
+            nRowsInBufferMargin   = Math.round(BUFFER_COEF * nRowsInViewPort)
+            nThumbsInBufferMargin = nRowsInBufferMargin * nThumbsPerRow
+            nThumbsInBuffer       = nThumbsInViewPort + 2*nThumbsInBufferMargin
             ##
             # 2/ COMPUTE THE PROPERTIES OF EACH MONTH
             nextY   = 0
@@ -500,8 +515,8 @@ module.exports = class LongList
             # always repositionated
             if bufferAlreadyAdapted
                 _rePositionThumbs()
+                _adaptBuffer()
             bufferAlreadyAdapted = true
-            _adaptBuffer()
 
         @resizeHandler = _resizeHandler
 
@@ -518,27 +533,53 @@ module.exports = class LongList
          * data structure : see the beginning of this file.
         ###
         _initBuffer = ()=>
-
-            thumb$ = document.createElement('img')
-            thumb$.setAttribute('class', 'long-list-thumb')
-            thumb$.style.height = thumbHeight + 'px'
-            thumb$.style.width  = thumbHeight + 'px'
-            @thumbs$.appendChild(thumb$)
-            thumb =
-                prev : null
-                next : null
-                el   : thumb$
-                rank : null
-                id   : null
-            thumb.prev = thumb
-            thumb.next = thumb
-
+            nToCreate = Math.min(@nPhotos, nThumbsInBuffer)
+            firstCreatedThb = {}
+            previousCreatedThb = firstCreatedThb
+            rowY     = monthTopPadding
+            col      = 0
+            monthRk  = 0
+            month    = @months[0]
+            localRk  = 0
+            # loop to create the thumbs
+            for rk in [0..nToCreate-1] by 1
+                if localRk == 0 then _insertMonthLabel(month)
+                thumb$ = document.createElement('img')
+                thumb$.setAttribute('class', 'long-list-thumb')
+                thumb$.style.height = thumbHeight + 'px'
+                thumb$.style.width  = thumbHeight + 'px'
+                thumb =
+                    prev : null
+                    next : previousCreatedThb
+                    el   : thumb$
+                    rank : rk
+                    monthRk : monthRk
+                    id   : null
+                previousCreatedThb.prev = thumb
+                previousCreatedThb = thumb
+                thumb$.style.cssText = "top:#{rowY}px;left:#{marginLeft + col*colWidth}px;height:#{thumbHeight}px;width:#{thumbHeight}px;"
+                @thumbs$.appendChild(thumb$)
+                localRk += 1
+                if localRk == month.nPhotos
+                    # jump to a new month
+                    monthRk += 1
+                    month    = @months[monthRk]
+                    localRk  = 0
+                    col      = 0
+                    rowY    += rowHeight + monthTopPadding
+                else
+                    # go to next column or to a new row if we are at last column
+                    col  += 1
+                    if col is nThumbsPerRow
+                        rowY += rowHeight
+                        col   = 0
+            # create the buffer
             buffer =
-                    first   : thumb  # top most thumb
-                    firstRk : -1     # rank of the first image of the buffer
-                    last    : thumb  # bottom most thumb
-                    lastRk  : -1     # rank of the last image of the buffer
-                    nThumbs :  1     # number of thumbs in the buffer
+                    first   : firstCreatedThb.prev  # top most thumb
+                    firstRk : 0           # rank of the first imge of the buffer
+                    last    : thumb       # bottom most thumb
+                    lastRk  : nToCreate-1 # rank of the last image of the buffer
+                    nThumbs :  1          # number of thumbs in the buffer
                     # the following data are the coordonates of the thumb that
                     # would be just after the last of the buffer.
                     nextLastRk      : null
@@ -551,12 +592,15 @@ module.exports = class LongList
                     nextFirstMonthRk : null
                     nextFirstRk      : null
                     nextFirstY       : null
+            buffer.first.next = buffer.last
+            buffer.last.prev  = buffer.first
             @buffer = buffer
-            # _createThumbsBottom = (nToCreate, startRk, startCol, startY, monthRk) =>
-            # Photo.listFromFiles targetRk, nToFind, (error, res) ->
-            #     if error
-            #         console.log error
-            #     _updateThumb(res.files, res.firstRank)
+            safeZone.firstThumbToUpdate = buffer.first
+            # request the photo documents from server
+            Photo.listFromFiles 0, nToCreate, (error, res) ->
+                if error
+                    console.log error
+                _updateThumb(res.files, res.firstRank)
 
 
 
@@ -612,11 +656,13 @@ module.exports = class LongList
             @noScrollScheduled      = true
             @noIndexScrollScheduled = true
             lazyHideIndex()
+            # console.log '\n======_adaptBuffer==beginning======='
 
             # test speed, if too high, relaunch a _scrollHandler
             current_scrollTop = @viewPort$.scrollTop
             speed = Math.abs(current_scrollTop - lastOnScroll_Y) / viewPortHeight
             if speed > MAX_SPEED
+                # console.log 'HIGH SPEED ! :-)'
                 _scrollHandler()
                 return
 
@@ -639,31 +685,16 @@ module.exports = class LongList
 
             _computeSafeZone()
 
-            # console.log '\n======_adaptBuffer==beginning======='
             # console.log 'safeZone', JSON.stringify(safeZone,2)
-            # console.log 'bufr', bufr
+            # console.log 'buffer', bufr
             if safeZone.lastRk > bufr.lastRk
                 # 1/ the safeZone is going down and the bottom of the safeZone
                 # is bellow the bottom of the buffer
                 #
-                # nToFind = number of thumbs to find (by reusing thumbs from the
-                # buffer or by creation new ones) in order to fill the bottom of
-                # the safeZone
-                nToFind = \
+                # nToMove = number of thumbs to move from the top of the
+                # buffer in order to fill its bottom
+                nToMove = \
                     Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone)
-                # the  available thumbs are the ones in the buffer and above
-                # the safeZone
-                # (rank greater than buffer.firstRk but lower
-                # than safeZone.firstRk)
-                nAvailable = safeZone.firstRk - bufr.firstRk
-                if nAvailable < 0
-                    nAvailable = 0
-                if nAvailable > bufr.nThumbs
-                    nAvailable = bufr.nThumbs
-
-                nToCreate = Math.max(nToFind - nAvailable, 0)
-                nToMove   = nToFind - nToCreate
-
                 if safeZone.firstRk <= bufr.lastRk
                     # part of the buffer is in the safe zone : add thumbs after
                     # the last thumb of the buffer
@@ -682,34 +713,16 @@ module.exports = class LongList
                     targetY       = safeZone.firstY
 
                 # console.log 'direction: DOWN',         \
-                #             'nToFind:'   + nToFind,    \
-                #             'nAvailable:'+ nAvailable, \
-                #             'nToCreate:' + nToCreate,  \
                 #             'nToMove:'   + nToMove,    \
                 #             'targetRk:'  + targetRk,   \
                 #             'targetCol'  + targetCol,  \
                 #             'targetY'    + targetY
 
-                if nToFind > 0
-                    Photo.listFromFiles targetRk, nToFind, (error, res) ->
-                        if error
-                            console.log error
-                        _updateThumb(res.files, res.firstRank)
-
-                if nToCreate > 0
-                    [targetY, targetCol, targetMonthRk] =
-                        _createThumbsBottom( nToCreate     ,
-                                              targetRk     ,
-                                              targetCol    ,
-                                              targetY      ,
-                                              targetMonthRk  )
-                    targetRk += nToCreate
-
                 if nToMove > 0
-                    # console.log "nToMove",nToMove
-                    # console.log "targetRk",targetRk
-                    # Photo.listFromFiles targetRk, nToMove, (error, res) ->
-                    #     _updateThumb(res.files, res.firstRank)
+                    console.log "nToMove",nToMove
+                    console.log "targetRk",targetRk
+                    Photo.listFromFiles targetRk, nToMove, (error, res) ->
+                        _updateThumb(res.files, res.firstRank)
                     _moveBufferToBottom( nToMove        ,
                                           targetRk      ,
                                           targetCol     ,
@@ -720,22 +733,9 @@ module.exports = class LongList
                 # 2/ the safeZone is going up and the top of the safeZone is
                 # above the buffer
                 #
-                # nToFind = number of thumbs to find (by reusing thumbs from the
-                # buffer or by creation new ones) in order to fill the top of
-                # the safeZone
-                nToFind = Math.min(bufr.firstRk - safeZone.firstRk, nThumbsInSafeZone)
-                # the  available thumbs are the ones in the buffer and under
-                # the safeZone
-                # (rank smaller than buffer.lastRk but higher
-                # than safeZone.lastRk)
-                nAvailable = bufr.lastRk - safeZone.lastRk
-                if nAvailable < 0
-                    nAvailable = 0
-                if nAvailable > bufr.nThumbs
-                    nAvailable = bufr.nThumbs
-
-                nToCreate = Math.max(nToFind - nAvailable, 0)
-                nToMove   = nToFind - nToCreate
+                # nToMove = number of thumbs to move by reusing thumbs from the
+                # bottom of the buffer in order to fill its top
+                nToMove = Math.min(bufr.firstRk - safeZone.firstRk, nThumbsInSafeZone)
 
                 if safeZone.lastRk >= bufr.firstRk
                     # part of the buffer is in the safe zone : add thumbs above
@@ -755,38 +755,22 @@ module.exports = class LongList
                     targetY       = safeZone.endY
 
                 # console.log 'direction: UP',           \
-                #             'nToFind:'   + nToFind,    \
-                #             'nAvailable:'+ nAvailable, \
-                #             'nToCreate:' + nToCreate,  \
                 #             'nToMove:'   + nToMove,    \
                 #             'targetRk:'  + targetRk,   \
                 #             'targetCol'  + targetCol,  \
                 #             'targetY'    + targetY
 
-                if nToFind > 0
-                    Photo.listFromFiles targetRk - nToFind + 1 , nToFind, (error, res) ->
+                if nToMove > 0
+                    Photo.listFromFiles targetRk - nToMove + 1 , nToMove, (error, res) ->
                         if error
                             console.log error
                         _updateThumb(res.files, res.firstRank)
-
-                if nToCreate > 0
-                    throw new Error('It should not be used in the
-                        current implementation')
-                    [targetY, targetCol, targetMonthRk] =
-                        _createThumbsTop(  nToCreate    ,
-                                           targetRk     ,
-                                           targetCol    ,
-                                           targetY      ,
-                                           targetMonthRk  )
-                    targetRk += nToCreate
-
-                if nToMove > 0
                     _moveBufferToTop( nToMove       ,
                                       targetRk      ,
                                       targetCol     ,
                                       targetY       ,
                                       targetMonthRk  )
-            if !nToFind?
+            if !nToMove?
                 # The buffer was inside the safe zone, there was no modification
                 # of the buffer
                 safeZone.firstThumbToUpdate   = previous_firstThumbToUpdate
@@ -1137,65 +1121,6 @@ module.exports = class LongList
                                      inMonthRow * rowHeight
 
 
-        _createThumbsBottom = (nToCreate, startRk, startCol, startY, monthRk) =>
-            bufr     = buffer
-            rowY     = startY
-            col      = startCol
-            month    = @months[monthRk]
-            localRk  = startRk - month.firstRk
-            lastLast = bufr.last
-            for rk in [startRk..startRk+nToCreate-1] by 1
-                if localRk == 0 then _insertMonthLabel(month)
-                thumb$ = document.createElement('img')
-                thumb$.dataset.rank = rk
-                thumb$.setAttribute('class', 'long-list-thumb')
-                thumb =
-                    next    : bufr.last
-                    prev    : bufr.first
-                    el      : thumb$
-                    rank    : rk
-                    monthRk : monthRk
-                    id      : null
-                if rk == safeZone.firstVisibleRk
-                    safeZone.firstThumbToUpdate = thumb
-                bufr.first.next = thumb
-                bufr.last.prev  = thumb
-                bufr.last       = thumb
-                style        = thumb$.style
-                style.top    = rowY + 'px'
-                style.left   = (marginLeft + col*colWidth) + 'px'
-                style.height = thumbHeight + 'px'
-                style.width  = thumbHeight + 'px'
-
-                @thumbs$.appendChild(thumb$)
-                localRk += 1
-                if localRk == month.nPhotos
-                    # jump to a new month
-                    monthRk += 1
-                    month    = @months[monthRk]
-                    localRk  = 0
-                    col      = 0
-                    rowY    += rowHeight + monthTopPadding
-                else
-                    # go to next column or to a new row if we are at last column
-                    col  += 1
-                    if col is nThumbsPerRow
-                        rowY += rowHeight
-                        col   = 0
-            bufr.lastRk   = rk - 1
-            bufr.nThumbs += nToCreate
-            # if the first visible thumb has not bee created, then the first
-            # thumb to update will be the first created thumb (lastLast.prev :-)
-            if safeZone.firstThumbToUpdate == null
-                safeZone.firstThumbToUpdate = lastLast.prev
-            # store the parameters of the thumb that is just after the last one
-            bufr.nextLastRk      = rk
-            bufr.nextLastCol     = col
-            bufr.nextLastY       = rowY
-            bufr.nextLastMonthRk = monthRk
-
-            return [rowY, col, monthRk]
-
 
         _moveBufferToBottom= (nToMove, startRk, startCol, startY, monthRk)=>
             monthRk_initial = monthRk
@@ -1255,6 +1180,7 @@ module.exports = class LongList
             buffer.nextLastMonthRk = monthRk
 
 
+
         _moveBufferToTop= (nToMove, startRk, startCol, startY, monthRk)=>
             rowY    = startY
             col     = startCol
@@ -1310,6 +1236,7 @@ module.exports = class LongList
             buffer.lastRk  = buffer.last.rank
 
 
+
         _insertMonthLabel = (month)=>
             if month.label$
                 label$ = month.label$
@@ -1323,6 +1250,7 @@ module.exports = class LongList
             label$.style.left  = Math.round(marginLeft/2) + 'px'
 
 
+
         _indexClickHandler = (e) =>
             monthRk = e.target.dataset.monthRk
             if monthRk
@@ -1330,9 +1258,11 @@ module.exports = class LongList
                 _adaptIndex()
 
 
+
         _indexMouseEnter = () =>
             @index$.classList.add('hardVisible')
             indexVisible = false
+
 
 
         _indexMouseLeave = () =>
@@ -1341,10 +1271,11 @@ module.exports = class LongList
             lazyHideIndex()
 
         ####
-        # Get the geometry
+        # END of _DOM_controlerInit
         _getStaticDimensions()
-        _initBuffer()
-        _resizeHandler()
+        _resizeHandler()       # compute buffer and safeZone sizes
+        _initBuffer()          # initialize the buffer
+        @noScrollScheduled      = true
 
         ####
         # bind events
@@ -1355,6 +1286,10 @@ module.exports = class LongList
         @index$.addEventListener(    'mouseenter' , _indexMouseEnter  )
         @index$.addEventListener(    'mouseleave' , _indexMouseLeave  )
 
+
+
+################################################################################
+## MOUSE AND KEYBOARD EVENTS ##
 
 
     _clickHandler: (e) =>
@@ -1641,10 +1576,6 @@ module.exports = class LongList
                 @_scrollHandler()
                 return
 
-
-            # thumb$.scrollIntoView(true)
-            # @_scrollHandler()
-            # @_scrollHandler()
 
 
     ###*
