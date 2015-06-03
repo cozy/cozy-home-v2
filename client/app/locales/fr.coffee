@@ -183,7 +183,7 @@ module.exports =
     "home section personal watch": "Applications de veille"
     "home section misc": "Divers"
     "home section platform": "Plateforme"
-    "navbar back button title": "Retour au bureau"
+    "navbar back button title": "Retour bureau"
     "navbar logout": "Déconnexion"
     "navbar notifications": "Notifications"
     "or:": "ou:"

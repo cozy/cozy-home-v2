@@ -138,7 +138,7 @@ module.exports =
     "update stack error": "An error occured during update, page will refresh."
     "applications broken": "Applications broken"
     "cozy platform": "Platform"
-    "navbar back button title": "Back to Home"
+    "navbar back button title": "Back Home"
     "navbar notifications": "Notifications"
     "or:": "or:"
     "reboot stack": "Reboot"
