@@ -1580,6 +1580,7 @@ body {
 }
 #home-content {
   height: 100%;
+  padding: 20px;
 }
 .wizard {
   max-width: 800px;
@@ -1894,7 +1895,7 @@ body {
   -webkit-border-radius: 15px;
   border-radius: 15px;
   display: none;
-  padding: 0px 12px 10px;
+  padding: 0px 12px 0px;
 }
 #app-list section.show {
   display: block;
@@ -1974,6 +1975,7 @@ body {
   padding: 25px;
   -webkit-border-radius: 100px;
   border-radius: 100px;
+  background: #5ca3f9;
 }
 .platform-app .application-inner:hover img {
   background: #ff9d3b;
@@ -2088,11 +2090,7 @@ body {
   font-size: 20px;
   text-align: left;
 }
-#help-view .help-section {
-  height: 100%;
-}
 #help-view .help-section .w50 {
-  height: 100%;
   background: inherit;
 }
 #help-view .help-section .w600 {
@@ -2672,6 +2670,11 @@ body {
   #market-view .cozy-app {
     width: 100%;
   }
+  #help-view .line:first-child,
+  #account-view .line:first-child,
+  #config-applications-view .line:first-child {
+    margin-bottom: 20px;
+  }
   #help-view .w50,
   #account-view .w50,
   #config-applications-view .w50 {
@@ -2679,6 +2682,9 @@ body {
   }
 }
 @media (max-width: 850px) {
+  #applications-view {
+    padding: 10px;
+  }
   #market-view span {
     display: none;
   }
@@ -2703,6 +2709,9 @@ body {
   }
 }
 @media (max-width: 800px) {
+  .back-button span {
+    display: none;
+  }
   .pa2 {
     padding: 10px;
   }
@@ -2888,6 +2897,9 @@ body {
   }
   #market-view #market-application-list .cozy-app {
     height: 300px;
+  }
+  #market-view .app-img img {
+    padding: 10px;
   }
   #help-view p.help-text {
     font-size: 20px;

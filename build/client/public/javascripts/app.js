@@ -213,6 +213,7 @@ module.exports = BackgroundCollection = (function(_super) {
     return this.fetch({
       success: function(models) {
         var selected;
+        _this.addPredefinedBackgrounds();
         selected = _this.findWhere({
           id: window.app.instance.background
         });
@@ -220,11 +221,10 @@ module.exports = BackgroundCollection = (function(_super) {
           selected = _this.at(0);
         }
         if (selected != null) {
-          selected.set({
+          return selected.set({
             'selected': true
           });
         }
-        return _this.addPredefinedBackgrounds();
       },
       error: function() {}
     });
@@ -3338,7 +3338,19 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="line lightgrey help-section"><div class="mod w50 left pa2"><div class="txtcenter"><a href="http://cozy.io" target="_blank"><img src="img/logo_brand.png" class="w350"/></a></div><h4>');
+buf.push('<div class="line lightgrey help-section"><div class="mod w50 left pa2"><img src="img/contribute.jpg"/><h4>');
+var __val__ = t('help community title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div class="line"><p class="help-text">');
+var __val__ = t('Register and post on our forum: ') + " "
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
+var __val__ = t('Chat with us on IRC:') + " "
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud (irc.freenode.net)</a></P><p class="help-text">');
+var __val__ = t('help wiki title') + " "
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><P class="help-text"><a href="https://github.com/cozy-setup/wiki">github.com/cozy-setup/wiki</a></P></div></div><div class="mod w50 left pa2"><div class="txtcenter"><a href="http://cozy.io" target="_blank"><img src="img/logo-brand.png" class="w350"/></a></div><h4>');
 var __val__ = t('help support title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p class="help-text mt2">');
@@ -3353,22 +3365,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><div id="send-message-success" class="alert main-alert alert-success w100">');
 var __val__ = t('send message success')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div><div class="line"><p class="help-text mt2">');
+buf.push('</div><br/><br/><div class="line"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
 var __val__ = t('Ask your question on Twitter: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div><div class="mod w50 left pa2"><h4>');
-var __val__ = t('help community title')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line"><p class="help-text">');
-var __val__ = t('Register and post on our forum: ') + " "
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
-var __val__ = t('Chat with us on IRC:') + " "
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud on irc.freenode.net</a></P></div><h4>');
+buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div><h4>');
 var __val__ = t('help documentation title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
@@ -3380,7 +3383,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="help-text"><a href="/home/quicktour" class="wizard">');
 var __val__ = t('relaunch install wizard')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></p></div></div></div>');
+buf.push('</a></p></div></div><div class="clearfix"></div></div>');
 }
 return buf.join("");
 };
@@ -4361,6 +4364,7 @@ module.exports = ApplicationRow = (function(_super) {
         this.startStopBtn.displayGrey(t('start this app'));
     }
     this.updateIcon.toggle(this.model.get('needsUpdate'));
+    this.$(".update-app").toggle(!this.model.get('needsUpdate'));
     bool = this.model.get('isStoppable');
     return this.$('.app-stoppable').attr('checked', bool);
   };
@@ -5257,7 +5261,6 @@ module.exports = ApplicationRow = (function(_super) {
 
   function ApplicationRow(options) {
     this.showSpinner = __bind(this.showSpinner, this);
-    this.generateSpinner = __bind(this.generateSpinner, this);
     this.launchApp = __bind(this.launchApp, this);
     this.onAppClicked = __bind(this.onAppClicked, this);
     this.onAppChanged = __bind(this.onAppChanged, this);
@@ -5408,24 +5411,6 @@ module.exports = ApplicationRow = (function(_super) {
     } else if (e.which === 1) {
       return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
     }
-  };
-
-  ApplicationRow.prototype.generateSpinner = function() {
-    this.spinner = new Sonic({
-      width: 40,
-      height: 40,
-      padding: 20,
-      strokeColor: '#363a46',
-      pointDistance: .002,
-      stepsPerFrame: 15,
-      trailLength: .7,
-      step: 'fader',
-      setup: function() {
-        return this._.lineWidth = 5;
-      },
-      path: [['arc', 20, 20, 20, 0, 360]]
-    });
-    return this.spinner.play();
   };
 
   ApplicationRow.prototype.setBackgroundColor = function() {
@@ -7346,7 +7331,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
-    var frame, name,
+    var frame, onLoad,
       _this = this;
     if (this.apps.length === 0) {
       this.apps.once('reset', function() {
@@ -7354,25 +7339,36 @@ module.exports = HomeView = (function(_super) {
       });
       return null;
     }
-    this.frames.show();
-    this.content.hide();
-    this.backButton.show();
+    this.$("#app-btn-" + slug + " .spinner").toggle();
+    this.$("#app-btn-" + slug + " .icon").toggle();
     frame = this.$("#" + slug + "-frame");
+    onLoad = function() {
+      var name;
+      _this.$("#app-btn-" + slug + " .spinner").toggle();
+      _this.$("#app-btn-" + slug + " .icon").toggle();
+      _this.frames.show();
+      _this.content.hide();
+      _this.backButton.show();
+      _this.$('#app-frames').find('iframe').hide();
+      frame.show();
+      _this.selectedApp = slug;
+      name = _this.apps.get(slug).get('name');
+      if (name == null) {
+        name = '';
+      }
+      window.document.title = "Cozy - " + name;
+      $("#current-application").html(name);
+      return _this.resetLayoutSizes();
+    };
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
+      return frame.on('load', onLoad);
     } else if (hash) {
       frame.prop('contentWindow').location.hash = hash;
+      return onLoad();
+    } else {
+      return onLoad();
     }
-    this.$('#app-frames').find('iframe').hide();
-    frame.show();
-    this.selectedApp = slug;
-    name = this.apps.get(slug).get('name');
-    if (name == null) {
-      name = '';
-    }
-    window.document.title = "Cozy - " + name;
-    $("#current-application").html(name);
-    return this.resetLayoutSizes();
   };
 
   HomeView.prototype.createApplicationIframe = function(slug, hash) {

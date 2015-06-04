@@ -16,11 +16,11 @@ module.exports = {
         domain: domain
       };
       data = {
-        to: "frank@cozycloud.cc",
+        to: "support@cozycloud.cc",
         subject: "Demande d'assistance depuis un Cozy",
         content: (JSON.stringify(infos)) + "\n\n" + body.messageText
       };
-      return cozydb.sendMailFromUser(data, (function(_this) {
+      return cozydb.api.sendMailFromUser(data, (function(_this) {
         return function(err) {
           if (err) {
             return next(err);
