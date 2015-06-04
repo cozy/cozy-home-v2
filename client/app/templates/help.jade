@@ -1,4 +1,20 @@
 .line.lightgrey.help-section
+
+    .mod.w50.left.pa2
+        img(src="img/contribute.jpg")
+        h4= t('help community title')
+        .line
+            p.help-text= t('Register and post on our forum: ') + " "
+            P.help-text
+                a(href="https://forum.cozy.io") forum.cozy.io
+            p.help-text= t('Chat with us on IRC:') + " "
+            P.help-text
+                a(href="https://webchat.freenode.net/?channels=cozycloud") #cozycloud (irc.freenode.net)
+
+            p.help-text= t('help wiki title') + " "
+            P.help-text
+                a(href="https://github.com/cozy-setup/wiki") github.com/cozy-setup/wiki
+
     .mod.w50.left.pa2
         .txtcenter
             a(href="http://cozy.io", target="_blank")
@@ -10,6 +26,8 @@
         #send-message-error.alert.main-alert.alert-error.w100= t('send message error')
         #send-message-success.alert.main-alert.alert-success.w100= t('send message success')
 
+        br
+        br
         .line
             p.help-text.mt2= t('Write an email to our support team at:')
             P.help-text
@@ -17,15 +35,6 @@
             p.help-text= t('Ask your question on Twitter: ') + " "
             P.help-text
                 a(href="https://twitter.com/mycozycloud") @mycozycloud
-    .mod.w50.left.pa2
-        h4= t('help community title')
-        .line
-            p.help-text= t('Register and post on our forum: ') + " "
-            P.help-text
-                a(href="https://forum.cozy.io") forum.cozy.io
-            p.help-text= t('Chat with us on IRC:') + " "
-            P.help-text
-                a(href="https://webchat.freenode.net/?channels=cozycloud") #cozycloud on irc.freenode.net
         h4= t('help documentation title')
         .line
             p.help-text= t('Visit the project website and learn to build your app:')
@@ -34,3 +43,5 @@
             p.help-text= t('or:')
             p.help-text
                 a.wizard(href="/home/quicktour")= t('relaunch install wizard')
+
+    .clearfix
