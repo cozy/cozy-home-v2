@@ -40,9 +40,9 @@ module.exports = class BackgroundCollection extends Backbone.Collection
     init: ->
         @fetch
             success: (models) =>
+                @addPredefinedBackgrounds()
                 selected = @findWhere id: window.app.instance.background
                 selected ?= @at 0
-                selected?.set 'selected': true
-                @addPredefinedBackgrounds()
+                selected.set 'selected': true if selected?
             error: ->
 
