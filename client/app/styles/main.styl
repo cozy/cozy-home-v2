@@ -418,7 +418,7 @@ body
         background rgba(247, 244, 240, 0.8)
         border-radius 15px
         display none
-        padding 0px 12px 10px
+        padding 0px 12px 0px
 
         &.show
             display block
@@ -1139,6 +1139,9 @@ body
 
 @media (max-width 850px)
 
+    #applications-view
+        padding 10px
+
     #market-view
         span
             display none
@@ -1168,6 +1171,10 @@ body
 
 
 @media (max-width 800px)
+    .back-button
+        span
+            display none
+
     .pa2
         padding 10px
 
@@ -1369,6 +1376,10 @@ body
         #market-application-list
             .cozy-app
                 height 300px
+
+        .app-img 
+            img
+                padding 10px
 
     #help-view
         p.help-text
