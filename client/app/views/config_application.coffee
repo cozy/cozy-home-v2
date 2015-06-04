@@ -79,6 +79,7 @@ module.exports = class ApplicationRow extends BaseView
                 @startStopBtn.displayGrey t 'start this app'
 
         @updateIcon.toggle @model.get 'needsUpdate'
+        @$(".update-app").toggle not @model.get 'needsUpdate'
 
         bool = @model.get 'isStoppable'
         @$('.app-stoppable').attr 'checked', bool
