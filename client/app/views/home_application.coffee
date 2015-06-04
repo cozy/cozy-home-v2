@@ -151,28 +151,6 @@ module.exports = class ApplicationRow extends BaseView
         else if e.which is 1 # left click
             window.app.routers.main.navigate "apps/#{@model.id}/", true
 
-    # Spinner stuff
-    generateSpinner: =>
-        @spinner = new Sonic
-            width: 40
-            height: 40
-            padding: 20
-
-            strokeColor: '#363a46'
-
-            pointDistance: .002
-            stepsPerFrame: 15
-            trailLength: .7
-
-            step: 'fader'
-
-            setup: ->
-                this._.lineWidth = 5
-            path: [
-                ['arc', 20, 20, 20, 0, 360]
-            ]
-        @spinner.play()
-
 
     setBackgroundColor: ->
         slug = @model.get 'slug'
@@ -188,6 +166,7 @@ module.exports = class ApplicationRow extends BaseView
 
     showSpinner: =>
         @$('.spinner').show()
+
 
     hideSpinner: ->
         @$('.spinner').hide()
