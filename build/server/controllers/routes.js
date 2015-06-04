@@ -155,6 +155,9 @@ module.exports = {
   'api/backgrounds/:backgroundid/picture.jpg': {
     get: backgrounds.picture
   },
+  'api/backgrounds/:backgroundid/thumb.jpg': {
+    get: backgrounds.thumb
+  },
   'files/photo/range/:skip/:limit': {
     get: file.photoRange
   },

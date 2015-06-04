@@ -925,6 +925,9 @@ input[type=checkbox] {
 button::-moz-focus-inner {
   border: 0;
 }
+.w350 {
+  max-width: 350px;
+}
 .help-text {
   font-size: 26px;
   text-align: center;

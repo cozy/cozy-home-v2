@@ -179,40 +179,31 @@ module.exports = BackgroundCollection = (function(_super) {
     return this.add([
       {
         id: 'background-none',
-        src: '/img/backgrounds/background_none_th.png',
-        imgSrc: '/img/backgrounds/background_none.png'
+        predefined: true
       }, {
         id: 'background-01',
-        src: '/img/backgrounds/background_01_th.png',
-        imgSrc: '/img/backgrounds/background_01.png'
+        predefined: true
       }, {
         id: 'background-02',
-        src: '/img/backgrounds/background_02_th.png',
-        imgSrc: '/img/backgrounds/background_02.png'
+        predefined: true
       }, {
         id: 'background-03',
-        src: '/img/backgrounds/background_03_th.png',
-        imgSrc: '/img/backgrounds/background_03.png'
+        predefined: true
       }, {
         id: 'background-04',
-        src: '/img/backgrounds/background_04_th.png',
-        imgSrc: '/img/backgrounds/background_04.png'
+        predefined: true
       }, {
         id: 'background-05',
-        src: '/img/backgrounds/background_05_th.png',
-        imgSrc: '/img/backgrounds/background_05.png'
+        predefined: true
       }, {
         id: 'background-06',
-        src: '/img/backgrounds/background_06_th.png',
-        imgSrc: '/img/backgrounds/background_06.png'
+        predefined: true
       }, {
         id: 'background-07',
-        src: '/img/backgrounds/background_07_th.png',
-        imgSrc: '/img/backgrounds/background_07.png'
+        predefined: true
       }, {
         id: 'background-08',
-        src: '/img/backgrounds/background_08_th.png',
-        imgSrc: '/img/backgrounds/background_08.png'
+        predefined: true
       }
     ]);
   };
@@ -228,9 +219,11 @@ module.exports = BackgroundCollection = (function(_super) {
         if (selected == null) {
           selected = _this.at(0);
         }
-        selected.set({
-          'selected': true
-        });
+        if (selected != null) {
+          selected.set({
+            'selected': true
+          });
+        }
         return _this.addPredefinedBackgrounds();
       },
       error: function() {}
@@ -2644,7 +2637,7 @@ module.exports = Background = (function(_super) {
       id = id.replace('-', '_');
       return "/img/backgrounds/" + id + "_th.png";
     } else {
-      return "/api/backgrounds/" + id + "/picture.jpg";
+      return "/api/backgrounds/" + id + "/thumb.jpg";
     }
   };
 
@@ -3345,8 +3338,8 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="line lightgrey help-section"><div class="mod w50 left pa2"><div class="txtcenter"><a href="http://cozy.io" target="_blank"><img src="img/logo_brand.png"/></a></div><h4>');
-var __val__ = t('help send message title')
+buf.push('<div class="line lightgrey help-section"><div class="mod w50 left pa2"><div class="txtcenter"><a href="http://cozy.io" target="_blank"><img src="img/logo_brand.png" class="w350"/></a></div><h4>');
+var __val__ = t('help support title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p class="help-text mt2">');
 var __val__ = t('help send message explanation')
@@ -3360,16 +3353,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><div id="send-message-success" class="alert main-alert alert-success w100">');
 var __val__ = t('send message success')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div><div class="mod w50 left pa2"><h4>');
-var __val__ = t('help support title')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line"><p class="help-text mt2">');
+buf.push('</div><div class="line"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
 var __val__ = t('Ask your question on Twitter: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div><h4>');
+buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div></div><div class="mod w50 left pa2"><h4>');
 var __val__ = t('help community title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
@@ -3908,8 +3898,8 @@ module.exports = exports.AccountView = (function(_super) {
   __extends(AccountView, _super);
 
   function AccountView() {
-    this.displayErrors = __bind(this.displayErrors, this);
     this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
+    this.displayErrors = __bind(this.displayErrors, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
     _ref = AccountView.__super__.constructor.apply(this, arguments);
     return _ref;
@@ -3949,7 +3939,7 @@ module.exports = exports.AccountView = (function(_super) {
       el: this.$('.background-list')
     });
     this.backgroundList.collection.on('change', this.onBackgroundChanged);
-    this.backgroundAddButton = $('#background-add-button');
+    this.backgroundAddButton = this.$('#background-add-button');
     return this.fetchData();
   };
 
@@ -3986,20 +3976,6 @@ module.exports = exports.AccountView = (function(_super) {
         }
       }
       return _this.accountSubmitButton.spin(false);
-    });
-  };
-
-  AccountView.prototype.onBackgroundChanged = function(model) {
-    var data;
-    data = {
-      background: model.get('id')
-    };
-    return this.instance.saveData(data, function(err) {
-      if (err) {
-        return alert(t('account background saved error'));
-      } else {
-        return Backbone.Mediator.pub('backgroundChanged', data.background);
-      }
     });
   };
 
@@ -4146,6 +4122,20 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
+  AccountView.prototype.onBackgroundChanged = function(model) {
+    var data;
+    data = {
+      background: model.get('id')
+    };
+    return this.instance.saveData(data, function(err) {
+      if (err) {
+        return alert(t('account background saved error'));
+      } else {
+        return Backbone.Mediator.pub('backgroundChanged', data.background);
+      }
+    });
+  };
+
   return AccountView;
 
 })(BaseView);
@@ -4237,6 +4227,9 @@ module.exports = BackgroundListItem = (function(_super) {
   BackgroundListItem.prototype.afterRender = function() {
     var _this = this;
     this.deleteButton = this.$('.background-delete');
+    if (this.model.get('predefined')) {
+      this.deleteButton.hide();
+    }
     return this.model.on('change', function() {
       if (_this.model.get('selected')) {
         return _this.$el.addClass('selected');
