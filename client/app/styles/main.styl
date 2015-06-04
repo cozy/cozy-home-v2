@@ -83,7 +83,7 @@ body
 
 
 .back-button
-    margin-top 2px
+    margin-top 5px
 
     font-family 'Maven Pro', sans-serif
     font-weight normal
@@ -92,6 +92,12 @@ body
 
     color white
     opacity 0.5
+
+    img
+        margin-left 6px
+        margin-right 6px
+        width 20px
+        height 20px
 
     &:hover
         color white
@@ -185,7 +191,7 @@ body
     line-height 34px
     width auto
     cursor pointer
-    margin 0
+    margin 0 3px 0 0
     padding 0 10px
     width 36px
     height 36px
@@ -206,7 +212,7 @@ body
     #notifications-counter
         position absolute
         top 3px
-        right 0
+        right 3px
 
         height 20px
         width 20px
@@ -582,21 +588,33 @@ body
         margin-top 10px
 
         .background-button
+            position relative
             text-align center
             cursor pointer
 
             img
-                border 2px solid #DDD
+                border 5px solid transparent
+
+            button
+                display none
+                position absolute
+                top 10px
+                right 10px
+
+            &:hover
+                button
+                    display inline
 
         .background-button:hover
 
             img
-                border 2px solid orange
+                border 5px solid orange
 
         .background-button.selected
 
             img
-                border 2px solid #CDF
+                border 5px solid #6AF
+                outline 0
 
 #help-view
     height 100%

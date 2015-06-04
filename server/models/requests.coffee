@@ -34,6 +34,9 @@ module.exports =
     stack_application:
         all: cozydb.defaultRequests.all
 
+    background:
+        all: cozydb.defaultRequests.all
+
     file:
         imageByDate : imageByDate
         imageByMonth:

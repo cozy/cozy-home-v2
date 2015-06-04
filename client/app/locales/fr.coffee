@@ -97,7 +97,7 @@ module.exports =
         J'ai besoin de votre email pour la récupération de mot de passe ou
         pour vous envoyer des informations :
     """
-    "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts:"
+    "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts :"
     "your timezone is required":"""
         Votre fuseau horaire est nécessaire pour vous afficher les dates correctement :
     """
@@ -195,7 +195,7 @@ module.exports =
     "account localization": "Régionalisation"
     "spanish": "espagnol"
     "account personalization": "Personalisation"
-    "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy:"
+    "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :"
     "account password": "Changement de mot de passe"
     "help support title": "Support officiel"
     "help community title": "Support via la communauté"

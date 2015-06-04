@@ -1,13 +1,13 @@
 BaseCollection = require 'lib/base_collection'
-Application = require 'models/background'
+Background = require 'models/background'
 
 
-# List of available background. Currently the list is hardcoded.
-module.exports = class BackgroundCollection extends BaseCollection
+# List of available backgrounds.
+module.exports = class BackgroundCollection extends Backbone.Collection
+    url: 'api/backgrounds'
+    model: Background
 
-    model: Application
-
-    init: ->
+    addPredefinedBackgrounds: ->
         @add [
                 id: 'background-none'
                 src: '/img/backgrounds/background_none_th.png'
@@ -45,7 +45,13 @@ module.exports = class BackgroundCollection extends BaseCollection
                 src: '/img/backgrounds/background_08_th.png'
                 imgSrc: '/img/backgrounds/background_08.png'
         ]
-        selected = @findWhere id: window.app.instance.background
-        selected ?= @at 0
-        selected.set 'selected': true
+
+    init: ->
+        @fetch
+            success: (models) =>
+                selected = @findWhere id: window.app.instance.background
+                selected ?= @at 0
+                selected.set 'selected': true
+                @addPredefinedBackgrounds()
+            error: ->
 

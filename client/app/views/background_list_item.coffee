@@ -7,11 +7,28 @@ module.exports = class BackgroundListItem extends BaseView
     tagName: "div"
     template: require 'templates/background_list_item'
     events:
+        'click .delete-background-button': 'onDeleteClicked'
         'click': 'onClicked'
 
-    afterRender: ->
-        @$el.addClass 'selected' if @model.get 'selected'
 
+    getRenderData: ->
+        model:
+            src: @model.getThumbSrc()
+
+
+    afterRender: ->
+        @deleteButton = @$ '.background-delete'
+        @model.on 'change', =>
+            @$el.addClass 'selected' if @model.get 'selected'
+
+
+    # When item is clicked it is marked as selected.
     onClicked: ->
         @model.set 'selected', true
-        @$el.addClass 'selected'
+
+
+    # When delete button is clicked, the model is deleted remotely and the
+    # current background item is removed from DOM.
+    onDeleteClicked: ->
+        @deleteButton.spin true
+        @model.destroy()

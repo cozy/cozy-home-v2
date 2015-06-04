@@ -73,7 +73,13 @@ module.exports = class HomeView extends BaseView
         if background is 'background-none'
             @content.css 'background-image', 'none'
         else
-            val = "url('/img/backgrounds/#{background.replace '-', '_'}.jpg')"
+            # It's a pre-defined background
+            if background.indexOf('background') > -1
+                name = background.replace '-', '_'
+                val = "url('/img/backgrounds/#{name}.jpg')"
+            else
+                val = "url('/api/backgrounds/#{background}/picture.jpg')"
+
             @content.css 'background-image', val
 
 
