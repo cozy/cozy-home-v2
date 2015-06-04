@@ -2,16 +2,14 @@
     .mod.w50.left.pa2
         .txtcenter
             a(href="http://cozy.io", target="_blank")
-                img(src="img/logo_brand.png")
-        h4= t('help send message title')
+                img.w350(src="img/logo_brand.png")
+        h4= t('help support title')
         p.help-text.mt2= t('help send message explanation')
         textarea#send-message-textarea.w100.h400
         button#send-message-button.btn.w100= t('help send message action')
         #send-message-error.alert.main-alert.alert-error.w100= t('send message error')
         #send-message-success.alert.main-alert.alert-success.w100= t('send message success')
 
-    .mod.w50.left.pa2
-        h4= t('help support title')
         .line
             p.help-text.mt2= t('Write an email to our support team at:')
             P.help-text
@@ -19,6 +17,7 @@
             p.help-text= t('Ask your question on Twitter: ') + " "
             P.help-text
                 a(href="https://twitter.com/mycozycloud") @mycozycloud
+    .mod.w50.left.pa2
         h4= t('help community title')
         .line
             p.help-text= t('Register and post on our forum: ') + " "

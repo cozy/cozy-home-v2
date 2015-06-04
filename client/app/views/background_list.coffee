@@ -23,3 +23,4 @@ module.exports = class BackgroundList extends ViewCollection
                 if changedModel.cid isnt model.cid
                     model.set {'selected': false}, {silent: true}
                     @views[model.cid].$el.removeClass 'selected'
+

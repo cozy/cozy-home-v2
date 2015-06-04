@@ -10,40 +10,31 @@ module.exports = class BackgroundCollection extends Backbone.Collection
     addPredefinedBackgrounds: ->
         @add [
                 id: 'background-none'
-                src: '/img/backgrounds/background_none_th.png'
-                imgSrc: '/img/backgrounds/background_none.png'
+                predefined: true
             ,
                 id: 'background-01'
-                src: '/img/backgrounds/background_01_th.png'
-                imgSrc: '/img/backgrounds/background_01.png'
+                predefined: true
             ,
                 id: 'background-02'
-                src: '/img/backgrounds/background_02_th.png'
-                imgSrc: '/img/backgrounds/background_02.png'
+                predefined: true
             ,
                 id: 'background-03'
-                src: '/img/backgrounds/background_03_th.png'
-                imgSrc: '/img/backgrounds/background_03.png'
+                predefined: true
             ,
                 id: 'background-04'
-                src: '/img/backgrounds/background_04_th.png'
-                imgSrc: '/img/backgrounds/background_04.png'
+                predefined: true
             ,
                 id: 'background-05'
-                src: '/img/backgrounds/background_05_th.png'
-                imgSrc: '/img/backgrounds/background_05.png'
+                predefined: true
             ,
                 id: 'background-06'
-                src: '/img/backgrounds/background_06_th.png'
-                imgSrc: '/img/backgrounds/background_06.png'
+                predefined: true
             ,
                 id: 'background-07'
-                src: '/img/backgrounds/background_07_th.png'
-                imgSrc: '/img/backgrounds/background_07.png'
+                predefined: true
             ,
                 id: 'background-08'
-                src: '/img/backgrounds/background_08_th.png'
-                imgSrc: '/img/backgrounds/background_08.png'
+                predefined: true
         ]
 
     init: ->
@@ -51,7 +42,7 @@ module.exports = class BackgroundCollection extends Backbone.Collection
             success: (models) =>
                 selected = @findWhere id: window.app.instance.background
                 selected ?= @at 0
-                selected.set 'selected': true
+                selected?.set 'selected': true
                 @addPredefinedBackgrounds()
             error: ->
 

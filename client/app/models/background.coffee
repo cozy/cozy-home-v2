@@ -24,6 +24,6 @@ module.exports = class Background extends BaseModel
             id = id.replace '-', '_'
             return "/img/backgrounds/#{id}_th.png"
         else
-            return "/api/backgrounds/#{id}/picture.jpg"
+            return "/api/backgrounds/#{id}/thumb.jpg"
 
 

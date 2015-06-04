@@ -96,6 +96,8 @@ module.exports =
         delete: backgrounds.delete
     'api/backgrounds/:backgroundid/picture.jpg':
         get: backgrounds.picture
+    'api/backgrounds/:backgroundid/thumb.jpg':
+        get: backgrounds.thumb
 
     # Photo routes
     'files/photo/range/:skip/:limit'  : get: file.photoRange

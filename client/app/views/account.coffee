@@ -48,7 +48,7 @@ module.exports = class exports.AccountView extends BaseView
         @backgroundList = new BackgroundList
             el: @$ '.background-list'
         @backgroundList.collection.on 'change', @onBackgroundChanged
-        @backgroundAddButton = $ '#background-add-button'
+        @backgroundAddButton = @$ '#background-add-button'
 
         # Load data once everything is built
         @fetchData()
@@ -85,17 +85,6 @@ module.exports = class exports.AccountView extends BaseView
                 else
                     @displayErrors data.msg
             @accountSubmitButton.spin false
-
-
-    # When background is changed, data are saved and a backgroundChanged event
-    # is emitted. That way the main view can be notified.
-    onBackgroundChanged: (model) =>
-        data = background: model.get('id')
-        @instance.saveData data, (err) ->
-            if err
-                alert t 'account background saved error'
-            else
-                Backbone.Mediator.pub 'backgroundChanged', data.background
 
 
     # Display errors that occured through the error alert.
@@ -188,6 +177,10 @@ module.exports = class exports.AccountView extends BaseView
             if event.keyCode is 13 or event.which is 13
                 @onNewPasswordSubmit()
 
+    # When add background button is clicked, it displays the photo selector
+    # modal. From the selector result it sends a multipart form to the server.
+    # That way the background can saved. Once it's done the background is
+    # added to the available background list.
     onAddBackgroundClicked: ->
         params =
             type: 'singlePhoto'
@@ -216,4 +209,15 @@ module.exports = class exports.AccountView extends BaseView
                         alert t 'account background added error'
                     complete: =>
                         @backgroundAddButton.spin false
+
+
+    # When background is changed, data are saved and a backgroundChanged event
+    # is emitted. That way the main view can be notified.
+    onBackgroundChanged: (model) =>
+        data = background: model.get('id')
+        @instance.saveData data, (err) ->
+            if err
+                alert t 'account background saved error'
+            else
+                Backbone.Mediator.pub 'backgroundChanged', data.background
 
