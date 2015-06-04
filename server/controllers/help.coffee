@@ -14,10 +14,10 @@ module.exports =
             infos = {locale, domain}
 
             data =
-                to: "frank@cozycloud.cc"
+                to: "support@cozycloud.cc"
                 subject: "Demande d'assistance depuis un Cozy"
                 content: "#{JSON.stringify infos}\n\n#{body.messageText}"
-            cozydb.sendMailFromUser data, (err) =>
+            cozydb.api.sendMailFromUser data, (err) =>
                 return next err if err
 
                 res.send success: 'Mail successully sent to support.'
