@@ -17,7 +17,7 @@ module.exports = class BackgroundListItem extends BaseView
 
 
     afterRender: ->
-        @deleteButton = @$ '.background-delete'
+        @deleteButton = @$ '.delete-background-button'
         @deleteButton.hide() if @model.get 'predefined'
         @model.on 'change', =>
             @$el.addClass 'selected' if @model.get 'selected'

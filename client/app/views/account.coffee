@@ -205,6 +205,8 @@ module.exports = class exports.AccountView extends BaseView
                     success: (data) =>
                         background = new Background data
                         @backgroundList.collection.add background
+                        @backgroundList.select background
+
                     error: (data) =>
                         alert t 'account background added error'
                     complete: =>
