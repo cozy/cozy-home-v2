@@ -23,7 +23,7 @@ Background.createNew = (imagePath, callback) ->
                 return callback err if err
 
                 # Build thumbnail
-                image.resize 150, 100
+                image.resize 300, 200
                 thumbPath = '/tmp/home-thumb.jpg'
                 image.write thumbPath, (err) ->
                     return callback err if err
