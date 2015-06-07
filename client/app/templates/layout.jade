@@ -6,14 +6,19 @@ header#header.navbar
         li#no-notif-msg= t('you have no notifications')
 
 #notifications-buttons.right-menu
-    button#dismiss-all.spin-black.btn= t('dismiss all')
-    a#logout-button.btn(href="#logout")= t('navbar logout')
+    button#dismiss-all.btn
+        i.fa.fa-trash.mr1
+        span= t('dismiss all')
+    a#logout-button.btn(href="#logout")
+        i.fa.fa-sign-out.mr1
+        span= t('navbar logout')
 
 
 .home-body
     #app-frames
     #content
-        // Preload spinners
+        // Preload spinners and hover icons
         img.hidden(src="/img/spinner.svg")
         img.hidden(src="/img/spinner-white.svg")
+        img.hidden(src="/img/notification-orange.png")
         #home-content

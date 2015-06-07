@@ -4,7 +4,7 @@
 @import '../lib/styles/_wizard'
 
 *
-    outline: none
+    outline none
 
 .home-body
     width 100%
@@ -83,12 +83,12 @@ body
 
 
 .back-button
-    margin 2px 8px
-    width 24px
+    margin-top 2px
 
     font-family 'Maven Pro', sans-serif
     font-weight normal
     font-size .8em
+    text-transform lowercase
 
     color white
     opacity 0.5
@@ -97,9 +97,6 @@ body
         color white
         opacity 1
 
-    span
-        display inline-block !important    // make the beta flag always visible
-        vertical-align super
 
 
 /* content */
@@ -112,13 +109,6 @@ body
 
 #home-content
     height 100%
-    padding: 40px 60px 20px 40px
-
-    #applications-view
-    #market-view
-    #config-applications-view
-    #help-view
-        padding-bottom 10px
 
 .wizard
     max-width 800px
@@ -140,11 +130,11 @@ body
     margin .25em 1em 0 0
 
 .platform-section
-    border-radius 20px
-    margin-bottom 20px
+    height 100%
+    border-radius 0
     border-right 1px solid #DDD
     border-bottom 1px solid #DDD
-    padding 30px 20px 10px 20px
+    padding 20px
     background #F7F4F0
 
     .buttons
@@ -174,10 +164,12 @@ body
 
     #current-application
         cursor default
+        font-size 18px
+        opacity 0.8
         color white
         font-weight normal
         text-transform uppercase
-        line-height 32px
+        line-height 34px
 
 #menu-applications-container
     margin auto
@@ -202,6 +194,9 @@ body
     &:hover
         background url('/img/notification-orange.png')
 
+        #notifications-counter
+            background orange + 10%
+
     img //position hotfix
         vertical-align baseline
         width 24px
@@ -220,12 +215,13 @@ body
         font-size 15px
 
         text-align center
-        background #d9534f
+        background #338CF7
         color #fff
         border 2px solid #363a46
 
         &:empty
             padding 0
+
 
     .backcolor
         position absolute
@@ -243,7 +239,7 @@ body
 
 #notifications-toggle.highlight
     img
-        opacity: 1
+        opacity 1
 
 .active
     #notifications-toggle
@@ -392,11 +388,11 @@ body
             background-color orange + 10%
 
 
-@media screen and (-webkit-min-device-pixel-ratio:0)
+@media screen and (-webkit-min-device-pixel-ratio: 0)
 
     #menu-applications-toggle
         span
-            padding-top: 10px
+            padding-top 10px
 
 /** Applications */
 
@@ -407,14 +403,15 @@ body
 
     .preview-holder
         padding 10px
-        display: block
-        list-style-type: none
-        background-color: orange
+        display block
+        list-style-type none
+        background-color orange
 
     section
         background rgba(247, 244, 240, 0.8)
-        border-radius 20px
+        border-radius 15px
         display none
+        padding 0px 12px 10px
 
         &.show
             display block
@@ -424,7 +421,7 @@ body
             text-transform uppercase
             color darkgrey
             background-color transparent
-            padding 5px 10px 2px 20px
+            padding 20px 10px 4px 18px
             margin-top 20px
             margin-bottom 0px
 
@@ -461,8 +458,8 @@ body
             margin-top 0px
 
         p
-            margin: 0
-            font-family: 'Source Sans Pro', sans-serif
+            margin 0
+            font-family 'Source Sans Pro', sans-serif
             color textcolor
 
         .app-title
@@ -487,7 +484,7 @@ body
 
     &.broken
         .broken-notifier
-            display: block
+            display block
 
 .platform-app
     .application-inner
@@ -501,60 +498,60 @@ body
                 border-radius 100px
 
 .app-tools
-    width: 50%
-    margin-left: auto
-    margin-right: auto
-    margin-top: 12px
-    color: text-color
-    text-align: center
-    margin-bottom: 20px
+    width 50%
+    margin-left auto
+    margin-right auto
+    margin-top 12px
+    color text-color
+    text-align center
+    margin-bottom 20px
 
 #no-app-message
-    margin: auto
-    margin-top: 30px
-    width: 80%
-    background: lightgrey
-    border-bottom-left-radius: 5px
-    border-bottom-right-radius: 5px
-    padding-bottom: 20px
+    margin auto
+    margin-top 30px
+    width 80%
+    background lightgrey
+    border-bottom-left-radius 5px
+    border-bottom-right-radius 5px
+    padding-bottom 20px
 
     #start-title
-        padding: 20px
-        font-size: 28px
-        margin-bottom: 30px
+        padding 20px
+        font-size 28px
+        margin-bottom 30px
 
         img
-            float: left
+            float left
 
     p
         padding-left 20px
         padding-right 20px
 
     img
-        width: 32px
-        margin-right: 10px
+        width 32px
+        margin-right 10px
 
     img.logo
-        width: auto
+        width auto
 
     a
-        border-bottom: 0
+        border-bottom 0
 
 .darkbg
-    background: darkblue
-    //background: orangewhite - 40%
-    color: white
+    background darkblue
+    //background orangewhite - 40%
+    color white
 
 .section-title
-    background: darkblue
-    color: white
-    padding: 5px 20px
-    position: absolute
-    top: 0
-    margin: auto
+    background darkblue
+    color white
+    padding 5px 20px
+    position absolute
+    top 0
+    margin auto
 
 .install-info
-    width: 40%
+    width 40%
     text-align center
 
 
@@ -570,11 +567,9 @@ body
         font-size 24px
 
     #account-form
-        border-radius 20px
-        margin-bottom 20px
+        padding 20px
         border-right 1px solid #DDD
         border-bottom 1px solid #DDD
-        padding 30px 20px 10px 20px
 
     .input
         .btn
@@ -604,16 +599,27 @@ body
                 border 2px solid #CDF
 
 #help-view
+    height 100%
 
     p.help-text
-        font-size 22px
+        font-size 20px
+        text-align left
 
     .help-section
-        border-radius 20px
-        margin-bottom 20px
-        padding 30px 20px
-        border-right 1px solid #DDD
-        border-bottom 1px solid #DDD
+        height 100%
+        .w50
+            height 100%
+            background inherit
+
+        .w600
+            padding 20px
+            border-left 1px solid lightgrey - 10%
+            border-right 1px solid lightgrey - 10%
+            border-bottom 1px solid lightgrey - 10%
+            margin-bottom 30px
+
+    .alert
+        margin-top 10px
 
 #home-view
     overflow hidden
@@ -624,8 +630,8 @@ body
     margin 0
 
 .app-introduction
-    margin-top: 60px
-    margin-bottom: 20px
+    margin-top 60px
+    margin-bottom 20px
 
 // MARKET PAGE
 
@@ -634,70 +640,70 @@ body
     width 99%
 
     p
-        margin-bottom: 0
+        margin-bottom 0
 
     .text
-        padding: 20px
+        padding 20px
 
     #app-git-field
-        text-align: left
-        box-sizing: border-box
-        width: 100%
-        max-width: 550px
-        font-size: 24px
-        padding: 10px
-        margin-top: 2px
-        margin-right: 10px
+        text-align left
+        box-sizing border-box
+        width 100%
+        max-width 550px
+        font-size 24px
+        padding 10px
+        margin-top 2px
+        margin-right 10px
 
     .btn
-        height: 60px
+        height 60px
 
     .error
-        box-sizing: border-box
-        width: 100%
-        max-width: 615px
-        margin-top: 10px
-        font-size: 0.8em
-        padding: 5px
+        box-sizing border-box
+        width 100%
+        max-width 615px
+        margin-top 10px
+        font-size 0.8em
+        padding 5px
 
 #app-market-list
-    box-sizing: border-box
-    margin-top: 20px
+    box-sizing border-box
+    margin-top 20px
 
     .app-install-button
         button
         div
-            display: inline
+            display inline
 
         .app-text
-            padding: 10px
-            word-wrap: normal
-            overflow-x: hidden
+            padding 10px
+            word-wrap normal
+            overflow-x hidden
 
         .app-text p
-            margin-right: 20px
+            margin-right 20px
 
         .app-install
-            border: 0
-            outline: 0
-            font-weight: bold
-            color: orange - 10%
-            box-shadow: none
-            font-size: 0.8em
-            padding: 4px 8px
-            float: right
+            border 0
+            outline 0
+            font-weight bold
+            color orange - 10%
+            box-shadow none
+            font-size 0.8em
+            padding 4px 8px
+            float right
 
         .app-install-text
-            display: none
-            float: right
-            font-size: 0.8em
-            padding: 4px
-            padding-left: 8px
-            cursor: pointer
-            font-weight: bold
-            color: orange - 10%
-            box-shadow: none
-            height: 20px
+            display none
+            float right
+            font-size 0.8em
+            padding 4px
+            padding-left 8px
+            cursor pointer
+            font-weight bold
+            color orange - 10%
+            box-shadow none
+            height 20px
 
 
 
@@ -764,23 +770,23 @@ body
         display none
 
     .img-btn:hover
-        opacity: 1
-        cursor: pointer
+        opacity 1
+        cursor pointer
 
 .cozy-app:hover
-    background: lightgrey - 10%
+    background lightgrey - 10%
 
     .right
-        display: inline
+        display inline
 
     .img-btn
-        display: inline
+        display inline
 
 .cozy-app.official
-    background: lightgreyblue
+    background lightgreyblue
 
 .cozy-app.official:hover
-    background: lightgreyblue - 5%
+    background lightgreyblue - 5%
 
 
 // Config application
@@ -831,6 +837,7 @@ body
         align-items center
 
         button
+        a
             width 100%
             display inline-block
             margin 0 0 2px
@@ -857,11 +864,10 @@ body
                 display none
 
     .to-update-label
-        background #333
+        background #43A047
         color orangewhite
         padding 3px 6px
         font-size 12px
-        margin-left 10px
         border-radius 3px
         text-transform lowercase
 
@@ -875,6 +881,8 @@ body
             width 100%
             text-align left
             margin-bottom 2px
+            display block
+            font-size 12px
 
             .fa
                 margin-top 2px
@@ -896,19 +904,19 @@ body
         display inline-block
 
     .mod.left
-        margin: 0
+        margin 0
 
     .smaller
-        font-family: 'Source Sans Pro', sans-serif
+        font-family 'Source Sans Pro', sans-serif
 
     .md-header
-        background: transparent
+        background transparent
 
     .md-footer
-        padding: 0
+        padding 0
 
         .btn
-            font-weight: normal
+            font-weight normal
 
 .config-device:hover
     .dataLine
@@ -917,6 +925,9 @@ body
         text-shadow none
 
 #config-applications-view
+    .w50
+        padding 20px
+
     .change-layout img
         margin-left 5px
         margin-bottom 7px
@@ -933,93 +944,93 @@ body
 .application
     .permissionsLine
         p
-            text-shadow: none
-            color: grey + 20%
+            text-shadow none
+            color grey + 20%
 
 .md-open
-    overflow: hidden
+    overflow hidden
 
 .md-modal
-    position: fixed
-    top: 50%
-    left: 50%
-    width: 50%
-    max-width: 630px
-    min-width: 320px
-    height: auto
-    z-index: 2000
-    visibility: hidden
-    backface-visibility: hidden
-    transform: translateX(-50%) translateY(-50%)
+    position fixed
+    top 50%
+    left 50%
+    width 50%
+    max-width 630px
+    min-width 320px
+    height auto
+    z-index 2000
+    visibility hidden
+    backface-visibility hidden
+    transform translateX(-50%) translateY(-50%)
 
 
 .md-modal .md-content
-    transform: translateX(20%)
-    opacity: 0
-    transition: all 3s
-    background: orangewhite
-    position: relative
-    margin: 0 auto
-    transition: all 0.3s
+    transform translateX(20%)
+    opacity 0
+    transition all 3s
+    background orangewhite
+    position relative
+    margin 0 auto
+    transition all 0.3s
 
 .md-show.md-content
-    transform: translateX(0)
-    opacity: 1
-    transition: all 0.3s
+    transform translateX(0)
+    opacity 1
+    transition all 0.3s
 
 .md-overlay
-    position: fixed
-    width: 100%
-    height: 100%
-    visibility: hidden
-    top: 0
-    left: 0
-    z-index: 1000
-    opacity: 0
-    background: rgba(143,140,140,0.6)
-    transition: all 0.6s
-    cursor: pointer
+    position fixed
+    width 100%
+    height 100%
+    visibility hidden
+    top 0
+    left 0
+    z-index 1000
+    opacity 0
+    background rgba(143,140,140,0.6)
+    transition all 0.6s
+    cursor pointer
 
 .md-header
-    padding: 10px 20px
-    background: #333
+    padding 10px 20px
+    background #333
 
     h3
-        color: white
-        margin-bottom: 0px
-        margin-top: 10px
+        color white
+        margin-bottom 0px
+        margin-top 10px
 
     img
-        width: 32px
+        width 32px
 
     span
-        padding-top: 30px
+        padding-top 30px
 
     p
-        margin-top: 0px
-        font-size: 18px
-        color: white
+        margin-top 0px
+        font-size 18px
+        color white
 
     a
-        color: white
-        opacity: 0.7
-        transition: all 0.3s
-        line-height: 32px
-        font-size: 24px
+        color white
+        opacity 0.7
+        transition all 0.3s
+        line-height 32px
+        font-size 24px
 
     a:hover
-        color: white
-        opacity: 1
+        color white
+        opacity 1
 
     .repo-stars
-        right: 60px
-        padding-top: 3px
-        position: absolute
+        right 60px
+        padding-top 3px
+        position absolute
 
 .noncozy-warning
-    margin-top: 20px
+    margin-top 20px
     padding 5px 10px
-    border-radius: 5px
+    border-radius 5px
     background lightgreyblue
 
     .fa
@@ -1057,15 +1068,15 @@ body
         display inline-block
 
     p
-        margin-top: 0
+        margin-top 0
 
     h4
         margin-bottom 20px
         font-size 20px
 
 .md-footer
-    background: lightgrey
-    padding: 10px
+    background lightgrey
+    padding 10px
 
 
 .md-show
@@ -1088,10 +1099,7 @@ body
 
 // Responsive
 
-@media (max-width: 1200px)
-    #home-content
-        padding-top 10px
-
+@media (max-width 1200px)
     .application .application-inner
         padding 0px 10px
 
@@ -1100,7 +1108,14 @@ body
         .cozy-app
             width 100%
 
-@media (max-width: 850px)
+    #help-view
+    #account-view
+    #config-applications-view
+        .w50
+            width 100%
+
+
+@media (max-width 850px)
 
     #market-view
         span
@@ -1124,8 +1139,27 @@ body
             button.next
                 margin-bottom 0
 
+    #app-list
+        section
+            h2
+                padding-left 13px
 
-@media (max-width: 800px)
+
+@media (max-width 800px)
+    .pa2
+        padding 10px
+
+    #account-view
+        #account-form
+            padding 10px
+
+    #config-applications-view
+        .w50
+            padding 10px
+
+    .platform-section
+        padding 10px
+
 
     .application .application-inner
         padding 0
@@ -1134,63 +1168,63 @@ body
             font-size 14px
 
     .md-content
-        overflow: auto
+        overflow auto
 
     .md-modal
-        position: fixed
-        bottom: 0
-        width: 100%
-        height: 90%
-        z-index: 2000
-        visibility: hidden
-        backface-visibility: hidden
-        margin: 0
-        padding: 0
+        position fixed
+        bottom 0
+        width 100%
+        height 90%
+        z-index 2000
+        visibility hidden
+        backface-visibility hidden
+        margin 0
+        padding 0
 
     .section-title
-        display: none
+        display none
 
     .home-body
-        box-shadow: none
+        box-shadow none
 
     #account-form
-        text-align: left
+        text-align left
 
         p
-            margin: 15px
+            margin 15px
 
         .field
-            margin: 15px
+            margin 15px
 
             select
 
 
             option
-                width: 75%
+                width 75%
 
     img
-        margin: 10px 10px 0 0
+        margin 10px 10px 0 0
 
     h3
-        margin-top: 20px
-        margin-bottom: 0
-        padding-bottom: 0
-        line-height: 16px
+        margin-top 20px
+        margin-bottom 0
+        padding-bottom 0
+        line-height 16px
 
     .comment
-        font-size: 14px
+        font-size 14px
 
     #buttons
-        width: 100%
-        height: 100%
+        width 100%
+        height 100%
 
         .nav
-            margin: 0
-            height: 20px
+            margin 0
+            height 20px
 
         .app-button
-            display: none
-            height: 60px
+            display none
+            height 60px
 
         li
             margin 0
@@ -1233,17 +1267,17 @@ body
 
     #config-applications-view
         .w33
-            width: 100%
-            padding: 10px 40px 10px 10px
+            width 100%
+            padding 10px 40px 10px 10px
 
         .w66
-            width: 100%
-            margin-top: 40px
-            padding: 10px 40px 10px 10px
+            width 100%
+            margin-top 40px
+            padding 10px 40px 10px 10px
 
         .config-applications
             .buttons
-                display: block
+                display block
 
 
         .change-layout, .disk-space, .memory-free, .stack-app
@@ -1277,7 +1311,7 @@ body
 
 
 
-@media (max-width: 640px)
+@media (max-width 640px)
 
     #account-view
         p
@@ -1285,26 +1319,26 @@ body
 
         input
         select
-            width: 100%
-            font-size: 16px
+            width 100%
+            font-size 16px
 
         #account-form
             .btn
-                width: 100%
-                margin: 20px 0 0 0
-                height: 30px
+                width 100%
+                margin 20px 0 0 0
+                height 30px
 
         select
-            width: 100%
+            width 100%
 
     #home-content
-        padding 5px
+        padding 0
 
     #no-app-message
         width 100%
 
     #market-view
-        padding 10px 0 10px 10px
+        padding 0
 
         .right
             img
@@ -1332,8 +1366,12 @@ body
                 font-size 26px
                 line-height 26px
 
+    #app-list
+        section
+            h2
+                padding-left 8px
 
-@media (max-width: 500px)
+@media (max-width 500px)
 
     #config-applications-view
         .mod.w25
@@ -1345,7 +1383,7 @@ body
 
     #home-menu
         .logout-menu-icon
-            display: block
+            display block
 
     .application .application-inner
         padding 0
@@ -1354,8 +1392,8 @@ body
             padding 5px
 
         .app-title
-            margin-top: 4px
-            font-size: 10px
+            margin-top 4px
+            font-size 10px
 
 
     #market-view
@@ -1386,9 +1424,9 @@ body
             text-align left
 
             img
-                margin: 10px 0 0 10px
-                width: 100px
-                height: 100px
+                margin 10px 0 0 10px
+                width 100px
+                height 100px
 
     #notifications
     #notifications-buttons
@@ -1401,24 +1439,24 @@ body
     #config-applications-view
         .config-application
             .mod.left
-                width: 100%
-                margin-bottom: 10px
+                width 100%
+                margin-bottom 10px
 
     #content
         #home-menu
             .menu-btn:hover
-                background: none
-                background-color: transparent
+                background none
+                background-color transparent
 
                 span
-                    display: none
+                    display none
 
 
 span.app
-    font-weight: bold
+    font-weight bold
 
 button.btn
-    display: inline-flex
+    display inline-flex
     vertical-align top
     text-align center
 

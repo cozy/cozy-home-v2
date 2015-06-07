@@ -87,7 +87,7 @@ module.exports =
     "manage your applications":"Applications"
     "manage your devices":"Manage your devices"
     "synchronized": "synchronized"
-    "revoke device access": "Revoke device access"
+    "revoke device access": "Revoke device"
     "no application installed":"There is no app installed."
 
     "your parameters":"Your settings"
@@ -124,6 +124,10 @@ module.exports =
     "updated":"updated"
     "updating":"updating"
     "update all": "Update all"
+    "show home logs": "Show Home Logs"
+    "show data system logs": "Show Data System Logs"
+    "show proxy logs": "Show Proxy Logs"
+    "show logs": "Show Logs"
     "update stack": "Update"
     "refresh page": "Wait please, update takes several minutes."
     "status no device": "No device registered for synchronization."
@@ -134,7 +138,8 @@ module.exports =
     "update stack error": "An error occured during update, page will refresh."
     "applications broken": "Applications broken"
     "cozy platform": "Platform"
-    "navbar back button title": "Back to Home"
+    "navbar back button title": "Back Home"
+    "navbar notifications": "Notifications"
     "or:": "or:"
     "reboot stack": "Reboot"
     "update error":"An error occured while updating the app"
@@ -183,7 +188,11 @@ module.exports =
     "help": "Help"
     "change layout": "Change the layout"
     "market app install": "Installing..."
-
+    "help send message title": "Write directly to the Cozy Team"
+    "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!"
+    "help send message action": "Send message to the Cozy Support Team"
+    "send message success": "Message successfully sent!"
+    "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc"
     "introduction market": """
         Welcome to the Cozy app store!
         Here, you can install
