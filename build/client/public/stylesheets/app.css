@@ -754,8 +754,13 @@ body {
   font-size: 18px;
 }
 a {
-  color: #15a7c7;
+  color: #5ca3f9;
   text-decoration: none;
+  -webkit-transition: color 0.2s ease;
+  -moz-transition: color 0.2s ease;
+  -o-transition: color 0.2s ease;
+  -ms-transition: color 0.2s ease;
+  transition: color 0.2s ease;
 }
 hr {
   margin: 20px 0;
@@ -781,12 +786,11 @@ select,
 textarea {
   background: #fff;
   padding: 10px;
-  -webkit-border-radius: 0.4em;
-  border-radius: 0.4em;
   border: 0;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
-  border: 1px solid #fff;
+  border-left: 3px solid #5ca3f9;
+  border-bottom: 1px solid transparent;
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -795,9 +799,10 @@ textarea {
 }
 input,
 select {
-  color: #15a7c7;
+  color: #5ca3f9;
   font-family: 'Maven Pro', sans-serif;
   font-size: 30px;
+  line-height: 30px;
   height: 60px;
   width: 550px;
   text-align: center;
@@ -805,14 +810,16 @@ select {
 input:hover,
 select:hover,
 textarea:hover {
-  border: 1px solid #15a7c7;
+  border-left: 3px solid #ff850a;
+  border-bottom: 1px solid #ff850a;
 }
 input:focus,
 select:focus {
   color: #ff850a;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
-  border: 1px solid #ffc285;
+  border-left: 3px solid #ff850a;
+  border-bottom: 1px solid #ff850a;
 }
 .w500 {
   max-width: 500px;
@@ -854,14 +861,12 @@ select:focus {
   text-align: center;
 }
 .btn {
-  background: #15a7c7;
-  border: 1px #11869f;
+  background: #5ca3f9;
+  border: 1px #1a7ef7;
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif;
   color: #fff;
   padding: 5px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
   cursor: pointer;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -913,7 +918,7 @@ select:focus {
   background: transparent;
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif;
-  color: #15a7c7;
+  color: #5ca3f9;
   padding: 5px;
   margin-right: 5px;
 }
@@ -1444,7 +1449,7 @@ dialog[open]::backdrop {
   -webkit-border-radius: 5px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #15a7c7;
+  background-color: #5ca3f9;
   color: #fff;
 }
 .wizard button:focus,
@@ -1453,7 +1458,7 @@ dialog[open]::backdrop {
 }
 .wizard button.action.no {
   background-color: transparent;
-  color: #15a7c7;
+  color: #5ca3f9;
 }
 .wizard button.action.no:focus,
 .wizard button.action.no:hover {
@@ -1538,14 +1543,6 @@ body {
   height: 36px;
   padding: 0;
 }
-.navbar span {
-  margin: 0;
-}
-.navbar img {
-  height: 28px;
-  vertical-align: middle;
-  margin: 2px 0 0 0;
-}
 .back-button {
   margin-top: 5px;
   font-family: 'Maven Pro', sans-serif;
@@ -1556,6 +1553,11 @@ body {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
+  -webkit-transition: opacity 0.2s ease;
+  -moz-transition: opacity 0.2s ease;
+  -o-transition: opacity 0.2s ease;
+  -ms-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 .back-button img {
   margin-left: 6px;
@@ -1577,6 +1579,11 @@ body {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
+  -webkit-transition: 0.6s background-image ease-in-out;
+  -moz-transition: 0.6s background-image ease-in-out;
+  -o-transition: 0.6s background-image ease-in-out;
+  -ms-transition: 0.6s background-image ease-in-out;
+  transition: 0.6s background-image ease-in-out;
 }
 #home-content {
   height: 100%;
@@ -1610,7 +1617,8 @@ body {
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   padding: 20px;
-  background: #f7f4f0;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.95);
 }
 .platform-section .buttons button.btn {
   display: block;
@@ -1666,23 +1674,24 @@ body {
   line-height: 34px;
   width: auto;
   cursor: pointer;
-  margin: 0 3px 0 0;
+  margin: 0 5px 0 0;
   padding: 0 10px;
   width: 36px;
   height: 36px;
-  background: url("/img/notification.png");
 }
-#notifications-toggle:hover {
-  background: url("/img/notification-orange.png");
+#notifications-toggle i {
+  color: #5ca3f9;
+  -webkit-transition: color 0.2s ease;
+  -moz-transition: color 0.2s ease;
+  -o-transition: color 0.2s ease;
+  -ms-transition: color 0.2s ease;
+  transition: color 0.2s ease;
+}
+#notifications-toggle:hover i {
+  color: #ff850a;
 }
 #notifications-toggle:hover #notifications-counter {
-  background: #ff9123;
-}
-#notifications-toggle img {
-  vertical-align: baseline;
-  width: 24px;
-  height: 24px;
-  margin-top: 0;
+  background: #ff850a;
 }
 #notifications-toggle #notifications-counter {
   position: absolute;
@@ -1698,6 +1707,11 @@ body {
   background: #338cf7;
   color: #fff;
   border: 2px solid #363a46;
+  -webkit-transition: background 0.2s ease;
+  -moz-transition: background 0.2s ease;
+  -o-transition: background 0.2s ease;
+  -ms-transition: background 0.2s ease;
+  transition: background 0.2s ease;
 }
 #notifications-toggle #notifications-counter:empty {
   padding: 0;
@@ -1743,16 +1757,6 @@ body {
 }
 #notifications-container a {
   color: #363a46;
-}
-#notifications-container #notifications-toggle.highlight {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-#notifications-container .notification a {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
 }
 #notifications-container .badge {
   padding: 1px 2px 1px 3px;
@@ -1891,7 +1895,7 @@ body {
   background-color: #ff850a;
 }
 #app-list section {
-  background: rgba(247,244,240,0.8);
+  background: rgba(255,255,255,0.8);
   -webkit-border-radius: 15px;
   border-radius: 15px;
   display: none;
@@ -1933,6 +1937,11 @@ body {
   border-radius: 200px;
   margin-bottom: 10px;
   width: 100%;
+  -webkit-transition: background 0.2s ease;
+  -moz-transition: background 0.2s ease;
+  -o-transition: background 0.2s ease;
+  -ms-transition: background 0.2s ease;
+  transition: background 0.2s ease;
 }
 .application .application-inner img.spinner {
   -webkit-border-radius: 200px;
@@ -2038,23 +2047,27 @@ body {
   width: 40%;
   text-align: center;
 }
+#account-view p {
+  margin: 0;
+  margin-bottom: 5px;
+}
 #account-view input,
 #account-view select {
-  max-width: 490px;
   text-align: left;
   margin-bottom: 10px;
   font-size: 24px;
 }
 #account-view #account-form {
+  background: rgba(255,255,255,0.95);
   padding: 20px;
+  margin-bottom: 20px;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
 #account-view .input .btn {
   display: inline-block;
-  height: 55px;
-  width: 55px;
-  margin-left: 10px;
+  line-height: 40px;
+  padding: 10px;
 }
 #account-view .background-list {
   margin-top: 10px;
@@ -2086,19 +2099,23 @@ body {
 #help-view {
   height: 100%;
 }
+#help-view p {
+  margin: 0;
+  margin-bottom: 0;
+}
+#help-view p.mt2 {
+  margin-top: 20px;
+}
 #help-view p.help-text {
   font-size: 20px;
   text-align: left;
 }
-#help-view .help-section .w50 {
-  background: inherit;
+#help-view .help-section {
+  background: rgba(255,255,255,0.95);
+  margin-bottom: 20px;
 }
-#help-view .help-section .w600 {
-  padding: 20px;
-  border-left: 1px solid #e6ddd0;
-  border-right: 1px solid #e6ddd0;
-  border-bottom: 1px solid #e6ddd0;
-  margin-bottom: 30px;
+#help-view .help-section .w50 {
+  padding: 30px;
 }
 #help-view .alert {
   margin-top: 10px;
@@ -2136,8 +2153,6 @@ body {
   max-width: 550px;
   font-size: 24px;
   padding: 10px;
-  margin-top: 2px;
-  margin-right: 10px;
 }
 #your-app .btn {
   height: 60px;
@@ -2317,7 +2332,6 @@ body {
   border-top: 0;
 }
 .config-application {
-  background: #f7f4f0;
   border-top: 1px solid #e6ddd0;
   padding: 10px 0;
   margin-bottom: 10px;
@@ -2604,7 +2618,7 @@ body {
   float: left;
   font-size: 28px;
   margin: 5px 10px 5px 0;
-  color: #15a7c7;
+  color: #5ca3f9;
 }
 .noncozy-warning span,
 .noncozy-warning a {
@@ -2613,7 +2627,7 @@ body {
   color: #000;
 }
 .noncozy-warning a {
-  color: #15a7c7;
+  color: #5ca3f9;
 }
 .noncozy-warning a:hover {
   color: #ff850a;

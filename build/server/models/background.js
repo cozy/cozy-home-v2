@@ -24,7 +24,7 @@ Background.createNew = function(imagePath, callback) {
         if (err) {
           return callback(err);
         }
-        image.resize(150, 100);
+        image.resize(300, 200);
         thumbPath = '/tmp/home-thumb.jpg';
         return image.write(thumbPath, function(err) {
           var data;

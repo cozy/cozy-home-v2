@@ -1557,8 +1557,8 @@ module.exports = {
   "public name description": "Your public name will be used by your Cozy and its apps to mention you properly:",
   "your timezone is required": "Your time zone helps display dates properly:",
   "domain name for urls and email": "The domain name is used to build sharing URLs sent via email to yourself or your contacts:",
-  "save": "save",
-  "saved": "saved",
+  "save": "Save",
+  "saved": "Saved",
   "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
   "account background selection": "Select your background for your Cozy Home:",
   "account localization": "Localization",
@@ -1574,7 +1574,7 @@ module.exports = {
   "current password": "current password",
   "new password": "new password",
   "confirm your new password": "confirm your new password",
-  "save your new password": "save your new password",
+  "save your new password": "Save your new password",
   "do you want assistance": "Do you need some help?",
   "Write an email to our support team at:": "Send our support team an email:",
   "Register and post on our forum: ": "Register and post to our forum:",
@@ -1622,6 +1622,7 @@ module.exports = {
   "help support title": "Official Support",
   "help community title": "Community Support",
   "help documentation title": "Documentation",
+  "help wiki title": "Wiki:",
   "changing locale requires reload": "Changing the locale requires to reload the page.",
   "cancel": "cancel",
   "abort": "abort",
@@ -1653,6 +1654,7 @@ module.exports = {
   "help send message action": "Send message to the Cozy Support Team",
   "send message success": "Message successfully sent!",
   "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc",
+  "account background add": "Add background",
   "introduction market": "Welcome to the Cozy app store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
@@ -2016,7 +2018,7 @@ module.exports = {
   "memory unit": "Mo",
   "always on": "toujours démarrée",
   "keep always on": "garder toujours démarrée",
-  "stop this app": "arrêter cette application",
+  "stop this app": "Arrêter cette application",
   "update required": "Mise à jour disponible",
   "application is installing": "Une application est en cours d'installation.\nAttendez la fin de celle-ci avant d'en lancer une nouvelle.",
   "no app message": "Vous n'avez aucune application installée. Allez sur\nl'<a href=\"#applications\">app store</a> pour en installer au moins une !",
@@ -2045,8 +2047,8 @@ module.exports = {
   "revoke device access": "Révoquer l'appareil",
   "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
-  "save": "sauver",
-  "saved": "sauvé",
+  "save": "Sauver",
+  "saved": "Sauvé",
   "market app install": "Installation…",
   "your parameters": "Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations :",
@@ -2065,6 +2067,7 @@ module.exports = {
   "save your new password": "Sauvegarder votre nouveau mot de passe",
   "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
   "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
+  "account background add": "Ajouter un fond d'écran",
   "Register and post on our forum: ": "Postez un message sur notre forum :",
   "Ask your question on Twitter: ": "Posez votre question sur Twitter :",
   "Chat with us on IRC:": "Discutez avec nous sur IRC :",
@@ -2124,7 +2127,7 @@ module.exports = {
   "navbar back button title": "Retour bureau",
   "navbar logout": "Déconnexion",
   "navbar notifications": "Notifications",
-  "or:": "ou:",
+  "or:": "ou :",
   "app status": "Etats",
   "app store": "App Store",
   "settings": "Paramètres",
@@ -2138,8 +2141,9 @@ module.exports = {
   "help support title": "Support officiel",
   "help community title": "Support via la communauté",
   "help documentation title": "Documentation",
+  "help wiki title": "Wiki :",
   "help send message title": "Ecrire directement à l'équipe Cozy",
-  "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utilisier le champ texte en dessous. Vous pouvez également nous envoyer des retours, rapporter des bugs et bien sûr demander de l'assistance !",
+  "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !",
   "help send message action": "Send message to the Cozy Support Team",
   "send message success": "Message successfully sent!",
   "help send message action": "Envoyer un message à l'équipe support de Cozy",
@@ -3344,19 +3348,19 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
 var __val__ = t('Register and post on our forum: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text mt2">');
 var __val__ = t('Chat with us on IRC:') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud (irc.freenode.net)</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud (irc.freenode.net)</a></P><p class="help-text mt2">');
 var __val__ = t('help wiki title') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://github.com/cozy-setup/wiki">github.com/cozy-setup/wiki</a></P></div></div><div class="mod w50 left pa2"><div class="txtcenter"><a href="http://cozy.io" target="_blank"><img src="img/logo-brand.png" class="w350"/></a></div><h4>');
+buf.push('</p><P class="help-text"><a href="https://github.com/cozy-setup/wiki">github.com/cozy-setup/wiki</a></P></div></div><div class="mod w50 left pa2"><div style="text-align: right;"><a href="http://cozy.io" target="_blank"><img src="img/logo-brand.png" class="w350"/></a></div><h4>');
 var __val__ = t('help support title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p class="help-text mt2">');
 var __val__ = t('help send message explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><textarea id="send-message-textarea" class="w100 h400"></textarea><button id="send-message-button" class="btn w100">');
+buf.push('</p><textarea id="send-message-textarea" class="mt2 w100 h400"></textarea><button id="send-message-button" class="btn w100">');
 var __val__ = t('help send message action')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><div id="send-message-error" class="alert main-alert alert-error w100">');
@@ -3368,16 +3372,16 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><br/><br/><div class="line"><p class="help-text mt2">');
 var __val__ = t('Write an email to our support team at:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text mt2">');
 var __val__ = t('Ask your question on Twitter: ') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div><h4>');
 var __val__ = t('help documentation title')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line"><p class="help-text">');
+buf.push('</h4><div class="line"><p class="help-text mt2">');
 var __val__ = t('Visit the project website and learn to build your app:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P><p class="help-text">');
+buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P><p class="help-text mt2">');
 var __val__ = t('or:')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="help-text"><a href="/home/quicktour" class="wizard">');
@@ -3661,7 +3665,7 @@ with (locals || {}) {
 var interp;
 buf.push('<a');
 buf.push(attrs({ 'id':('notifications-toggle'), 'title':("" + (t('navbar notifications')) + "") }, {"title":true}));
-buf.push('><span class="backcolor"></span><span id="notifications-counter"></span></a><div id="clickcatcher"></div>');
+buf.push('><i class="fa fa-bell"></i><span id="notifications-counter"></span></a><div id="clickcatcher"></div>');
 }
 return buf.join("");
 };
@@ -4112,7 +4116,8 @@ module.exports = exports.AccountView = (function(_super) {
           success: function(data) {
             var background;
             background = new Background(data);
-            return _this.backgroundList.collection.add(background);
+            _this.backgroundList.collection.add(background);
+            return _this.backgroundList.select(background);
           },
           error: function(data) {
             return alert(t('account background added error'));
@@ -4188,6 +4193,18 @@ module.exports = BackgroundList = (function(_super) {
     });
   };
 
+  BackgroundList.prototype.select = function(background) {
+    return this.views[background.cid].$el.click();
+  };
+
+  BackgroundList.prototype.appendView = function(view) {
+    if (view.model.get('predefined')) {
+      return this.$el.prepend(view.el);
+    } else {
+      return this.$el.append(view.el);
+    }
+  };
+
   return BackgroundList;
 
 })(ViewCollection);
@@ -4229,7 +4246,7 @@ module.exports = BackgroundListItem = (function(_super) {
 
   BackgroundListItem.prototype.afterRender = function() {
     var _this = this;
-    this.deleteButton = this.$('.background-delete');
+    this.deleteButton = this.$('.delete-background-button');
     if (this.model.get('predefined')) {
       this.deleteButton.hide();
     }
@@ -4364,7 +4381,9 @@ module.exports = ApplicationRow = (function(_super) {
         this.startStopBtn.displayGrey(t('start this app'));
     }
     this.updateIcon.toggle(this.model.get('needsUpdate'));
-    this.$(".update-app").toggle(!this.model.get('needsUpdate'));
+    if (!this.model.get('needsUpdate')) {
+      this.$(".update-app").hide();
+    }
     bool = this.model.get('isStoppable');
     return this.$('.app-stoppable').attr('checked', bool);
   };
@@ -8231,15 +8250,12 @@ module.exports = NotificationsView = (function(_super) {
   };
 
   NotificationsView.prototype.checkIfEmpty = function() {
-    var imgPath, newCount;
+    var newCount;
     newCount = this.collection.length;
     this.noNotifMsg.toggle(newCount === 0);
     if (newCount === 0) {
       this.counter.html("");
-      this.counter.hide();
-      imgPath = 'img/notification-white.png';
-      this.$('#notifications-toggle img').attr('src', imgPath);
-      return this.$('#notifications-toggle').removeClass('highlight');
+      return this.counter.hide();
     } else {
       this.counter.html(newCount);
       return this.counter.show();
@@ -8257,15 +8273,13 @@ module.exports = NotificationsView = (function(_super) {
       return this.hideNotifList();
     } else {
       $('.right-menu').show();
-      this.clickcatcher.show();
-      return this.$('#notifications-toggle').addClass('highlight');
+      return this.clickcatcher.show();
     }
   };
 
   NotificationsView.prototype.hideNotifList = function(event) {
     $('.right-menu').hide();
-    this.clickcatcher.hide();
-    return this.$('#notifications-toggle').removeClass('highlight');
+    return this.clickcatcher.hide();
   };
 
   NotificationsView.prototype.dismissAll = function() {
