@@ -45,13 +45,9 @@ module.exports = class NotificationsView extends ViewCollection
     checkIfEmpty: =>
         newCount = @collection.length
         @noNotifMsg.toggle(newCount is 0)
-        #@dismissButton.toggle(newCount isnt 0)
-        if newCount is 0 #hide 0 counter
+        if newCount is 0 # hide 0 counter
             @counter.html ""
             @counter.hide()
-            imgPath = 'img/notification-white.png'
-            @$('#notifications-toggle img').attr 'src', imgPath
-            @$('#notifications-toggle').removeClass 'highlight'
         else
             @counter.html newCount
             @counter.show()
@@ -66,12 +62,10 @@ module.exports = class NotificationsView extends ViewCollection
         else
             $('.right-menu').show()#'slide', direction: 'right', 200)
             @clickcatcher.show()
-            @$('#notifications-toggle').addClass 'highlight'
 
     hideNotifList: (event) =>
         $('.right-menu').hide() #'slide', direction: 'right', 200)
         @clickcatcher.hide()
-        @$('#notifications-toggle').removeClass 'highlight'
 
     dismissAll: =>
         @dismissButton.spin true

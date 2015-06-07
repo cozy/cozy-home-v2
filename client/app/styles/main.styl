@@ -73,14 +73,6 @@ body
     height 36px
     padding 0
 
-    span
-        margin 0
-
-    img
-        height 28px
-        vertical-align middle
-        margin 2px 0 0 0
-
 
 .back-button
     margin-top 5px
@@ -92,6 +84,7 @@ body
 
     color white
     opacity 0.5
+    transition opacity 0.2s ease
 
     img
         margin-left 6px
@@ -112,6 +105,7 @@ body
     overflow auto
     margin-bottom 10px
     background-size cover
+    transition 0.6s background-image ease-in-out
 
 #home-content
     height 100%
@@ -193,23 +187,21 @@ body
     line-height 34px
     width auto
     cursor pointer
-    margin 0 3px 0 0
+    margin 0 5px 0 0
     padding 0 10px
     width 36px
     height 36px
-    background url('/img/notification.png')
+
+    i 
+        color blue
+        transition color 0.2s ease
 
     &:hover
-        background url('/img/notification-orange.png')
+        i
+            color orange
 
         #notifications-counter
-            background orange + 10%
-
-    img //position hotfix
-        vertical-align baseline
-        width 24px
-        height 24px
-        margin-top 0
+            background orange
 
     #notifications-counter
         position absolute
@@ -226,6 +218,7 @@ body
         background #338CF7
         color #fff
         border 2px solid #363a46
+        transition background 0.2s ease
 
         &:empty
             padding 0
@@ -266,13 +259,6 @@ body
 
     a
         color darkblue
-
-    #notifications-toggle.highlight
-        opacity 1
-
-    .notification
-        a
-            opacity 1
 
     .badge
         padding 1px 2px 1px 3px
@@ -416,7 +402,7 @@ body
         background-color orange
 
     section
-        background rgba(247, 244, 240, 0.8)
+        background rgba(255, 255, 255, 0.8)
         border-radius 15px
         display none
         padding 0px 12px 0px
@@ -456,6 +442,7 @@ body
             border-radius 200px
             margin-bottom 10px
             width 100%
+            transition background 0.2s ease
 
         img.spinner
             border-radius 200px
@@ -568,14 +555,18 @@ body
 
 #account-view
 
+    p
+        margin 0
+        margin-bottom 5px
+
     input
     select
-        max-width 490px
         text-align left
         margin-bottom 10px
         font-size 24px
 
     #account-form
+        background rgba(255, 255, 255, 0.95)
         padding 20px
         margin-bottom 20px
         border-right 1px solid #DDD
@@ -584,9 +575,8 @@ body
     .input
         .btn
             display inline-block
-            height 55px
-            width 55px
-            margin-left 10px
+            line-height 40px
+            padding 10px
 
     .background-list
         margin-top 10px
@@ -623,14 +613,21 @@ body
 #help-view
     height 100%
 
+    p
+        margin 0
+        margin-bottom 0
+
+    p.mt2
+        margin-top 20px
+
     p.help-text
         font-size 20px
         text-align left
 
     .help-section
+        background rgba(255, 255, 255, 0.95)
         margin-bottom 20px
         .w50
-            background inherit
             padding 30px
 
     .alert
@@ -667,8 +664,6 @@ body
         max-width 550px
         font-size 24px
         padding 10px
-        margin-top 2px
-        margin-right 10px
 
     .btn
         height 60px
