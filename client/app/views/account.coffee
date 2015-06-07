@@ -186,9 +186,9 @@ module.exports = class exports.AccountView extends BaseView
             type: 'singlePhoto'
 
         new ObjectPicker params, (newPhotoChosen, dataUrl) =>
-            @backgroundAddButton.spin true
 
             if dataUrl?
+                @backgroundAddButton.spin true
                 binary = atob dataUrl.split(',')[1]
                 array = []
                 array.push binary.charCodeAt i for i in [0..binary.length]
@@ -211,7 +211,6 @@ module.exports = class exports.AccountView extends BaseView
                         alert t 'account background added error'
                     complete: =>
                         @backgroundAddButton.spin false
-
 
     # When background is changed, data are saved and a backgroundChanged event
     # is emitted. That way the main view can be notified.
