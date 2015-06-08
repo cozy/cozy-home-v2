@@ -813,7 +813,8 @@ textarea:hover {
   border-bottom: 1px solid #ff850a;
 }
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   color: #ff850a;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
@@ -2024,10 +2025,39 @@ body {
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
-#account-view .input .btn {
-  display: inline-block;
-  line-height: 40px;
-  padding: 10px;
+#account-view .account-field {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+  -o-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  -o-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+  margin-bottom: 20px;
+  max-width: 550px;
+}
+#account-view .account-field input {
+  margin: 0;
+  width: 100%;
+}
+#account-view .account-field select {
+  margin: 0;
+  width: 100%;
+  cursor: pointer;
+}
+#account-view .account-field button {
+  width: 60px;
 }
 #account-view button {
   text-align: center;
@@ -2361,9 +2391,9 @@ body {
 }
 .config-application .comments {
   clear: both;
-  margin-top: 1em;
   font-size: 14px;
   line-height: 20px;
+  margin-left: 2em;
 }
 .config-application .comments img {
   overflow: hidden;
@@ -2373,9 +2403,9 @@ body {
 .config-application .comments a {
   color: #808080;
 }
-@media (max-width: 640px) {
-  .config-application .comments a {
-    display: none;
+@media (max-width: 800px) {
+  .config-application .comments {
+    margin-left: 0;
   }
 }
 .config-application .to-update-label {
@@ -2406,8 +2436,8 @@ body {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-.config-device .spinner {
-  margin: 0 10px;
+.config-device .btn {
+  text-align: left;
 }
 .config-device strong,
 .config-device .mod {
@@ -2655,15 +2685,16 @@ body {
   #market-view .cozy-app {
     width: 100%;
   }
-  #help-view .line:first-child,
-  #account-view .line:first-child,
-  #config-applications-view .line:first-child {
-    margin-bottom: 20px;
-  }
   #help-view .w50,
   #account-view .w50,
   #config-applications-view .w50 {
     width: 100%;
+    padding: 0;
+  }
+  #help-view .personalisation,
+  #account-view .personalisation,
+  #config-applications-view .personalisation {
+    margin-bottom: 30px;
   }
 }
 @media (max-width: 850px) {
@@ -2698,9 +2729,6 @@ body {
     display: none;
   }
   .pa2 {
-    padding: 10px;
-  }
-  #account-view #account-form {
     padding: 10px;
   }
   #config-applications-view .w50 {
@@ -2738,19 +2766,6 @@ body {
   .home-body {
     -webkit-box-shadow: none;
     box-shadow: none;
-  }
-  #account-form {
-    text-align: left;
-  }
-  #account-form p {
-    margin: 15px;
-  }
-  #account-form .field {
-    margin: 15px;
-  }
-  #account-form .field select,
-  #account-form .field option {
-    width: 75%;
   }
   img {
     margin: 10px 10px 0 0;
@@ -2814,12 +2829,9 @@ body {
   }
   #config-applications-view .w33 {
     width: 100%;
-    padding: 10px 40px 10px 10px;
   }
   #config-applications-view .w66 {
     width: 100%;
-    margin-top: 40px;
-    padding: 10px 40px 10px 10px;
   }
   #config-applications-view .config-applications .buttons {
     display: block;
@@ -2859,14 +2871,6 @@ body {
   #account-view select {
     width: 100%;
     font-size: 16px;
-  }
-  #account-view #account-form .btn {
-    width: 100%;
-    margin: 20px 0 0 0;
-    height: 30px;
-  }
-  #account-view select {
-    width: 100%;
   }
   #home-content {
     padding: 0;

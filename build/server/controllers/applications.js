@@ -371,7 +371,9 @@ module.exports = {
                 console.log(err);
                 iconInfos = null;
               }
-              appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
+              if ((iconInfos != null) && (iconInfos.extension != null)) {
+                appli.iconType = iconInfos.extension;
+              }
               return appli.updateAttributes(updatedData, function(err) {
                 if (err != null) {
                   return sendErrorSocket(err);

@@ -1636,7 +1636,7 @@ module.exports = {
   "finish layout edition": "Save",
   "reset customization": "Reset",
   "use icon": "Use icon",
-  "home section favorite": "Favorite",
+  "home section favorites": "Favorites",
   "home section leave": "Import",
   "home section main": "Basics",
   "home section productivity": "Productivity",
@@ -1650,6 +1650,8 @@ module.exports = {
   "help": "Help",
   "change layout": "Change the layout",
   "market app install": "Installing...",
+  "market install your app": "You can install an application directly from its git repository. You can simply copy/paste its Git URL in the field below. To know more about how to build you own app, go read our ",
+  "market app tutorial": " tutorial",
   "help send message title": "Write directly to the Cozy Team",
   "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!",
   "help send message action": "Send message to the Cozy Support Team",
@@ -2051,6 +2053,8 @@ module.exports = {
   "save": "Sauver",
   "saved": "Sauvé",
   "market app install": "Installation…",
+  "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre application vous pouvez suivre notre",
+  "market app tutorial": "didacticiel",
   "your parameters": "Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations :",
   "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts :",
@@ -2118,7 +2122,7 @@ module.exports = {
   "reset customization": "Remise à zéro",
   "use icon": "Mode icône",
   "change layout": "Modifier la disposition",
-  "home section favorite": "Applications favorites",
+  "home section favorites": "Applications favorites",
   "home section leave": "Service d'import",
   "home section main": "Applications principales",
   "home section productivity": "Applications de productivité",
@@ -2473,9 +2477,14 @@ module.exports = Application = (function(_super) {
   };
 
   Application.prototype.isIconSvg = function() {
-    var iconType;
+    var icon, iconType;
     iconType = this.get('iconType');
-    return (iconType != null) && iconType === 'svg';
+    if (iconType) {
+      return iconType === 'svg';
+    } else {
+      icon = this.get('icon');
+      return icon != null ? icon.indexOf('.svg') : void 0;
+    }
   };
 
   Application.prototype.isRunning = function() {
@@ -3037,7 +3046,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div id="account-form" class="lightgrey pa2"><div class="line"><div class="mod left w50 pa2"><h4>');
+buf.push('<div id="account-form" class="lightgrey pa2"><div class="line"><div class="mod left w50 pa2 personalisation"><h4>');
 var __val__ = t('account personalization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p><p>');
@@ -3052,19 +3061,19 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
 var __val__ = t('alerts and password recovery email')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><input id="account-email-field"/><button class="btn">');
+buf.push('</p><p class="account-field"><input id="account-email-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p></div><div class="input"><p>');
 var __val__ = t('public name description')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><input id="account-public-name-field"/><button class="btn">');
+buf.push('</p><p class="account-field"><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p></div><div class="input"><p>');
 var __val__ = t('domain name for urls and email')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p><input id="account-domain-field"/><button class="btn">');
+buf.push('</p><p class="account-field"><input id="account-domain-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p></div><h4>');
@@ -3073,13 +3082,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
 var __val__ = t('your timezone is required')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><select id="account-timezone-field"></select><button class="btn">');
+buf.push('</p><p class="account-field"><select id="account-timezone-field"></select><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><div class="input"><p>');
+buf.push('</button></p></div><div class="input"><p>');
 var __val__ = t('Chose the language you want I use to speak with you:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><select id="account-locale-field"><option value="fr">');
+buf.push('</p><p class="account-field"><select id="account-locale-field"><option value="fr">');
 var __val__ = t('french')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="en">');
@@ -3094,7 +3103,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><h4>');
+buf.push('</button></p></div><h4>');
 var __val__ = t('account password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div id="change-password-form"><p><label>');
@@ -3178,7 +3187,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="line"><div class="left mod w75"><div class="line"><span class="favorite mr1">');
+buf.push('<div class="line"><div class="left mod w66"><div class="line"><span class="favorite mr1">');
 if ( app.favorite)
 {
 buf.push('<i title="config application unmark favorite" class="fa fa-star"></i>');
@@ -3217,7 +3226,7 @@ buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div></div></div><div class="buttons left mod w25"><div><button class="btn update-app"><i class="fa fa-refresh mr1"></i> <span class="label">');
+buf.push('</a></div></div></div><div class="buttons left mod w33"><div><button class="btn update-app"><i class="fa fa-refresh mr1"></i> <span class="label">');
 var __val__ = t('update')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button></div><div><button class="btn remove-app"><i class="fa fa-trash mr1"></i> <span class="label">');
@@ -3254,16 +3263,16 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!--.section-title.darkbg.bigger apps--><div class="md-overlay"></div><div class="line platform-section"><div class="mod left w50"><h4>');
+buf.push('<div class="md-overlay"></div><div class="line platform-section"><div class="mod left w50"><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><div class="disk-space mt2 left w50 mod"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2 left w50 mod"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div></div><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="stack-app mt2 line"><div class="mod w75 left"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><span class="refresh">');
+buf.push('</h4><div class="stack-app mt2 line"><div class="mod w66 left"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><span class="refresh">');
 var __val__ = t('refresh page')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="mod buttons w25 right"><button class="btn update-stack"><i class="fa fa-refresh mr1"></i><span>');
+buf.push('</span></div></div><div class="mod buttons w33 right"><button class="btn update-stack"><i class="fa fa-refresh mr1"></i><span>');
 var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button><button class="btn update-all"><i class="fa fa-refresh mr1"></i><span>');
@@ -3299,7 +3308,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong></div><div class="buttons right"><button class="remove-device btn"><i class="fa fa-trash mr1"></i> <span class="label">');
+buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong></div><div class="buttons right w33"><button class="remove-device btn w100"><i class="fa fa-trash mr1"></i> <span class="label">');
 var __val__ = t('revoke device access')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button></div></div>');
@@ -3532,12 +3541,12 @@ buf.push('<div class="platform-section"><p class="mt2">' + escape((interp = t('i
 var __val__ = t('installed everything')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div></div><div class="mt2 mb2"><div id="your-app" class="clearfix"><div class="text"><p>');
-var __val__ = t('install')
+var __val__ = t('market install your app')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
-var __val__ = t('your own application')
+var __val__ = t('market app tutorial')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
+buf.push('</a>.</p><p><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div></div><div class="md-overlay"></div>');
@@ -3623,10 +3632,10 @@ with (locals || {}) {
 var interp;
 buf.push('<div class="navbar clearfix"><div id="notifications-container" class="right"></div><a');
 buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('fa') + ' ' + ('fa-chevron-left') + ' ' + ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
-buf.push('>');
+buf.push('><span>');
 var __val__ = t("navbar back button title")
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><div id="menu-applications-container"></div></div>');
+buf.push('</span></a><div id="menu-applications-container"></div></div>');
 }
 return buf.join("");
 };
