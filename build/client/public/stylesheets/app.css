@@ -1492,7 +1492,8 @@ body {
   padding: 0;
 }
 .back-button {
-  margin-top: 5px;
+  margin-left: 15px;
+  margin-top: 0.8rem;
   font-family: 'Maven Pro', sans-serif;
   font-weight: normal;
   font-size: 0.8em;
@@ -1507,11 +1508,10 @@ body {
   -ms-transition: opacity 0.2s ease;
   transition: opacity 0.2s ease;
 }
-.back-button img {
-  margin-left: 6px;
-  margin-right: 6px;
-  width: 20px;
-  height: 20px;
+.back-button::before {
+  margin-right: 0.5em;
+  vertical-align: middle;
+  font-size: 2rem;
 }
 .back-button:hover {
   color: #fff;
@@ -1534,7 +1534,22 @@ body {
   transition: 0.6s background-image ease-in-out;
 }
 #home-content {
-  height: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  min-height: 100%;
+}
+#home-content section {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .wizard {
   max-width: 800px;
@@ -1558,7 +1573,7 @@ body {
   margin: 0.25em 1em 0 0;
 }
 .platform-section {
-  height: 100%;
+  min-height: 100%;
   -webkit-border-radius: 0;
   border-radius: 0;
   border-right: 1px solid #ddd;
@@ -2049,9 +2064,6 @@ body {
 #account-view .background-list .background-button.selected img {
   border: 5px solid #6af;
   outline: 0;
-}
-#help-view {
-  height: 100%;
 }
 #help-view p {
   margin: 0;

@@ -3254,7 +3254,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!--.section-title.darkbg.bigger apps--><div class="md-overlay"></div><div class="txt-center"><div class="line platform-section"><div class="mod left w50"><h4>');
+buf.push('<!--.section-title.darkbg.bigger apps--><div class="md-overlay"></div><div class="line platform-section"><div class="mod left w50"><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><div class="disk-space mt2 left w50 mod"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2 left w50 mod"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div></div><h4>');
@@ -3287,7 +3287,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4></div><div class="mod left w50"><h4 class="title-app h4 mb3">');
 var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4></div></div></div>');
+buf.push('</h4></div></div>');
 }
 return buf.join("");
 };
@@ -3622,11 +3622,11 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="navbar clearfix"><div id="notifications-container" class="right"></div><a');
-buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
-buf.push('><img src="img/back.png"/><span>');
+buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('fa') + ' ' + ('fa-chevron-left') + ' ' + ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
+buf.push('>');
 var __val__ = t("navbar back button title")
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><div id="menu-applications-container"></div></div>');
+buf.push('</a><div id="menu-applications-container"></div></div>');
 }
 return buf.join("");
 };
@@ -5579,16 +5579,20 @@ module.exports = InstallWizardView = (function(_super) {
 });
 
 ;require.register("views/long-list-images", function(exports, require, module) {
-var CELL_PADDING, COEF_SECURITY, LongList, MAX_SPEED, MONTH_HEADER_HEIGHT, MONTH_LABEL_TOP, Photo, THROTTLE, THUMB_DIM_UNIT, THUMB_HEIGHT,
+var BUFFER_COEF, CELL_PADDING, LongList, MAX_SPEED, MONTH_HEADER_HEIGHT, MONTH_LABEL_TOP, Photo, SAFE_ZONE_COEF, THROTTLE, THROTTLE_INDEX, THUMB_DIM_UNIT, THUMB_HEIGHT,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Photo = require('../models/photo');
 
 THROTTLE = 450;
 
+THROTTLE_INDEX = 300;
+
 MAX_SPEED = 1.5 * THROTTLE / 1000;
 
-COEF_SECURITY = 3;
+BUFFER_COEF = 3;
+
+SAFE_ZONE_COEF = 2;
 
 THUMB_DIM_UNIT = 'em';
 
@@ -5610,9 +5614,7 @@ module.exports = LongList = (function() {
     this._dblclickHandler = __bind(this._dblclickHandler, this);
     this._clickHandler = __bind(this._clickHandler, this);
     this.getSelectedFile = __bind(this.getSelectedFile, this);
-    this.state = {
-      selected: {}
-    };
+    this.selected = {};
     this.viewPort$ = document.createElement('div');
     this.viewPort$.classList.add('viewport');
     this.externalViewPort$.appendChild(this.viewPort$);
@@ -5626,7 +5628,7 @@ module.exports = LongList = (function() {
     this.index$.style.position = 'absolute';
     this.index$.style.top = 0;
     this.index$.style.bottom = 0;
-    this.index$.style.right = this.getScrollBarWidth() + 'px';
+    this.index$.style.right = this._getScrollBarWidth() + 'px';
     this._lastSelectedCol = null;
     this.isInited = this.isPhotoArrayLoaded = false;
     Photo.getMonthdistribution(function(error, res) {
@@ -5637,15 +5639,34 @@ module.exports = LongList = (function() {
     });
   }
 
+  /**
+   * To compute the geometry we mus know the the width and height of the
+   * externalViewPort$.
+   * This is possible only if this element is inserted in the DOM of we give
+   * the dimension that will be available with the following function.
+   * @param {Integer} width  in px of the externalViewPort$ when it will be
+   *                  inserted
+   * @param {Integer} heigth in px of the externalViewPort$ when it will be
+   *                  inserted
+  */
+
+
   LongList.prototype.setInitialDimensions = function(width, heigth) {
     this.initialWidth = width;
     this.initialHeight = heigth;
     return this._resizeHandler();
   };
 
+  /**
+   * returns the selected "file", ie the same document as in Couch
+   * {id, name, path, lastModification, binary, class, docType, mime,
+   * creationDate, size, tags}
+  */
+
+
   LongList.prototype.getSelectedFile = function() {
     var k, thumb$, _ref;
-    _ref = this.state.selected;
+    _ref = this.selected;
     for (k in _ref) {
       thumb$ = _ref[k];
       if (thumb$) {
@@ -5655,8 +5676,14 @@ module.exports = LongList = (function() {
     return null;
   };
 
+  /**
+   * There is an event delegation, so the parent (externalViewPort$ or above)
+   * are in charge of listening and transmitting the event with this function.
+   * @param  {Event} e Event
+  */
+
+
   LongList.prototype.keyHandler = function(e) {
-    console.log('LongList.keyHandler', e.which);
     switch (e.which) {
       case 39:
         e.stopPropagation();
@@ -5704,7 +5731,8 @@ module.exports = LongList = (function() {
   };
 
   /**
-   * Must be called when the goemetry of the parent of the long list changes.
+   * Must be called when the goemetry of the parent (externalViewPort$) of the
+   * long list changes.
   */
 
 
@@ -5716,15 +5744,13 @@ module.exports = LongList = (function() {
    * approach has been chosen for performance reasons (acces to scope
    * variables faster than to nested properties of objects). It's not an
    * obvious choice.
-   * Called only when both LongList.init() has been called and that we also
-   * got from the server the month distribution (Photo.getMonthdistribution)
-   *
-   * @return {[type]} [description]
+   * Called only when we get from the server the month distribution
+   * (Photo.getMonthdistribution)
   */
 
 
   LongList.prototype._DOM_controlerInit = function() {
-    var buffer, bufferAlreadyAdapted, cellPadding, colWidth, currentIndexRkSelected, emToPixels, getElementFontSize, indexHeight, indexVisible, isDefaultToSelect, lastOnScroll_Y, lazyHideIndex, marginLeft, monthHeaderHeight, monthLabelTop, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInSafeZone, nThumbsPerRow, previousWidth, remToPixels, rowHeight, safeZone, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _createThumbsBottom, _getBufferNextFirst, _getBufferNextLast, _getDimInPixels, _getStaticDimensions, _indexClickHandler, _indexMouseEnter, _indexMouseLeave, _initBuffer, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _rePositionThumbs, _resizeHandler, _scrollHandler, _selectCurrentIndex, _updateThumb,
+    var buffer, bufferAlreadyAdapted, cellPadding, colWidth, currentIndexRkSelected, current_scrollTop, indexHeight, indexVisible, isDefaultToSelect, lastOnScroll_Y, lazyHideIndex, marginLeft, monthHeaderHeight, monthLabelTop, monthTopPadding, months, nRowsInSafeZoneMargin, nThumbsInBuffer, nThumbsInBufferMargin, nThumbsInSafeZone, nThumbsPerRow, previousWidth, rowHeight, safeZone, thumbHeight, thumbWidth, thumbs$Height, viewPortHeight, _SZ_bottomCase, _SZ_initEndPoint, _SZ_initStartPoint, _SZ_setMarginAtStart, _adaptBuffer, _adaptIndex, _computeSafeZone, _emToPixels, _getBufferNextFirst, _getBufferNextLast, _getDimInPixels, _getElementFontSize, _getStaticDimensions, _indexClickHandler, _indexMouseEnter, _indexMouseLeave, _initBuffer, _insertMonthLabel, _moveBufferToBottom, _moveBufferToTop, _rePositionThumbs, _remToPixels, _resizeHandler, _scrollHandler, _selectCurrentIndex, _updateThumb,
       _this = this;
     months = this.months;
     buffer = null;
@@ -5741,6 +5767,8 @@ module.exports = LongList = (function() {
     nThumbsPerRow = null;
     nRowsInSafeZoneMargin = null;
     nThumbsInSafeZone = null;
+    nThumbsInBufferMargin = null;
+    nThumbsInBuffer = null;
     viewPortHeight = null;
     indexHeight = null;
     indexVisible = null;
@@ -5748,6 +5776,7 @@ module.exports = LongList = (function() {
     thumbs$Height = null;
     monthLabelTop = null;
     lastOnScroll_Y = null;
+    current_scrollTop = null;
     safeZone = {
       firstRk: null,
       firstMonthRk: null,
@@ -5763,6 +5792,11 @@ module.exports = LongList = (function() {
       firstThumbRkToUpdate: null
     };
     isDefaultToSelect = true;
+    /**
+     * called after a scroll, will launch _adaptBuffer and _adaptIndex
+     * (both throttled)
+    */
+
     _scrollHandler = function(e) {
       if (_this.noScrollScheduled) {
         lastOnScroll_Y = _this.viewPort$.scrollTop;
@@ -5770,7 +5804,7 @@ module.exports = LongList = (function() {
         _this.noScrollScheduled = false;
       }
       if (_this.noIndexScrollScheduled) {
-        setTimeout(_adaptIndex, 250);
+        setTimeout(_adaptIndex, THROTTLE_INDEX);
         _this.noIndexScrollScheduled = false;
       }
       if (!indexVisible) {
@@ -5779,25 +5813,6 @@ module.exports = LongList = (function() {
       }
     };
     this._scrollHandler = _scrollHandler;
-    getElementFontSize = function(context) {
-      return parseFloat(getComputedStyle(context || document.documentElement).fontSize);
-    };
-    remToPixels = function(value) {
-      return emToPixels(value);
-    };
-    emToPixels = function(value, context) {
-      return Math.round(value * getElementFontSize(context));
-    };
-    _getDimInPixels = function(value) {
-      switch (THUMB_DIM_UNIT) {
-        case 'px':
-          return value;
-        case 'em':
-          return emToPixels(value, _this.viewPort$);
-        case 'rem':
-          return remToPixels(value);
-      }
-    };
     /**
      * called once for all during _DOM_controlerInit
      * computes the static parameters of the geometry
@@ -5816,16 +5831,42 @@ module.exports = LongList = (function() {
       return _this.monthLabelTop = monthLabelTop;
     };
     /**
+     * returns the font-size in px of a given element (context) or of the
+     * root element of the document if no context is provided.
+     * @param  {element} context Optionnal: an elemment to get the font-size
+     * @return {integer}         the font-size
+    */
+
+    _getElementFontSize = function(context) {
+      return parseFloat(getComputedStyle(context || document.documentElement).fontSize);
+    };
+    _remToPixels = function(value) {
+      return _emToPixels(value);
+    };
+    _emToPixels = function(value, context) {
+      return Math.round(value * _getElementFontSize(context));
+    };
+    _getDimInPixels = function(value) {
+      switch (THUMB_DIM_UNIT) {
+        case 'px':
+          return value;
+        case 'em':
+          return _emToPixels(value, _this.viewPort$);
+        case 'rem':
+          return _remToPixels(value);
+      }
+    };
+    /**
      * Compute all the geometry after a resize or when the list in inserted
      * in the DOM.
-     * _adaptBuffer will be executed at the end if
+     * _adaptBuffer will be executed at the end except if
      *     1- the distribution array of photo has not been received.
-     *     2- the geometry could not be computed (for instance if the widht
+     *     2- the geometry could not be computed (for instance if the width
      *     of the list is null when the list is not visible)
     */
 
     _resizeHandler = function() {
-      var MONTH_LABEL_HEIGHT, VP_width, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInViewPort, nThumbsInSZ_Margin, nThumbsInViewPort, nextY, rk, txt, y, _i, _j, _len, _len1, _ref, _ref1;
+      var MONTH_LABEL_HEIGHT, VP_width, c, d, h, label$, minMonthHeight, minMonthNphotos, minimumIndexHeight, month, nPhotos, nPhotosInMonth, nRowsInBufferMargin, nRowsInViewPort, nThumbsInSZ_Margin, nThumbsInViewPort, nextY, rk, txt, y, _i, _j, _len, _len1, _ref, _ref1;
       if (!_this.isPhotoArrayLoaded) {
         return;
       }
@@ -5848,10 +5889,13 @@ module.exports = LongList = (function() {
       _this.nThumbsPerRow = nThumbsPerRow;
       marginLeft = cellPadding + Math.round((VP_width - nThumbsPerRow * colWidth - cellPadding) / 2);
       nRowsInViewPort = Math.ceil(viewPortHeight / rowHeight);
-      nRowsInSafeZoneMargin = Math.round(COEF_SECURITY * nRowsInViewPort);
+      nRowsInSafeZoneMargin = Math.round(SAFE_ZONE_COEF * nRowsInViewPort);
       nThumbsInSZ_Margin = nRowsInSafeZoneMargin * nThumbsPerRow;
       nThumbsInViewPort = nRowsInViewPort * nThumbsPerRow;
       nThumbsInSafeZone = nThumbsInSZ_Margin * 2 + nThumbsInViewPort;
+      nRowsInBufferMargin = Math.round(BUFFER_COEF * nRowsInViewPort);
+      nThumbsInBufferMargin = nRowsInBufferMargin * nThumbsPerRow;
+      nThumbsInBuffer = nThumbsInViewPort + 2 * nThumbsInBufferMargin;
       nextY = 0;
       nPhotos = 0;
       minMonthHeight = Infinity;
@@ -5900,32 +5944,72 @@ module.exports = LongList = (function() {
       }
       if (bufferAlreadyAdapted) {
         _rePositionThumbs();
+        _adaptBuffer();
       }
-      bufferAlreadyAdapted = true;
-      return _adaptBuffer();
+      return bufferAlreadyAdapted = true;
     };
     this.resizeHandler = _resizeHandler;
+    /**
+     * Initialize the buffer.
+     * The buffer lists all the created thumbs, keep a reference on the
+     * first (top most) and the last (bottom most) thumb.
+     * The buffer is a closed double linked chain.
+     * Each element of the chain is a "thumb" with a previous (prev) and
+     * next (next) element.
+     * "closed" means that buffer.last.prev == buffer.first
+     * data structure : see the beginning of this file.
+    */
+
     _initBuffer = function() {
-      var thumb, thumb$;
-      thumb$ = document.createElement('img');
-      thumb$.setAttribute('class', 'long-list-thumb');
-      thumb$.style.height = thumbHeight + 'px';
-      thumb$.style.width = thumbHeight + 'px';
-      _this.thumbs$.appendChild(thumb$);
-      thumb = {
-        prev: null,
-        next: null,
-        el: thumb$,
-        rank: null,
-        id: null
-      };
-      thumb.prev = thumb;
-      thumb.next = thumb;
+      var col, firstCreatedThb, localRk, month, monthRk, nToCreate, previousCreatedThb, rk, rowY, thumb, thumb$, _i, _ref;
+      nToCreate = Math.min(_this.nPhotos, nThumbsInBuffer);
+      firstCreatedThb = {};
+      previousCreatedThb = firstCreatedThb;
+      rowY = monthTopPadding;
+      col = 0;
+      monthRk = 0;
+      month = _this.months[0];
+      localRk = 0;
+      for (rk = _i = 0, _ref = nToCreate - 1; _i <= _ref; rk = _i += 1) {
+        if (localRk === 0) {
+          _insertMonthLabel(month);
+        }
+        thumb$ = document.createElement('img');
+        thumb$.setAttribute('class', 'long-list-thumb');
+        thumb$.style.height = thumbHeight + 'px';
+        thumb$.style.width = thumbHeight + 'px';
+        thumb = {
+          prev: null,
+          next: previousCreatedThb,
+          el: thumb$,
+          rank: rk,
+          monthRk: monthRk,
+          id: null
+        };
+        previousCreatedThb.prev = thumb;
+        previousCreatedThb = thumb;
+        thumb$.style.cssText = "top:" + rowY + "px;left:" + (marginLeft + col * colWidth) + "px;height:" + thumbHeight + "px;width:" + thumbHeight + "px;";
+        _this.thumbs$.appendChild(thumb$);
+        localRk += 1;
+        if (localRk === month.nPhotos) {
+          monthRk += 1;
+          month = _this.months[monthRk];
+          localRk = 0;
+          col = 0;
+          rowY += rowHeight + monthTopPadding;
+        } else {
+          col += 1;
+          if (col === nThumbsPerRow) {
+            rowY += rowHeight;
+            col = 0;
+          }
+        }
+      }
       buffer = {
-        first: thumb,
-        firstRk: -1,
+        first: firstCreatedThb.prev,
+        firstRk: 0,
         last: thumb,
-        lastRk: -1,
+        lastRk: nToCreate - 1,
         nThumbs: 1,
         nextLastRk: null,
         nextLastCol: null,
@@ -5936,7 +6020,16 @@ module.exports = LongList = (function() {
         nextFirstRk: null,
         nextFirstY: null
       };
-      return _this.buffer = buffer;
+      buffer.first.next = buffer.last;
+      buffer.last.prev = buffer.first;
+      _this.buffer = buffer;
+      safeZone.firstThumbToUpdate = buffer.first;
+      return Photo.listFromFiles(0, nToCreate, function(error, res) {
+        if (error) {
+          console.log(error);
+        }
+        return _updateThumb(res.files, res.firstRank);
+      });
     };
     /**
      * called by onscroll (throttled), adapt the position of the index (top)
@@ -5986,17 +6079,17 @@ module.exports = LongList = (function() {
       return indexVisible = false;
     }, 2000);
     /**
-     * Adapt the buffer when the viewport has moved
+     * Adapt the buffer when the viewport has moved.
      * Launched at init and by _scrollHandler
-     * Steps :
     */
 
     _adaptBuffer = function() {
-      var bufr, nAvailable, nToCreate, nToFind, nToMove, previous_firstThumbToUpdate, speed, targetCol, targetMonthRk, targetRk, targetY, _ref, _ref1;
+      var bufr, nToMove, previous_firstThumbToUpdate, speed, targetCol, targetMonthRk, targetRk, targetY;
       _this.noScrollScheduled = true;
       _this.noIndexScrollScheduled = true;
       lazyHideIndex();
-      speed = Math.abs(_this.viewPort$.scrollTop - lastOnScroll_Y) / viewPortHeight;
+      current_scrollTop = _this.viewPort$.scrollTop;
+      speed = Math.abs(current_scrollTop - lastOnScroll_Y) / viewPortHeight;
       if (speed > MAX_SPEED) {
         _scrollHandler();
         return;
@@ -6017,16 +6110,7 @@ module.exports = LongList = (function() {
       safeZone.firstThumbRkToUpdate = null;
       _computeSafeZone();
       if (safeZone.lastRk > bufr.lastRk) {
-        nToFind = Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone);
-        nAvailable = safeZone.firstRk - bufr.firstRk;
-        if (nAvailable < 0) {
-          nAvailable = 0;
-        }
-        if (nAvailable > bufr.nThumbs) {
-          nAvailable = bufr.nThumbs;
-        }
-        nToCreate = Math.max(nToFind - nAvailable, 0);
-        nToMove = nToFind - nToCreate;
+        nToMove = Math.min(safeZone.lastRk - bufr.lastRk, nThumbsInSafeZone);
         if (safeZone.firstRk <= bufr.lastRk) {
           _getBufferNextLast();
           targetRk = bufr.nextLastRk;
@@ -6039,32 +6123,16 @@ module.exports = LongList = (function() {
           targetCol = safeZone.firstCol;
           targetY = safeZone.firstY;
         }
-        if (nToFind > 0) {
-          Photo.listFromFiles(targetRk, nToFind, function(error, res) {
-            if (error) {
-              console.log(error);
-            }
+        if (nToMove > 0) {
+          console.log("nToMove", nToMove);
+          console.log("targetRk", targetRk);
+          Photo.listFromFiles(targetRk, nToMove, function(error, res) {
             return _updateThumb(res.files, res.firstRank);
           });
-        }
-        if (nToCreate > 0) {
-          _ref = _createThumbsBottom(nToCreate, targetRk, targetCol, targetY, targetMonthRk), targetY = _ref[0], targetCol = _ref[1], targetMonthRk = _ref[2];
-          targetRk += nToCreate;
-        }
-        if (nToMove > 0) {
           _moveBufferToBottom(nToMove, targetRk, targetCol, targetY, targetMonthRk);
         }
       } else if (safeZone.firstRk < bufr.firstRk) {
-        nToFind = Math.min(bufr.firstRk - safeZone.firstRk, nThumbsInSafeZone);
-        nAvailable = bufr.lastRk - safeZone.lastRk;
-        if (nAvailable < 0) {
-          nAvailable = 0;
-        }
-        if (nAvailable > bufr.nThumbs) {
-          nAvailable = bufr.nThumbs;
-        }
-        nToCreate = Math.max(nToFind - nAvailable, 0);
-        nToMove = nToFind - nToCreate;
+        nToMove = Math.min(bufr.firstRk - safeZone.firstRk, nThumbsInSafeZone);
         if (safeZone.lastRk >= bufr.firstRk) {
           _getBufferNextFirst();
           targetRk = bufr.nextFirstRk;
@@ -6077,25 +6145,17 @@ module.exports = LongList = (function() {
           targetMonthRk = safeZone.endMonthRk;
           targetY = safeZone.endY;
         }
-        if (nToFind > 0) {
-          Photo.listFromFiles(targetRk - nToFind + 1, nToFind, function(error, res) {
+        if (nToMove > 0) {
+          Photo.listFromFiles(targetRk - nToMove + 1, nToMove, function(error, res) {
             if (error) {
               console.log(error);
             }
             return _updateThumb(res.files, res.firstRank);
           });
-        }
-        if (nToCreate > 0) {
-          throw new Error('It should not be used in the\
-                        current implementation');
-          _ref1 = _createThumbsTop(nToCreate, targetRk, targetCol, targetY, targetMonthRk), targetY = _ref1[0], targetCol = _ref1[1], targetMonthRk = _ref1[2];
-          targetRk += nToCreate;
-        }
-        if (nToMove > 0) {
           _moveBufferToTop(nToMove, targetRk, targetCol, targetY, targetMonthRk);
         }
       }
-      if (nToFind == null) {
+      if (nToMove == null) {
         return safeZone.firstThumbToUpdate = previous_firstThumbToUpdate;
       }
     };
@@ -6203,9 +6263,9 @@ module.exports = LongList = (function() {
         thumb$.dataset.id = fileId;
         thumb.id = fileId;
         thumb = thumb.prev;
-        if (_this.state.selected[fileId]) {
+        if (_this.selected[fileId]) {
           thumb$.classList.add('selectedThumb');
-          _this.state.selected[fileId] = thumb$;
+          _this.selected[fileId] = thumb$;
         } else {
           thumb$.classList.remove('selectedThumb');
         }
@@ -6220,9 +6280,9 @@ module.exports = LongList = (function() {
         thumb$.dataset.id = fileId;
         thumb.id = fileId;
         thumb = thumb.next;
-        if (_this.state.selected[fileId]) {
+        if (_this.selected[fileId]) {
           thumb$.classList.add('selectedThumb');
-          _this.state.selected[fileId] = thumb$;
+          _this.selected[fileId] = thumb$;
         } else {
           thumb$.classList.remove('selectedThumb');
         }
@@ -6287,10 +6347,14 @@ module.exports = LongList = (function() {
         return _SZ_bottomCase();
       }
     };
+    /**
+     * set the start of the safe zone on the top of the viewport.
+    */
+
     _SZ_initStartPoint = function() {
       var SZ, Y, inMonthRow, month, monthRk, _i, _len, _ref;
       SZ = safeZone;
-      Y = _this.viewPort$.scrollTop;
+      Y = current_scrollTop;
       _ref = _this.months;
       for (monthRk = _i = 0, _len = _ref.length; _i < _len; monthRk = ++_i) {
         month = _ref[monthRk];
@@ -6311,6 +6375,11 @@ module.exports = LongList = (function() {
       SZ.firstVisibleRk = SZ.firstRk;
       return _selectCurrentIndex(monthRk);
     };
+    /**
+     * move up the start of the safe zone of 'nRowsInSafeZoneMargin' rows
+     * @return {[type]} [description]
+    */
+
     _SZ_setMarginAtStart = function() {
       var SZ, inMonthRow, j, month, rowsSeen, _i, _ref;
       SZ = safeZone;
@@ -6344,7 +6413,9 @@ module.exports = LongList = (function() {
       return SZ.firstY = monthTopPadding;
     };
     /**
-     * Finds the end point of the safeZone.
+     * Finds the end point of the safeZone, which is 'nThumbsInSafeZone'
+     * after the first thumb of the SZ (the number of thumb in the safe zone
+     * and in the buffer is constant)
      * Returns true if the safeZone end pointer should be after the last
      * thumb
     */
@@ -6372,6 +6443,10 @@ module.exports = LongList = (function() {
       safeZone.endY = month.y + monthTopPadding + inMonthRow * rowHeight;
       return false;
     };
+    /**
+     * if the safe zone is bellow the last thumb => move up the safe zone
+    */
+
     _SZ_bottomCase = function() {
       var SZ, inMonthRk, inMonthRow, month, monthRk, rk, thumbsSeen, thumbsTarget, _i;
       SZ = safeZone;
@@ -6401,67 +6476,6 @@ module.exports = LongList = (function() {
         SZ.firstRk = rk;
         return SZ.firstY = month.y + cellPadding + monthHeaderHeight + inMonthRow * rowHeight;
       }
-    };
-    _createThumbsBottom = function(nToCreate, startRk, startCol, startY, monthRk) {
-      var bufr, col, lastLast, localRk, month, rk, rowY, style, thumb, thumb$, _i, _ref;
-      bufr = buffer;
-      rowY = startY;
-      col = startCol;
-      month = _this.months[monthRk];
-      localRk = startRk - month.firstRk;
-      lastLast = bufr.last;
-      for (rk = _i = startRk, _ref = startRk + nToCreate - 1; _i <= _ref; rk = _i += 1) {
-        if (localRk === 0) {
-          _insertMonthLabel(month);
-        }
-        thumb$ = document.createElement('img');
-        thumb$.dataset.rank = rk;
-        thumb$.setAttribute('class', 'long-list-thumb');
-        thumb = {
-          next: bufr.last,
-          prev: bufr.first,
-          el: thumb$,
-          rank: rk,
-          monthRk: monthRk,
-          id: null
-        };
-        if (rk === safeZone.firstVisibleRk) {
-          safeZone.firstThumbToUpdate = thumb;
-        }
-        bufr.first.next = thumb;
-        bufr.last.prev = thumb;
-        bufr.last = thumb;
-        style = thumb$.style;
-        style.top = rowY + 'px';
-        style.left = (marginLeft + col * colWidth) + 'px';
-        style.height = thumbHeight + 'px';
-        style.width = thumbHeight + 'px';
-        _this.thumbs$.appendChild(thumb$);
-        localRk += 1;
-        if (localRk === month.nPhotos) {
-          monthRk += 1;
-          month = _this.months[monthRk];
-          localRk = 0;
-          col = 0;
-          rowY += rowHeight + monthTopPadding;
-        } else {
-          col += 1;
-          if (col === nThumbsPerRow) {
-            rowY += rowHeight;
-            col = 0;
-          }
-        }
-      }
-      bufr.lastRk = rk - 1;
-      bufr.nThumbs += nToCreate;
-      if (safeZone.firstThumbToUpdate === null) {
-        safeZone.firstThumbToUpdate = lastLast.prev;
-      }
-      bufr.nextLastRk = rk;
-      bufr.nextLastCol = col;
-      bufr.nextLastY = rowY;
-      bufr.nextLastMonthRk = monthRk;
-      return [rowY, col, monthRk];
     };
     _moveBufferToBottom = function(nToMove, startRk, startCol, startY, monthRk) {
       var col, localRk, month, monthRk_initial, rk, rowY, style, thumb, thumb$, _i, _ref;
@@ -6598,9 +6612,9 @@ module.exports = LongList = (function() {
       return lazyHideIndex();
     };
     _getStaticDimensions();
-    _initBuffer();
     _resizeHandler();
-    isDefaultToSelect = true;
+    _initBuffer();
+    this.noScrollScheduled = true;
     this.thumbs$.addEventListener('click', this._clickHandler);
     this.thumbs$.addEventListener('dblclick', this._dblclickHandler);
     this.viewPort$.addEventListener('scroll', _scrollHandler);
@@ -6653,23 +6667,23 @@ module.exports = LongList = (function() {
     if (thumb$.dataset.id === '') {
       return null;
     }
-    if (this.state.selected[thumb$.dataset.id]) {
+    if (this.selected[thumb$.dataset.id]) {
       return null;
     }
     this._unselectAll();
     thumb$.classList.add('selectedThumb');
-    return this.state.selected[thumb$.dataset.id] = thumb$;
+    return this.selected[thumb$.dataset.id] = thumb$;
   };
 
   LongList.prototype._unselectAll = function() {
     var id, thumb$, _ref, _results;
-    _ref = this.state.selected;
+    _ref = this.selected;
     _results = [];
     for (id in _ref) {
       thumb$ = _ref[id];
       if (typeof thumb$ === 'object') {
         thumb$.classList.remove('selectedThumb');
-        _results.push(this.state.selected[id] = false);
+        _results.push(this.selected[id] = false);
       } else {
         _results.push(void 0);
       }
@@ -6679,7 +6693,7 @@ module.exports = LongList = (function() {
 
   LongList.prototype._getSelectedThumb$ = function() {
     var id, thumb$, _ref;
-    _ref = this.state.selected;
+    _ref = this.selected;
     for (id in _ref) {
       thumb$ = _ref[id];
       if (typeof thumb$ === 'object') {
@@ -6691,7 +6705,7 @@ module.exports = LongList = (function() {
 
   LongList.prototype._selectNextThumb = function() {
     var id, nextThumb$, thumb$, _ref;
-    _ref = this.state.selected;
+    _ref = this.selected;
     for (id in _ref) {
       thumb$ = _ref[id];
       if (typeof thumb$ === 'object') {
@@ -6922,13 +6936,13 @@ module.exports = LongList = (function() {
 
   LongList.prototype._coordonate = {
     top: function(thumb$) {
-      return Number(thumb$.style.top.slice(0, -2));
+      return parseInt(thumb$.style.top, 10);
     },
     left: function(thumb$) {
-      return Number(thumb$.style.left.slice(0, -2));
+      return parseInt(thumb$.style.left, 10);
     },
     rank: function(thumb$) {
-      return Number(thumb$.dataset.rank);
+      return thumb$.dataset.rank;
     }
   };
 
@@ -7084,7 +7098,13 @@ module.exports = LongList = (function() {
     return th;
   };
 
-  LongList.prototype.getScrollBarWidth = function() {
+  /**
+   * a helper in charge of getting the width in px of the scrollbar this one
+   * appears
+  */
+
+
+  LongList.prototype._getScrollBarWidth = function() {
     var inner, outer, w1, w2;
     inner = document.createElement('p');
     inner.style.width = "100%";
