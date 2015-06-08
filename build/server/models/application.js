@@ -40,6 +40,10 @@ module.exports = Application = cozydb.getModel('Application', {
   needsUpdate: {
     type: Boolean,
     "default": false
+  },
+  favorite: {
+    type: Boolean,
+    "default": false
   }
 });
 

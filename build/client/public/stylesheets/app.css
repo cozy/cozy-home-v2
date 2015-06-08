@@ -789,8 +789,7 @@ textarea {
   border: 0;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
-  border-left: 3px solid #5ca3f9;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid #5ca3f9;
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -894,9 +893,6 @@ select:focus {
 }
 .red {
   background: #c66666;
-}
-.lightgrey {
-  background: #f7f4f0;
 }
 .alert-error,
 .alert-success {
@@ -1486,54 +1482,6 @@ body {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-#home-menu {
-  position: fixed;
-  z-index: 50;
-  right: 0;
-}
-#home-menu .menu-btn {
-  z-index: 50;
-  height: 52px;
-  opacity: 0.3;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-  filter: alpha(opacity=30);
-  margin: 0;
-  padding: 0;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
-#home-menu .menu-btn span {
-  font-size: 24px;
-  display: none;
-  color: #363a46;
-}
-#home-menu .menu-btn img {
-  width: 32px;
-  cursor: pointer;
-  margin: 10px 10px;
-}
-#home-menu .menu-btn:hover {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-  margin: 0;
-  padding: 0;
-  background: #f1e2cf;
-}
-#home-menu .menu-btn:hover a {
-  color: #fff;
-  font-weight: normal;
-  color: #854300;
-  padding: 30px 0px 10px 10px;
-}
-#home-menu .menu-btn:hover span {
-  display: inline;
-}
-#home-menu .active {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
 .navbar {
   position: fixed;
   background: #333;
@@ -1587,7 +1535,6 @@ body {
 }
 #home-content {
   height: 100%;
-  padding: 20px;
 }
 .wizard {
   max-width: 800px;
@@ -1617,7 +1564,6 @@ body {
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   padding: 20px;
-  margin-bottom: 20px;
   background: rgba(255,255,255,0.95);
 }
 .platform-section .buttons button.btn {
@@ -1886,7 +1832,7 @@ body {
 #app-list {
   margin: auto;
   max-width: 720px;
-  margin-bottom: 40px;
+  padding-bottom: 20px;
 }
 #app-list .preview-holder {
   padding: 10px;
@@ -2004,7 +1950,7 @@ body {
   margin: auto;
   margin-top: 30px;
   width: 80%;
-  background: #f7f4f0;
+  background: #fff;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding-bottom: 20px;
@@ -2060,7 +2006,6 @@ body {
 #account-view #account-form {
   background: rgba(255,255,255,0.95);
   padding: 20px;
-  margin-bottom: 20px;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
@@ -2068,6 +2013,9 @@ body {
   display: inline-block;
   line-height: 40px;
   padding: 10px;
+}
+#account-view button {
+  text-align: center;
 }
 #account-view .background-list {
   margin-top: 10px;
@@ -2078,7 +2026,13 @@ body {
   cursor: pointer;
 }
 #account-view .background-list .background-button img {
+  -webkit-transition: border 0.2s ease;
+  -moz-transition: border 0.2s ease;
+  -o-transition: border 0.2s ease;
+  -ms-transition: border 0.2s ease;
+  transition: border 0.2s ease;
   border: 5px solid transparent;
+  margin: 0;
 }
 #account-view .background-list .background-button button {
   display: none;
@@ -2111,8 +2065,8 @@ body {
   text-align: left;
 }
 #help-view .help-section {
+  height: 100%;
   background: rgba(255,255,255,0.95);
-  margin-bottom: 20px;
 }
 #help-view .help-section .w50 {
   padding: 30px;
@@ -2150,7 +2104,7 @@ body {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
-  max-width: 550px;
+  max-width: 700px;
   font-size: 24px;
   padding: 10px;
 }
@@ -2208,6 +2162,9 @@ body {
   -webkit-box-shadow: none;
   box-shadow: none;
   height: 20px;
+}
+#market-view {
+  height: 100%;
 }
 #market-view #no-app-message,
 .cozy-app {
@@ -2360,6 +2317,9 @@ body {
 .config-application .smaller input {
   margin: 0 5px 0;
 }
+.config-application .favorite {
+  cursor: pointer;
+}
 .config-application .md-header {
   background: transparent;
 }
@@ -2408,7 +2368,7 @@ body {
 }
 .config-application .to-update-label {
   background: #43a047;
-  color: #fcf9f5;
+  color: #fff;
   padding: 3px 6px;
   font-size: 12px;
   -webkit-border-radius: 3px;
@@ -2429,7 +2389,6 @@ body {
   margin-top: 2px;
 }
 .config-device {
-  background: #f7f4f0;
   padding: 0;
   margin-bottom: 5px;
   -webkit-border-radius: 5px;
@@ -2520,7 +2479,7 @@ body {
   -o-transition: all 3s;
   -ms-transition: all 3s;
   transition: all 3s;
-  background: #fcf9f5;
+  background: #fff;
   position: relative;
   margin: 0 auto;
   -webkit-transition: all 0.3s;
@@ -2633,7 +2592,7 @@ body {
   color: #ff850a;
 }
 .md-body {
-  background: #f7f4f0;
+  background: #fff;
   padding: 20px;
   color: #333;
   overflow-y: auto;
@@ -2655,7 +2614,7 @@ body {
   font-size: 20px;
 }
 .md-footer {
-  background: #f7f4f0;
+  background: #fff;
   padding: 10px;
 }
 .md-show {

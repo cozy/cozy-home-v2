@@ -48,6 +48,9 @@ module.exports = {
   'slug': {
     param: applications.loadApplication
   },
+  'id': {
+    param: applications.loadApplicationById
+  },
   'api/applications/getPermissions': {
     post: applications.getPermissions
   },
@@ -62,7 +65,7 @@ module.exports = {
   },
   'api/applications/byid/:id': {
     get: applications.read,
-    put: applications.updatestoppable
+    put: applications.updateData
   },
   'api/applications/install': {
     post: applications.install

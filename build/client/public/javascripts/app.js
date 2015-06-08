@@ -1496,7 +1496,7 @@ module.exports = {
   "total": "Total",
   "memory consumption": "Memory usage",
   "disk consumption": "Disk usage",
-  "you have no notifications": "You have no notifications",
+  "you have no notifications": "Hello %{name}, you have currently no notification.",
   "dismiss all": "Dismiss all",
   "add application": "Add app?",
   "install": "Install",
@@ -1636,6 +1636,7 @@ module.exports = {
   "finish layout edition": "Save",
   "reset customization": "Reset",
   "use icon": "Use icon",
+  "home section favorite": "Favorite",
   "home section leave": "Import",
   "home section main": "Basics",
   "home section productivity": "Productivity",
@@ -1992,7 +1993,7 @@ module.exports = {
   "total": "Total",
   "memory consumption": "Utilisation mémoire",
   "disk consumption": "Utilisation disque",
-  "you have no notifications": "Vous n'avez aucune notification",
+  "you have no notifications": "Bonjour %{name}, vous n'avez aucune notification pour le moment.",
   "dismiss all": "Tout effacer",
   "add application": "Ajouter l'application ?",
   "install": "Installer",
@@ -2117,6 +2118,7 @@ module.exports = {
   "reset customization": "Remise à zéro",
   "use icon": "Mode icône",
   "change layout": "Modifier la disposition",
+  "home section favorite": "Applications favorites",
   "home section leave": "Service d'import",
   "home section main": "Applications principales",
   "home section productivity": "Applications de productivité",
@@ -2577,10 +2579,13 @@ module.exports = Application = (function(_super) {
   };
 
   Application.prototype.getSection = function() {
-    var name, section;
+    var favorite, name, section;
     section = 'misc';
     name = this.get('slug');
-    if (name === 'leave-google') {
+    favorite = this.get('favorite');
+    if (favorite) {
+      section = 'favorite';
+    } else if (name === 'leave-google') {
       section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
@@ -3173,7 +3178,16 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="line"><div class="left mod w75"><div class="line"><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('<div class="line"><div class="left mod w75"><div class="line"><span class="favorite mr1">');
+if ( app.favorite)
+{
+buf.push('<i title="config application unmark favorite" class="fa fa-star"></i>');
+}
+else
+{
+buf.push('<i title="config application mark favorite" class="fa fa-star-o"></i>');
+}
+buf.push('</span><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
@@ -3198,14 +3212,7 @@ var __val__ = t('update required')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span>');
 }
-buf.push('</div><div class="line"><div class="comments">');
-if ( app.comment === 'official application')
-{
-buf.push('<img');
-buf.push(attrs({ 'src':("img/happycloud-black.svg"), 'alt':("" + (t(app.comment)) + ""), 'width':("20") }, {"src":true,"alt":true,"width":true}));
-buf.push('/>');
-}
-buf.push('<a');
+buf.push('</div><div class="line"><div class="comments"><a');
 buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href":true,"target":true}));
 buf.push('>');
 var __val__ = app.website
@@ -3428,7 +3435,10 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 buf.push(null == __val__ ? "" : __val__);
-buf.push('</p></div><div id="app-list"><section id="apps-leave" class="line"><h2>');
+buf.push('</p></div><div id="app-list"><section id="apps-favorite" class="line"><h2>');
+var __val__ = t('home section favorites')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2></section><section id="apps-leave" class="line"><h2>');
 var __val__ = t('home section leave')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-main" class="line"><h2>');
@@ -4095,8 +4105,8 @@ module.exports = exports.AccountView = (function(_super) {
     };
     return new ObjectPicker(params, function(newPhotoChosen, dataUrl) {
       var array, binary, blob, form, i, _i, _ref1;
-      _this.backgroundAddButton.spin(true);
       if (dataUrl != null) {
+        _this.backgroundAddButton.spin(true);
         binary = atob(dataUrl.split(',')[1]);
         array = [];
         for (i = _i = 0, _ref1 = binary.length; 0 <= _ref1 ? _i <= _ref1 : _i >= _ref1; i = 0 <= _ref1 ? ++_i : --_i) {
@@ -4309,13 +4319,15 @@ module.exports = ApplicationRow = (function(_super) {
     "click .remove-app": "onRemoveClicked",
     "click .update-app": "onUpdateClicked",
     "click .start-stop-btn": "onStartStopClicked",
-    "click .app-stoppable": "onStoppableClicked"
+    "click .app-stoppable": "onStoppableClicked",
+    "click .favorite": "onFavoriteClicked"
   };
 
   /* Constructor*/
 
 
   function ApplicationRow(options) {
+    this.onFavoriteClicked = __bind(this.onFavoriteClicked, this);
     this.remove = __bind(this.remove, this);
     this.onStartStopClicked = __bind(this.onStartStopClicked, this);
     this.onUpdateClicked = __bind(this.onUpdateClicked, this);
@@ -4532,6 +4544,13 @@ module.exports = ApplicationRow = (function(_super) {
         return Backbone.Mediator.pub('app-state-changed', true);
       }
     });
+  };
+
+  ApplicationRow.prototype.onFavoriteClicked = function() {
+    this.model.set('favorite', !this.model.get('favorite'));
+    this.model.save();
+    Backbone.Mediator.pub('app:changed:favorite', this.model);
+    return this.render();
   };
 
   return ApplicationRow;
@@ -5155,6 +5174,10 @@ module.exports = ApplicationsListView = (function(_super) {
   ApplicationsListView.prototype.template = require('templates/home');
 
   ApplicationsListView.prototype.itemView = require('views/home_application');
+
+  ApplicationsListView.prototype.subscriptions = {
+    'app:changed:favorite': 'render'
+  };
 
   /* Constructor*/
 
@@ -8231,7 +8254,7 @@ module.exports = NotificationsView = (function(_super) {
 
   NotificationsView.prototype.afterRender = function() {
     this.counter = this.$('#notifications-counter');
-    this.counter.html('10');
+    this.counter.html('0');
     this.clickcatcher = this.$('#clickcatcher');
     this.clickcatcher.hide();
     this.noNotifMsg = $('#no-notif-msg');
@@ -8242,7 +8265,12 @@ module.exports = NotificationsView = (function(_super) {
     this.dismissButton.click(this.dismissAll);
     NotificationsView.__super__.afterRender.apply(this, arguments);
     this.initializing = false;
-    return this.collection.fetch();
+    this.collection.fetch();
+    if (window.cozy_user != null) {
+      return this.noNotifMsg.html(t('you have no notifications', {
+        name: window.cozy_user.public_name || ''
+      }));
+    }
   };
 
   NotificationsView.prototype.remove = function() {
