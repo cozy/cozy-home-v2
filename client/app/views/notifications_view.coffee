@@ -40,7 +40,7 @@ module.exports = class NotificationsView extends ViewCollection
         @collection.fetch()
         if window.cozy_user?
             @noNotifMsg.html t 'you have no notifications',
-                name: window.cozy_user.public_name
+                name: window.cozy_user.public_name or ''
 
     remove: =>
         super
@@ -59,7 +59,7 @@ module.exports = class NotificationsView extends ViewCollection
         if event? and @$el.has($(event.target)).length is 0
             @hideNotifList()
 
-    showNotifList: () =>
+    showNotifList: =>
         if $('.right-menu').is ':visible'
             @hideNotifList()
         else
