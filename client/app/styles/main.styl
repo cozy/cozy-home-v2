@@ -21,48 +21,6 @@
 body
     box-sizing border-box
 
-#home-menu
-    position fixed
-    z-index 50
-    right 0
-
-    .menu-btn
-        z-index 50
-        height 52px
-        opacity 0.3
-        margin 0
-        padding 0
-        border-top-left-radius 5px
-        border-bottom-left-radius 5px
-
-        span
-            font-size 24px
-            display none
-            color darkblue
-
-        img
-            width 32px
-            cursor pointer
-            margin 10px 10px
-
-    .menu-btn:hover
-        opacity 1
-        margin 0
-        padding 0
-        background orangewhite - 10%
-
-        a
-            color white
-            font-weight normal
-            color orange - 50%
-            padding 30px 0px 10px 10px
-
-        span
-            display inline
-
-    .active
-        opacity 1
-
 
 .navbar
     position fixed
@@ -73,17 +31,9 @@ body
     height 36px
     padding 0
 
-    span
-        margin 0
-
-    img
-        height 28px
-        vertical-align middle
-        margin 2px 0 0 0
-
 
 .back-button
-    margin-top 2px
+    margin-top 5px
 
     font-family 'Maven Pro', sans-serif
     font-weight normal
@@ -92,6 +42,13 @@ body
 
     color white
     opacity 0.5
+    transition opacity 0.2s ease
+
+    img
+        margin-left 6px
+        margin-right 6px
+        width 20px
+        height 20px
 
     &:hover
         color white
@@ -106,6 +63,7 @@ body
     overflow auto
     margin-bottom 10px
     background-size cover
+    transition 0.6s background-image ease-in-out
 
 #home-content
     height 100%
@@ -135,7 +93,7 @@ body
     border-right 1px solid #DDD
     border-bottom 1px solid #DDD
     padding 20px
-    background #F7F4F0
+    background rgba(255, 255, 255, 0.95)
 
     .buttons
         button.btn
@@ -185,28 +143,26 @@ body
     line-height 34px
     width auto
     cursor pointer
-    margin 0
+    margin 0 5px 0 0
     padding 0 10px
     width 36px
     height 36px
-    background url('/img/notification.png')
+
+    i 
+        color blue
+        transition color 0.2s ease
 
     &:hover
-        background url('/img/notification-orange.png')
+        i
+            color orange
 
         #notifications-counter
-            background orange + 10%
-
-    img //position hotfix
-        vertical-align baseline
-        width 24px
-        height 24px
-        margin-top 0
+            background orange
 
     #notifications-counter
         position absolute
         top 3px
-        right 0
+        right 3px
 
         height 20px
         width 20px
@@ -218,6 +174,7 @@ body
         background #338CF7
         color #fff
         border 2px solid #363a46
+        transition background 0.2s ease
 
         &:empty
             padding 0
@@ -258,13 +215,6 @@ body
 
     a
         color darkblue
-
-    #notifications-toggle.highlight
-        opacity 1
-
-    .notification
-        a
-            opacity 1
 
     .badge
         padding 1px 2px 1px 3px
@@ -399,7 +349,7 @@ body
 #app-list
     margin auto
     max-width 720px
-    margin-bottom 40px
+    padding-bottom 20px
 
     .preview-holder
         padding 10px
@@ -408,10 +358,10 @@ body
         background-color orange
 
     section
-        background rgba(247, 244, 240, 0.8)
+        background rgba(255, 255, 255, 0.8)
         border-radius 15px
         display none
-        padding 0px 12px 10px
+        padding 0px 12px 0px
 
         &.show
             display block
@@ -448,6 +398,7 @@ body
             border-radius 200px
             margin-bottom 10px
             width 100%
+            transition background 0.2s ease
 
         img.spinner
             border-radius 200px
@@ -491,6 +442,7 @@ body
         img
             padding 25px
             border-radius 100px
+            background #338CF7 + 20%
 
         &:hover
             img
@@ -510,7 +462,7 @@ body
     margin auto
     margin-top 30px
     width 80%
-    background lightgrey
+    background white
     border-bottom-left-radius 5px
     border-bottom-right-radius 5px
     padding-bottom 20px
@@ -559,14 +511,18 @@ body
 
 #account-view
 
+    p
+        margin 0
+        margin-bottom 5px
+
     input
     select
-        max-width 490px
         text-align left
         margin-bottom 10px
         font-size 24px
 
     #account-form
+        background rgba(255, 255, 255, 0.95)
         padding 20px
         border-right 1px solid #DDD
         border-bottom 1px solid #DDD
@@ -574,32 +530,56 @@ body
     .input
         .btn
             display inline-block
-            height 55px
-            width 55px
-            margin-left 10px
+            line-height 40px
+            padding 10px
+
+
+    button
+        text-align center
 
     .background-list
         margin-top 10px
 
         .background-button
+            position relative
             text-align center
             cursor pointer
 
             img
-                border 2px solid #DDD
+                transition border 0.2s ease
+                border 5px solid transparent
+                margin 0
+
+            button
+                display none
+                position absolute
+                top 10px
+                right 10px
+
+            &:hover
+                button
+                    display inline
 
         .background-button:hover
 
             img
-                border 2px solid orange
+                border 5px solid orange
 
         .background-button.selected
 
             img
-                border 2px solid #CDF
+                border 5px solid #6AF
+                outline 0
 
 #help-view
     height 100%
+
+    p
+        margin 0
+        margin-bottom 0
+
+    p.mt2
+        margin-top 20px
 
     p.help-text
         font-size 20px
@@ -607,16 +587,9 @@ body
 
     .help-section
         height 100%
+        background rgba(255, 255, 255, 0.95)
         .w50
-            height 100%
-            background inherit
-
-        .w600
-            padding 20px
-            border-left 1px solid lightgrey - 10%
-            border-right 1px solid lightgrey - 10%
-            border-bottom 1px solid lightgrey - 10%
-            margin-bottom 30px
+            padding 30px
 
     .alert
         margin-top 10px
@@ -649,11 +622,9 @@ body
         text-align left
         box-sizing border-box
         width 100%
-        max-width 550px
+        max-width 700px
         font-size 24px
         padding 10px
-        margin-top 2px
-        margin-right 10px
 
     .btn
         height 60px
@@ -705,6 +676,9 @@ body
             box-shadow none
             height 20px
 
+
+#market-view
+    height 100%
 
 
 #market-view #no-app-message,
@@ -806,7 +780,6 @@ body
     border-top 0
 
 .config-application
-    background lightgrey
     border-top 1px solid lightgrey - 10%
     padding 10px 0
     margin-bottom 10px
@@ -823,6 +796,9 @@ body
 
         input
             margin 0 5px 0
+
+    .favorite
+        cursor pointer
 
     .md-header
         background transparent
@@ -865,7 +841,7 @@ body
 
     .to-update-label
         background #43A047
-        color orangewhite
+        color white
         padding 3px 6px
         font-size 12px
         border-radius 3px
@@ -891,7 +867,6 @@ body
 
 
 .config-device
-    background lightgrey
     padding 0
     margin-bottom 5px
     border-radius 5px
@@ -968,7 +943,7 @@ body
     transform translateX(20%)
     opacity 0
     transition all 3s
-    background orangewhite
+    background white
     position relative
     margin 0 auto
     transition all 0.3s
@@ -1054,7 +1029,7 @@ body
 
 .md-body
 
-    background lightgrey
+    background white
     padding 20px
     color darkgrey
     overflow-y auto
@@ -1075,7 +1050,7 @@ body
         font-size 20px
 
 .md-footer
-    background lightgrey
+    background white
     padding 10px
 
 
@@ -1111,11 +1086,18 @@ body
     #help-view
     #account-view
     #config-applications-view
+
+        .line:first-child
+            margin-bottom 20px
+
         .w50
             width 100%
 
 
 @media (max-width 850px)
+
+    #applications-view
+        padding 10px
 
     #market-view
         span
@@ -1146,6 +1128,10 @@ body
 
 
 @media (max-width 800px)
+    .back-button
+        span
+            display none
+
     .pa2
         padding 10px
 
@@ -1347,6 +1333,10 @@ body
         #market-application-list
             .cozy-app
                 height 300px
+
+        .app-img 
+            img
+                padding 10px
 
     #help-view
         p.help-text

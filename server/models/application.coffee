@@ -1,9 +1,9 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
 {Manifest} = require '../lib/manifest'
 
 
-module.exports = Application = americano.getModel 'Application',
+module.exports = Application = cozydb.getModel 'Application',
     name: String
     displayName: String
     description: String
@@ -27,7 +27,7 @@ module.exports = Application = americano.getModel 'Application',
     version: String
     comment: String
     needsUpdate: {type: Boolean, default: false}
-    _attachments: Object
+    favorite: {type: Boolean, default: false}
 
 Application.all = (params, callback) ->
     Application.request "bySlug", params, callback

@@ -12,6 +12,7 @@ module.exports = class BackgroundList extends ViewCollection
     collection: new BackgroundCollection
     events: {}
 
+
     # Init collection with default values.
     # Add a change listener to mark the selected background as selected
     # and remove the selection from others.
@@ -23,3 +24,16 @@ module.exports = class BackgroundList extends ViewCollection
                 if changedModel.cid isnt model.cid
                     model.set {'selected': false}, {silent: true}
                     @views[model.cid].$el.removeClass 'selected'
+
+
+    # Select given background (and fire select events).
+    select: (background) ->
+        @views[background.cid].$el.click()
+
+
+    # Override to put official background first.
+    appendView: (view) ->
+        if view.model.get 'predefined'
+            @$el.prepend view.el
+        else
+            @$el.append view.el

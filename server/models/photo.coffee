@@ -1,15 +1,14 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 async = require 'async'
 
 Binary = require './binary'
 
-module.exports = Photo = americano.getModel 'Photo',
+module.exports = Photo = cozydb.getModel 'Photo',
     id           : String
     title        : String
     description  : String
     orientation  : Number
     binary       : (x) -> x
-    _attachments : Object
     albumid      : String
     date         : String
 

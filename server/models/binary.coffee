@@ -1,3 +1,3 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
-module.exports = Binary = americano.getModel 'Binary', {}
+module.exports = Binary = cozydb.getModel 'Binary', {}

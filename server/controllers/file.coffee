@@ -67,11 +67,12 @@ module.exports.photoMonthDistribution = (req, res, next) ->
         distribution = []
         for k in [distribution_raw.length-1..0]
             month = distribution_raw[k]
-            yearStr   = month.key[0] + ''
-            monthStr  = month.key[1] + ''
-            if monthStr.length == 1
-                monthStr = '0' + monthStr
-            distribution.push(nPhotos:month.value, month:yearStr+monthStr)
+            if month?
+                yearStr   = month.key[0] + ''
+                monthStr  = month.key[1] + ''
+                if monthStr.length == 1
+                    monthStr = '0' + monthStr
+                distribution.push(nPhotos:month.value, month:yearStr+monthStr)
         res.send(distribution, 200)
 
 ###*

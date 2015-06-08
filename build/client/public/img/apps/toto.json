@@ -1,0 +1,9 @@
+{
+  "icon": "img/apps/ghost.svg",
+  "name": "ghost",
+  "displayName": "Ghost",
+  "slug": "ghost",
+  "git": "https://github.com/cozy-labs/cozy-ghost.git",
+  "comment": "community contribution",
+  "description": "ghost description"
+}

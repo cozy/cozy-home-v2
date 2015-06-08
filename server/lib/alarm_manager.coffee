@@ -1,4 +1,4 @@
-CozyAdapter = require 'jugglingdb-cozy-adapter'
+cozydb = require 'cozydb'
 RRule = require('rrule').RRule
 moment = require 'moment-timezone'
 log = require('printit')
@@ -115,7 +115,7 @@ module.exports = class AlarmManager
                     subject: @polyglot.t 'reminder title email'
                     content: @polyglot.t 'reminder message', {message}
 
-            CozyAdapter.sendMailToUser data, (error, response) ->
+            cozydb.sendMailToUser data, (error, response) ->
                 if error?
                     log.error "Error while sending email -- #{error}"
 

@@ -1,4 +1,4 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
 byApps = -> emit [doc.app, doc.ref], doc if doc.type is 'persistent'
 
@@ -11,16 +11,16 @@ imageByDate = (doc) ->
 module.exports =
 
     user:
-        all: americano.defaultRequests.all
+        all: cozydb.defaultRequests.all
 
     alarm:
-        all: americano.defaultRequests.all
+        all: cozydb.defaultRequests.all
 
     event:
-        all: americano.defaultRequests.all
+        all: cozydb.defaultRequests.all
 
     cozyinstance:
-        all: americano.defaultRequests.all
+        all: cozydb.defaultRequests.all
 
     notification:
         all: (doc) ->
@@ -28,11 +28,14 @@ module.exports =
         byApps: byApps
 
     application:
-        all: americano.defaultRequests.all
+        all: cozydb.defaultRequests.all
         bySlug: allSlug
 
     stack_application:
-        all: americano.defaultRequests.all
+        all: cozydb.defaultRequests.all
+
+    background:
+        all: cozydb.defaultRequests.all
 
     file:
         imageByDate : imageByDate

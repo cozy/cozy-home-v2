@@ -1,9 +1,9 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
 {Manifest} = require '../lib/manifest'
 
 
-module.exports = StackApplication = americano.getModel 'StackApplication',
+module.exports = StackApplication = cozydb.getModel 'StackApplication',
     name: String
     version: String
     lastVersion: String

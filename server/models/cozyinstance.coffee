@@ -1,6 +1,6 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
-module.exports = CozyInstance = americano.getModel 'CozyInstance',
+module.exports = CozyInstance = cozydb.getModel 'CozyInstance',
     domain: String
     locale: String
     helpUrl: String
