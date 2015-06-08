@@ -270,7 +270,8 @@ module.exports =
                             catch err
                                 console.log err
                                 iconInfos = null
-                            appli.iconType = iconInfos?.extension or null
+                            if iconInfos? and iconInfos.extension?
+                                appli.iconType = iconInfos.extension
 
                             appli.updateAttributes updatedData, (err) ->
                                 return sendErrorSocket err if err?
