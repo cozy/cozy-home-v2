@@ -1,6 +1,6 @@
 #account-form.lightgrey.pa2
     .line
-        .mod.left.w50.pa2
+        .mod.left.w50.pa2.personalisation
             h4= t('account personalization')
 
             p
@@ -15,17 +15,17 @@
 
             .input
                 p= t('alerts and password recovery email')
-                p
+                p.account-field
                     input#account-email-field
                     button.btn= t('save')
             .input
                 p= t('public name description')
-                p
+                p.account-field
                     input#account-public-name-field
                     button.btn= t('save')
             .input
                 p= t('domain name for urls and email')
-                p
+                p.account-field
                     input#account-domain-field
                     button.btn= t('save')
 
@@ -34,17 +34,19 @@
 
             .input
                 p= t('your timezone is required')
-                select#account-timezone-field
-                button.btn= t('save')
+                p.account-field
+                    select#account-timezone-field
+                    button.btn= t('save')
 
             .input
                 p= t('Chose the language you want I use to speak with you:')
-                select#account-locale-field
-                    option(value="fr")= t('french')
-                    option(value="en")= t('english')
-                    option(value="de")= t('german')
-                    option(value="es")= t('spanish')
-                button.btn= t('save')
+                p.account-field
+                    select#account-locale-field
+                        option(value="fr")= t('french')
+                        option(value="en")= t('english')
+                        option(value="de")= t('german')
+                        option(value="es")= t('spanish')
+                    button.btn= t('save')
 
             h4= t('account password')
             #change-password-form

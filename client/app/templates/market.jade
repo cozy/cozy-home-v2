@@ -7,10 +7,11 @@
         #your-app.clearfix
             .text
                 p
-                    = t('install')
+                    = t('market install your app')
                     | &nbsp;
                     a(href="http://cozy.io/hack/getting-started/",
-                      target="_blank")= t('your own application')
+                      target="_blank")= t('market app tutorial')
+                    | .
                 p
                     input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
                     button.btn.app-install-button= t('install')

@@ -533,12 +533,24 @@ body
         border-right 1px solid #DDD
         border-bottom 1px solid #DDD
 
-    .input
-        .btn
-            display inline-block
-            line-height 40px
-            padding 10px
+    .account-field
+        display flex
+        justify-content flex-end
+        align-items stretch
+        margin-bottom 20px
+        max-width 550px
 
+        input 
+            margin 0
+            width 100%
+
+        select
+            margin 0
+            width 100%
+            cursor pointer
+
+        button
+            width 60px
 
     button
         text-align center
@@ -828,9 +840,9 @@ body
 
     .comments
         clear both
-        margin-top 1em
         font-size 14px
         line-height 20px
+        margin-left 2em
 
         img
             overflow hidden
@@ -840,8 +852,8 @@ body
         a
             color grey
 
-            @media (max-width: 640px)
-                display none
+        @media (max-width: 800px)
+            margin-left 0
 
     .to-update-label
         background #43A047
@@ -875,8 +887,8 @@ body
     margin-bottom 5px
     border-radius 5px
 
-    .spinner
-        margin 0 10px
+    .btn
+        text-align left
 
     strong
     .mod
@@ -917,6 +929,7 @@ body
         font-weight normal
         &:hover
             color orange
+
 
 // modals
 
@@ -1076,7 +1089,9 @@ body
         ul
             margin 10px 150px
 
+
 // Responsive
+
 
 @media (max-width 1200px)
     .application .application-inner
@@ -1091,11 +1106,12 @@ body
     #account-view
     #config-applications-view
 
-        .line:first-child
-            margin-bottom 20px
-
         .w50
             width 100%
+            padding 0
+
+        .personalisation
+            margin-bottom 30px
 
 
 @media (max-width 850px)
@@ -1139,9 +1155,6 @@ body
     .pa2
         padding 10px
 
-    #account-view
-        #account-form
-            padding 10px
 
     #config-applications-view
         .w50
@@ -1176,21 +1189,6 @@ body
 
     .home-body
         box-shadow none
-
-    #account-form
-        text-align left
-
-        p
-            margin 15px
-
-        .field
-            margin 15px
-
-            select
-
-
-            option
-                width 75%
 
     img
         margin 10px 10px 0 0
@@ -1258,12 +1256,9 @@ body
     #config-applications-view
         .w33
             width 100%
-            padding 10px 40px 10px 10px
 
         .w66
             width 100%
-            margin-top 40px
-            padding 10px 40px 10px 10px
 
         .config-applications
             .buttons
@@ -1311,15 +1306,6 @@ body
         select
             width 100%
             font-size 16px
-
-        #account-form
-            .btn
-                width 100%
-                margin 20px 0 0 0
-                height 30px
-
-        select
-            width 100%
 
     #home-content
         padding 0
