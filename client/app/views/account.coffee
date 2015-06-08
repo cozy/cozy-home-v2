@@ -1,22 +1,61 @@
 BaseView = require 'lib/base_view'
+Background = require '../models/background'
 timezones = require('helpers/timezone').timezones
 locales =   require('helpers/locales' ).locales
 request = require 'lib/request'
 BackgroundList = require 'views/background_list'
 Instance = require 'models/instance'
+ObjectPicker = require './object-picker'
+
 
 # View describing main screen for user once he is logged
 module.exports = class exports.AccountView extends BaseView
     id: 'account-view'
     template: require 'templates/account'
 
-    ### Constructor ###
+    events:
+        'click #background-add-button': 'onAddBackgroundClicked'
 
-    constructor: ->
-        super()
 
-    # When data are submited, it sends a request to backend to save them.
-    # If an error occurs, message is displayed.
+    afterRender: ->
+
+        # Register widgets
+        @emailField = @$ '#account-email-field'
+        @publicNameField = @$ '#account-public-name-field'
+        @timezoneField = @$ '#account-timezone-field'
+        @domainField = @$ '#account-domain-field'
+        @localeField = @$ '#account-locale-field'
+        @infoAlert = @$ '#account-info'
+        @infoAlert.hide()
+        @errorAlert = @$ '#account-error'
+        @errorAlert.hide()
+
+        @changePasswordForm = @$ '#change-password-form'
+        @accountSubmitButton = @$ '#account-form-button'
+
+        # Configure Background
+        @accountSubmitButton.click (event) =>
+            event.preventDefault()
+            @onNewPasswordSubmit()
+
+        # Fill timezone selector
+        for timezone in timezones
+            @timezoneField.append(
+                "<option value=\"#{timezone}\">#{timezone}</option>"
+            )
+
+        # Build and render background list. Listen to background changes.
+        @backgroundList = new BackgroundList
+            el: @$ '.background-list'
+        @backgroundList.collection.on 'change', @onBackgroundChanged
+        @backgroundAddButton = @$ '#background-add-button'
+
+        # Load data once everything is built
+        @fetchData()
+
+
+    # When password data are submited, it sends a request to backend to save
+    # them.  If an error occurs, message is displayed.
     onNewPasswordSubmit: (event) =>
         form =
             password0: @password0Field.val()
@@ -48,18 +87,7 @@ module.exports = class exports.AccountView extends BaseView
             @accountSubmitButton.spin false
 
 
-    # When background is changed, data are saved and a backgroundChanged event
-    # is emitted. That way the main view can be notified.
-    onBackgroundChanged: (model) =>
-        data = background: model.get('id')
-        @instance.saveData data, (err) ->
-            if err
-                alert t 'account background saved error'
-            else
-                Backbone.Mediator.pub 'backgroundChanged', data.background
-
-
-    ### Functions ###
+    # Display errors that occured through the error alert.
     displayErrors: (msgs) =>
         errorString = ""
         msgs = msgs.split ',' if typeof(msgs) is 'string'
@@ -100,6 +128,8 @@ module.exports = class exports.AccountView extends BaseView
 
 
     # Fetch data from backend and fill form with collected data.
+    # Then set all listeners: listen to keyup for each field and to click
+    # for each button.
     fetchData: ->
 
         userData = window.cozy_user or {}
@@ -147,33 +177,48 @@ module.exports = class exports.AccountView extends BaseView
             if event.keyCode is 13 or event.which is 13
                 @onNewPasswordSubmit()
 
+    # When add background button is clicked, it displays the photo selector
+    # modal. From the selector result it sends a multipart form to the server.
+    # That way the background can saved. Once it's done the background is
+    # added to the available background list.
+    onAddBackgroundClicked: ->
+        params =
+            type: 'singlePhoto'
 
-    ### Configuration ###
+        new ObjectPicker params, (newPhotoChosen, dataUrl) =>
 
-    afterRender: ->
-        @emailField = @$ '#account-email-field'
-        @publicNameField = @$ '#account-public-name-field'
-        @timezoneField = @$ '#account-timezone-field'
-        @domainField = @$ '#account-domain-field'
-        @localeField = @$ '#account-locale-field'
-        @infoAlert = @$ '#account-info'
-        @infoAlert.hide()
-        @errorAlert = @$ '#account-error'
-        @errorAlert.hide()
+            if dataUrl?
+                @backgroundAddButton.spin true
+                binary = atob dataUrl.split(',')[1]
+                array = []
+                array.push binary.charCodeAt i for i in [0..binary.length]
+                blob = new Blob [new Uint8Array(array)], type: 'image/jpeg'
 
-        @changePasswordForm = @$ '#change-password-form'
-        @accountSubmitButton = @$ '#account-form-button'
-        @accountSubmitButton.click (event) =>
-            event.preventDefault()
-            @onNewPasswordSubmit()
+                form = new FormData()
+                form.append 'picture', blob
+                $.ajax
+                    type: "POST"
+                    url: "/api/backgrounds"
+                    data: form
+                    contentType: false
+                    processData: false
+                    success: (data) =>
+                        background = new Background data
+                        @backgroundList.collection.add background
+                        @backgroundList.select background
 
-        for timezone in timezones
-            @timezoneField.append(
-                "<option value=\"#{timezone}\">#{timezone}</option>"
-            )
+                    error: (data) =>
+                        alert t 'account background added error'
+                    complete: =>
+                        @backgroundAddButton.spin false
 
-        @backgroundList = new BackgroundList
-            el: @$ '.background-list'
-        @backgroundList.collection.on 'change', @onBackgroundChanged
+    # When background is changed, data are saved and a backgroundChanged event
+    # is emitted. That way the main view can be notified.
+    onBackgroundChanged: (model) =>
+        data = background: model.get('id')
+        @instance.saveData data, (err) ->
+            if err
+                alert t 'account background saved error'
+            else
+                Backbone.Mediator.pub 'backgroundChanged', data.background
 
-        @fetchData()

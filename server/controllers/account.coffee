@@ -129,3 +129,4 @@ module.exports =
 
         else
             res.send 400, error: true, msg: 'No accepted parameter given'
+

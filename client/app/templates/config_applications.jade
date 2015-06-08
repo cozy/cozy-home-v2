@@ -1,68 +1,67 @@
 //.section-title.darkbg.bigger apps
 .md-overlay
-.txt-center
-    .line.platform-section
-        .mod.left.w50
-            h4= t('hardware consumption')
-            .line
-                .disk-space.mt2.left.w50.mod
-                    .line
-                        img(src="img/hard-drive.png")
-                    .line
-                        span.amount 0
-                        |  / 
-                        span.total 0
-                        |  #{t('hard drive gigabytes')}
-                .memory-free.mt2.left.w50.mod
-                    .line
-                        img(src="img/ram.png")
-                    .line
-                        span.amount 0
-                        |  / 
-                        span.total 0
-                        |  #{t('memory megabytes')}
+.line.platform-section
+    .mod.left.w50
+        h4= t('hardware consumption')
+        .line
+            .disk-space.mt2.left.w50.mod
+                .line
+                    img(src="img/hard-drive.png")
+                .line
+                    span.amount 0
+                    |  / 
+                    span.total 0
+                    |  #{t('hard drive gigabytes')}
+            .memory-free.mt2.left.w50.mod
+                .line
+                    img(src="img/ram.png")
+                .line
+                    span.amount 0
+                    |  / 
+                    span.total 0
+                    |  #{t('memory megabytes')}
 
-            h4= t('cozy platform')
-            .stack-app.mt2.line
-                .mod.w75.left
-                    .line
-                        span.app Data System: 
-                        span.data-system --
-                    .line
-                        span.app Proxy: 
-                        span.proxy --
-                    .line
-                        span.app Home: 
-                        span.home --
-                    .line
-                        span.app Controller: 
-                        span.controller --
-                    .line
-                        span.refresh= t('refresh page')
-                .mod.buttons.w25.right
-                    button.btn.update-stack
-                        i.fa.fa-refresh.mr1
-                        span= t('update stack')
-                    button.btn.update-all
-                        i.fa.fa-refresh.mr1
-                        span= t('update all')
-                    button.btn.reboot-stack
-                        i.fa.fa-power-off.mr1
-                        span= t('reboot stack')
-                    a.btn.btn-large(href="/logs/home", target="_blank")
-                        i.fa.fa-cog.mr1
-                        | 
-                        span= t('show home logs')
-                    a.btn.btn-large(href="/logs/data-system", target="_blank")
-                        i.fa.fa-cog.mr1
-                        | 
-                        span= t('show data system logs')
-                    a.btn.btn-large(href="/logs/proxy", target="_blank")
-                        i.fa.fa-cog.mr1
-                        | 
-                        span= t('show proxy logs')
+        h4= t('cozy platform')
+        .stack-app.mt2.line
+            .mod.w75.left
+                .line
+                    span.app Data System: 
+                    span.data-system --
+                .line
+                    span.app Proxy: 
+                    span.proxy --
+                .line
+                    span.app Home: 
+                    span.home --
+                .line
+                    span.app Controller: 
+                    span.controller --
+                .line
+                    span.refresh= t('refresh page')
+            .mod.buttons.w25.right
+                button.btn.update-stack
+                    i.fa.fa-refresh.mr1
+                    span= t('update stack')
+                button.btn.update-all
+                    i.fa.fa-refresh.mr1
+                    span= t('update all')
+                button.btn.reboot-stack
+                    i.fa.fa-power-off.mr1
+                    span= t('reboot stack')
+                a.btn.btn-large(href="/logs/home", target="_blank")
+                    i.fa.fa-cog.mr1
+                    | 
+                    span= t('show home logs')
+                a.btn.btn-large(href="/logs/data-system", target="_blank")
+                    i.fa.fa-cog.mr1
+                    | 
+                    span= t('show data system logs')
+                a.btn.btn-large(href="/logs/proxy", target="_blank")
+                    i.fa.fa-cog.mr1
+                    | 
+                    span= t('show proxy logs')
 
-            h4.title-device.h4.mb3= t('manage your devices')
+        h4.title-device.h4.mb3= t('manage your devices')
 
-        .mod.left.w50
-            h4.title-app.h4.mb3= t('manage your applications')
+    .mod.left.w50
+        h4.title-app.h4.mb3= t('manage your applications')

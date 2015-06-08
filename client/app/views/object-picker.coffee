@@ -109,7 +109,7 @@ module.exports = class PhotoPickerCroper extends Modal
 
 
     # overload the modal behavour : "ok" leads to the cropping step
-    onYes: ()->
+    onYes: ->
         # expected object :
         #    {dataUrl:string}
         # or {id:file.id, docType: 'file', name:file.name}
@@ -127,11 +127,11 @@ module.exports = class PhotoPickerCroper extends Modal
             if url
                 @_showCropingTool(url)
         else
-            # Cropping is finished, get the coordonates to cropp
+            # Cropping is finished, get the coordinates to crop
             # the original image
             dimension = @_getCroppedDimensions()
             # send result
-            @cb(true,@_getResultDataURL(@imgPreview, dimension))
+            @cb(true, @_getResultDataURL(@imgPreview, dimension))
             @close()
 
     resizeHandler: (event) =>

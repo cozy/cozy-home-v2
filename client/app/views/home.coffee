@@ -6,6 +6,9 @@ module.exports = class ApplicationsListView extends ViewCollection
     template: require 'templates/home'
     itemView: require 'views/home_application'
 
+    subscriptions:
+        'app:changed:favorite': 'render'
+
 
     ### Constructor ###
 

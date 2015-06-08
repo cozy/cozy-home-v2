@@ -10,7 +10,9 @@ proxy             = require './proxy'
 album             = require './album'
 photo             = require './photo'
 logs              = require './logs'
+backgrounds       = require './backgrounds'
 help              = require './help'
+
 
 module.exports =
     '': get: index.index
@@ -18,8 +20,10 @@ module.exports =
     # Fetch on params
     'albumid': param: album.fetch
     'photoid': param: photo.fetch
-    'fileid' : param: file.fetch
-    'slug'   : param: applications.loadApplication
+    'fileid': param: file.fetch
+    'backgroundid': param: backgrounds.fetch
+    'slug': param: applications.loadApplication
+    'id': param: applications.loadApplicationById
 
     # Application routes
     'api/applications/getPermissions' : post: applications.getPermissions
@@ -29,7 +33,7 @@ module.exports =
     'api/applications'                : get: applications.applications
     'api/applications/byid/:id'       :
         get: applications.read
-        put: applications.updatestoppable
+        put: applications.updateData
     'api/applications/install'        : post: applications.install
     'api/applications/:slug.png'      : get: applications.icon
     'api/applications/:slug.svg'      : get: applications.icon
@@ -68,7 +72,8 @@ module.exports =
     'api/notifications/:id':
         get: notifications.show
         delete: notifications.delete
-    'notifications': post: notifications.create
+    'notifications':
+        post: notifications.create
     'notifications/:app/:ref':
         put: notifications.updateOrCreate
         delete: notifications.destroy
@@ -77,11 +82,24 @@ module.exports =
     'api/proxy/':
         get: proxy.get
 
+    # Logs
     'logs/:moduleslug':
         get: logs.logs
 
+    # Help
     'help/message':
         post: help.message
+
+    # Backgrounds
+    'api/backgrounds':
+        get: backgrounds.all
+        post: backgrounds.create
+    'api/backgrounds/:backgroundid':
+        delete: backgrounds.delete
+    'api/backgrounds/:backgroundid/picture.jpg':
+        get: backgrounds.picture
+    'api/backgrounds/:backgroundid/thumb.jpg':
+        get: backgrounds.thumb
 
     # Photo routes
     'files/photo/range/:skip/:limit'  : get: file.photoRange
@@ -100,3 +118,4 @@ module.exports =
     'photos/thumbs/:photoid.jpg' : get : photo.thumb
     'photos/raws/:photoid.jpg'   :
         get : photo.raw
+

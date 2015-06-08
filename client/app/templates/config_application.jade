@@ -1,6 +1,11 @@
 .line
     .left.mod.w75
         .line
+            span.favorite.mr1
+                if app.favorite
+                    i.fa.fa-star(title='config application unmark favorite')
+                else
+                    i.fa.fa-star-o(title='config application mark favorite')
             strong #{app.displayName}
             if app.version
                 span &nbsp;-&nbsp; #{app.version}
@@ -15,10 +20,6 @@
                 span.to-update-label= t('update required')
         .line
             .comments
-                if app.comment === 'official application'
-                    img(src="img/happycloud-black.svg", 
-                        alt="#{t(app.comment)}", 
-                        width="20")
                 a(href="#{app.website}", target="_blank")= app.website
     .buttons.left.mod.w25
         div

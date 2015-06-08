@@ -27,6 +27,7 @@ module.exports = Application = cozydb.getModel 'Application',
     version: String
     comment: String
     needsUpdate: {type: Boolean, default: false}
+    favorite: {type: Boolean, default: false}
 
 Application.all = (params, callback) ->
     Application.request "bySlug", params, callback

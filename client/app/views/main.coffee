@@ -26,11 +26,12 @@ module.exports = class HomeView extends BaseView
 
     wizards: ['quicktour']
 
+
     constructor: ->
-        @apps          = new AppCollection(window.applications)
-        @stackApps     = new StackAppCollection(window.stack_applications)
-        @devices       = new DeviceCollection(window.devices)
-        @market        = new AppCollection(window.market_applications)
+        @apps          = new AppCollection window.applications
+        @stackApps     = new StackAppCollection window.stack_applications
+        @devices       = new DeviceCollection window.devices
+        @market        = new AppCollection window.market_applications
         @notifications = new NotificationCollection()
         @intentManager = new IntentManager()
         SocketListener.watch @apps
@@ -38,9 +39,6 @@ module.exports = class HomeView extends BaseView
         SocketListener.watch @devices
         super
 
-        # Disable preload for now.
-        #thumbPreloader = new ThumbPreloader()
-        #thumbPreloader.start()
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
@@ -73,7 +71,13 @@ module.exports = class HomeView extends BaseView
         if background is 'background-none'
             @content.css 'background-image', 'none'
         else
-            val = "url('/img/backgrounds/#{background.replace '-', '_'}.jpg')"
+            # It's a pre-defined background
+            if background.indexOf('background') > -1
+                name = background.replace '-', '_'
+                val = "url('/img/backgrounds/#{name}.jpg')"
+            else
+                val = "url('/api/backgrounds/#{background}/picture.jpg')"
+
             @content.css 'background-image', val
 
 
@@ -211,6 +215,8 @@ module.exports = class HomeView extends BaseView
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
     # iframes. Then currently selected frame is registered
+    #
+    # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
 
         if @apps.length is 0
@@ -218,29 +224,41 @@ module.exports = class HomeView extends BaseView
                 @displayApplication slug, hash
             return null
 
-        @frames.show()
-        @content.hide()
-        @backButton.show()
+        @$("#app-btn-#{slug} .spinner").toggle()
+        @$("#app-btn-#{slug} .icon").toggle()
 
         frame = @$("##{slug}-frame")
+        onLoad = =>
+            @$("#app-btn-#{slug} .spinner").toggle()
+            @$("#app-btn-#{slug} .icon").toggle()
+            @frames.show()
+            @content.hide()
+            @backButton.show()
+
+            @$('#app-frames').find('iframe').hide()
+            frame.show()
+
+            @selectedApp = slug
+
+            name = @apps.get(slug).get('name')
+            name = '' if not name?
+            window.document.title = "Cozy - #{name}"
+            $("#current-application").html name
+            @resetLayoutSizes()
+
+
         if frame.length is 0
             frame = @createApplicationIframe(slug, hash)
+            frame.on 'load', onLoad
 
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
         else if hash
             frame.prop('contentWindow').location.hash = hash
+            onLoad()
 
-        @$('#app-frames').find('iframe').hide()
-        frame.show()
-
-        @selectedApp = slug
-
-        name = @apps.get(slug).get('name')
-        name = '' if not name?
-        window.document.title = "Cozy - #{name}"
-        $("#current-application").html name
-        @resetLayoutSizes()
+        else
+            onLoad()
 
     createApplicationIframe: (slug, hash="") ->
 
