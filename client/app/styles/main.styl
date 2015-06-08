@@ -21,48 +21,6 @@
 body
     box-sizing border-box
 
-#home-menu
-    position fixed
-    z-index 50
-    right 0
-
-    .menu-btn
-        z-index 50
-        height 52px
-        opacity 0.3
-        margin 0
-        padding 0
-        border-top-left-radius 5px
-        border-bottom-left-radius 5px
-
-        span
-            font-size 24px
-            display none
-            color darkblue
-
-        img
-            width 32px
-            cursor pointer
-            margin 10px 10px
-
-    .menu-btn:hover
-        opacity 1
-        margin 0
-        padding 0
-        background orangewhite - 10%
-
-        a
-            color white
-            font-weight normal
-            color orange - 50%
-            padding 30px 0px 10px 10px
-
-        span
-            display inline
-
-    .active
-        opacity 1
-
 
 .navbar
     position fixed
@@ -109,7 +67,6 @@ body
 
 #home-content
     height 100%
-    padding 20px
 
 .wizard
     max-width 800px
@@ -136,7 +93,6 @@ body
     border-right 1px solid #DDD
     border-bottom 1px solid #DDD
     padding 20px
-    margin-bottom 20px
     background rgba(255, 255, 255, 0.95)
 
     .buttons
@@ -393,7 +349,7 @@ body
 #app-list
     margin auto
     max-width 720px
-    margin-bottom 40px
+    padding-bottom 20px
 
     .preview-holder
         padding 10px
@@ -506,7 +462,7 @@ body
     margin auto
     margin-top 30px
     width 80%
-    background lightgrey
+    background white
     border-bottom-left-radius 5px
     border-bottom-right-radius 5px
     padding-bottom 20px
@@ -568,7 +524,6 @@ body
     #account-form
         background rgba(255, 255, 255, 0.95)
         padding 20px
-        margin-bottom 20px
         border-right 1px solid #DDD
         border-bottom 1px solid #DDD
 
@@ -593,6 +548,7 @@ body
             img
                 transition border 0.2s ease
                 border 5px solid transparent
+                margin 0
 
             button
                 display none
@@ -630,8 +586,8 @@ body
         text-align left
 
     .help-section
+        height 100%
         background rgba(255, 255, 255, 0.95)
-        margin-bottom 20px
         .w50
             padding 30px
 
@@ -720,6 +676,9 @@ body
             box-shadow none
             height 20px
 
+
+#market-view
+    height 100%
 
 
 #market-view #no-app-message,
@@ -838,6 +797,9 @@ body
         input
             margin 0 5px 0
 
+    .favorite
+        cursor pointer
+
     .md-header
         background transparent
 
@@ -879,7 +841,7 @@ body
 
     .to-update-label
         background #43A047
-        color orangewhite
+        color white
         padding 3px 6px
         font-size 12px
         border-radius 3px
@@ -905,7 +867,6 @@ body
 
 
 .config-device
-    background lightgrey
     padding 0
     margin-bottom 5px
     border-radius 5px
@@ -982,7 +943,7 @@ body
     transform translateX(20%)
     opacity 0
     transition all 3s
-    background orangewhite
+    background white
     position relative
     margin 0 auto
     transition all 0.3s
@@ -1068,7 +1029,7 @@ body
 
 .md-body
 
-    background lightgrey
+    background white
     padding 20px
     color darkgrey
     overflow-y auto
@@ -1089,7 +1050,7 @@ body
         font-size 20px
 
 .md-footer
-    background lightgrey
+    background white
     padding 10px
 
 
