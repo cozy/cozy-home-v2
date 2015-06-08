@@ -16,7 +16,7 @@ module.exports =
     "total"                     : "Total"
     "memory consumption"        : "Memory usage"
     "disk consumption"          : "Disk usage"
-    "you have no notifications" : "You have no notifications"
+    "you have no notifications" : "Hello %{name}, you have currently no notification."
     "dismiss all"               : "Dismiss all"
     "add application"         : "Add app?"
     "install"                   : "Install"

@@ -24,20 +24,23 @@ module.exports = class NotificationsView extends ViewCollection
         @sound.play() unless @initializing
 
     afterRender: =>
-        @counter    = @$ '#notifications-counter'
-        @counter.html '10'
+        @counter = @$ '#notifications-counter'
+        @counter.html '0'
         @clickcatcher = @$ '#clickcatcher'
         @clickcatcher.hide()
         @noNotifMsg = $ '#no-notif-msg'
         @notifList  = $ '#notifications-list'
         @hideNotifList()
-        @sound      = $('#notification-sound')[0]
+        @sound = $('#notification-sound')[0]
         @dismissButton = $ "#dismiss-all"
         @dismissButton.click @dismissAll
 
         super
         @initializing = false
         @collection.fetch()
+        if window.cozy_user?
+            @noNotifMsg.html t 'you have no notifications',
+                name: window.cozy_user.public_name
 
     remove: =>
         super
@@ -60,11 +63,11 @@ module.exports = class NotificationsView extends ViewCollection
         if $('.right-menu').is ':visible'
             @hideNotifList()
         else
-            $('.right-menu').show()#'slide', direction: 'right', 200)
+            $('.right-menu').show()
             @clickcatcher.show()
 
     hideNotifList: (event) =>
-        $('.right-menu').hide() #'slide', direction: 'right', 200)
+        $('.right-menu').hide()
         @clickcatcher.hide()
 
     dismissAll: =>
