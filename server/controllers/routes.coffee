@@ -13,6 +13,7 @@ logs              = require './logs'
 backgrounds       = require './backgrounds'
 help              = require './help'
 
+
 module.exports =
     '': get: index.index
 
@@ -22,6 +23,7 @@ module.exports =
     'fileid': param: file.fetch
     'backgroundid': param: backgrounds.fetch
     'slug': param: applications.loadApplication
+    'id': param: applications.loadApplicationById
 
     # Application routes
     'api/applications/getPermissions' : post: applications.getPermissions
@@ -31,7 +33,7 @@ module.exports =
     'api/applications'                : get: applications.applications
     'api/applications/byid/:id'       :
         get: applications.read
-        put: applications.updatestoppable
+        put: applications.updateData
     'api/applications/install'        : post: applications.install
     'api/applications/:slug.png'      : get: applications.icon
     'api/applications/:slug.svg'      : get: applications.icon
@@ -116,3 +118,4 @@ module.exports =
     'photos/thumbs/:photoid.jpg' : get : photo.thumb
     'photos/raws/:photoid.jpg'   :
         get : photo.raw
+

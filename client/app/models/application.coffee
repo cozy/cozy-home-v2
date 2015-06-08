@@ -15,7 +15,7 @@ module.exports = class Application extends Backbone.Model
         return iconType? and iconType is 'svg'
 
     isRunning: -> @get('state') is 'installed'
-    isBroken: ->  @get('state') is 'broken'
+    isBroken: -> @get('state') is 'broken'
 
     # use same events as backbone to enable socket-listener
     prepareCallbacks: (callbacks, presuccess, preerror) ->
@@ -88,9 +88,12 @@ module.exports = class Application extends Backbone.Model
     # returns one of 'other', 'official', 'leave'
     getSection: ->
         section = 'misc'
-        name = @get('slug')
+        name = @get 'slug'
+        favorite = @get 'favorite'
 
-        if name in ['leave-google']
+        if favorite
+            section = 'favorite'
+        else if name in ['leave-google']
             section = 'leave'
         else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
             section = 'main'

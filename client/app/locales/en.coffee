@@ -176,6 +176,7 @@ module.exports =
     "finish layout edition": "Save"
     "reset customization": "Reset"
     "use icon": "Use icon"
+    "home section favorite": "Favorite"
     "home section leave": "Import"
     "home section main": "Basics"
     "home section productivity": "Productivity"

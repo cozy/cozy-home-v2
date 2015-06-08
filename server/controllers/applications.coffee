@@ -3,6 +3,7 @@ fs = require 'fs'
 slugify = require 'cozy-slug'
 {exec} = require 'child_process'
 async = require 'async'
+cozydb = require 'cozydb'
 log = require('printit')
     prefix: "applications"
 
@@ -73,7 +74,6 @@ randomString = (length) ->
         string = string + Math.random().toString(36).substr(2)
     return string.substr 0, length
 
-
 updateApp = (app, callback) ->
     data = {}
     if not app.password?
@@ -114,11 +114,19 @@ updateApp = (app, callback) ->
                         else console.info 'icon attached'
                         manager.resetProxy callback
 
+baseIdController = new cozydb.SimpleController
+     model: Application
+     reqProp: 'application'
+     reqParamID: 'id'
+
 
 module.exports =
 
+    loadApplicationById: baseIdController.find
+
+
     # Load application corresponding to slug given in params
-    loadApplication: (req, res, next, slug) ->
+    loadApplication:  (req, res, next, slug) ->
         Application.all key: req.params.slug, (err, apps) ->
             if err
                 next err
@@ -127,7 +135,6 @@ module.exports =
             else
                 req.application = apps[0]
                 next()
-
 
     applications: (req, res, next) ->
         Application.all (err, apps) ->
@@ -183,22 +190,30 @@ module.exports =
             res.type 'png'
             fs.createReadStream('./client/app/assets/img/stopped.png').pipe res
 
-    updatestoppable: (req, res, next) ->
-        Application.find req.params.id, (err, app) ->
-            if err
-                sendError res, err
-            else if app is null
-                sendError res, new Error('Application not found'), 404
-            else
-                Stoppable = req.body.isStoppable
-                Stoppable = if Stoppable? then Stoppable else app.isStoppable
-                changes =
-                    homeposition: req.body.homeposition or app.homeposition
-                    isStoppable: Stoppable
-                app.updateAttributes changes, (err, app) ->
-                    autostop.restartTimeout app.name
-                    return sendError res, err if err
-                    res.send app
+
+    # Update application parameters like autostop or favorite.
+    updateData: (req, res, next) ->
+        app = req.application
+        console.log app
+        console.log req.body
+        if req.body.isStoppable? and req.body.isStoppable isnt app.isStoppable
+            Stoppable = req.body.isStoppable
+            Stoppable = if Stoppable? then Stoppable else app.isStoppable
+            changes =
+                homeposition: req.body.homeposition or app.homeposition
+                isStoppable: Stoppable
+            app.updateAttributes changes, (err, app) ->
+                autostop.restartTimeout app.name
+                return sendError res, err if err
+                res.send app
+        else if req.body.favorite? and req.body.favorite isnt app.favorite
+            changes =
+                favorite: req.body.favorite
+            app.updateAttributes changes, (err, app) ->
+                return next err if err
+                res.send app
+        else
+            res.send app
 
 
     # Set up app into 3 places :
@@ -278,7 +293,6 @@ module.exports =
     # * proxy, cozy router
     # * database
     uninstall: (req, res, next) ->
-        req.body.slug = req.params.slug
         manager.uninstallApp req.application, (err, result) ->
             return markBroken res, req.application, err if err
 

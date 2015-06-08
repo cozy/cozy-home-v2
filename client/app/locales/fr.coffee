@@ -177,6 +177,7 @@ module.exports =
     "reset customization": "Remise à zéro"
     "use icon": "Mode icône"
     "change layout": "Modifier la disposition"
+    "home section favorite": "Applications favorites"
     "home section leave": "Service d'import"
     "home section main": "Applications principales"
     "home section productivity": "Applications de productivité"

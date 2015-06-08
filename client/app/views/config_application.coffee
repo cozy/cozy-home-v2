@@ -20,6 +20,7 @@ module.exports = class ApplicationRow extends BaseView
         "click .update-app": "onUpdateClicked"
         "click .start-stop-btn": "onStartStopClicked"
         "click .app-stoppable": "onStoppableClicked"
+        "click .favorite": "onFavoriteClicked"
 
     ### Constructor ####
 
@@ -184,3 +185,14 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.html t 'broken'
                 @updateButton.displayRed t "update failed"
                 Backbone.Mediator.pub 'app-state-changed', true
+
+
+    # When favorite button is clicked, the favorite flag is toggled.
+    # A event is published, that way the home view can refresh and display
+    # the application as a favorite.
+    onFavoriteClicked: =>
+        @model.set 'favorite', not @model.get 'favorite'
+        @model.save()
+        Backbone.Mediator.pub 'app:changed:favorite', @model
+        @render()
+
