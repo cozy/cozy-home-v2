@@ -62,10 +62,9 @@ module.exports.photoRange = (req, res, next) ->
  * [{nPhotos:`number`, month:'YYYYMM'}, ...]
 ###
 module.exports.photoMonthDistribution = (req, res, next) ->
-    console.log 'enter photoMonthDistribution'
     File.imageByMonth {group : true , group_level : 2 , reduce: true }, (error, distribution_raw) ->
         distribution = []
-        for k in [distribution_raw.length-1..0]
+        for k in [distribution_raw?.length-1..0]
             month = distribution_raw[k]
             if month?
                 yearStr   = month.key[0] + ''
