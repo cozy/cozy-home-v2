@@ -2,13 +2,20 @@ request = require 'request-json'
 logger = require('printit')
     prefix: 'manifest'
 
+
+
 # Class to facilitate applications' permissions management
 class exports.Manifest
 
     download: (app, callback) ->
 
-        # we can be smarter here
-        if app.git?
+        # If manifest is already part of the app request, use it
+        if app.local or app.git.match /^\/usr\/local\/cozy/
+            @config = require "#{app.git}/package.json"
+            callback null
+
+        # Or fetch it from git
+        else if app.git?
             providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
             providerName = providerName[0]
 

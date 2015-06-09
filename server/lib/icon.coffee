@@ -58,8 +58,11 @@ icons.getPath = (root, appli) ->
 # Retrieves icon information
 icons.getIconInfos = (appli) ->
     if appli?
-        repoName = (appli.git.split('/')[4]).replace '.git', ''
         name = appli.name.toLowerCase()
+        if appli.git? and appli.git.match /^https/
+            repoName = (appli.git.split('/')[4]).replace '.git', ''
+        else
+            repoName = name
         basePath = '/' + path.join 'usr', 'local', 'cozy', 'apps'
 
         # This path matches the old controller paths.

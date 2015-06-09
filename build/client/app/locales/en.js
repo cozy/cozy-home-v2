@@ -162,7 +162,7 @@ module.exports = {
   "tasky description": "Super fast and simple tag-based task manager.",
   "todos description": "Write your tasks, order them and complete them efficiently.",
   "term description": "A terminal app for your Cozy.",
-  "ghost description": "share your stories with the world with this app based on the Ghost Blogging Platform.",
+  "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform.",
   "reminder title email": "Reminder",
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",

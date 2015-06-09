@@ -11,7 +11,8 @@ module.exports = class ApplicationRow extends BaseView
 
     getRenderData: ->
         app: _.extend {}, @model.attributes,
-            website: @model.get('website') or @model.get('git')[...-4]
+            website: @model.get('website') \
+                or @model.get('git').replace(/\.git$/, '')
 
     events:
         "click .remove-app"        : "onRemoveClicked"
