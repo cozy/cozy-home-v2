@@ -2,6 +2,7 @@ cozydb = require 'cozydb'
 async = require 'async'
 Photo = require './photo'
 
+
 sanitize = (data) ->
     if data.title?
         data.title = data.title
@@ -11,6 +12,7 @@ sanitize = (data) ->
 
     # Set default date if not set.
     data.date ?= new Date()
+
 
 module.exports = class Album extends cozydb.CozyModel
     @schema:
@@ -50,3 +52,4 @@ module.exports = class Album extends cozydb.CozyModel
             return callback err if err
             url = "#{domain}public/photos/#albums/#{@id}"
             callback null, url
+

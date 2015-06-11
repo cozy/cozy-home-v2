@@ -1,16 +1,12 @@
 fs = require 'fs'
-path = require 'path'
-
-# Blue, green and red markers
-colors = /(\x1B\[[0-9]*m)/g
+logs = require '../lib/logs'
 
 module.exports =
 
     # This controller pipes the log file corresponding to given app slug.
     # It loads them from the folder /usr/local/var/log/cozy.
     logs: (req, res, next) ->
-        filename = "#{req.params.moduleslug}.log"
-        filepath = path.join '/', 'usr', 'local', 'var', 'log', 'cozy', filename
+        filepath = logs.getLogPath req.params.moduleslug
 
         fs.exists filepath, (exists) ->
             if exists
@@ -18,7 +14,7 @@ module.exports =
 
                 # We remove color markers during the stream.
                 stream.on 'data', (data) ->
-                    res.write data.toString().replace colors, ''
+                    res.write data.toString().replace logs.colors, ''
                 stream.on 'end', ->
                     res.end()
             else
