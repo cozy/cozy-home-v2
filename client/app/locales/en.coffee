@@ -386,7 +386,7 @@ You can synchronize both contacts and calendars through the CalDAV and CardDAV p
         'close wizard': "Start using my Cozy!"
 
     # object picker
-    "pick from files"         : "Choose one photo"
+    "pick from files"         : "Pick a photo"
     "Crop the photo"          : "Crop the image ("
     "chooseAgain"             : "choose another photo"
     "modal ok"                : "OK"

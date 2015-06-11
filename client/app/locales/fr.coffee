@@ -410,7 +410,7 @@ nous vous invitons à consulter nos deux didacticiels :
         'close wizard': "Démarrer avec mon Cozy !"
 
     # object picker
-    "pick from files"         : "Choisir une photo"
+    "pick from files"         : "Choisissez une photo"
     "Crop the photo"          : "Recadrez l'image ("
     "chooseAgain"             : "changer de photo"
     "modal ok"                : "OK"
