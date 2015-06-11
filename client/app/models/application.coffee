@@ -101,7 +101,7 @@ module.exports = class Application extends Backbone.Model
             section = 'leave'
         else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
             section = 'main'
-        else if name in ['blog', 'feeds', 'bookmarks']
+        else if name in ['blog', 'feeds', 'bookmarks', 'quickmarks', 'zerofeeds']
             section = 'watch'
         else if name in ['kresus', 'konnectors', 'kyou', 'databrowser']
             section = 'data'
@@ -115,3 +115,4 @@ module.exports = class Application extends Backbone.Model
     updateAll: (callbacks) ->
         @prepareCallbacks callbacks
         client.put "/api/applications/update/all", {}, callbacks
+
