@@ -1,0 +1,382 @@
+.object-picker
+// ========================================= //
+// MODAL (header, body, footer, layout)
+    .modalCY-body
+        position  relative
+
+    .objectPickerCont
+        flex             1
+        display          flex
+        flex-direction   column
+        position         absolute
+        top              0
+        bottom           0
+        right            0
+        left             0
+        background-color white
+
+    .fp-nav-tabs
+        flex-shrink      0
+        flex-grow        0
+        background-color #ddd
+        display          flex
+        flex-direction   column
+
+    .tabMarginTop
+       flex-grow 2
+
+    .tabMarginBottom
+        flex-grow 3
+
+    [role='tab']
+        padding-right 8px
+        padding-left  8px
+        padding       0.7em
+        color         #3F3F3F
+        cursor        pointer
+        text-align    center
+        line-height   35px
+
+    [aria-selected='true']
+        background-color #fff
+
+    .thumbPicker
+        position relative
+        // must be before aria-hidden otherwise display = none will not work
+        display  flex
+
+    [role='tabpanel']
+        flex-grow 1
+
+    [aria-hidden="true"]
+        display none
+
+
+// ========================================= //
+// Cropping body
+    .croperCont
+        flex-grow 1
+        margin    10%
+        position  relative
+
+    #frame-img-to-crop
+        position         relative
+        background-color grey
+
+    .frame-to-crop
+        position  relative
+        max-width none
+
+    .chooseAgain
+        position absolute
+
+    a
+        cursor pointer
+
+    #frame-preview
+        position absolute
+        overflow hidden
+
+    #img-preview
+        max-width none
+
+
+// ========================================= //
+// photoUpload panel
+    .photoUpload[aria-hidden="false"]
+        display        flex
+        flex-direction column
+        align-content  flex-end
+
+    .photoUpload-btn.btn
+        display block
+
+    .photoUpload-btn
+        flex-grow       1
+        display         flex
+        justify-content center
+        align-items     center
+
+        .btn
+            flex-grow        0
+            padding          0.8em
+            background-color blue
+            font-size        1.2em
+
+        .btn:hover
+            background-color orange
+
+
+    .photoUpload-or
+        display         flex
+        justify-content center
+        z-index         1
+
+        div
+            display          block
+            position         relative
+            transform        translateY(+50%)
+            width            10em
+            padding          0.3em
+            border           1px solid blue
+            border-radius    1em
+            text-align       center
+            color            black
+            background-color white
+
+    .modal-file-drop-zone
+        flex-grow        3
+        position         relative
+        background-color blue
+
+        > div
+            RL-margin = 15%
+            TB-margin = 15%
+
+            position     absolute
+            left         RL-margin
+            right        RL-margin
+            top          TB-margin
+            bottom       TB-margin
+            z-index      1
+            border-color lightgreyedblue
+            border-style dashed
+            border-width 5px
+            margin       0px
+
+            .dragging
+                border-color white
+
+        p
+            font-size   1.3em
+            font-weight bold
+            color       #B5ADAD
+            color       white
+            line-height 1em
+            text-align  center
+            position    absolute
+            top         50%
+            left        50%
+            transform   translateX(-50%) translateY(-50%)
+
+
+// ========================================= //
+// urlPhotoUpload panel
+    margin-urlUpload = 1.3em
+    url-input-height = 1.8em
+
+    .urlPhotoUpload[aria-hidden="false"]
+        display         flex
+        flex-direction  column
+        align-items     stretch
+        justify-content center
+        margin-bottom   margin-urlUpload
+
+    .bloc-container
+        display         flex
+        flex-direction  column
+        justify-content stretch
+        align-items     stretch
+        height          url-input-height
+
+    .img-container
+        position        relative
+        flex-grow       1
+        flex-shrink     1
+        // will be replaced by 'flex' when the first image is loaded
+        display         none
+        justify-content center
+        align-items     center
+        margin-top      margin-urlUpload
+        margin-bottom   0.5em
+        margin-right    margin-urlUpload
+        margin-left     margin-urlUpload
+
+    .url-preview
+        position            absolute
+        top                 50%
+        left                50%
+        transform           translateX(-50%) translateY(-50%)
+        width               100%
+        height              100%
+        background-repeat   no-repeat
+        background-position center
+        background-size     contain
+
+    .modal-url-input
+        flex-shrink   0
+        flex-grow     0
+        align-self    center
+        width         93%
+        max-width     40em
+        height        1.8em
+        margin-bottom 0
+        padding-left  0.4em
+        border        2px solid blue
+        background    transparent
+        font-size     1.0em
+
+    .modal-url-input focus
+        border-width 2px
+
+    .modal-url-input hover
+        border-color #fe8800
+
+
+// ========================================= //
+// album picker panel
+    .albumPicker.noAlbum
+        flex-direction column
+        align-items    center
+
+        :nth-child(1)
+            flex-grow 2
+
+        .noAlbumDisclaimer
+            max-width 26em
+            padding   1em
+
+        :nth-child(3)
+            flex-grow 3
+
+
+    .albumPicker
+        albumsSeparatorWidth = 0.4em
+
+        display     flex
+        align-items stretch
+
+        .albums
+            flex-grow   0
+            flex-shrink 0
+            overflow-y  auto
+            overflow-x  hidden
+            z-index     1
+            position    relative
+
+            &::after
+                content          ''
+                position         absolute
+                display          block
+                top              0
+                bottom           0
+                right            0 //- albumsSeparatorWidth
+                width            albumsSeparatorWidth
+                background-color #eee
+                z-index          0
+
+        .albumLabel
+            padding-top    0.8em
+            padding-bottom 0.5em
+            display        flex
+            flex-direction column
+            align-items    center
+            position       relative
+            z-index        1
+
+            &:hover
+                cursor           pointer
+                background-color #F4FAFF
+                z-index          0
+
+        .albumLabel.selectedAlbum
+            background-color #F4FAFF
+            z-index 1
+
+            &::after
+                content          ''
+                position         absolute
+                display          block
+                top              0
+                bottom           0
+                right            0
+                width            albumsSeparatorWidth
+                background-color blue
+
+        .label
+            max-width  11em
+            padding    0 0.5em 0 0.5em
+            color      grey
+            text-align center
+
+        .selectedAlbum .label
+            color black
+
+        .cover
+            width 4em
+
+        .thumbs
+            flex-grow        1
+            background-color white
+            padding-top      2em
+            padding-bottom   2em
+            overflow-y       auto
+
+            img
+                width  10em
+                height 10em
+                margin 0.3em
+                cursor pointer
+
+                &.hide
+                    display none
+
+                &.selected
+                    border 0.35em solid blue
+
+
+// ========================================= //
+// image long list for image picker
+
+    .viewport
+        overflow-y scroll
+        overflow-x hidden
+        flex       1
+
+    .long-list-thumb
+        max-width        none
+        cursor           pointer
+        position         absolute
+        opacity          1
+        border           0
+        background-color #F5F5F5
+
+    .long-list-thumb.selectedThumb
+        border 0.35em solid blue
+
+    .long-list-month-label
+        position   absolute
+        color      black
+        z-index    1
+        width      4em
+        padding    0.3em
+        width      8em
+        text-align center
+
+    .long-list-index.visible
+        opacity 1
+
+    .long-list-index.hardVisible
+        opacity 1
+
+    .long-list-index
+        opacity    0
+        transition opacity 1s, top 0.5s
+
+        div
+            position                  static
+            text-align                right
+            color                     #4D4D4D
+            background-color          rgba(255, 255, 255, 0.65)
+            border-bottom-left-radius 0.4em
+            border-top-left-radius    0.4em
+            padding-left              0.4em
+            padding-right             0.3em
+            cursor                    pointer
+
+            &:hover
+                color rgba(255, 255, 255, 1)
+                background-color rgba(0, 0, 0, 0.6)
+
+        .current
+            font-weight bold
