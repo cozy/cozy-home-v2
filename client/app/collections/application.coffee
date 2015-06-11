@@ -18,3 +18,4 @@ module.exports = class ApplicationCollection extends BaseCollection
 
         for app in @models
             return app if idorslug is app.get 'id'
+
