@@ -12,8 +12,7 @@ MarketView             = require 'views/market'
 ApplicationsListView   = require 'views/home'
 SocketListener         = require 'lib/socket_listener'
 User                   = require 'models/user'
-IntentManager          = require 'lib/intentManager'
-ThumbPreloader         = require 'lib/thumb_preloader'
+IntentManager          = require 'lib/intent_manager'
 
 # View describing main screen for user once he is logged
 module.exports = class HomeView extends BaseView

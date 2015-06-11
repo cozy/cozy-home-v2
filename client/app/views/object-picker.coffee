@@ -369,4 +369,3 @@ module.exports = class PhotoPickerCroper extends Modal
         if @state.activePanel.resizeHandler
             @state.activePanel.resizeHandler()
         @_setFocus()
-

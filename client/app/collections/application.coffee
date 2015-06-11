@@ -1,6 +1,5 @@
 BaseCollection = require 'lib/base_collection'
 Application = require 'models/application'
-client = require '../lib/client'
 
 
 
