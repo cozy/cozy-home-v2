@@ -9,7 +9,6 @@ module.exports = class IntentManager
 
 
     handleIntent : (message) =>
-        # console.log "HOME / IntentManager, received message ", message
         intent = message.data
         switch intent.type
 

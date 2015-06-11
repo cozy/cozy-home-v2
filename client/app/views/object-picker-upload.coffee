@@ -39,7 +39,6 @@ module.exports = class ObjectPickerUpload extends BaseView
         return true
 
     keyHandler : (e)=>
-        # console.log 'ObjectPickerUpload', e.which
         return false
 
 
@@ -108,4 +107,3 @@ module.exports = class ObjectPickerUpload extends BaseView
         reader.onloadend = =>
             @dataUrl = reader.result
             @objectPicker.onYes()
-

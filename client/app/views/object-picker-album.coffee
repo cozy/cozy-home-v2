@@ -129,7 +129,13 @@ module.exports = class ObjectPickerAlbum extends BaseView
                 @panel.removeChild(@albums$)
                 @panel.removeChild(@thumbs$)
                 @panel.classList.add('noAlbum')
-                $(@panel).append("<div></div><div class='noAlbumDisclaimer'>#{t('you have no album')}</div><div></div>")
+                $(@panel).append("""
+                    <div></div>
+                    <div class='noAlbumDisclaimer'>
+                        #{t('you have no album')}
+                    </div>
+                    <div></div>
+                """)
                 return
             n = 0
             for album in res
