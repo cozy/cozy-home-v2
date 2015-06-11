@@ -44,7 +44,11 @@ module.exports = class ObjectPickerPhotoURL extends BaseView
     ###
     _setupInput: ()->
         img = @img
-        urlRegexp = /\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i
+        urlRegexp = /// \b
+            (https?|ftp|file)://
+            [\-A-Z0-9+&@#/%?=~_|$!:,.;]*
+            [A-Z0-9+&@#/%=~_|$]
+        ///i
         imgTmp = new Image()
 
         imgTmp.onerror =  () ->
@@ -71,13 +75,3 @@ module.exports = class ObjectPickerPhotoURL extends BaseView
                 img.style.backgroundImage = ""
                 @url = undefined
         ,false)
-
-
-    # _getDataUrl: () ->
-    #     canvas = document.createElement 'canvas'
-    #     ctx = canvas.getContext '2d'
-    #     canvas.width  = @img.width;
-    #     canvas.height = @img.height;
-    #     ctx.drawImage( @img, 0, 0)
-    #     return canvas.toDataURL 'image/jpeg'
-
