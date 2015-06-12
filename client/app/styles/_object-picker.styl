@@ -42,7 +42,7 @@
         line-height 35px
         width       3.33333em
 
-    [aria-selected='true']
+    [aria-selected=true]
         background-color #fff
 
     .thumbPicker
@@ -50,11 +50,13 @@
         // must be before aria-hidden otherwise display = none will not work
         display  flex
 
-    [role='tabpanel']
-        flex-grow 1
+    [role=tabpanel]
+        position relative
+        display  flex
+        flex     1
 
-    [aria-hidden="true"]
-        display none
+        &[aria-hidden=true]
+            display none
 
 
     // ========================================= //
@@ -88,8 +90,7 @@
 
     // ========================================= //
     // photoUpload panel
-    .photoUpload[aria-hidden="false"]
-        display        flex
+    .photoUpload
         flex-direction column
         align-content  flex-end
 
@@ -170,8 +171,7 @@
     margin-urlUpload = 1.3em
     url-input-height = 1.8em
 
-    .urlPhotoUpload[aria-hidden="false"]
-        display         flex
+    .urlPhotoUpload
         flex-direction  column
         align-items     stretch
         justify-content center
