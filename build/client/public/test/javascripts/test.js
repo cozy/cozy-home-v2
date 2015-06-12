@@ -1,1 +1,318 @@
-!function(){"use strict";var t="undefined"==typeof window?global:window;if("function"!=typeof t.require){var e={},i={},n={}.hasOwnProperty,o={},s=function(t,e){var i=0;e&&(e.indexOf(!1)&&(i="components/".length),e.indexOf("/",i)>0&&(e=e.substring(i,e.indexOf("/",i))));var n=o[t+"/index.js"]||o[e+"/deps/"+t+"/index.js"];return n?"components/"+n.substring(0,n.length-".js".length):t},r=function(){var t=/^\.\.?(\/|$)/;return function(e,i){var n,o,s=[];n=(t.test(i)?e+"/"+i:i).split("/");for(var r=0,a=n.length;a>r;r++)o=n[r],".."===o?s.pop():"."!==o&&""!==o&&s.push(o);return s.join("/")}}(),a=function(t){return t.split("/").slice(0,-1).join("/")},c=function(e){return function(i){var n=r(a(e),i);return t.require(n,e)}},p=function(t,e){var n={id:t,exports:{}};return i[t]=n,e(n.exports,c(t),n),n.exports},l=function(t,o){var a=r(t,".");if(null==o&&(o="/"),a=s(t,o),n.call(i,a))return i[a].exports;if(n.call(e,a))return p(a,e[a]);var c=r(a,"./index");if(n.call(i,c))return i[c].exports;if(n.call(e,c))return p(c,e[c]);throw new Error('Cannot find module "'+t+'" from "'+o+'"')};l.alias=function(t,e){o[e]=t},l.register=l.define=function(t,i){if("object"==typeof t)for(var o in t)n.call(t,o)&&(e[o]=t[o]);else e[t]=i},l.list=function(){var t=[];for(var i in e)n.call(e,i)&&t.push(i);return t},l.brunch=!0,t.require=l}}(),require.register("test/application_collection_test",function(t,e,i){var n,o,s;o=e("collections/application").ApplicationCollection,n=e("models/application").Application,s=e("views/applications_view").ApplicationsView,describe("Application Collection",function(){return before(function(){return this.view=new s,this.view.render(),this.view.setListeners(),this.apps=new o(this.view)}),after(function(){}),describe("binding reset",function(){return it("When I add 3 apps silently to the collection and fire reset event",function(){return this.apps.add(new n({name:"app 01",silent:!0})),this.apps.add(new n({name:"app 02",silent:!0})),this.apps.add(new n({name:"app 03",silent:!0})),this.apps.onReset()}),it("Then it displays 3 apps inside app list",function(){return expect(this.view.$("#app-list .application").length).to.equal(3)})}),describe("binding add",function(){return it("When I add 1 app to the collection",function(){return this.view.clearApps(),this.apps.reset([]),this.apps.add(new n({name:"app 01"}))}),it("Then it displays 1 app inside app list",function(){return expect(this.view.$("#app-list .application").length).to.equal(1)})})})}),require.register("test/application_view_test",function(t,e,i){var n,o;o=e("views/applications_view").ApplicationsView,n=e("models/application").Application,describe("Manage applications",function(){return before(function(){return this.view=new o,this.view.render(),this.view.setListeners()}),describe("unit tests",function(){return it("addApplication",function(){return this.view.addApplication(new n({name:"app 01"})),expect(this.view.$(".application").length).to.equal(1)}),it("clearApps",function(){return this.view.clearApps(),expect(this.view.$(".application").length).to.equal(0)}),it("checkData",function(){var t;return t={git:"https://github.com/mycozycloud/cozy-notes.git"},expect(this.view.checkData(t).error).to.not.be.ok,t.name="test",expect(this.view.checkData(t).error).to.not.be.ok,t.description=void 0,expect(this.view.checkData(t).error).to.be.ok,t.description="",expect(this.view.checkData(t).error).to.be.ok,t.description="desc",expect(this.view.checkData(t).error).to.not.be.ok,t.git="blabla",expect(this.view.checkData(t).error).to.be.ok}),it("displayInfo",function(){return this.view.displayInfo("test"),expect(this.view.infoAlert.is(":visible")).to.be.ok,expect(this.view.infoAlert.html()).to.equal("test")}),it("displayError",function(){return this.view.displayError("test"),expect(this.view.errorAlert.is(":visible")).to.be.ok,expect(this.view.errorAlert.html()).to.equal("test"),expect(this.view.infoAlert.is(":visible")).to.not.be.ok}),it("onManageAppsClicked",function(){return this.view.addApplication(new n({name:"app 01"})),this.view.onManageAppsClicked(),expect(this.view.isManaging).to.be.ok,this.view.onManageAppsClicked(),expect(this.view.isManaging).to.not.be.ok})}),describe("Display installation form",function(){return it("When I click on add application button",function(){return this.view.addApplicationModal.hide(),this.view.addApplicationButton.click()}),it("It displays a form to describe new app",function(){return expect(this.view.addApplicationModal.is(":visible")).to.be.ok}),it("When I click on add application button",function(){return this.view.addApplicationButton.click()}),it("It hides the form",function(){return expect(this.view.addApplicationModal.is(":visible")).to.not.be.ok}),it("When I display the form and I click on close button",function(){return this.view.addApplicationButton.click(),this.view.addApplicationCloseCross.click()}),it("It hides the form",function(){return expect(this.view.addApplicationModal.is(":visible")).to.not.be.ok})}),describe("Add a new application",function(){return describe("Wrong data",function(){return it("When I click on install application button",function(){return this.data={name:"My App",slug:"my-app",description:"Awesome app",state:"running",index:0,git:"git@github.com:mycozycloud/my-app.git"},this.view.appNameField.val(this.data.name),this.view.installAppButton.button.click()}),it("Then error message is diplayed",function(){return expect(this.view.errorAlert.is(":visible")).to.be.ok,expect(this.view.infoAlert.is(":visible")).to.not.be.ok})})})})}),require.register("test/home_view_test",function(t,e,i){var n,o;o=e("views/home_view").HomeView,n=e("initialize").Application,describe("Manage applications",function(){return before(function(){return this.view=new o,this.view.render(),this.view.setListeners()}),describe("unit tests",function(){return it("home",function(){return this.view.home(),expect(this.view.homeButton.parent().hasClass("active")).to.be.ok}),it("account",function(){return this.view.account(),expect(this.view.accountButton.parent().hasClass("active")).to.be.ok}),it("selectNavButton",function(){return this.view.selectNavButton(this.view.homeButton),expect(this.view.homeButton.parent().hasClass("active")).to.be.ok,this.view.selectNavButton(this.view.accountButton),expect(this.view.accountButton.parent().hasClass("active")).to.be.ok}),it("addApplication",function(){}),it("clearApps",function(){return this.view.clearApps(),expect(this.view.$(".app-button").length).to.equal(0)}),it("loadApp",function(){})})})}),require.register("test/test-helpers",function(t,e,i){i.exports={expect:e("chai").expect,sinon:e("sinon"),$:e("jquery")}});
+(function() {
+  'use strict';
+
+  var globals = typeof window === 'undefined' ? global : window;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var has = ({}).hasOwnProperty;
+
+  var aliases = {};
+
+  var endsWith = function(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  };
+
+  var unalias = function(alias, loaderPath) {
+    var start = 0;
+    if (loaderPath) {
+      if (loaderPath.indexOf('components/' === 0)) {
+        start = 'components/'.length;
+      }
+      if (loaderPath.indexOf('/', start) > 0) {
+        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
+      }
+    }
+    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
+    if (result) {
+      return 'components/' + result.substring(0, result.length - '.js'.length);
+    }
+    return alias;
+  };
+
+  var expand = (function() {
+    var reg = /^\.\.?(\/|$)/;
+    return function(root, name) {
+      var results = [], parts, part;
+      parts = (reg.test(name) ? root + '/' + name : name).split('/');
+      for (var i = 0, length = parts.length; i < length; i++) {
+        part = parts[i];
+        if (part === '..') {
+          results.pop();
+        } else if (part !== '.' && part !== '') {
+          results.push(part);
+        }
+      }
+      return results.join('/');
+    };
+  })();
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var module = {id: name, exports: {}};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var require = function(name, loaderPath) {
+    var path = expand(name, '.');
+    if (loaderPath == null) loaderPath = '/';
+    path = unalias(name, loaderPath);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    var dirIndex = expand(path, './index');
+    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+
+    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          modules[key] = bundle[key];
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+    }
+  };
+
+  require.list = function() {
+    var result = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        result.push(item);
+      }
+    }
+    return result;
+  };
+
+  require.brunch = true;
+  globals.require = require;
+})();
+require.register("test/application_collection_test", function(exports, require, module) {
+var Application, ApplicationCollection, ApplicationsView;
+
+ApplicationCollection = require("collections/application").ApplicationCollection;
+
+Application = require("models/application").Application;
+
+ApplicationsView = require("views/applications_view").ApplicationsView;
+
+describe('Application Collection', function() {
+  before(function() {
+    this.view = new ApplicationsView();
+    this.view.render();
+    this.view.setListeners();
+    return this.apps = new ApplicationCollection(this.view);
+  });
+  after(function() {});
+  describe("binding reset", function() {
+    it("When I add 3 apps silently to the collection and fire reset event", function() {
+      this.apps.add(new Application({
+        name: "app 01",
+        silent: true
+      }));
+      this.apps.add(new Application({
+        name: "app 02",
+        silent: true
+      }));
+      this.apps.add(new Application({
+        name: "app 03",
+        silent: true
+      }));
+      return this.apps.onReset();
+    });
+    return it("Then it displays 3 apps inside app list", function() {
+      return expect(this.view.$("#app-list .application").length).to.equal(3);
+    });
+  });
+  return describe("binding add", function() {
+    it("When I add 1 app to the collection", function() {
+      this.view.clearApps();
+      this.apps.reset([]);
+      return this.apps.add(new Application({
+        name: "app 01"
+      }));
+    });
+    return it("Then it displays 1 app inside app list", function() {
+      return expect(this.view.$("#app-list .application").length).to.equal(1);
+    });
+  });
+});
+});
+
+;require.register("test/application_view_test", function(exports, require, module) {
+var Application, ApplicationsView;
+
+ApplicationsView = require("views/applications_view").ApplicationsView;
+
+Application = require("models/application").Application;
+
+describe('Manage applications', function() {
+  before(function() {
+    this.view = new ApplicationsView();
+    this.view.render();
+    return this.view.setListeners();
+  });
+  describe("unit tests", function() {
+    it("addApplication", function() {
+      this.view.addApplication(new Application({
+        name: "app 01"
+      }));
+      return expect(this.view.$(".application").length).to.equal(1);
+    });
+    it("clearApps", function() {
+      this.view.clearApps();
+      return expect(this.view.$(".application").length).to.equal(0);
+    });
+    it("checkData", function() {
+      var data;
+      data = {
+        git: "https://github.com/mycozycloud/cozy-notes.git"
+      };
+      expect(this.view.checkData(data).error).to.not.be.ok;
+      data.name = "test";
+      expect(this.view.checkData(data).error).to.not.be.ok;
+      data.description = void 0;
+      expect(this.view.checkData(data).error).to.be.ok;
+      data.description = "";
+      expect(this.view.checkData(data).error).to.be.ok;
+      data.description = "desc";
+      expect(this.view.checkData(data).error).to.not.be.ok;
+      data.git = "blabla";
+      return expect(this.view.checkData(data).error).to.be.ok;
+    });
+    it("displayInfo", function() {
+      this.view.displayInfo("test");
+      expect(this.view.infoAlert.is(":visible")).to.be.ok;
+      return expect(this.view.infoAlert.html()).to.equal("test");
+    });
+    it("displayError", function() {
+      this.view.displayError("test");
+      expect(this.view.errorAlert.is(":visible")).to.be.ok;
+      expect(this.view.errorAlert.html()).to.equal("test");
+      return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
+    });
+    return it("onManageAppsClicked", function() {
+      this.view.addApplication(new Application({
+        name: "app 01"
+      }));
+      this.view.onManageAppsClicked();
+      expect(this.view.isManaging).to.be.ok;
+      this.view.onManageAppsClicked();
+      return expect(this.view.isManaging).to.not.be.ok;
+    });
+  });
+  describe("Display installation form", function() {
+    it("When I click on add application button", function() {
+      this.view.addApplicationModal.hide();
+      return this.view.addApplicationButton.click();
+    });
+    it("It displays a form to describe new app", function() {
+      return expect(this.view.addApplicationModal.is(":visible")).to.be.ok;
+    });
+    it("When I click on add application button", function() {
+      return this.view.addApplicationButton.click();
+    });
+    it("It hides the form", function() {
+      return expect(this.view.addApplicationModal.is(":visible")).to.not.be.ok;
+    });
+    it("When I display the form and I click on close button", function() {
+      this.view.addApplicationButton.click();
+      return this.view.addApplicationCloseCross.click();
+    });
+    return it("It hides the form", function() {
+      return expect(this.view.addApplicationModal.is(":visible")).to.not.be.ok;
+    });
+  });
+  return describe("Add a new application", function() {
+    return describe("Wrong data", function() {
+      it("When I click on install application button", function() {
+        this.data = {
+          name: "My App",
+          slug: "my-app",
+          description: "Awesome app",
+          state: "running",
+          index: 0,
+          git: "git@github.com:mycozycloud/my-app.git"
+        };
+        this.view.appNameField.val(this.data.name);
+        return this.view.installAppButton.button.click();
+      });
+      return it("Then error message is diplayed", function() {
+        expect(this.view.errorAlert.is(":visible")).to.be.ok;
+        return expect(this.view.infoAlert.is(":visible")).to.not.be.ok;
+      });
+    });
+  });
+});
+});
+
+;require.register("test/home_view_test", function(exports, require, module) {
+var Application, HomeView;
+
+HomeView = require("views/home_view").HomeView;
+
+Application = require("initialize").Application;
+
+describe('Manage applications', function() {
+  before(function() {
+    this.view = new HomeView();
+    this.view.render();
+    return this.view.setListeners();
+  });
+  return describe("unit tests", function() {
+    it("home", function() {
+      this.view.home();
+      return expect(this.view.homeButton.parent().hasClass("active")).to.be.ok;
+    });
+    it("account", function() {
+      this.view.account();
+      return expect(this.view.accountButton.parent().hasClass("active")).to.be.ok;
+    });
+    it("selectNavButton", function() {
+      this.view.selectNavButton(this.view.homeButton);
+      expect(this.view.homeButton.parent().hasClass("active")).to.be.ok;
+      this.view.selectNavButton(this.view.accountButton);
+      return expect(this.view.accountButton.parent().hasClass("active")).to.be.ok;
+    });
+    it("addApplication", function() {});
+    it("clearApps", function() {
+      this.view.clearApps();
+      return expect(this.view.$(".app-button").length).to.equal(0);
+    });
+    return it("loadApp", function() {});
+  });
+});
+});
+
+;require.register("test/test-helpers", function(exports, require, module) {
+module.exports = {
+  expect: require('chai').expect,
+  sinon: require('sinon'),
+  $: require('jquery')
+};
+});
+
+;
+//# sourceMappingURL=test.js.map
