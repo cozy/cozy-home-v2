@@ -58,6 +58,9 @@
         overflow hidden
         flex     1
 
+        [aria-hidden=true]
+            display none
+
     .modalCY-footer
         flex-shrink      0
         box-shadow       inset 0 1px 0 #ffffff
@@ -67,6 +70,15 @@
 
         button
             margin-right 0.3em
+
+
+    // Back (aka "choose again") button
+    .back
+        display     inline
+        white-space nowrap
+
+    &:not([data-step=croper]) .back
+        display none
 
 
 @media (max-height: 38em)

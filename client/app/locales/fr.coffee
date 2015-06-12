@@ -411,7 +411,7 @@ nous vous invitons à consulter nos deux didacticiels :
 
     # object picker
     "pick from files"         : "Choisissez une photo"
-    "Crop the photo"          : "Recadrez l'image ("
+    "Crop the photo"          : "Recadrez l'image"
     "chooseAgain"             : "changer de photo"
     "modal ok"                : "OK"
     "modal cancel"            : "Annuler"

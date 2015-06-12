@@ -23,9 +23,9 @@ module.exports = class PhotoPickerCroper extends Modal
 # Methods
 
     events: -> _.extend super,
-        'click    a.next'       : 'displayMore'
-        'click    a.prev'       : 'displayPrevPage'
-        'click    .chooseAgain' : '_chooseAgain'
+        'click a.next': 'displayMore'
+        'click a.prev': 'displayPrevPage'
+        'click .back':  '_chooseAgain'
 
 
     initialize: (params, cb) ->
@@ -47,21 +47,22 @@ module.exports = class PhotoPickerCroper extends Modal
             currentStep : 'objectPicker' # 2 states : 'croper' & 'objectPicker'
             img_naturalW: 0  # natural width  (px) of the selected file
             img_naturalH: 0  # natural height (px) of the selected file
+        @el.dataset.step = @state.currentStep
         super(@config)
         ####
         # get elements
-        body              = @el.querySelector('.modalCY-body')
+        body              = @el.querySelector '.modalCY-body'
         body.innerHTML    = template()
         @body             = body
-        @objectPickerCont = body.querySelector(     '.objectPickerCont'  )
-        @tablist          = body.querySelector(     '[role=tablist]'     )
-        @imgResult        = body.querySelector(     '#img-result'        )
-        @cropper$         = @el.querySelector(      '.croperCont'        )
-        @framePreview     = @cropper$.querySelector('#frame-preview'     )
-        @frameToCrop      = @cropper$.querySelector('.frame-to-crop'     )
-        @imgToCrop        = @cropper$.querySelector('#img-to-crop'       )
-        @imgPreview       = @cropper$.querySelector('#img-preview'       )
-        @chooseAgain      = @cropper$.querySelector('.chooseAgain'       )
+        @objectPickerCont = body.querySelector '.objectPickerCont'
+        @tablist          = body.querySelector '[role=tablist]'
+        @imgResult        = body.querySelector '#img-result'
+        @cropper$         = @el.querySelector '.croperCont'
+        @framePreview     = @cropper$.querySelector '#frame-preview'
+        @frameToCrop      = @cropper$.querySelector '.frame-to-crop'
+        @imgToCrop        = @cropper$.querySelector '#img-to-crop'
+        @imgPreview       = @cropper$.querySelector '#img-preview'
+        @chooseAgain      = @el.querySelector '.back'
         ####
         # initialise tabs and panels
         @panelsControlers = {} # {tab1.name : tab1Controler, tab2... }
@@ -89,7 +90,7 @@ module.exports = class PhotoPickerCroper extends Modal
         ####
         # init the cropper
         @imgToCrop.addEventListener('load', @_onImgToCropLoaded, false)
-        @cropper$.style.visibility = 'hidden'
+        @cropper$.setAttribute('aria-hidden', true)
         @framePreview.style.width  = THUMB_WIDTH  + 'px'
         @framePreview.style.height = THUMB_HEIGHT + 'px'
         previewTops =   @cropper$.clientHeight              \
@@ -240,8 +241,9 @@ module.exports = class PhotoPickerCroper extends Modal
     _showCropingTool: (url)=>
         @state.currentStep  = 'croper'
         @currentPhotoScroll = @body.scrollTop
-        @objectPickerCont.style.visibility = 'hidden'
-        @cropper$.style.visibility         = ''
+        @el.dataset.step = @state.currentStep
+        @objectPickerCont.setAttribute 'aria-hidden', true
+        @cropper$.setAttribute 'aria-hidden', false
         @_imgToCropTemp = new Image()
         @_imgToCropTemp.id = 'img-to-crop'
         @_imgToCropTemp.addEventListener( 'load', @_onImgToCropLoaded  , false)
@@ -253,7 +255,8 @@ module.exports = class PhotoPickerCroper extends Modal
      * triggered when the image to crop is loaded, will compute the geometry
      * and initialize jCrop
     ###
-    _onImgToCropLoaded: ()=>
+    _onImgToCropLoaded: =>
+        console.debug @_imgToCropTemp
         natural_h =   @_imgToCropTemp.naturalHeight
         natural_w =   @_imgToCropTemp.naturalWidth
         frame_H   =   @cropper$.clientHeight              \
@@ -336,9 +339,10 @@ module.exports = class PhotoPickerCroper extends Modal
         @jcrop_api.destroy()
         @imgToCrop.removeAttribute('style')
         @imgToCrop.src = ''
-        @objectPickerCont.style.visibility = ''
-        @cropper$.style.visibility = 'hidden'
+        @objectPickerCont.setAttribute 'aria-hidden', false
+        @cropper$.setAttribute 'aria-hidden', true
         @body.scrollTop = @currentPhotoScroll
+        @el.dataset.step = @state.currentStep
         # manage focus wich was on the jcrop element
         @_setFocus()
 

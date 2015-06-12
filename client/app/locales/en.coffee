@@ -387,7 +387,7 @@ You can synchronize both contacts and calendars through the CalDAV and CardDAV p
 
     # object picker
     "pick from files"         : "Pick a photo"
-    "Crop the photo"          : "Crop the image ("
+    "Crop the photo"          : "Crop image"
     "chooseAgain"             : "choose another photo"
     "modal ok"                : "OK"
     "modal cancel"            : "Cancel"
