@@ -16,6 +16,7 @@ module.exports =
 
 
     updateAccount: (req, res, next) ->
+
         updateData = (user, body, data, cb) ->
             if body.timezone?
                 #TODO CHECK TIMEZONE VALIDITY
@@ -63,9 +64,9 @@ module.exports =
 
                 data.password = utils.cryptPassword newPassword
                 adapter.updateKeys newPassword, cb
+
             else
                 cb()
-
 
         User.all (err, users) ->
             next err if err
@@ -74,7 +75,6 @@ module.exports =
 
             user = users[0]
             data = {}
-
 
             updatePassword user, req.body, data, (libErr, userErr) =>
                 return res.send 500, error: libErr if libErr
@@ -85,7 +85,7 @@ module.exports =
                     return res.send 400, error: userErr if userErr
 
                     res.send
-                        success: true,
+                        success: true
                         msg: 'Your new password is set'
 
 
