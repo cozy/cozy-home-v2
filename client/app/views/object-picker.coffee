@@ -10,7 +10,6 @@ tabControler         = require 'views/tab-controler'
 MARGIN_BETWEEN_IMG_AND_CROPED = 30 # px
 THUMB_WIDTH                   = 100 # px
 THUMB_HEIGHT                  = 100 # px
-CHOOSE_AGAIN_MARGIN           = 17  # px
 
 module.exports = class PhotoPickerCroper extends Modal
 
@@ -93,12 +92,8 @@ module.exports = class PhotoPickerCroper extends Modal
         @cropper$.setAttribute('aria-hidden', true)
         @framePreview.style.width  = THUMB_WIDTH  + 'px'
         @framePreview.style.height = THUMB_HEIGHT + 'px'
-        previewTops =   @cropper$.clientHeight              \
-                      - @chooseAgain.offsetHeight           \
-                      - CHOOSE_AGAIN_MARGIN                 \
-                      - THUMB_HEIGHT
-        @framePreview.style.top   = Math.round(previewTops/2) + 'px'
-        @framePreview.style.right = 0
+        previewTops = @cropper$.clientHeight - THUMB_HEIGHT
+
         ####
         # detect when the result image is loaded, then send the corresponding
         # data url as a response
@@ -259,9 +254,7 @@ module.exports = class PhotoPickerCroper extends Modal
         console.debug @_imgToCropTemp
         natural_h =   @_imgToCropTemp.naturalHeight
         natural_w =   @_imgToCropTemp.naturalWidth
-        frame_H   =   @cropper$.clientHeight              \
-                    - @chooseAgain.offsetHeight           \
-                    - CHOOSE_AGAIN_MARGIN
+        frame_H   =   @cropper$.clientHeight
         frame_W   =   @cropper$.clientWidth               \
                     - MARGIN_BETWEEN_IMG_AND_CROPED       \
                     - THUMB_WIDTH
@@ -299,9 +292,9 @@ module.exports = class PhotoPickerCroper extends Modal
         @frameToCrop.style.left   = margin + 'px'
         cropTop                   = Math.round((frame_H-img_h)/2)
         @frameToCrop.style.top    = cropTop + 'px'
+        @framePreview.style.top   = cropTop + 'px'
         @framePreview.style.right = margin + 'px'
-        @chooseAgain.style.top    = cropTop + img_h + CHOOSE_AGAIN_MARGIN + 'px'
-        @chooseAgain.style.left   = margin + 'px'
+
 
         selection_w   = Math.round(Math.min(@img_h,@img_w)*1)
         x = Math.round( (@img_w-selection_w)/2 )
