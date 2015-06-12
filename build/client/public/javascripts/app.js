@@ -2517,7 +2517,7 @@ module.exports = Application = (function(_super) {
       section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
-    } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks' || name === 'quickmarks' || name === 'zerofeeds') {
+    } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks' || name === 'quickmarks' || name === 'zero-feeds') {
       section = 'watch';
     } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser') {
       section = 'data';
