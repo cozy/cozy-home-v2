@@ -270,8 +270,8 @@ module.exports = {
     'import content': "<p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.\n</p>\n<p>\nYour traditional files can be uploaded directly through the Files application UI.\n</p>\n<p>\nWe are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.\n</p>\n<p>\nThis introduction to Cozy is finished. You already know everything you need to start with Cozy. We let you discover the platform and the available applications!\n</p>",
     'close wizard': "Start using my Cozy!"
   },
-  "pick from files": "Choose one photo",
-  "Crop the photo": "Crop the image (",
+  "pick from files": "Pick a photo",
+  "Crop the photo": "Crop image",
   "chooseAgain": "choose another photo",
   "modal ok": "OK",
   "modal cancel": "Cancel",

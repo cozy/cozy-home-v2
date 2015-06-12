@@ -14,7 +14,7 @@ module.exports = class ObjectPickerPhotoURL extends BaseView
         @render()
         @name     = 'urlPhotoUpload'
         @tabLabel = 'url'
-        @tab      = $("<div>#{@tabLabel}</div>")[0]
+        @tab      = $("<div class='fa fa-link'>#{@tabLabel}</div>")[0]
         @panel    = @el
         @img      = @panel.querySelector('.url-preview')
         @blocContainer=@panel.querySelector('.bloc-container')

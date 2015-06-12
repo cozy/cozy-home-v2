@@ -1,17 +1,12 @@
-img#img-result(style='position:fixed') // never displayed, just for downloading.
+// never displayed, just for downloading.
+img#img-result
+
+
 .objectPickerCont
-    nav.fp-nav-tabs
-        .tabMarginTop
-        div(role='tablist', aria-controls='objectPickerCont')
-        .tabMarginBottom
+    nav.fp-nav-tabs(role='tablist', aria-controls='objectPickerCont')
 
 .croperCont
     .frame-to-crop
         div#img-to-crop
-    .chooseAgain
-        span #{t('Crop the photo')}
-        a #{t('chooseAgain')}
-        | )
     div#frame-preview
         img#img-preview
-

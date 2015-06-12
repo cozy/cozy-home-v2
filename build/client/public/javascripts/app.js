@@ -1660,8 +1660,8 @@ module.exports = {
     'import content': "<p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.\n</p>\n<p>\nYour traditional files can be uploaded directly through the Files application UI.\n</p>\n<p>\nWe are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.\n</p>\n<p>\nThis introduction to Cozy is finished. You already know everything you need to start with Cozy. We let you discover the platform and the available applications!\n</p>",
     'close wizard': "Start using my Cozy!"
   },
-  "pick from files": "Choose one photo",
-  "Crop the photo": "Crop the image (",
+  "pick from files": "Pick a photo",
+  "Crop the photo": "Crop image",
   "chooseAgain": "choose another photo",
   "modal ok": "OK",
   "modal cancel": "Cancel",
@@ -2167,8 +2167,8 @@ module.exports = {
     'import content': "<p>\nPour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. La plupart des outils proposent une exportation à ce format.\nEnsuite, vous trouverez des outils d'importation. dans les applications\nContacts et Calendar.\n</p>\n<p>\nQuant à vos fichiers classiques, ils peuvent être uploadés directement depuis l'interface de l'application Files.\n</p>\n<p>\nNous mettrons également bientôt à disposition une application vous permettant de récupérer toutes vos données Google très facilement dans votre Cozy.\n</p>\n<p>\nVoilà, maintenant l'introduction à Cozy est terminée. Vous savez déjà\ntout ce qu'il faut pour démarrer. Nous vous laissons découvrir\nles applications disponibles.\n</p>",
     'close wizard': "Démarrer avec mon Cozy !"
   },
-  "pick from files": "Choisir une photo",
-  "Crop the photo": "Recadrez l'image (",
+  "pick from files": "Choisissez une photo",
+  "Crop the photo": "Recadrez l'image",
   "chooseAgain": "changer de photo",
   "modal ok": "OK",
   "modal cancel": "Annuler",
@@ -3647,7 +3647,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<img id="img-result" style="position:fixed"/><!-- never displayed, just for downloading.--><div class="objectPickerCont"><nav class="fp-nav-tabs"><div class="tabMarginTop"></div><div role="tablist" aria-controls="objectPickerCont"></div><div class="tabMarginBottom"></div></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div class="chooseAgain"><span>' + escape((interp = t('Crop the photo')) == null ? '' : interp) + '</span><a>' + escape((interp = t('chooseAgain')) == null ? '' : interp) + '</a>)</div><div id="frame-preview"><img id="img-preview"/></div></div>');
+buf.push('<!-- never displayed, just for downloading.--><img id="img-result"/><div class="objectPickerCont"><nav role="tablist" aria-controls="objectPickerCont" class="fp-nav-tabs"></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div id="frame-preview"><img id="img-preview"/></div></div>');
 }
 return buf.join("");
 };
@@ -5912,7 +5912,7 @@ module.exports = LongList = (function() {
     */
 
     _initBuffer = function() {
-      var col, firstCreatedThb, localRk, month, monthRk, nToCreate, previousCreatedThb, rk, rowY, thumb, thumb$, _i, _ref;
+      var col, firstCreatedThb, localRk, month, monthRk, nToCreate, previousCreatedThb, rk, rowY, thumb, thumb$, thumbImg$, _i, _ref;
       nToCreate = Math.min(_this.nPhotos, nThumbsInBuffer);
       firstCreatedThb = {};
       previousCreatedThb = firstCreatedThb;
@@ -5925,8 +5925,10 @@ module.exports = LongList = (function() {
         if (localRk === 0) {
           _insertMonthLabel(month);
         }
-        thumb$ = document.createElement('img');
-        thumb$.setAttribute('class', 'long-list-thumb');
+        thumbImg$ = document.createElement('img');
+        thumb$ = document.createElement('div');
+        thumb$.appendChild(thumbImg$);
+        thumb$.setAttribute('class', 'long-list-thumb thumb');
         thumb$.style.height = thumbHeight + 'px';
         thumb$.style.width = thumbHeight + 'px';
         thumb = {
@@ -5977,7 +5979,7 @@ module.exports = LongList = (function() {
       safeZone.firstThumbToUpdate = buffer.first;
       return Photo.listFromFiles(0, nToCreate, function(error, res) {
         if (error) {
-          console.log(error);
+          console.error(error);
         }
         return _updateThumb(res.files, res.firstRank);
       });
@@ -6075,8 +6077,6 @@ module.exports = LongList = (function() {
           targetY = safeZone.firstY;
         }
         if (nToMove > 0) {
-          console.log("nToMove", nToMove);
-          console.log("targetRk", targetRk);
           Photo.listFromFiles(targetRk, nToMove, function(error, res) {
             return _updateThumb(res.files, res.firstRank);
           });
@@ -6099,7 +6099,7 @@ module.exports = LongList = (function() {
         if (nToMove > 0) {
           Photo.listFromFiles(targetRk - nToMove + 1, nToMove, function(error, res) {
             if (error) {
-              console.log(error);
+              console.error(error);
             }
             return _updateThumb(res.files, res.firstRank);
           });
@@ -6112,7 +6112,6 @@ module.exports = LongList = (function() {
     };
     _rePositionThumbs = function() {
       var bufr, col, deltaTop, firstVisibleThumb, lastLast, localRk, month, monthRk, rk, row, rowY, scrollTop, startRk, style, thumb, thumb$, _i, _ref;
-      console.log("== _rePositionThumbs");
       bufr = buffer;
       thumb = bufr.first;
       thumb$ = thumb.el;
@@ -6210,15 +6209,15 @@ module.exports = LongList = (function() {
         fileId = file.id;
         thumb$ = thumb.el;
         thumb$.file = file;
-        thumb$.src = "files/photo/thumbs/" + fileId + ".jpg";
+        thumb$.firstElementChild.src = "files/photo/thumbs/" + fileId + ".jpg";
         thumb$.dataset.id = fileId;
         thumb.id = fileId;
         thumb = thumb.prev;
         if (_this.selected[fileId]) {
-          thumb$.classList.add('selectedThumb');
+          thumb$.setAttribute('aria-selected', true);
           _this.selected[fileId] = thumb$;
         } else {
-          thumb$.classList.remove('selectedThumb');
+          thumb$.setAttribute('aria-selected', false);
         }
       }
       thumb = firstThumbToUpdate.next;
@@ -6232,10 +6231,10 @@ module.exports = LongList = (function() {
         thumb.id = fileId;
         thumb = thumb.next;
         if (_this.selected[fileId]) {
-          thumb$.classList.add('selectedThumb');
+          thumb$.setAttribute('aria-selected', true);
           _this.selected[fileId] = thumb$;
         } else {
-          thumb$.classList.remove('selectedThumb');
+          thumb$.setAttribute('aria-selected', false);
         }
       }
       if (isDefaultToSelect) {
@@ -6577,8 +6576,11 @@ module.exports = LongList = (function() {
   LongList.prototype._clickHandler = function(e) {
     var th, thBottomY, thTopY, viewPortBottomY, viewPortTopY;
     th = e.target;
-    if (!th.classList.contains('long-list-thumb')) {
-      return;
+    while (!th.classList.contains('thumb')) {
+      th = th.parentElement;
+      if (th.classList.contains('thumbs')) {
+        return;
+      }
     }
     if (!this._toggleOnThumb$(th)) {
       return null;
@@ -6599,8 +6601,11 @@ module.exports = LongList = (function() {
   LongList.prototype._dblclickHandler = function(e) {
     var th;
     th = e.target;
-    if (!th.classList.contains('long-list-thumb')) {
-      return null;
+    while (!th.classList.contains('thumb')) {
+      th = th.parentElement;
+      if (th.classList.contains('thumbs')) {
+        return;
+      }
     }
     this._toggleOnThumb$(th);
     this._lastSelectedCol = this._coordonate.left(th);
@@ -6622,7 +6627,7 @@ module.exports = LongList = (function() {
       return null;
     }
     this._unselectAll();
-    thumb$.classList.add('selectedThumb');
+    thumb$.setAttribute('aria-selected', true);
     return this.selected[thumb$.dataset.id] = thumb$;
   };
 
@@ -6633,7 +6638,7 @@ module.exports = LongList = (function() {
     for (id in _ref) {
       thumb$ = _ref[id];
       if (typeof thumb$ === 'object') {
-        thumb$.classList.remove('selectedThumb');
+        thumb$.setAttribute('aria-selected', false);
         _results.push(this.selected[id] = false);
       } else {
         _results.push(void 0);
@@ -6996,15 +7001,15 @@ module.exports = LongList = (function() {
       return null;
     }
     th = thumb$.previousElementSibling;
-    if (th === null) {
+    if (th == null) {
       th = thumb$.parentNode.lastElementChild;
       if (th === thumb$) {
         return null;
       }
     }
-    while (th.nodeName === 'DIV') {
+    while (!th.classList.contains('thumb')) {
       th = th.previousElementSibling;
-      if (th === null) {
+      if (th == null) {
         th = thumb$.parentNode.lastElementChild;
         if (th === thumb$) {
           return null;
@@ -7031,15 +7036,15 @@ module.exports = LongList = (function() {
       return null;
     }
     th = thumb$.nextElementSibling;
-    if (th === null) {
+    if (th == null) {
       th = thumb$.parentNode.firstElementChild;
       if (th === thumb$) {
         return null;
       }
     }
-    while (th.nodeName === 'DIV') {
+    while (!th.classList.contains('thumb')) {
       th = th.nextElementSibling;
-      if (th === null) {
+      if (th == null) {
         th = thumb$.parentNode.firstElementChild;
         if (th === thumb$) {
           return null;
@@ -7903,11 +7908,12 @@ Modal = (function(_super) {
       this.content = options.content;
     }
     if (this.yes == null) {
-      this.yes = options.yes || 'ok';
+      this.yes = options.yes || t('ok');
     }
     if (this.no == null) {
-      this.no = options.no || 'cancel';
+      this.no = options.no || t('cancel');
     }
+    this.back = options.back || t('chooseAgain');
     if (this.cb == null) {
       this.cb = options.cb || function() {};
     }
@@ -7971,16 +7977,15 @@ Modal = (function(_super) {
   };
 
   Modal.prototype.render = function() {
-    var body, close, foot, head, title, yesBtn;
-    close = $('<button class="close" type="button" data-dismiss="modal">×</button>');
+    var backBtn, body, close, foot, head, noBtn, title, yesBtn;
+    close = $('<button class="close fa fa-close" data-dismiss="modal"/>');
     title = $('<p>').text(this.title);
     head = $('<div class="modalCY-header">').append(close, title);
     body = $('<div class="modalCY-body"></div>').append(this.renderContent());
-    yesBtn = $('<button id="modal-dialog-yes" class="btn btn-cozy">').text(this.yes);
-    foot = $('<div class="modalCY-footer">').append(yesBtn);
-    if (this.no) {
-      foot.prepend($('<button id="modal-dialog-no" class="btn btn-link">').text(this.no));
-    }
+    foot = $('<div class="modalCY-footer">');
+    backBtn = $("<button id=\"modal-dialog-back\" class=\"btn light-btn left back\">\n    <i class=\"fa fa-chevron-left\"/> " + this.back + "\n</button>").appendTo(foot);
+    yesBtn = $('<button id="modal-dialog-yes" class="btn right"/>').text(this.yes).appendTo(foot);
+    noBtn = this.no ? $('<button id="modal-dialog-no" class="btn light-btn right"/>').text(this.no).appendTo(foot) : void 0;
     this.backdrop = document.createElement('div');
     this.backdrop.classList.add('modalCY-backdrop');
     $("body").append(this.backdrop);
@@ -8329,10 +8334,10 @@ module.exports = ObjectPickerAlbum = (function(_super) {
   ObjectPickerAlbum.prototype.initialize = function() {
     this.name = 'albumPicker';
     this.tabLabel = 'album';
-    this.tab = $("<div>" + this.tabLabel + "</div>")[0];
+    this.tab = $("<div class='fa fa-book'>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
     this.albums$ = $('<div class="albums"></div>')[0];
-    this.thumbs$ = $('<div class="thumbs"><img></img></div>')[0];
+    this.thumbs$ = $("<div class=\"thumbs\">\n    <div class=\"thumb\"><img/></div>\n</div>")[0];
     this.panel.appendChild(this.albums$);
     this.panel.appendChild(this.thumbs$);
     this._getAlbums();
@@ -8371,13 +8376,11 @@ module.exports = ObjectPickerAlbum = (function(_super) {
     thumbStyle = window.getComputedStyle(this.thumbs$.children[0]);
     colWidth = parseInt(thumbStyle.width) + parseInt(thumbStyle.marginLeft) + parseInt(thumbStyle.marginRight) + 2;
     width = this.thumbs$.clientWidth;
-    margin = Math.floor((width % colWidth) / 2);
-    return this.thumbs$.style.paddingLeft = margin + 'px';
+    return margin = Math.floor((width % colWidth) / 2);
   };
 
   ObjectPickerAlbum.prototype._dblclickHandler = function(e) {
     var thumb$;
-    console.log('dblClick', e.target);
     thumb$ = e.target;
     if (!this._toggleOnThumb$(thumb$)) {
       return;
@@ -8387,26 +8390,25 @@ module.exports = ObjectPickerAlbum = (function(_super) {
 
   ObjectPickerAlbum.prototype._clickHandler = function(e) {
     var th;
-    console.log('click', e.target);
     th = e.target;
-    if (th.nodeName !== 'IMG') {
-      return;
+    while (!th.classList.contains('thumb')) {
+      th = th.parentElement;
+      if (th.classList.contains('thumbs')) {
+        return;
+      }
     }
     if (!this._toggleOnThumb$(th)) {
       return null;
     }
-    return th.classList.add('selected');
+    return th.setAttribute('aria-selected', true);
   };
 
   ObjectPickerAlbum.prototype._toggleOnThumb$ = function(thumb$) {
-    if (thumb$.classList.contains('selected')) {
+    if (thumb$.getAttribute('aria-selected') === 'true') {
       return true;
     }
-    if (thumb$.nodeName !== 'IMG') {
-      return false;
-    }
     this._unselectAll();
-    thumb$.classList.add('selected');
+    thumb$.setAttribute('aria-selected', true);
     this.selectedThumbs[thumb$.dataset.id] = thumb$;
     return true;
   };
@@ -8418,7 +8420,7 @@ module.exports = ObjectPickerAlbum = (function(_super) {
     for (id in _ref) {
       thumb$ = _ref[id];
       if (typeof thumb$ === 'object') {
-        thumb$.classList.remove('selected');
+        thumb$.setAttribute('aria-selected', false);
         _results.push(this.selectedThumbs[id] = false);
       } else {
         _results.push(void 0);
@@ -8432,7 +8434,7 @@ module.exports = ObjectPickerAlbum = (function(_super) {
     return client.get("albums/?", function(err, res) {
       var album, albumLabel$, n, _i, _len;
       if (err) {
-        console.log(err);
+        console.error(err);
         return;
       }
       if (res.length === 0) {
@@ -8448,7 +8450,7 @@ module.exports = ObjectPickerAlbum = (function(_super) {
         albumLabel$ = _this._initAlbum(album);
         if (n === 0) {
           _this.previousSelectedAlbum$ = albumLabel$;
-          albumLabel$.classList.add('selectedAlbum');
+          albumLabel$.setAttribute('aria-selected', true);
           _this._getAlbumPhotos(album.id);
         }
         n += 1;
@@ -8467,8 +8469,8 @@ module.exports = ObjectPickerAlbum = (function(_super) {
     label.textContent = album.title;
     this.albums$.appendChild(el);
     el.addEventListener('click', function(event) {
-      _this.previousSelectedAlbum$.classList.remove('selectedAlbum');
-      el.classList.add('selectedAlbum');
+      _this.previousSelectedAlbum$.setAttribute('aria-selected', false);
+      el.setAttribute('aria-selected', true);
       _this.previousSelectedAlbum$ = el;
       return _this._getAlbumPhotos(album.id);
     });
@@ -8487,7 +8489,7 @@ module.exports = ObjectPickerAlbum = (function(_super) {
   };
 
   ObjectPickerAlbum.prototype._updateThumbs = function(res) {
-    var nPhoto, photoId, photoRank, photos, thumb, _i, _j, _len, _ref, _ref1, _results;
+    var nPhoto, photoId, photoRank, photos, thumb, thumbImg, _i, _j, _len, _ref, _ref1, _results;
     photos = res.photos;
     nPhoto = photos.length;
     photoRank = 0;
@@ -8495,23 +8497,27 @@ module.exports = ObjectPickerAlbum = (function(_super) {
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       thumb = _ref[_i];
       if (photoRank >= nPhoto) {
-        thumb.classList.add("hide");
-        thumb.src = '';
+        thumb.setAttribute('aria-hidden', true);
+        thumb.firstElementChild.src = '';
         thumb.dataset.id = '';
         thumb.photo = null;
       } else {
-        thumb.classList.remove("hide");
+        thumb.setAttribute('aria-hidden', false);
         thumb.dataset.id = photoId = photos[photoRank].id;
-        thumb.src = "photos/thumbs/" + photoId + ".jpg";
+        thumb.firstElementChild.src = "photos/thumbs/" + photoId + ".jpg";
         thumb.photo = photos[photoRank];
       }
       photoRank += 1;
     }
     _results = [];
     for (photoRank = _j = photoRank, _ref1 = nPhoto - 1; _j <= _ref1; photoRank = _j += 1) {
-      thumb = document.createElement('img');
-      thumb.src = "photos/thumbs/" + photos[photoRank].id + ".jpg";
+      thumbImg = document.createElement('img');
+      thumbImg.src = "photos/thumbs/" + photos[photoRank].id + ".jpg";
+      thumb = document.createElement('div');
+      thumb.appendChild(thumbImg);
+      thumb.classList.add('thumb');
       thumb.photo = photos[photoRank];
+      thumb.dataset.id = photos[photoRank].id;
       _results.push(this.thumbs$.appendChild(thumb));
     }
     return _results;
@@ -8546,7 +8552,7 @@ module.exports = ObjectPickerImage = (function(_super) {
   ObjectPickerImage.prototype.initialize = function() {
     this.name = 'thumbPicker';
     this.tabLabel = 'image';
-    this.tab = $("<div>" + this.tabLabel + "</div>")[0];
+    this.tab = $("<div class='fa fa-photo'>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
     return this.longList = new LongList(this.panel, this.modal);
   };
@@ -8610,7 +8616,7 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
     this.render();
     this.name = 'urlPhotoUpload';
     this.tabLabel = 'url';
-    this.tab = $("<div>" + this.tabLabel + "</div>")[0];
+    this.tab = $("<div class='fa fa-link'>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
     this.img = this.panel.querySelector('.url-preview');
     this.blocContainer = this.panel.querySelector('.bloc-container');
@@ -8738,7 +8744,7 @@ module.exports = ObjectPickerUpload = (function(_super) {
   };
 
   ObjectPickerUpload.prototype._createTab = function() {
-    return $("<div>" + this.tabLabel + "</div>")[0];
+    return $("<div class='fa fa-upload'>" + this.tabLabel + "</div>")[0];
   };
 
   ObjectPickerUpload.prototype._bindFileDropZone = function() {
@@ -8805,7 +8811,7 @@ module.exports = ObjectPickerUpload = (function(_super) {
 });
 
 ;require.register("views/object-picker", function(exports, require, module) {
-var CHOOSE_AGAIN_MARGIN, MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
+var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8830,8 +8836,6 @@ THUMB_WIDTH = 100;
 
 THUMB_HEIGHT = 100;
 
-CHOOSE_AGAIN_MARGIN = 17;
-
 module.exports = PhotoPickerCroper = (function(_super) {
   __extends(PhotoPickerCroper, _super);
 
@@ -8847,9 +8851,9 @@ module.exports = PhotoPickerCroper = (function(_super) {
 
   PhotoPickerCroper.prototype.events = function() {
     return _.extend(PhotoPickerCroper.__super__.events.apply(this, arguments), {
-      'click    a.next': 'displayMore',
-      'click    a.prev': 'displayPrevPage',
-      'click    .chooseAgain': '_chooseAgain'
+      'click a.next': 'displayMore',
+      'click a.prev': 'displayPrevPage',
+      'click .back': '_chooseAgain'
     });
   };
 
@@ -8873,6 +8877,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
       img_naturalW: 0,
       img_naturalH: 0
     };
+    this.el.dataset.step = this.state.currentStep;
     PhotoPickerCroper.__super__.initialize.call(this, this.config);
     body = this.el.querySelector('.modalCY-body');
     body.innerHTML = template();
@@ -8885,7 +8890,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.frameToCrop = this.cropper$.querySelector('.frame-to-crop');
     this.imgToCrop = this.cropper$.querySelector('#img-to-crop');
     this.imgPreview = this.cropper$.querySelector('#img-preview');
-    this.chooseAgain = this.cropper$.querySelector('.chooseAgain');
+    this.chooseAgain = this.el.querySelector('.back');
     this.panelsControlers = {};
     this.imagePanel = new ObjectPickerImage(this);
     tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
@@ -8903,12 +8908,10 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this._listenTabsSelection();
     this._selectDefaultTab(this.imagePanel.name);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
-    this.cropper$.style.visibility = 'hidden';
+    this.cropper$.setAttribute('aria-hidden', true);
     this.framePreview.style.width = THUMB_WIDTH + 'px';
     this.framePreview.style.height = THUMB_HEIGHT + 'px';
-    previewTops = this.cropper$.clientHeight - this.chooseAgain.offsetHeight - CHOOSE_AGAIN_MARGIN - THUMB_HEIGHT;
-    this.framePreview.style.top = Math.round(previewTops / 2) + 'px';
-    this.framePreview.style.right = 0;
+    previewTops = this.cropper$.clientHeight - THUMB_HEIGHT;
     this.imgResult.addEventListener('load', this._onImgResultLoaded, false);
     window.addEventListener('resize', this.resizeHandler);
     return true;
@@ -9047,8 +9050,9 @@ module.exports = PhotoPickerCroper = (function(_super) {
   PhotoPickerCroper.prototype._showCropingTool = function(url) {
     this.state.currentStep = 'croper';
     this.currentPhotoScroll = this.body.scrollTop;
-    this.objectPickerCont.style.visibility = 'hidden';
-    this.cropper$.style.visibility = '';
+    this.el.dataset.step = this.state.currentStep;
+    this.objectPickerCont.setAttribute('aria-hidden', true);
+    this.cropper$.setAttribute('aria-hidden', false);
     this._imgToCropTemp = new Image();
     this._imgToCropTemp.id = 'img-to-crop';
     this._imgToCropTemp.addEventListener('load', this._onImgToCropLoaded, false);
@@ -9064,9 +9068,10 @@ module.exports = PhotoPickerCroper = (function(_super) {
 
   PhotoPickerCroper.prototype._onImgToCropLoaded = function() {
     var cropTop, frame_H, frame_W, img_h, img_w, margin, natural_h, natural_w, options, selection_w, t, x, y;
+    console.debug(this._imgToCropTemp);
     natural_h = this._imgToCropTemp.naturalHeight;
     natural_w = this._imgToCropTemp.naturalWidth;
-    frame_H = this.cropper$.clientHeight - this.chooseAgain.offsetHeight - CHOOSE_AGAIN_MARGIN;
+    frame_H = this.cropper$.clientHeight;
     frame_W = this.cropper$.clientWidth - MARGIN_BETWEEN_IMG_AND_CROPED - THUMB_WIDTH;
     if (frame_H < natural_h || frame_W < natural_w) {
       if (frame_H / frame_W > natural_h / natural_w) {
@@ -9095,9 +9100,8 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.frameToCrop.style.left = margin + 'px';
     cropTop = Math.round((frame_H - img_h) / 2);
     this.frameToCrop.style.top = cropTop + 'px';
+    this.framePreview.style.top = cropTop + 'px';
     this.framePreview.style.right = margin + 'px';
-    this.chooseAgain.style.top = cropTop + img_h + CHOOSE_AGAIN_MARGIN + 'px';
-    this.chooseAgain.style.left = margin + 'px';
     selection_w = Math.round(Math.min(this.img_h, this.img_w) * 1);
     x = Math.round((this.img_w - selection_w) / 2);
     y = Math.round((this.img_h - selection_w) / 2);
@@ -9134,9 +9138,10 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.jcrop_api.destroy();
     this.imgToCrop.removeAttribute('style');
     this.imgToCrop.src = '';
-    this.objectPickerCont.style.visibility = '';
-    this.cropper$.style.visibility = 'hidden';
+    this.objectPickerCont.setAttribute('aria-hidden', false);
+    this.cropper$.setAttribute('aria-hidden', true);
     this.body.scrollTop = this.currentPhotoScroll;
+    this.el.dataset.step = this.state.currentStep;
     return this._setFocus();
   };
 
@@ -9152,7 +9157,6 @@ module.exports = PhotoPickerCroper = (function(_super) {
   PhotoPickerCroper.prototype._listenTabsSelection = function() {
     var _this = this;
     return this.objectPickerCont.addEventListener('panelSelect', function(event) {
-      console.log('event panelSelect');
       return _this._activatePanel(event.target.classList[0]);
     });
   };

@@ -274,8 +274,8 @@ module.exports = {
     'import content': "<p>\nPour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. La plupart des outils proposent une exportation à ce format.\nEnsuite, vous trouverez des outils d'importation. dans les applications\nContacts et Calendar.\n</p>\n<p>\nQuant à vos fichiers classiques, ils peuvent être uploadés directement depuis l'interface de l'application Files.\n</p>\n<p>\nNous mettrons également bientôt à disposition une application vous permettant de récupérer toutes vos données Google très facilement dans votre Cozy.\n</p>\n<p>\nVoilà, maintenant l'introduction à Cozy est terminée. Vous savez déjà\ntout ce qu'il faut pour démarrer. Nous vous laissons découvrir\nles applications disponibles.\n</p>",
     'close wizard': "Démarrer avec mon Cozy !"
   },
-  "pick from files": "Choisir une photo",
-  "Crop the photo": "Recadrez l'image (",
+  "pick from files": "Choisissez une photo",
+  "Crop the photo": "Recadrez l'image",
   "chooseAgain": "changer de photo",
   "modal ok": "OK",
   "modal cancel": "Annuler",

@@ -23,7 +23,7 @@ module.exports = class ObjectPickerImage extends BaseView
         @tabLabel = 'image'
         ####
         # get elements (name ends with '$')
-        @tab      = $("<div>#{@tabLabel}</div>")[0]
+        @tab      = $("<div class='fa fa-photo'>#{@tabLabel}</div>")[0]
         @panel    = @el
         ####
         # construct the long list of images
@@ -48,7 +48,6 @@ module.exports = class ObjectPickerImage extends BaseView
 
 
     keyHandler : (e)->
-        # console.log 'ObjectPickerImage.keyHandler', e.which
         @longList.keyHandler(e)
         return
 
