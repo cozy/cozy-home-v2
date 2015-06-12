@@ -101,7 +101,7 @@ module.exports = class Application extends Backbone.Model
             section = 'leave'
         else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
             section = 'main'
-        else if name in ['blog', 'feeds', 'bookmarks', 'quickmarks', 'zerofeeds']
+        else if name in ['blog', 'feeds', 'bookmarks', 'quickmarks', 'zero-feeds']
             section = 'watch'
         else if name in ['kresus', 'konnectors', 'kyou', 'databrowser']
             section = 'data'
