@@ -23,7 +23,7 @@ module.exports = class ObjectPickerAlbum extends BaseView
         @tabLabel = 'album'
         ####
         # get elements (name ends with '$')
-        @tab      = $("<div>#{@tabLabel}</div>")[0]
+        @tab      = $("<div class='fa fa-book'>#{@tabLabel}</div>")[0]
         @panel    = @el
         @albums$  = $('<div class="albums"></div>')[0]
         @thumbs$  = $('<div class="thumbs"><img></img></div>')[0]

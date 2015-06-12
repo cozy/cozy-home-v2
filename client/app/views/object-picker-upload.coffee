@@ -46,7 +46,7 @@ module.exports = class ObjectPickerUpload extends BaseView
 ## PRIVATE SECTION ##
 #
     _createTab : () ->
-        return $("<div>#{@tabLabel}</div>")[0]
+        return $("<div class='fa fa-upload'>#{@tabLabel}</div>")[0]
 
 
     _bindFileDropZone: ()->

@@ -1,6 +1,13 @@
 .object-picker
-// ========================================= //
-// MODAL (header, body, footer, layout)
+
+    #img-result
+        position   absolute
+        top        -9999em
+        left       -9999em
+        visibility hidden
+
+    // ========================================= //
+    // MODAL (header, body, footer, layout)
     .modalCY-body
         position  relative
 
@@ -16,26 +23,24 @@
         background-color white
 
     .fp-nav-tabs
-        flex-shrink      0
-        flex-grow        0
         background-color #ddd
         display          flex
-        flex-direction   column
+        flex 0
 
-    .tabMarginTop
-       flex-grow 2
+        :first-child
+            margin-left auto
 
-    .tabMarginBottom
-        flex-grow 3
+        :last-child
+            margin-right auto
 
-    [role='tab']
-        padding-right 8px
-        padding-left  8px
-        padding       0.7em
-        color         #3F3F3F
-        cursor        pointer
-        text-align    center
-        line-height   35px
+
+    [role=tab]
+        padding     0.7em
+        color       #3F3F3F
+        cursor      pointer
+        text-align  center
+        line-height 35px
+        width       3.33333em
 
     [aria-selected='true']
         background-color #fff
@@ -52,8 +57,8 @@
         display none
 
 
-// ========================================= //
-// Cropping body
+    // ========================================= //
+    // Cropping body
     .croperCont
         flex-grow 1
         margin    10%
@@ -81,8 +86,8 @@
         max-width none
 
 
-// ========================================= //
-// photoUpload panel
+    // ========================================= //
+    // photoUpload panel
     .photoUpload[aria-hidden="false"]
         display        flex
         flex-direction column
@@ -160,8 +165,8 @@
             transform   translateX(-50%) translateY(-50%)
 
 
-// ========================================= //
-// urlPhotoUpload panel
+    // ========================================= //
+    // urlPhotoUpload panel
     margin-urlUpload = 1.3em
     url-input-height = 1.8em
 
@@ -223,8 +228,8 @@
         border-color #fe8800
 
 
-// ========================================= //
-// album picker panel
+    // ========================================= //
+    // album picker panel
     .albumPicker.noAlbum
         flex-direction column
         align-items    center
@@ -325,9 +330,8 @@
                     border 0.35em solid blue
 
 
-// ========================================= //
-// image long list for image picker
-
+    // ========================================= //
+    // image long list for image picker
     .viewport
         overflow-y scroll
         overflow-x hidden

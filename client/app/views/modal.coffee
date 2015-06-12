@@ -59,13 +59,21 @@ class Modal extends Backbone.View
         super
 
     render: ->
-        close = $('<button class="close" type="button" data-dismiss="modal">×</button>')
+        close = $('<button class="close fa fa-close" data-dismiss="modal"/>')
         title = $('<p>').text @title
         head  = $('<div class="modalCY-header">').append close, title
+
         body  = $('<div class="modalCY-body"></div>').append @renderContent()
-        yesBtn= $('<button id="modal-dialog-yes" class="btn btn-cozy">').text @yes
-        foot  = $('<div class="modalCY-footer">').append yesBtn
-        foot.prepend $('<button id="modal-dialog-no" class="btn btn-link">').text(@no) if @no
+
+        foot  = $('<div class="modalCY-footer">')
+        yesBtn= $('<button id="modal-dialog-yes" class="btn right">')
+                .text(@yes)
+                .appendTo foot
+        noBtn = if @no
+            $('<button id="modal-dialog-no" class="btn light-btn right">')
+            .text(@no)
+            .appendTo foot
+
         @backdrop = document.createElement('div')
         @backdrop.classList.add('modalCY-backdrop')
 
