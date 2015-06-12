@@ -22,7 +22,7 @@ module.exports = logs =
     getLogs: (slug, callback) ->
         logPath = logs.getLogPath slug
         fs.readFile logPath, (err, logContent) ->
-            callback err, logContent?.toString().replace colors, ''
+            callback err, logContent?.toString().replace logs.colors, ''
 
 
     # Return log contents for given set of apps.

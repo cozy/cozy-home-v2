@@ -18,7 +18,7 @@ module.exports = logs = {
     var logPath;
     logPath = logs.getLogPath(slug);
     return fs.readFile(logPath, function(err, logContent) {
-      return callback(err, logContent != null ? logContent.toString().replace(colors, '') : void 0);
+      return callback(err, logContent != null ? logContent.toString().replace(logs.colors, '') : void 0);
     });
   },
   getManyLogs: function(slugs, callback) {
