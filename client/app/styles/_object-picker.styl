@@ -45,18 +45,32 @@
     [aria-selected=true]
         background-color #fff
 
-    .thumbPicker
-        position relative
-        // must be before aria-hidden otherwise display = none will not work
-        display  flex
-
     [role=tabpanel]
-        position relative
-        display  flex
-        flex     1
+        position   relative
+        display    flex
+        flex       1 0
+        overflow-y auto
 
         &[aria-hidden=true]
             display none
+
+    .thumb
+        position relative
+        overflow hidden
+
+        img
+            display block
+
+        &[aria-selected=true]::after
+            content    ''
+            display    block
+            box-sizing border-box
+            position   absolute
+            top        -1px
+            right      -1px
+            bottom     -1px
+            left       -1px
+            border     4px solid blue
 
 
     // ========================================= //
@@ -209,17 +223,10 @@
         background-size     contain
 
     .modal-url-input
-        flex-shrink   0
-        flex-grow     0
-        align-self    center
-        width         93%
-        max-width     40em
-        height        1.8em
-        margin-bottom 0
-        padding-left  0.4em
-        border        2px solid blue
-        background    transparent
-        font-size     1.0em
+        margin    0 auto
+        max-width 40em
+        border    2px solid blue
+        font-size 1em
 
     .modal-url-input focus
         border-width 2px
@@ -246,88 +253,76 @@
 
 
     .albumPicker
-        albumsSeparatorWidth = 0.4em
-
         display     flex
         align-items stretch
 
-        .albums
-            flex-grow   0
-            flex-shrink 0
-            overflow-y  auto
-            overflow-x  hidden
-            z-index     1
-            position    relative
+        // Albums list separator
+        .albums::before
+        .albumLabel::after
+            content  ''
+            display  block
+            width    .2em
+            position absolute
+            top      0
+            bottom   0
+            right    -(@width / 2)
 
-            &::after
-                content          ''
-                position         absolute
-                display          block
-                top              0
-                bottom           0
-                right            0 //- albumsSeparatorWidth
-                width            albumsSeparatorWidth
+        .albums
+            z-index    1
+            position   relative
+            overflow-x hidden
+
+            &::before
                 background-color #eee
                 z-index          0
 
         .albumLabel
-            padding-top    0.8em
-            padding-bottom 0.5em
+            padding        1em
             display        flex
             flex-direction column
             align-items    center
             position       relative
             z-index        1
 
+            .label
+                max-width  11em
+                padding    0 0.5em 0 0.5em
+                color      grey
+                text-align center
+
+            .cover
+                width 4em
+
             &:hover
                 cursor           pointer
-                background-color #F4FAFF
+                background-color lightgreyedblue
                 z-index          0
 
-        .albumLabel.selectedAlbum
-            background-color #F4FAFF
-            z-index 1
+            &[aria-selected=true]
+                background-color lightgreyblue
+                z-index 1
 
-            &::after
-                content          ''
-                position         absolute
-                display          block
-                top              0
-                bottom           0
-                right            0
-                width            albumsSeparatorWidth
-                background-color blue
+                .label
+                    color darkgrey
 
-        .label
-            max-width  11em
-            padding    0 0.5em 0 0.5em
-            color      grey
-            text-align center
-
-        .selectedAlbum .label
-            color black
-
-        .cover
-            width 4em
+                &::after
+                    background-color blue
 
         .thumbs
-            flex-grow        1
-            background-color white
-            padding-top      2em
-            padding-bottom   2em
+            display          flex
+            flex             1
+            padding          .5em
             overflow-y       auto
+            background-color white
 
-            img
-                width  10em
-                height 10em
-                margin 0.3em
-                cursor pointer
+        .thumb
+            width  10em
+            height 10em
+            margin .5em
+            cursor pointer
 
-                &.hide
-                    display none
-
-                &.selected
-                    border 0.35em solid blue
+            &[aria-hidden=true]
+                display none
 
 
     // ========================================= //
@@ -345,8 +340,16 @@
         border           0
         background-color #F5F5F5
 
-    .long-list-thumb.selectedThumb
-        border 0.35em solid blue
+        &[aria-selected=true]::after
+            content    ''
+            display    block
+            box-sizing border-box
+            position   absolute
+            top        0
+            right      0
+            bottom     0
+            left       0
+            border     4px solid blue
 
     .long-list-month-label
         position   absolute

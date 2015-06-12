@@ -221,7 +221,6 @@ module.exports = class PhotoPickerCroper extends Modal
 
     onKeyStroke: (e)->
     # overloads the modal onKeyStroke
-        # console.log 'onKeyStroke', e.which, @state.activePanel
         if e.which == 13 # return key => validate modal
             e.stopPropagation()
             @onYes()
@@ -345,7 +344,6 @@ module.exports = class PhotoPickerCroper extends Modal
 
 
     _setFocus: ()->
-        # console.log "HOME/objectPicker._setFocus", @state.activePanel
         if !@state.activePanel.setFocusIfExpected
             return
         if !@state.activePanel.setFocusIfExpected()
@@ -354,7 +352,6 @@ module.exports = class PhotoPickerCroper extends Modal
 
     _listenTabsSelection: ()->
         @objectPickerCont.addEventListener('panelSelect',(event)=>
-            console.log 'event panelSelect'
             @_activatePanel(event.target.classList[0])
         )
 
@@ -364,7 +361,6 @@ module.exports = class PhotoPickerCroper extends Modal
 
 
     _activatePanel: (panelClassName)->
-        # console.log 'panelClassName =', panelClassName
         @state.activePanel = @panelsControlers[panelClassName]
         if @state.activePanel.resizeHandler
             @state.activePanel.resizeHandler()
