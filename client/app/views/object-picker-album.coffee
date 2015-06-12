@@ -7,9 +7,9 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
     tagName   : "section"
 
-####################
-## PUBLIC SECTION ##
-#
+    ####################
+    ## PUBLIC SECTION ##
+    #
 
     constructor: (modal) ->
         @modal = modal
@@ -80,9 +80,9 @@ module.exports = class ObjectPickerAlbum extends BaseView
         margin = Math.floor((width % colWidth)/2)
 
 
-#####################
-## PRIVATE SECTION ##
-#
+    #####################
+    ## PRIVATE SECTION ##
+    #
 
     _dblclickHandler: (e) =>
         thumb$ = e.target

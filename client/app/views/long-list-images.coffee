@@ -1544,30 +1544,28 @@ module.exports = class LongList
     ###
     _getPreviousThumb$: (thumb$) ->
         # 1/ check we are not on the first thumb
-        if thumb$.dataset.rank == '0'
-            return null
+        return null if thumb$.dataset.rank is '0'
         # 2/ check we are not on the first displayed by the buffer
-        if thumb$ == @buffer.first.el
-            return null
+        return null if thumb$ is @buffer.first.el
         # 3/ get the previous thumb
         th = thumb$.previousElementSibling
-        if th == null
+        unless th?
             # case if thumb$ is the first element => jump to the last one
             # (what does not means it is the first displayed)
             th = thumb$.parentNode.lastElementChild
-            if th == thumb$
-                # case there is only one photo
-                return null
-        while th.nodeName == 'DIV'
+            # case there is only one photo
+            return null if th is thumb$
+
+        while not th.classList.contains 'thumb'
             # case of a month label
             th = th.previousElementSibling
-            if th == null
+            unless th?
                 # case if thumb$ is the first element => jump to the last one
                 # (what does not means it is the first displayed)
                 th = thumb$.parentNode.lastElementChild
-                if th == thumb$
-                    # case there is only one photo
-                    return null
+                # case there is only one photo
+                return null if th is thumb$
+
         return th
 
     ###*
@@ -1578,30 +1576,28 @@ module.exports = class LongList
     ###
     _getNextThumb$: (thumb$) ->
         # 1/ check we are not on the last thumb
-        if @_coordonate.rank(thumb$) == @nPhotos - 1
-            return null
+        return null if @_coordonate.rank(thumb$) is @nPhotos - 1
         # 2/ check we are not on the last displayed by the buffer
-        if thumb$ == @buffer.last.el
-            return null
+        return null if thumb$ is @buffer.last.el
         # 3/ get the next thumb
         th = thumb$.nextElementSibling
-        if th == null
+        unless th?
             # case if thumb$ is the last element => jump to the first one
             # (what does not means it is the oldest displayed)
             th = thumb$.parentNode.firstElementChild
-            if th == thumb$
-                # case there is only one photo
-                return null
-        while th.nodeName == 'DIV'
+            # case there is only one photo
+            return null if th is thumb$
+
+        while not th.classList.contains 'thumb'
             # case of a month label
             th = th.nextElementSibling
-            if th == null
+            unless th?
                 # case if thumb$ is the last element => jump to the first one
                 # (what does not means it is the oldest displayed)
                 th = thumb$.parentNode.firstElementChild
-                if th == thumb$
-                    # case there is only one photo
-                    return null
+                # case there is only one photo
+                return null if th is thumb$
+
         return th
 
     ###*
