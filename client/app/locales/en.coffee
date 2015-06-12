@@ -197,6 +197,10 @@ module.exports =
     "help send message action": "Send message to the Cozy Support Team"
     "send message success": "Message successfully sent!"
     "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc"
+    "account change password success": "The password was changed successfully."
+    "account change password short": "The new password is too short."
+    "account change password difference": "The password confirmation doesn't match the new password."
+    "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct."
     "account background add": "Add background"
     "introduction market": """
         Welcome to the Cozy app store!
