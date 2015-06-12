@@ -12,10 +12,14 @@ module.exports = class Application extends Backbone.Model
 
     isIconSvg: ->
         iconType = @get 'iconType'
-        return iconType? and iconType is 'svg'
+        if iconType
+            return iconType is 'svg'
+        else
+            icon = @get 'icon'
+            return icon?.indexOf '.svg'
 
     isRunning: -> @get('state') is 'installed'
-    isBroken: ->  @get('state') is 'broken'
+    isBroken: -> @get('state') is 'broken'
 
     # use same events as backbone to enable socket-listener
     prepareCallbacks: (callbacks, presuccess, preerror) ->
@@ -84,16 +88,29 @@ module.exports = class Application extends Backbone.Model
         @prepareCallbacks callbacks
         client.post "/api/applications/getMetaData", @toJSON(), callbacks
 
-    getHomePosition: (cols) ->
-        pos = @get 'homeposition'
-        return pos?[cols]
+    # In which of the home section does this application go
+    # returns one of 'other', 'official', 'leave'
+    getSection: ->
+        section = 'misc'
+        name = @get 'slug'
+        favorite = @get 'favorite'
 
-    saveHomePosition: (cols, obj, options = {}) ->
-        pos = @get('homeposition') or {}
-        pos[cols] = obj
-        options['patch'] = true
-        options['type'] = 'PUT'
-        @save homeposition: pos, options
+        if favorite
+            section = 'favorite'
+        else if name in ['leave-google']
+            section = 'leave'
+        else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
+            section = 'main'
+        else if name in ['blog', 'feeds', 'bookmarks']
+            section = 'watch'
+        else if name in ['kresus', 'konnectors', 'kyou', 'databrowser']
+            section = 'data'
+        else if name in ['todos', 'notes', 'tasky']
+            section = 'productivity'
+        else if name in ['sync']
+            section = 'platform'
+
+        return section
 
     updateAll: (callbacks) ->
         @prepareCallbacks callbacks

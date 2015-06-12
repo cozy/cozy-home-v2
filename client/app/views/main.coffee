@@ -1,19 +1,19 @@
-BaseView = require 'lib/base_view'
-appIframeTemplate = require 'templates/application_iframe'
-AppCollection = require 'collections/application'
-StackAppCollection = require 'collections/stackApplication'
+BaseView               = require 'lib/base_view'
+appIframeTemplate      = require 'templates/application_iframe'
+AppCollection          = require 'collections/application'
+StackAppCollection     = require 'collections/stackApplication'
 NotificationCollection = require 'collections/notifications'
-DeviceCollection = require 'collections/device'
-NavbarView = require 'views/navbar'
-AccountView = require 'views/account'
-HelpView = require 'views/help'
+DeviceCollection       = require 'collections/device'
+NavbarView             = require 'views/navbar'
+AccountView            = require 'views/account'
+HelpView               = require 'views/help'
 ConfigApplicationsView = require 'views/config_applications'
-MarketView = require 'views/market'
-ApplicationsListView = require 'views/home'
-SocketListener = require 'lib/socket_listener'
-
-User = require 'models/user'
-
+MarketView             = require 'views/market'
+ApplicationsListView   = require 'views/home'
+SocketListener         = require 'lib/socket_listener'
+User                   = require 'models/user'
+IntentManager          = require 'lib/intentManager'
+ThumbPreloader         = require 'lib/thumb_preloader'
 
 # View describing main screen for user once he is logged
 module.exports = class HomeView extends BaseView
@@ -21,38 +21,65 @@ module.exports = class HomeView extends BaseView
 
     template: require 'templates/layout'
 
-    wizards: ['install', 'quicktour']
+    subscriptions:
+        'backgroundChanged': 'changeBackground'
+
+    wizards: ['quicktour']
+
 
     constructor: ->
-        @apps = new AppCollection()
-        @stackApps = new StackAppCollection()
-        @devices = new DeviceCollection()
+        @apps          = new AppCollection window.applications
+        @stackApps     = new StackAppCollection window.stack_applications
+        @devices       = new DeviceCollection window.devices
+        @market        = new AppCollection window.market_applications
         @notifications = new NotificationCollection()
+        @intentManager = new IntentManager()
         SocketListener.watch @apps
         SocketListener.watch @notifications
         SocketListener.watch @devices
-
         super
+
 
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
-        @applicationListView = new ApplicationsListView @apps
-        @configApplications = new ConfigApplicationsView @apps, @devices, @stackApps
+        @applicationListView = new ApplicationsListView @apps, @market
+        @configApplications = new ConfigApplicationsView(
+            @apps, @devices, @stackApps, @market)
         @accountView = new AccountView()
         @helpView = new HelpView()
-        @marketView = new MarketView @apps
+        @marketView = new MarketView @apps, @market
 
-        $("#content").niceScroll()
         @frames = @$ '#app-frames'
         @content = @$ '#content'
+        @changeBackground window.app.instance.background
+        @backButton = @$ '.back-button'
+        @backButton.hide()
 
         $(window).resize @resetLayoutSizes
-        @apps.fetch reset: true
-        @devices.fetch reset: true
-        @stackApps.fetch reset: true
         @resetLayoutSizes()
 
+
     ### Functions ###
+
+
+    # Change the background of the content element. It builds the background
+    # image url with given value. If no param is given of default background is
+    # given, background image is removed.
+    changeBackground: (background='background_07') ->
+        if background is undefined or background is null
+            @content.css 'background_07.jpg', 'none'
+        if background is 'background-none'
+            @content.css 'background-image', 'none'
+        else
+            # It's a pre-defined background
+            if background.indexOf('background') > -1
+                name = background.replace '-', '_'
+                val = "url('/img/backgrounds/#{name}.jpg')"
+            else
+                val = "url('/api/backgrounds/#{background}/picture.jpg')"
+
+            @content.css 'background-image', val
+
 
     # Send a logout request to server then reload current window to redirect
     # user to automatically redirect user to login page (he's not logged
@@ -65,16 +92,32 @@ module.exports = class HomeView extends BaseView
             error: =>
                 alert 'Server error occured, logout failed.'
 
-    displayView: (view) =>
-        $("#current-application").html 'home'
+    displayView: (view, title) =>
+
+        if title?
+            title = title.substring 6
+        else
+            title ?= t 'home'
+
+        window.document.title = title
+        $('#current-application').html title
+
+        if view is @applicationListView
+            @backButton.hide()
+        else
+            @backButton.show()
+
+
         displayView = =>
             @frames.hide()
             view.$el.hide()
             @content.show()
             $('#home-content').append view.$el
-            view.$el.fadeIn()
+            view.$el.show()
+
             @currentView = view
             @resetLayoutSizes()
+            @content.scrollTop 0
 
         if @currentView?
 
@@ -84,16 +127,15 @@ module.exports = class HomeView extends BaseView
                 @resetLayoutSizes()
                 return
 
-            @currentView.$el.fadeOut =>
-                @currentView.$el.detach()
-                displayView()
+            @currentView.$el.hide()
+            @currentView.$el.detach()
+            displayView()
         else
             displayView()
 
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: (wizard=null) =>
         @displayView @applicationListView
-        @applicationListView.setMode 'view'
         window.document.title = t "cozy home title"
 
         for wiz in @wizards
@@ -110,23 +152,18 @@ module.exports = class HomeView extends BaseView
             @[wview].show()
 
     displayApplicationsListEdit: =>
-        @displayView @applicationListView
-        @applicationListView.setMode 'edit'
-        window.document.title = t "cozy home title"
+        @displayView @applicationListView, t "cozy home title"
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
-        @displayView @marketView
-        window.document.title = t "cozy app store title"
+        @displayView @marketView, t "cozy app store title"
 
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
-        @displayView @accountView
-        window.document.title = t 'cozy account title'
+        @displayView @accountView, t 'cozy account title'
 
     displayHelp: =>
-        @displayView @helpView
-        window.document.title = t "cozy help title"
+        @displayView @helpView, t "cozy help title"
 
     displayInstallWizard: ->
         @displayApplicationsList 'install'
@@ -135,13 +172,11 @@ module.exports = class HomeView extends BaseView
         @displayApplicationsList 'quicktour'
 
     displayConfigApplications: =>
-        @displayView @configApplications
-        window.document.title = t "cozy applications title"
+        @displayView @configApplications, t "cozy applications title"
 
 
     displayUpdateApplication: (slug) =>
-        @displayView @configApplications
-        window.document.title = t "cozy applications title"
+        @displayView @configApplications, t "cozy applications title"
         window.app.routers.main.navigate 'config-applications', false
 
         # When the route is called on browser loading, it must wait for
@@ -180,6 +215,8 @@ module.exports = class HomeView extends BaseView
     # Get frame corresponding to slug if it exists, create before either.
     # Then this frame is displayed while we hide content div and other app
     # iframes. Then currently selected frame is registered
+    #
+    # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
 
         if @apps.length is 0
@@ -187,42 +224,61 @@ module.exports = class HomeView extends BaseView
                 @displayApplication slug, hash
             return null
 
-        @frames.show()
-        @content.hide()
+        @$("#app-btn-#{slug} .spinner").toggle()
+        @$("#app-btn-#{slug} .icon").toggle()
 
         frame = @$("##{slug}-frame")
+        onLoad = =>
+            @$("#app-btn-#{slug} .spinner").toggle()
+            @$("#app-btn-#{slug} .icon").toggle()
+            @frames.show()
+            @content.hide()
+            @backButton.show()
+
+            @$('#app-frames').find('iframe').hide()
+            frame.show()
+
+            @selectedApp = slug
+
+            name = @apps.get(slug).get('name')
+            name = '' if not name?
+            window.document.title = "Cozy - #{name}"
+            $("#current-application").html name
+            @resetLayoutSizes()
+
+
         if frame.length is 0
             frame = @createApplicationIframe(slug, hash)
+            frame.on 'load', onLoad
 
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
         else if hash
             frame.prop('contentWindow').location.hash = hash
+            onLoad()
 
-        @$('#app-frames').find('iframe').hide()
-        frame.show()
-
-        @selectedApp = slug
-
-        name = @apps.get(slug).get('name')
-        name = '' if not name?
-        window.document.title = "Cozy - #{name}"
-        $("#current-application").html name
-        @resetLayoutSizes()
+        else
+            onLoad()
 
     createApplicationIframe: (slug, hash="") ->
 
         # prepends '#' only if there is an actual hash
         hash = "##{hash}" if hash?.length > 0
 
-        @frames.append appIframeTemplate(id: slug, hash:hash)
-        frame = @$("##{slug}-frame")
-        $(frame.prop('contentWindow')).on 'hashchange', =>
-            location = frame.prop('contentWindow').location
-            newhash = location.hash.replace '#', ''
+        iframeHTML = appIframeTemplate(id: slug, hash:hash)
+        iframe     = @frames.append(iframeHTML)[0].lastChild
+        iframe$    = $(iframe)
+        iframe$.prop('contentWindow').addEventListener 'hashchange', =>
+            location = iframe$.prop('contentWindow').location
+            newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
         @resetLayoutSizes()
-        return frame
+        # declare the iframe to the intent manager.
+        # TODO : when each iFrame will
+        # have its own domain, then precise it
+        # (ex : https://app1.joe.cozycloud.cc:8080)
+        @intentManager.registerIframe(iframe,'*')
+        return iframe$
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
@@ -233,9 +289,9 @@ module.exports = class HomeView extends BaseView
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        @frames.height $(window).height() - 50
+        @frames.height $(window).height() - 36
 
         if $(window).width() > 640
-            @content.height $(window).height() - 48
+            @content.height $(window).height() - 36
         else
             @content.height $(window).height()

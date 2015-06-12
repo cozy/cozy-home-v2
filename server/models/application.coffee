@@ -1,11 +1,11 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
 {Manifest} = require '../lib/manifest'
 HttpClient = require("request-json").JsonClient
 dataClient = new HttpClient "http://localhost:9101/"
 
 
-module.exports = Application = americano.getModel 'Application',
+module.exports = Application = cozydb.getModel 'Application',
     name: String
     displayName: String
     description: String
@@ -19,13 +19,15 @@ module.exports = Application = americano.getModel 'Application',
     color: {type: String, default: null}
     git: String
     errormsg: String
+    errorcode: String
     branch: String
     port: Number
     homeposition: Object
     widget: String
     version: String
+    comment: String
     needsUpdate: {type: Boolean, default: false}
-    _attachments: Object
+    favorite: {type: Boolean, default: false}
 
 # Get token from token file if in production mode.
 getToken = ->

@@ -1,8 +1,8 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 moment = require 'moment-timezone'
 {RRule} = require 'rrule'
 
-module.exports = Event = americano.getModel 'Event',
+module.exports = Event = cozydb.getModel 'Event',
     start       : type : String
     end         : type : String
     place       : type : String
@@ -10,10 +10,10 @@ module.exports = Event = americano.getModel 'Event',
     description : type : String
     rrule       : type : String
     tags        : type : (x) -> x # DAMN IT JUGGLING
-    attendees   : type : [Object]
+    attendees   : type : [cozydb.NoSchema]
     related     : type : String, default: null
     timezone    : type : String
-    alarms      : type : [Object]
+    alarms      : type : [cozydb.NoSchema]
 
 # 'start' and 'end' use those format,
 # According to allDay or rrules.

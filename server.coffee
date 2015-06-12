@@ -2,6 +2,7 @@ process.on 'uncaughtException', (err) ->
     console.error err
     console.error err.stack
 
+
 application = module.exports = (callback) ->
     americano = require 'americano'
     request = require 'request-json'
@@ -22,6 +23,10 @@ application = module.exports = (callback) ->
 
         if process.env.NODE_ENV isnt "test"
             initProxy()
+
+        # initialize market when app starts
+        market = require './server/lib/market'
+        market.download ->
 
         localization.initialize ->
             setupRealtime app, ->

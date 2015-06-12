@@ -1,5 +1,5 @@
-blue = #15a7c7
-//blue = #747089
+blue = #5CA3F9
+darkgrey = #333
 darkblue = #363a46
 darkred = #C66666
 darkgreen = #66C666
@@ -9,6 +9,7 @@ lightgrey = #f7f4f0
 lightred = #fff4f0
 lightgreyblue = #f0f4f7
 lightgreyred = #f0fcfc
+green = #5C5
 
 html
     height 100%
@@ -19,19 +20,31 @@ body
     height 100%
     padding 0
     margin 0
-    background-color: orangewhite
-    box-sizing: border-box
-    min-width: 320px
-    color: black
-    font-family: 'Source Sans Pro', sans-serif
-    font-size: 18px
+    background-color orangewhite
+    box-sizing border-box
+    min-width 320px
+    color black
+    font-family 'Source Sans Pro', sans-serif
+    font-size 18px
 
 a
-    color: blue
-    text-decoration: none
+    color blue
+    text-decoration none
+    transition color 0.2s ease
+
+hr
+    margin 20px 0
+    border 0
+    border-top 1px solid #DDD
 
 a:hover
-    color: orange
+    color orange
+
+h4
+    margin 40px 0 15px 0
+    border-bottom 1px solid #CCC
+    font-weight normal
+    font-size 28px
 
 iframe
     width 100%
@@ -40,57 +53,66 @@ iframe
 
 input
 select
-    background: white
-    font-family: 'Maven Pro', sans-serif
-    text-align: center
-    font-size: 30px
-    height: 60px
-    width: 550px
-    padding: 10px
-    border-radius: 0.4em
-    border: 0
-    color: blue
-    box-shadow: 0 0 0 0
-    border: 1px solid white
-    transition: all 0.2s
+textarea
+    background white
+    padding 10px
+    border 0
+    box-shadow 0 0 0 0
+    //border-left 3px solid blue
+    border-bottom 1px solid blue
+    transition all 0.2s
 
+input
+select
+    color blue
+    font-family 'Maven Pro', sans-serif
+    font-size 30px
+    line-height 30px
+    height 60px
+    width 550px
+    text-align center
+    
 input:hover
 select:hover
-    border: 1px solid blue
+textarea:hover
+    border-left 3px solid orange
+    border-bottom 1px solid orange
 
 input:focus
 select:focus
-    color: orange
-    box-shadow: 0 0 0 0
-    border: 1px solid orange + 50%
+textarea:focus
+    color orange
+    box-shadow 0 0 0 0
+    border-left 3px solid orange
+    border-bottom 1px solid orange
 
 .w500
-    max-width: 500px
+    max-width 500px
 
 .w600
-    max-width: 600px
-    margin: auto
+    max-width 600px
+    margin auto
 
 .w800
-    max-width: 800px
-    margin: auto
+    max-width 800px
+    margin auto
 
 .tooltip-inner
 .tooltip-inner
     a:hover
-        color: textcolor
-        text-decoration: none
+        color textcolor
+        text-decoration none
 .ma2
-    margin: 20px
+    margin 20px
 
 .pa2
-    padding: 20px
+    padding 20px
 
 .par2
-    padding-right: 20px
+    padding-right 20px
 
 .mt6
-    margin-top: 60px
+    margin-top 60px
 
 .spacer
 .spacer
@@ -100,67 +122,74 @@ select:focus
     float right
 
 .hidden
-    display: none
+    display none
 
 .center
     text-align center
 
 .btn
-    background: blue
-    border: 1px blue - 20%
-    margin: 0
-    font-family: 'Source Sans Pro', sans-serif
-    color: white
-    padding: 5px
-    border-radius: 4px
-    cursor: pointer
-    transition: all 0.3s
+    background blue
+    border 1px blue - 20%
+    margin 0
+    font-family 'Source Sans Pro', sans-serif
+    color white
+    padding 5px
+    cursor pointer
+    transition all 0.3s
+
+.btn.btn-green
+    background-color green
+
 
 .btn:hover
-    color: white
-    background: orange
-    border-color: 1px solid orange
-    color: white
+    color white
+    background orange
+    border-color 1px solid orange
+    color white
 
 .btn:active
-    box-shadow: 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
-    background: orange - 10%
-    color: white
+    box-shadow 1px 3px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0
+    background orange - 10%
+    color white
 
 .green
-    background: darkgreen
+    background darkgreen
 
 .red
-    background: darkred
-
-.lightgrey
-    background: lightgrey
+    background darkred
 
 .alert-error
 .alert-success
-    display: none
-    border-radius: 5px
-    font-family: 'Maven Pro', sans-serif
-    font-size: 20px
-    padding: 20px
-    color: white
+    display none
+    border-radius 5px
+    font-family 'Maven Pro', sans-serif
+    font-size 20px
+    padding 20px
+    color white
 
 .alert-error
-    background: darkred
+    background darkred
 
 .alert-success
-    background: darkgreen
+    background darkgreen
 
 .light-btn
-    background: transparent
-    margin: 0
-    font-family: 'Source Sans Pro', sans-serif
-    color: blue
-    padding: 5px
-    margin-right: 5px
+    background transparent
+    margin 0
+    font-family 'Source Sans Pro', sans-serif
+    color blue
+    padding 5px
+    margin-right 5px
 
 
 input[type=checkbox]
-    margin-top: 8px
-    width: 15px
-    height: 15px
+    margin-top 8px
+    width 15px
+    height 15px
+
+
+button::-moz-focus-inner
+    border 0
+
+.w350
+    max-width 350px

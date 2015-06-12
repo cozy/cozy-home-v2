@@ -23,11 +23,11 @@ module.exports = class PopoverDescriptionView extends BaseView
         @model.set "description", ""
         @body = @$ ".md-body"
         @header = @$ ".md-header h3"
-        @header.html @model.get 'name'
+        @header.html @model.get 'displayName'
 
         @body.addClass 'loading'
         @body.html t('please wait data retrieval') + '<div class="spinner-container" />'
-        @body.find('.spinner-container').spin 'small'
+        @body.find('.spinner-container').spin true
         @model.getMetaData
             success: =>
                 @body.removeClass 'loading'
@@ -48,8 +48,6 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.html ""
 
-        @$('.repo-stars').html @model.get('stars')
-
         description = @model.get "description"
         @header.parent().append "<p class=\"line left\"> #{description} </p>"
 
@@ -68,7 +66,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @handleContentHeight()
         @body.slideDown()
-        @body.niceScroll() # must be done in the end to avoid weird render
+        #@body.niceScroll() # must be done in the end to avoid weird render
 
     handleContentHeight: ->
         @body.css 'max-height', "#{$(window).height() / 2}px"
@@ -79,7 +77,6 @@ module.exports = class PopoverDescriptionView extends BaseView
     show: =>
         @$el.addClass 'md-show'
         @overlay.addClass 'md-show'
-        $('#home-content').addClass 'md-open'
         setTimeout =>
             @$('.md-content').addClass 'md-show'
         , 300

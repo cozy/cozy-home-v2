@@ -5,7 +5,7 @@ AppsMenu = require './menu_applications'
 
 module.exports = class NavbarView extends BaseView
 
-    el:'#header'
+    el:'.navbar'
     template: require 'templates/navbar'
 
     constructor: (apps, notifications) ->

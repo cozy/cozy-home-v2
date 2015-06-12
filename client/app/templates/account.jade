@@ -1,56 +1,73 @@
-//.section-title.darkbg.bigger config
+#account-form.lightgrey.pa2
+    .line
+        .mod.left.w50.pa2.personalisation
+            h4= t('account personalization')
+
+            p
+                p= t('account background selection')
+                .background-list.line.mb1
+                button#background-add-button.btn.w100= t('account background add')
 
 
-h4.pa2.w600.biggest.darkbg.center= t('your parameters')
-#account-form.lightgrey.w600.pa2
-    .input
-        p= t('alerts and password recovery email')
-        input#account-email-field
-        button.btn= t('save')
-    .input
-        p= t('public name description')
-        input#account-public-name-field
-        button.btn= t('save')
-    .input
-        p= t('your timezone is required')
-        select#account-timezone-field
-        button.btn= t('save')
-    .input
-        p= t('domain name for urls and email')
-        input#account-domain-field
-        button.btn= t('save')
 
-    .input
-        p= t('Chose the language you want I use to speak with you:')
-        select#account-locale-field
-            option(value="fr")= t('french')
-            option(value="en")= t('english')
-            option(value="de")= t('german')
-        button.btn= t('save')
+        .mod.left.w50.pa2
+            h4= t('account identifiers')
 
-    p
-        button#change-password-button.btn= t('change password')
+            .input
+                p= t('alerts and password recovery email')
+                p.account-field
+                    input#account-email-field
+                    button.btn= t('save')
+            .input
+                p= t('public name description')
+                p.account-field
+                    input#account-public-name-field
+                    button.btn= t('save')
+            .input
+                p= t('domain name for urls and email')
+                p.account-field
+                    input#account-domain-field
+                    button.btn= t('save')
 
-    #change-password-form
-        p= t('change password procedure')
-        p
-            label= t('input your current password')
-        input#account-password0-field(type="password", placeholder="#{t('current password')}")
 
-        p
-            label= t('enter a new password')
-        input#account-password1-field(type="password", placeholder="#{t('new password')}")
-        p
-            label= t('confirm your new password')
-        input#account-password2-field(type="password", placeholder="#{t('new password')}")
+            h4= t('account localization')
 
-        p
-            button#account-form-button(class="btn")= t('save your new password')
+            .input
+                p= t('your timezone is required')
+                p.account-field
+                    select#account-timezone-field
+                    button.btn= t('save')
 
-            p.loading-indicator &nbsp;
+            .input
+                p= t('Chose the language you want I use to speak with you:')
+                p.account-field
+                    select#account-locale-field
+                        option(value="fr")= t('french')
+                        option(value="en")= t('english')
+                        option(value="de")= t('german')
+                        option(value="es")= t('spanish')
+                    button.btn= t('save')
 
-            #account-info.alert.main-alert.alert-success.hide
-                    #account-info-text
+            h4= t('account password')
+            #change-password-form
+                p
+                    label= t('input your current password')
+                input#account-password0-field(type="password", placeholder="#{t('current password')}")
 
-            #account-error.alert.alert-error.main-alert.hide
-                    #account-form-error-text
+                p
+                    label= t('enter a new password')
+                input#account-password1-field(type="password", placeholder="#{t('new password')}")
+                p
+                    label= t('confirm new password')
+                input#account-password2-field(type="password", placeholder="#{t('new password')}")
+
+                p
+                    button#account-form-button(class="btn")= t('save your new password')
+
+                    p.loading-indicator &nbsp;
+
+                    #account-info.alert.main-alert.alert-success.hide
+                            #account-info-text
+
+                    #account-error.alert.alert-error.main-alert.hide
+                            #account-form-error-text

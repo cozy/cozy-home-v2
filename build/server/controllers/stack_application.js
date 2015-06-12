@@ -27,7 +27,7 @@ sendError = function(res, err, code) {
       message: "Server error occured"
     };
   }
-  console.log("Sending error to client :");
+  console.log("Sending error to client:");
   console.log(err.stack);
   return res.send(code, {
     error: true,
@@ -52,7 +52,7 @@ module.exports = {
   update: function(req, res, next) {
     var manager;
     manager = new AppManager();
-    return manager.updateStack(function(err, res) {
+    return manager.updateStack(function(err, result) {
       if (err != null) {
         log.error(err);
         return sendError(res, err);
@@ -62,7 +62,7 @@ module.exports = {
   reboot: function(req, res, next) {
     var manager;
     manager = new AppManager();
-    return manager.restartController(function(err, res) {
+    return manager.restartController(function(err, result) {
       if (err != null) {
         log.error(err);
         return sendError(res, err);

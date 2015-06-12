@@ -1,11 +1,7 @@
 .md-content
     .md-header.clearfix
         .line
-            h3.left #{model.name}
-            .right
-                a(href="#{model.git}").repo-stars &nbsp;
-                a(href="#{model.git}")
-                    img(src="img/star-white.png")
+            h3.left #{model.displayName}
         if (model.comment !== 'official application')
             .line.noncozy-warning
                 i.fa.fa-info-circle

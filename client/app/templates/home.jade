@@ -1,5 +1,3 @@
-// .section-title.darkbg.bigger home
-
 #no-app-message.w600
     .darkbg#start-title.clearfix
         a(href="http://cozy.io")
@@ -10,4 +8,43 @@
     p.bigger!= t('noapps.first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
     p.bigger!= t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
 
-#app-list.gridster
+#app-list
+    section#apps-favorite.line
+        h2= t('home section favorites')
+    section#apps-leave.line
+        h2= t('home section leave')
+    section#apps-main.line
+        h2= t('home section main')
+    section#apps-productivity.line
+        h2= t('home section productivity')
+    section#apps-data.line
+        h2= t('home section data management')
+    section#apps-watch.line
+        h2= t('home section personal watch')
+    section#apps-misc.line
+        h2= t('home section misc')
+    section#apps-platform.line.show
+        h2= t('home section platform')
+        div.application.mod.w20.left.platform-app
+            .application-inner
+                a(href="#applications")
+                    img.icon(src="img/apps/store.svg")
+                    p.app-title= t('app store')
+
+        div.application.mod.w20.left.platform-app
+            .application-inner
+                a(href="#config-applications")
+                    img.icon.svg(src="img/apps/state.svg")
+                    p.app-title= t('app status')
+
+        div.application.mod.w20.left.platform-app
+            .application-inner(href="#account")
+                a(href="#account")
+                    img.icon.svg(src="img/apps/settings.svg")
+                    p.app-title= t('settings')
+
+        div.application.mod.w20.left.platform-app
+            .application-inner(href="#help")
+                a(href="#help")
+                    img.icon.svg(src="img/apps/help.svg")
+                    p.app-title= t('help')
