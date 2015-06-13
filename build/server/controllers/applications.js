@@ -425,10 +425,10 @@ module.exports = {
     return manager.uninstallApp(req.application, function(err, result) {
       if (err) {
         return manager.uninstallApp(req.application, function(err, result) {
-          return removeMetada(result);
+          return removeMetadata(result);
         });
       } else {
-        return removeMetada(result);
+        return removeMetadata(result);
       }
     });
   },

@@ -311,9 +311,9 @@ module.exports =
 
             if err
                 manager.uninstallApp req.application, (err, result) ->
-                    removeMetada result
+                    removeMetadata result
             else
-                removeMetada result
+                removeMetadata result
 
 
 
