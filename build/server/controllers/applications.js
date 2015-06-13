@@ -405,10 +405,8 @@ module.exports = {
     });
   },
   uninstall: function(req, res, next) {
-    return manager.uninstallApp(req.application, function(err, result) {
-      if (err) {
-        return markBroken(res, req.application, err);
-      }
+    var removeMetadata;
+    removeMetadata = function(result) {
       return req.application.destroy(function(err) {
         if (err) {
           return sendError(res, err);
@@ -419,10 +417,19 @@ module.exports = {
           }
           return res.send({
             success: true,
-            msg: 'Application succesfuly uninstalled'
+            msg: 'Application successfuly uninstalled'
           });
         });
       });
+    };
+    return manager.uninstallApp(req.application, function(err, result) {
+      if (err) {
+        return manager.uninstallApp(req.application, function(err, result) {
+          return removeMetada(result);
+        });
+      } else {
+        return removeMetada(result);
+      }
     });
   },
   update: function(req, res, next) {
