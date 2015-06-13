@@ -294,9 +294,8 @@ module.exports =
     # * proxy, cozy router
     # * database
     uninstall: (req, res, next) ->
-        manager.uninstallApp req.application, (err, result) ->
-            return markBroken res, req.application, err if err
 
+        removeMetadata = (result) ->
             req.application.destroy (err) ->
                 return sendError res, err if err
 
@@ -305,7 +304,16 @@ module.exports =
 
                     res.send
                         success: true
-                        msg: 'Application succesfuly uninstalled'
+                        msg: 'Application successfuly uninstalled'
+
+
+        manager.uninstallApp req.application, (err, result) ->
+
+            if err
+                manager.uninstallApp req.application, (err, result) ->
+                    removeMetada result
+            else
+                removeMetada result
 
 
 
