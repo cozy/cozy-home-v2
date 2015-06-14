@@ -3204,9 +3204,10 @@ body {
   }
 }
 .config-application .to-update-label {
-  background: #43a047;
+  background: #6c6;
   color: #fff;
   padding: 3px 6px;
+  margin-left: 26px;
   font-size: 12px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -3495,6 +3496,7 @@ body {
 @media (max-width: 850px) {
   #applications-view {
     padding: 10px;
+    margin-bottom: 20px;
   }
   #market-view span {
     display: none;

@@ -61,7 +61,7 @@ module.exports = {
                 });
               }
               data = {
-                to: "frank@mycozycloud.com",
+                to: "support@cozycloud.cc",
                 subject: "Demande d'assistance depuis un Cozy",
                 content: content,
                 attachments: attachments

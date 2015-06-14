@@ -1439,8 +1439,8 @@ module.exports = {
   "update required": "Update available",
   "navbar faq": "Frequently Asked Questions",
   "application is installing": "An app is already installing.\nWait for it to finish, then try again.",
-  "no app message": "You currently have no app installed on your Cozy.\nGo to the <a href=\"#applications\">app store</a> and install new apps!",
-  "welcome to app store": "Welcome to your cozy app store, install your own app from here\nor add one from the available list.",
+  "no app message": "You currently have no app installed on your Cozy.\nGo to the <a href=\"#applications\">Cozy store</a> and install new apps!",
+  "welcome to app store": "Welcome to your Cozy store, install your own app from here\nor add one from the available list.",
   "installed everything": "You have already installed everything!",
   "already similarly named app": "You already have an app with a similar name.",
   "your app list": "Access your apps",
@@ -1454,7 +1454,7 @@ module.exports = {
   "welcome to your cozy": "Welcome to your Cozy!",
   "you have no apps": "You have no apps.",
   "app management": "App management",
-  "app store": "App store",
+  "app store": "Add App",
   "configuration": "Configuration",
   "assistance": "Assistance",
   "hardware consumption": "Hardware",
@@ -1504,7 +1504,7 @@ module.exports = {
   "show proxy logs": "Show Proxy Logs",
   "show logs": "Show Logs",
   "update stack": "Update",
-  "refresh page": "Wait please, update takes several minutes.",
+  "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
   "status no device": "No device registered for synchronization.",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
@@ -1575,7 +1575,7 @@ module.exports = {
   "account change password difference": "The password confirmation doesn't match the new password.",
   "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct.",
   "account background add": "Add background",
-  "introduction market": "Welcome to the Cozy app store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
+  "introduction market": "Welcome to the Cozy store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
   "please wait data retrieval": "Please wait while the data is being retrieved…",
@@ -1653,7 +1653,7 @@ module.exports = {
     'welcome content': "<p>\nCozy is an operating system for your personal cloud. It allows\nto manage simply your distant own machine. You will be able to\ninstall applications that manage your data. Through a web browser\nyou will be able to access your data without compromising your\nprivacy.</p>\n<p>Here are the many benefits of a personal cloud with Cozy:</p>\n<ul>\n  <li>Your data stays confidential and is stored on a hardware of your own.</li>\n  <li>You will not have targeted ads anymore.</li>\n  <li>You don't need to connect on 10 different accounts to use your own tools.</li>\n  <li>No need to push the same data for each tool: the data is shared within the applications.</li>\n</ul>\n<p></p>",
     'continue to apps': "What applications are available ?",
     'apps title': "Available Applications",
-    'apps content': "<p>By default Cozy proposes five applications :</p>\n<ul>\n  <li>Calendar: To manage your events</li>\n  <li>Contacts: To handle your address and phone books.</li>\n  <li>Files: To store files and share the big ones.</li>\n  <li>Emails: To centralize your mailbox online.</li>\n  <li>Photos: To create and share photo albums.</li>\n</ul>\n<p>Aside of these main applications you can discover applications\nbuilt by the community. You will find apps like a bank account\nmanager, a feed reader, a todo-list manager and many more!\nGo to the app store to discover the full list of application.\n</p>",
+    'apps content': "<p>By default Cozy proposes five applications :</p>\n<ul>\n  <li>Calendar: To manage your events</li>\n  <li>Contacts: To handle your address and phone books.</li>\n  <li>Files: To store files and share the big ones.</li>\n  <li>Emails: To centralize your mailbox online.</li>\n  <li>Photos: To create and share photo albums.</li>\n</ul>\n<p>Aside of these main applications you can discover applications\nbuilt by the community. You will find apps like a bank account\nmanager, a feed reader, a todo-list manager and many more!\nGo to the Cozy store to discover the full list of application.\n</p>",
     'continue to sync': "How to sync my mobile?",
     'sync title': "Mobile Synchronization",
     'sync content': "<p><strong>Contacts and Calendars</strong></p>\n<p>\nYou can synchronize both contacts and calendars through the CalDAV and CardDAV protocols. Behind these exotic names, you will find two standards that allow to sync your Cozy with many contact and calendars managers. That means you can sync your Cozy with the native applications of your smartphone. Here are two tutorials that will help you achieving that:\n<ul>\n<li><a href=\"http://cozy.io/en/mobile/contacts.html\">Contacts synchronization</a></li>\n<li><a href=\"http://cozy.io/en/mobile/calendar.html\">Calendar synchronization</a></li>\n</ul>\n</p>\n<p><strong>Files and Pictures (Android)</strong></p>\n<p>\n  With Cozy you can both backup your photos and see your online file\n  on your mobile. You can cache the files you want always with you\n  and see them while your mobile is offline.\n</p>\n<p>To install the Cozy application. You can read our <a href=\"http://cozy.io/en/mobile/files.html\">tutorial</a> or go directly to the <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">PlayStore</a>\n</p>",
@@ -1955,7 +1955,7 @@ module.exports = {
   "welcome to your cozy": "Bienvenue sur votre Cozy !",
   "you have no apps": "Vous n'avez aucune application installée.",
   "app management": "Gestion des applications",
-  "app store": "App Store",
+  "app store": "Ajouter",
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
@@ -1970,7 +1970,7 @@ module.exports = {
   "save": "Sauver",
   "saved": "Sauvé",
   "market app install": "Installation…",
-  "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre application vous pouvez suivre notre",
+  "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre",
   "market app tutorial": "didacticiel",
   "your parameters": "Vos paramètres",
   "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations :",
@@ -2005,7 +2005,7 @@ module.exports = {
   "show data system logs": "Voir les logs du Data System",
   "show proxy logs": "Voir les logs du Proxy",
   "show logs": "Voir les logs",
-  "refresh page": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
+  "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes.",
   "update stack modal title": "Mise à jour de votre Cozy",
   "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Voulez-vous vraiment continuer ?",
   "update stack modal confirm": "Mettre à jour",
@@ -2020,7 +2020,7 @@ module.exports = {
   "stopped": "stoppée",
   "retry to install": "Nouvel essai d'installation",
   "cozy account title": "Cozy - Paramètres",
-  "cozy app store title": "Cozy - App Store",
+  "cozy app store title": "Cozy - Store",
   "cozy home title": "Cozy - Bureau",
   "cozy applications title": "Cozy - États",
   "running": "démarrée",
@@ -2052,7 +2052,7 @@ module.exports = {
   "navbar notifications": "Notifications",
   "or:": "ou :",
   "app status": "Etats",
-  "app store": "App Store",
+  "app store": "Ajouter",
   "settings": "Paramètres",
   "help": "Aide",
   "account identifiers": "Identifiants",
@@ -2062,7 +2062,7 @@ module.exports = {
   "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
   "account password": "Changement de mot de passe",
   "account change password success": "Le mot de passe a été changé avec succès.",
-  "account change password short": "The mot de passe est trop court.",
+  "account change password short": "Le mot de passe est trop court.",
   "account change password difference": "La confirmation de votre nouveau mot de passe est différente du nouveau mot de passe.",
   "account change password error": "Une erreur s'est produite lors du changement de votre mot de passe. Assurez vous que le mot de passe précédent est correct.",
   "help support title": "Support officiel",
@@ -2128,7 +2128,7 @@ module.exports = {
   'more details': "Plus de détails",
   'noapps': {
     'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
-    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans l'App Store</a> pour installer votre première application."
+    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
   },
   'relaunch install wizard': "Relancer l'assistant d'embarquement",
   'installwizard': {
@@ -3046,10 +3046,10 @@ buf.push('/><p><button id="account-form-button" class="btn">');
 var __val__ = t('save your new password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text">');
-var __val__ = t('account password change success')
+var __val__ = t('account change password success')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text">');
-var __val__ = t('account password change error')
+var __val__ = t('account change password error')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div></p></div></div></div></div>');
 }
@@ -3197,7 +3197,7 @@ buf.push('</h4><div class="line"><div class="disk-space mt2 left w50 mod"><div c
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="stack-app mt2 line"><div class="mod w66 left"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><span class="refresh">');
-var __val__ = t('refresh page')
+var __val__ = t('reboot stack waiting message')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></div></div><div class="mod buttons w33 right"><button class="btn update-stack"><i class="fa fa-refresh mr1"></i><span>');
 var __val__ = t('update stack')
@@ -3916,9 +3916,9 @@ module.exports = exports.AccountView = (function(_super) {
       }, 10000);
     };
     if (form.password1.length < 5) {
-      return showError('account password change short');
+      return showError('account change password short');
     } else if (form.password1 !== form.password2) {
-      return showError('account password change difference');
+      return showError('account change password difference');
     } else {
       this.accountSubmitButton.spin(true);
       return request.post('api/user', form, function(err, data) {
@@ -3941,7 +3941,7 @@ module.exports = exports.AccountView = (function(_super) {
               return _this.infoAlert.hide();
             }, 10000);
           } else {
-            return showError('account password change error');
+            return showError('account change password error');
           }
         }
       });
@@ -8894,21 +8894,15 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.imgPreview = this.cropper$.querySelector('#img-preview');
     this.chooseAgain = this.el.querySelector('.back');
     this.panelsControlers = {};
-    this.imagePanel = new ObjectPickerImage(this);
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
-    this.panelsControlers[this.imagePanel.name] = this.imagePanel;
-    this.albumPanel = new ObjectPickerAlbum(this);
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.albumPanel);
-    this.panelsControlers[this.albumPanel.name] = this.albumPanel;
-    this.photoURLpanel = new ObjectPickerPhotoURL();
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
-    this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
     this.uploadPanel = new ObjectPickerUpload(this);
     tabControler.addTab(this.objectPickerCont, this.tablist, this.uploadPanel);
     this.panelsControlers[this.uploadPanel.name] = this.uploadPanel;
+    this.photoURLpanel = new ObjectPickerPhotoURL();
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
+    this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
     tabControler.initializeTabs(body);
     this._listenTabsSelection();
-    this._selectDefaultTab(this.imagePanel.name);
+    this._selectDefaultTab(this.uploadPanel.name);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
     this.cropper$.setAttribute('aria-hidden', true);
     this.framePreview.style.width = THUMB_WIDTH + 'px';
