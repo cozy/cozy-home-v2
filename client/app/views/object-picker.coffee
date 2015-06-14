@@ -66,25 +66,26 @@ module.exports = class PhotoPickerCroper extends Modal
         # initialise tabs and panels
         @panelsControlers = {} # {tab1.name : tab1Controler, tab2... }
         # image panel
-        @imagePanel = new ObjectPickerImage(this)
-        tabControler.addTab @objectPickerCont, @tablist, @imagePanel
-        @panelsControlers[@imagePanel.name] = @imagePanel
-        # album panel
-        @albumPanel = new ObjectPickerAlbum(this)
-        tabControler.addTab @objectPickerCont, @tablist, @albumPanel
-        @panelsControlers[@albumPanel.name] = @albumPanel
-        # photoURL panel
-        @photoURLpanel = new ObjectPickerPhotoURL()
-        tabControler.addTab @objectPickerCont, @tablist, @photoURLpanel
-        @panelsControlers[@photoURLpanel.name] = @photoURLpanel
+        #@imagePanel = new ObjectPickerImage(this)
+        #tabControler.addTab @objectPickerCont, @tablist, @imagePanel
+        #@panelsControlers[@imagePanel.name] = @imagePanel
+        ## album panel
+        #@albumPanel = new ObjectPickerAlbum(this)
+        #tabControler.addTab @objectPickerCont, @tablist, @albumPanel
+        #@panelsControlers[@albumPanel.name] = @albumPanel
         # upload panel
         @uploadPanel = new ObjectPickerUpload(this)
         tabControler.addTab @objectPickerCont, @tablist, @uploadPanel
         @panelsControlers[@uploadPanel.name] = @uploadPanel
+        # photoURL panel
+        @photoURLpanel = new ObjectPickerPhotoURL()
+        tabControler.addTab @objectPickerCont, @tablist, @photoURLpanel
+        @panelsControlers[@photoURLpanel.name] = @photoURLpanel
         # init tabs
         tabControler.initializeTabs(body)
         @_listenTabsSelection()
-        @_selectDefaultTab(@imagePanel.name)
+        #@_selectDefaultTab(@imagePanel.name)
+        @_selectDefaultTab(@uploadPanel.name)
         # @_selectDefaultTab(@albumPanel.name)
         ####
         # init the cropper
@@ -119,15 +120,16 @@ module.exports = class PhotoPickerCroper extends Modal
 
         # cropping is requested by the app, go to the cropping step
         if @state.currentStep == 'objectPicker'
-            url = @_getUrlForCropping(obj)
+            url = @_getUrlForCropping obj
             if url
-                @_showCropingTool(url)
+                @_showCropingTool url
         else
             # Cropping is finished, get the coordinates to crop
-            # the original image
+            # the original image.
             dimension = @_getCroppedDimensions()
-            # send result
-            @cb(true, @_getResultDataURL(@imgPreview, dimension))
+
+            # Send result.
+            @cb true, @_getResultDataURL @imgPreview, dimension
             @close()
 
     resizeHandler: (event) =>
@@ -167,7 +169,7 @@ module.exports = class PhotoPickerCroper extends Modal
 
 
     _onImgResultLoaded: (e) =>
-        @cb(true,@_getResultDataURL(@imgResult, null))
+        @cb(true, @_getResultDataURL(@imgResult, null))
         @close()
 
 
@@ -211,7 +213,7 @@ module.exports = class PhotoPickerCroper extends Modal
         else
             canvas.width  = img.width
             canvas.height = img.height
-            ctx.drawImage( img, 0, 0)
+            ctx.drawImage img, 0, 0
         return dataUrl =  canvas.toDataURL 'image/jpeg'
 
 
