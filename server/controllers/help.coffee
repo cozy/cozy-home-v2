@@ -15,7 +15,6 @@ module.exports =
 
         CozyUser.first (err, user) ->
             CozyInstance.first (err, instance) ->
-                selectedApp = req.body.app or 'home'
 
                 {locale, domain} = instance
                 {email, public_name} = user
