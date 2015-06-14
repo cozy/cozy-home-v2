@@ -8,15 +8,15 @@ module.exports =
     "no domain set"             : "no.domain.set"
     "locale"                    : "Locale"
     "change password"           : "Change password"
-    "input your current password" : "enter your current password"
-    "enter a new password" : "use this field to create a new password"
-    "confirm new password"       : "confirm new password"
+    "input your current password" : "Enter your current password:"
+    "enter a new password" : "Enter your new password:"
+    "confirm new password"       : "Confirm your new password:"
     "send changes"              : "Save"
     "manage"                    : "Manage"
     "total"                     : "Total"
     "memory consumption"        : "Memory usage"
     "disk consumption"          : "Disk usage"
-    "you have no notifications" : "You have no notifications"
+    "you have no notifications" : "Hello %{name}, you have currently no notification."
     "dismiss all"               : "Dismiss all"
     "add application"         : "Add app?"
     "install"                   : "Install"
@@ -31,8 +31,8 @@ module.exports =
     "applications permissions"  : "App permissions"
     "confirm"                   : "Confirm"
     "installing"                : "Installing"
-    "remove"                    : "remove"
-    "update"                    : "update"
+    "remove"                    : "Remove"
+    "update"                    : "Update"
     "started"                   : "started"
     "notifications"             : "Notifications"
     "questions and help forum"  : "Questions and help forum"
@@ -42,8 +42,9 @@ module.exports =
     "memory unit"               : "MB"
     "always on"                 : "always on"
     "keep always on"            : "keep always on"
-    "stop this app"             : "stop this app"
+    "stop this app"             : "Stop this app"
     "update required"           : "Update available"
+    "navbar faq"                : "Frequently Asked Questions"
 
 
     "application is installing" : """
@@ -68,11 +69,12 @@ module.exports =
 
     "your app list": "Access your apps"
     "customize your cozy": "Customize your layout"
-    "manage your apps":"Manage your apps"
+    "manage your apps":"Applications"
     "choose your apps":"Choose your apps"
     "configure your cozy":"Configure your cozy"
     "ask for assistance":"Ask for help"
-    "logout":"sign out"
+    "logout": "Sign out"
+    "navbar logout": "Sign out"
     "welcome to your cozy":"Welcome to your Cozy!"
     "you have no apps":"You have no apps."
     "app management":"App management"
@@ -82,42 +84,53 @@ module.exports =
     "hardware consumption":"Hardware"
     "hard drive gigabytes":"(Hard Drive)"
     "memory megabytes":"&nbsp;MB (RAM)"
-    "manage your applications":"Manage your apps"
+    "manage your applications":"Applications"
     "manage your devices":"Manage your devices"
     "synchronized": "synchronized"
-    "revoke device access": "Revoke device access"
+    "revoke device access": "Revoke device"
     "no application installed":"There is no app installed."
 
-    "your parameters":" Your settings"
-    "alerts and password recovery email":"I need your email address for alerts or password recovery."
-    "public name description": "Your public name will be used by your Cozy and its apps to communicate with you."
-    "your timezone is required":"Your time zone helps display dates properly."
-    "domain name for urls and email":"The domain name is used for URLs sent via email to yourself or your contacts."
-    "save":"save"
-    "saved":"saved"
-    "Chose the language you want I use to speak with you:":"Choose the language you want me to use with you:"
+    "your parameters":"Your settings"
+    "alerts and password recovery email":"I need your email address for notifications or password recovery:"
+    "public name description": "Your public name will be used by your Cozy and its apps to mention you properly:"
+    "your timezone is required":"Your time zone helps display dates properly:"
+    "domain name for urls and email":"The domain name is used to build sharing URLs sent via email to yourself or your contacts:"
+    "save":"Save"
+    "saved":"Saved"
+    "Chose the language you want I use to speak with you:":"Choose the language you want to see:"
+    "account background selection": "Select your background for your Cozy Home:"
+    "account localization": "Localization"
+    "account identifiers": "Identifiers"
+    "account personalization": "Personalization"
+    "account password": "Change Password"
     "french":"French"
     "english":"English"
     "german":"German"
+    "spanish":"Spanish"
     "portuguese":"Portuguese"
     "change password procedure":"Steps to change your password"
     "current password":"current password"
     "new password":"new password"
     "confirm your new password":"confirm your new password"
-    "save your new password":"save your new password"
+    "save your new password":"Save your new password"
     "do you want assistance":"Do you need some help?"
-    "Write an email to our support team at:":"Shoot our support team an email:"
-    "Register and post on our forum: ":"Register and post to our forum: "
-    "Ask your question on Twitter: ":"Ask questions on Twitter: "
+    "Write an email to our support team at:":"Send our support team an email:"
+    "Register and post on our forum: ":"Register and post to our forum:"
+    "Ask your question on Twitter: ":"Ask questions on Twitter:"
     "Chat with us on IRC:":"Chat with us on IRC:"
-    "Visit the project website and learn to build your app:":"Visit the project website and learn to build your app:"
+    "Visit the project website and learn to build your app:":"Visit the project website:"
     "your own application":"your own app"
     "installed":"installed"
     "updated":"updated"
     "updating":"updating"
     "update all": "Update all"
+    "show home logs": "Show Home Logs"
+    "show data system logs": "Show Data System Logs"
+    "show proxy logs": "Show Proxy Logs"
+    "show logs": "Show Logs"
     "update stack": "Update"
     "refresh page": "Wait please, update takes several minutes."
+    "status no device": "No device registered for synchronization."
     "update stack modal title": "Updating your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?"
     "update stack modal confirm": "Update"
@@ -125,19 +138,29 @@ module.exports =
     "update stack error": "An error occured during update, page will refresh."
     "applications broken": "Applications broken"
     "cozy platform": "Platform"
+    "navbar back button title": "Back Home"
+    "navbar notifications": "Notifications"
+    "or:": "or:"
     "reboot stack": "Reboot"
     "update error":"An error occured while updating the app"
-    "error update uninstalled app": "You can't update an app that is not installed."
+    "error update uninstRlled app": "You can't update an app that is not installed."
+    "notification open application": "Open application"
+    "notification update stack": "Update the platform"
+    "notification update application": "Update application"
     "broken":"broken"
-    "start this app":"start this app"
+    "start this app":"Start this app"
     "stopped":"stopped"
-    "retry to install":"retry installation"
-    "cozy account title":"Cozy - Account"
-    "cozy app store title":"Cozy - App Store"
+    "retry to install":"Retry installation"
+    "cozy account title":"Cozy - Settings"
+    "cozy app store title":"Cozy - Store"
     "cozy home title":"Cozy - Home"
-    "cozy applications title":"Cozy - App Configuration"
+    "cozy applications title":"Cozy - Status"
     "running":"running"
     "cozy help title":"Cozy - Help"
+    "help support title": "Official Support"
+    "help community title": "Community Support"
+    "help documentation title": "Documentation"
+    "help wiki title": "Wiki:"
     "changing locale requires reload":"Changing the locale requires to reload the page."
     "cancel":"cancel"
     "abort":"abort"
@@ -152,15 +175,37 @@ module.exports =
     "required permissions":"Required permissions"
     "finish layout edition": "Save"
     "reset customization": "Reset"
-    "use widget": "Use widget"
     "use icon": "Use icon"
+    "home section favorites": "Favorites"
+    "home section leave": "Import"
+    "home section main": "Basics"
+    "home section productivity": "Productivity"
+    "home section data management": "Data"
+    "home section personal watch": "Watch"
+    "home section misc": "Misc"
+    "home section platform": "Platform"
+    "app status": "Status"
+    "app store": "Store"
+    "settings": "Settings"
+    "help": "Help"
     "change layout": "Change the layout"
-
+    "market app install": "Installing..."
+    "market install your app": "You can install an application directly from its git repository. You can simply copy/paste its Git URL in the field below. To know more about how to build you own app, go read our "
+    "market app tutorial": " tutorial"
+    "help send message title": "Write directly to the Cozy Team"
+    "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!"
+    "help send message action": "Send message to the Cozy Support Team"
+    "send message success": "Message successfully sent!"
+    "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc"
+    "account change password success": "The password was changed successfully."
+    "account change password short": "The new password is too short."
+    "account change password difference": "The password confirmation doesn't match the new password."
+    "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct."
+    "account background add": "Add background"
     "introduction market": """
-        Welcome to the Cozy app store. Here you can customize your Cozy
-        by installing new apps.
-        From here you will be able to install an app you created, or choose from
-        existing apps provided by Cozy Cloud and its friendly developer community.
+        Welcome to the Cozy app store!
+        Here, you can install
+        apps provided by Cozy Cloud, apps from the community or apps built by yourself!
     """
 
     "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later."
@@ -175,10 +220,10 @@ module.exports =
     "files description": "Your online file-system, synced with your devices."
     "photos description": "Organize your photos and share them with friends."
     "sync description": "The tool required to sync your contacts and calendar with your smartphone."
-    "bookmark description": "Save and manage your bookmarks."
+    "quickmarks description": "Save and manage your bookmarks."
     "cozic description": "An audio player to listen to your music from your browser."
     "databrowser description": "Browse and visualize all your data (raw format)."
-    "feeds description": "Aggregate your feeds and save your favorite links as bookmarks."
+    "zero-feeds description": "Aggregate your feeds and save your favorite links as bookmarks."
     "kyou description": "Improve your health and happiness by quantifying yourself."
     "konnectors description": "Import data from external services (Twitter, Jawbone…)."
     "kresus description": "Additional tools for your personal finance manager."
@@ -190,6 +235,7 @@ module.exports =
     "todos description": "Write your tasks, order them and complete them efficiently."
     "term description": "A terminal app for your Cozy."
     "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform."
+    "leave google description": "An app to import your current data from your Google account."
     "reminder title email": "Reminder"
     "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """
@@ -207,6 +253,18 @@ module.exports =
     "installation message failure": "%{appName}'s installation failed."
     "update available notification": "A new version of %{appName} is available."
     "stack update available notification": "A new version of the platform is available."
+    "app broken title": 'Broken application'
+    "app broken": 'This application is broken. Can you try install again: '
+    "reinstall broken app": "reinstall it."
+    "error git": "We can't retrieve source code."
+    "error github repo": 'Application repository seems unavailable.'
+    "error github": 'Github seems unavailable. You can check its status on https://status.github.com/.'
+    'error npm': "We can't installed application dependencies."
+    'error user linux': "We can't create specific linux user for this application."
+    'error start': "Application can't start. You can find more details in log application."
+    "app msg":  'If error persists, you can contact us at contact@cozycloud.cc' +
+                'or on IRC #cozycloud on irc.freenode.net.'
+    'more details': "More details"
 
     'noapps':
         'first steps': """
@@ -226,7 +284,7 @@ module.exports =
             <p>This wizard will help you choose, install and configure apps for your Cozy.</p>
             <p>Please remember that Cozy is currently in beta. Don't hesitate to <a href="#help">get in touch</a> if you run into trouble.</p>
         """
-        'yes': "Activate the %{slug} app"
+        'yes': "Activate the %{slug}^B app"
         'no': "No, thanks"
         'continue to files': "Configure my apps"
         'files title': "Configure Files app"
@@ -249,7 +307,7 @@ module.exports =
         """
         'photos title': "Configure Photos app"
         'photos content': """
-            <p>Do you want an app to store your photos and albums, and helps you share them with your friends and family?</p>
+            <p>Do you want an app to store your photos and albums, and help you share them with your friends and family?</p>
             <p><small>Pro-tip: If you use an Android device, we have an app you can use to automatically upload photos to your Cozy.</small></p>
         """
         'thanks title': "Done!"
@@ -260,38 +318,95 @@ module.exports =
         'show-me-a-quick-tour': "Please tell me more about my Cozy"
 
     'quicktourwizard':
-        'welcome title': "Meet your Cozy!"
+        'welcome title': "Welcome to your Cozy!"
         'welcome content': """
-            <p>Welcome to your brand new Cozy.</p>
-            <p>This short guided tour will show you the best features of your Cozy.</p>
-            <p>Please remember that Cozy is currently in beta. Don't hesitate to <a href="#help">get in touch</a> if you run into trouble.</p>
-        """
-        'continue to dashboard': "Discover the Dashboard"
-        'dashboard title': "Discover the Dashboard"
-        'dashboard content': """
-            <p>Here is a little guide about everything available in your Cozy Home. All features can be reached from the menu on the top right corner.</p>
-            <p><img src="/img/home-black.png"><strong>Home: </strong>This is the place where you can access your apps</p>
-        """
-        'continue to apps': "How to manage your apps?"
-        'apps title': "Manage your apps"
-        'apps content': """
-            <p><img src="/img/config-apps.png"><strong>App management: </strong>Here you can manage the state of your apps: start, stop, remove…</p>
-            <p><img src="/img/apps.png"><strong>App store: </strong>In the app store, you will find new apps to install in your Cozy.</p>
-        """
-        'continue to help': "How to get help?"
-        'help title': "Get help"
-        'help content': """
-            <p><img src="/img/configuration.png"><strong>Configuration: </strong>To make sure your Cozy does what you want, have a look at the settings.</p>
-            <p><img src="/img/help.png"><strong>Help: </strong>Lost in your Cozy? Here are some links to help you out.</p>
-        """
-        'continue to sync': "Sync with your smartphone"
-        'sync title': "Get in sync"
-        'sync content': """
-            <p>To learn more about data synchronization, please have a look at the following resources:</p>
+            <p>
+            Cozy is an operating system for your personal cloud. It allows
+            to manage simply your distant own machine. You will be able to
+            install applications that manage your data. Through a web browser
+            you will be able to access your data without compromising your
+            privacy.</p>
+            <p>Here are the many benefits of a personal cloud with Cozy:</p>
             <ul>
-                <li><a href="http://cozy.io/mobile/files.html">Sync Files</a></li>
-                <li><a href="http://cozy.io/mobile/calendar.html">Sync Calendar</a></li>
-                <li><a href="http://cozy.io/mobile/contacts.html">Sync Contacts</a></li>
+              <li>Your data stays confidential and is stored on a hardware of your own.</li>
+              <li>You will not have targeted ads anymore.</li>
+              <li>You don't need to connect on 10 different accounts to use your own tools.</li>
+              <li>No need to push the same data for each tool: the data is shared within the applications.</li>
             </ul>
+            <p></p>
         """
-        'close wizard': "Now I'm ready to use my Cozy"
+        'continue to apps': "What applications are available ?"
+        'apps title': "Available Applications"
+        'apps content': """
+            <p>By default Cozy proposes five applications :</p>
+            <ul>
+              <li>Calendar: To manage your events</li>
+              <li>Contacts: To handle your address and phone books.</li>
+              <li>Files: To store files and share the big ones.</li>
+              <li>Emails: To centralize your mailbox online.</li>
+              <li>Photos: To create and share photo albums.</li>
+            </ul>
+            <p>Aside of these main applications you can discover applications
+            built by the community. You will find apps like a bank account
+            manager, a feed reader, a todo-list manager and many more!
+            Go to the app store to discover the full list of application.
+            </p>
+        """
+        'continue to sync': "How to sync my mobile?"
+        'sync title': "Mobile Synchronization"
+        'sync content': """
+            <p><strong>Contacts and Calendars</strong></p>
+<p>
+You can synchronize both contacts and calendars through the CalDAV and CardDAV protocols. Behind these exotic names, you will find two standards that allow to sync your Cozy with many contact and calendars managers. That means you can sync your Cozy with the native applications of your smartphone. Here are two tutorials that will help you achieving that:
+<ul>
+<li><a href="http://cozy.io/en/mobile/contacts.html">Contacts synchronization</a></li>
+<li><a href="http://cozy.io/en/mobile/calendar.html">Calendar synchronization</a></li>
+</ul>
+</p>
+            <p><strong>Files and Pictures (Android)</strong></p>
+            <p>
+              With Cozy you can both backup your photos and see your online file
+              on your mobile. You can cache the files you want always with you
+              and see them while your mobile is offline.
+            </p>
+            <p>To install the Cozy application. You can read our <a href="http://cozy.io/en/mobile/files.html">tutorial</a> or go directly to the <a href="https://play.google.com/store/apps/details?id=io.cozy.files_client">PlayStore</a>
+            </p>
+        """
+        'continue to import': "How to import my data?"
+        'import title': "Contacts and Calendars import"
+        'import content': """
+        <p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.
+        </p>
+        <p>
+        Your traditional files can be uploaded directly through the Files application UI.
+        </p>
+        <p>
+        We are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.
+        </p>
+        <p>
+        This introduction to Cozy is finished. You already know everything you need to start with Cozy. We let you discover the platform and the available applications!
+        </p>
+        """
+        'close wizard': "Start using my Cozy!"
+
+    # object picker
+    "pick from files"         : "Pick a photo"
+    "Crop the photo"          : "Crop image"
+    "chooseAgain"             : "choose another photo"
+    "modal ok"                : "OK"
+    "modal cancel"            : "Cancel"
+    "no image"                : "There is no image on your Cozy"
+    "ObjPicker upload btn"    : "Upload a local file"
+    "or"                      : "or"
+    "drop a file"             : "Drag & drop a file"
+    "url of an image"         : "URL of an image on the web"
+    "you have no album"       : """
+        <p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>
+        <p>Créez en à partir de
+            <a href="/#applications" target='_blank'>l'application Photo</a>
+            <br>
+            et utilisez les photo de votre téléphone via
+            <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)
+    """
+

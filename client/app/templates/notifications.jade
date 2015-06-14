@@ -1,9 +1,6 @@
-a#notifications-toggle
-    span.backcolor
-    img(src="img/notification-white.png")
+a#notifications-toggle(title="#{t('navbar notifications')}")
+    i.fa.fa-bell
     span#notifications-counter
-audio#notification-sound(src="sounds/notification.wav", preload)
+
 #clickcatcher
-ul#notifications
-    li#no-notif-msg= t('you have no notifications')
-    li#dismiss-all.btn= t('dismiss all')
+

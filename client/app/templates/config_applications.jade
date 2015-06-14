@@ -1,49 +1,66 @@
-//.section-title.darkbg.bigger apps
-.txt-center
-    .line.w800
-        .mod.w33.left
-            .sys-infos.line
-                .mod.center-txt
-                    h4= t('hardware consumption')
-                    .disk-space.mt2
-                        .line
-                            img(src="img/hard-drive.png")
-                        .line
-                            span.amount 0
-                            |  / 
-                            span.total 0
-                            |  #{t('hard drive gigabytes')}
-                    .memory-free.mt2
-                        .line
-                            img(src="img/ram.png")
-                        .line
-                            span.amount 0
-                            |  / 
-                            span.total 0
-                            |  #{t('memory megabytes')}
-                    h4= t('cozy platform')
-                    .stack-app.mt2
-                        .line
-                            span.app Data System: 
-                            span.data-system --
-                        .line
-                            span.app Proxy: 
-                            span.proxy --
-                        .line
-                            span.app Home: 
-                            span.home --
-                        .line
-                            span.app Controller: 
-                            span.controller --
-                        .line.buttons
-                            button.btn.update-stack= t('update stack')
-                            button.btn.reboot-stack= t('reboot stack')
-                        .line
-                            span.refresh= t('refresh page')
+.md-overlay
+.line.platform-section
+    .mod.left.w50
+        h4= t('hardware consumption')
+        .line
+            .disk-space.mt2.left.w50.mod
+                .line
+                    img(src="img/hard-drive.png")
+                .line
+                    span.amount 0
+                    |  / 
+                    span.total 0
+                    |  #{t('hard drive gigabytes')}
+            .memory-free.mt2.left.w50.mod
+                .line
+                    img(src="img/ram.png")
+                .line
+                    span.amount 0
+                    |  / 
+                    span.total 0
+                    |  #{t('memory megabytes')}
 
+        h4= t('cozy platform')
+        .stack-app.mt2.line
+            .mod.w66.left
+                .line
+                    span.app Data System: 
+                    span.data-system --
+                .line
+                    span.app Proxy: 
+                    span.proxy --
+                .line
+                    span.app Home: 
+                    span.home --
+                .line
+                    span.app Controller: 
+                    span.controller --
+                .line
+                    span.refresh= t('refresh page')
+            .mod.buttons.w33.right
+                button.btn.update-stack
+                    i.fa.fa-refresh.mr1
+                    span= t('update stack')
+                button.btn.update-all
+                    i.fa.fa-refresh.mr1
+                    span= t('update all')
+                button.btn.reboot-stack
+                    i.fa.fa-power-off.mr1
+                    span= t('reboot stack')
+                a.btn.btn-large(href="/logs/home", target="_blank")
+                    i.fa.fa-cog.mr1
+                    | 
+                    span= t('show home logs')
+                a.btn.btn-large(href="/logs/data-system", target="_blank")
+                    i.fa.fa-cog.mr1
+                    | 
+                    span= t('show data system logs')
+                a.btn.btn-large(href="/logs/proxy", target="_blank")
+                    i.fa.fa-cog.mr1
+                    | 
+                    span= t('show proxy logs')
 
-        .mod.w66.right
-            .title-device.h4.mb3= t('manage your devices')
-        .mod.w66.left
-            .title-app.h4.mb3= t('manage your applications')
-            button.btn.update-all= t('update all')
+        h4.title-device.h4.mb3= t('manage your devices')
+
+    .mod.left.w50
+        h4.title-app.h4.mb3= t('manage your applications')

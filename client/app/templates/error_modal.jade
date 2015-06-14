@@ -1,0 +1,21 @@
+.md-content
+    .md-header.clearfix
+        .line
+            h3.left= t('app broken title')
+    .md-body
+        strong #{t('app broken')}
+        a(href="#config-applications") #{ t('reinstall broken app')}
+        br
+        span #{t('app msg')}
+        br
+        br
+        span #{errortype}
+        br
+        br
+        button.btn#more= t('more details')
+        br
+        br
+        p.details= details
+
+    .md-footer.clearfix
+        button.btn.right#ok= t('ok')

@@ -1,29 +1,37 @@
 americano = require 'americano'
-fs = require 'fs'
+fs        = require 'fs'
+path      = require 'path'
 
-# public path depends on what app is running (./server or ./build/server)
-publicPath = __dirname + '/../client/public'
-try
-    fs.lstatSync publicPath
-catch e
-    publicPath = __dirname + '/../../client/public'
+clientPath   = path.resolve(__dirname, '..', 'client', 'public')
+useBuildView = fs.existsSync path.resolve(__dirname, 'views', 'index.js')
 
 config =
-    common: [
-        americano.bodyParser()
-        americano.methodOverride()
-        americano.errorHandler
-            dumpExceptions: true
-            showStack: true
-        americano.static publicPath,
-            maxAge: 86400000
-    ]
+
+    common:
+        set:
+            'view engine': if useBuildView then 'js' else 'jade'
+            'views': path.resolve __dirname, 'views'
+        engine:
+            js: (path, locales, callback) ->
+                callback null, require(path)(locales)
+        use: [
+            americano.bodyParser()
+            americano.methodOverride()
+            americano.errorHandler
+                dumpExceptions: true
+                showStack: true
+            americano.static clientPath,
+                maxAge: 86400000
+        ]
+
     development: [
         americano.logger 'dev'
     ]
+
     production: [
         americano.logger 'short'
     ]
+
     plugins: [
         'americano-cozy'
     ]

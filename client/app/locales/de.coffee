@@ -107,8 +107,8 @@ module.exports =
     "save your new password":"Speichern Sie Ihr neues Passwort"
     "do you want assistance":"Brauchen Sie etwas Hilfe?"
     "Write an email to our support team at:":"Shoot unserem Support Team eine E-Mail:"
-    "Register and post on our forum: ":"Registieren Sie sich und schreiben in unserem Forum: "
-    "Ask your question on Twitter: ":"Stellen Fragen auf Twitter: "
+    "Register and post on our forum: ":"Registieren Sie sich und schreiben in unserem Forum:"
+    "Ask your question on Twitter: ":"Stellen Fragen auf Twitter:"
     "Chat with us on IRC:":"Chatten Sie mit uns auf IRC:"
     "Visit the project website and learn to build your app:":"Besuchen Sie die Projekt Webseite und lernen Sie Ihre eigene App zu erstellen:"
     "your own application":"Ihre eigene App"
@@ -152,15 +152,13 @@ module.exports =
     "required permissions":"Benötigte Rechte"
     "finish layout edition": "Speichern"
     "reset customization": "Rücksetzen"
-    "use widget": "Widget verwenden"
     "use icon": "Icon verwenden"
     "change layout": "Layout verändern"
 
-    "introduction market": """
-        Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch
+    "introduction market": """Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch
         installieren neuer Apps anpassen.
         Von hier können Sie eine selbst erstellte App oder schon existierenden Apps;
-	bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinschaft, installieren.
+bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinschaft, installieren.
     """
 
     "error connectivity issue": "Ein Fehler ist aufgetreten beim abrufen der Daten.<br />Bitte versuchen Sie später erneut."
@@ -175,17 +173,16 @@ module.exports =
     "files description": "Ihr Online Datei-System, synchronisiert mit Ihren Geräten."
     "photos description": "Organisieren Sie Ihre Fotos und teilen Sie diese mit Freunden."
     "sync description": "Das Tool ist die Vorausetzung zur Synchronisation Ihrer Kontakte und Kalender mit Ihrem Smartphone."
-    "bookmark description": "Speichern und verwalten Ihrer Lesezeichen."
+    "quickmarks description": "Speichern und verwalten Ihrer Lesezeichen."
     "cozic description": "Ein Audio-Player zum hören Ihrer Musik in Ihrem Browser."
     "databrowser description": "Durchblättern und visualisieren all Ihrer Daten (RAW Format)."
-    "feeds description": "Sammeln Sie Ihre Feeds und speichern Sie favorisierten Links als Lesezeichen."
+    "zero-feeds description": "Sammeln Sie Ihre Feeds und speichern Sie favorisierten Links als Lesezeichen."
     "kyou description": "Verbessern Sie Ihre Gesundheit und Zufriedenheit durch Bewertung Ihrer selbst."
     "konnectors description": "Daten Import von externen Services (Twitter, Jawbone…)."
     "kresus description": "Zusätzliche Tools für Ihre private Finanz Verwaltung."
     "nirc description": "Zugruff auf Ihre fovorisierten IRC Kanäle von Ihrem Cozy."
     "notes description": "Organisieren und schreiben von smarten Notizen."
     "owm description": "Wissen wie das Wetter wird, überall auf der Welt."
-    "pfm description": "Verwalten Ihrer Bank Konten ohne sich jedesmal ein zu buchen  (Nur französische Banken)."
     "remote storage description": "Ein entferntes Speicher Gerät, zur Speicherung Ihre nicht gehosteten Applikationen."
     "tasky description": "Super schneller und einfacher Tag-basierter Aufgaben Verwalter."
     "todos description": "Erstellen Sie Ihre Aufgaben, ordnen Sie diese und führen Sie diese effizient aus."

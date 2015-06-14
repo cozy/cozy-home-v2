@@ -52,6 +52,13 @@ In order to run the tests, you must only have the Data System started:
     npm install
     TOKEN=token NODE_ENV=test DB_NAME=home_test npm start
 
+## Backgrounds
+
+Here are the source for the backgrounds:
+
+* [Trianglify Background Generator](http://qrohlf.com/trianglify-generator/)
+* [Unsplash](http://unsplash.com) (Jonathan Bean, Jeff Sheldon, Francesco Gallaroti, Brian Jimenez) - License CC-Zero
+
 ## Icons
 
 by [iconmonstr](http://iconmonstr.com/)

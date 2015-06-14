@@ -29,9 +29,14 @@ module.exports = class ApplicationsListView extends ViewCollection
         else
             views = _.values @views
             sortedViews = _.sortBy views, (view) ->
-                view.model.get('displayName').toLowerCase()
+                if view?.model?.get('displayName')?
+                    return view.model.get('displayName').toLowerCase()
+                else
+                    return 'unknown'
             index = _.indexOf(sortedViews, view) - 1
-            view.$el.insertAfter @$el.find(".config-application:eq(#{index})")
+            if index >= 0
+                previous = @$el.find ".config-application:eq(#{index})"
+                view.$el.insertAfter previous
 
     openUpdatePopover: (slug) ->
         appToUpdateView = null
@@ -47,5 +52,4 @@ module.exports = class ApplicationsListView extends ViewCollection
             appToUpdateView.openPopover()
         else
             alert t('error update uninstalled app')
-
 

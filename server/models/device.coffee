@@ -1,6 +1,6 @@
-americano = require 'americano-cozy'
+cozydb = require 'cozydb'
 
-module.exports = Device = americano.getModel 'Device',
+module.exports = Device = cozydb.getModel 'Device',
     login: String
     configuration: Object
 

@@ -7,3 +7,4 @@ module.exports = class ApplicationCollection extends BaseCollection
 
     model: StackApplication
     url: 'api/applications/stack'
+
