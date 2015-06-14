@@ -76,7 +76,7 @@ module.exports =
     "welcome to your cozy":"Bienvenue sur votre Cozy !"
     "you have no apps":"Vous n'avez aucune application installée."
     "app management":"Gestion des applications"
-    "app store":"App Store"
+    "app store":"Ajouter"
     "configuration":"Configuration"
     "assistance":"Aide"
     "hardware consumption":"Matériel"
@@ -91,7 +91,7 @@ module.exports =
     "save":"Sauver"
     "saved":"Sauvé"
     "market app install": "Installation…"
-    "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre application vous pouvez suivre notre"
+    "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre"
     "market app tutorial": "didacticiel"
 
     "your parameters":"Vos paramètres"
@@ -154,7 +154,7 @@ module.exports =
     "stopped":"stoppée"
     "retry to install":"Nouvel essai d'installation"
     "cozy account title":"Cozy - Paramètres"
-    "cozy app store title": "Cozy - App Store"
+    "cozy app store title": "Cozy - Store"
     "cozy home title":"Cozy - Bureau"
     "cozy applications title":"Cozy - États"
     "running":"démarrée"
@@ -192,7 +192,7 @@ module.exports =
     "navbar notifications": "Notifications"
     "or:": "ou :"
     "app status": "Etats"
-    "app store": "App Store"
+    "app store": "Ajouter"
     "settings": "Paramètres"
     "help": "Aide"
     "account identifiers": "Identifiants"
@@ -290,7 +290,7 @@ module.exports =
         """
         'customize your cozy': """
             Vous pouvez également <a href="%{account}">aller dans les réglages</a> pour personnaliser votre Cozy
-            ou <a href="%{appstore}">vous rendre dans l'App Store</a> pour installer votre première application.
+            ou <a href="%{appstore}">vous rendre dans le Cozy Store</a> pour installer votre première application.
         """
 
     'relaunch install wizard': "Relancer l'assistant d'embarquement"
