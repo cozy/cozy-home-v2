@@ -106,17 +106,10 @@ module.exports =
     "confirm your new password":"Bestägigen Sie in neues Passwort"
     "save your new password":"Speichern Sie Ihr neues Passwort"
     "do you want assistance":"Brauchen Sie etwas Hilfe?"
-<<<<<<< HEAD
-    "Write an email to our support team at:":"Shoot unserem Support Team eine E-Mail:"
-    "Register and post on our forum: ":"Registieren Sie sich und schreiben in unserem Forum:"
-    "Ask your question on Twitter: ":"Stellen Fragen auf Twitter:"
-    "Chat with us on IRC:":"Chatten Sie mit uns auf IRC:"
-=======
     "Write an email to our support team at:":"Schreibe unserem Support Team eine E-Mail:"
     "Register and post on our forum: ":"Registieren Sie sich und schreiben in unserem Forum: "
     "Ask your question on Twitter: ":"Stellen Sie Fragen auf Twitter: "
     "Chat with us on IRC:":"Chatten Sie mit uns über IRC:"
->>>>>>> cbf2267c61d3b0e3483f96e9005ad8da831d354a
     "Visit the project website and learn to build your app:":"Besuchen Sie die Projekt Webseite und lernen Sie Ihre eigene App zu erstellen:"
     "your own application":"Ihre eigene App"
     "installed":"Installiert"
@@ -192,10 +185,7 @@ bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinscha
     "nirc description": "Zugriff auf Ihre favorisierten IRC Kanäle von Ihrem Cozy."
     "notes description": "Organisieren und schreiben von Notizen."
     "owm description": "Wissen wie das Wetter wird, überall auf der Welt."
-<<<<<<< HEAD
-=======
     "pfm description": "Verwalten Ihrer Bank Konten ohne sich jedesmal einzuloggen  (Nur französische Banken)."
->>>>>>> cbf2267c61d3b0e3483f96e9005ad8da831d354a
     "remote storage description": "Ein entferntes Speicher Gerät, zur Speicherung Ihre nicht gehosteten Applikationen."
     "tasky description": "Super schneller und einfacher Tag basierter Aufgaben Verwalter."
     "todos description": "Erstellen Sie Ihre Aufgaben, ordnen Sie diese und führen Sie diese effizient aus."
