@@ -16,7 +16,6 @@ module.exports = {
     return CozyUser.first(function(err, user) {
       return CozyInstance.first(function(err, instance) {
         var body, content, domain, email, infos, locale, public_name, selectedApp;
-        selectedApp = req.body.app || 'home';
         locale = instance.locale, domain = instance.domain;
         email = user.email, public_name = user.public_name;
         body = req.body;
