@@ -6,7 +6,8 @@
                     i.fa.fa-star(title='config application unmark favorite')
                 else
                     i.fa.fa-star-o(title='config application mark favorite')
-            strong #{app.displayName}
+            strong
+                a(href="#apps/#{app.name}")= app.displayName
             if app.version
                 span &nbsp;-&nbsp; #{app.version}
             span &nbsp;-&nbsp;
