@@ -13,7 +13,8 @@ module.exports = class ApplicationRow extends BaseView
         gitName = @model.get('git')
         gitName = gitName[...-4] if gitName?
         app: _.extend {}, @model.attributes,
-            website: @model.get('website') or gitName
+            website: @model.get('website') or gitName,
+            branch: @model.get('branch') or 'master'
 
     events:
         "click .remove-app": "onRemoveClicked"
