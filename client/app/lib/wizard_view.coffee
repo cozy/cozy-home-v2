@@ -56,7 +56,7 @@ module.exports = class WizardView extends BaseView
         @el.removeAttribute 'open'
         document.removeEventListener 'keydown', @close
         @remove()
-        @$backdrop.remove()
+        @backdrop.remove()
 
 
     next: ->
