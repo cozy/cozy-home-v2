@@ -2130,6 +2130,12 @@ dialog[open]::backdrop {
   display: -ms-flexbox;
   display: box;
   display: flex;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: multiple;
+  -o-box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -o-box-flex: 1;
@@ -3135,6 +3141,9 @@ body {
 .config-application strong {
   text-transform: lowercase;
   font-size: 20px;
+}
+.config-application strong a {
+  color: #000;
 }
 .config-application .smaller {
   font-family: 'Source Sans Pro', sans-serif;

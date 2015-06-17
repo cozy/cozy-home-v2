@@ -1141,7 +1141,7 @@ module.exports = WizardView = (function(_super) {
     this.el.removeAttribute('open');
     document.removeEventListener('keydown', this.close);
     this.remove();
-    return this.$backdrop.remove();
+    return this.backdrop.remove();
   };
 
   WizardView.prototype.next = function() {
@@ -2777,8 +2777,12 @@ module.exports = StackApplication = (function(_super) {
     return client.get("api/applications/stack", {
       success: function() {
         if (step === total_step) {
-          if (success) {
+          if (success != null) {
             return success('ok');
+          } else {
+            if (callbacks) {
+              return callbacks();
+            }
           }
         } else {
           if (step === 1) {
@@ -2803,7 +2807,7 @@ module.exports = StackApplication = (function(_super) {
   StackApplication.prototype.updateStack = function(callbacks) {
     var _this = this;
     return client.put("/api/applications/update/stack", {}, {
-      sucess: function() {
+      success: function() {
         return _this.waitReboot(0, 2, callbacks);
       },
       error: function() {
@@ -2815,7 +2819,7 @@ module.exports = StackApplication = (function(_super) {
   StackApplication.prototype.rebootStack = function(callbacks) {
     var _this = this;
     return client.put("/api/applications/reboot/stack", {}, {
-      sucess: function() {
+      success: function() {
         return _this.waitReboot(0, 1, callbacks);
       },
       error: function() {
@@ -3123,7 +3127,12 @@ else
 {
 buf.push('<i title="config application mark favorite" class="fa fa-star-o"></i>');
 }
-buf.push('</span><strong>' + escape((interp = app.displayName) == null ? '' : interp) + '</strong>');
+buf.push('</span><strong><a');
+buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
+buf.push('>');
+var __val__ = app.displayName
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></strong>');
 if ( app.version)
 {
 buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
@@ -3153,7 +3162,7 @@ buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div></div></div><div class="buttons left mod w33"><div><button class="btn update-app"><i class="fa fa-refresh mr1"></i> <span class="label">');
+buf.push('</a></div><div class="comments"><a>' + escape((interp = app.branch) == null ? '' : interp) + '</a></div></div></div><div class="buttons left mod w33"><div><button class="btn update-app"><i class="fa fa-refresh mr1"></i> <span class="label">');
 var __val__ = t('update')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button></div><div><button class="btn remove-app"><i class="fa fa-trash mr1"></i> <span class="label">');
@@ -3297,7 +3306,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud (irc.freenode.net)</a></P><p class="help-text mt2">');
 var __val__ = t('help wiki title') + " "
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://github.com/cozy-setup/wiki">github.com/cozy-setup/wiki</a></P></div></div><div class="mod w50 left pa2"><div style="text-align: right;"><a href="http://cozy.io" target="_blank"><img src="img/logo-brand.png" class="w350"/></a></div><h4>');
+buf.push('</p><P class="help-text"><a href="https://github.com/cozy/cozy-setup/wiki">github.com/cozy/cozy-setup/wiki</a></P></div></div><div class="mod w50 left pa2"><div style="text-align: right;"><a href="http://cozy.io" target="_blank"><img src="img/logo-brand.png" class="w350"/></a></div><h4>');
 var __val__ = t('help support title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p class="help-text mt2">');
@@ -4262,7 +4271,8 @@ module.exports = ApplicationRow = (function(_super) {
     }
     return {
       app: _.extend({}, this.model.attributes, {
-        website: this.model.get('website') || gitName
+        website: this.model.get('website') || gitName,
+        branch: this.model.get('branch') || 'master'
       })
     };
   };
