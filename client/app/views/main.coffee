@@ -227,8 +227,6 @@ module.exports = class HomeView extends BaseView
 
         frame = @$("##{slug}-frame")
         onLoad = =>
-            @$("#app-btn-#{slug} .spinner").hide()
-            @$("#app-btn-#{slug} .icon").show()
             @frames.show()
             @content.hide()
             @backButton.show()
@@ -243,6 +241,9 @@ module.exports = class HomeView extends BaseView
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
             @resetLayoutSizes()
+
+            @$("#app-btn-#{slug} .spinner").hide()
+            @$("#app-btn-#{slug} .icon").show()
 
 
         if frame.length is 0
