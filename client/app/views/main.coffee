@@ -217,19 +217,18 @@ module.exports = class HomeView extends BaseView
     #
     # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
-
         if @apps.length is 0
             @apps.once 'reset', =>
                 @displayApplication slug, hash
             return null
 
-        @$("#app-btn-#{slug} .spinner").toggle()
-        @$("#app-btn-#{slug} .icon").toggle()
+        @$("#app-btn-#{slug} .spinner").show()
+        @$("#app-btn-#{slug} .icon").hide()
 
         frame = @$("##{slug}-frame")
         onLoad = =>
-            @$("#app-btn-#{slug} .spinner").toggle()
-            @$("#app-btn-#{slug} .icon").toggle()
+            @$("#app-btn-#{slug} .spinner").hide()
+            @$("#app-btn-#{slug} .icon").show()
             @frames.show()
             @content.hide()
             @backButton.show()

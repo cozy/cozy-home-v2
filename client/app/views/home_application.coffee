@@ -54,7 +54,6 @@ module.exports = class ApplicationRow extends BaseView
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
-                @icon.show()
                 @icon.attr 'src', "img/broken.png"
                 @stateLabel.show().text t 'broken'
 
@@ -75,7 +74,6 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.hide()
 
             when 'installing'
-                @icon.hide()
                 @showSpinner()
                 @stateLabel.show().text 'installing'
                 @setBackgroundColor()
@@ -92,7 +90,6 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()
-                @icon.show()
                 @stateLabel.hide()
 
     onAppClicked: (event) =>
@@ -126,16 +123,13 @@ module.exports = class ApplicationRow extends BaseView
             when 'installing'
                 alert t 'this app is being installed. Wait a little'
             when 'stopped'
-                @icon.hide()
                 @showSpinner()
                 @model.start
                     success: =>
                         @launchApp(event)
                         @hideSpinner()
-                        @icon.show()
                     error: =>
                         @hideSpinner()
-                        @icon.show()
                         msg = 'This app cannot start.'
                         errormsg = @model.get 'errormsg'
                         msg += " Error was : #{errormsg}" if errormsg
@@ -165,9 +159,11 @@ module.exports = class ApplicationRow extends BaseView
 
 
     showSpinner: =>
+        @icon.hide()
         @$('.spinner').show()
 
 
     hideSpinner: ->
         @$('.spinner').hide()
+        @icon.show()
 
