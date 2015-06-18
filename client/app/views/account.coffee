@@ -207,6 +207,7 @@ module.exports = class exports.AccountView extends BaseView
     onAddBackgroundClicked: ->
         params =
             type: 'singlePhoto'
+            defaultTab: 'photoUpload'
 
         new ObjectPicker params, (newPhotoChosen, dataUrl) =>
 
