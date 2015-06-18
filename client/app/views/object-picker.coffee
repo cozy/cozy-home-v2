@@ -84,9 +84,7 @@ module.exports = class PhotoPickerCroper extends Modal
         # init tabs
         tabControler.initializeTabs(body)
         @_listenTabsSelection()
-        #@_selectDefaultTab(@imagePanel.name)
-        @_selectDefaultTab(@uploadPanel.name)
-        # @_selectDefaultTab(@albumPanel.name)
+        @_selectDefaultTab(@params.defaultTab || @imagePanel.name)
         ####
         # init the cropper
         @imgToCrop.addEventListener('load', @_onImgToCropLoaded, false)
