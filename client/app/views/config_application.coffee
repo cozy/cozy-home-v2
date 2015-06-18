@@ -10,14 +10,18 @@ module.exports = class ApplicationRow extends BaseView
     template: require 'templates/config_application'
 
     getRenderData: ->
+        gitName = @model.get('git')
+        gitName = gitName[...-4] if gitName?
         app: _.extend {}, @model.attributes,
-            website: @model.get('website') or @model.get('git')[...-4]
+            website: @model.get('website') or gitName,
+            branch: @model.get('branch') or 'master'
 
     events:
-        "click .remove-app"        : "onRemoveClicked"
-        "click .update-app"        : "onUpdateClicked"
-        "click .start-stop-btn"    : "onStartStopClicked"
-        "click .app-stoppable"     : "onStoppableClicked"
+        "click .remove-app": "onRemoveClicked"
+        "click .update-app": "onUpdateClicked"
+        "click .start-stop-btn": "onStartStopClicked"
+        "click .app-stoppable": "onStoppableClicked"
+        "click .favorite": "onFavoriteClicked"
 
     ### Constructor ####
 
@@ -77,6 +81,7 @@ module.exports = class ApplicationRow extends BaseView
                 @startStopBtn.displayGrey t 'start this app'
 
         @updateIcon.toggle @model.get 'needsUpdate'
+        @$(".update-app").hide() unless @model.get('needsUpdate')
 
         bool = @model.get 'isStoppable'
         @$('.app-stoppable').attr 'checked', bool
@@ -90,8 +95,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onRemoveClicked: (event) =>
         event.preventDefault()
-        @removeButton.displayGrey ""
-        @removeButton.spin true, '#ffffff'
+        @removeButton.spin true
         @stateLabel.html t 'removing'
         @model.uninstall
             success: =>
@@ -124,8 +128,7 @@ module.exports = class ApplicationRow extends BaseView
 
     onStartStopClicked: (event) =>
         event.preventDefault()
-        @startStopBtn.displayGrey ""
-        @startStopBtn.spin true, '#ffffff'
+        @startStopBtn.spin true
         if(@model.isRunning())
             @model.stop
                 success: =>
@@ -161,8 +164,7 @@ module.exports = class ApplicationRow extends BaseView
 
     updateApp: ->
         Backbone.Mediator.pub 'app-state-changed', true
-        @updateButton.displayGrey ""
-        @updateButton.spin 'small', '#ffffff'
+        @updateButton.spin true
         if @model.get('state') isnt 'broken'
             @stateLabel.html t 'updating'
         else
@@ -184,3 +186,14 @@ module.exports = class ApplicationRow extends BaseView
                 @stateLabel.html t 'broken'
                 @updateButton.displayRed t "update failed"
                 Backbone.Mediator.pub 'app-state-changed', true
+
+
+    # When favorite button is clicked, the favorite flag is toggled.
+    # A event is published, that way the home view can refresh and display
+    # the application as a favorite.
+    onFavoriteClicked: =>
+        @model.set 'favorite', not @model.get 'favorite'
+        @model.save()
+        Backbone.Mediator.pub 'app:changed:favorite', @model
+        @render()
+

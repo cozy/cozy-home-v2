@@ -88,7 +88,7 @@ module.exports =
     "revoke device access": "Revoke device access"
     "no application installed":"Não há aplicações instaladas."
 
-    "your parameters":" Os seus parâmetros"
+    "your parameters":"Os seus parâmetros"
     "alerts and password recovery email":"Necessito do seu email para enviar alertas ou email de recuperação de password."
     "public name description": "O nome público será utilizado para o Cozy e as aplicações comunicarem consigo."
     "your timezone is required":"O fuso horário é necessário para mostrar as datas correctamente."
@@ -106,8 +106,8 @@ module.exports =
     "save your new password":"grave a sua nova password"
     "do you want assistance":"Procura ajuda ?"
     "Write an email to our support team at:":"Escreve um e-mail á equipa de suporte:"
-    "Register and post on our forum: ":"Regista-te no nosso fórum: "
-    "Ask your question on Twitter: ":"Pergunta-nos no Twitter: "
+    "Register and post on our forum: ":"Regista-te no nosso fórum:"
+    "Ask your question on Twitter: ":"Pergunta-nos no Twitter:"
     "Chat with us on IRC:":"Chat with us on IRC:"
     "Visit the project website and learn to build your app:":"Visita o site do projecto para aprenderes a fazer a tua aplicação:"
     "your own application":"a tua aplicação"
@@ -146,7 +146,6 @@ module.exports =
     "required permissions":"Permissões necessárias:"
     "finish layout edition": "Guardar"
     "reset customization": "Repo"
-    "use widget": "Usar widget"
     "use icon": "Usar icon"
     "change layout": "Mudar o layout"
 

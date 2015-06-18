@@ -1,0 +1,121 @@
+.modalCY-backdrop
+    position         fixed
+    top              -50px
+    right            -50px
+    bottom           -50px
+    left             -50px
+    background-color #000000
+    z-index          100000
+    opacity          0.85
+
+.fade
+    opacity 0
+    top     -50%
+
+.fade.in
+    opacity    1
+    top        50%
+    transition opacity 0.15s linear, top 0.15s ease-out
+
+.fade.out
+    opacity    0
+    top        -25%
+    transition opacity 0.15s linear, top 0.15s ease-out
+
+.modalCY
+    display          flex
+    flex-direction   column
+    position         absolute
+    left             50%
+    transform        translateX(-50%) translateY(-50%)
+    height           80%
+    width            90%
+    max-width        85em
+    z-index          100001
+    overflow         hidden
+    background-color white
+
+    .modalCY-header
+        flex-shrink             0
+        background-color        #333
+        color                   #fff
+        font-size               1.4em
+        padding                 20px
+
+        p
+            margin 0
+
+        button
+            padding    .35em 0
+            border     0
+            font-size  .8em
+            color      #fff
+            background transparent
+            opacity    .35
+            cursor     pointer
+
+    .modalCY-body
+        overflow hidden
+        // Inherited flex layout for children
+        display  flex
+        flex     1
+
+        [aria-hidden=true]
+            display none
+
+    .modalCY-footer
+        flex-shrink      0
+        box-shadow       inset 0 1px 0 #ffffff
+        background-color #f5f5f5
+        text-align       right
+        padding          14px 15px 15px
+
+        button
+            margin-right 0.3em
+
+
+    // Back (aka "choose again") button
+    .back
+        display     inline
+        white-space nowrap
+
+    &:not([data-step=croper]) .back
+        display none
+
+
+@media (max-height: 38em)
+    .modalCY
+        height 90%
+        width  90%
+
+        .modalCY-header
+            font-size      1.3em
+            padding-top    7px
+            padding-bottom 7px
+
+        .modalCY-footer
+            padding-top    4px
+            padding-bottom 4px
+
+
+@media (max-width: 39em)
+    .modalCY
+        height        100%
+        width         100%
+        border-radius 0
+
+        .modalCY-header
+            font-size      1.1em
+            padding-top    7px
+            padding-bottom 7px
+
+        .modalCY-footer
+            padding-top    4px
+            padding-bottom 4px
+
+
+@media (max-height: 17em)
+    .modalCY
+        height        100%
+        width         100%
+        border-radius 0

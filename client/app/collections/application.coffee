@@ -1,6 +1,5 @@
 BaseCollection = require 'lib/base_collection'
 Application = require 'models/application'
-client = require '../lib/client'
 
 
 
@@ -19,12 +18,3 @@ module.exports = class ApplicationCollection extends BaseCollection
         for app in @models
             return app if idorslug is app.get 'id'
 
-    # fetch application list from the market
-    fetchFromMarket: (callback) ->
-        if @apps.length > 0
-            callback @reset(@apps)
-        else
-            client.get 'api/applications/market', (err, apps) =>
-                @apps = apps
-                @reset @apps
-                callback()

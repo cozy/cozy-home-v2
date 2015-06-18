@@ -1,35 +1,24 @@
 header#header.navbar
 
+
+#notifications.right-menu
+    ul#notifications-list
+        li#no-notif-msg= t('you have no notifications')
+
+#notifications-buttons.right-menu
+    button#dismiss-all.btn
+        i.fa.fa-trash.mr1
+        span= t('dismiss all')
+    a#logout-button.btn(href="#logout")
+        i.fa.fa-sign-out.mr1
+        span= t('navbar logout')
+
+
 .home-body
-  #app-frames
-  #content
-    #home-menu.mt3
-        .txtright.menu-btn.home-icon
-            a(href="#home")
-                span= t('your app list')
-                img(src="img/home-black.png")
-        .txtright.menu-btn
-            a(href="#applications")
-                span= t('choose your apps')
-                img(src="img/store.png")
-        .txtright.menu-btn
-            a(href="#config-applications")
-                span= t('manage your apps')
-                img(src="img/apps.png")
-        .txtright.menu-btn.customize-icon
-            a(href="#customize")
-                span= t('customize your cozy')
-                img(src="img/config-apps.png")
-        .txtright.menu-btn
-            a(href="#account")
-                span= t('configure your cozy')
-                img(src="img/configuration.png")
-        .txtright.menu-btn.help-icon
-            a(href="#help")
-                span= t('ask for assistance')
-                img(src="img/help.png")
-        .txtright.menu-btn.logout-menu-icon
-            a(href="#logout")
-                span= t('sign out')
-                img(src="img/logout-black.png")
-    #home-content
+    #app-frames
+    #content
+        // Preload spinners and hover icons
+        img.hidden(src="/img/spinner.svg")
+        img.hidden(src="/img/spinner-white.svg")
+        img.hidden(src="/img/notification-orange.png")
+        #home-content

@@ -4,7 +4,7 @@ exec = require('child_process').exec
 
 ControllerClient = require("cozy-clients").ControllerClient
 
-freeMemCmd = "free | grep cache: | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
+freeMemCmd = "free | grep /cache | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'"
 
 
 # Utilities to get memory consumption and disk usage.

@@ -13,7 +13,7 @@ sendError = (res, err, code=500) ->
         stack:   null
         message: "Server error occured"
 
-    console.log "Sending error to client :"
+    console.log "Sending error to client:"
     console.log err.stack
 
     res.send code,
@@ -32,14 +32,14 @@ module.exports =
 
     update: (req, res, next) ->
         manager = new AppManager()
-        manager.updateStack (err, res) ->
+        manager.updateStack (err, result) ->
             if err?
                 log.error err
                 sendError res, err
 
     reboot: (req, res, next) ->
         manager = new AppManager()
-        manager.restartController (err, res) ->
+        manager.restartController (err, result) ->
             if err?
                 log.error err
                 sendError res, err

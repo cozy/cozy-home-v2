@@ -46,7 +46,7 @@ module.exports = class WizardView extends BaseView
         else
             @el.setAttribute 'open', true
             document.addEventListener 'keydown', @close
-            @$backdrop = $('<div/>', {'class': 'backdrop'}).insertAfter @$el
+            @backdrop = $('<div/>', {'class': 'backdrop'}).insertAfter @$el
 
 
     close: (event) =>
@@ -55,7 +55,8 @@ module.exports = class WizardView extends BaseView
 
         @el.removeAttribute 'open'
         document.removeEventListener 'keydown', @close
-        @$backdrop.remove() unless @isDialogEnabled
+        @remove()
+        @backdrop.remove()
 
 
     next: ->

@@ -1,21 +1,21 @@
-//.section-title.darkbg.bigger app store
-p.mt2 #{t('introduction market')}
-#app-market-list
-    #market-applications-list.clearfix
-        #no-app-message= t('installed everything')
+.platform-section
+    p.mt2 #{t('introduction market')}
+    #app-market-list
+        #market-applications-list.clearfix
+            #no-app-message= t('installed everything')
+    .mt2.mb2
+        #your-app.clearfix
+            .text
+                p
+                    = t('market install your app')
+                    | &nbsp;
+                    a(href="http://cozy.io/hack/getting-started/",
+                      target="_blank")= t('market app tutorial')
+                    | .
+                p.add-app-field
+                    input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
+                    button.btn.app-install-button= t('install')
+
+                .error.alert-error
+                .info.alert
 .md-overlay
-.mt2.mb2
-    #your-app.clearfix
-        .text
-            p
-                = t('install')
-                | &nbsp;
-                a(href="http://cozy.io/hack/getting-started/",
-                  target="_blank")= t('your own application')
-            p
-                input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
-                button.btn.app-install-button= t('install')
-
-
-            .error.alert-error
-            .info.alert

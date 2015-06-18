@@ -1,10 +1,6 @@
 .navbar.clearfix
-    a.logo.left(href="#home")
-        img(src="img/happycloud-white.svg")
-        span beta
-    #menu-applications-container.left
-
-    a#logout-button.right(href="#logout")
-        span=t('logout')
-        img(src="img/logout-white.png")
-    .right#notifications-container
+    #notifications-container.right
+    a.fa.fa-chevron-left.back-button.left(href="#home", title="#{t('navbar back button title')}")
+        span
+            = t("navbar back button title")
+    #menu-applications-container

@@ -2,15 +2,20 @@
 
 # Expected callbacks: success and error
 exports.request = (type, url, data, callback) ->
-    $.ajax
+    body = if data? then JSON.stringify data else null
+
+    fired = false
+    req = $.ajax
         type: type
         url: url
-        data: if data? then JSON.stringify data else null
+        data: body
         contentType: "application/json"
         dataType: "json"
         success: (data) ->
+            fired = true
             callback null, data if callback?
         error: (data) ->
+            fired = true
             if data?
                 data = JSON.parse data.responseText
                 if data.msg? and callback?
@@ -20,6 +25,9 @@ exports.request = (type, url, data, callback) ->
                     callback new Error data.msg, data
             else if callback?
                 callback new Error "Server error occured", data
+    req.always ->
+        unless fired
+            callback new Error "Server error occured", data
 
 # Sends a get request with data as body
 # Expected callbacks: success and error

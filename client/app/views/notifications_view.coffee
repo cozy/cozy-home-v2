@@ -12,47 +12,45 @@ module.exports = class NotificationsView extends ViewCollection
 
     events:
         "click #notifications-toggle": "showNotifList"
-        "click #clickcatcher"        : "hideNotifList"
-        "click #dismiss-all"         : "dismissAll"
+        "click #clickcatcher": "hideNotifList"
 
-    appendView: (view) ->
-        @notifList.prepend view.el
-        # TODO use visibility.js to only play sound
-        # when window is not visible
-        @sound.play() unless @initializing
-        @$('#notifications-toggle img').attr 'src', 'img/notification-orange.png'
-        @$('#notifications-toggle').addClass 'highlight'
-
-    afterRender: =>
-        @counter    = @$ '#notifications-counter'
-        @counter.html '10'
-        @clickcatcher = @$ '#clickcatcher'
-        @clickcatcher.hide()
-        @noNotifMsg = @$ '#no-notif-msg'
-        @notifList  = @$ '#notifications'
-        @sound      = @$('#notification-sound')[0]
-        @dismissButton = @$ "#dismiss-all"
-
+    initialize: ->
         super
         @initializing = true
-        @collection.fetch().always -> @initializing = false
 
-        $(window).on 'click', @windowClicked
+    appendView: (view) ->
+        @notifList ?= $ '#notifications-list'
+        @notifList.prepend view.el
+        @sound.play() unless @initializing
+
+    afterRender: =>
+        @counter = @$ '#notifications-counter'
+        @counter.html '0'
+        @clickcatcher = @$ '#clickcatcher'
+        @clickcatcher.hide()
+        @noNotifMsg = $ '#no-notif-msg'
+        @notifList  = $ '#notifications-list'
+        @hideNotifList()
+        @sound = $('#notification-sound')[0]
+        @dismissButton = $ "#dismiss-all"
+        @dismissButton.click @dismissAll
+
+        super
+        @initializing = false
+        @collection.fetch()
+        if window.cozy_user?
+            @noNotifMsg.html t 'you have no notifications',
+                name: window.cozy_user.public_name or ''
 
     remove: =>
-        $(window).off 'click', @hideNotifList
         super
 
     checkIfEmpty: =>
         newCount = @collection.length
-        @$('#no-notif-msg').toggle(newCount is 0)
-        @$('#dismiss-all').toggle(newCount isnt 0)
-        if newCount is 0 #hide 0 counter
+        @noNotifMsg.toggle(newCount is 0)
+        if newCount is 0 # hide 0 counter
             @counter.html ""
             @counter.hide()
-            imgPath = 'img/notification-white.png'
-            @$('#notifications-toggle img').attr 'src', imgPath
-            @$('#notifications-toggle').removeClass 'highlight'
         else
             @counter.html newCount
             @counter.show()
@@ -61,28 +59,22 @@ module.exports = class NotificationsView extends ViewCollection
         if event? and @$el.has($(event.target)).length is 0
             @hideNotifList()
 
-    showNotifList: () ->
-        if @notifList.is ':visible'
-            @notifList.hide()
-            @clickcatcher.hide()
-            @$el.removeClass 'active'
+    showNotifList: =>
+        if $('.right-menu').is ':visible'
+            @hideNotifList()
         else
-            @$el.addClass 'active'
-            @notifList.slideDown 100
+            $('.right-menu').show()
             @clickcatcher.show()
 
-    dismissAll: () ->
-        @dismissButton.css 'color', 'transparent'
-        @dismissButton.spin 'small'
+    hideNotifList: (event) =>
+        $('.right-menu').hide()
+        @clickcatcher.hide()
+
+    dismissAll: =>
+        @dismissButton.spin true
         @collection.removeAll
             success: =>
-                @dismissButton.spin()
-                @dismissButton.css 'color', '#333'
+                @dismissButton.spin false
             error: =>
-                @dismissButton.spin()
-                @dismissButton.css 'color', '#333'
+                @dismissButton.spin false
 
-    hideNotifList: (event) =>
-        @notifList.slideUp 100
-        @clickcatcher.hide()
-        @$el.removeClass 'active'

@@ -30,7 +30,10 @@ module.exports = class StackApplication extends Backbone.Model
         client.get "api/applications/stack",
             success: =>
                 if step is total_step
-                    success 'ok' if success
+                    if success?
+                        success 'ok'
+                    else
+                        callbacks() if callbacks
                 else
                     if step is 1
                         step += step
@@ -46,14 +49,14 @@ module.exports = class StackApplication extends Backbone.Model
 
     updateStack: (callbacks) ->
         client.put "/api/applications/update/stack", {},
-            sucess: =>
+            success: =>
                 @waitReboot 0, 2, callbacks
             error: =>
                 @waitReboot 0, 2, callbacks
 
     rebootStack: (callbacks) ->
         client.put "/api/applications/reboot/stack", {},
-            sucess: =>
+            success: =>
                 @waitReboot 0, 1, callbacks
             error: =>
                 @waitReboot 0, 1, callbacks

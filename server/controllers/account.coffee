@@ -2,7 +2,6 @@ utils = require '../lib/passport_utils'
 Adapter = require '../lib/adapter'
 User = require '../models/user'
 CozyInstance = require '../models/cozyinstance'
-UserPreference = require '../models/user_preference'
 
 adapter = new Adapter()
 
@@ -14,7 +13,10 @@ EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
 module.exports =
+
+
     updateAccount: (req, res, next) ->
+
         updateData = (user, body, data, cb) ->
             if body.timezone?
                 #TODO CHECK TIMEZONE VALIDITY
@@ -41,26 +43,30 @@ module.exports =
             newPassword = body.password1
             newPassword2 = body.password2
 
-            unless newPassword? and newPassword.length > 0
-                return cb null
-
             errors = []
 
-            unless utils.checkPassword oldPassword, user.password
-                errors.push "The current password is incorrect."
+            if newPassword?
+                if newPassword.length < 5
+                    errors.push "The new password is too short."
+                    return cb null, errors
 
-            unless newPassword is newPassword2
-                errors.push "The new passwords don't match."
+                unless utils.checkPassword oldPassword, user.password
+                    errors.push "The current password is incorrect."
 
-            unless newPassword.length > 5
-                errors.push "The new password is too short."
+                unless newPassword is newPassword2
+                    errors.push "The new passwords don't match."
 
-            if errors.length
-                return cb null, errors
+                unless newPassword.length > 5
+                    errors.push "The new password is too short."
 
-            data.password = utils.cryptPassword newPassword
-            adapter.updateKeys newPassword, cb
+                if errors.length
+                    return cb null, errors
 
+                data.password = utils.cryptPassword newPassword
+                adapter.updateKeys newPassword, cb
+
+            else
+                cb()
 
         User.all (err, users) ->
             next err if err
@@ -69,7 +75,6 @@ module.exports =
 
             user = users[0]
             data = {}
-
 
             updatePassword user, req.body, data, (libErr, userErr) =>
                 return res.send 500, error: libErr if libErr
@@ -80,7 +85,7 @@ module.exports =
                     return res.send 400, error: userErr if userErr
 
                     res.send
-                        success: true,
+                        success: true
                         msg: 'Your new password is set'
 
 
@@ -92,6 +97,7 @@ module.exports =
             else
                 res.send rows: users
 
+
     # Return list of instances
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->
@@ -100,49 +106,27 @@ module.exports =
             else
                 res.send rows: instances
 
-    # Update Cozy Instance domain, create it if it does not exist.
-    updateInstance: (req, res, next) ->
-        domain = req.body.domain
-        locale = req.body.locale
-        helpUrl = req.body.helpUrl
 
-        if domain? or locale? or helpUrl
+    # Update Cozy Instance data, create it if it does not exist.
+    updateInstance: (req, res, next) ->
+        {domain, locale, helpUrl, background, connectedOnce} = req.body
+
+        if domain? or locale? or helpUrl? or background? or connectedOnce?
             CozyInstance.all (err, instances) ->
+                data = {domain, locale, helpUrl, background, connectedOnce}
+
                 if err then next err
+
                 else if instances.length is 0
-                    data =
-                        domain: domain
-                        locale: locale
-                        helpUrl: helpUrl
                     CozyInstance.create data, (err, instance) ->
                         if err then next err
                         else
                             res.send success: true, msg: 'Instance updated.'
+
                 else
-                    data = domain: domain, locale: locale, helpUrl: helpUrl
                     instances[0].updateAttributes data, ->
                         res.send success: true, msg: 'Instance updated.'
+
         else
-            res.send 400, error: true, msg: 'No domain or locale given'
-
-    getUserPreference: (req, res, next) ->
-        UserPreference.all (err, preferences) ->
-            next err if err?
-            if preferences.length > 0
-                res.send 200, preferences[0]
-            else
-                res.send 500, error: 'No user preference found'
-
-    setUserPreference: (req, res, next) ->
-
-        UserPreference.all (err, preferences) ->
-            next err if err?
-            if preferences.length is 0
-                UserPreference.create req.body, (err) ->
-                    next err if err?
-                    res.send 201, success: true
-            else
-                preferences[0].updateAttributes req.body, (err) ->
-                    next err if err?
-                    res.send success: true
+            res.send 400, error: true, msg: 'No accepted parameter given'
 

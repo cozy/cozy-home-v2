@@ -19,8 +19,7 @@ module.exports = class DeviceRow extends BaseView
 
     onRemoveClicked: (event) ->
         if window.confirm t 'revoke device confirmation message'
-            @$('.remove-device').html '&nbsp;'
-            $(event.currentTarget).spin 'tiny', '#ffffff'
+            $(event.currentTarget).spin true
             $.ajax("/api/devices/#{@model.get('id')}",
                 type: "DELETE"
                 success: =>
