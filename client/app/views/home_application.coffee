@@ -54,7 +54,7 @@ module.exports = class ApplicationRow extends BaseView
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
-                @icon.attr 'src', "img/broken.png"
+                @icon.attr 'src', "img/broken.svg"
                 @stateLabel.show().text t 'broken'
 
             when 'installed'
