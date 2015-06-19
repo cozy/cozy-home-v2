@@ -5299,8 +5299,7 @@ module.exports = ApplicationRow = (function(_super) {
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
-        this.icon.show();
-        this.icon.attr('src', "img/broken.png");
+        this.icon.attr('src', "img/broken.svg");
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
         this.hideSpinner();
@@ -5318,7 +5317,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.removeClass('stopped');
         return this.stateLabel.hide();
       case 'installing':
-        this.icon.hide();
         this.showSpinner();
         this.stateLabel.show().text('installing');
         return this.setBackgroundColor();
@@ -5333,7 +5331,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.addClass('stopped');
         this.hideSpinner();
-        this.icon.show();
         return this.stateLabel.hide();
     }
   };
@@ -5384,18 +5381,15 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installing':
         return alert(t('this app is being installed. Wait a little'));
       case 'stopped':
-        this.icon.hide();
         this.showSpinner();
         return this.model.start({
           success: function() {
             _this.launchApp(event);
-            _this.hideSpinner();
-            return _this.icon.show();
+            return _this.hideSpinner();
           },
           error: function() {
             var msg;
             _this.hideSpinner();
-            _this.icon.show();
             msg = 'This app cannot start.';
             errormsg = _this.model.get('errormsg');
             if (errormsg) {
@@ -5431,11 +5425,13 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.showSpinner = function() {
+    this.icon.hide();
     return this.$('.spinner').show();
   };
 
   ApplicationRow.prototype.hideSpinner = function() {
-    return this.$('.spinner').hide();
+    this.$('.spinner').hide();
+    return this.icon.show();
   };
 
   return ApplicationRow;
@@ -7367,13 +7363,11 @@ module.exports = HomeView = (function(_super) {
       });
       return null;
     }
-    this.$("#app-btn-" + slug + " .spinner").toggle();
-    this.$("#app-btn-" + slug + " .icon").toggle();
+    this.$("#app-btn-" + slug + " .spinner").show();
+    this.$("#app-btn-" + slug + " .icon").hide();
     frame = this.$("#" + slug + "-frame");
     onLoad = function() {
       var name;
-      _this.$("#app-btn-" + slug + " .spinner").toggle();
-      _this.$("#app-btn-" + slug + " .icon").toggle();
       _this.frames.show();
       _this.content.hide();
       _this.backButton.show();
@@ -7386,7 +7380,9 @@ module.exports = HomeView = (function(_super) {
       }
       window.document.title = "Cozy - " + name;
       $("#current-application").html(name);
-      return _this.resetLayoutSizes();
+      _this.resetLayoutSizes();
+      _this.$("#app-btn-" + slug + " .spinner").hide();
+      return _this.$("#app-btn-" + slug + " .icon").show();
     };
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
@@ -8160,6 +8156,7 @@ module.exports = NotificationView = (function(_super) {
       url = action.app === 'home' ? "/" : "/apps/" + action.app + "/";
       url += action.url || '';
       url = url.replace('//', '/');
+      $('.right-menu').hide();
     } else {
       url = null;
     }

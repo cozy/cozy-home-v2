@@ -139,7 +139,8 @@ updateApp = function(app, callback) {
               git: app.git,
               name: app.name,
               icon: app.icon,
-              iconPath: data.iconPath
+              iconPath: data.iconPath,
+              slug: app.slug
             };
             iconInfos = icons.getIconInfos(infos);
           } catch (_error) {

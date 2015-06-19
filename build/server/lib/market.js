@@ -76,3 +76,15 @@ module.exports.download = function(callback) {
     });
   }
 };
+
+module.exports.getApp = function(app) {
+  try {
+    return [null, require("../../../market/apps/" + app)];
+  } catch (_error) {
+    try {
+      return [null, require("../../market/apps/" + app)];
+    } catch (_error) {
+      return ['not found', null];
+    }
+  }
+};
