@@ -4,6 +4,7 @@ log = require('printit')
     prefix: 'icons'
 
 module.exports = icons = {}
+market = require './market'
 
 ###
 Get right icon path depending on app configuration:
@@ -14,7 +15,7 @@ Get right icon path depending on app configuration:
 * returns null otherwise
 ###
 icons.getPath = (root, appli) ->
-
+    [err, marketApp] = market.getApp(appli.slug)
     iconPath = null
 
     # try to retrieve icon path from manifest, if developer set it.
@@ -26,6 +27,11 @@ icons.getPath = (root, appli) ->
     if not iconPath? and appli.icon?
         homeBasePath = path.join process.cwd(), 'client/app/assets'
         iconPath = path.join homeBasePath, appli.icon
+        iconPath = null unless fs.existsSync(iconPath)
+
+    if not iconPath? and marketApp?
+        homeBasePath = path.join process.cwd(), 'client/app/assets'
+        iconPath = path.join homeBasePath, marketApp.icon
         iconPath = null unless fs.existsSync(iconPath)
 
     # if it has not been set, or if it doesn't exist, try to guess the icon path
@@ -52,7 +58,6 @@ icons.getPath = (root, appli) ->
         result =
             path: iconPath
             extension: extension
-
         return result
 
 # Retrieves icon information

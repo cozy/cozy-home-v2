@@ -101,6 +101,7 @@ updateApp = (app, callback) ->
                         name: app.name
                         icon: app.icon
                         iconPath: data.iconPath
+                        slug: app.slug
                     iconInfos = icons.getIconInfos infos
                 catch err
                     console.log err
