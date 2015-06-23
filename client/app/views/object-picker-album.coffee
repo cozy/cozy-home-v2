@@ -31,8 +31,8 @@ module.exports = class ObjectPickerAlbum extends BaseView
                 <div class="thumb"><img/></div>
             </div>
         """)[0]
-        @panel.appendChild(@albums$)
-        @panel.appendChild(@thumbs$)
+        @panel.appendChild @albums$
+        @panel.appendChild @thumbs$
         ####
         # construct the list of albums
         @_getAlbums()
@@ -43,8 +43,8 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
         ####
         # listeners
-        @thumbs$.addEventListener( 'click'    , @_clickHandler    )
-        @thumbs$.addEventListener( 'dblclick' , @_dblclickHandler )
+        @thumbs$.addEventListener 'click', @_clickHandler
+        @thumbs$.addEventListener 'dblclick', @_dblclickHandler
 
 
     getObject : () ->
@@ -186,11 +186,12 @@ module.exports = class ObjectPickerAlbum extends BaseView
             photoRank += 1
 
         for photoRank in [photoRank..nPhoto-1] by 1
-            thumbImg     = document.createElement('img')
+            thumbImg     = document.createElement 'img'
             thumbImg.src = "photos/thumbs/#{photos[photoRank].id}.jpg"
-            thumb        = document.createElement('div')
-            thumb.appendChild(thumbImg)
-            thumb.classList.add('thumb')
+            thumb        = document.createElement 'div'
+            thumb.appendChild thumbImg
+            thumb.classList.add 'thumb'
             thumb.photo      = photos[photoRank]
             thumb.dataset.id = photos[photoRank].id
-            @thumbs$.appendChild(thumb)
+            @thumbs$.appendChild thumb
+

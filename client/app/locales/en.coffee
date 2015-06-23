@@ -54,11 +54,11 @@ module.exports =
 
     "no app message": """
         You currently have no app installed on your Cozy.
-        Go to the <a href="#applications">app store</a> and install new apps!
+        Go to the <a href="#applications">Cozy store</a> and install new apps!
         """
 
     "welcome to app store": """
-        Welcome to your cozy app store, install your own app from here
+        Welcome to your Cozy store, install your own app from here
         or add one from the available list.
         """
 
@@ -78,7 +78,7 @@ module.exports =
     "welcome to your cozy":"Welcome to your Cozy!"
     "you have no apps":"You have no apps."
     "app management":"App management"
-    "app store":"App store"
+    "app store":"Add App"
     "configuration":"Configuration"
     "assistance":"Assistance"
     "hardware consumption":"Hardware"
@@ -129,7 +129,7 @@ module.exports =
     "show proxy logs": "Show Proxy Logs"
     "show logs": "Show Logs"
     "update stack": "Update"
-    "refresh page": "Wait please, update takes several minutes."
+    "reboot stack waiting message": "Wait please, rebooting takes several minutes."
     "status no device": "No device registered for synchronization."
     "update stack modal title": "Updating your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?"
@@ -203,7 +203,7 @@ module.exports =
     "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct."
     "account background add": "Add background"
     "introduction market": """
-        Welcome to the Cozy app store!
+        Welcome to the Cozy store!
         Here, you can install
         apps provided by Cozy Cloud, apps from the community or apps built by yourself!
     """
@@ -349,7 +349,7 @@ module.exports =
             <p>Aside of these main applications you can discover applications
             built by the community. You will find apps like a bank account
             manager, a feed reader, a todo-list manager and many more!
-            Go to the app store to discover the full list of application.
+            Go to the Cozy store to discover the full list of application.
             </p>
         """
         'continue to sync': "How to sync my mobile?"

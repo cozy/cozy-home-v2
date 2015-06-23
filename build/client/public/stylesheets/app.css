@@ -2130,6 +2130,12 @@ dialog[open]::backdrop {
   display: -ms-flexbox;
   display: box;
   display: flex;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: multiple;
+  -o-box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -o-box-flex: 1;
@@ -3136,6 +3142,9 @@ body {
   text-transform: lowercase;
   font-size: 20px;
 }
+.config-application strong a {
+  color: #000;
+}
 .config-application .smaller {
   font-family: 'Source Sans Pro', sans-serif;
   display: -webkit-box;
@@ -3204,9 +3213,10 @@ body {
   }
 }
 .config-application .to-update-label {
-  background: #43a047;
+  background: #6c6;
   color: #fff;
   padding: 3px 6px;
+  margin-left: 26px;
   font-size: 12px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -3495,6 +3505,7 @@ body {
 @media (max-width: 850px) {
   #applications-view {
     padding: 10px;
+    margin-bottom: 20px;
   }
   #market-view span {
     display: none;

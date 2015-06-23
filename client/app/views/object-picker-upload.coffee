@@ -103,3 +103,4 @@ module.exports = class ObjectPickerUpload extends BaseView
         reader.onloadend = =>
             @dataUrl = reader.result
             @objectPicker.onYes()
+

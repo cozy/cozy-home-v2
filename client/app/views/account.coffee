@@ -77,10 +77,10 @@ module.exports = class exports.AccountView extends BaseView
             , 10000
 
         if form.password1.length < 5
-            showError 'account password change short'
+            showError 'account change password short'
 
         else if form.password1 isnt form.password2
-            showError 'account password change difference'
+            showError 'account change password difference'
 
         else
 
@@ -107,7 +107,7 @@ module.exports = class exports.AccountView extends BaseView
                             @infoAlert.hide()
                         , 10000
                     else
-                        showError 'account password change error'
+                        showError 'account change password error'
 
 
     # Display errors that occured through the error alert.
