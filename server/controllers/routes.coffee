@@ -69,7 +69,7 @@ module.exports =
     'api/notifications':
         get: notifications.all
         delete: notifications.deleteAll
-    'api/notifications/:id':
+    'api/notifications/:notifid':
         get: notifications.show
         delete: notifications.delete
     'notifications':
