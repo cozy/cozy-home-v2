@@ -130,6 +130,7 @@ module.exports =
     "show logs": "Show Logs"
     "update stack": "Update"
     "reboot stack waiting message": "Wait please, rebooting takes several minutes."
+    "update stack waiting message": "Wait please, updating takes several minutes."
     "status no device": "No device registered for synchronization."
     "update stack modal title": "Updating your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?"

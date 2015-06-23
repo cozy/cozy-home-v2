@@ -140,6 +140,7 @@ module.exports =
     "show proxy logs": "Voir les logs du Proxy"
     "show logs": "Voir les logs"
     "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes."
+    "update stack waiting message": "Veuillez patienter, la mise à jour peut prendre quelques minutes."
     "update stack modal title": "Mise à jour de votre Cozy"
     "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Voulez-vous vraiment continuer ?"
     "update stack modal confirm": "Mettre à jour"
