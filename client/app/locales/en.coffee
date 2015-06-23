@@ -97,6 +97,7 @@ module.exports =
     "domain name for urls and email":"The domain name is used to build sharing URLs sent via email to yourself or your contacts:"
     "save":"Save"
     "saved":"Saved"
+    "error": "Error"
     "Chose the language you want I use to speak with you:":"Choose the language you want to see:"
     "account background selection": "Select your background for your Cozy Home:"
     "account localization": "Localization"

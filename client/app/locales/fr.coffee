@@ -90,6 +90,7 @@ module.exports =
     "no application installed":"Il n'y a pas d'applications installées."
     "save":"Sauver"
     "saved":"Sauvé"
+    "error": "Erreur"
     "market app install": "Installation…"
     "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre"
     "market app tutorial": "didacticiel"
