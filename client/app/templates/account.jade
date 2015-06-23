@@ -18,16 +18,19 @@
                 p.account-field
                     input#account-email-field
                     button.btn= t('save')
+                p.error.email.hide
             .input
                 p= t('public name description')
                 p.account-field
                     input#account-public-name-field
                     button.btn= t('save')
+                p.error.public-name.hide
             .input
                 p= t('domain name for urls and email')
                 p.account-field
                     input#account-domain-field
                     button.btn= t('save')
+                p.error.domain.hide
 
 
             h4= t('account localization')
