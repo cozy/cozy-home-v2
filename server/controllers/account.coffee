@@ -30,10 +30,10 @@ module.exports =
                     if EMAILREGEX.test body.email
                         data.email = body.email
                     else
-                        errors = ["Given email is not a proper email"]
+                        errors = ["error proper email"]
                         return cb null, errors
                 else
-                    errors = ["Given email is empty"]
+                    errors = ["error email empty"]
                     return cb null, errors
 
             if data.timezone or data.email or data.password or data.public_name

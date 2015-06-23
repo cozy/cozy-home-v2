@@ -91,6 +91,8 @@ module.exports =
     "save":"Sauver"
     "saved":"Sauvé"
     "error": "Erreur"
+    "error proper email": "L'adresse mail forunie n'est pas correcte"
+    "error email empty": "L'adresse mail ne doit pas être vide"
     "market app install": "Installation…"
     "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre"
     "market app tutorial": "didacticiel"

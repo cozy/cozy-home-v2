@@ -123,10 +123,11 @@ module.exports = class exports.AccountView extends BaseView
                 saveButton.spin false
 
                 if err
-                    err = "#{err}".replace 'Error: ', ''
+                    err = err.toString()
+                    err = err.replace 'Error: ', ''
                     saveButton.addClass 'red'
                     saveButton.html t 'error'
-                    alertMsg.html "#{err}"
+                    alertMsg.html "#{t(err)}"
                     alertMsg.show()
                 else
                     saveButton.removeClass 'red'
