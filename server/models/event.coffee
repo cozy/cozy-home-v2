@@ -86,8 +86,7 @@ Event::_getRecurringStartDates = (startingBound, endingBound) ->
 Event::getAlarms = (userTimezone) ->
 
     alarms = []
-
-    for alarm, key in @alarms?.items
+    for alarm in @alarms
         startDates = []
 
         if @isRecurring()
