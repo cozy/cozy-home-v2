@@ -103,6 +103,7 @@ updateApp = (app, callback) ->
                         name: app.name
                         icon: app.icon
                         iconPath: data.iconPath
+                        slug: app.slug
                     iconInfos = icons.getIconInfos infos
                 catch err
                     console.log err
@@ -311,10 +312,8 @@ module.exports =
     # * database
     uninstall: (req, res, next) ->
         req.body.slug = req.params.slug
-        # Uninstall application from controller
-        manager.uninstallApp req.application, (err, result) ->
-            return markBroken res, req.application, err if err
-            # Remove application access
+
+        removeMetadata = (result) ->
             req.application.destroyAccess (err) ->
                 return sendError res, err if err
                 # Remove application
@@ -323,11 +322,18 @@ module.exports =
                     # Reset proxy
                     manager.resetProxy (err) ->
                         return sendError res, err if err
+                    res.send
+                        success: true
+                        msg: 'Application successfuly uninstalled'
 
-                        res.send
-                            success: true
-                            msg: 'Application succesfuly uninstalled'
 
+        manager.uninstallApp req.application, (err, result) ->
+
+            if err
+                manager.uninstallApp req.application, (err, result) ->
+                    removeMetadata result
+            else
+                removeMetadata result
 
 
     # Update an app :

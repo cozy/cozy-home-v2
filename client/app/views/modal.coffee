@@ -9,8 +9,9 @@ class Modal extends Backbone.View
     initialize: (options) ->
         @title ?= options.title
         @content ?= options.content
-        @yes ?= options.yes or 'ok'
-        @no ?= options.no or 'cancel'
+        @yes ?= options.yes or t('ok')
+        @no ?= options.no or t('cancel')
+        @back = options.back or t('chooseAgain')
         @cb ?= options.cb or ->
         @render()
         if options.cssSpaceName?
@@ -59,13 +60,26 @@ class Modal extends Backbone.View
         super
 
     render: ->
-        close = $('<button class="close" type="button" data-dismiss="modal">×</button>')
+        close = $('<button class="close fa fa-close" data-dismiss="modal"/>')
         title = $('<p>').text @title
         head  = $('<div class="modalCY-header">').append close, title
+
         body  = $('<div class="modalCY-body"></div>').append @renderContent()
-        yesBtn= $('<button id="modal-dialog-yes" class="btn btn-cozy">').text @yes
-        foot  = $('<div class="modalCY-footer">').append yesBtn
-        foot.prepend $('<button id="modal-dialog-no" class="btn btn-link">').text(@no) if @no
+
+        foot  = $('<div class="modalCY-footer">')
+        backBtn = $("""
+            <button id="modal-dialog-back" class="btn light-btn left back">
+                <i class="fa fa-chevron-left"/> #{@back}
+            </button>
+        """).appendTo foot
+        yesBtn= $('<button id="modal-dialog-yes" class="btn right"/>')
+                .text(@yes)
+                .appendTo foot
+        noBtn = if @no
+            $('<button id="modal-dialog-no" class="btn light-btn right"/>')
+            .text(@no)
+            .appendTo foot
+
         @backdrop = document.createElement('div')
         @backdrop.classList.add('modalCY-backdrop')
 

@@ -59,3 +59,12 @@ module.exports.download = (callback) ->
 
                     apps.sort comparator
                     callback err, apps
+
+module.exports.getApp = (app) ->
+    try
+        return [null, require "../../../market/apps/#{app}"]
+    catch
+        try
+            return [null, require "../../market/apps/#{app}"]
+        catch
+            return ['not found', null]

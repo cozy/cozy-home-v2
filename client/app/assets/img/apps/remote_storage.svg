@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.3.2 (12043) - http://www.bohemiancoding.com/sketch -->
-    <title>remote_storage</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="remote_storage" sketch:type="MSLayerGroup">
-            <path d="M30,58.75 L30,58.75 C45.8781866,58.75 58.75,45.8781866 58.75,30 C58.75,14.1218134 45.8781866,1.25 30,1.25 C14.1218134,1.25 1.25,14.1218134 1.25,30 C1.25,45.8781866 14.1218134,58.75 30,58.75 L30,58.75 Z M30,60 L30,60 C13.4314575,60 0,46.5685425 0,30 C0,13.4314575 13.4314575,0 30,0 C46.5685425,0 60,13.4314575 60,30 C60,46.5685425 46.5685425,60 30,60 L30,60 Z" id="Shape-Copy" fill-opacity="0.0107280344" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
-            <path d="M14,21.339746 L14,38.660254 L14,38.660254 L29,30 L14,21.339746 Z M15.6898417,20.0059755 L30,11.5882353 L30,11.5882353 L30,28.2679492 L15.6898417,20.0059755 Z M48,38.660254 L48,21.339746 L33,30 L48,38.660254 Z M46.3101583,39.9940245 L32,48.4117647 L32,31.7320508 L46.3101583,39.9940245 Z M15.6898417,39.9940245 L30,48.4117647 L30,31.7320508 L15.6898417,39.9940245 L15.6898417,39.9940245 Z M46.3101583,20.0059755 L32,11.5882353 L32,11.5882353 L32,28.2679492 L46.3101583,20.0059755 L46.3101583,20.0059755 Z M11,19 L31,7 L51,19 L51,41 L31,53 L11,41 L11,19 Z" id="Rectangle-47" fill="#000000" sketch:type="MSShapeGroup"></path>
-        </g>
-    </g>
-</svg>
+<svg xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><title>remote_storage</title><desc>Created with Sketch.</desc><path sketch:type="MSShapeGroup" fill="#fff" fill-opacity=".011" d="M30 58.75c15.879 0 28.75-12.872 28.75-28.75s-12.871-28.75-28.75-28.75c-15.878 0-28.75 12.872-28.75 28.75s12.872 28.75 28.75 28.75zm0 1.25c-16.568 0-30-13.432-30-30s13.432-30 30-30 30 13.432 30 30-13.432 30-30 30z"/><path d="M31 7l-20 12v22l20 12 20-12v-22l-20-12zm-17 14.34l15 8.66-15 8.66v-17.32zm16 27.072l-14.31-8.418 14.31-8.262v16.68zm0-20.144l-14.31-8.262 14.31-8.418v16.68zm2-16.68l14.311 8.417-14.311 8.263v-16.68zm0 36.824v-16.68l14.311 8.262-14.311 8.418zm16-9.752l-15-8.66 15-8.66v17.32z"/></svg>

@@ -54,11 +54,11 @@ module.exports =
 
     "no app message": """
         You currently have no app installed on your Cozy.
-        Go to the <a href="#applications">app store</a> and install new apps!
+        Go to the <a href="#applications">Cozy store</a> and install new apps!
         """
 
     "welcome to app store": """
-        Welcome to your cozy app store, install your own app from here
+        Welcome to your Cozy store, install your own app from here
         or add one from the available list.
         """
 
@@ -78,7 +78,7 @@ module.exports =
     "welcome to your cozy":"Welcome to your Cozy!"
     "you have no apps":"You have no apps."
     "app management":"App management"
-    "app store":"App store"
+    "app store":"Add App"
     "configuration":"Configuration"
     "assistance":"Assistance"
     "hardware consumption":"Hardware"
@@ -129,7 +129,7 @@ module.exports =
     "show proxy logs": "Show Proxy Logs"
     "show logs": "Show Logs"
     "update stack": "Update"
-    "refresh page": "Wait please, update takes several minutes."
+    "reboot stack waiting message": "Wait please, rebooting takes several minutes."
     "status no device": "No device registered for synchronization."
     "update stack modal title": "Updating your Cozy"
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?"
@@ -197,9 +197,13 @@ module.exports =
     "help send message action": "Send message to the Cozy Support Team"
     "send message success": "Message successfully sent!"
     "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc"
+    "account change password success": "The password was changed successfully."
+    "account change password short": "The new password is too short."
+    "account change password difference": "The password confirmation doesn't match the new password."
+    "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct."
     "account background add": "Add background"
     "introduction market": """
-        Welcome to the Cozy app store!
+        Welcome to the Cozy store!
         Here, you can install
         apps provided by Cozy Cloud, apps from the community or apps built by yourself!
     """
@@ -216,10 +220,10 @@ module.exports =
     "files description": "Your online file-system, synced with your devices."
     "photos description": "Organize your photos and share them with friends."
     "sync description": "The tool required to sync your contacts and calendar with your smartphone."
-    "bookmark description": "Save and manage your bookmarks."
+    "quickmarks description": "Save and manage your bookmarks."
     "cozic description": "An audio player to listen to your music from your browser."
     "databrowser description": "Browse and visualize all your data (raw format)."
-    "feeds description": "Aggregate your feeds and save your favorite links as bookmarks."
+    "zero-feeds description": "Aggregate your feeds and save your favorite links as bookmarks."
     "kyou description": "Improve your health and happiness by quantifying yourself."
     "konnectors description": "Import data from external services (Twitter, Jawbone…)."
     "kresus description": "Additional tools for your personal finance manager."
@@ -345,7 +349,7 @@ module.exports =
             <p>Aside of these main applications you can discover applications
             built by the community. You will find apps like a bank account
             manager, a feed reader, a todo-list manager and many more!
-            Go to the app store to discover the full list of application.
+            Go to the Cozy store to discover the full list of application.
             </p>
         """
         'continue to sync': "How to sync my mobile?"
@@ -386,8 +390,8 @@ You can synchronize both contacts and calendars through the CalDAV and CardDAV p
         'close wizard': "Start using my Cozy!"
 
     # object picker
-    "pick from files"         : "Choose one photo"
-    "Crop the photo"          : "Crop the image ("
+    "pick from files"         : "Pick a photo"
+    "Crop the photo"          : "Crop image"
     "chooseAgain"             : "choose another photo"
     "modal ok"                : "OK"
     "modal cancel"            : "Cancel"

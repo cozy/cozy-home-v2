@@ -1,4 +1,5 @@
 BaseView = require 'lib/base_view'
+
 Background = require '../models/background'
 timezones = require('helpers/timezone').timezones
 locales =   require('helpers/locales' ).locales
@@ -55,8 +56,9 @@ module.exports = class exports.AccountView extends BaseView
 
 
     # When password data are submited, it sends a request to backend to save
-    # them.  If an error occurs, message is displayed.
+    # them. If an error occurs, message is displayed.
     onNewPasswordSubmit: (event) =>
+
         form =
             password0: @password0Field.val()
             password1: @password1Field.val()
@@ -65,26 +67,47 @@ module.exports = class exports.AccountView extends BaseView
         @infoAlert.hide()
         @errorAlert.hide()
 
-        @accountSubmitButton.spin true
-        request.post 'api/user', form, (err, data) =>
-            if err
-                @password0Field.val null
-                @password1Field.val null
-                @password2Field.val null
-                if data?
-                    @displayErrors data.msg
-                else
-                    @displayErrors err.message
-            else
-                if data.success
-                    @infoAlert.html data.msg
-                    @infoAlert.show()
+        hideFunc = null
+        showError = (message) =>
+            @errorAlert.html t message
+            @errorAlert.fadeIn()
+            clearTimeout hideFunc
+            hideFunc = setTimeout =>
+                @errorAlert.fadeOut()
+            , 10000
+
+        if form.password1.length < 5
+            showError 'account change password short'
+
+        else if form.password1 isnt form.password2
+            showError 'account change password difference'
+
+        else
+
+            @accountSubmitButton.spin true
+            request.post 'api/user', form, (err, data) =>
+
+                @accountSubmitButton.spin false
+                if err
                     @password0Field.val null
                     @password1Field.val null
                     @password2Field.val null
+                    @errorAlert.show()
+                    timeout =>
+                        @errorAlert.hide()
+                    , 10000
+
                 else
-                    @displayErrors data.msg
-            @accountSubmitButton.spin false
+                    if data.success
+                        @infoAlert.show()
+                        @password0Field.val null
+                        @password1Field.val null
+                        @password2Field.val null
+                        timeout =>
+                            @infoAlert.hide()
+                        , 10000
+                    else
+                        showError 'account change password error'
 
 
     # Display errors that occured through the error alert.
@@ -177,6 +200,7 @@ module.exports = class exports.AccountView extends BaseView
             if event.keyCode is 13 or event.which is 13
                 @onNewPasswordSubmit()
 
+
     # When add background button is clicked, it displays the photo selector
     # modal. From the selector result it sends a multipart form to the server.
     # That way the background can saved. Once it's done the background is
@@ -211,6 +235,7 @@ module.exports = class exports.AccountView extends BaseView
                         alert t 'account background added error'
                     complete: =>
                         @backgroundAddButton.spin false
+
 
     # When background is changed, data are saved and a backgroundChanged event
     # is emitted. That way the main view can be notified.

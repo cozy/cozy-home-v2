@@ -7,9 +7,9 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
     tagName   : "section"
 
-####################
-## PUBLIC SECTION ##
-#
+    ####################
+    ## PUBLIC SECTION ##
+    #
 
     constructor: (modal) ->
         @modal = modal
@@ -23,12 +23,16 @@ module.exports = class ObjectPickerAlbum extends BaseView
         @tabLabel = 'album'
         ####
         # get elements (name ends with '$')
-        @tab      = $("<div>#{@tabLabel}</div>")[0]
+        @tab      = $("<div class='fa fa-book'>#{@tabLabel}</div>")[0]
         @panel    = @el
         @albums$  = $('<div class="albums"></div>')[0]
-        @thumbs$  = $('<div class="thumbs"><img></img></div>')[0]
-        @panel.appendChild(@albums$)
-        @panel.appendChild(@thumbs$)
+        @thumbs$  = $("""
+            <div class="thumbs">
+                <div class="thumb"><img/></div>
+            </div>
+        """)[0]
+        @panel.appendChild @albums$
+        @panel.appendChild @thumbs$
         ####
         # construct the list of albums
         @_getAlbums()
@@ -39,8 +43,8 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
         ####
         # listeners
-        @thumbs$.addEventListener( 'click'    , @_clickHandler    )
-        @thumbs$.addEventListener( 'dblclick' , @_dblclickHandler )
+        @thumbs$.addEventListener 'click', @_clickHandler
+        @thumbs$.addEventListener 'dblclick', @_dblclickHandler
 
 
     getObject : () ->
@@ -63,8 +67,6 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
 
     keyHandler : (e)->
-        # console.log 'ObjectPickerAlbum.keyHandler', e.which
-        # @longList.keyHandler(e)
         return
 
 
@@ -76,16 +78,13 @@ module.exports = class ObjectPickerAlbum extends BaseView
                      + 2
         width = @thumbs$.clientWidth
         margin = Math.floor((width % colWidth)/2)
-        @thumbs$.style.paddingLeft = margin + 'px'
 
 
-
-#####################
-## PRIVATE SECTION ##
-#
+    #####################
+    ## PRIVATE SECTION ##
+    #
 
     _dblclickHandler: (e) =>
-        console.log 'dblClick', e.target
         thumb$ = e.target
         if !@_toggleOnThumb$(thumb$)
             return
@@ -93,21 +92,20 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
 
     _clickHandler: (e) =>
-        console.log 'click', e.target
         th = e.target
-        if th.nodeName != 'IMG'
-            return
+        while (not th.classList.contains('thumb'))
+            th = th.parentElement
+            return if th.classList.contains('thumbs')
+
         if !@_toggleOnThumb$(th) then return null
-        th.classList.add('selected')
+        th.setAttribute('aria-selected', true)
 
 
     _toggleOnThumb$: (thumb$)=>
-        if thumb$.classList.contains('selected')
+        if thumb$.getAttribute('aria-selected') is 'true'
             return true
-        if thumb$.nodeName != 'IMG'
-            return false
         @_unselectAll()
-        thumb$.classList.add('selected')
+        thumb$.setAttribute('aria-selected', true)
         @selectedThumbs[thumb$.dataset.id] = thumb$
         return true
 
@@ -115,14 +113,14 @@ module.exports = class ObjectPickerAlbum extends BaseView
     _unselectAll: () =>
         for id, thumb$ of @selectedThumbs
             if typeof(thumb$) == 'object'
-                thumb$.classList.remove('selected')
+                thumb$.setAttribute('aria-selected', false)
                 @selectedThumbs[id] = false
 
 
     _getAlbums: () ->
         client.get "albums/?", (err, res) =>
             if err
-                console.log err
+                console.error err
                 return
             # if true
             if res.length == 0
@@ -142,7 +140,7 @@ module.exports = class ObjectPickerAlbum extends BaseView
                 albumLabel$ = @_initAlbum(album)
                 if n == 0
                     @previousSelectedAlbum$ = albumLabel$
-                    albumLabel$.classList.add('selectedAlbum')
+                    albumLabel$.setAttribute('aria-selected', true)
                     @_getAlbumPhotos(album.id)
                 n += 1
             @resizeHandler()
@@ -156,8 +154,8 @@ module.exports = class ObjectPickerAlbum extends BaseView
         label.textContent = album.title
         @albums$.appendChild(el)
         el.addEventListener 'click', (event) =>
-            @previousSelectedAlbum$.classList.remove('selectedAlbum')
-            el.classList.add('selectedAlbum')
+            @previousSelectedAlbum$.setAttribute('aria-selected', false)
+            el.setAttribute('aria-selected', true)
             @previousSelectedAlbum$ = el
             @_getAlbumPhotos(album.id)
         return el
@@ -171,24 +169,29 @@ module.exports = class ObjectPickerAlbum extends BaseView
 
 
     _updateThumbs: (res)=>
-        # console.log res
         photos = res.photos
         nPhoto = photos.length
         photoRank = 0
         for thumb in @thumbs$.children
             if photoRank >= nPhoto
-                thumb.classList.add("hide")
-                thumb.src        = ''
-                thumb.dataset.id = ''
-                thumb.photo      = null
+                thumb.setAttribute('aria-hidden', true)
+                thumb.firstElementChild.src = ''
+                thumb.dataset.id            = ''
+                thumb.photo                 = null
             else
-                thumb.classList.remove("hide")
-                thumb.dataset.id = photoId = photos[photoRank].id
-                thumb.src        = "photos/thumbs/#{photoId}.jpg"
-                thumb.photo      = photos[photoRank]
+                thumb.setAttribute('aria-hidden', false)
+                thumb.dataset.id            = photoId = photos[photoRank].id
+                thumb.firstElementChild.src = "photos/thumbs/#{photoId}.jpg"
+                thumb.photo                 = photos[photoRank]
             photoRank += 1
+
         for photoRank in [photoRank..nPhoto-1] by 1
-            thumb       = document.createElement('img')
-            thumb.src   = "photos/thumbs/#{photos[photoRank].id}.jpg"
-            thumb.photo = photos[photoRank]
-            @thumbs$.appendChild(thumb)
+            thumbImg     = document.createElement 'img'
+            thumbImg.src = "photos/thumbs/#{photos[photoRank].id}.jpg"
+            thumb        = document.createElement 'div'
+            thumb.appendChild thumbImg
+            thumb.classList.add 'thumb'
+            thumb.photo      = photos[photoRank]
+            thumb.dataset.id = photos[photoRank].id
+            @thumbs$.appendChild thumb
+

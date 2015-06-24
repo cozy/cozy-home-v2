@@ -15,7 +15,6 @@ module.exports =
 
         CozyUser.first (err, user) ->
             CozyInstance.first (err, instance) ->
-                selectedApp = req.body.app or 'home'
 
                 {locale, domain} = instance
                 {email, public_name} = user
@@ -51,7 +50,7 @@ module.exports =
                                     contentType: "text/plain"
 
                             data =
-                                to: "frank@mycozycloud.com"
+                                to: "support@cozycloud.cc"
                                 subject: "Demande d'assistance depuis un Cozy"
                                 content: content
                                 attachments: attachments

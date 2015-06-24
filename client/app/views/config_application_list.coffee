@@ -53,4 +53,3 @@ module.exports = class ApplicationsListView extends ViewCollection
         else
             alert t('error update uninstalled app')
 
-

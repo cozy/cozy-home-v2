@@ -40,6 +40,7 @@ module.exports = class ConfigApplicationsView extends BaseView
         @applications = new Application()
         @stackApps.fetch reset: true
         @displayDevices()
+        @stackApplications = new StackApplication
 
     openUpdatePopover: (slug) ->
         @applicationList.openUpdatePopover slug

@@ -46,7 +46,7 @@ module.exports = class ObjectPickerUpload extends BaseView
 ## PRIVATE SECTION ##
 #
     _createTab : () ->
-        return $("<div>#{@tabLabel}</div>")[0]
+        return $("<div class='fa fa-upload'>#{@tabLabel}</div>")[0]
 
 
     _bindFileDropZone: ()->
@@ -55,14 +55,12 @@ module.exports = class ObjectPickerUpload extends BaseView
         hasEnteredText = false
 
         dropbox.addEventListener("dragenter", (e)->
-            # console.log 'dragenter'
             e.stopPropagation()
             e.preventDefault()
             dropbox.classList.add('dragging')
         ,false)
 
         dropbox.addEventListener("dragleave", (e)->
-            # console.log 'dragleave'
             e.stopPropagation()
             e.preventDefault()
             dropbox.classList.remove('dragging')
@@ -85,7 +83,6 @@ module.exports = class ObjectPickerUpload extends BaseView
 
 
     _changePhotoFromUpload: () =>
-        # console.log "_changePhotoFromUpload"
         @uploadPopupOpened = true
         # pb : is not set to false if the user close the popup by clicking on
         # the close button => will close the modal too...
@@ -98,7 +95,6 @@ module.exports = class ObjectPickerUpload extends BaseView
 
 
     _handleFile: (file) =>
-        # console.log "_handleFile"
         unless file.type.match /image\/.*/
             return alert t 'This is not an image'
         reader = new FileReader()
@@ -107,3 +103,4 @@ module.exports = class ObjectPickerUpload extends BaseView
         reader.onloadend = =>
             @dataUrl = reader.result
             @objectPicker.onYes()
+

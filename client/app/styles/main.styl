@@ -3,6 +3,10 @@
 @import '_help'
 @import '../lib/styles/_wizard'
 
+@import '_modal'
+@import '_object-picker'
+
+
 *
     outline none
 
@@ -817,6 +821,8 @@ body
     strong
         text-transform lowercase
         font-size 20px
+        a
+            color black
 
     .smaller
         font-family 'Source Sans Pro', sans-serif
@@ -869,12 +875,14 @@ body
             margin-left 0
 
     .to-update-label
-        background #43A047
+        background #6C6
         color white
         padding 3px 6px
+        margin-left 26px
         font-size 12px
         border-radius 3px
         text-transform lowercase
+
 
 #config-applications-view
     .stack-app
@@ -1131,6 +1139,7 @@ body
 
     #applications-view
         padding 10px
+        margin-bottom 20px
 
     #market-view
         span
@@ -1161,6 +1170,7 @@ body
 
 
 @media (max-width 800px)
+
     .back-button
         span
             display none
@@ -1168,14 +1178,12 @@ body
     .pa2
         padding 10px
 
-
     #config-applications-view
         .w50
             padding 10px
 
     .platform-section
         padding 10px
-
 
     .application .application-inner
         padding 0

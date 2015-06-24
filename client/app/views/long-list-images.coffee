@@ -228,7 +228,6 @@ module.exports = class LongList
      * @param  {Event} e Event
     ###
     keyHandler : (e)->
-        # console.log 'LongList.keyHandler', e.which
         switch e.which
             when 39 # right key
                 e.stopPropagation()
@@ -544,8 +543,10 @@ module.exports = class LongList
             # loop to create the thumbs
             for rk in [0..nToCreate-1] by 1
                 if localRk == 0 then _insertMonthLabel(month)
-                thumb$ = document.createElement('img')
-                thumb$.setAttribute('class', 'long-list-thumb')
+                thumbImg$ = document.createElement('img')
+                thumb$ = document.createElement('div')
+                thumb$.appendChild(thumbImg$)
+                thumb$.setAttribute('class', 'long-list-thumb thumb')
                 thumb$.style.height = thumbHeight + 'px'
                 thumb$.style.width  = thumbHeight + 'px'
                 thumb =
@@ -599,7 +600,7 @@ module.exports = class LongList
             # request the photo documents from server
             Photo.listFromFiles 0, nToCreate, (error, res) ->
                 if error
-                    console.log error
+                    console.error error
                 _updateThumb(res.files, res.firstRank)
 
 
@@ -656,13 +657,11 @@ module.exports = class LongList
             @noScrollScheduled      = true
             @noIndexScrollScheduled = true
             lazyHideIndex()
-            # console.log '\n======_adaptBuffer==beginning======='
 
             # test speed, if too high, relaunch a _scrollHandler
             current_scrollTop = @viewPort$.scrollTop
             speed = Math.abs(current_scrollTop - lastOnScroll_Y) / viewPortHeight
             if speed > MAX_SPEED
-                # console.log 'HIGH SPEED ! :-)'
                 _scrollHandler()
                 return
 
@@ -685,8 +684,6 @@ module.exports = class LongList
 
             _computeSafeZone()
 
-            # console.log 'safeZone', JSON.stringify(safeZone,2)
-            # console.log 'buffer', bufr
             if safeZone.lastRk > bufr.lastRk
                 # 1/ the safeZone is going down and the bottom of the safeZone
                 # is bellow the bottom of the buffer
@@ -712,15 +709,7 @@ module.exports = class LongList
                     targetCol     = safeZone.firstCol
                     targetY       = safeZone.firstY
 
-                # console.log 'direction: DOWN',         \
-                #             'nToMove:'   + nToMove,    \
-                #             'targetRk:'  + targetRk,   \
-                #             'targetCol'  + targetCol,  \
-                #             'targetY'    + targetY
-
                 if nToMove > 0
-                    console.log "nToMove",nToMove
-                    console.log "targetRk",targetRk
                     Photo.listFromFiles targetRk, nToMove, (error, res) ->
                         _updateThumb(res.files, res.firstRank)
                     _moveBufferToBottom( nToMove        ,
@@ -754,16 +743,10 @@ module.exports = class LongList
                     targetMonthRk = safeZone.endMonthRk
                     targetY       = safeZone.endY
 
-                # console.log 'direction: UP',           \
-                #             'nToMove:'   + nToMove,    \
-                #             'targetRk:'  + targetRk,   \
-                #             'targetCol'  + targetCol,  \
-                #             'targetY'    + targetY
-
                 if nToMove > 0
                     Photo.listFromFiles targetRk - nToMove + 1 , nToMove, (error, res) ->
                         if error
-                            console.log error
+                            console.error error
                         _updateThumb(res.files, res.firstRank)
                     _moveBufferToTop( nToMove       ,
                                       targetRk      ,
@@ -775,13 +758,8 @@ module.exports = class LongList
                 # of the buffer
                 safeZone.firstThumbToUpdate   = previous_firstThumbToUpdate
 
-            # console.log '======_adaptBuffer==ending='
-            # console.log 'bufr', bufr
-            # console.log '======_adaptBuffer==ended======='
-
 
         _rePositionThumbs = () =>
-            console.log "== _rePositionThumbs"
             bufr      = buffer
             thumb     = bufr.first
             thumb$    = thumb.el
@@ -839,7 +817,6 @@ module.exports = class LongList
          * @param  {Integer} fstFileRk The rank of the first file of files
         ###
         _updateThumb = (files, fstFileRk)=>
-            # console.log '\n======_updateThumb started ================='
             lstFileRk = fstFileRk + files.length - 1
             bufr      = buffer
             thumb     = bufr.first
@@ -874,42 +851,24 @@ module.exports = class LongList
                     th = th.next
             ##
             # 2/ update src of thumbs that are after the firstThumbRkToUpdate
-            # if firstThumbRkToUpdate <= lstFileRk
-            #     console.log " update forward: #{firstThumbRkToUpdate}->
-            #         #{lstFileRk}"
-            #     console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,   \
-            #                    'nFiles', files.length,                         \
-            #                    'fstFileRk', fstFileRk,                         \
-            #                    'lstFileRk',lstFileRk
-            # else
-            #     console.log ' update forward: none'
             thumb = firstThumbToUpdate
             for file_i in [firstThumbRkToUpdate-fstFileRk..files.length-1] by 1
-                file    = files[file_i]
-                fileId = file.id
-                thumb$            = thumb.el
-                thumb$.file       = file
-                thumb$.src        = "files/photo/thumbs/#{fileId}.jpg"
-                # thumb$.src        = 'files/photo/thumbs/fast/#{fileId}'
-                thumb$.dataset.id = fileId
-                thumb.id          = fileId
-                thumb             = thumb.prev
+                file                         = files[file_i]
+                fileId                       = file.id
+                thumb$                       = thumb.el
+                thumb$.file                  = file
+                thumb$.firstElementChild.src = "files/photo/thumbs/#{fileId}.jpg"
+                # thumb$.src                 = 'files/photo/thumbs/fast/#{fileId}'
+                thumb$.dataset.id            = fileId
+                thumb.id                     = fileId
+                thumb                        = thumb.prev
                 if @.selected[fileId]
-                    thumb$.classList.add('selectedThumb')
+                    thumb$.setAttribute('aria-selected', true)
                     @selected[fileId] = thumb$
                 else
-                    thumb$.classList.remove('selectedThumb')
+                    thumb$.setAttribute('aria-selected', false)
             ##
             # 3/ update src of thumbs that are before the firstThumbRkToUpdate
-            # if firstThumbRkToUpdate > fstFileRk
-            #     console.log " update backward #{firstThumbRkToUpdate-1}->
-            #         #{fstFileRk}"
-            #     console.log '   firstThumbRkToUpdate', firstThumbRkToUpdate,
-            #                    'nFiles', files.length,
-            #                    'fstFileRk', fstFileRk,
-            #                    'lstFileRk',lstFileRk
-            # else
-            #     console.log ' update backward: none'
             thumb = firstThumbToUpdate.next
             for file_i in [firstThumbRkToUpdate-fstFileRk-1..0] by -1
                 file   = files[file_i]
@@ -922,18 +881,16 @@ module.exports = class LongList
                 thumb.id          = fileId
                 thumb             = thumb.next
                 if @selected[fileId]
-                    thumb$.classList.add('selectedThumb')
+                    thumb$.setAttribute('aria-selected', true)
                     @selected[fileId] = thumb$
                 else
-                    thumb$.classList.remove('selectedThumb')
+                    thumb$.setAttribute('aria-selected', false)
             ##
             # 3/ default selection management : can not be done before the id of
             # the first thumb is given by the server, that's why it is done here
             if isDefaultToSelect
                 @_toggleOnThumb$(bufr.first.el)
                 isDefaultToSelect = false
-
-            # console.log '======_updateThumb finished ================='
 
 
         _getBufferNextFirst = ()=>
@@ -1170,7 +1127,6 @@ module.exports = class LongList
                         rowY += rowHeight
                         col   = 0
 
-            # console.log 'firstThumbToUpdate (_moveBufferToBottom)', safeZone.firstThumbToUpdate.el
             buffer.lastRk  = rk - 1
             buffer.firstRk = buffer.first.rank
             # store the parameters of the thumb that is just after the last one
@@ -1230,8 +1186,6 @@ module.exports = class LongList
                         rowY -= rowHeight
                         col   = nThumbsPerRow - 1
 
-            # console.log 'firstThumbToUpdate (_moveBufferToTop)',
-            #             safeZone.firstThumbToUpdate.el
             buffer.firstRk = rk + 1
             buffer.lastRk  = buffer.last.rank
 
@@ -1294,8 +1248,10 @@ module.exports = class LongList
 
     _clickHandler: (e) =>
         th = e.target
-        if not th.classList.contains('long-list-thumb')
-            return
+        while (not th.classList.contains('thumb'))
+            th = th.parentElement
+            return if th.classList.contains('thumbs')
+
         if !@_toggleOnThumb$(th) then return null
         @_lastSelectedCol = @_coordonate.left(th)
         viewPortTopY    = @viewPort$.scrollTop
@@ -1310,8 +1266,10 @@ module.exports = class LongList
 
     _dblclickHandler: (e) =>
         th = e.target
-        if not th.classList.contains('long-list-thumb')
-            return null
+        while (not th.classList.contains('thumb'))
+            th = th.parentElement
+            return if th.classList.contains('thumbs')
+
         @_toggleOnThumb$(th)
         @_lastSelectedCol = @_coordonate.left(th)
         @modal.onYes()
@@ -1331,14 +1289,14 @@ module.exports = class LongList
             return null
         # otherwise we can toggle
         @_unselectAll()
-        thumb$.classList.add('selectedThumb')
+        thumb$.setAttribute('aria-selected', true)
         @selected[thumb$.dataset.id] = thumb$
 
 
     _unselectAll: () =>
         for id, thumb$ of @selected
             if typeof(thumb$) == 'object'
-                thumb$.classList.remove('selectedThumb')
+                thumb$.setAttribute('aria-selected', false)
                 @selected[id] = false
 
 
@@ -1586,30 +1544,28 @@ module.exports = class LongList
     ###
     _getPreviousThumb$: (thumb$) ->
         # 1/ check we are not on the first thumb
-        if thumb$.dataset.rank == '0'
-            return null
+        return null if thumb$.dataset.rank is '0'
         # 2/ check we are not on the first displayed by the buffer
-        if thumb$ == @buffer.first.el
-            return null
+        return null if thumb$ is @buffer.first.el
         # 3/ get the previous thumb
         th = thumb$.previousElementSibling
-        if th == null
+        unless th?
             # case if thumb$ is the first element => jump to the last one
             # (what does not means it is the first displayed)
             th = thumb$.parentNode.lastElementChild
-            if th == thumb$
-                # case there is only one photo
-                return null
-        while th.nodeName == 'DIV'
+            # case there is only one photo
+            return null if th is thumb$
+
+        while not th.classList.contains 'thumb'
             # case of a month label
             th = th.previousElementSibling
-            if th == null
+            unless th?
                 # case if thumb$ is the first element => jump to the last one
                 # (what does not means it is the first displayed)
                 th = thumb$.parentNode.lastElementChild
-                if th == thumb$
-                    # case there is only one photo
-                    return null
+                # case there is only one photo
+                return null if th is thumb$
+
         return th
 
     ###*
@@ -1620,30 +1576,28 @@ module.exports = class LongList
     ###
     _getNextThumb$: (thumb$) ->
         # 1/ check we are not on the last thumb
-        if @_coordonate.rank(thumb$) == @nPhotos - 1
-            return null
+        return null if @_coordonate.rank(thumb$) is @nPhotos - 1
         # 2/ check we are not on the last displayed by the buffer
-        if thumb$ == @buffer.last.el
-            return null
+        return null if thumb$ is @buffer.last.el
         # 3/ get the next thumb
         th = thumb$.nextElementSibling
-        if th == null
+        unless th?
             # case if thumb$ is the last element => jump to the first one
             # (what does not means it is the oldest displayed)
             th = thumb$.parentNode.firstElementChild
-            if th == thumb$
-                # case there is only one photo
-                return null
-        while th.nodeName == 'DIV'
+            # case there is only one photo
+            return null if th is thumb$
+
+        while not th.classList.contains 'thumb'
             # case of a month label
             th = th.nextElementSibling
-            if th == null
+            unless th?
                 # case if thumb$ is the last element => jump to the first one
                 # (what does not means it is the oldest displayed)
                 th = thumb$.parentNode.firstElementChild
-                if th == thumb$
-                    # case there is only one photo
-                    return null
+                # case there is only one photo
+                return null if th is thumb$
+
         return th
 
     ###*

@@ -10,17 +10,17 @@ module.exports =
     "change password"           : "Passwort ändern"
     "input your current password" : "Tragen Sie Ihr aktuelles Passwort ein"
     "enter a new password" : "Benutzen Sie das Feld um ein neues Passwort zu erstellen"
-    "confirm new password"       : "Bestätigen Sie neues PassworT"
+    "confirm new password"       : "Bestätigen Sie das neue Passwort"
     "send changes"              : "Speichern"
     "manage"                    : "Managen"
     "total"                     : "Total"
     "memory consumption"        : "Arbeitsspeicher Verbrauch"
     "disk consumption"          : "Speicherplatz Verbrauch"
     "you have no notifications" : "Sie haben keine Mitteilungen"
-    "dismiss all"               : "Alle wegschicken"
+    "dismiss all"               : "Alle ausblenden"
     "add application"         : "App hinzufügen?"
     "install"                   : "Installieren"
-    "your app"                 : "Deine app!"
+    "your app"                 : "Deine App!"
     "community contribution"    : "Community Mitwirkung"
     "official application"      : "Offizielle App"
     "application description"   : "App Beschreibung"
@@ -57,8 +57,8 @@ module.exports =
         """
 
     "welcome to app store": """
-	Willkommen zu Ihrem Cozy App Store, installieren Sie Ihre eigene App
-	von hier und fügen Sie eine von der Liste hinzu.
+	Willkommen in Ihrem Cozy App Store, installieren Sie Ihre eigene App
+	von hier aus und fügen Sie eine von der Liste hinzu.
         """
 
     "installed everything": "Sie haben bereits alles installiert!"
@@ -89,13 +89,13 @@ module.exports =
     "no application installed":"Es ist keine App installiert."
 
     "your parameters": "Ihre Einstellungen"
-    "alerts and password recovery email":"Ihre E-Mail Addresse wird benötigt Alarme und Passwort Recovery."
+    "alerts and password recovery email":"Ihre E-Mail Addresse wird für Alarme und Passwort Recovery benötigt."
     "public name description": "Ihr öffentlicher Name wird von Ihrem Cozy und seinen Apps genutzt um mit Ihnen zu kommunizieren."
-    "your timezone is required":"Ihre Zeitzone hilft dabei Datums korrekt anzuzeigen."
+    "your timezone is required":"Ihre Zeitzone hilft dabei das Datum korrekt anzuzeigen."
     "domain name for urls and email":"Der Domain Name wird benutzt um URLs via E-Mail zu Ihnen und Ihren Kontakten zu senden."
     "save":"Speichern"
     "saved":"Gespeichert"
-    "Chose the language you want I use to speak with you:":"Wählen Sie die Sprache mit der sich mich nutzen möchten:"
+    "Chose the language you want I use to speak with you:":"Wählen Sie die Sprache in der Sie mich nutzen möchten:"
     "french":"Französisch"
     "english":"Englisch"
     "german":"Deutsch"
@@ -106,10 +106,10 @@ module.exports =
     "confirm your new password":"Bestägigen Sie in neues Passwort"
     "save your new password":"Speichern Sie Ihr neues Passwort"
     "do you want assistance":"Brauchen Sie etwas Hilfe?"
-    "Write an email to our support team at:":"Shoot unserem Support Team eine E-Mail:"
-    "Register and post on our forum: ":"Registieren Sie sich und schreiben in unserem Forum:"
-    "Ask your question on Twitter: ":"Stellen Fragen auf Twitter:"
-    "Chat with us on IRC:":"Chatten Sie mit uns auf IRC:"
+    "Write an email to our support team at:":"Schreibe unserem Support Team eine E-Mail:"
+    "Register and post on our forum: ":"Registieren Sie sich und schreiben in unserem Forum: "
+    "Ask your question on Twitter: ":"Stellen Sie Fragen auf Twitter: "
+    "Chat with us on IRC:":"Chatten Sie mit uns über IRC:"
     "Visit the project website and learn to build your app:":"Besuchen Sie die Projekt Webseite und lernen Sie Ihre eigene App zu erstellen:"
     "your own application":"Ihre eigene App"
     "installed":"Installiert"
@@ -121,8 +121,8 @@ module.exports =
     "update stack modal title": "Aktualisieren Sie Ihren Cozy"
     "update stack modal content": "Sie sind dabei die Plattform zu aktualisieren. Ihr Cozy wird ein Paar Minuten nicht verfügbar sein. Ist das OK?"
     "update stack modal confirm": "Aktualisierung"
-    "update stack success": "Ihre Applikation wurde aktualisiert, Seite wird neu aufgebaut."
-    "update stack error": "Ein Fehler ist während der Aktualisierung aufgetreten, Seite wird neu aufgebaut."
+    "update stack success": "Ihre Applikation wurde aktualisiert, Seite wird neu geladen."
+    "update stack error": "Ein Fehler ist während der Aktualisierung aufgetreten, Seite wird neu geladen."
     "applications broken": "Applikation abgestürtzt"
     "cozy platform": "Plattform"
     "reboot stack": "Neustart"
@@ -130,7 +130,7 @@ module.exports =
     "error update uninstalled app": "Sie können keine App aktualisieren, die nicht installiert ist."
     "broken":"Absturz"
     "start this app":"Diese App starten"
-    "stopped":"Gestoppet"
+    "stopped":"Gestoppt"
     "retry to install":"Installation wiederholen"
     "cozy account title":"Cozy - Account"
     "cozy app store title":"Cozy - App Store"
@@ -151,40 +151,43 @@ module.exports =
     "removing":"Entfernen"
     "required permissions":"Benötigte Rechte"
     "finish layout edition": "Speichern"
-    "reset customization": "Rücksetzen"
+    "reset customization": "Zurücksetzen"
+    "use widget": "Widget verwenden"
     "use icon": "Icon verwenden"
     "change layout": "Layout verändern"
 
-    "introduction market": """Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch
+    "introduction market": """
+        Willkommen zum Cozy App Store. Hier können Sie Ihr Cozy durch das
         installieren neuer Apps anpassen.
         Von hier können Sie eine selbst erstellte App oder schon existierenden Apps;
 bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinschaft, installieren.
     """
 
-    "error connectivity issue": "Ein Fehler ist aufgetreten beim abrufen der Daten.<br />Bitte versuchen Sie später erneut."
+    "error connectivity issue": "Beim Abrufen der Daten ist ein Fehler aufgetreten.<br />Bitte versuchen Sie später erneut."
     "package.json not found": "Abruf von package.json ist nicht möglich. Prüfen Sie Ihre Repoitory URL."
     "please wait data retrieval": "Bitte warten während die Daten abgerufen werden…"
     "revoke device confirmation message": "Dies verhindert den Zugriff des Gerätes auf Ihr Cosy. Sind Sie sicher?"
 
     "dashboard": "Dashboard"
-    "calendars description": "Verwalten Sie Ihre Ereignisse und synchronisieren Sie diese mit Ihrem Smartphone."
+    "calendars description": "Verwalten Sie Ihre Einträge und synchronisieren Sie diese mit Ihrem Smartphone."
     "contacts description": "Verwalten Sie Ihre Kontakte und synchronisieren Sie diese mit Ihrem Smartphone."
     "emails description": "Lesen, senden und sichern Sie Ihre E-Mails."
     "files description": "Ihr Online Datei-System, synchronisiert mit Ihren Geräten."
     "photos description": "Organisieren Sie Ihre Fotos und teilen Sie diese mit Freunden."
     "sync description": "Das Tool ist die Vorausetzung zur Synchronisation Ihrer Kontakte und Kalender mit Ihrem Smartphone."
-    "bookmark description": "Speichern und verwalten Ihrer Lesezeichen."
+    "quickmarks description": "Speichern und verwalten Ihrer Lesezeichen."
     "cozic description": "Ein Audio-Player zum hören Ihrer Musik in Ihrem Browser."
-    "databrowser description": "Durchblättern und visualisieren all Ihrer Daten (RAW Format)."
+    "databrowser description": "Durchsuchen und visualisieren all Ihrer Daten (RAW Format)."
     "feeds description": "Sammeln Sie Ihre Feeds und speichern Sie favorisierten Links als Lesezeichen."
     "kyou description": "Verbessern Sie Ihre Gesundheit und Zufriedenheit durch Bewertung Ihrer selbst."
     "konnectors description": "Daten Import von externen Services (Twitter, Jawbone…)."
-    "kresus description": "Zusätzliche Tools für Ihre private Finanz Verwaltung."
-    "nirc description": "Zugruff auf Ihre fovorisierten IRC Kanäle von Ihrem Cozy."
-    "notes description": "Organisieren und schreiben von smarten Notizen."
+    "kresus description": "Zusätzliches Tool für Ihre private Finanzverwaltung."
+    "nirc description": "Zugriff auf Ihre favorisierten IRC Kanäle von Ihrem Cozy."
+    "notes description": "Organisieren und schreiben von Notizen."
     "owm description": "Wissen wie das Wetter wird, überall auf der Welt."
+    "pfm description": "Verwalten Ihrer Bank Konten ohne sich jedesmal einzuloggen  (Nur französische Banken)."
     "remote storage description": "Ein entferntes Speicher Gerät, zur Speicherung Ihre nicht gehosteten Applikationen."
-    "tasky description": "Super schneller und einfacher Tag-basierter Aufgaben Verwalter."
+    "tasky description": "Super schneller und einfacher Tag basierter Aufgaben Verwalter."
     "todos description": "Erstellen Sie Ihre Aufgaben, ordnen Sie diese und führen Sie diese effizient aus."
     "term description": "Eine Terminal App für Ihr Cozy."
     "reminder title email": "Erinnerung"
@@ -212,7 +215,7 @@ bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinscha
         """
         'customize your cozy': """
             Sie können außerdem <a href="%{account}">zu den Einstellungen gehen</a> um Ihr Cozy anzupassen,
-            oder <a href="%{appstore}">den App Store besuchen</a> um Ihre Erste App zu installieren.
+            oder <a href="%{appstore}">den App Store besuchen</a> um Ihre erste App zu installieren.
         """
 
     'relaunch install wizard': "Installation Wizard neu starten"
@@ -236,7 +239,7 @@ bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinscha
         """
         'contacts title': "Contacts App konfigurieren"
         'contacts content': """
-            <p>Möchten Sie eine Kontakt App um Ihr Adressbuch zu verwalten und direkten Zugriff zu Ihren Freunden zu haben?</p>
+            <p>Möchten Sie eine Kontakt App um Ihr Adressbuch zu verwalten und direkten Zugriff auf Ihre Freunde zu haben?</p>
             <p><small>Aktivieren dieser App ermöglicht auch die Verwendung der Sync App um Daten mit Ihrem Smartphone und den Computer Programmen zu synchronisieren.</small></p>
         """
         'calendar title': "Calendar App konfigurieren"
@@ -266,7 +269,7 @@ bereitgestellt durch die Cozy Cloud und deren freundlicher Entwickler Gemeinscha
         'continue to dashboard': "Dashboard entdecken"
         'dashboard title': "Dashboard entdecken"
         'dashboard content': """
-            <p>Hier ist eine kleine Führung über alles was in Ihrem Cozy Home verfügbar ist. Alle Eigenschaften können vom Menü in der oberen rechten Ecke erreicht werden.</p>
+            <p>Hier ist eine kleine Führung durch alles was in Ihrem Cozy Home verfügbar ist. Alle Eigenschaften können vom Menü in der oberen rechten Ecke erreicht werden.</p>
             <p><img src="/img/home-black.png"><strong>Home: </strong>Dies ist der Platz von dem Sie alle Ihre Apps erreichen</p>
         """
         'continue to apps': "Wie können Ihre Apps verwalten werden?"
