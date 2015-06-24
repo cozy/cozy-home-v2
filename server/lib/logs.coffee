@@ -14,7 +14,12 @@ module.exports = logs =
     # Return the log path for a given app slug.
     getLogPath: (slug) ->
         filename = "#{slug}.log"
-        return path.join '/', 'usr', 'local', 'var', 'log', 'cozy', filename
+        filepath = path.join '/', 'usr', 'local', 'var', 'log', 'cozy', filename
+        backuppath = "#{filepath}-backup"
+        if (not fs.existsSync filepath) and fs.existsSync backuppath
+            return backuppath
+        else
+            return filepath
 
 
     # Returns log content for given app.
