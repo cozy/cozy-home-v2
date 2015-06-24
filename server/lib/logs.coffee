@@ -37,7 +37,7 @@ module.exports = logs =
             # missing
             fs.readFile logPath, (err, logContent) ->
                 content = logContent?.toString()
-                logContents[slug] = content.replace logs.colors, ''
+                logContents[slug] = content?.replace logs.colors, ''
 
                 next()
         , ->
