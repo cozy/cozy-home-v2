@@ -14,7 +14,7 @@ module.exports =
             else res.send 204, success: true
 
     show: (req, res, next) ->
-        Notification.find req.params.id, (err, notif) =>
+        Notification.find req.params.notifid, (err, notif) =>
             if err then next err
             else if not notif
                 res.send 404, error: 'Notification not found'
@@ -22,7 +22,7 @@ module.exports =
                 res.send 200, notif
 
     delete: (req, res, next) ->
-        Notification.find req.params.id, (err, notif) =>
+        Notification.find req.params.notifid, (err, notif) =>
             if err then next err
             else if not notif
                 res.send 404, error: 'Notification not found'

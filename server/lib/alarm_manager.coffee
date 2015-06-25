@@ -43,7 +43,7 @@ module.exports = class AlarmManager
 
     # Handles event's alarms
     addEventCounters: (event) ->
-        if event.alarms? and event.alarms.items?.length > 0
+        if event.alarms? and event.alarms.length > 0
             cozyAlarms = event.getAlarms @timezone
             @addAlarmCounters cozyAlarm for cozyAlarm in cozyAlarms
 
@@ -74,7 +74,6 @@ module.exports = class AlarmManager
     # immediately create the Notification object
     # and/or send Email for a given alarm
     handleNotification: (alarm) =>
-
         if alarm.action in ['DISPLAY', 'BOTH']
             resource = if alarm.related? then alarm.related
             else

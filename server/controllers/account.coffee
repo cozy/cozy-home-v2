@@ -25,11 +25,15 @@ module.exports =
             if body.public_name?
                 data.public_name = body.public_name
 
-            if body.email? and body.email.length > 0
-                if EMAILREGEX.test body.email
-                    data.email = body.email
+            if body.email?
+                if body.email.length > 0
+                    if EMAILREGEX.test body.email
+                        data.email = body.email
+                    else
+                        errors = ["error proper email"]
+                        return cb null, errors
                 else
-                    errors = ["Given email is not a proper email"]
+                    errors = ["error email empty"]
                     return cb null, errors
 
             if data.timezone or data.email or data.password or data.public_name
