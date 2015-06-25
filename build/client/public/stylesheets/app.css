@@ -2840,6 +2840,9 @@ body {
 #account-view .account-field button {
   width: 60px;
 }
+#account-view .error {
+  color: #f00;
+}
 #account-view button {
   text-align: center;
 }

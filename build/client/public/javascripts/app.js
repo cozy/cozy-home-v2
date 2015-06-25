@@ -1,59 +1,42 @@
-(function() {
+(function(/*! Brunch !*/) {
   'use strict';
 
-  var globals = typeof window === 'undefined' ? global : window;
+  var globals = typeof window !== 'undefined' ? window : global;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
-  var has = ({}).hasOwnProperty;
 
-  var aliases = {};
-
-  var endsWith = function(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  var has = function(object, name) {
+    return ({}).hasOwnProperty.call(object, name);
   };
 
-  var unalias = function(alias, loaderPath) {
-    var start = 0;
-    if (loaderPath) {
-      if (loaderPath.indexOf('components/' === 0)) {
-        start = 'components/'.length;
-      }
-      if (loaderPath.indexOf('/', start) > 0) {
-        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
+    }
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
       }
     }
-    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
-    if (result) {
-      return 'components/' + result.substring(0, result.length - '.js'.length);
-    }
-    return alias;
+    return results.join('/');
   };
 
-  var expand = (function() {
-    var reg = /^\.\.?(\/|$)/;
-    return function(root, name) {
-      var results = [], parts, part;
-      parts = (reg.test(name) ? root + '/' + name : name).split('/');
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part === '..') {
-          results.pop();
-        } else if (part !== '.' && part !== '') {
-          results.push(part);
-        }
-      }
-      return results.join('/');
-    };
-  })();
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
     return function(name) {
-      var absolute = expand(dirname(path), name);
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
       return globals.require(absolute, path);
     };
   };
@@ -68,26 +51,21 @@
   var require = function(name, loaderPath) {
     var path = expand(name, '.');
     if (loaderPath == null) loaderPath = '/';
-    path = unalias(name, loaderPath);
 
-    if (has.call(cache, path)) return cache[path].exports;
-    if (has.call(modules, path)) return initModule(path, modules[path]);
+    if (has(cache, path)) return cache[path].exports;
+    if (has(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+    if (has(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
-  require.alias = function(from, to) {
-    aliases[to] = from;
-  };
-
-  require.register = require.define = function(bundle, fn) {
+  var define = function(bundle, fn) {
     if (typeof bundle === 'object') {
       for (var key in bundle) {
-        if (has.call(bundle, key)) {
+        if (has(bundle, key)) {
           modules[key] = bundle[key];
         }
       }
@@ -96,18 +74,21 @@
     }
   };
 
-  require.list = function() {
+  var list = function() {
     var result = [];
     for (var item in modules) {
-      if (has.call(modules, item)) {
+      if (has(modules, item)) {
         result.push(item);
       }
     }
     return result;
   };
 
-  require.brunch = true;
   globals.require = require;
+  globals.require.define = define;
+  globals.require.register = define;
+  globals.require.list = list;
+  globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
 var Application, ApplicationCollection, BaseCollection, _ref,
@@ -1472,6 +1453,9 @@ module.exports = {
   "domain name for urls and email": "The domain name is used to build sharing URLs sent via email to yourself or your contacts:",
   "save": "Save",
   "saved": "Saved",
+  "error": "Error",
+  "error proper email": "Given email is not correct",
+  "error email empty": "Given email is empty",
   "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
   "account background selection": "Select your background for your Cozy Home:",
   "account localization": "Localization",
@@ -1505,6 +1489,7 @@ module.exports = {
   "show logs": "Show Logs",
   "update stack": "Update",
   "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
+  "update stack waiting message": "Wait please, updating takes several minutes.",
   "status no device": "No device registered for synchronization.",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
@@ -1969,6 +1954,9 @@ module.exports = {
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "Sauver",
   "saved": "Sauvé",
+  "error": "Erreur",
+  "error proper email": "L'adresse mail forunie n'est pas correcte",
+  "error email empty": "L'adresse mail ne doit pas être vide",
   "market app install": "Installation…",
   "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre",
   "market app tutorial": "didacticiel",
@@ -2006,6 +1994,7 @@ module.exports = {
   "show proxy logs": "Voir les logs du Proxy",
   "show logs": "Voir les logs",
   "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes.",
+  "update stack waiting message": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
   "update stack modal title": "Mise à jour de votre Cozy",
   "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Voulez-vous vraiment continuer ?",
   "update stack modal confirm": "Mettre à jour",
@@ -2989,19 +2978,19 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="account-field"><input id="account-email-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><div class="input"><p>');
+buf.push('</button></p><p class="error email hide"></p></div><div class="input"><p>');
 var __val__ = t('public name description')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="account-field"><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><div class="input"><p>');
+buf.push('</button></p><p class="error public-name hide"></p></div><div class="input"><p>');
 var __val__ = t('domain name for urls and email')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="account-field"><input id="account-domain-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><h4>');
+buf.push('</button></p><p class="error domain hide"></p></div><h4>');
 var __val__ = t('account localization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
@@ -3811,7 +3800,7 @@ buf.push('</h3></div></div><div class="md-body"><p class="step1">');
 var __val__ = t('update stack modal content')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="step2">');
-var __val__ = t('refresh page')
+var __val__ = t('update stack waiting message')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="success">');
 var __val__ = t('update stack success')
@@ -3861,7 +3850,6 @@ module.exports = exports.AccountView = (function(_super) {
 
   function AccountView() {
     this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
-    this.displayErrors = __bind(this.displayErrors, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
     _ref = AccountView.__super__.constructor.apply(this, arguments);
     return _ref;
@@ -3957,23 +3945,10 @@ module.exports = exports.AccountView = (function(_super) {
     }
   };
 
-  AccountView.prototype.displayErrors = function(msgs) {
-    var errorString, msg, _i, _len;
-    errorString = "";
-    if (typeof msgs === 'string') {
-      msgs = msgs.split(',');
-    }
-    for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-      msg = msgs[_i];
-      errorString += "" + msg + "<br />";
-    }
-    this.errorAlert.html(errorString);
-    return this.errorAlert.show();
-  };
-
   AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
-    var saveButton, saveFunction;
+    var alertMsg, saveButton, saveFunction;
     saveButton = fieldWidget.parent().find('.btn');
+    alertMsg = this.$(".error." + fieldName);
     saveFunction = function() {
       var data;
       saveButton.spin(true);
@@ -3982,11 +3957,17 @@ module.exports = exports.AccountView = (function(_super) {
       return request.post("api/" + path, data, function(err) {
         saveButton.spin(false);
         if (err) {
+          err = err.toString();
+          err = err.replace('Error: ', '');
           saveButton.addClass('red');
-          return saveButton.html('error');
+          saveButton.html(t('error'));
+          alertMsg.html("" + (t(err)));
+          return alertMsg.show();
         } else {
+          saveButton.removeClass('red');
           saveButton.addClass('green');
           saveButton.html(t('saved'));
+          alertMsg.hide();
           if (fieldName === 'locale') {
             alert(t('changing locale requires reload'));
             window.location.reload();
@@ -4312,6 +4293,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.stateLabel = this.$('.state-label');
     this.updateIcon = this.$('.update-notification-icon');
     this.appStoppable = this.$(".app-stoppable");
+    this.updateLabel = this.$(".to-update-label");
     this.listenTo(this.model, 'change', this.onAppChanged);
     return this.onAppChanged(this.model);
   };
@@ -4486,17 +4468,19 @@ module.exports = ApplicationRow = (function(_super) {
     }
     return this.model.updateApp({
       success: function() {
+        _this.updateButton.displayGreen(t("updated"));
         _this.updateButton.spin(false);
         if (_this.model.get('state') === 'installed') {
-          _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('started'));
-          Backbone.Mediator.pub('app-state-changed', true);
         }
         if (_this.model.get('state') === 'stopped') {
-          _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('stopped'));
-          return Backbone.Mediator.pub('app-state-changed', true);
         }
+        Backbone.Mediator.pub('app-state-changed', true);
+        return setTimeout(function() {
+          _this.updateButton.hide();
+          return _this.updateLabel.hide();
+        }, 1000);
       },
       error: function(jqXHR) {
         _this.updateButton.spin(false);
