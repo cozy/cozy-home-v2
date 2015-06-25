@@ -68,7 +68,6 @@ describe "Auto-stop manager", ->
             it "And application's document should not be updated", ->
                 @fixture.state.should.equal 'installed'
                 @fixture.errormsg.should.equal ''
-                should.exist @fixture.password
 
 
     describe ".stopApp()", ->
