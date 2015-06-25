@@ -94,8 +94,6 @@ reseting routes"
     processInstall: (app, callback) ->
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for spawning #{app.name}..."
-        console.info "with manifest : "
-        console.info JSON.stringify manifest
 
         @checkMemory (err) =>
             return callback err if err

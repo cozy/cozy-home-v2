@@ -111,8 +111,6 @@ AppManager = (function() {
     var manifest;
     manifest = app.getHaibuDescriptor();
     console.info("Request controller for spawning " + app.name + "...");
-    console.info("with manifest : ");
-    console.info(JSON.stringify(manifest));
     return this.checkMemory((function(_this) {
       return function(err) {
         if (err) {
