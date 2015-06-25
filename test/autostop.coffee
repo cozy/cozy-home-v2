@@ -461,7 +461,7 @@ describe "Auto-stop manager", ->
                     Event: description: 'access the events'
                 isStoppable: true
 
-            app.save done
+            Application.create app, done
 
         it "Then I wait for 4 minutes", ->
             @sandbox.clock.tick 4 * minute
