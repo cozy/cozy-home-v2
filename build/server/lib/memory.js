@@ -9,7 +9,7 @@ exec = require('child_process').exec;
 
 ControllerClient = require("cozy-clients").ControllerClient;
 
-freeMemCmd = "free | grep /cache | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'";
+freeMemCmd = "LC_ALL=C free | grep /cache | cut -d':' -f2 | sed -e 's/^ *[0-9]* *//'";
 
 exports.MemoryManager = (function() {
   function MemoryManager() {
