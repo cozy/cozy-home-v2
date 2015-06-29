@@ -458,8 +458,6 @@ describe "Auto-stop manager", ->
             @client.post "api/applications/install", app, (err, res, app) =>
                 done()
 
-            Application.create app, done
-
         it "Then I wait for 4 minutes", =>
             @sandbox = sinon.sandbox.create useFakeTimers: true
             @sandbox.clock.tick 4 * minute
