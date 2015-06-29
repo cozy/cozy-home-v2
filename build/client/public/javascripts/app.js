@@ -1256,6 +1256,7 @@ module.exports = {
   "english": "Englisch",
   "german": "Deutsch",
   "portuguese": "Portuguisisch",
+  "spanish": "Spanisch",
   "change password procedure": "Schritte um Ihr Passwort zu ändern",
   "current password": "Aktuelles Passwort",
   "new password": "Neues Passwort",
@@ -1765,6 +1766,7 @@ module.exports = {
   "english": "Inglés",
   "german": "Alemán",
   "portuguese": "Portugués",
+  "spanish": "Español",
   "change password procedure": "Pasos a seguir para cambiar la contraseña",
   "current password": "contraseña actual",
   "new password": "nueva contraseña",
@@ -2065,7 +2067,7 @@ module.exports = {
   "help": "Aide",
   "account identifiers": "Identifiants",
   "account localization": "Régionalisation",
-  "spanish": "espagnol",
+  "spanish": "Espagnol",
   "account personalization": "Personalisation",
   "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
   "account password": "Changement de mot de passe",
@@ -3909,7 +3911,11 @@ module.exports = exports.AccountView = (function(_super) {
     });
     this.backgroundList.collection.on('change', this.onBackgroundChanged);
     this.backgroundAddButton = this.$('#background-add-button');
-    return this.fetchData();
+    this.fetchData();
+    if (window.managed) {
+      this.$('#account-domain-field')[0].disabled = true;
+      return this.$('#account-domain-field').parent().find('.btn').hide();
+    }
   };
 
   AccountView.prototype.onNewPasswordSubmit = function(event) {
@@ -4444,7 +4450,8 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('started'));
-          return Backbone.Mediator.pub('app-state-changed', true);
+          Backbone.Mediator.pub('app-state-changed', true);
+          return window.location.href = "#apps/" + (_this.model.get('slug'));
         },
         error: function() {
           var errormsg, msg;
@@ -8160,6 +8167,7 @@ module.exports = NotificationView = (function(_super) {
       url += action.url || '';
       url = url.replace('//', '/');
       $('.right-menu').hide();
+      this.model.destroy();
     } else {
       url = null;
     }

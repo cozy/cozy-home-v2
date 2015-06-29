@@ -83,6 +83,7 @@ module.exports = {
   "english": "Inglés",
   "german": "Alemán",
   "portuguese": "Portugués",
+  "spanish": "Español",
   "change password procedure": "Pasos a seguir para cambiar la contraseña",
   "current password": "contraseña actual",
   "new password": "nueva contraseña",

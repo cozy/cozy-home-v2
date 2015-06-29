@@ -166,7 +166,7 @@ module.exports = {
   "help": "Aide",
   "account identifiers": "Identifiants",
   "account localization": "Régionalisation",
-  "spanish": "espagnol",
+  "spanish": "Espagnol",
   "account personalization": "Personalisation",
   "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
   "account password": "Changement de mot de passe",

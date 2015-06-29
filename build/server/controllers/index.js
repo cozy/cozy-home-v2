@@ -51,6 +51,7 @@ module.exports = {
           value = results[key];
           imports += "window." + key + " = " + (JSON.stringify(value)) + ";\n";
         }
+        imports += "window.managed = " + process.env.MANAGED + ";\n";
         return res.render('index', {
           imports: imports
         });

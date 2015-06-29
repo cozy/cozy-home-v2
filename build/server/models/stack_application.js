@@ -19,14 +19,14 @@ StackApplication.all = function(params, callback) {
 StackApplication.prototype.checkForUpdate = function(callback) {
   var manifest, setFlag;
   setFlag = (function(_this) {
-    return function(repoVersion) {
+    return function(repoVersion, cb) {
       return _this.updateAttributes({
         lastVersion: repoVersion
       }, function(err) {
         if (err) {
-          return callback(err);
+          return cb(err);
         } else {
-          return callback(null, true);
+          return cb();
         }
       });
     };
@@ -41,12 +41,17 @@ StackApplication.prototype.checkForUpdate = function(callback) {
         repoVersion = manifest.getVersion();
         if (repoVersion == null) {
           return callback(null, false);
-        } else if (_this.version == null) {
-          return setFlag(repoVersion);
-        } else if (_this.version !== repoVersion) {
-          return setFlag(repoVersion);
         } else {
-          return callback(null, false);
+          return setFlag(repoVersion, function(err) {
+            if (err != null) {
+              return callback(err);
+            }
+            if ((_this.version == null) || _this.version !== repoVersion) {
+              return callback(null, true);
+            } else {
+              return callback(null, false);
+            }
+          });
         }
       }
     };
