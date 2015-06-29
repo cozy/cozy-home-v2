@@ -18,12 +18,13 @@ StackApplication.all = (params, callback) ->
 #
 # callback: function(err, needsUpdate)
 StackApplication::checkForUpdate = (callback) ->
-    setFlag = (repoVersion) =>
+    setFlag = (repoVersion, cb) =>
         @updateAttributes lastVersion: repoVersion, (err) =>
             if err
-                callback err
+                cb err
             else
-                callback null, true
+                cb()
+
     # Retrieve manifest
     manifest = new Manifest()
     manifest.download @, (err) =>
@@ -35,14 +36,15 @@ StackApplication::checkForUpdate = (callback) ->
             if not repoVersion?
                 callback null, false
 
-            else if not @version?
-                # if the app has not version but the version on the repo
-                # has one, we set the needsUpdate flag, in doubt. In the
-                # worst case, the app on the cozy has the same version, but
-                # there's no way we can
-                # figure out.
-                setFlag repoVersion
-            else if @version isnt repoVersion
-                setFlag repoVersion
             else
-                callback null, false
+                setFlag repoVersion, (err) =>
+                    return callback err if err?
+                    if not @version? or @version isnt repoVersion
+                        # if the app has not version but the version on the repo
+                        # has one, we set the needsUpdate flag, in doubt. In the
+                        # worst case, the app on the cozy has the same version, but
+                        # there's no way we can
+                        # figure out.
+                        callback null, true
+                    else
+                        callback null, false

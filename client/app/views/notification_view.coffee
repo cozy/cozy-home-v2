@@ -58,6 +58,7 @@ module.exports = class NotificationView extends BaseView
             url += action.url or ''
             url = url.replace '//', '/'
             $('.right-menu').hide()
+            @model.destroy()
 
         else
             url = null

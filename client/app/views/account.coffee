@@ -53,6 +53,9 @@ module.exports = class exports.AccountView extends BaseView
 
         # Load data once everything is built
         @fetchData()
+        if window.managed
+            @$('#account-domain-field')[0].disabled = true
+            @$('#account-domain-field').parent().find('.btn').hide()
 
 
     # When password data are submited, it sends a request to backend to save

@@ -26,5 +26,6 @@ module.exports =
                 imports = ""
                 for key, value of results
                     imports += "window.#{key} = #{JSON.stringify(value)};\n"
+                imports += "window.managed = #{process.env.MANAGED};\n"
 
                 res.render 'index', {imports}

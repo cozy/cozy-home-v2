@@ -145,6 +145,7 @@ module.exports = class ApplicationRow extends BaseView
                     @startStopBtn.spin false
                     @stateLabel.html t 'started'
                     Backbone.Mediator.pub 'app-state-changed', true
+                    window.location.href = "#apps/#{@model.get('slug')}"
                 error: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'stopped'
