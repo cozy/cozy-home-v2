@@ -32,15 +32,20 @@ module.exports = {
       if (err != null) {
         return next(err);
       } else {
-        return ds.del("device/" + id + "/", function(err, response, body) {
-          err = err || body.error;
-          if (err != null) {
-            return next(err);
-          } else {
-            return res.send(200, {
-              success: true
-            });
+        return ds.del("access/" + id + "/", function(err, response, body) {
+          if (err) {
+            log.error(err);
           }
+          return device.destroy(function(err) {
+            err = err || body.error;
+            if (err != null) {
+              return next(err);
+            } else {
+              return res.send(200, {
+                success: true
+              });
+            }
+          });
         });
       }
     });
