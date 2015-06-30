@@ -23,8 +23,10 @@ module.exports =
             if err? then next err
             else
                 # proper removal of the device (device doc and filter)
-                ds.del "device/#{id}/", (err, response, body) ->
-                    err = err or body.error
-                    if err? then next err
-                    else
-                        res.send 200, success: true
+                ds.del "access/#{id}/", (err, response, body) ->
+                    log.error err if err
+                    device.destroy (err) ->
+                        err = err or body.error
+                        if err? then next err
+                        else
+                            res.send 200, success: true
