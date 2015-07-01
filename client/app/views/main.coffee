@@ -23,8 +23,6 @@ module.exports = class HomeView extends BaseView
     subscriptions:
         'backgroundChanged': 'changeBackground'
 
-    wizards: ['quicktour']
-
 
     constructor: ->
         @apps          = new AppCollection window.applications
@@ -133,22 +131,9 @@ module.exports = class HomeView extends BaseView
             displayView()
 
     # Display application manager page, hides app frames, active home button.
-    displayApplicationsList: (wizard=null) =>
+    displayApplicationsList: =>
         @displayView @applicationListView
         window.document.title = t "cozy home title"
-
-        for wiz in @wizards
-            wview = "#{wiz}WizardView"
-            @[wview].dispose() if @[wview]? and wizard isnt wiz
-
-        if wizard? and wizard in @wizards
-            wview = "#{wizard}WizardView"
-            WView = require "views/#{wizard}_wizard"
-
-            options = market: @marketView if wizard is 'install'
-            @[wview] = new WView options
-            @$el.append @[wview].render().$el
-            @[wview].show()
 
     displayApplicationsListEdit: =>
         @displayView @applicationListView, t "cozy home title"
@@ -163,12 +148,6 @@ module.exports = class HomeView extends BaseView
 
     displayHelp: =>
         @displayView @helpView, t "cozy help title"
-
-    displayInstallWizard: ->
-        @displayApplicationsList 'install'
-
-    displayQuickTourWizard: ->
-        @displayApplicationsList 'quicktour'
 
     displayConfigApplications: =>
         @displayView @configApplications, t "cozy applications title"
