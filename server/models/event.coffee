@@ -84,7 +84,6 @@ Event::_getRecurringStartDates = (startingBound, endingBound) ->
 
 
 Event::getAlarms = (userTimezone) ->
-
     alarms = []
     for alarm in @alarms
         startDates = []
@@ -110,7 +109,7 @@ Event::getAlarms = (userTimezone) ->
 
             # formats like a Cozy alarm
             cozyAlarm =
-                _id: "#{@_id}_#{alarm.id}"
+                _id: @_id
                 action: alarm.action
                 trigg: trigg.toISOString() # Cozy alarm uses UTC.
                 description: @description
