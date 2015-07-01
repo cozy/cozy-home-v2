@@ -28,6 +28,7 @@ module.exports = class AlarmManager
     # cancel all timeouts for a given id
     clearTimeouts: (id) ->
         if @timeouts[id]?
+            log.info "Remove notification #{id}"
             clearTimeout timeout for timeout in @timeouts[id]
             delete @timeouts[id]
 
