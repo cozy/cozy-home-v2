@@ -1,9 +1,9 @@
 cozydb = require 'cozydb'
+fs = require 'fs'
 CozyInstance = require '../models/cozyinstance'
 CozyUser = require '../models/user'
 Application = require '../models/application'
 logs = require '../lib/logs'
-
 
 module.exports =
 
@@ -21,8 +21,6 @@ module.exports =
                 {body} = req
                 infos = {locale, domain}
 
-                selectedApp = 'calendar'
-
                 content = '\n\n---- User config\n\n'
                 content += JSON.stringify({locale, domain}) + '\n'
                 content += JSON.stringify({email, public_name}) + '\n'
@@ -30,34 +28,23 @@ module.exports =
                 content += '\n\n---- User message\n\n'
                 content += req.body.messageText
 
-                Application.all (err, apps) ->
-                    slugs = apps.map (app) -> app.slug
+                logs.getCompressLogs (path) ->
 
-                    logs.getManyLogs slugs, (err, appLogs) ->
-                        logs.getLogs 'data-system', (err, dsLogs) ->
+                    attachments = [
+                        path: path
+                        contentType: "application/x-compressed-tar"
+                    ]
 
-                            attachments = []
-                            if dsLogs?
-                                attachments.push
-                                    filename: "ds.log"
-                                    content: dsLogs
-                                    contentType: "plain/text"
+                    data =
+                        to: "support@cozycloud.cc"
+                        subject: "Demande d'assistance depuis un Cozy"
+                        content: content
+                        attachments: attachments
 
-                            for slug, logContent of appLogs
-                                attachments.push
-                                    filename: "#{slug}.log"
-                                    content: logContent
-                                    contentType: "text/plain"
+                    cozydb.api.sendMailFromUser data, (err) =>
+                        fs.unlink path
+                        return next err if err
 
-                            data =
-                                to: "support@cozycloud.cc"
-                                subject: "Demande d'assistance depuis un Cozy"
-                                content: content
-                                attachments: attachments
-
-                            cozydb.api.sendMailFromUser data, (err) =>
-                                return next err if err
-
-                                res.send
-                                    success: 'Mail successully sent to support.'
+                        res.send
+                            success: 'Mail successully sent to support.'
 
