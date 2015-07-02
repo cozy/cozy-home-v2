@@ -4886,10 +4886,7 @@ module.exports = DeviceRow = (function(_super) {
       return $.ajax("/api/devices/" + (this.model.get('id')), {
         type: "DELETE",
         success: function() {
-          return _this.$el.fadeOut(function() {
-            _this.model.destroy();
-            return _this.destroy();
-          });
+          return _this.$el.fadeOut(function() {});
         },
         error: function() {
           _this.$('.remove-device').html(t('revoke device access'));

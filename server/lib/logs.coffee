@@ -1,6 +1,9 @@
 fs = require 'fs'
 path = require 'path'
 async = require 'async'
+fstream = require 'fstream'
+tar = require 'tar'
+zlib = require 'zlib'
 
 
 # Utilities to retrieve log paths and contents.
@@ -47,4 +50,15 @@ module.exports = logs =
                 next()
         , ->
             callback null, logContents
+
+    getCompressLogs: (callback) ->
+        path = path.join __dirname, '..', '..', 'cozy.tar.gz'
+        logPath = '/usr/local/var/log/cozy'
+        readStream = fstream.Reader 'path': logPath, 'type': 'Directory'
+        readStream.pipe(tar.Pack())
+        .pipe(zlib.Gzip())
+        .pipe fstream.Writer('path': path)
+        readStream.on 'end', () ->
+            callback path
+
 
