@@ -33,7 +33,9 @@
     "printit": "0.1.3",
     "request": "2.55.0",
     "request-json": "0.4.6",
-    "rrule": "2.0.1"
+    "rrule": "2.0.1",
+    "fstream": "1.0.7",
+    "tar": "2.1.1"
   },
   "contributors": [
     "Zoe Bellot",
