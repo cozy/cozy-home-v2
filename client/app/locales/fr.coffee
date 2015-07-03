@@ -202,7 +202,7 @@ module.exports =
     "account identifiers": "Identifiants"
     "account localization": "Régionalisation"
     "spanish": "Espagnol"
-    "account personalization": "Personalisation"
+    "account personalization": "Personnalisation"
     "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :"
     "account password": "Changement de mot de passe"
     "account change password success": "Le mot de passe a été changé avec succès."
