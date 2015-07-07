@@ -50,6 +50,7 @@ module.exports = AlarmManager = (function() {
   AlarmManager.prototype.clearTimeouts = function(id) {
     var i, len, ref, timeout;
     if (this.timeouts[id] != null) {
+      log.info("Remove notification " + id);
       ref = this.timeouts[id];
       for (i = 0, len = ref.length; i < len; i++) {
         timeout = ref[i];
