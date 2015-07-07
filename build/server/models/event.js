@@ -127,7 +127,7 @@ Event.prototype.getAlarms = function(userTimezone) {
         trigg.subtract(value, key);
       }
       cozyAlarm = {
-        _id: this._id + "_" + alarm.id,
+        _id: this._id,
         action: alarm.action,
         trigg: trigg.toISOString(),
         description: this.description

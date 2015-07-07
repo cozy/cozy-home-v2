@@ -4070,7 +4070,8 @@ module.exports = exports.AccountView = (function(_super) {
     var params,
       _this = this;
     params = {
-      type: 'singlePhoto'
+      type: 'singlePhoto',
+      defaultTab: 'photoUpload'
     };
     return new ObjectPicker(params, function(newPhotoChosen, dataUrl) {
       var array, binary, blob, form, i, _i, _ref1;
@@ -8569,11 +8570,14 @@ module.exports = ObjectPickerImage = (function(_super) {
   }
 
   ObjectPickerImage.prototype.initialize = function() {
+    var _this = this;
     this.name = 'thumbPicker';
     this.tabLabel = 'image';
     this.tab = $("<div class='fa fa-photo'>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
-    return this.longList = new LongList(this.panel, this.modal);
+    return this.el.addEventListener('panelSelect', function() {
+      return _this.longList = new LongList(_this.panel, _this.modal);
+    });
   };
 
   ObjectPickerImage.prototype.getObject = function() {
@@ -8919,7 +8923,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
     tabControler.initializeTabs(body);
     this._listenTabsSelection();
-    this._selectDefaultTab(this.uploadPanel.name);
+    this._selectDefaultTab(this.params.defaultTab || this.imagePanel.name);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
     this.cropper$.setAttribute('aria-hidden', true);
     this.framePreview.style.width = THUMB_WIDTH + 'px';
@@ -9035,8 +9039,8 @@ module.exports = PhotoPickerCroper = (function(_super) {
       d = dimensions;
       ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
     } else {
-      canvas.width = img.width;
-      canvas.height = img.height;
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
       ctx.drawImage(img, 0, 0);
     }
     return dataUrl = canvas.toDataURL('image/jpeg');
