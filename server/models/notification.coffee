@@ -10,4 +10,4 @@ module.exports = Notification = cozydb.getModel 'Notification',
     ref: String # for apps with multiple notifs to manage
 
 Notification.all = (callback) ->
-    Notification.request "all", callback
+    Notification.request "byDate", callback
