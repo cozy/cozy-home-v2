@@ -27,7 +27,8 @@ module.exports = class ObjectPickerImage extends BaseView
         @panel    = @el
         ####
         # construct the long list of images
-        @longList = new LongList(@panel, @modal)
+        @el.addEventListener 'panelSelect', =>
+            @longList = new LongList(@panel, @modal)
 
 
     getObject : () ->
@@ -54,4 +55,3 @@ module.exports = class ObjectPickerImage extends BaseView
 
     resizeHandler: () ->
         @longList.resizeHandler()
-
