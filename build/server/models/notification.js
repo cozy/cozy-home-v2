@@ -19,5 +19,5 @@ module.exports = Notification = cozydb.getModel('Notification', {
 });
 
 Notification.all = function(callback) {
-  return Notification.request("all", callback);
+  return Notification.request("byDate", callback);
 };

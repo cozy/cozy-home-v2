@@ -34,7 +34,7 @@ module.exports = {
     all: cozydb.defaultRequests.all
   },
   notification: {
-    all: function(doc) {
+    byDate: function(doc) {
       return emit(doc.publishDate, doc);
     },
     byApps: byApps
