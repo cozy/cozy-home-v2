@@ -88,6 +88,7 @@ module.exports = class AlarmManager
 
         if alarm.action in ['EMAIL', 'BOTH']
             if alarm.event?
+                timezone = alarm.timezone or @timezone
                 event = alarm.event
                 agenda = event.tags[0] or ''
                 titleKey = 'reminder title email expanded'
@@ -106,16 +107,16 @@ module.exports = class AlarmManager
                     timezone: timezone
                 data =
                     from: 'Cozy Calendar <no-reply@cozycloud.cc>'
-                    subject: @polyglot.t titleKey, titleOptions
-                    content: @polyglot.t contentKey, contentOptions
+                    subject: localization.t titleKey, titleOptions
+                    content: localization.t contentKey, contentOptions
 
             else
                 data =
                     from: "Cozy Calendar <no-reply@cozycloud.cc>"
-                    subject: @polyglot.t 'reminder title email'
-                    content: @polyglot.t 'reminder message', {message}
+                    subject: localization.t 'reminder title email'
+                    content: localization.t 'reminder message', {message}
 
-            cozydb.sendMailToUser data, (error, response) ->
+            cozydb.api.sendMailToUser data, (error, response) ->
                 if error?
                     log.error "Error while sending email -- #{error}"
 
