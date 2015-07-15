@@ -34,56 +34,56 @@
 	background-image: url(icons/icons.png);
 }
 
-.svg-feed { 
+.svg-feeds { 
 	background-position: 0 -360px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-feeds { 
+.svg-files { 
 	background-position: 0 -420px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-files { 
+.svg-ghost { 
 	background-position: 0 -480px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-ghost { 
+.svg-help { 
 	background-position: 0 -540px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-help { 
+.svg-konnectors { 
 	background-position: 0 -600px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-konnectors { 
+.svg-kresus { 
 	background-position: 0 -660px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-kresus { 
+.svg-kyou { 
 	background-position: 0 -720px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-kyou { 
+.svg-leave-google { 
 	background-position: 0 -780px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-leave-google { 
-	background-position: 0 -840px;
+.svg-mstsc { 
+	background-position: 0 -880px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }

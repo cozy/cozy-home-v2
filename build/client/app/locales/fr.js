@@ -213,7 +213,7 @@ module.exports = {
   "term description": "Un terminal pour votre Cozy.",
   "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
   "leave google description": "Une application pour importer vos données de votre compte Google.",
-  "mstsc.js description": "Prenez contrôle de votre bureau Windows à distance à traver le protocole RDP.",
+  "mstsc.js description": "Depuis votre Cozy, prenez contrôle de votre bureau Windows à distance à travers le protocole RDP.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
