@@ -1256,6 +1256,7 @@ module.exports = {
   "english": "Englisch",
   "german": "Deutsch",
   "portuguese": "Portuguisisch",
+  "spanish": "Spanisch",
   "change password procedure": "Schritte um Ihr Passwort zu ändern",
   "current password": "Aktuelles Passwort",
   "new password": "Neues Passwort",
@@ -1472,6 +1473,9 @@ module.exports = {
   "domain name for urls and email": "The domain name is used to build sharing URLs sent via email to yourself or your contacts:",
   "save": "Save",
   "saved": "Saved",
+  "error": "Error",
+  "error proper email": "Given email is not correct",
+  "error email empty": "Given email is empty",
   "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
   "account background selection": "Select your background for your Cozy Home:",
   "account localization": "Localization",
@@ -1505,6 +1509,7 @@ module.exports = {
   "show logs": "Show Logs",
   "update stack": "Update",
   "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
+  "update stack waiting message": "Wait please, updating takes several minutes.",
   "status no device": "No device registered for synchronization.",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
@@ -1761,6 +1766,7 @@ module.exports = {
   "english": "Inglés",
   "german": "Alemán",
   "portuguese": "Portugués",
+  "spanish": "Español",
   "change password procedure": "Pasos a seguir para cambiar la contraseña",
   "current password": "contraseña actual",
   "new password": "nueva contraseña",
@@ -1969,6 +1975,9 @@ module.exports = {
   "no application installed": "Il n'y a pas d'applications installées.",
   "save": "Sauver",
   "saved": "Sauvé",
+  "error": "Erreur",
+  "error proper email": "L'adresse mail forunie n'est pas correcte",
+  "error email empty": "L'adresse mail ne doit pas être vide",
   "market app install": "Installation…",
   "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre",
   "market app tutorial": "didacticiel",
@@ -2006,6 +2015,7 @@ module.exports = {
   "show proxy logs": "Voir les logs du Proxy",
   "show logs": "Voir les logs",
   "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes.",
+  "update stack waiting message": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
   "update stack modal title": "Mise à jour de votre Cozy",
   "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Voulez-vous vraiment continuer ?",
   "update stack modal confirm": "Mettre à jour",
@@ -2057,7 +2067,7 @@ module.exports = {
   "help": "Aide",
   "account identifiers": "Identifiants",
   "account localization": "Régionalisation",
-  "spanish": "espagnol",
+  "spanish": "Espagnol",
   "account personalization": "Personalisation",
   "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
   "account password": "Changement de mot de passe",
@@ -2989,19 +2999,19 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="account-field"><input id="account-email-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><div class="input"><p>');
+buf.push('</button></p><p class="error email hide"></p></div><div class="input"><p>');
 var __val__ = t('public name description')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="account-field"><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><div class="input"><p>');
+buf.push('</button></p><p class="error public-name hide"></p></div><div class="input"><p>');
 var __val__ = t('domain name for urls and email')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="account-field"><input id="account-domain-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><h4>');
+buf.push('</button></p><p class="error domain hide"></p></div><h4>');
 var __val__ = t('account localization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
@@ -3811,7 +3821,7 @@ buf.push('</h3></div></div><div class="md-body"><p class="step1">');
 var __val__ = t('update stack modal content')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="step2">');
-var __val__ = t('refresh page')
+var __val__ = t('update stack waiting message')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="success">');
 var __val__ = t('update stack success')
@@ -3861,7 +3871,6 @@ module.exports = exports.AccountView = (function(_super) {
 
   function AccountView() {
     this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
-    this.displayErrors = __bind(this.displayErrors, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
     _ref = AccountView.__super__.constructor.apply(this, arguments);
     return _ref;
@@ -3902,7 +3911,11 @@ module.exports = exports.AccountView = (function(_super) {
     });
     this.backgroundList.collection.on('change', this.onBackgroundChanged);
     this.backgroundAddButton = this.$('#background-add-button');
-    return this.fetchData();
+    this.fetchData();
+    if (window.managed) {
+      this.$('#account-domain-field')[0].disabled = true;
+      return this.$('#account-domain-field').parent().find('.btn').hide();
+    }
   };
 
   AccountView.prototype.onNewPasswordSubmit = function(event) {
@@ -3957,23 +3970,10 @@ module.exports = exports.AccountView = (function(_super) {
     }
   };
 
-  AccountView.prototype.displayErrors = function(msgs) {
-    var errorString, msg, _i, _len;
-    errorString = "";
-    if (typeof msgs === 'string') {
-      msgs = msgs.split(',');
-    }
-    for (_i = 0, _len = msgs.length; _i < _len; _i++) {
-      msg = msgs[_i];
-      errorString += "" + msg + "<br />";
-    }
-    this.errorAlert.html(errorString);
-    return this.errorAlert.show();
-  };
-
   AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
-    var saveButton, saveFunction;
+    var alertMsg, saveButton, saveFunction;
     saveButton = fieldWidget.parent().find('.btn');
+    alertMsg = this.$(".error." + fieldName);
     saveFunction = function() {
       var data;
       saveButton.spin(true);
@@ -3982,11 +3982,17 @@ module.exports = exports.AccountView = (function(_super) {
       return request.post("api/" + path, data, function(err) {
         saveButton.spin(false);
         if (err) {
+          err = err.toString();
+          err = err.replace('Error: ', '');
           saveButton.addClass('red');
-          return saveButton.html('error');
+          saveButton.html(t('error'));
+          alertMsg.html("" + (t(err)));
+          return alertMsg.show();
         } else {
+          saveButton.removeClass('red');
           saveButton.addClass('green');
           saveButton.html(t('saved'));
+          alertMsg.hide();
           if (fieldName === 'locale') {
             alert(t('changing locale requires reload'));
             window.location.reload();
@@ -4312,6 +4318,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.stateLabel = this.$('.state-label');
     this.updateIcon = this.$('.update-notification-icon');
     this.appStoppable = this.$(".app-stoppable");
+    this.updateLabel = this.$(".to-update-label");
     this.listenTo(this.model, 'change', this.onAppChanged);
     return this.onAppChanged(this.model);
   };
@@ -4443,7 +4450,8 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('started'));
-          return Backbone.Mediator.pub('app-state-changed', true);
+          Backbone.Mediator.pub('app-state-changed', true);
+          return window.location.href = "#apps/" + (_this.model.get('slug'));
         },
         error: function() {
           var errormsg, msg;
@@ -4486,17 +4494,19 @@ module.exports = ApplicationRow = (function(_super) {
     }
     return this.model.updateApp({
       success: function() {
+        _this.updateButton.displayGreen(t("updated"));
         _this.updateButton.spin(false);
         if (_this.model.get('state') === 'installed') {
-          _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('started'));
-          Backbone.Mediator.pub('app-state-changed', true);
         }
         if (_this.model.get('state') === 'stopped') {
-          _this.updateButton.displayGreen(t("updated"));
           _this.stateLabel.html(t('stopped'));
-          return Backbone.Mediator.pub('app-state-changed', true);
         }
+        Backbone.Mediator.pub('app-state-changed', true);
+        return setTimeout(function() {
+          _this.updateButton.hide();
+          return _this.updateLabel.hide();
+        }, 1000);
       },
       error: function(jqXHR) {
         _this.updateButton.spin(false);
@@ -5299,8 +5309,7 @@ module.exports = ApplicationRow = (function(_super) {
     switch (this.model.get('state')) {
       case 'broken':
         this.hideSpinner();
-        this.icon.show();
-        this.icon.attr('src', "img/broken.png");
+        this.icon.attr('src', "img/broken.svg");
         return this.stateLabel.show().text(t('broken'));
       case 'installed':
         this.hideSpinner();
@@ -5318,7 +5327,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.removeClass('stopped');
         return this.stateLabel.hide();
       case 'installing':
-        this.icon.hide();
         this.showSpinner();
         this.stateLabel.show().text('installing');
         return this.setBackgroundColor();
@@ -5333,7 +5341,6 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.attr('src', "api/applications/" + app.id + "." + extension);
         this.icon.addClass('stopped');
         this.hideSpinner();
-        this.icon.show();
         return this.stateLabel.hide();
     }
   };
@@ -5384,18 +5391,15 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installing':
         return alert(t('this app is being installed. Wait a little'));
       case 'stopped':
-        this.icon.hide();
         this.showSpinner();
         return this.model.start({
           success: function() {
             _this.launchApp(event);
-            _this.hideSpinner();
-            return _this.icon.show();
+            return _this.hideSpinner();
           },
           error: function() {
             var msg;
             _this.hideSpinner();
-            _this.icon.show();
             msg = 'This app cannot start.';
             errormsg = _this.model.get('errormsg');
             if (errormsg) {
@@ -5431,11 +5435,13 @@ module.exports = ApplicationRow = (function(_super) {
   };
 
   ApplicationRow.prototype.showSpinner = function() {
+    this.icon.hide();
     return this.$('.spinner').show();
   };
 
   ApplicationRow.prototype.hideSpinner = function() {
-    return this.$('.spinner').hide();
+    this.$('.spinner').hide();
+    return this.icon.show();
   };
 
   return ApplicationRow;
@@ -7367,13 +7373,11 @@ module.exports = HomeView = (function(_super) {
       });
       return null;
     }
-    this.$("#app-btn-" + slug + " .spinner").toggle();
-    this.$("#app-btn-" + slug + " .icon").toggle();
+    this.$("#app-btn-" + slug + " .spinner").show();
+    this.$("#app-btn-" + slug + " .icon").hide();
     frame = this.$("#" + slug + "-frame");
     onLoad = function() {
       var name;
-      _this.$("#app-btn-" + slug + " .spinner").toggle();
-      _this.$("#app-btn-" + slug + " .icon").toggle();
       _this.frames.show();
       _this.content.hide();
       _this.backButton.show();
@@ -7386,7 +7390,9 @@ module.exports = HomeView = (function(_super) {
       }
       window.document.title = "Cozy - " + name;
       $("#current-application").html(name);
-      return _this.resetLayoutSizes();
+      _this.resetLayoutSizes();
+      _this.$("#app-btn-" + slug + " .spinner").hide();
+      return _this.$("#app-btn-" + slug + " .icon").show();
     };
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
@@ -8160,6 +8166,8 @@ module.exports = NotificationView = (function(_super) {
       url = action.app === 'home' ? "/" : "/apps/" + action.app + "/";
       url += action.url || '';
       url = url.replace('//', '/');
+      $('.right-menu').hide();
+      this.model.destroy();
     } else {
       url = null;
     }

@@ -1,6 +1,8 @@
 cozydb = require 'cozydb'
 
 {Manifest} = require '../lib/manifest'
+HttpClient = require("request-json").JsonClient
+dataClient = new HttpClient "http://localhost:9101/"
 
 
 module.exports = Application = cozydb.getModel 'Application',
@@ -20,14 +22,48 @@ module.exports = Application = cozydb.getModel 'Application',
     errorcode: String
     branch: String
     port: Number
-    permissions: Object
-    password: String
     homeposition: Object
     widget: String
     version: String
     comment: String
     needsUpdate: {type: Boolean, default: false}
     favorite: {type: Boolean, default: false}
+
+# Get token from token file if in production mode.
+getToken = ->
+    if process.env.NODE_ENV is 'production' or process.env.NODE_ENV is 'test'
+        try
+            token = process.env.TOKEN
+            return token
+        catch err
+            console.log err.message
+            console.log err.stack
+            return null
+    else
+        return ""
+
+# Create application access
+#   access contains :
+#       * password
+#       * login
+#       * permissions
+Application.createAccess = (access, callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    access.type = "application"
+    dataClient.post 'access/', access, (err, res, body) ->
+        callback err, new Application(body)
+
+# Remove application access
+Application::destroyAccess = (callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    dataClient.del "access/#{@id}/", callback
+
+# Update application access
+Application::updateAccess = (access, callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    access.type = "application"
+    dataClient.put "access/#{@id}/",  access, (err, res, body) ->
+        callback err, new Application(body)
 
 Application.all = (params, callback) ->
     Application.request "bySlug", params, callback

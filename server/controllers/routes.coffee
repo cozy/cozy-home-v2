@@ -52,7 +52,7 @@ module.exports =
 
     # Devices routes
     'api/devices'    : get: devices.devices
-    'api/devices/:id': delete: devices.remove
+    'api/devices/:deviceid': delete: devices.remove
 
     # Devices routes
     'api/sys-data': get: monitor.sysData
@@ -69,7 +69,7 @@ module.exports =
     'api/notifications':
         get: notifications.all
         delete: notifications.deleteAll
-    'api/notifications/:id':
+    'api/notifications/:notifid':
         get: notifications.show
         delete: notifications.delete
     'notifications':

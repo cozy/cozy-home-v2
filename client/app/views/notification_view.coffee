@@ -57,6 +57,8 @@ module.exports = class NotificationView extends BaseView
             url = if action.app is 'home' then "/" else "/apps/#{action.app}/"
             url += action.url or ''
             url = url.replace '//', '/'
+            $('.right-menu').hide()
+            @model.destroy()
 
         else
             url = null

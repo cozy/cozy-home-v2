@@ -18,7 +18,7 @@ module.exports =
             else res.send rows: devices
 
     remove: (req, res, next) ->
-        id = req.params.id
+        id = req.params.deviceid
         Device.find id, (err, device) ->
             if err? then next err
             else

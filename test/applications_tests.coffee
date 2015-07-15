@@ -1,6 +1,9 @@
 should = require('chai').Should()
 expect = require('chai').expect
 helpers = require './helpers'
+Client = require('request-json').JsonClient
+
+Application = require "#{helpers.prefix}server/models/application"
 
 TESTMAIL = "test@test.com"
 TESTPASS = "password"
@@ -103,6 +106,36 @@ describe "Applications management", ->
                 expect(@body).to.have.property('rows').with.length 2
                 expect(@body.rows[0].name).to.equal "My App"
 
+            it 'Then application has an access', (done) ->
+                Application.all key:"my-app", (err, apps) =>
+                    ds = new Client "http://localhost:9101/"
+                    ds.setBasicAuth 'home', 'token'
+                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                        @password = body[0].value.token
+                        done()
+
+            it 'Then application can access to contact', (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'contact'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.not.exist body.error
+                    done()
+
+            it "Then application can't access to other doctype", (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'test'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.exist body.error
+                    body.error.should.equal 'Application is not authorized'
+                    done()
+
+
         describe "Install a new application with specific branch", ->
 
             before resetTestServers
@@ -139,9 +172,37 @@ describe "Applications management", ->
                 @client.put "api/applications/my-app/update", {}, done
 
             it "Then it sends me a success response", ->
-                console.log @body
-                #@response.statusCode.should.equal 200
-                #expect(@body.success).to.be.ok    
+                @response.statusCode.should.equal 200
+                expect(@body.success).to.be.ok
+
+            it 'Then application has an access', (done) ->
+                Application.all key:"my-app", (err, apps) =>
+                    ds = new Client "http://localhost:9101/"
+                    ds.setBasicAuth 'home', 'token'
+                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                        @password = body[0].value.token
+                        done()
+
+            it 'Then application can access to contact', (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'contact'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.not.exist body.error
+                    done()
+
+            it "Then application can't access to other docType", (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'test'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.exist body.error
+                    body.error.should.equal 'Application is not authorized'
+                    done()
 
     describe "Application update all", ->
 
@@ -198,36 +259,36 @@ describe "Applications management", ->
                 request.method.should.equal "POST"
 
             it "And the proxy have been requested to update its routes", ->
-                @proxy.lastCall().request.url.should.equal "/routes/reset"    
+                @proxy.lastCall().request.url.should.equal "/routes/reset"
 
+            it 'Then application has an access', (done) ->
+                Application.all key:"my-app", (err, apps) =>
+                    ds = new Client "http://localhost:9101/"
+                    ds.setBasicAuth 'home', 'token'
+                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                        @password = body[0].value.token
+                        done()
 
-    ###describe "Application auto stop", ->
-
-        before resetTestServers
-
-        describe "POST /api/applications/:slug/start Start an app", ->
-
-            it "When I send a request to stop an application", (done) ->
-                @client.post "api/applications/my-app/start", {}, done
-
-            it "Then it sends me a success response with the updated app", ->
-                @response.statusCode.should.equal 200
-                expect(@body.success).to.be.ok
-                expect(@body.app.state).to.equal 'installed'
-
-            it "And I wait 3 minutes", (done) ->
-                @timeout(3.2 * 60 * 1000)
-                setTimeout () ->
+            it 'Then application can access to contact', (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'contact'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.not.exist body.error
                     done()
-                , 3.1 * 60 * 1000
 
-            it "And controller have been requested to stop this app", ->
-                request = @controller.lastCall().request
-                request.url.should.equal "/drones/my-app/stop"
-                request.method.should.equal "POST"
-
-            it "And the proxy have been requested to update its routes", ->
-                @proxy.lastCall().request.url.should.equal "/routes/reset"  ###
+            it "Then application can't access to other docType", (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'test'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.exist body.error
+                    body.error.should.equal 'Application is not authorized'
+                    done()
 
 
     describe "Application uninstallation", ->

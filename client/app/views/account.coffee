@@ -53,6 +53,9 @@ module.exports = class exports.AccountView extends BaseView
 
         # Load data once everything is built
         @fetchData()
+        if window.managed
+            @$('#account-domain-field')[0].disabled = true
+            @$('#account-domain-field').parent().find('.btn').hide()
 
 
     # When password data are submited, it sends a request to backend to save
@@ -109,21 +112,11 @@ module.exports = class exports.AccountView extends BaseView
                     else
                         showError 'account change password error'
 
-
-    # Display errors that occured through the error alert.
-    displayErrors: (msgs) =>
-        errorString = ""
-        msgs = msgs.split ',' if typeof(msgs) is 'string'
-        errorString += "#{msg}<br />" for msg in msgs
-
-        @errorAlert.html errorString
-        @errorAlert.show()
-
-
     # Build a function that save given data when triggered and display
     # a loading indicator on the save button of the field.
     getSaveFunction: (fieldName, fieldWidget, path) ->
         saveButton = fieldWidget.parent().find('.btn')
+        alertMsg = @$ ".error.#{fieldName}"
         saveFunction = ->
             saveButton.spin true
 
@@ -133,11 +126,17 @@ module.exports = class exports.AccountView extends BaseView
                 saveButton.spin false
 
                 if err
+                    err = err.toString()
+                    err = err.replace 'Error: ', ''
                     saveButton.addClass 'red'
-                    saveButton.html 'error'
+                    saveButton.html t 'error'
+                    alertMsg.html "#{t(err)}"
+                    alertMsg.show()
                 else
+                    saveButton.removeClass 'red'
                     saveButton.addClass 'green'
                     saveButton.html t 'saved'
+                    alertMsg.hide()
                     if fieldName is 'locale'
                         alert t 'changing locale requires reload'
                         window.location.reload()

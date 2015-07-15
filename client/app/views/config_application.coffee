@@ -41,6 +41,7 @@ module.exports = class ApplicationRow extends BaseView
         @stateLabel = @$ '.state-label'
         @updateIcon = @$ '.update-notification-icon'
         @appStoppable  = @$ ".app-stoppable"
+        @updateLabel = @$ ".to-update-label"
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
@@ -144,6 +145,7 @@ module.exports = class ApplicationRow extends BaseView
                     @startStopBtn.spin false
                     @stateLabel.html t 'started'
                     Backbone.Mediator.pub 'app-state-changed', true
+                    window.location.href = "#apps/#{@model.get('slug')}"
                 error: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'stopped'
@@ -171,15 +173,18 @@ module.exports = class ApplicationRow extends BaseView
             @stateLabel.html t "installing"
         @model.updateApp
             success: =>
+                @updateButton.displayGreen t "updated"
                 @updateButton.spin false
                 if @model.get('state') is 'installed'
-                    @updateButton.displayGreen t "updated"
                     @stateLabel.html t 'started'
-                    Backbone.Mediator.pub 'app-state-changed', true
                 if @model.get('state') is 'stopped'
-                    @updateButton.displayGreen t "updated"
                     @stateLabel.html t 'stopped'
-                    Backbone.Mediator.pub 'app-state-changed', true
+                Backbone.Mediator.pub 'app-state-changed', true
+                setTimeout =>
+                    @updateButton.hide()
+                    @updateLabel.hide()
+                , 1000
+
             error: (jqXHR) =>
                 @updateButton.spin false
                 alert t 'update error'
