@@ -97,7 +97,7 @@ module.exports = class Application extends Backbone.Model
 
         if favorite
             section = 'favorite'
-        else if name in ['leave-google']
+        else if name in ['import-from-google']
             section = 'leave'
         else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
             section = 'main'
