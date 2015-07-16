@@ -52,8 +52,8 @@ module.exports = class HomeView extends BaseView
         @backButton = @$ '.back-button'
         @backButton.hide()
 
-        $(window).resize @resetLayoutSizes
-        @resetLayoutSizes()
+        $(window).resize @forceIframeRendering
+        @forceIframeRendering()
 
 
     ### Functions ###
@@ -73,7 +73,7 @@ module.exports = class HomeView extends BaseView
                 name = background.replace '-', '_'
                 val = "url('/img/backgrounds/#{name}.jpg')"
             else
-                val = "url('/api/backgrounds/#{background}>A/picture.jpg')"
+                val = "url('/api/backgrounds/#{background}/picture.jpg')"
 
             @content.css 'background-image', val
 
@@ -113,7 +113,7 @@ module.exports = class HomeView extends BaseView
             view.$el.show()
 
             @currentView = view
-            @resetLayoutSizes()
+            @forceIframeRendering()
             @content.scrollTop 0
 
         if @currentView?
@@ -121,7 +121,7 @@ module.exports = class HomeView extends BaseView
             if view is @currentView
                 @frames.hide()
                 @content.show()
-                @resetLayoutSizes()
+                @forceIframeRendering()
                 return
 
             @currentView.$el.hide()
@@ -225,7 +225,6 @@ module.exports = class HomeView extends BaseView
             name = '' if not name?
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
-            #@resetLayoutSizes()
 
             @$("#app-btn-#{slug} .spinner").hide()
             @$("#app-btn-#{slug} .icon").show()
@@ -267,7 +266,7 @@ module.exports = class HomeView extends BaseView
             newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
 
-        @resetLayoutSizes()
+        @forceIframeRendering()
         # declare the iframe to the intent manager.
         # TODO : when each iFrame will
         # have its own domain, then precise it
@@ -280,15 +279,15 @@ module.exports = class HomeView extends BaseView
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
 
-            # Ugly trick required because some app state changes requires
-            # to redraw the iframe.
-            @resetLayoutSizes()
+            # Ugly trick required because app state changes sometime
+            # breaks the iframe layout.
+            @forceIframeRendering()
 
     ### Configuration ###
 
-    # Small trick to size properly iframe.
-    resetLayoutSizes: =>
-        # Ugly trick to for redrawing of iframes.
+    # Ugly trick for redrawing iframes. It's required because sometimes the
+    # browser breaks the Iframe layout (I didn't find any reason for that).
+    forceIframeRendering: =>
         @frames.find('iframe').height "99%"
         setTimeout =>
             @frames.find('iframe').height "100%"
