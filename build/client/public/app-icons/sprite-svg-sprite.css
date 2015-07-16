@@ -30,101 +30,60 @@
 
 .svg-emails { 
 	background-position: 0 -300px;
-<<<<<<< HEAD
-=======
-	background-repeat: no-repeat;
-	background-image: url(icons/icons.svg);
-}
-
-.svg-feed { 
-	background-position: 0 -360px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-feeds { 
-<<<<<<< HEAD
 	background-position: 0 -360px;
-=======
-	background-position: 0 -420px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-files { 
-<<<<<<< HEAD
 	background-position: 0 -420px;
-=======
-	background-position: 0 -480px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-ghost { 
-<<<<<<< HEAD
 	background-position: 0 -480px;
-=======
-	background-position: 0 -540px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-help { 
-<<<<<<< HEAD
 	background-position: 0 -540px;
-=======
-	background-position: 0 -600px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-konnectors { 
-<<<<<<< HEAD
 	background-position: 0 -600px;
-=======
-	background-position: 0 -660px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-kresus { 
-<<<<<<< HEAD
 	background-position: 0 -660px;
-=======
-	background-position: 0 -720px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-kyou { 
-<<<<<<< HEAD
 	background-position: 0 -720px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-leave-google { 
-=======
->>>>>>> build
 	background-position: 0 -780px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
-<<<<<<< HEAD
 .svg-mstsc { 
 	background-position: 0 -880px;
-=======
-.svg-leave-google { 
-	background-position: 0 -840px;
->>>>>>> build
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }

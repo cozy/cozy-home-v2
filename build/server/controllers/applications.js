@@ -423,7 +423,7 @@ module.exports = {
     removeMetadata = function(result) {
       return req.application.destroyAccess(function(err) {
         if (err) {
-          return sendError(res, err);
+          log.warn(err);
         }
         return req.application.destroy(function(err) {
           if (err) {
