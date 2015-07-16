@@ -109,7 +109,7 @@ module.exports = AlarmManager = (function() {
   };
 
   AlarmManager.prototype.handleNotification = function(alarm) {
-    var agenda, contentKey, contentOptions, data, event, message, resource, titleKey, titleOptions, _ref, _ref1, _ref2;
+    var agenda, contentKey, contentOptions, data, event, message, resource, timezone, titleKey, titleOptions, _ref, _ref1, _ref2;
     if ((_ref = alarm.action) === 'DISPLAY' || _ref === 'BOTH') {
       resource = alarm.related != null ? alarm.related : {
         app: 'calendar',
@@ -125,6 +125,7 @@ module.exports = AlarmManager = (function() {
     }
     if ((_ref1 = alarm.action) === 'EMAIL' || _ref1 === 'BOTH') {
       if (alarm.event != null) {
+        timezone = alarm.timezone || this.timezone;
         event = alarm.event;
         agenda = event.tags[0] || '';
         titleKey = 'reminder title email expanded';
@@ -144,19 +145,19 @@ module.exports = AlarmManager = (function() {
         };
         data = {
           from: 'Cozy Calendar <no-reply@cozycloud.cc>',
-          subject: this.polyglot.t(titleKey, titleOptions),
-          content: this.polyglot.t(contentKey, contentOptions)
+          subject: localization.t(titleKey, titleOptions),
+          content: localization.t(contentKey, contentOptions)
         };
       } else {
         data = {
           from: "Cozy Calendar <no-reply@cozycloud.cc>",
-          subject: this.polyglot.t('reminder title email'),
-          content: this.polyglot.t('reminder message', {
+          subject: localization.t('reminder title email'),
+          content: localization.t('reminder message', {
             message: message
           })
         };
       }
-      cozydb.sendMailToUser(data, function(error, response) {
+      cozydb.api.sendMailToUser(data, function(error, response) {
         if (error != null) {
           return log.error("Error while sending email -- " + error);
         }

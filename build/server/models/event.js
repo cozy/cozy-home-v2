@@ -104,11 +104,11 @@ Event.prototype._getRecurringStartDates = function(startingBound, endingBound) {
 };
 
 Event.prototype.getAlarms = function(userTimezone) {
-  var alarm, alarms, cozyAlarm, duration, endDate, event, in24h, key, now, startDate, startDates, trigg, unitValues, value, _i, _j, _len, _len1, _ref;
+  var alarm, alarms, cozyAlarm, duration, endDate, event, in24h, index, key, now, startDate, startDates, trigg, unitValues, value, _i, _j, _len, _len1, _ref;
   alarms = [];
   _ref = this.alarms;
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    alarm = _ref[_i];
+  for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+    alarm = _ref[index];
     startDates = [];
     if (this.isRecurring()) {
       now = moment().tz(userTimezone);
@@ -127,10 +127,11 @@ Event.prototype.getAlarms = function(userTimezone) {
         trigg.subtract(value, key);
       }
       cozyAlarm = {
-        _id: this._id,
+        _id: this._id + "_" + index,
         action: alarm.action,
         trigg: trigg.toISOString(),
-        description: this.description
+        description: this.description,
+        timezone: this.timezone
       };
       duration = moment(this.end).diff(moment(this.start), 'seconds');
       endDate = startDate.clone().add(duration, 'seconds');
