@@ -73,7 +73,7 @@ module.exports = class HomeView extends BaseView
                 name = background.replace '-', '_'
                 val = "url('/img/backgrounds/#{name}.jpg')"
             else
-                val = "url('/api/backgrounds/#{background}/picture.jpg')"
+                val = "url('/api/backgrounds/#{background}>A/picture.jpg')"
 
             @content.css 'background-image', val
 
@@ -206,7 +206,13 @@ module.exports = class HomeView extends BaseView
 
         frame = @$("##{slug}-frame")
         onLoad = =>
+
+            # We display back the iframes
+            @frames.css 'top', '0'
+            @frames.css 'left', '0'
+            @frames.css 'position', 'inherit'
             @frames.show()
+
             @content.hide()
             @backButton.show()
 
@@ -219,14 +225,24 @@ module.exports = class HomeView extends BaseView
             name = '' if not name?
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
-            @resetLayoutSizes()
+            #@resetLayoutSizes()
 
             @$("#app-btn-#{slug} .spinner").hide()
             @$("#app-btn-#{slug} .icon").show()
 
 
         if frame.length is 0
-            frame = @createApplicationIframe(slug, hash)
+            frame = @createApplicationIframe slug, hash
+
+            # We show frames right now because to load properly the app
+            # requires a proper height.
+            @frames.show()
+
+            # Then we hide the frames by moving them far.
+            @frames.css 'top', '-9999px'
+            @frames.css 'left', '-9999px'
+            @frames.css 'position', 'absolute'
+
             frame.on 'load', onLoad
 
         # if the app was already open, we want to change its hash
@@ -265,21 +281,13 @@ module.exports = class HomeView extends BaseView
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
 
             # Ugly trick required because some app state changes requires
-            # to redraw the iframe
+            # to redraw the iframe.
             @resetLayoutSizes()
 
     ### Configuration ###
 
     # Small trick to size properly iframe.
     resetLayoutSizes: =>
-        @frames.height $(window).height() - 36
-
-        if $(window).width() > 640
-            @content.height $(window).height() - 36
-        else
-            @content.height 100
-            @content.height $(window).height()
-
         # Ugly trick to for redrawing of iframes.
         @frames.find('iframe').height "99%"
         setTimeout =>
