@@ -315,7 +315,7 @@ module.exports =
 
         removeMetadata = (result) ->
             req.application.destroyAccess (err) ->
-                return sendError res, err if err
+                log.warn err if err
                 # Remove application
                 req.application.destroy (err) ->
                     return sendError res, err if err
