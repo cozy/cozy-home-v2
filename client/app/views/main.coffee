@@ -250,18 +250,23 @@ module.exports = class HomeView extends BaseView
             location = iframe$.prop('contentWindow').location
             newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
+
         @resetLayoutSizes()
         # declare the iframe to the intent manager.
         # TODO : when each iFrame will
         # have its own domain, then precise it
         # (ex : https://app1.joe.cozycloud.cc:8080)
-        @intentManager.registerIframe(iframe,'*')
+        @intentManager.registerIframe iframe, '*'
+
         return iframe$
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
-        @resetLayoutSizes()
+
+            # Ugly trick required because some app state changes requires
+            # to redraw the iframe
+            @resetLayoutSizes()
 
     ### Configuration ###
 
@@ -272,4 +277,12 @@ module.exports = class HomeView extends BaseView
         if $(window).width() > 640
             @content.height $(window).height() - 36
         else
+            @content.height 100
             @content.height $(window).height()
+
+        # Ugly trick to for redrawing of iframes.
+        @frames.find('iframe').height "99%"
+        setTimeout =>
+            @frames.find('iframe').height "100%"
+        , 10
+
