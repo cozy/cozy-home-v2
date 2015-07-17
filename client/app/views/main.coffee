@@ -247,10 +247,16 @@ module.exports = class HomeView extends BaseView
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
         else if hash
-            frame.prop('contentWindow').location.hash = hash
+            contentWindow = frame.prop('contentWindow')
+            currentHash = contentWindow.location.hash.substring 1
+            onLoad()
+
+        else if frame.is(':visible')
+            frame.prop('contentWindow').location.hash = ''
             onLoad()
 
         else
+            #alert 'default'
             onLoad()
 
     createApplicationIframe: (slug, hash="") ->
@@ -277,7 +283,9 @@ module.exports = class HomeView extends BaseView
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
-            app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
+            currentHash = location.hash.substring "#apps/#{slug}/".length
+            if currentHash isnt newhash
+                app?.routers.main.navigate "apps/#{slug}/#{newhash}", false
 
             # Ugly trick required because app state changes sometime
             # breaks the iframe layout.
