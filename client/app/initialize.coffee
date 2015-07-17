@@ -38,13 +38,10 @@ class exports.Application
         @routers.main = new MainRouter()
         Backbone.history.start()
 
-        @routers.main.navigate 'home', true
-
         # Configure realtime (to show automatic update of applications).
         SocketListener = require 'lib/socket_listener'
         SocketListener.socket.on 'installerror', (err) ->
             console.log "An error occured while attempting to install app"
             console.log err
-
 
 new exports.Application

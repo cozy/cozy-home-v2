@@ -52,8 +52,8 @@ module.exports = class HomeView extends BaseView
         @backButton = @$ '.back-button'
         @backButton.hide()
 
-        $(window).resize @resetLayoutSizes
-        @resetLayoutSizes()
+        $(window).resize @forceIframeRendering
+        @forceIframeRendering()
 
 
     ### Functions ###
@@ -113,7 +113,7 @@ module.exports = class HomeView extends BaseView
             view.$el.show()
 
             @currentView = view
-            @resetLayoutSizes()
+            @forceIframeRendering()
             @content.scrollTop 0
 
         if @currentView?
@@ -121,7 +121,7 @@ module.exports = class HomeView extends BaseView
             if view is @currentView
                 @frames.hide()
                 @content.show()
-                @resetLayoutSizes()
+                @forceIframeRendering()
                 return
 
             @currentView.$el.hide()
@@ -206,7 +206,13 @@ module.exports = class HomeView extends BaseView
 
         frame = @$("##{slug}-frame")
         onLoad = =>
+
+            # We display back the iframes
+            @frames.css 'top', '0'
+            @frames.css 'left', '0'
+            @frames.css 'position', 'inherit'
             @frames.show()
+
             @content.hide()
             @backButton.show()
 
@@ -219,14 +225,23 @@ module.exports = class HomeView extends BaseView
             name = '' if not name?
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
-            @resetLayoutSizes()
 
             @$("#app-btn-#{slug} .spinner").hide()
             @$("#app-btn-#{slug} .icon").show()
 
 
         if frame.length is 0
-            frame = @createApplicationIframe(slug, hash)
+            frame = @createApplicationIframe slug, hash
+
+            # We show frames right now because to load properly the app
+            # requires a proper height.
+            @frames.show()
+
+            # Then we hide the frames by moving them far.
+            @frames.css 'top', '-9999px'
+            @frames.css 'left', '-9999px'
+            @frames.css 'position', 'absolute'
+
             frame.on 'load', onLoad
 
         # if the app was already open, we want to change its hash
@@ -250,26 +265,31 @@ module.exports = class HomeView extends BaseView
             location = iframe$.prop('contentWindow').location
             newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
-        @resetLayoutSizes()
+
+        @forceIframeRendering()
         # declare the iframe to the intent manager.
         # TODO : when each iFrame will
         # have its own domain, then precise it
         # (ex : https://app1.joe.cozycloud.cc:8080)
-        @intentManager.registerIframe(iframe,'*')
+        @intentManager.registerIframe iframe, '*'
+
         return iframe$
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             app?.routers.main.navigate "/apps/#{slug}/#{newhash}", false
-        @resetLayoutSizes()
+
+            # Ugly trick required because app state changes sometime
+            # breaks the iframe layout.
+            @forceIframeRendering()
 
     ### Configuration ###
 
-    # Small trick to size properly iframe.
-    resetLayoutSizes: =>
-        @frames.height $(window).height() - 36
+    # Ugly trick for redrawing iframes. It's required because sometimes the
+    # browser breaks the Iframe layout (I didn't find any reason for that).
+    forceIframeRendering: =>
+        @frames.find('iframe').height "99%"
+        setTimeout =>
+            @frames.find('iframe').height "100%"
+        , 10
 
-        if $(window).width() > 640
-            @content.height $(window).height() - 36
-        else
-            @content.height $(window).height()
