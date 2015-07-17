@@ -419,7 +419,6 @@ exports.Application = (function() {
     this.mainView = new MainView();
     this.routers.main = new MainRouter();
     Backbone.history.start();
-    this.routers.main.navigate('home', true);
     SocketListener = require('lib/socket_listener');
     return SocketListener.socket.on('installerror', function(err) {
       console.log("An error occured while attempting to install app");
@@ -6515,7 +6514,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   function HomeView() {
-    this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
+    this.forceIframeRendering = __bind(this.forceIframeRendering, this);
     this.onAppHashChanged = __bind(this.onAppHashChanged, this);
     this.displayUpdateApplication = __bind(this.displayUpdateApplication, this);
     this.displayConfigApplications = __bind(this.displayConfigApplications, this);
@@ -6551,8 +6550,8 @@ module.exports = HomeView = (function(_super) {
     this.changeBackground(window.app.instance.background);
     this.backButton = this.$('.back-button');
     this.backButton.hide();
-    $(window).resize(this.resetLayoutSizes);
-    return this.resetLayoutSizes();
+    $(window).resize(this.forceIframeRendering);
+    return this.forceIframeRendering();
   };
 
   /* Functions*/
@@ -6617,14 +6616,14 @@ module.exports = HomeView = (function(_super) {
       $('#home-content').append(view.$el);
       view.$el.show();
       _this.currentView = view;
-      _this.resetLayoutSizes();
+      _this.forceIframeRendering();
       return _this.content.scrollTop(0);
     };
     if (this.currentView != null) {
       if (view === this.currentView) {
         this.frames.hide();
         this.content.show();
-        this.resetLayoutSizes();
+        this.forceIframeRendering();
         return;
       }
       this.currentView.$el.hide();
@@ -6702,6 +6701,9 @@ module.exports = HomeView = (function(_super) {
     frame = this.$("#" + slug + "-frame");
     onLoad = function() {
       var name;
+      _this.frames.css('top', '0');
+      _this.frames.css('left', '0');
+      _this.frames.css('position', 'inherit');
       _this.frames.show();
       _this.content.hide();
       _this.backButton.show();
@@ -6714,12 +6716,15 @@ module.exports = HomeView = (function(_super) {
       }
       window.document.title = "Cozy - " + name;
       $("#current-application").html(name);
-      _this.resetLayoutSizes();
       _this.$("#app-btn-" + slug + " .spinner").hide();
       return _this.$("#app-btn-" + slug + " .icon").show();
     };
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
+      this.frames.show();
+      this.frames.css('top', '-9999px');
+      this.frames.css('left', '-9999px');
+      this.frames.css('position', 'absolute');
       return frame.on('load', onLoad);
     } else if (hash) {
       frame.prop('contentWindow').location.hash = hash;
@@ -6750,7 +6755,7 @@ module.exports = HomeView = (function(_super) {
       newhash = location.hash.replace('#', '');
       return _this.onAppHashChanged(slug, newhash);
     });
-    this.resetLayoutSizes();
+    this.forceIframeRendering();
     this.intentManager.registerIframe(iframe, '*');
     return iframe$;
   };
@@ -6760,20 +6765,19 @@ module.exports = HomeView = (function(_super) {
       if (typeof app !== "undefined" && app !== null) {
         app.routers.main.navigate("/apps/" + slug + "/" + newhash, false);
       }
+      return this.forceIframeRendering();
     }
-    return this.resetLayoutSizes();
   };
 
   /* Configuration*/
 
 
-  HomeView.prototype.resetLayoutSizes = function() {
-    this.frames.height($(window).height() - 36);
-    if ($(window).width() > 640) {
-      return this.content.height($(window).height() - 36);
-    } else {
-      return this.content.height($(window).height());
-    }
+  HomeView.prototype.forceIframeRendering = function() {
+    var _this = this;
+    this.frames.find('iframe').height("99%");
+    return setTimeout(function() {
+      return _this.frames.find('iframe').height("100%");
+    }, 10);
   };
 
   return HomeView;
@@ -6862,6 +6866,7 @@ module.exports = MarketView = (function(_super) {
       return (_ref = app.get('state')) === 'installed' || _ref === 'stopped' || _ref === 'broken';
     }));
     installeds = installedApps.pluck('slug');
+    this.$('.cozy-app').remove();
     this.marketApps.each(function(app) {
       var slug;
       slug = app.get('slug');
@@ -6869,8 +6874,6 @@ module.exports = MarketView = (function(_super) {
         if (_this.$("#market-app-" + (app.get('slug'))).length === 0) {
           return _this.addApplication(app);
         }
-      } else {
-        return _this.$("#market-app-" + (app.get('slug'))).remove();
       }
     });
     if (this.$('.cozy-app').length === 0) {
@@ -6883,8 +6886,7 @@ module.exports = MarketView = (function(_super) {
     row = new ApplicationRow(application, this);
     this.noAppMessage.hide();
     this.appList.append(row.el);
-    appButton = this.$(row.el);
-    return appButton.hide().fadeIn();
+    return appButton = this.$(row.el);
   };
 
   MarketView.prototype.onEnterPressed = function(event) {

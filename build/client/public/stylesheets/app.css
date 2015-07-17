@@ -1723,7 +1723,7 @@ button::-moz-focus-inner {
 .home-body {
   width: 100%;
   height: 100%;
-  padding: 0;
+  padding: 36px 0 0 0;
   margin: 0;
   background: bgcolor;
   background: #fdfdfd;
@@ -1731,7 +1731,33 @@ button::-moz-focus-inner {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding-top: 36px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  -o-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+}
+#app-frames {
+  height: 100%;
 }
 body {
   -webkit-box-sizing: border-box;
@@ -1779,7 +1805,6 @@ body {
 #content {
   height: 100%;
   overflow: auto;
-  margin-bottom: 10px;
   -webkit-transition: 0.6s background-image ease-in-out;
   -moz-transition: 0.6s background-image ease-in-out;
   -o-transition: 0.6s background-image ease-in-out;
@@ -2483,11 +2508,11 @@ body {
   margin-right: 0.5%;
   margin-top: 0.5%;
   cursor: pointer;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: background 0.3s;
+  -moz-transition: background 0.3s;
+  -o-transition: background 0.3s;
+  -ms-transition: background 0.3s;
+  transition: background 0.3s;
   text-align: left;
   border-bottom: 1px solid #e6ddd0;
   border-right: 1px solid #e6ddd0;
