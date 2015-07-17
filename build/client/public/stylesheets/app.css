@@ -2186,7 +2186,6 @@ body {
 }
 .application .application-inner .app-title {
   height: 20%;
-  max-height: 20px;
   text-align: center;
   font-family: 'Source Sans Pro', sans-serif;
   text-transform: uppercase;

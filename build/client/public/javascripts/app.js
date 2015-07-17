@@ -2017,7 +2017,7 @@ module.exports = Application = (function(_super) {
     favorite = this.get('favorite');
     if (favorite) {
       section = 'favorite';
-    } else if (name === 'leave-google') {
+    } else if (name === 'import-from-google') {
       section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
@@ -6688,7 +6688,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
-    var frame, onLoad,
+    var contentWindow, currentHash, frame, onLoad,
       _this = this;
     if (this.apps.length === 0) {
       this.apps.once('reset', function() {
@@ -6727,7 +6727,11 @@ module.exports = HomeView = (function(_super) {
       this.frames.css('position', 'absolute');
       return frame.on('load', onLoad);
     } else if (hash) {
-      frame.prop('contentWindow').location.hash = hash;
+      contentWindow = frame.prop('contentWindow');
+      currentHash = contentWindow.location.hash.substring(1);
+      return onLoad();
+    } else if (frame.is(':visible')) {
+      frame.prop('contentWindow').location.hash = '';
       return onLoad();
     } else {
       return onLoad();
@@ -6761,9 +6765,13 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.onAppHashChanged = function(slug, newhash) {
+    var currentHash;
     if (slug === this.selectedApp) {
-      if (typeof app !== "undefined" && app !== null) {
-        app.routers.main.navigate("/apps/" + slug + "/" + newhash, false);
+      currentHash = location.hash.substring(("#apps/" + slug + "/").length);
+      if (currentHash !== newhash) {
+        if (typeof app !== "undefined" && app !== null) {
+          app.routers.main.navigate("apps/" + slug + "/" + newhash, false);
+        }
       }
       return this.forceIframeRendering();
     }
