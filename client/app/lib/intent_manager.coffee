@@ -10,10 +10,14 @@ module.exports = class IntentManager
 
     handleIntent : (message) =>
         intent = message.data
+        params = intent.params
         switch intent.type
 
             when 'goto'
-                window.app.routers.main.navigate "apps/#{intent.params}", true
+                if params.target == '_blank'
+                    window.open "#apps/#{params.appUrl}", '_blank'
+                else
+                    window.app.routers.main.navigate "apps/#{params.appUrl}", true
 
             when 'pickObject'
                 switch intent.params.objectType
