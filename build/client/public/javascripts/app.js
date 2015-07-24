@@ -8343,6 +8343,12 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.imgPreview = this.cropper$.querySelector('#img-preview');
     this.chooseAgain = this.el.querySelector('.back');
     this.panelsControlers = {};
+    this.imagePanel = new ObjectPickerImage(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
+    this.panelsControlers[this.imagePanel.name] = this.imagePanel;
+    this.albumPanel = new ObjectPickerAlbum(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.albumPanel);
+    this.panelsControlers[this.albumPanel.name] = this.albumPanel;
     this.uploadPanel = new ObjectPickerUpload(this);
     tabControler.addTab(this.objectPickerCont, this.tablist, this.uploadPanel);
     this.panelsControlers[this.uploadPanel.name] = this.uploadPanel;

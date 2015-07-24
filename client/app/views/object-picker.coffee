@@ -66,13 +66,13 @@ module.exports = class PhotoPickerCroper extends Modal
         # initialise tabs and panels
         @panelsControlers = {} # {tab1.name : tab1Controler, tab2... }
         # image panel
-        #@imagePanel = new ObjectPickerImage(this)
-        #tabControler.addTab @objectPickerCont, @tablist, @imagePanel
-        #@panelsControlers[@imagePanel.name] = @imagePanel
+        @imagePanel = new ObjectPickerImage(this)
+        tabControler.addTab @objectPickerCont, @tablist, @imagePanel
+        @panelsControlers[@imagePanel.name] = @imagePanel
         ## album panel
-        #@albumPanel = new ObjectPickerAlbum(this)
-        #tabControler.addTab @objectPickerCont, @tablist, @albumPanel
-        #@panelsControlers[@albumPanel.name] = @albumPanel
+        @albumPanel = new ObjectPickerAlbum(this)
+        tabControler.addTab @objectPickerCont, @tablist, @albumPanel
+        @panelsControlers[@albumPanel.name] = @albumPanel
         # upload panel
         @uploadPanel = new ObjectPickerUpload(this)
         tabControler.addTab @objectPickerCont, @tablist, @uploadPanel
