@@ -10,7 +10,6 @@ module.exports = class exports.HelpView extends BaseView
     template: require 'templates/help'
 
     events:
-        'click .wizard': 'displayWizard'
         'click #send-message-button': 'onSendMessageClicked'
 
 
@@ -30,14 +29,6 @@ module.exports = class exports.HelpView extends BaseView
         if helpUrl?
             template = require 'templates/help_url'
             $(@$el.find('.line')[1]).prepend template helpUrl: helpUrl
-
-
-    # Display the wizard that is started at first connection by running
-    # the wizard route.
-    displayWizard: (event) ->
-        event.preventDefault()
-        dest = event.target.getAttribute('href')
-        window.app.routers.main.navigate dest, trigger: true
 
 
     # When send message is clicked, the content of the message textarea is

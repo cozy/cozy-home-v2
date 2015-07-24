@@ -24,8 +24,6 @@ module.exports = class DeviceRow extends BaseView
                 type: "DELETE"
                 success: =>
                     @$el.fadeOut =>
-                        @model.destroy()
-                        @destroy()
                 error: =>
                     @$('.remove-device').html t 'revoke device access'
                     console.log "error while revoking the device access"

@@ -44,8 +44,6 @@ module.exports = class ApplicationsListView extends ViewCollection
     checkIfEmpty: ->
         noapps = @apps.size() is 0 and not @isLoading
         @$("#no-app-message").toggle noapps
-        if noapps
-            window.app.routers.main.navigate 'home/install', trigger: true
 
 
     appendView: (view) ->

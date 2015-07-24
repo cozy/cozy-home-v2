@@ -400,7 +400,7 @@ exports.Application = (function() {
   }
 
   Application.prototype.initialize = function() {
-    var SocketListener, data, err, instance, locales, _ref;
+    var SocketListener, err, locales, _ref;
     this.instance = window.cozy_instance || {};
     this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
     try {
@@ -419,19 +419,6 @@ exports.Application = (function() {
     this.mainView = new MainView();
     this.routers.main = new MainRouter();
     Backbone.history.start();
-    if (!window.cozy_instance.connectedOnce) {
-      this.routers.main.navigate('home/quicktour', true);
-      data = {
-        connectedOnce: true
-      };
-      instance = new Instance(window.cozy_instance);
-      instance.saveData(data, function(err) {
-        console.log('connectedOnce saved');
-        return console.log(err);
-      });
-    } else if (Backbone.history.getFragment() === '') {
-      this.routers.main.navigate('home', true);
-    }
     SocketListener = require('lib/socket_listener');
     return SocketListener.socket.on('installerror', function(err) {
       console.log("An error occured while attempting to install app");
@@ -767,186 +754,7 @@ SocketListener = (function(_super) {
 module.exports = new SocketListener();
 });
 
-;require.register("lib/templates/wizard", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-// iterate steps
-;(function(){
-  if ('number' == typeof steps.length) {
-
-    for (var index = 0, $$l = steps.length; index < $$l; index++) {
-      var step = steps[index];
-
-buf.push('<section');
-buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tabpanel"), 'role':("tabpanel"), 'aria-labelledby':("" + (step.slug) + "-wizard-tabpanel"), 'aria-hidden':("" + (index !== 0? 'true':'false') + "") }, {"id":true,"role":true,"aria-labelledby":true,"aria-hidden":true}));
-buf.push('><header><h1>');
-var __val__ = t(context + '.' + step.slug + " title")
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h1></header><div class="content">');
-var __val__ = t(context + '.' + step.slug + " content")
-buf.push(null == __val__ ? "" : __val__);
-buf.push('</div><footer>');
-if ( step.choices)
-{
-// iterate step.choices
-;(function(){
-  if ('number' == typeof step.choices.length) {
-
-    for (var label = 0, $$l = step.choices.length; label < $$l; label++) {
-      var action = step.choices[label];
-
-buf.push('<button');
-buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
-buf.push('>');
-var __val__ = t(context + '.' + label, step)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-    }
-
-  } else {
-    var $$l = 0;
-    for (var label in step.choices) {
-      $$l++;      var action = step.choices[label];
-
-buf.push('<button');
-buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
-buf.push('>');
-var __val__ = t(context + '.' + label, step)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-    }
-
-  }
-}).call(this);
-
-}
-else if ( index === (steps.length - 1))
-{
-buf.push('<button class="close">');
-var __val__ = t(context + '.' + "close wizard")
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-}
-else
-{
-buf.push('<button class="next">');
-var __val__ = t(context + '.' + "continue to " + steps[index + 1].slug)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-}
-buf.push('</footer></section>');
-    }
-
-  } else {
-    var $$l = 0;
-    for (var index in steps) {
-      $$l++;      var step = steps[index];
-
-buf.push('<section');
-buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tabpanel"), 'role':("tabpanel"), 'aria-labelledby':("" + (step.slug) + "-wizard-tabpanel"), 'aria-hidden':("" + (index !== 0? 'true':'false') + "") }, {"id":true,"role":true,"aria-labelledby":true,"aria-hidden":true}));
-buf.push('><header><h1>');
-var __val__ = t(context + '.' + step.slug + " title")
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h1></header><div class="content">');
-var __val__ = t(context + '.' + step.slug + " content")
-buf.push(null == __val__ ? "" : __val__);
-buf.push('</div><footer>');
-if ( step.choices)
-{
-// iterate step.choices
-;(function(){
-  if ('number' == typeof step.choices.length) {
-
-    for (var label = 0, $$l = step.choices.length; label < $$l; label++) {
-      var action = step.choices[label];
-
-buf.push('<button');
-buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
-buf.push('>');
-var __val__ = t(context + '.' + label, step)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-    }
-
-  } else {
-    var $$l = 0;
-    for (var label in step.choices) {
-      $$l++;      var action = step.choices[label];
-
-buf.push('<button');
-buf.push(attrs({ 'id':("" + (step.slug) + "-" + (label) + ""), "class": ('action') + ' ' + ("" + (label) + "") }, {"class":true,"id":true}));
-buf.push('>');
-var __val__ = t(context + '.' + label, step)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-    }
-
-  }
-}).call(this);
-
-}
-else if ( index === (steps.length - 1))
-{
-buf.push('<button class="close">');
-var __val__ = t(context + '.' + "close wizard")
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-}
-else
-{
-buf.push('<button class="next">');
-var __val__ = t(context + '.' + "continue to " + steps[index + 1].slug)
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button>');
-}
-buf.push('</footer></section>');
-    }
-
-  }
-}).call(this);
-
-buf.push('<footer><div class="progress adv-0"><ol>');
-// iterate steps
-;(function(){
-  if ('number' == typeof steps.length) {
-
-    for (var index = 0, $$l = steps.length; index < $$l; index++) {
-      var step = steps[index];
-
-buf.push('<li');
-buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tab"), 'aria-selected':("" + (index === 0? 'true':'false') + ""), 'role':('tab'), 'aria-controls':('' + (step.slug) + '-wizard-tabpanel') }, {"id":true,"aria-selected":true,"role":true,"aria-controls":true}));
-buf.push('>');
-var __val__ = step.slug
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li>');
-    }
-
-  } else {
-    var $$l = 0;
-    for (var index in steps) {
-      $$l++;      var step = steps[index];
-
-buf.push('<li');
-buf.push(attrs({ 'id':("" + (step.slug) + "-wizard-tab"), 'aria-selected':("" + (index === 0? 'true':'false') + ""), 'role':('tab'), 'aria-controls':('' + (step.slug) + '-wizard-tabpanel') }, {"id":true,"aria-selected":true,"role":true,"aria-controls":true}));
-buf.push('>');
-var __val__ = step.slug
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li>');
-    }
-
-  }
-}).call(this);
-
-buf.push('</ol></div></footer>');
-}
-return buf.join("");
-};
-});
-
-require.register("lib/view_collection", function(exports, require, module) {
+;require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1046,127 +854,6 @@ module.exports = ViewCollection = (function(_super) {
   };
 
   return ViewCollection;
-
-})(BaseView);
-});
-
-;require.register("lib/wizard_view", function(exports, require, module) {
-var BaseView, WizardView, _ref,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-BaseView = require('./base_view');
-
-module.exports = WizardView = (function(_super) {
-  __extends(WizardView, _super);
-
-  function WizardView() {
-    this.close = __bind(this.close, this);
-    _ref = WizardView.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  WizardView.prototype.tagName = 'dialog';
-
-  WizardView.prototype.className = 'wizard';
-
-  WizardView.prototype.template = require('./templates/wizard');
-
-  WizardView.prototype.context = 'wizard';
-
-  WizardView.prototype.bindStepsEvents = function() {
-    var action, events, label, step, _i, _len, _ref1, _ref2;
-    events = {
-      'click .next': 'next',
-      'click .close': 'close'
-    };
-    _ref1 = this.steps;
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      step = _ref1[_i];
-      if (step.choices == null) {
-        continue;
-      }
-      _ref2 = step.choices;
-      for (label in _ref2) {
-        action = _ref2[label];
-        events["click #" + step.slug + "-" + label] = action;
-      }
-    }
-    return this.delegateEvents(events);
-  };
-
-  WizardView.prototype.initialize = function() {
-    WizardView.__super__.initialize.apply(this, arguments);
-    if (this.steps == null) {
-      this.steps = [];
-    }
-    this.isDialogEnabled = !!this.el.showModal;
-    return this.bindStepsEvents();
-  };
-
-  WizardView.prototype.dispose = function() {
-    this.undelegateEvents();
-    return this.remove();
-  };
-
-  WizardView.prototype.getRenderData = function() {
-    return {
-      context: this.context,
-      steps: this.steps
-    };
-  };
-
-  WizardView.prototype.show = function() {
-    this.currentIndex = this.$el.find('.progress [aria-selected=true]').index();
-    this.progress();
-    if (this.isDialogEnabled) {
-      return this.el.showModal();
-    } else {
-      this.el.setAttribute('open', true);
-      document.addEventListener('keydown', this.close);
-      return this.backdrop = $('<div/>', {
-        'class': 'backdrop'
-      }).insertAfter(this.$el);
-    }
-  };
-
-  WizardView.prototype.close = function(event) {
-    if ((event.keyCode != null) && event.keyCode !== 27) {
-      return;
-    }
-    if (typeof event.preventDefault === "function") {
-      event.preventDefault();
-    }
-    this.el.removeAttribute('open');
-    document.removeEventListener('keydown', this.close);
-    this.remove();
-    return this.backdrop.remove();
-  };
-
-  WizardView.prototype.next = function() {
-    this.currentIndex++;
-    return this.displayStep();
-  };
-
-  WizardView.prototype.displayStep = function() {
-    var _ref1;
-    if ((_ref1 = this.steps[this.currentIndex].beforeShow) != null) {
-      _ref1.call(this);
-    }
-    this.$('[role=tabpanel]').not(":eq(" + this.currentIndex + ")").attr('aria-hidden', true).end().eq(this.currentIndex).attr('aria-hidden', false);
-    this.$('[role=tab]').not(":eq(" + this.currentIndex + ")").attr('aria-selected', false).end().eq(this.currentIndex).attr('aria-selected', true);
-    return this.progress();
-  };
-
-  WizardView.prototype.progress = function() {
-    var adv;
-    adv = 0 | this.currentIndex / (this.steps.length - 1) * 100;
-    this.$('.progress').attr('class', "progress adv-" + adv);
-    return this.$(".progress li:lt(" + this.currentIndex + ")").addClass('past');
-  };
-
-  return WizardView;
 
 })(BaseView);
 });
@@ -1346,47 +1033,7 @@ module.exports = {
   "update available notification": "Eine neue Version von %{appName} ist verfügbar.",
   "stack update available notification": "Eine neue Version der Plattform ist verfügbar.",
   'noapps': {
-    'first steps': "Sie können <a href=\"%{wizard}\">unseren Wizard benutzen</a> um Hilfe bei der Installation und der Konfiguration Ihrer Apps zu erhalten,\noder Sie können eine <a href=\"%{quicktour}\">Quick Tour</a> unternehmen und die Cozy Eigenschaften entdecken.",
     'customize your cozy': "Sie können außerdem <a href=\"%{account}\">zu den Einstellungen gehen</a> um Ihr Cozy anzupassen,\noder <a href=\"%{appstore}\">den App Store besuchen</a> um Ihre erste App zu installieren."
-  },
-  'relaunch install wizard': "Installation Wizard neu starten",
-  'installwizard': {
-    'welcome title': "Willkommen zu Ihrem neuen Cozy",
-    'welcome content': "<p>Dieser Wizard wird Ihnen dabei helfen auf Ihrem Cozy, Apps auszuwählen, installieren und einzurichten.</p>\n<p>>Bitte beachten Sie, das Cozy im Moment im Beta Status befindet. Zögern Sie nicht <a href=\"#help\">um mit uns in Kontakt zu treten</a> wenn Probleme auftreten.</p>",
-    'yes': "Aktivieren der %{slug} App",
-    'no': "Nein, Danke",
-    'continue to files': "Meine Apps konfigurieren",
-    'files title': "Files App konfigurieren",
-    'files content': "<p>Möchte Sie eine App zum Speichern Ihrer persönlichen Dateien und Ordner, sicher erreichbar von überall?</p>",
-    'emails title': "Emails App konfigurieren",
-    'emails content': "<p>Möchten Sie einen E-Mail Client der mit all Ihren E-Mail Providern verbunden ist, so haben Sie Zugriff auf einen einheitlichen Briefkasten erreichbar von überall?</p>",
-    'contacts title': "Contacts App konfigurieren",
-    'contacts content': "<p>Möchten Sie eine Kontakt App um Ihr Adressbuch zu verwalten und direkten Zugriff auf Ihre Freunde zu haben?</p>\n<p><small>Aktivieren dieser App ermöglicht auch die Verwendung der Sync App um Daten mit Ihrem Smartphone und den Computer Programmen zu synchronisieren.</small></p>",
-    'calendar title': "Calendar App konfigurieren",
-    'calendar content': "<p>Möchten Sie eine Kalendar App um Ihnen zu helfen Ihr Leben zu organisieren?</p>\n<p><small>Aktivieren dieser App ermöglicht auch die Verwendung der Sync App um Daten mit Ihrem Smartphone und den Computer Programmen zu synchronisieren.</small></p>",
-    'photos title': "Photos App konfigurieren",
-    'photos content': "<p>Möchten Sie eine App um Ihre Fotos und Albums zu speichern, und Ihnen zu helfen diese mit Freunden und Familie zu teilen?</p>\n<p><small>Pro-Tip: Wenn Sie ein Android Gerät verwenden, können Sie unsere App nutzen, um automatisch Fotos zu Ihrem Cozy hochzuladen.</small></p>",
-    'thanks title': "Fertig!",
-    'thanks content': "<p>Es ist so einfach! Sie haben Ihr Cozy mit den folgenden Apps personalisiert:</p>",
-    'go-to-my-cozy': "Ich bin bereit mein Cozy zu benutzen",
-    'show-me-a-quick-tour': "Bitte erzählen Sie mir mehr über mein Cozy"
-  },
-  'quicktourwizard': {
-    'welcome title': "Treffen Sie Ihr Cozy!",
-    'welcome content': "<p>Wilkommen zu Ihrem brand neuen Cozy.</p>\n<p>Diese kurze geführet Tour wird Ihnen die besten Eigenschaften Ihres Cozy vorstellen.</p>\n<p>>Bitte beachten Sie, das Cozy im Moment im Beta Status befindet. Zögern Sie nicht <a href=\"#help\">um mit uns in Kontakt zu treten</a> wenn Probleme auftreten.</p>",
-    'continue to dashboard': "Dashboard entdecken",
-    'dashboard title': "Dashboard entdecken",
-    'dashboard content': "<p>Hier ist eine kleine Führung durch alles was in Ihrem Cozy Home verfügbar ist. Alle Eigenschaften können vom Menü in der oberen rechten Ecke erreicht werden.</p>\n<p><img src=\"/img/home-black.png\"><strong>Home: </strong>Dies ist der Platz von dem Sie alle Ihre Apps erreichen</p>",
-    'continue to apps': "Wie können Ihre Apps verwalten werden?",
-    'apps title': "Apps verwalten",
-    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>App Verwaltung: </strong>Hier können Sie den Status Ihrer Apps verwalten: starten, stoppen, entfernen…</p>\n<p><img src=\"/img/apps.png\"><strong>App Store: </strong>Im App Store finden Sie neue Apps zur Installation auf Ihrem Cozy.</p>",
-    'continue to help': "Wie Hilfe bekommen?",
-    'help title': "Hilfe bekommen",
-    'help content': "<p><img src=\"/img/configuration.png\"><strong>Konfiguration: </strong>Um sicher zu stellen, dass Ihr Cozy das macht, was Sie möchten, sehen Sie sich die Einstellungen an.</p>\n<p><img src=\"/img/help.png\"><strong>Hilfe: </strong>Verloren in Ihrem Cozy? Hier sind einiges Links um Ihnen weiter zu helfen.</p>",
-    'continue to sync': "Sync mit Ihrem Smartphone",
-    'sync title': "Get in sync",
-    'sync content': "<p>Um mehr über Daten Synchronisation zu lernen, bitte schauen Sie sich die folgenden Ressourcen an:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Files</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendar</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
-    'close wizard': "Nun bin ich bereit mein Cozy zu verwenden"
   }
 };
 });
@@ -1629,44 +1276,7 @@ module.exports = {
   "app msg": 'If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.',
   'more details': "More details",
   'noapps': {
-    'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help with installing and configuring your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> and discover your Cozy features.",
     'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
-  },
-  'relaunch install wizard': "Restart install wizard",
-  'installwizard': {
-    'welcome title': "Welcome to your new Cozy",
-    'welcome content': "<p>This wizard will help you choose, install and configure apps for your Cozy.</p>\n<p>Please remember that Cozy is currently in beta. Don't hesitate to <a href=\"#help\">get in touch</a> if you run into trouble.</p>",
-    'yes': "Activate the %{slug}^B app",
-    'no': "No, thanks",
-    'continue to files': "Configure my apps",
-    'files title': "Configure Files app",
-    'files content': "<p>Do you want an app to store your personal files and folders, making them accessible securely from anywhere?</p>",
-    'emails title': "Configure Emails app",
-    'emails content': "<p>Do you want an email client linked to all your email providers, so you can access a private, unified mailbox from anywhere?</p>",
-    'contacts title': "Configure Contacts app",
-    'contacts content': "<p>Do you want a contacts app to manage your address book and give you instant access to your friends?</p>\n<p><small>Enabling this app will also enable the Sync app to synchronize data with your smartphone and desktop apps.</small></p>",
-    'calendar title': "Configure Calendar app",
-    'calendar content': "<p>Do you want a calendar app to help you organize your life?</p>\n<p><small>Enabling this app will also enable the Sync app to synchronize data with your smartphone and desktop apps.</small></p>",
-    'photos title': "Configure Photos app",
-    'photos content': "<p>Do you want an app to store your photos and albums, and help you share them with your friends and family?</p>\n<p><small>Pro-tip: If you use an Android device, we have an app you can use to automatically upload photos to your Cozy.</small></p>",
-    'thanks title': "Done!",
-    'thanks content': "<p>It's that easy! You've just personalized your Cozy with the following apps:</p>",
-    'go-to-my-cozy': "I'm ready to use my Cozy",
-    'show-me-a-quick-tour': "Please tell me more about my Cozy"
-  },
-  'quicktourwizard': {
-    'welcome title': "Welcome to your Cozy!",
-    'welcome content': "<p>\nCozy is an operating system for your personal cloud. It allows\nto manage simply your distant own machine. You will be able to\ninstall applications that manage your data. Through a web browser\nyou will be able to access your data without compromising your\nprivacy.</p>\n<p>Here are the many benefits of a personal cloud with Cozy:</p>\n<ul>\n  <li>Your data stays confidential and is stored on a hardware of your own.</li>\n  <li>You will not have targeted ads anymore.</li>\n  <li>You don't need to connect on 10 different accounts to use your own tools.</li>\n  <li>No need to push the same data for each tool: the data is shared within the applications.</li>\n</ul>\n<p></p>",
-    'continue to apps': "What applications are available ?",
-    'apps title': "Available Applications",
-    'apps content': "<p>By default Cozy proposes five applications :</p>\n<ul>\n  <li>Calendar: To manage your events</li>\n  <li>Contacts: To handle your address and phone books.</li>\n  <li>Files: To store files and share the big ones.</li>\n  <li>Emails: To centralize your mailbox online.</li>\n  <li>Photos: To create and share photo albums.</li>\n</ul>\n<p>Aside of these main applications you can discover applications\nbuilt by the community. You will find apps like a bank account\nmanager, a feed reader, a todo-list manager and many more!\nGo to the Cozy store to discover the full list of application.\n</p>",
-    'continue to sync': "How to sync my mobile?",
-    'sync title': "Mobile Synchronization",
-    'sync content': "<p><strong>Contacts and Calendars</strong></p>\n<p>\nYou can synchronize both contacts and calendars through the CalDAV and CardDAV protocols. Behind these exotic names, you will find two standards that allow to sync your Cozy with many contact and calendars managers. That means you can sync your Cozy with the native applications of your smartphone. Here are two tutorials that will help you achieving that:\n<ul>\n<li><a href=\"http://cozy.io/en/mobile/contacts.html\">Contacts synchronization</a></li>\n<li><a href=\"http://cozy.io/en/mobile/calendar.html\">Calendar synchronization</a></li>\n</ul>\n</p>\n<p><strong>Files and Pictures (Android)</strong></p>\n<p>\n  With Cozy you can both backup your photos and see your online file\n  on your mobile. You can cache the files you want always with you\n  and see them while your mobile is offline.\n</p>\n<p>To install the Cozy application. You can read our <a href=\"http://cozy.io/en/mobile/files.html\">tutorial</a> or go directly to the <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">PlayStore</a>\n</p>",
-    'continue to import': "How to import my data?",
-    'import title': "Contacts and Calendars import",
-    'import content': "<p>Most of the tools allow you to export your calendars to the .ical format and your contacts to the .vcard or .vcf format. Once you have the right files, you can import them into your Cozy via the import tools available in the Contacts and Calendars application.\n</p>\n<p>\nYour traditional files can be uploaded directly through the Files application UI.\n</p>\n<p>\nWe are working on an application that will allow you to fetch your data from Google easily. We expect to provide you with it soon.\n</p>\n<p>\nThis introduction to Cozy is finished. You already know everything you need to start with Cozy. We let you discover the platform and the available applications!\n</p>",
-    'close wizard': "Start using my Cozy!"
   },
   "pick from files": "Pick a photo",
   "Crop the photo": "Crop image",
@@ -1855,47 +1465,7 @@ module.exports = {
   "update available notification": "Una nueva versión de %{appName} está disponible.",
   "stack update available notification": "Una nueva versión de la Plataforma está disponible.",
   "noapps": {
-    "first steps": "Usted puede <a href=\"%{wizard}\">utilizar nuestro asistente </a> para que lo ayude a instalar y a configurar sus aplicaciones,\no puede abrir <a href=\"%{quicktour}\">primeros pasos </a> para descubrir las funcionalidades de su Cozy.",
     "customize your cozy": "Puede igualmente <a href=\"%{account}\">ir a configuración </a> para personalizar su Cozy,\no <a href=\"%{appstore}\"> a la Apliteca</a> para instalar su primera aplicación."
-  },
-  "relaunch install wizard": "Reiniciar el asistente de instalación",
-  "installwizard": {
-    "welcome title": "Bienvenido(a) a su Cozy",
-    "welcome content": "<p>Este asistente va a ayudarlo(a) a escoger, instalar y configurar las aplicaciones en su Cozy.</p>\n<p>No olvide que su Cozy está en fase beta. No dude en <a href=\"#help\">contactarnos</a> si encuentra dificultades en su utilización.</p>",
-    "yes": "Activar la aplicación %{slug}",
-    "no": "No, gracias",
-    "continue to files": "Configurar mis aplicaciones",
-    "files title": "Configurar la aplicación Archivos",
-    "files content": "<p>¿Desea usted instalar una aplicación que le permita organizar sus archivos y carpetas personales, así como hacerlos accesibles con seguridad desde donde se encuentre?</p>",
-    "emails title": "Configurar la aplicacion Emails",
-    "emails content": "<p>¿Desea usted un cliente de correo electrónico enlazado con todas sus cuentas que le permita un acceso privado a una sola casilla desde donde se encuentre?",
-    "contacts title": "Configurar la aplicación Contactos",
-    "contacts content": "<p>¿Desea activar una aplicación que le permita administrar su libreta de direcciones y le permita dar acceso inmediato a sus amigos?</p>\n<p><small>La instalación de esta aplicación provocará igualmente la instalación de la aplicación Sincronización que le permitirá sincronizar sus datos con su teléfono y / o su ordenador.</small></p>",
-    "calendar title": "Configurar la aplicación Agenda",
-    "calendar content": "<p>¿Desea activar la aplicación Agenda para que le ayude a organizar sus actividades?</p>\n<p><small>La instalación de esta aplicación provocará igualmente la instalación de la aplicación Sincronización que le permitirá sincronizar sus datos con su teléfono y / o su ordenador.</small></p>",
-    "photos title": "Configurar la aplicación Fotos",
-    "photos content": "<p>¿Desea usted instalar una aplicación que le permita organizar sus fotos y álbumes y compartirlos con sus amigos y su familia?</p>\n<p><small>Pro-tip: Si usted utliza un periférico Android, disponemos de una aplicación que permite cargar automaticamente fotos a su Cozy.</small></p>",
-    "thanks title": "¡Tarea realizada!",
-    "thanks content": "<p>¡Qué fácil es! Usted acaba de configurar su Cozy al instalar las aplicaciones siguientes:</p>",
-    "go-to-my-cozy": "Estoy listo(a) para utilizar mi Cozy",
-    "show-me-a-quick-tour": "Infórmeme más acerca de mi Cozy"
-  },
-  "quicktourwizard": {
-    "welcome title": "¡Conozca su Cozy!",
-    "welcome content": "<p>Bienvenido(a) a su nuevo Cozy.</p>\n<p>Esta visita rápida le presentará las funcionalidades de su Cozy.</p>\n<p>No olvide que su Cozy está en fase beta. No dude en  <a href=\"#help\">consultarnos</a> si encuentra dificultades en su utilización.</p>",
-    "continue to dashboard": "Descubra el Tablero de Control",
-    "dashboard title": "Descubra el Tablero de Control",
-    "dashboard content": "<p>Esta es una pequeña guía que describe las secciones de su Cozy. Usted puede acceder a ellas desde el menú situado en la esquina superior derecha.</p>\n<p><img src=\"/img/home-black.png\"><strong>Inicio: </strong>Este es el lugar de donde usted puede acceder a sus aplicaciones</p>",
-    "continue to apps": "¿Cómo administrar sus aplicaciones?",
-    "apps title": "Administre sus aplicaciones",
-    "apps content": "<p><img src=\"/img/config-apps.png\"><strong>Administración de Aplicaciones: </strong>Aquí usted puede administar el estado de sus aplicaciones: lanzarlas, interrumpirlas, suprimirlas…</p>\n<p><img src=\"/img/apps.png\"><strong>Apliteca: </strong>En la Apliteca, usted encontrará nuevas aplicaciones para instalar en su Cozy.</p>",
-    "continue to help": "¿Cómo obtener ayuda?",
-    "help title": "Obtener ayuda",
-    "help content": "<p><img src=\"/img/configuration.png\"><strong>Configuración: </strong>Para estar seguro que Cozy haga lo que usted quiere, échele una mirada a los posibles ajustes.</p>\n<p><img src=\"/img/help.png\"><strong>Ayuda: </strong>¿Perdido en su Cozy? He aquí algunos enlaces que le serán de utilidad.</p>",
-    "continue to sync": "Sincronizar con su teléfono",
-    "sync title": "Sincronizar",
-    "sync content": "<p>Para obtener información sobre la sincronización de sus periféricos, le aconsejamos las fuentes siguientes:</p>\n<ul>\n<li><a href=\"http://cozy.io/mobile/files.html\">Sinc Archivos</a></li>\n<li><a href=\"http://cozy.io/mobile/calendar.html\">Sinc Agenda</a></li>\n<li><a href=\"http://cozy.io/mobile/contacts.html\">Sinc Contactos</a></li>\n</ul>",
-    "close wizard": "Estoy listo(a) para utilizar mi Cozy"
   }
 };
 });
@@ -2069,7 +1639,7 @@ module.exports = {
   "account identifiers": "Identifiants",
   "account localization": "Régionalisation",
   "spanish": "Espagnol",
-  "account personalization": "Personalisation",
+  "account personalization": "Personnalisation",
   "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
   "account password": "Changement de mot de passe",
   "account change password success": "Le mot de passe a été changé avec succès.",
@@ -2139,47 +1709,7 @@ module.exports = {
   "app msg": "Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc\nou sur IRC #cozycloud sur irc.freenode.net.",
   'more details': "Plus de détails",
   'noapps': {
-    'first steps': "Vous pouvez <a href=\"%{wizard}\">utiliser l'assistant</a> pour vous aider à installer et configurer vos applications,\nou vous pouvez ouvrir <a href=\"%{quicktour}\">les \"premiers pas\"</a> pour découvrir les fonctionnalités de votre Cozy.",
     'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
-  },
-  'relaunch install wizard': "Relancer l'assistant d'embarquement",
-  'installwizard': {
-    'welcome title': "Bienvenue dans votre Cozy",
-    'welcome content': "<p>Cet assistant va vous aider à choisir, installer et configurer vos applications dans votre Cozy.</p>\n<p>N'oubliez pas que Cozy est en phase bêta, n'hésitez pas à <a href=\"#help\">nous contacter</a> si vous rencontrez des difficultés dans votre utilisation.</p>",
-    'yes': "Activer l'application %{slug}",
-    'no': "Non, merci",
-    'continue to files': "Configurer mes applications",
-    'files title': "Configurer l'application Files",
-    'files content': "<p>Souhaitez-vous utiliser l'application fichiers qui vous permet de stocker fichiers et dossiers et d'avoir accès à tous vos documents, n'importe où ?</p>",
-    'emails title': "Configurer l'application Emails",
-    'emails content': "<p>Souhaitez-vous activer le webmail qui vous permet de connecter vos différentes boîtes mail dans une messagerie unifiée ?</p>",
-    'contacts title': "Configurer l'application Contacts",
-    'contacts content': "<p>Souhaitez-vous activer l'application Contacts qui vous permet de gérer votre carnet d'adresses ?</p>\n<p><small>L'installation de cette application provoquera également l'installation de l'application sync qui vous permet de synchroniser vos données avec votre smartphone et / ou votre ordinateur.</small></p>",
-    'calendar title': "Configurer l'application Calendar",
-    'calendar content': "<p>Souhaitez-vous activer l'application Calendar qui vous permet de gérer votre agenda ?</p>\n<p><small>L'installation de cette application provoquera également l'installation de l'application sync qui vous permet de synchroniser vos données avec votre smartphone et / ou votre ordinateur.</small></p>",
-    'photos title': "Configurer l'application Photos",
-    'photos content': "<p>Souhaitez-vous installer l'application photos qui vous permet de stocker vos images et albums et de les partager avec vos proches ?</p>\n<p><small>Si vous utilisez un smartphone Android, vous pouvez installer notre application sur votre smartphone pour télécharger vos photos directement depuis votre téléphone.</small></p>",
-    'thanks title': "Et voilà !",
-    'thanks content': "<p>Félicitations ! Vous venez de configurer votre Cozy en y installant les applications suivantes :</p>",
-    'go-to-my-cozy': "Je suis prêt à utiliser mon Cozy",
-    'show-me-a-quick-tour': "Dites m'en plus sur les fonctionnalités de mon Cozy"
-  },
-  'quicktourwizard': {
-    'welcome title': "Bienvenue sur votre Cozy !",
-    'welcome content': "<p>Cozy est le système d'exploitation de votre cloud personnel. Il permet de gérer simplement votre propre machine à distance. Vous pourrez installer des applications qui vous permettront d'exploiter les données que vous stockez. Grâce à un navigateur web, vous pourrez accéder à vos outils depuis n'importe où sans pour autant compromettre votre vie privée. </p>\n<p>Voici les avantages d'avoir son propre cloud :</p>\n<ul>\n  <li>Votre confidentialité est respectée, vos données sont stockées sur une machine qui vous appartient.</li>\n  <li>Vous ne recevez plus de publicité ciblée.</li>\n  <li>Vous n'avez plus à vous connecter à 10 comptes différents pour utiliser vos propres outils.</li>\n  <li>Plus besoin de rentrer les même informations dans chaque outil : les données sont partagées par les applications.</li>\n</ul>\n<p></p>",
-    'continue to apps': "Quelles sont les applications disponibles ?",
-    'apps title': "Les applications disponibles",
-    'apps content': "<p>Par défaut Cozy propose cinq applications :</p>\n<ul>\n  <li>Calendar : Pour gérer vos événements importants</li>\n  <li>Contacts : Votre carnet d'adresses et de téléphones.</li>\n  <li>Files : Pour stocker vos fichiers importants et partager des fichiers volumineux.</li>\n  <li>Emails : Pour centraliser vos boites mail en ligne.</li>\n  <li>Photos : Pour créer et partager des albums photos.</li>\n</ul>\n<p>De plus, vous pourrez découvrir les applications réalisées\npar la communauté. Vous trouverez des applications comme un gestionnaire de compte bancaire, un lecteur de flux RSS, un gestionnaire de todo-liste et bien d'autres encore ! Rendez-vous dans l'app store pour découvrir le catalogue.\n</p>",
-    'continue to help': "Comment trouver de l'aide ?",
-    'help title': "Obtenir de l'aide",
-    'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration : </strong>Pour fonctionner correctement, Cozy nécessite différents paramètres. Choisissez-les dans cette section.</p>\n<p><img src=\"/img/help.png\"><strong>Aide: </strong>Vous trouverez ici toutes les ressources dont vous avez besoin.</p>",
-    'continue to sync': "Comment synchroniser votre mobile ?",
-    'sync title': "Synchronisation du mobile",
-    'sync content': "<p><strong>Contacts et Agendas</strong></p>\n<p>\nVous pouvez synchroniser vos contacts et agendas à travers les protocoles\nCalDAV et CardDAV. Sous ces noms exotiques se cachent deux standards qui permettent de synchroniser votre Cozy avec la plupart des logiciels de gestion de contacts\net d'agendas disponibles. Cela permet également de synchroniser\nun smartphone Android ou iOS avec votre Cozy. Pour configurer votre téléphone\nnous vous invitons à consulter nos deux didacticiels :\n<ul>\n<li><a href=\"http://cozy.io/fr/mobile/contacts.html\">Comment synchroniser ses contacts</a></li>\n<li><a href=\"http://cozy.io/fr/mobile/calendar.html\">Comment synchroniser ses agendas</a></li>\n</ul>\n</p>\n<p><strong>Fichiers et Photos (Android seulement)</strong></p>\n<p>\n  Avec Cozy vous pouvez sauvegarder automatiquement vos photos dans votre Cozy. Inversement vous pouvez consulter les fichiers de votre Cozy depuis votre mobile et les sauvegarder pour y accéder même quand votre connexion est interrompue.\n</p>\n<p>Pour installer l'application Cozy pour Android. Vous pouvez lire notre <a href=\"http://cozy.io/fr/mobile/files.html\">tutoriel</a> ou récupérer notre application sur le <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">PlayStore</a>\n</p>",
-    'continue to import': "Comment importer mes données ?",
-    'import title': "Import des données de contacts et agendas",
-    'import content': "<p>\nPour importer vos données vous pouvez utiliser les format ICAL, ou\nCardDAV. La plupart des outils proposent une exportation à ce format.\nEnsuite, vous trouverez des outils d'importation. dans les applications\nContacts et Calendar.\n</p>\n<p>\nQuant à vos fichiers classiques, ils peuvent être uploadés directement depuis l'interface de l'application Files.\n</p>\n<p>\nNous mettrons également bientôt à disposition une application vous permettant de récupérer toutes vos données Google très facilement dans votre Cozy.\n</p>\n<p>\nVoilà, maintenant l'introduction à Cozy est terminée. Vous savez déjà\ntout ce qu'il faut pour démarrer. Nous vous laissons découvrir\nles applications disponibles.\n</p>",
-    'close wizard': "Démarrer avec mon Cozy !"
   },
   "pick from files": "Choisissez une photo",
   "Crop the photo": "Recadrez l'image",
@@ -2336,47 +1866,7 @@ module.exports = {
   "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
   'noapps': {
-    'first steps': "You can <a href=\"%{wizard}\">use our wizard</a> to help you to install and configure your apps,\nor you can take a <a href=\"%{quicktour}\">quick tour</a> to discover your Cozy features.",
     'customize your cozy': "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
-  },
-  'relaunch install wizard': "Relaunch install wizard",
-  'installwizard': {
-    'welcome title': "Welcome to your new Cozy",
-    'welcome content': "<p>This wizard will help you to choose, install and configure your apps in your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
-    'yes': "Activate this %{slug} app",
-    'no': "No, thanks",
-    'continue to files': "Configure my apps",
-    'files title': "Configure Files app",
-    'files content': "<p>Do you want a files application that stores for you files and folder, so your documents are available anywhere?</p>",
-    'emails title': "Configure Emails app",
-    'emails content': "<p>Do you want a webmail that can connects to your email(s) provider(s), so you can access a private, unified mailbox everywhere?</p>",
-    'contacts title': "Configure Contacts app",
-    'contacts content': "<p>Do you want a contacts application that will manage your addressbook to keep instant access to your friends?</p>\n<p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>",
-    'calendar title': "Configure Calendar app",
-    'calendar content': "<p>Do you want a calendar application that will tracks your upcoming events?</p>\n<p><small>Enabling this app will also enable the sync app that will provides to you a synchronization channel with your smartphone and desktop apps.</small></p>",
-    'photos title': "Configure Photos app",
-    'photos content': "<p>Do you want a photos app that stores your pictures in albums and allows you to share them with others?</p>\n<p><small>Tip: if you use an Android smartphone, you can use our app to upload your photos to the app directly from you phone.</small></p>",
-    'thanks title': "It's done!",
-    'thanks content': "<p>That's all! You've just configured your cozy with the following apps:</p>",
-    'go-to-my-cozy': "I'm ready to use my Cozy",
-    'show-me-a-quick-tour': "Please tell me more about my Cozy"
-  },
-  'quicktourwizard': {
-    'welcome title': "Meet your Cozy!",
-    'welcome content': "<p>Welcome to your brand new Cozy</p>\n<p>This quick steps tour will presents to you some features about your Cozy.</p>\n<p>Please remember that Cozy is actually in a beta version, so don't hesitate to <a href=\"#help\">keep in touch with us</a> if you expect some issues.</p>",
-    'continue to dashboard': "Discover the Dashboard",
-    'dashboard title': "Discover the Dashboard",
-    'dashboard content': "<p>Here is a little guide about all section available in your Cozy Home. All of them can be reached from the menu located on the top right corner.</p>\n<p><img src=\"/img/home-black.png\"><strong>Home: </strong>It is the place from where you can reach your applications</p>",
-    'continue to apps': "How to manage your apps?",
-    'apps title': "Manage your apps",
-    'apps content': "<p><img src=\"/img/config-apps.png\"><strong>App management: </strong>There you can manage the state of your applications: start it, stop it, remove it…</p>\n<p><img src=\"/img/apps.png\"><strong>App store: </strong>In the app store, you will find new applications to install on your Cozy.</p>",
-    'continue to help': "How to get assistance?",
-    'help title': "Get help",
-    'help content': "<p><img src=\"/img/configuration.png\"><strong>Configuration: </strong>To work properly your Cozy requires several parameters. Set them in this section.</p>\n<p><img src=\"/img/help.png\"><strong>Assistance: </strong>You will find here some links to assistance resources.</p>",
-    'continue to sync': "Sync with your smartphone",
-    'sync title': "Get in Sync",
-    'sync content': "<p>To get more information about syncing, you can take a look at the following resources:</p>\n<ul>\n    <li><a href=\"http://cozy.io/mobile/files.html\">Sync Fichiers</a></li>\n    <li><a href=\"http://cozy.io/mobile/calendar.html\">Sync Calendrier</a></li>\n    <li><a href=\"http://cozy.io/mobile/contacts.html\">Sync Contacts</a></li>\n</ul>",
-    'close wizard': "Now I'm ready to use my Cozy"
   }
 };
 });
@@ -2527,7 +2017,7 @@ module.exports = Application = (function(_super) {
     favorite = this.get('favorite');
     if (favorite) {
       section = 'favorite';
-    } else if (name === 'leave-google') {
+    } else if (name === 'import-from-google') {
       section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
@@ -2894,8 +2384,6 @@ module.exports = MainRouter = (function(_super) {
     "config-applications": "configApplications",
     "account": "account",
     "help": "help",
-    "home/install": "installWizard",
-    "home/quicktour": "quickTourWizard",
     "logout": "logout",
     "update/:slug": "updateApp",
     "update-stack": "updateStack",
@@ -2958,14 +2446,6 @@ module.exports = MainRouter = (function(_super) {
 
   MainRouter.prototype.application = function(slug, hash) {
     return app.mainView.displayApplication(slug, hash);
-  };
-
-  MainRouter.prototype.installWizard = function() {
-    return app.mainView.displayInstallWizard();
-  };
-
-  MainRouter.prototype.quickTourWizard = function() {
-    return app.mainView.displayQuickTourWizard();
   };
 
   MainRouter.prototype.logout = function() {
@@ -3345,13 +2825,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text mt2">');
 var __val__ = t('Visit the project website and learn to build your app:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P><p class="help-text mt2">');
-var __val__ = t('or:')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="help-text"><a href="/home/quicktour" class="wizard">');
-var __val__ = t('relaunch install wizard')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></p></div></div><div class="clearfix"></div></div>');
+buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P></div></div><div class="clearfix"></div></div>');
 }
 return buf.join("");
 };
@@ -3385,9 +2859,6 @@ var __val__ = t('welcome to your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><p class="bigger">');
 var __val__ = t('you have no apps')
-buf.push(null == __val__ ? "" : __val__);
-buf.push('</p><p class="bigger">');
-var __val__ = t('noapps.first steps', {wizard:'#home/install', quicktour: '#home/quicktour'})
 buf.push(null == __val__ ? "" : __val__);
 buf.push('</p><p class="bigger">');
 var __val__ = t('noapps.customize your cozy', {account: '#account', appstore: '#applications'})
@@ -4070,7 +3541,8 @@ module.exports = exports.AccountView = (function(_super) {
     var params,
       _this = this;
     params = {
-      type: 'singlePhoto'
+      type: 'singlePhoto',
+      defaultTab: 'photoUpload'
     };
     return new ObjectPicker(params, function(newPhotoChosen, dataUrl) {
       var array, binary, blob, form, i, _i, _ref1;
@@ -4888,10 +4360,7 @@ module.exports = DeviceRow = (function(_super) {
       return $.ajax("/api/devices/" + (this.model.get('id')), {
         type: "DELETE",
         success: function() {
-          return _this.$el.fadeOut(function() {
-            _this.model.destroy();
-            return _this.destroy();
-          });
+          return _this.$el.fadeOut(function() {});
         },
         error: function() {
           _this.$('.remove-device').html(t('revoke device access'));
@@ -5075,7 +4544,6 @@ module.exports = exports.HelpView = (function(_super) {
   HelpView.prototype.template = require('templates/help');
 
   HelpView.prototype.events = {
-    'click .wizard': 'displayWizard',
     'click #send-message-button': 'onSendMessageClicked'
   };
 
@@ -5096,15 +4564,6 @@ module.exports = exports.HelpView = (function(_super) {
         helpUrl: helpUrl
       }));
     }
-  };
-
-  HelpView.prototype.displayWizard = function(event) {
-    var dest;
-    event.preventDefault();
-    dest = event.target.getAttribute('href');
-    return window.app.routers.main.navigate(dest, {
-      trigger: true
-    });
   };
 
   HelpView.prototype.onSendMessageClicked = function() {
@@ -5201,12 +4660,7 @@ module.exports = ApplicationsListView = (function(_super) {
   ApplicationsListView.prototype.checkIfEmpty = function() {
     var noapps;
     noapps = this.apps.size() === 0 && !this.isLoading;
-    this.$("#no-app-message").toggle(noapps);
-    if (noapps) {
-      return window.app.routers.main.navigate('home/install', {
-        trigger: true
-      });
-    }
+    return this.$("#no-app-message").toggle(noapps);
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
@@ -5449,104 +4903,6 @@ module.exports = ApplicationRow = (function(_super) {
   return ApplicationRow;
 
 })(BaseView);
-});
-
-;require.register("views/install_wizard", function(exports, require, module) {
-var InstallWizardView, WizardView, _ref,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-WizardView = require('lib/wizard_view');
-
-module.exports = InstallWizardView = (function(_super) {
-  __extends(InstallWizardView, _super);
-
-  function InstallWizardView() {
-    _ref = InstallWizardView.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  InstallWizardView.prototype.context = 'installwizard';
-
-  InstallWizardView.prototype.initialize = function(options) {
-    var slug, _i, _len, _ref1;
-    if (options.market != null) {
-      this.marketView = options.market;
-    }
-    this.steps = [];
-    this.installedApps = [];
-    this.steps.push({
-      slug: 'welcome'
-    });
-    _ref1 = ['files', 'emails', 'contacts', 'calendar', 'photos'];
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      slug = _ref1[_i];
-      this.steps.push({
-        slug: slug,
-        choices: {
-          'no': 'next',
-          'yes': _.partial(this.validStep, slug)
-        }
-      });
-    }
-    this.steps.push({
-      slug: 'thanks',
-      beforeShow: this.resumeInstalls,
-      choices: {
-        'go-to-my-cozy': 'close',
-        'show-me-a-quick-tour': _.partial(this.close, 'home/quicktour')
-      }
-    });
-    return InstallWizardView.__super__.initialize.apply(this, arguments);
-  };
-
-  InstallWizardView.prototype.close = function(url) {
-    InstallWizardView.__super__.close.apply(this, arguments);
-    if (typeof url !== 'string') {
-      url = 'home';
-    }
-    return window.app.routers.main.navigate(url, {
-      trigger: true
-    });
-  };
-
-  InstallWizardView.prototype.installApp = function(app) {
-    var application;
-    application = this.marketView.marketApps.findWhere({
-      slug: app
-    });
-    if (application == null) {
-      return;
-    }
-    this.marketView.runInstallation(application, false);
-    this.installedApps.push(app);
-    if ((app === 'calendar' || app === 'contacts') && __indexOf.call(this.installedApps, 'sync') < 0) {
-      return this.installApp('sync');
-    }
-  };
-
-  InstallWizardView.prototype.validStep = function(app) {
-    this.installApp(app);
-    return this.next();
-  };
-
-  InstallWizardView.prototype.resumeInstalls = function() {
-    var $appsList, app, _i, _len, _ref1;
-    $appsList = $('<ul/>');
-    _ref1 = this.installedApps;
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      app = _ref1[_i];
-      $('<li/>', {
-        text: app
-      }).appendTo($appsList);
-    }
-    return this.$("section:last .content").append($appsList);
-  };
-
-  return InstallWizardView;
-
-})(WizardView);
 });
 
 ;require.register("views/long-list-images", function(exports, require, module) {
@@ -7114,8 +6470,7 @@ module.exports = LongList = (function() {
 var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HelpView, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 BaseView = require('lib/base_view');
 
@@ -7158,10 +6513,8 @@ module.exports = HomeView = (function(_super) {
     'backgroundChanged': 'changeBackground'
   };
 
-  HomeView.prototype.wizards = ['quicktour'];
-
   function HomeView() {
-    this.resetLayoutSizes = __bind(this.resetLayoutSizes, this);
+    this.forceIframeRendering = __bind(this.forceIframeRendering, this);
     this.onAppHashChanged = __bind(this.onAppHashChanged, this);
     this.displayUpdateApplication = __bind(this.displayUpdateApplication, this);
     this.displayConfigApplications = __bind(this.displayConfigApplications, this);
@@ -7197,8 +6550,8 @@ module.exports = HomeView = (function(_super) {
     this.changeBackground(window.app.instance.background);
     this.backButton = this.$('.back-button');
     this.backButton.hide();
-    $(window).resize(this.resetLayoutSizes);
-    return this.resetLayoutSizes();
+    $(window).resize(this.forceIframeRendering);
+    return this.forceIframeRendering();
   };
 
   /* Functions*/
@@ -7263,14 +6616,14 @@ module.exports = HomeView = (function(_super) {
       $('#home-content').append(view.$el);
       view.$el.show();
       _this.currentView = view;
-      _this.resetLayoutSizes();
+      _this.forceIframeRendering();
       return _this.content.scrollTop(0);
     };
     if (this.currentView != null) {
       if (view === this.currentView) {
         this.frames.hide();
         this.content.show();
-        this.resetLayoutSizes();
+        this.forceIframeRendering();
         return;
       }
       this.currentView.$el.hide();
@@ -7281,33 +6634,9 @@ module.exports = HomeView = (function(_super) {
     }
   };
 
-  HomeView.prototype.displayApplicationsList = function(wizard) {
-    var WView, options, wiz, wview, _i, _len, _ref;
-    if (wizard == null) {
-      wizard = null;
-    }
+  HomeView.prototype.displayApplicationsList = function() {
     this.displayView(this.applicationListView);
-    window.document.title = t("cozy home title");
-    _ref = this.wizards;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      wiz = _ref[_i];
-      wview = "" + wiz + "WizardView";
-      if ((this[wview] != null) && wizard !== wiz) {
-        this[wview].dispose();
-      }
-    }
-    if ((wizard != null) && __indexOf.call(this.wizards, wizard) >= 0) {
-      wview = "" + wizard + "WizardView";
-      WView = require("views/" + wizard + "_wizard");
-      if (wizard === 'install') {
-        options = {
-          market: this.marketView
-        };
-      }
-      this[wview] = new WView(options);
-      this.$el.append(this[wview].render().$el);
-      return this[wview].show();
-    }
+    return window.document.title = t("cozy home title");
   };
 
   HomeView.prototype.displayApplicationsListEdit = function() {
@@ -7324,14 +6653,6 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.displayHelp = function() {
     return this.displayView(this.helpView, t("cozy help title"));
-  };
-
-  HomeView.prototype.displayInstallWizard = function() {
-    return this.displayApplicationsList('install');
-  };
-
-  HomeView.prototype.displayQuickTourWizard = function() {
-    return this.displayApplicationsList('quicktour');
   };
 
   HomeView.prototype.displayConfigApplications = function() {
@@ -7367,7 +6688,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
-    var frame, onLoad,
+    var contentWindow, currentHash, frame, onLoad,
       _this = this;
     if (this.apps.length === 0) {
       this.apps.once('reset', function() {
@@ -7380,6 +6701,9 @@ module.exports = HomeView = (function(_super) {
     frame = this.$("#" + slug + "-frame");
     onLoad = function() {
       var name;
+      _this.frames.css('top', '0');
+      _this.frames.css('left', '0');
+      _this.frames.css('position', 'inherit');
       _this.frames.show();
       _this.content.hide();
       _this.backButton.show();
@@ -7392,15 +6716,22 @@ module.exports = HomeView = (function(_super) {
       }
       window.document.title = "Cozy - " + name;
       $("#current-application").html(name);
-      _this.resetLayoutSizes();
       _this.$("#app-btn-" + slug + " .spinner").hide();
       return _this.$("#app-btn-" + slug + " .icon").show();
     };
     if (frame.length === 0) {
       frame = this.createApplicationIframe(slug, hash);
+      this.frames.show();
+      this.frames.css('top', '-9999px');
+      this.frames.css('left', '-9999px');
+      this.frames.css('position', 'absolute');
       return frame.on('load', onLoad);
     } else if (hash) {
-      frame.prop('contentWindow').location.hash = hash;
+      contentWindow = frame.prop('contentWindow');
+      currentHash = contentWindow.location.hash.substring(1);
+      return onLoad();
+    } else if (frame.is(':visible')) {
+      frame.prop('contentWindow').location.hash = '';
       return onLoad();
     } else {
       return onLoad();
@@ -7428,30 +6759,33 @@ module.exports = HomeView = (function(_super) {
       newhash = location.hash.replace('#', '');
       return _this.onAppHashChanged(slug, newhash);
     });
-    this.resetLayoutSizes();
+    this.forceIframeRendering();
     this.intentManager.registerIframe(iframe, '*');
     return iframe$;
   };
 
   HomeView.prototype.onAppHashChanged = function(slug, newhash) {
+    var currentHash;
     if (slug === this.selectedApp) {
-      if (typeof app !== "undefined" && app !== null) {
-        app.routers.main.navigate("/apps/" + slug + "/" + newhash, false);
+      currentHash = location.hash.substring(("#apps/" + slug + "/").length);
+      if (currentHash !== newhash) {
+        if (typeof app !== "undefined" && app !== null) {
+          app.routers.main.navigate("apps/" + slug + "/" + newhash, false);
+        }
       }
+      return this.forceIframeRendering();
     }
-    return this.resetLayoutSizes();
   };
 
   /* Configuration*/
 
 
-  HomeView.prototype.resetLayoutSizes = function() {
-    this.frames.height($(window).height() - 36);
-    if ($(window).width() > 640) {
-      return this.content.height($(window).height() - 36);
-    } else {
-      return this.content.height($(window).height());
-    }
+  HomeView.prototype.forceIframeRendering = function() {
+    var _this = this;
+    this.frames.find('iframe').height("99%");
+    return setTimeout(function() {
+      return _this.frames.find('iframe').height("100%");
+    }, 10);
   };
 
   return HomeView;
@@ -7540,6 +6874,7 @@ module.exports = MarketView = (function(_super) {
       return (_ref = app.get('state')) === 'installed' || _ref === 'stopped' || _ref === 'broken';
     }));
     installeds = installedApps.pluck('slug');
+    this.$('.cozy-app').remove();
     this.marketApps.each(function(app) {
       var slug;
       slug = app.get('slug');
@@ -7547,8 +6882,6 @@ module.exports = MarketView = (function(_super) {
         if (_this.$("#market-app-" + (app.get('slug'))).length === 0) {
           return _this.addApplication(app);
         }
-      } else {
-        return _this.$("#market-app-" + (app.get('slug'))).remove();
       }
     });
     if (this.$('.cozy-app').length === 0) {
@@ -7561,8 +6894,7 @@ module.exports = MarketView = (function(_super) {
     row = new ApplicationRow(application, this);
     this.noAppMessage.hide();
     this.appList.append(row.el);
-    appButton = this.$(row.el);
-    return appButton.hide().fadeIn();
+    return appButton = this.$(row.el);
   };
 
   MarketView.prototype.onEnterPressed = function(event) {
@@ -8572,11 +7904,14 @@ module.exports = ObjectPickerImage = (function(_super) {
   }
 
   ObjectPickerImage.prototype.initialize = function() {
+    var _this = this;
     this.name = 'thumbPicker';
     this.tabLabel = 'image';
     this.tab = $("<div class='fa fa-photo'>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
-    return this.longList = new LongList(this.panel, this.modal);
+    return this.el.addEventListener('panelSelect', function() {
+      return _this.longList = new LongList(_this.panel, _this.modal);
+    });
   };
 
   ObjectPickerImage.prototype.getObject = function() {
@@ -8922,7 +8257,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
     tabControler.initializeTabs(body);
     this._listenTabsSelection();
-    this._selectDefaultTab(this.uploadPanel.name);
+    this._selectDefaultTab(this.params.defaultTab || this.imagePanel.name);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
     this.cropper$.setAttribute('aria-hidden', true);
     this.framePreview.style.width = THUMB_WIDTH + 'px';
@@ -9038,8 +8373,8 @@ module.exports = PhotoPickerCroper = (function(_super) {
       d = dimensions;
       ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
     } else {
-      canvas.width = img.width;
-      canvas.height = img.height;
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
       ctx.drawImage(img, 0, 0);
     }
     return dataUrl = canvas.toDataURL('image/jpeg');
@@ -9334,48 +8669,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
   return PopoverDescriptionView;
 
 })(BaseView);
-});
-
-;require.register("views/quicktour_wizard", function(exports, require, module) {
-var QuicktourWizardView, WizardView, _ref,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-WizardView = require('lib/wizard_view');
-
-module.exports = QuicktourWizardView = (function(_super) {
-  __extends(QuicktourWizardView, _super);
-
-  function QuicktourWizardView() {
-    _ref = QuicktourWizardView.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  QuicktourWizardView.prototype.context = 'quicktourwizard';
-
-  QuicktourWizardView.prototype.initialize = function() {
-    this.steps = [
-      {
-        slug: 'welcome'
-      }, {
-        slug: 'apps'
-      }, {
-        slug: 'sync'
-      }, {
-        slug: 'import'
-      }
-    ];
-    return QuicktourWizardView.__super__.initialize.apply(this, arguments);
-  };
-
-  QuicktourWizardView.prototype.close = function() {
-    QuicktourWizardView.__super__.close.apply(this, arguments);
-    return window.app.routers.main.navigate('home');
-  };
-
-  return QuicktourWizardView;
-
-})(WizardView);
 });
 
 ;require.register("views/tab-controler", function(exports, require, module) {

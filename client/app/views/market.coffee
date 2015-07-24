@@ -55,13 +55,12 @@ module.exports = class MarketView extends BaseView
             app.get('state') in ['installed', 'stopped', 'broken']
         installeds = installedApps.pluck 'slug'
 
+        @$('.cozy-app').remove()
         @marketApps.each (app) =>
             slug = app.get 'slug'
             if installeds.indexOf(slug) is -1
                 if @$("#market-app-#{app.get 'slug'}").length is 0
                     @addApplication app
-            else
-                @$("#market-app-#{app.get 'slug'}").remove()
 
         if @$('.cozy-app').length is 0
             @noAppMessage.show()
@@ -73,7 +72,6 @@ module.exports = class MarketView extends BaseView
         @noAppMessage.hide()
         @appList.append row.el
         appButton = @$(row.el)
-        appButton.hide().fadeIn()
 
     onEnterPressed: (event) =>
         if event.which is 13 and not @popover?.$el.is(':visible')
