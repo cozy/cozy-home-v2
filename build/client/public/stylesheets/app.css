@@ -1858,6 +1858,56 @@ body {
   display: inline;
   width: auto;
 }
+/** Search bar */
+.twitter-typeahead {
+  float: right;
+  margin-top: -26px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+.twitter-typeahead input {
+  text-align: initial;
+  height: 1.6em;
+  width: 10em;
+  padding: 0 0.5em;
+  background-color: #999 !important;
+  border: 1px solid #000 !important;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  color: #000;
+  font-size: 1em;
+  font-family: "Source Sans Pro", sans-serif;
+  -webkit-transition: width 0.2s ease-out, background-color 0.3s ease-out;
+  -moz-transition: width 0.2s ease-out, background-color 0.3s ease-out;
+  -o-transition: width 0.2s ease-out, background-color 0.3s ease-out;
+  -ms-transition: width 0.2s ease-out, background-color 0.3s ease-out;
+  transition: width 0.2s ease-out, background-color 0.3s ease-out;
+}
+.twitter-typeahead input:focus {
+  width: 36vw;
+  background-color: #fff !important;
+  color: #333;
+}
+.twitter-typeahead .tt-menu {
+  padding: 0.2em 0;
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #e5e5e5;
+  -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+  font-family: "Source Sans Pro", sans-serif;
+}
+.twitter-typeahead .tt-suggestion {
+  padding: 0.2em 0.6em;
+}
+.twitter-typeahead .tt-cursor,
+.twitter-typeahead .tt-suggestion:hover {
+  background-color: #34a6ff;
+  color: #fff;
+  cursor: pointer;
+}
 /** Notifications */
 #menu-applications-toggle {
   height: 36px;

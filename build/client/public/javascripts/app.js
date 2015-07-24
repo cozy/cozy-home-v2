@@ -593,11 +593,17 @@ module.exports = IntentManager = (function() {
   };
 
   IntentManager.prototype.handleIntent = function(message) {
-    var intent;
+    var intent, params;
     intent = message.data;
+    params = intent.params;
     switch (intent.type) {
       case 'goto':
-        return window.app.routers.main.navigate("apps/" + intent.params, true);
+        if (params.target === '_blank') {
+          return window.open("#apps/" + params.appUrl, '_blank');
+        } else {
+          return window.app.routers.main.navigate("apps/" + params.appUrl, true);
+        }
+        break;
       case 'pickObject':
         switch (intent.params.objectType) {
           case 'singlePhoto':
@@ -3054,7 +3060,7 @@ buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title'))
 buf.push('><span>');
 var __val__ = t("navbar back button title")
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><div id="menu-applications-container"></div></div>');
+buf.push('</span></a><div id="menu-applications-container"></div><input id="search-bar" type="text"/></div>');
 }
 return buf.join("");
 };
@@ -7227,6 +7233,91 @@ module.exports = AppsMenu = (function(_super) {
 })(ViewCollection);
 });
 
+;require.register("views/menu_search_bar", function(exports, require, module) {
+var AppsMenu, BaseView,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('lib/base_view');
+
+module.exports = AppsMenu = (function(_super) {
+  __extends(AppsMenu, _super);
+
+  AppsMenu.prototype.el = '#menu-applications-container';
+
+  function AppsMenu() {
+    var states, substringMatcher, typeah,
+      _this = this;
+    substringMatcher = function(strs) {
+      return function(q, cb) {
+        var matches, substrRegex;
+        matches = [];
+        q = q.split(' ').join('');
+        substrRegex = new RegExp(q.split('').join('[\\S]*'), 'i');
+        $.each(strs, function(i, str) {
+          if (substrRegex.test(str)) {
+            matches.push(str);
+          }
+        });
+        cb(matches);
+      };
+    };
+    states = ["/Administratif", "/Administratif/Bank statements", "/Administratif/Bank statements/Bank Of America", "/Administratif/Bank statements/Deutsche Bank", "/Administratif/Bank statements/Société Générale", "/Administratif/CPAM", "/Administratif/EDF", "/Administratif/EDF/Contrat", "/Administratif/EDF/Factures", "/Administratif/Emploi", "/Administratif/Impôts", "/Administratif/Logement", "/Administratif/Logement/Loyer 158 rue de Verdun", "/Administratif/Orange", "/Administratif/Pièces identité", "/Administratif/Pièces identité/Carte identité", "/Administratif/Pièces identité/Passeport", "/Administratif/Pièces identité/Permis de conduire", "/Appareils photo", "/Boulot", "/Cours ISEN", "/Cours ISEN/CIR", "/Cours ISEN/CIR/LINUX", "/Cours ISEN/CIR/MICROCONTROLEUR", "/Cours ISEN/CIR/RESEAUX", "/Cours ISEN/CIR/TRAITEMENT_SIGNAL", "/Divers photo", "/Divers photo/wallpapers", "/Films", "/Notes", "/Notes/Communication", "/Notes/Notes techniques", "/Notes/Recrutement", "/Projet appartement à Lyon", "/Vacances Périgord"];
+    typeah = $('#search-bar');
+    typeah.typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1,
+      limit: 8
+    }, {
+      name: 'states',
+      source: substringMatcher(states),
+      templates: {
+        suggestion: function(string) {
+          var car, matchWithHighlights, matchedPositions, res, stringIndex, tokenIndex, tokens;
+          tokens = typeah.typeahead('val');
+          tokens = tokens.split(' ').join('');
+          console.log(string, tokens);
+          tokenIndex = 0;
+          stringIndex = 0;
+          matchWithHighlights = '';
+          matchedPositions = [];
+          string = string.toLowerCase();
+          while (stringIndex < string.length) {
+            car = string[stringIndex];
+            if (car === tokens[tokenIndex]) {
+              matchWithHighlights += '<strong class="tt-highlight">' + car + '</strong>';
+              matchedPositions.push(stringIndex);
+              tokenIndex++;
+              if (tokenIndex >= tokens.length) {
+                matchWithHighlights += string.slice(stringIndex + 1);
+                break;
+              }
+            } else {
+              matchWithHighlights += car;
+            }
+            stringIndex++;
+          }
+          res = '<p>' + matchWithHighlights + '</p>';
+          return res;
+        }
+      }
+    });
+    $('.twitter-typeahead').bind('typeahead:select', function(ev, suggestion) {
+      console.log('Selection: ', suggestion, ev);
+      window.app.routers.main.navigate("apps/files/folders/be2639a48e5ee0775d5b34bebf2e6b60", true);
+      return typeah.typeahead('val', '');
+    });
+    AppsMenu.__super__.constructor.apply(this, arguments);
+  }
+
+  AppsMenu.prototype.appendView = function(view) {};
+
+  return AppsMenu;
+
+})(BaseView);
+});
+
 ;require.register("views/modal", function(exports, require, module) {
 var Modal, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -7395,7 +7486,7 @@ module.exports = Modal;
 });
 
 ;require.register("views/navbar", function(exports, require, module) {
-var AppsMenu, BaseView, NavbarView, NotificationsView, appButtonTemplate,
+var AppsMenu, BaseView, NavbarView, NotificationsView, SearchBarView, appButtonTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -7405,6 +7496,8 @@ BaseView = require('lib/base_view');
 appButtonTemplate = require("templates/navbar_app_btn");
 
 NotificationsView = require('./notifications_view');
+
+SearchBarView = require('./menu_search_bar');
 
 AppsMenu = require('./menu_applications');
 
@@ -7426,7 +7519,8 @@ module.exports = NavbarView = (function(_super) {
     this.notifications = new NotificationsView({
       collection: this.notifications
     });
-    return this.appMenu = new AppsMenu(this.apps);
+    this.appMenu = new AppsMenu(this.apps);
+    return this.searchBar = new SearchBarView();
   };
 
   return NavbarView;
