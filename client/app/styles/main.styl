@@ -118,8 +118,8 @@ body
         height           1.6em
         width            10em
         padding          0 0.5em
-        background-color #999
-        border           1px solid #000
+        background-color #999 !important  // needed to overwrite JS properties
+        border           1px solid #000 !important  // needed to overwrite JS properties
         border-radius    3px
         color            #000
         font-size        1em
@@ -128,7 +128,7 @@ body
 
         &:focus
             width            36vw
-            background-color #fff
+            background-color #fff !important  // needed to overwrite JS properties
             color            #333
 
     .tt-menu
