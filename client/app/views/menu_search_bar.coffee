@@ -151,6 +151,63 @@ module.exports = class AppsMenu extends BaseView
         },
           name: 'states'
           source: substringMatcher(states)
+          templates:
+            suggestion: (string)->
+                tokens = typeah.typeahead('val')
+                tokens = tokens.split(' ').join('') # remove spaces
+                console.log string, tokens
+
+                tokenIndex = 0
+                stringIndex = 0
+                matchWithHighlights = ''
+                matchedPositions = []
+                string = string.toLowerCase()
+                while stringIndex < string.length
+                    car = string[stringIndex]
+                    if  car == tokens[tokenIndex]
+                        matchWithHighlights += '<strong class="tt-highlight">' + car + '</strong>'
+                        matchedPositions.push stringIndex
+                        tokenIndex++
+                        if tokenIndex >= tokens.length
+                            # matches.push
+                            #     match       : string
+                            #     highlighted : matchWithHighlights + string.slice(stringIndex + 1)
+                            #     positions   : matchedPositions
+                            matchWithHighlights += string.slice(stringIndex + 1)
+                            break
+                    else
+                        matchWithHighlights += car
+                    stringIndex++
+
+                res = '<p>' + matchWithHighlights + '</p>'
+                return res
+
+
+            # fuzzyMatch = (searchSet, query) ->
+            #   tokens = query.toLowerCase().split('')
+            #   matches = []
+            #   searchSet.forEach (string) ->
+            #     tokenIndex = 0
+            #     stringIndex = 0
+            #     matchWithHighlights = ''
+            #     matchedPositions = []
+            #     string = string.toLowerCase()
+            #     while stringIndex < string.length
+            #       if string[stringIndex] == tokens[tokenIndex]
+            #         matchWithHighlights += highlight(string[stringIndex])
+            #         matchedPositions.push stringIndex
+            #         tokenIndex++
+            #         if tokenIndex >= tokens.length
+            #           matches.push
+            #             match: string
+            #             highlighted: matchWithHighlights + string.slice(stringIndex + 1)
+            #             positions: matchedPositions
+            #           break
+            #       else
+            #         matchWithHighlights += string[stringIndex]
+            #       stringIndex++
+            #     return
+            #   matches
 
 
 
