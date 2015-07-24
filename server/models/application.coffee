@@ -65,6 +65,12 @@ Application::updateAccess = (access, callback) ->
     dataClient.put "access/#{@id}/",  access, (err, res, body) ->
         callback err, new Application(body)
 
+Application::getAccess = (callback) ->
+    dataClient.setBasicAuth 'home', getToken()
+    dataClient.post "request/access/byApp/", key: @id, (err, res, body) ->
+        callback err, body[0].value
+
+
 Application.all = (params, callback) ->
     Application.request "bySlug", params, callback
 

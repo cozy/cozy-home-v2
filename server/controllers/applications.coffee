@@ -370,21 +370,30 @@ module.exports =
                 cb()
 
         updateApps = (app, callback) ->
-            if app.needsUpdate? and app.needsUpdate
-                switch app.state
-                    when "installed", "stopped"
-                        # Update application
-                        console.log("Update #{app.name} (#{app.state})")
-                        updateApp app, (err) ->
-                            if err?
-                                error[app.name] = err
-                                broken app, err, callback
+            manifest = new Manifest()
+            manifest.download app, (err) =>
+                if err?
+                    sendError res, message: error
+                else
+                    app.getAccess (err, access) =>
+                        if JSON.stringify(access.permissions) isnt
+                                JSON.stringify(manifest.getPermissions())
+                            return callback()
+                        if app.needsUpdate? and app.needsUpdate or
+                                app.version isnt manifest.getVersion()
+                            if app.state in ["installed", "stopped"]
+                                # Update application
+                                console.log("Update #{app.name} (#{app.state})")
+                                updateApp app, (err) ->
+                                    if err?
+                                        error[app.name] = err
+                                        broken app, err, callback
+                                    else
+                                        callback()
                             else
                                 callback()
-                    else
-                        callback()
-            else
-                callback()
+                        else
+                            callback()
 
         Application.all (err, apps) =>
             async.forEachSeries apps, updateApps, () ->
