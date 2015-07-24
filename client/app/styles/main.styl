@@ -109,12 +109,45 @@ body
 
 /** Search bar */
 .twitter-typeahead
-    width:30em
-    height:2em
+    float         right
+    margin-top    -26px
+    border-radius 3px
+
     input
-        text-align: initial
+        text-align       initial
+        height           1.6em
+        width            10em
+        padding          0 0.5em
+        background-color #999
+        border           1px solid #000
+        border-radius    3px
+        color            #000
+        font-size        1em
+        font-family      "Source Sans Pro", sans-serif
+        transition       width 0.2s ease-out, background-color 0.3s ease-out
+
+        &:focus
+            width            36vw
+            background-color #fff
+            color            #333
+
+    .tt-menu
+        padding 0.2em 0
+        width 100%
+        background-color #fff
+        border-radius 3px
+        border 1px solid #e5e5e5
+        box-shadow 0 3px 6px rgba(0,0,0,0.12)
+        font-family   "Source Sans Pro", sans-serif
+
+    .tt-suggestion
+        padding 0.2em 0.6em
+
     .tt-cursor
-        background-color:blue
+    .tt-suggestion:hover
+        background-color basecolor
+        color            #fff
+        cursor           pointer
 
 
 
