@@ -108,49 +108,51 @@ randomString = function(length) {
 };
 
 updateApp = function(app, callback) {
-  var access, data;
+  var data, manifest;
   data = {};
-  access = {};
-  return manager.updateApp(app, function(err, result) {
-    var manifest;
-    if (err != null) {
-      return callback(err);
-    }
-    if (app.state !== "stopped") {
-      data.state = "installed";
-    }
-    manifest = new Manifest();
-    return manifest.download(app, (function(_this) {
-      return function(err) {
-        var iconInfos, infos;
-        if (err != null) {
-          return callback(err);
-        } else {
-          access.permissions = manifest.getPermissions();
-          access.slug = app.slug;
-          data.widget = manifest.getWidget();
-          data.version = manifest.getVersion();
-          data.iconPath = manifest.getIconPath();
-          data.color = manifest.getColor();
-          data.needsUpdate = false;
-          try {
-            infos = {
-              git: app.git,
-              name: app.name,
-              icon: app.icon,
-              iconPath: data.iconPath,
-              slug: app.slug
-            };
-            iconInfos = icons.getIconInfos(infos);
-          } catch (_error) {
-            err = _error;
-            console.log(err);
-            iconInfos = null;
+  manifest = new Manifest();
+  return manifest.download(app, (function(_this) {
+    return function(err) {
+      var access, iconInfos, infos;
+      if (err != null) {
+        return callback(err);
+      } else {
+        app.password = randomString(32);
+        access = {
+          permissions: manifest.getPermissions(),
+          slug: app.slug,
+          password: app.password
+        };
+        data.widget = manifest.getWidget();
+        data.version = manifest.getVersion();
+        data.iconPath = manifest.getIconPath();
+        data.color = manifest.getColor();
+        data.needsUpdate = false;
+        try {
+          infos = {
+            git: app.git,
+            name: app.name,
+            icon: app.icon,
+            iconPath: data.iconPath,
+            slug: app.slug
+          };
+          iconInfos = icons.getIconInfos(infos);
+        } catch (_error) {
+          err = _error;
+          console.log(err);
+          iconInfos = null;
+        }
+        data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
+        return app.updateAccess(access, function(err) {
+          if (err != null) {
+            return callback(err);
           }
-          data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
-          return app.updateAccess(access, function(err) {
+          return manager.updateApp(app, function(err, result) {
             if (err != null) {
               return callback(err);
+            }
+            if (app.state !== "stopped") {
+              data.state = "installed";
             }
             return app.updateAttributes(data, function(err) {
               removeAppUpdateNotification(app);
@@ -164,10 +166,10 @@ updateApp = function(app, callback) {
               });
             });
           });
-        }
-      };
-    })(this));
-  });
+        });
+      }
+    };
+  })(this));
 };
 
 baseIdController = new cozydb.SimpleController({

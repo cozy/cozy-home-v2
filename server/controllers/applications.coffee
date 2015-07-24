@@ -76,42 +76,43 @@ randomString = (length) ->
 
 updateApp = (app, callback) ->
     data = {}
-    access = {}
-    manager.updateApp app, (err, result) ->
-        return callback err if err?
-        if app.state isnt "stopped"
-            data.state = "installed"
-
-        manifest = new Manifest()
-        manifest.download app, (err) =>
-            if err?
-                callback err
-            else
-                # Retrieve access
-                access.permissions = manifest.getPermissions()
-                access.slug = app.slug
-                # Retrieve application
-                data.widget = manifest.getWidget()
-                data.version = manifest.getVersion()
-                data.iconPath = manifest.getIconPath()
-                data.color = manifest.getColor()
-                data.needsUpdate = false
-                try
-                    # `icons.getIconInfos` needs info from 'data' and 'app'.
-                    infos =
-                        git: app.git
-                        name: app.name
-                        icon: app.icon
-                        iconPath: data.iconPath
-                        slug: app.slug
-                    iconInfos = icons.getIconInfos infos
-                catch err
-                    console.log err
-                    iconInfos = null
-                data.iconType = iconInfos?.extension or null
-                # Update access
-                app.updateAccess access, (err) ->
+    manifest = new Manifest()
+    manifest.download app, (err) =>
+        if err?
+            callback err
+        else
+            app.password = randomString 32
+            # Retrieve access
+            access =
+                permissions: manifest.getPermissions()
+                slug: app.slug
+                password: app.password
+            # Retrieve application
+            data.widget = manifest.getWidget()
+            data.version = manifest.getVersion()
+            data.iconPath = manifest.getIconPath()
+            data.color = manifest.getColor()
+            data.needsUpdate = false
+            try
+                # `icons.getIconInfos` needs info from 'data' and 'app'.
+                infos =
+                    git: app.git
+                    name: app.name
+                    icon: app.icon
+                    iconPath: data.iconPath
+                    slug: app.slug
+                iconInfos = icons.getIconInfos infos
+            catch err
+                console.log err
+                iconInfos = null
+            data.iconType = iconInfos?.extension or null
+            # Update access
+            app.updateAccess access, (err) ->
+                return callback err if err?
+                manager.updateApp app, (err, result) ->
                     return callback err if err?
+                    if app.state isnt "stopped"
+                        data.state = "installed"
                     # Update application
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
