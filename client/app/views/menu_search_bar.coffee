@@ -4,25 +4,40 @@ module.exports = class AppsMenu extends BaseView
 
     el:'#menu-applications-container'
 
+    regExpHistory: {}
+
     constructor: () ->
-        substringMatcher = (strs) ->
-          (q, cb) ->
-            # an array that will be populated with substring matches
-            matches = []
-            # regex used to determine if a string contains the substring `q`
-            # substrRegex = new RegExp(q, 'i')
-            q = q.split(' ').join('')
-            substrRegex = new RegExp(q.split('').join('[\\S]*'), 'i')
-            # iterate through the pool of strings and for any string that
-            # contains the substring `q`, add it to the `matches` array
-            $.each strs, (i, str) ->
-              if substrRegex.test(str)
-                matches.push str
-              return
-            cb matches
-            return
+
+        substringMatcher = (items) =>
+            (query, cb) =>
+                # an array that will be populated with the item wich matches
+                matches = []
+
+                # regexs used to determine if a string matches
+                queryWords = query.toLowerCase().trim().split(' ')
+                regExpList = []
+                for word in queryWords
+                    if !reg = @regExpHistory[word]
+                        reg = new RegExp( word.split('').join('.*?'), 'g' )
+                        @regExpHistory[word] = reg
+                    regExpList.push reg
+
+                # iterate through the pool of strings to find those that matche
+                # all the regexp
+                for item in items
+                    itemMatched = true
+                    for regExp in regExpList
+                        if not regExp.test(item.toLowerCase())
+                            itemMatched = false
+                            break
+                        regExp.lastIndex = 0
+                    if itemMatched
+                        matches.push item
+
+                cb matches
 
         states = [
+            # "/Administratif/edf/toto"
             "/Administratif"
             "/Administratif/Bank statements"
             "/Administratif/Bank statements/Bank Of America"
@@ -60,8 +75,44 @@ module.exports = class AppsMenu extends BaseView
             "/Vacances Périgord"
         ]
 
+        trackCharsToHighlight = (item, charsToHighlight,startIndex,word)->
+            charsToHighlight[startIndex] = true
+            nChars = item.length
+            charIndex = startIndex
+            wordIndex = 1
+            while charIndex < nChars
+                char = item[charIndex]
+                if  char == word[wordIndex]
+                    charsToHighlight[charIndex] = true
+                    if ++wordIndex >= word.length
+                        return
+                charIndex++
+            return
+
+        highlightItem = (item,charsToHighlight) ->
+            res = '<p>'
+            previousWasToHighlight = undefined
+            for isToHighlight, n in charsToHighlight
+                if isToHighlight == previousWasToHighlight
+                   res +=  item[n]
+                else
+                    if previousWasToHighlight
+                        res += '</strong>' + item[n]
+                    else
+                        res += '<strong class="tt-highlight">' + item[n]
+                previousWasToHighlight = isToHighlight
+            if previousWasToHighlight
+                return res += '</strong></p>'
+            else
+                return res += '</p>'
+
+
+
+
+
+
         # states2 = [
-        #     val:'Alabama', id:1
+        #  ,kkoy k  val:'Alabama', id:1
         #     val:'Alaska', id:2
         # ]
         # numbers = new Bloodhound(
@@ -152,62 +203,37 @@ module.exports = class AppsMenu extends BaseView
           name: 'states'
           source: substringMatcher(states)
           templates:
-            suggestion: (string)->
-                tokens = typeah.typeahead('val')
-                tokens = tokens.split(' ').join('') # remove spaces
-                console.log string, tokens
+            suggestion: (item)=>
+                queryWords = typeah.typeahead('val').toLowerCase().trim().split(' ')
+                itemLC = item.toLowerCase()
+                fullWordsToHighlight = Array(item.length)
 
-                tokenIndex = 0
-                stringIndex = 0
-                matchWithHighlights = ''
-                matchedPositions = []
-                string = string.toLowerCase()
-                while stringIndex < string.length
-                    car = string[stringIndex]
-                    if  car == tokens[tokenIndex]
-                        matchWithHighlights += '<strong class="tt-highlight">' + car + '</strong>'
-                        matchedPositions.push stringIndex
-                        tokenIndex++
-                        if tokenIndex >= tokens.length
-                            # matches.push
-                            #     match       : string
-                            #     highlighted : matchWithHighlights + string.slice(stringIndex + 1)
-                            #     positions   : matchedPositions
-                            matchWithHighlights += string.slice(stringIndex + 1)
-                            break
-                    else
-                        matchWithHighlights += car
-                    stringIndex++
+                for word in queryWords
+                    wordRegexp = @regExpHistory[word]
+                    wordRegexp.lastIndex = 0
+                    fullWordMatch_N = 0
+                    fuzzyWordsToHighlight = Array(item.length)
 
-                res = '<p>' + matchWithHighlights + '</p>'
-                return res
+                    # for each word of the query look for an occurence to
+                    # highlight
+                    while match = wordRegexp.exec(itemLC)
+                        # if the occurence is a contiguous string, keep it
+                        if match[0].length == word.length
+                            fullWordMatch_N++
+                            trackCharsToHighlight(itemLC, fullWordsToHighlight,match.index,word)
+                        # else keep it only if so far there was no full match
+                        else if fullWordMatch_N == 0
+                            trackCharsToHighlight(itemLC, fuzzyWordsToHighlight,match.index,word)
+                    # if there were only fuzzy match, fusionnates the fuzzy
+                    # chars to highllight with the full match chars.
+                    if fullWordMatch_N == 0
+                        for isToHighlight,n in fuzzyWordsToHighlight
+                            if isToHighlight
+                                fullWordsToHighlight[n] = true
+
+                return html = highlightItem(item,fullWordsToHighlight)
 
 
-            # fuzzyMatch = (searchSet, query) ->
-            #   tokens = query.toLowerCase().split('')
-            #   matches = []
-            #   searchSet.forEach (string) ->
-            #     tokenIndex = 0
-            #     stringIndex = 0
-            #     matchWithHighlights = ''
-            #     matchedPositions = []
-            #     string = string.toLowerCase()
-            #     while stringIndex < string.length
-            #       if string[stringIndex] == tokens[tokenIndex]
-            #         matchWithHighlights += highlight(string[stringIndex])
-            #         matchedPositions.push stringIndex
-            #         tokenIndex++
-            #         if tokenIndex >= tokens.length
-            #           matches.push
-            #             match: string
-            #             highlighted: matchWithHighlights + string.slice(stringIndex + 1)
-            #             positions: matchedPositions
-            #           break
-            #       else
-            #         matchWithHighlights += string[stringIndex]
-            #       stringIndex++
-            #     return
-            #   matches
 
 
 
