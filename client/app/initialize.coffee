@@ -44,4 +44,10 @@ class exports.Application
             console.log "An error occured while attempting to install app"
             console.log err
 
+        # Retrieve news feed from the blog once a day
+        retrieveNewsFeed = ->
+            $.get "https://blog.cozycloud.cc/news.xml"
+        setTimeout retrieveNewsFeed, 3000
+        setInterval retrieveNewsFeed, 86400000
+
 new exports.Application
