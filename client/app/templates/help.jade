@@ -22,6 +22,9 @@
         h4= t('help support title')
         p.help-text.mt2= t('help send message explanation')
         textarea#send-message-textarea.mt2.w100.h400
+        p.help-logs
+            input#send-message-logs(type='checkbox', checked='checked')
+            span= t('help send logs')
         button#send-message-button.btn.w100= t('help send message action')
         #send-message-error.alert.main-alert.alert-error.w100= t('send message error')
         #send-message-success.alert.main-alert.alert-success.w100= t('send message success')
