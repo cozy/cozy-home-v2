@@ -241,6 +241,8 @@ module.exports =
     "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform."
     "leave google description": "An app to import your current data from your Google account."
     "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol."
+    "hastebin description": "A simple pastebin, a tool to easily share texts."
+
     "reminder title email": "Reminder"
     "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """

@@ -2017,13 +2017,11 @@ module.exports = Application = (function(_super) {
     favorite = this.get('favorite');
     if (favorite) {
       section = 'favorite';
-    } else if (name === 'import-from-google') {
-      section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
     } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks' || name === 'quickmarks' || name === 'zero-feeds') {
       section = 'watch';
-    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser') {
+    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser' || name === 'import-from-google') {
       section = 'data';
     } else if (name === 'todos' || name === 'notes' || name === 'tasky') {
       section = 'productivity';
