@@ -118,50 +118,56 @@
 	background-image: url(icons/icons.png);
 }
 
-.svg-remote_storage { 
+.svg-polybios { 
 	background-position: 0 -1240px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-settings { 
+.svg-remote_storage { 
 	background-position: 0 -1300px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-state { 
+.svg-settings { 
 	background-position: 0 -1360px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-store { 
+.svg-state { 
 	background-position: 0 -1420px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-sync { 
+.svg-store { 
 	background-position: 0 -1480px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-tasky { 
+.svg-sync { 
 	background-position: 0 -1540px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-term { 
+.svg-tasky { 
 	background-position: 0 -1600px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
 
-.svg-todos { 
+.svg-term { 
 	background-position: 0 -1660px;
+	background-repeat: no-repeat;
+	background-image: url(icons/icons.png);
+}
+
+.svg-todos { 
+	background-position: 0 -1720px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.png);
 }
