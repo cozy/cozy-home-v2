@@ -4,7 +4,7 @@ BaseView    = require 'lib/base_view'
 
 module.exports = class ObjectPickerPhotoURL extends BaseView
 
-    template : require '../templates/object-picker-photoURL'
+    template : require '../templates/object_picker_photourl'
     tagName  : 'section'
 
 ####################
