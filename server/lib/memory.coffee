@@ -67,8 +67,8 @@ class exports.MemoryManager
                     else
                         lines = resp.split('\n')
                         line = lines[0]
-                        # This is to prevent a misbehaviour which happens if the
-                        # syntax of free command is different than expected
+                        # This is to prevent a misbehaviour which happens if
+                        # the syntax of free command is different than expected
                         if isNaN parseInt(line)
                             data.freeMem = Math.floor os.freemem() / 1000
                         else
