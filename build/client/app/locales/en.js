@@ -217,7 +217,7 @@ module.exports = {
   "leave google description": "An app to import your current data from your Google account.",
   "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
   "hastebin description": "A simple pastebin, a tool to easily share texts.",
-  "polybios description": "Gérer vos clés PGP depuis votre navigateur.",
+  "polybios description": "Manage your PGP keys from your browser.",
   "reminder title email": "Reminder",
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
