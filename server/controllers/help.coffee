@@ -31,6 +31,7 @@ module.exports =
 
                     data =
                         to: "support@cozycloud.cc"
+                        'reply-to': email
                         subject: "Demande d'assistance depuis un Cozy"
                         content: content
 
@@ -40,7 +41,7 @@ module.exports =
                             contentType: "application/x-compressed-tar"
                         ]
 
-                    cozydb.api.sendMailFromUser data, (err) =>
+                    cozydb.api.sendMailFromUser data, (err) ->
                         fs.unlink path
                         return next err if err
 
