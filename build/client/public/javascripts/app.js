@@ -579,7 +579,7 @@ exports.del = function(url, callbacks) {
 var IntentManager, ObjectPicker,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-ObjectPicker = require('views/object-picker');
+ObjectPicker = require('views/object_picker');
 
 module.exports = IntentManager = (function() {
   function IntentManager() {
@@ -1256,6 +1256,8 @@ module.exports = {
   "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform.",
   "leave google description": "An app to import your current data from your Google account.",
   "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
+  "hastebin description": "A simple pastebin, a tool to easily share texts.",
+  "polybios description": "Manage your PGP keys from your browser.",
   "reminder title email": "Reminder",
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
@@ -1686,6 +1688,8 @@ module.exports = {
   "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
   "leave google description": "Une application pour importer vos données de votre compte Google.",
   "mstsc.js description": "Depuis votre Cozy, prenez contrôle de votre bureau Windows à distance à travers le protocole RDP.",
+  "hastebin description": "Un simple pastebin, un outil pour partager facilement vos textes.",
+  "polybios description": "Gérer vos clés PGP depuis votre navigateur.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
@@ -2017,13 +2021,11 @@ module.exports = Application = (function(_super) {
     favorite = this.get('favorite');
     if (favorite) {
       section = 'favorite';
-    } else if (name === 'import-from-google') {
-      section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
     } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks' || name === 'quickmarks' || name === 'zero-feeds') {
       section = 'watch';
-    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser') {
+    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser' || name === 'import-from-google') {
       section = 'data';
     } else if (name === 'todos' || name === 'notes' || name === 'tasky') {
       section = 'productivity';
@@ -2367,7 +2369,7 @@ var MainRouter, ObjectPickerCroper, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-ObjectPickerCroper = require('../views/object-picker');
+ObjectPickerCroper = require('../views/object_picker');
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
@@ -3109,7 +3111,19 @@ return buf.join("");
 };
 });
 
-require.register("templates/object-picker-photoURL", function(exports, require, module) {
+require.register("templates/object_picker", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<!-- never displayed, just for downloading.--><img id="img-result"/><div class="objectPickerCont"><nav role="tablist" aria-controls="objectPickerCont" class="fp-nav-tabs"></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div id="frame-preview"><img id="img-preview"/></div></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/object_picker_photourl", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3123,25 +3137,13 @@ return buf.join("");
 };
 });
 
-require.register("templates/object-picker-upload", function(exports, require, module) {
+require.register("templates/object_picker_upload", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="photoUpload-btn"><button class="btn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button></div><div class="photoUpload-or"><div>' + escape((interp = t('or')) == null ? '' : interp) + '</div></div><div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div></div></div><input type="file" style="display:none" class="uploader"/>');
-}
-return buf.join("");
-};
-});
-
-require.register("templates/object-picker", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<!-- never displayed, just for downloading.--><img id="img-result"/><div class="objectPickerCont"><nav role="tablist" aria-controls="objectPickerCont" class="fp-nav-tabs"></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div id="frame-preview"><img id="img-preview"/></div></div>');
 }
 return buf.join("");
 };
@@ -3337,7 +3339,7 @@ BackgroundList = require('views/background_list');
 
 Instance = require('models/instance');
 
-ObjectPicker = require('./object-picker');
+ObjectPicker = require('./object_picker');
 
 module.exports = exports.AccountView = (function(_super) {
   __extends(AccountView, _super);
@@ -7656,299 +7658,7 @@ module.exports = NotificationsView = (function(_super) {
 })(ViewCollection);
 });
 
-;require.register("views/object-picker-album", function(exports, require, module) {
-var BaseView, ObjectPickerAlbum, Photo, client,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Photo = require('../models/photo');
-
-BaseView = require('lib/base_view');
-
-client = require('../lib/client');
-
-module.exports = ObjectPickerAlbum = (function(_super) {
-  __extends(ObjectPickerAlbum, _super);
-
-  ObjectPickerAlbum.prototype.tagName = "section";
-
-  function ObjectPickerAlbum(modal) {
-    this._updateThumbs = __bind(this._updateThumbs, this);
-    this._getAlbumPhotos = __bind(this._getAlbumPhotos, this);
-    this._initAlbum = __bind(this._initAlbum, this);
-    this._unselectAll = __bind(this._unselectAll, this);
-    this._toggleOnThumb$ = __bind(this._toggleOnThumb$, this);
-    this._clickHandler = __bind(this._clickHandler, this);
-    this._dblclickHandler = __bind(this._dblclickHandler, this);
-    this.modal = modal;
-    ObjectPickerAlbum.__super__.constructor.call(this);
-  }
-
-  ObjectPickerAlbum.prototype.initialize = function() {
-    this.name = 'albumPicker';
-    this.tabLabel = 'album';
-    this.tab = $("<div class='fa fa-book'>" + this.tabLabel + "</div>")[0];
-    this.panel = this.el;
-    this.albums$ = $('<div class="albums"></div>')[0];
-    this.thumbs$ = $("<div class=\"thumbs\">\n    <div class=\"thumb\"><img/></div>\n</div>")[0];
-    this.panel.appendChild(this.albums$);
-    this.panel.appendChild(this.thumbs$);
-    this._getAlbums();
-    this.selectedThumbs = {};
-    this.thumbs$.addEventListener('click', this._clickHandler);
-    return this.thumbs$.addEventListener('dblclick', this._dblclickHandler);
-  };
-
-  ObjectPickerAlbum.prototype.getObject = function() {
-    var id, photo, res, thumb$, _ref;
-    _ref = this.selectedThumbs;
-    for (id in _ref) {
-      thumb$ = _ref[id];
-      if (thumb$) {
-        break;
-      }
-    }
-    photo = thumb$.photo;
-    res = {
-      id: photo.id,
-      docType: 'photo',
-      name: photo.title,
-      urlToFetch: "photos/raws/" + photo.id + ".jpg"
-    };
-    return res;
-  };
-
-  ObjectPickerAlbum.prototype.setFocusIfExpected = function() {
-    return false;
-  };
-
-  ObjectPickerAlbum.prototype.keyHandler = function(e) {};
-
-  ObjectPickerAlbum.prototype.resizeHandler = function() {
-    var colWidth, margin, thumbStyle, width;
-    thumbStyle = window.getComputedStyle(this.thumbs$.children[0]);
-    colWidth = parseInt(thumbStyle.width) + parseInt(thumbStyle.marginLeft) + parseInt(thumbStyle.marginRight) + 2;
-    width = this.thumbs$.clientWidth;
-    return margin = Math.floor((width % colWidth) / 2);
-  };
-
-  ObjectPickerAlbum.prototype._dblclickHandler = function(e) {
-    var thumb$;
-    thumb$ = e.target;
-    if (!this._toggleOnThumb$(thumb$)) {
-      return;
-    }
-    return this.modal.onYes();
-  };
-
-  ObjectPickerAlbum.prototype._clickHandler = function(e) {
-    var th;
-    th = e.target;
-    while (!th.classList.contains('thumb')) {
-      th = th.parentElement;
-      if (th.classList.contains('thumbs')) {
-        return;
-      }
-    }
-    if (!this._toggleOnThumb$(th)) {
-      return null;
-    }
-    return th.setAttribute('aria-selected', true);
-  };
-
-  ObjectPickerAlbum.prototype._toggleOnThumb$ = function(thumb$) {
-    if (thumb$.getAttribute('aria-selected') === 'true') {
-      return true;
-    }
-    this._unselectAll();
-    thumb$.setAttribute('aria-selected', true);
-    this.selectedThumbs[thumb$.dataset.id] = thumb$;
-    return true;
-  };
-
-  ObjectPickerAlbum.prototype._unselectAll = function() {
-    var id, thumb$, _ref, _results;
-    _ref = this.selectedThumbs;
-    _results = [];
-    for (id in _ref) {
-      thumb$ = _ref[id];
-      if (typeof thumb$ === 'object') {
-        thumb$.setAttribute('aria-selected', false);
-        _results.push(this.selectedThumbs[id] = false);
-      } else {
-        _results.push(void 0);
-      }
-    }
-    return _results;
-  };
-
-  ObjectPickerAlbum.prototype._getAlbums = function() {
-    var _this = this;
-    return client.get("albums/?", function(err, res) {
-      var album, albumLabel$, n, _i, _len;
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (res.length === 0) {
-        _this.panel.removeChild(_this.albums$);
-        _this.panel.removeChild(_this.thumbs$);
-        _this.panel.classList.add('noAlbum');
-        $(_this.panel).append("<div></div>\n<div class='noAlbumDisclaimer'>\n    " + (t('you have no album')) + "\n</div>\n<div></div>");
-        return;
-      }
-      n = 0;
-      for (_i = 0, _len = res.length; _i < _len; _i++) {
-        album = res[_i];
-        albumLabel$ = _this._initAlbum(album);
-        if (n === 0) {
-          _this.previousSelectedAlbum$ = albumLabel$;
-          albumLabel$.setAttribute('aria-selected', true);
-          _this._getAlbumPhotos(album.id);
-        }
-        n += 1;
-      }
-      return _this.resizeHandler();
-    });
-  };
-
-  ObjectPickerAlbum.prototype._initAlbum = function(album) {
-    var cover, el, label,
-      _this = this;
-    el = $(require('../templates/album_thumb')())[0];
-    cover = el.querySelector('.cover');
-    label = el.querySelector('.label');
-    cover.src = "photos/thumbs/" + album.coverPicture + ".jpg";
-    label.textContent = album.title;
-    this.albums$.appendChild(el);
-    el.addEventListener('click', function(event) {
-      _this.previousSelectedAlbum$.setAttribute('aria-selected', false);
-      el.setAttribute('aria-selected', true);
-      _this.previousSelectedAlbum$ = el;
-      return _this._getAlbumPhotos(album.id);
-    });
-    return el;
-  };
-
-  ObjectPickerAlbum.prototype._getAlbumPhotos = function(albumId) {
-    var _this = this;
-    return client.get("albums/" + albumId, function(err, res) {
-      if (err) {
-        return;
-      }
-      _this._updateThumbs(res);
-      return _this._toggleOnThumb$(_this.thumbs$.children[0]);
-    });
-  };
-
-  ObjectPickerAlbum.prototype._updateThumbs = function(res) {
-    var nPhoto, photoId, photoRank, photos, thumb, thumbImg, _i, _j, _len, _ref, _ref1, _results;
-    photos = res.photos;
-    nPhoto = photos.length;
-    photoRank = 0;
-    _ref = this.thumbs$.children;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      thumb = _ref[_i];
-      if (photoRank >= nPhoto) {
-        thumb.setAttribute('aria-hidden', true);
-        thumb.firstElementChild.src = '';
-        thumb.dataset.id = '';
-        thumb.photo = null;
-      } else {
-        thumb.setAttribute('aria-hidden', false);
-        thumb.dataset.id = photoId = photos[photoRank].id;
-        thumb.firstElementChild.src = "photos/thumbs/" + photoId + ".jpg";
-        thumb.photo = photos[photoRank];
-      }
-      photoRank += 1;
-    }
-    _results = [];
-    for (photoRank = _j = photoRank, _ref1 = nPhoto - 1; _j <= _ref1; photoRank = _j += 1) {
-      thumbImg = document.createElement('img');
-      thumbImg.src = "photos/thumbs/" + photos[photoRank].id + ".jpg";
-      thumb = document.createElement('div');
-      thumb.appendChild(thumbImg);
-      thumb.classList.add('thumb');
-      thumb.photo = photos[photoRank];
-      thumb.dataset.id = photos[photoRank].id;
-      _results.push(this.thumbs$.appendChild(thumb));
-    }
-    return _results;
-  };
-
-  return ObjectPickerAlbum;
-
-})(BaseView);
-});
-
-;require.register("views/object-picker-image", function(exports, require, module) {
-var BaseView, LongList, ObjectPickerImage, Photo,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Photo = require('../models/photo');
-
-LongList = require('views/long-list-images');
-
-BaseView = require('lib/base_view');
-
-module.exports = ObjectPickerImage = (function(_super) {
-  __extends(ObjectPickerImage, _super);
-
-  ObjectPickerImage.prototype.tagName = "section";
-
-  function ObjectPickerImage(modal) {
-    this.modal = modal;
-    ObjectPickerImage.__super__.constructor.call(this);
-  }
-
-  ObjectPickerImage.prototype.initialize = function() {
-    var _this = this;
-    this.name = 'thumbPicker';
-    this.tabLabel = 'image';
-    this.tab = $("<div class='fa fa-photo'>" + this.tabLabel + "</div>")[0];
-    this.panel = this.el;
-    return this.el.addEventListener('panelSelect', function() {
-      return _this.longList = new LongList(_this.panel, _this.modal);
-    });
-  };
-
-  ObjectPickerImage.prototype.getObject = function() {
-    var file;
-    file = this.longList.getSelectedFile();
-    if (file) {
-      return {
-        id: file.id,
-        docType: 'file',
-        name: file.name
-      };
-    }
-    return false;
-  };
-
-  ObjectPickerImage.prototype.setFocusIfExpected = function() {
-    return false;
-  };
-
-  ObjectPickerImage.prototype.setInitialDimensions = function(width, heigth) {
-    return this.longList.setInitialDimensions(width, heigth);
-  };
-
-  ObjectPickerImage.prototype.keyHandler = function(e) {
-    this.longList.keyHandler(e);
-  };
-
-  ObjectPickerImage.prototype.resizeHandler = function() {
-    return this.longList.resizeHandler();
-  };
-
-  return ObjectPickerImage;
-
-})(BaseView);
-});
-
-;require.register("views/object-picker-photoURL", function(exports, require, module) {
+;require.register("views/object-picker-photourl", function(exports, require, module) {
 var BaseView, ObjectPickerPhotoURL, proxyclient, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -7965,7 +7675,7 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
     return _ref;
   }
 
-  ObjectPickerPhotoURL.prototype.template = require('../templates/object-picker-photoURL');
+  ObjectPickerPhotoURL.prototype.template = require('../templates/object_picker_photourl');
 
   ObjectPickerPhotoURL.prototype.tagName = 'section';
 
@@ -8046,128 +7756,7 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/object-picker-upload", function(exports, require, module) {
-var BaseView, ObjectPickerUpload,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-BaseView = require('lib/base_view');
-
-module.exports = ObjectPickerUpload = (function(_super) {
-  __extends(ObjectPickerUpload, _super);
-
-  ObjectPickerUpload.prototype.template = require('../templates/object-picker-upload');
-
-  ObjectPickerUpload.prototype.tagName = "section";
-
-  function ObjectPickerUpload(objectPicker) {
-    this._handleFile = __bind(this._handleFile, this);
-    this._handleUploaderChange = __bind(this._handleUploaderChange, this);
-    this._changePhotoFromUpload = __bind(this._changePhotoFromUpload, this);
-    this.keyHandler = __bind(this.keyHandler, this);
-    ObjectPickerUpload.__super__.constructor.call(this);
-    this.objectPicker = objectPicker;
-  }
-
-  ObjectPickerUpload.prototype.initialize = function() {
-    var btn;
-    this.render();
-    this.name = 'photoUpload';
-    this.tabLabel = 'upload';
-    this.tab = this._createTab();
-    this.panel = this.el;
-    this._bindFileDropZone();
-    btn = this.panel.querySelector('.photoUpload-btn');
-    btn.addEventListener('click', this._changePhotoFromUpload);
-    this.btn = btn;
-    this.uploader = this.panel.querySelector('.uploader');
-    return this.uploader.addEventListener('change', this._handleUploaderChange);
-  };
-
-  ObjectPickerUpload.prototype.getObject = function() {
-    return {
-      dataUrl: this.dataUrl
-    };
-  };
-
-  ObjectPickerUpload.prototype.setFocusIfExpected = function() {
-    this.btn.focus();
-    return true;
-  };
-
-  ObjectPickerUpload.prototype.keyHandler = function(e) {
-    return false;
-  };
-
-  ObjectPickerUpload.prototype._createTab = function() {
-    return $("<div class='fa fa-upload'>" + this.tabLabel + "</div>")[0];
-  };
-
-  ObjectPickerUpload.prototype._bindFileDropZone = function() {
-    var dragenter, dragover, drop, dropbox, hasEnteredText,
-      _this = this;
-    dropbox = this.panel.querySelector(".modal-file-drop-zone>div");
-    hasEnteredText = false;
-    dropbox.addEventListener("dragenter", function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      return dropbox.classList.add('dragging');
-    }, false);
-    dropbox.addEventListener("dragleave", function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      return dropbox.classList.remove('dragging');
-    }, false);
-    dragenter = function(e) {
-      e.stopPropagation();
-      return e.preventDefault();
-    };
-    drop = function(e) {
-      var dt, files;
-      e.stopPropagation();
-      e.preventDefault();
-      dt = e.dataTransfer;
-      files = dt.files;
-      return _this._handleFile(files[0]);
-    };
-    dragover = dragenter;
-    dropbox.addEventListener("dragover", dragover, false);
-    return dropbox.addEventListener("drop", drop, false);
-  };
-
-  ObjectPickerUpload.prototype._changePhotoFromUpload = function() {
-    this.uploadPopupOpened = true;
-    return this.uploader.click();
-  };
-
-  ObjectPickerUpload.prototype._handleUploaderChange = function() {
-    var file;
-    file = this.uploader.files[0];
-    return this._handleFile(file);
-  };
-
-  ObjectPickerUpload.prototype._handleFile = function(file) {
-    var img, reader,
-      _this = this;
-    if (!file.type.match(/image\/.*/)) {
-      return alert(t('This is not an image'));
-    }
-    reader = new FileReader();
-    img = new Image();
-    reader.readAsDataURL(file);
-    return reader.onloadend = function() {
-      _this.dataUrl = reader.result;
-      return _this.objectPicker.onYes();
-    };
-  };
-
-  return ObjectPickerUpload;
-
-})(BaseView);
-});
-
-;require.register("views/object-picker", function(exports, require, module) {
+;require.register("views/object_picker", function(exports, require, module) {
 var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -8175,15 +7764,15 @@ var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, 
 
 Modal = require('../views/modal');
 
-template = require('../templates/object-picker');
+template = require('../templates/object_picker');
 
-ObjectPickerPhotoURL = require('./object-picker-photoURL');
+ObjectPickerPhotoURL = require('./object_picker_photourl');
 
-ObjectPickerUpload = require('./object-picker-upload');
+ObjectPickerUpload = require('./object_picker_upload');
 
-ObjectPickerImage = require('./object-picker-image');
+ObjectPickerImage = require('./object_picker_image');
 
-ObjectPickerAlbum = require('./object-picker-album');
+ObjectPickerAlbum = require('./object_picker_album');
 
 tabControler = require('views/tab-controler');
 
@@ -8527,6 +8116,419 @@ module.exports = PhotoPickerCroper = (function(_super) {
   return PhotoPickerCroper;
 
 })(Modal);
+});
+
+;require.register("views/object_picker_album", function(exports, require, module) {
+var BaseView, ObjectPickerAlbum, Photo, client,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Photo = require('../models/photo');
+
+BaseView = require('lib/base_view');
+
+client = require('../lib/client');
+
+module.exports = ObjectPickerAlbum = (function(_super) {
+  __extends(ObjectPickerAlbum, _super);
+
+  ObjectPickerAlbum.prototype.tagName = "section";
+
+  function ObjectPickerAlbum(modal) {
+    this._updateThumbs = __bind(this._updateThumbs, this);
+    this._getAlbumPhotos = __bind(this._getAlbumPhotos, this);
+    this._initAlbum = __bind(this._initAlbum, this);
+    this._unselectAll = __bind(this._unselectAll, this);
+    this._toggleOnThumb$ = __bind(this._toggleOnThumb$, this);
+    this._clickHandler = __bind(this._clickHandler, this);
+    this._dblclickHandler = __bind(this._dblclickHandler, this);
+    this.modal = modal;
+    ObjectPickerAlbum.__super__.constructor.call(this);
+  }
+
+  ObjectPickerAlbum.prototype.initialize = function() {
+    this.name = 'albumPicker';
+    this.tabLabel = 'album';
+    this.tab = $("<div class='fa fa-book'>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    this.albums$ = $('<div class="albums"></div>')[0];
+    this.thumbs$ = $("<div class=\"thumbs\">\n    <div class=\"thumb\"><img/></div>\n</div>")[0];
+    this.panel.appendChild(this.albums$);
+    this.panel.appendChild(this.thumbs$);
+    this._getAlbums();
+    this.selectedThumbs = {};
+    this.thumbs$.addEventListener('click', this._clickHandler);
+    return this.thumbs$.addEventListener('dblclick', this._dblclickHandler);
+  };
+
+  ObjectPickerAlbum.prototype.getObject = function() {
+    var id, photo, res, thumb$, _ref;
+    _ref = this.selectedThumbs;
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (thumb$) {
+        break;
+      }
+    }
+    photo = thumb$.photo;
+    res = {
+      id: photo.id,
+      docType: 'photo',
+      name: photo.title,
+      urlToFetch: "photos/raws/" + photo.id + ".jpg"
+    };
+    return res;
+  };
+
+  ObjectPickerAlbum.prototype.setFocusIfExpected = function() {
+    return false;
+  };
+
+  ObjectPickerAlbum.prototype.keyHandler = function(e) {};
+
+  ObjectPickerAlbum.prototype.resizeHandler = function() {
+    var colWidth, margin, thumbStyle, width;
+    thumbStyle = window.getComputedStyle(this.thumbs$.children[0]);
+    colWidth = parseInt(thumbStyle.width) + parseInt(thumbStyle.marginLeft) + parseInt(thumbStyle.marginRight) + 2;
+    width = this.thumbs$.clientWidth;
+    return margin = Math.floor((width % colWidth) / 2);
+  };
+
+  ObjectPickerAlbum.prototype._dblclickHandler = function(e) {
+    var thumb$;
+    thumb$ = e.target;
+    if (!this._toggleOnThumb$(thumb$)) {
+      return;
+    }
+    return this.modal.onYes();
+  };
+
+  ObjectPickerAlbum.prototype._clickHandler = function(e) {
+    var th;
+    th = e.target;
+    while (!th.classList.contains('thumb')) {
+      th = th.parentElement;
+      if (th.classList.contains('thumbs')) {
+        return;
+      }
+    }
+    if (!this._toggleOnThumb$(th)) {
+      return null;
+    }
+    return th.setAttribute('aria-selected', true);
+  };
+
+  ObjectPickerAlbum.prototype._toggleOnThumb$ = function(thumb$) {
+    if (thumb$.getAttribute('aria-selected') === 'true') {
+      return true;
+    }
+    this._unselectAll();
+    thumb$.setAttribute('aria-selected', true);
+    this.selectedThumbs[thumb$.dataset.id] = thumb$;
+    return true;
+  };
+
+  ObjectPickerAlbum.prototype._unselectAll = function() {
+    var id, thumb$, _ref, _results;
+    _ref = this.selectedThumbs;
+    _results = [];
+    for (id in _ref) {
+      thumb$ = _ref[id];
+      if (typeof thumb$ === 'object') {
+        thumb$.setAttribute('aria-selected', false);
+        _results.push(this.selectedThumbs[id] = false);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  ObjectPickerAlbum.prototype._getAlbums = function() {
+    var _this = this;
+    return client.get("albums/?", function(err, res) {
+      var album, albumLabel$, n, _i, _len;
+      if (err) {
+        console.error(err);
+        return;
+      }
+      if (res.length === 0) {
+        _this.panel.removeChild(_this.albums$);
+        _this.panel.removeChild(_this.thumbs$);
+        _this.panel.classList.add('noAlbum');
+        $(_this.panel).append("<div></div>\n<div class='noAlbumDisclaimer'>\n    " + (t('you have no album')) + "\n</div>\n<div></div>");
+        return;
+      }
+      n = 0;
+      for (_i = 0, _len = res.length; _i < _len; _i++) {
+        album = res[_i];
+        albumLabel$ = _this._initAlbum(album);
+        if (n === 0) {
+          _this.previousSelectedAlbum$ = albumLabel$;
+          albumLabel$.setAttribute('aria-selected', true);
+          _this._getAlbumPhotos(album.id);
+        }
+        n += 1;
+      }
+      return _this.resizeHandler();
+    });
+  };
+
+  ObjectPickerAlbum.prototype._initAlbum = function(album) {
+    var cover, el, label,
+      _this = this;
+    el = $(require('../templates/album_thumb')())[0];
+    cover = el.querySelector('.cover');
+    label = el.querySelector('.label');
+    cover.src = "photos/thumbs/" + album.coverPicture + ".jpg";
+    label.textContent = album.title;
+    this.albums$.appendChild(el);
+    el.addEventListener('click', function(event) {
+      _this.previousSelectedAlbum$.setAttribute('aria-selected', false);
+      el.setAttribute('aria-selected', true);
+      _this.previousSelectedAlbum$ = el;
+      return _this._getAlbumPhotos(album.id);
+    });
+    return el;
+  };
+
+  ObjectPickerAlbum.prototype._getAlbumPhotos = function(albumId) {
+    var _this = this;
+    return client.get("albums/" + albumId, function(err, res) {
+      if (err) {
+        return;
+      }
+      _this._updateThumbs(res);
+      return _this._toggleOnThumb$(_this.thumbs$.children[0]);
+    });
+  };
+
+  ObjectPickerAlbum.prototype._updateThumbs = function(res) {
+    var nPhoto, photoId, photoRank, photos, thumb, thumbImg, _i, _j, _len, _ref, _ref1, _results;
+    photos = res.photos;
+    nPhoto = photos.length;
+    photoRank = 0;
+    _ref = this.thumbs$.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      thumb = _ref[_i];
+      if (photoRank >= nPhoto) {
+        thumb.setAttribute('aria-hidden', true);
+        thumb.firstElementChild.src = '';
+        thumb.dataset.id = '';
+        thumb.photo = null;
+      } else {
+        thumb.setAttribute('aria-hidden', false);
+        thumb.dataset.id = photoId = photos[photoRank].id;
+        thumb.firstElementChild.src = "photos/thumbs/" + photoId + ".jpg";
+        thumb.photo = photos[photoRank];
+      }
+      photoRank += 1;
+    }
+    _results = [];
+    for (photoRank = _j = photoRank, _ref1 = nPhoto - 1; _j <= _ref1; photoRank = _j += 1) {
+      thumbImg = document.createElement('img');
+      thumbImg.src = "photos/thumbs/" + photos[photoRank].id + ".jpg";
+      thumb = document.createElement('div');
+      thumb.appendChild(thumbImg);
+      thumb.classList.add('thumb');
+      thumb.photo = photos[photoRank];
+      thumb.dataset.id = photos[photoRank].id;
+      _results.push(this.thumbs$.appendChild(thumb));
+    }
+    return _results;
+  };
+
+  return ObjectPickerAlbum;
+
+})(BaseView);
+});
+
+;require.register("views/object_picker_image", function(exports, require, module) {
+var BaseView, LongList, ObjectPickerImage, Photo,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Photo = require('../models/photo');
+
+LongList = require('views/long-list-images');
+
+BaseView = require('lib/base_view');
+
+module.exports = ObjectPickerImage = (function(_super) {
+  __extends(ObjectPickerImage, _super);
+
+  ObjectPickerImage.prototype.tagName = "section";
+
+  function ObjectPickerImage(modal) {
+    this.modal = modal;
+    ObjectPickerImage.__super__.constructor.call(this);
+  }
+
+  ObjectPickerImage.prototype.initialize = function() {
+    var _this = this;
+    this.name = 'thumbPicker';
+    this.tabLabel = 'image';
+    this.tab = $("<div class='fa fa-photo'>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    return this.el.addEventListener('panelSelect', function() {
+      return _this.longList = new LongList(_this.panel, _this.modal);
+    });
+  };
+
+  ObjectPickerImage.prototype.getObject = function() {
+    var file;
+    file = this.longList.getSelectedFile();
+    if (file) {
+      return {
+        id: file.id,
+        docType: 'file',
+        name: file.name
+      };
+    }
+    return false;
+  };
+
+  ObjectPickerImage.prototype.setFocusIfExpected = function() {
+    return false;
+  };
+
+  ObjectPickerImage.prototype.setInitialDimensions = function(width, heigth) {
+    return this.longList.setInitialDimensions(width, heigth);
+  };
+
+  ObjectPickerImage.prototype.keyHandler = function(e) {
+    this.longList.keyHandler(e);
+  };
+
+  ObjectPickerImage.prototype.resizeHandler = function() {
+    return this.longList.resizeHandler();
+  };
+
+  return ObjectPickerImage;
+
+})(BaseView);
+});
+
+;require.register("views/object_picker_upload", function(exports, require, module) {
+var BaseView, ObjectPickerUpload,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('lib/base_view');
+
+module.exports = ObjectPickerUpload = (function(_super) {
+  __extends(ObjectPickerUpload, _super);
+
+  ObjectPickerUpload.prototype.template = require('../templates/object_picker_upload');
+
+  ObjectPickerUpload.prototype.tagName = "section";
+
+  function ObjectPickerUpload(objectPicker) {
+    this._handleFile = __bind(this._handleFile, this);
+    this._handleUploaderChange = __bind(this._handleUploaderChange, this);
+    this._changePhotoFromUpload = __bind(this._changePhotoFromUpload, this);
+    this.keyHandler = __bind(this.keyHandler, this);
+    ObjectPickerUpload.__super__.constructor.call(this);
+    this.objectPicker = objectPicker;
+  }
+
+  ObjectPickerUpload.prototype.initialize = function() {
+    var btn;
+    this.render();
+    this.name = 'photoUpload';
+    this.tabLabel = 'upload';
+    this.tab = this._createTab();
+    this.panel = this.el;
+    this._bindFileDropZone();
+    btn = this.panel.querySelector('.photoUpload-btn');
+    btn.addEventListener('click', this._changePhotoFromUpload);
+    this.btn = btn;
+    this.uploader = this.panel.querySelector('.uploader');
+    return this.uploader.addEventListener('change', this._handleUploaderChange);
+  };
+
+  ObjectPickerUpload.prototype.getObject = function() {
+    return {
+      dataUrl: this.dataUrl
+    };
+  };
+
+  ObjectPickerUpload.prototype.setFocusIfExpected = function() {
+    this.btn.focus();
+    return true;
+  };
+
+  ObjectPickerUpload.prototype.keyHandler = function(e) {
+    return false;
+  };
+
+  ObjectPickerUpload.prototype._createTab = function() {
+    return $("<div class='fa fa-upload'>" + this.tabLabel + "</div>")[0];
+  };
+
+  ObjectPickerUpload.prototype._bindFileDropZone = function() {
+    var dragenter, dragover, drop, dropbox, hasEnteredText,
+      _this = this;
+    dropbox = this.panel.querySelector(".modal-file-drop-zone>div");
+    hasEnteredText = false;
+    dropbox.addEventListener("dragenter", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      return dropbox.classList.add('dragging');
+    }, false);
+    dropbox.addEventListener("dragleave", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      return dropbox.classList.remove('dragging');
+    }, false);
+    dragenter = function(e) {
+      e.stopPropagation();
+      return e.preventDefault();
+    };
+    drop = function(e) {
+      var dt, files;
+      e.stopPropagation();
+      e.preventDefault();
+      dt = e.dataTransfer;
+      files = dt.files;
+      return _this._handleFile(files[0]);
+    };
+    dragover = dragenter;
+    dropbox.addEventListener("dragover", dragover, false);
+    return dropbox.addEventListener("drop", drop, false);
+  };
+
+  ObjectPickerUpload.prototype._changePhotoFromUpload = function() {
+    this.uploadPopupOpened = true;
+    return this.uploader.click();
+  };
+
+  ObjectPickerUpload.prototype._handleUploaderChange = function() {
+    var file;
+    file = this.uploader.files[0];
+    return this._handleFile(file);
+  };
+
+  ObjectPickerUpload.prototype._handleFile = function(file) {
+    var img, reader,
+      _this = this;
+    if (!file.type.match(/image\/.*/)) {
+      return alert(t('This is not an image'));
+    }
+    reader = new FileReader();
+    img = new Image();
+    reader.readAsDataURL(file);
+    return reader.onloadend = function() {
+      _this.dataUrl = reader.result;
+      return _this.objectPicker.onYes();
+    };
+  };
+
+  return ObjectPickerUpload;
+
+})(BaseView);
 });
 
 ;require.register("views/popover_description", function(exports, require, module) {

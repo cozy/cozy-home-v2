@@ -6,7 +6,7 @@ locales =   require('helpers/locales' ).locales
 request = require 'lib/request'
 BackgroundList = require 'views/background_list'
 Instance = require 'models/instance'
-ObjectPicker = require './object-picker'
+ObjectPicker = require './object_picker'
 
 
 # View describing main screen for user once he is logged

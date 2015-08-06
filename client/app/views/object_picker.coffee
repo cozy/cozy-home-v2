@@ -1,9 +1,9 @@
 Modal                = require '../views/modal'
-template             = require '../templates/object-picker'
-ObjectPickerPhotoURL = require './object-picker-photoURL'
-ObjectPickerUpload   = require './object-picker-upload'
-ObjectPickerImage    = require './object-picker-image'
-ObjectPickerAlbum    = require './object-picker-album'
+template             = require '../templates/object_picker'
+ObjectPickerPhotoURL = require './object_picker_photourl'
+ObjectPickerUpload   = require './object_picker_upload'
+ObjectPickerImage    = require './object_picker_image'
+ObjectPickerAlbum    = require './object_picker_album'
 tabControler         = require 'views/tab-controler'
 
 

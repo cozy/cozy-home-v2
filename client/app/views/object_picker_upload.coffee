@@ -3,7 +3,7 @@ BaseView    = require 'lib/base_view'
 
 module.exports = class ObjectPickerUpload extends BaseView
 
-    template : require '../templates/object-picker-upload'
+    template : require '../templates/object_picker_upload'
     tagName  : "section"
 
 
