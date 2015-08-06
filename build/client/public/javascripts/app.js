@@ -579,7 +579,7 @@ exports.del = function(url, callbacks) {
 var IntentManager, ObjectPicker,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-ObjectPicker = require('views/object-picker');
+ObjectPicker = require('views/object_picker');
 
 module.exports = IntentManager = (function() {
   function IntentManager() {
@@ -2369,7 +2369,7 @@ var MainRouter, ObjectPickerCroper, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-ObjectPickerCroper = require('../views/object-picker');
+ObjectPickerCroper = require('../views/object_picker');
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
