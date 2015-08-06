@@ -39,15 +39,19 @@ class exports.MemoryManager
             lineData = line.split(' ')
 
             if lineData.length > 5 and lineData[5] is '/'
-                freeSpace = lineData[3].substring(0, lineData[3].length - 1)
+                freeSpace  = lineData[3].substring(0, lineData[3].length - 1)
+                freeUnit   = lineData[3].slice(-1)
                 totalSpace = lineData[1].substring(0, lineData[1].length - 1)
-                usedSpace = lineData[2].substring(0, lineData[2].length - 1)
-                unit = lineData[1].slice(-1)
+                totalUnit  = lineData[1].slice(-1)
+                usedSpace  = lineData[2].substring(0, lineData[2].length - 1)
+                usedUnit   = lineData[2].slice(-1)
 
                 data.totalDiskSpace = totalSpace
-                data.freeDiskSpace = freeSpace
-                data.usedDiskSpace = usedSpace
-                data.unit = unit
+                data.totalUnit      = totalUnit
+                data.freeDiskSpace  = freeSpace
+                data.freeUnit       = freeUnit
+                data.usedDiskSpace  = usedSpace
+                data.usedUnit       = usedUnit
         data
 
     # Return memory information from a complex free command (remove useless
@@ -67,7 +71,13 @@ class exports.MemoryManager
                     else
                         lines = resp.split('\n')
                         line = lines[0]
-                        data.freeMem = line
+                        # This is to prevent a misbehaviour which happens if
+                        # the syntax of free command is different than
+                        # expected
+                        if isNaN parseInt(line)
+                            data.freeMem = Math.floor os.freemem() / 1000
+                        else
+                            data.freeMem = line
                         callback null, data
 
     # Try to get disk infos from the Cozy controller (it can access to the

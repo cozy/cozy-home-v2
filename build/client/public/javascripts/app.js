@@ -393,6 +393,34 @@ Instance = require('models/instance');
 
 colorSet = require('../helpers/color-set');
 
+window.onerror = function(msg, url, line, col, error) {
+  var data, exception, xhr;
+  console.error(msg, url, line, col, error, error != null ? error.stack : void 0);
+  exception = (error != null ? error.toString() : void 0) || msg;
+  if (exception !== window.lastError) {
+    data = {
+      data: {
+        type: 'error',
+        error: {
+          msg: msg,
+          name: error != null ? error.name : void 0,
+          full: exception,
+          stack: error != null ? error.stack : void 0
+        },
+        url: url,
+        line: line,
+        col: col,
+        href: window.location.href
+      }
+    };
+    xhr = new XMLHttpRequest();
+    xhr.open('POST', 'log', true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(data));
+    return window.lastError = exception;
+  }
+};
+
 exports.Application = (function() {
   function Application() {
     this.initialize = __bind(this.initialize, this);
@@ -400,30 +428,61 @@ exports.Application = (function() {
   }
 
   Application.prototype.initialize = function() {
-    var SocketListener, err, locales, _ref;
-    this.instance = window.cozy_instance || {};
-    this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
+    var SocketListener, data, e, err, exception, locales, xhr, _ref;
     try {
-      locales = require('locales/' + this.locale);
+      this.instance = window.cozy_instance || {};
+      this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
+      try {
+        locales = require('locales/' + this.locale);
+      } catch (_error) {
+        err = _error;
+        locales = require('locales/en');
+      }
+      window.app = this;
+      this.polyglot = new Polyglot();
+      this.polyglot.extend(locales);
+      window.t = this.polyglot.t.bind(this.polyglot);
+      moment.locale(this.locale);
+      ColorHash.addScheme('cozy', colorSet);
+      this.routers = {};
+      this.mainView = new MainView();
+      this.routers.main = new MainRouter();
+      Backbone.history.start();
+      SocketListener = require('lib/socket_listener');
+      SocketListener.socket.on('installerror', function(err) {
+        console.log("An error occured while attempting to install app");
+        return console.log(err);
+      });
+      return setTimeout(function() {
+        return console.log(toto);
+      }, 5000);
     } catch (_error) {
-      err = _error;
-      locales = require('locales/en');
+      e = _error;
+      console.error(e, e != null ? e.stack : void 0);
+      exception = e.toString();
+      if (exception !== window.lastError) {
+        data = {
+          data: {
+            type: 'error',
+            error: {
+              msg: e.message,
+              name: e != null ? e.name : void 0,
+              full: exception,
+              stack: e != null ? e.stack : void 0
+            },
+            file: e != null ? e.fileName : void 0,
+            line: e != null ? e.lineNumber : void 0,
+            col: e != null ? e.columnNumber : void 0,
+            href: window.location.href
+          }
+        };
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', 'log', true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(data));
+        return window.lastError = exception;
+      }
     }
-    window.app = this;
-    this.polyglot = new Polyglot();
-    this.polyglot.extend(locales);
-    window.t = this.polyglot.t.bind(this.polyglot);
-    moment.locale(this.locale);
-    ColorHash.addScheme('cozy', colorSet);
-    this.routers = {};
-    this.mainView = new MainView();
-    this.routers.main = new MainRouter();
-    Backbone.history.start();
-    SocketListener = require('lib/socket_listener');
-    return SocketListener.socket.on('installerror', function(err) {
-      console.log("An error occured while attempting to install app");
-      return console.log(err);
-    });
   };
 
   return Application;
@@ -1220,6 +1279,7 @@ module.exports = {
   "help send message title": "Write directly to the Cozy Team",
   "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!",
   "help send message action": "Send message to the Cozy Support Team",
+  "help send logs": "Send server logs to ease debug",
   "send message success": "Message successfully sent!",
   "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc",
   "account change password success": "The password was changed successfully.",
@@ -1654,7 +1714,7 @@ module.exports = {
   "help wiki title": "Wiki :",
   "help send message title": "Ecrire directement à l'équipe Cozy",
   "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !",
-  "help send message action": "Send message to the Cozy Support Team",
+  "help send logs": "Joindre les logs des applications pour faciliter la résolution des problèmes",
   "send message success": "Message successfully sent!",
   "help send message action": "Envoyer un message à l'équipe support de Cozy",
   "send message success": "Message envoyé avec succès !",
@@ -2806,7 +2866,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p class="help-text mt2">');
 var __val__ = t('help send message explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><textarea id="send-message-textarea" class="mt2 w100 h400"></textarea><button id="send-message-button" class="btn w100">');
+buf.push('</p><textarea id="send-message-textarea" class="mt2 w100 h400"></textarea><p class="help-logs"><input id="send-message-logs" type="checkbox" checked="checked"/><span>');
+var __val__ = t('help send logs')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></p><button id="send-message-button" class="btn w100">');
 var __val__ = t('help send message action')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><div id="send-message-error" class="alert main-alert alert-error w100">');
@@ -2983,12 +3046,12 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="right"><a');
-buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("" + (app.git) + ""), 'target':("_blank"), "class": ('website') }, {"href":true,"target":true}));
 buf.push('><img src="img/git.png" class="img-btn"/></a>');
 if ( app.website !== undefined)
 {
 buf.push('<a');
-buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank"), "class": ('website') }, {"href":true,"target":true}));
 buf.push('><img src="img/link.png" class="img-btn"/></a>');
 }
 buf.push('</div><div class="app-img left">');
@@ -3509,12 +3572,14 @@ module.exports = exports.AccountView = (function(_super) {
     this.instance = new Instance(instance);
     domain = (instance != null ? instance.domain : void 0) || t('no domain set');
     locale = (instance != null ? instance.locale : void 0) || 'en';
-    saveDomain = this.getSaveFunction('domain', this.domainField, 'instance');
-    this.domainField.on('keyup', function(event) {
-      if (event.keyCode === 13 || event.which === 13) {
-        return saveDomain();
-      }
-    });
+    if (!window.managed) {
+      saveDomain = this.getSaveFunction('domain', this.domainField, 'instance');
+      this.domainField.on('keyup', function(event) {
+        if (event.keyCode === 13 || event.which === 13) {
+          return saveDomain();
+        }
+      });
+    }
     this.domainField.val(domain);
     saveLocale = this.getSaveFunction('locale', this.localeField, 'instance');
     this.localeField.change(saveLocale);
@@ -4216,11 +4281,14 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.$('.amount').html("--");
     this.$('.total').html("--");
     return request.get('api/sys-data', function(err, data) {
+      var diskTotal, diskUsed;
       if (err) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
+        diskUsed = "" + data.usedDiskSpace + " " + (data.usedUnit || 'G');
+        diskTotal = "" + data.totalDiskSpace + " " + (data.totalUnit || 'G');
         _this.displayMemory(data.freeMem, data.totalMem);
-        return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace, data.unit);
+        return _this.displayDiskSpace(diskUsed, diskTotal);
       }
     });
   };
@@ -4230,9 +4298,9 @@ module.exports = ConfigApplicationsView = (function(_super) {
     return this.memoryFree.find('.total').html(Math.floor(total / 1000));
   };
 
-  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total, unit) {
+  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
     this.diskSpace.find('.amount').html(amount);
-    return this.diskSpace.find('.total').html("" + total + " " + (unit || 'G'));
+    return this.diskSpace.find('.total').html(total);
   };
 
   ConfigApplicationsView.prototype.onAppStateChanged = function() {
@@ -4569,15 +4637,17 @@ module.exports = exports.HelpView = (function(_super) {
   };
 
   HelpView.prototype.onSendMessageClicked = function() {
-    var messageText,
+    var messageText, sendLogs,
       _this = this;
     this.alertMessageError.hide();
     this.alertMessageSuccess.hide();
     messageText = this.sendMessageInput.val();
+    sendLogs = this.$('#send-message-logs').is(':checked');
     if (messageText.length > 0) {
       this.sendMessageButton.spin(true);
       return request.post("help/message", {
-        messageText: messageText
+        messageText: messageText,
+        sendLogs: sendLogs
       }, function(err) {
         _this.sendMessageButton.spin(false);
         if (err) {
@@ -7116,6 +7186,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.template = require('templates/market_application');
 
   ApplicationRow.prototype.events = {
+    "click .website": "onWebsiteClicked",
     "click .btn": "onInstallClicked",
     "click": "onInstallClicked"
   };
@@ -7168,6 +7239,10 @@ module.exports = ApplicationRow = (function(_super) {
       return;
     }
     return this.marketView.showDescription(this, this.installButton);
+  };
+
+  ApplicationRow.prototype.onWebsiteClicked = function(e) {
+    return e.stopPropagation();
   };
 
   return ApplicationRow;

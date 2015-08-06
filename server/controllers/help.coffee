@@ -18,7 +18,6 @@ module.exports =
 
                 {locale, domain} = instance
                 {email, public_name} = user
-                {body} = req
                 infos = {locale, domain}
 
                 content = '\n\n---- User config\n\n'
@@ -28,23 +27,28 @@ module.exports =
                 content += '\n\n---- User message\n\n'
                 content += req.body.messageText
 
-                logs.getCompressLogs (path) ->
-
-                    attachments = [
-                        path: path
-                        contentType: "application/x-compressed-tar"
-                    ]
+                onLogs = (path) ->
 
                     data =
                         to: "support@cozycloud.cc"
+                        'reply-to': email
                         subject: "Demande d'assistance depuis un Cozy"
                         content: content
-                        attachments: attachments
 
-                    cozydb.api.sendMailFromUser data, (err) =>
+                    if path?
+                        data.attachments = [
+                            path: path
+                            contentType: "application/x-compressed-tar"
+                        ]
+
+                    cozydb.api.sendMailFromUser data, (err) ->
                         fs.unlink path
                         return next err if err
 
                         res.send
                             success: 'Mail successully sent to support.'
 
+                if req.body.sendLogs
+                    logs.getCompressLogs onLogs
+                else
+                    onLogs()
