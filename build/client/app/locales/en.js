@@ -180,6 +180,7 @@ module.exports = {
   "help send message title": "Write directly to the Cozy Team",
   "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!",
   "help send message action": "Send message to the Cozy Support Team",
+  "help send logs": "Send server logs to ease debug",
   "send message success": "Message successfully sent!",
   "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc",
   "account change password success": "The password was changed successfully.",

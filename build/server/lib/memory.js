@@ -36,7 +36,7 @@ exports.MemoryManager = (function() {
   };
 
   MemoryManager.prototype._extractDataFromDfResult = function(resp) {
-    var data, freeSpace, i, len, line, lineData, lines, totalSpace, unit, usedSpace;
+    var data, freeSpace, freeUnit, i, len, line, lineData, lines, totalSpace, totalUnit, usedSpace, usedUnit;
     data = {};
     lines = resp.split('\n');
     for (i = 0, len = lines.length; i < len; i++) {
@@ -45,13 +45,17 @@ exports.MemoryManager = (function() {
       lineData = line.split(' ');
       if (lineData.length > 5 && lineData[5] === '/') {
         freeSpace = lineData[3].substring(0, lineData[3].length - 1);
+        freeUnit = lineData[3].slice(-1);
         totalSpace = lineData[1].substring(0, lineData[1].length - 1);
+        totalUnit = lineData[1].slice(-1);
         usedSpace = lineData[2].substring(0, lineData[2].length - 1);
-        unit = lineData[1].slice(-1);
+        usedUnit = lineData[2].slice(-1);
         data.totalDiskSpace = totalSpace;
+        data.totalUnit = totalUnit;
         data.freeDiskSpace = freeSpace;
+        data.freeUnit = freeUnit;
         data.usedDiskSpace = usedSpace;
-        data.unit = unit;
+        data.usedUnit = usedUnit;
       }
     }
     return data;
@@ -74,7 +78,11 @@ exports.MemoryManager = (function() {
           } else {
             lines = resp.split('\n');
             line = lines[0];
-            data.freeMem = line;
+            if (isNaN(parseInt(line))) {
+              data.freeMem = Math.floor(os.freemem() / 1000);
+            } else {
+              data.freeMem = line;
+            }
             return callback(null, data);
           }
         });

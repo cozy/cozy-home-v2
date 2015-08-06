@@ -2315,6 +2315,10 @@ body {
   margin: 0;
   width: 100%;
 }
+#account-view .account-field input[disabled] {
+  border-width: 0;
+  color: #363a46;
+}
 #account-view .account-field select {
   margin: 0;
   width: 100%;

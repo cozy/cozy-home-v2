@@ -145,6 +145,9 @@ module.exports = {
   'logs/:moduleslug': {
     get: logs.logs
   },
+  'log': {
+    post: logs.logClient
+  },
   'help/message': {
     post: help.message
   },
