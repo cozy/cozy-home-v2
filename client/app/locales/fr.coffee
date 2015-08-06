@@ -215,7 +215,7 @@ module.exports =
     "help wiki title": "Wiki :"
     "help send message title": "Ecrire directement à l'équipe Cozy"
     "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !"
-    "help send message action": "Send message to the Cozy Support Team"
+    "help send logs": "Joindre les logs des applications pour faciliter la résolution des problèmes"
     "send message success": "Message successfully sent!"
     "help send message action": "Envoyer un message à l'équipe support de Cozy"
     "send message success": "Message envoyé avec succès !"

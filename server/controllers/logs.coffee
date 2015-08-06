@@ -1,5 +1,7 @@
 fs = require 'fs'
 logs = require '../lib/logs'
+log = require('printit')
+    prefix: 'home:client'
 
 module.exports =
 
@@ -19,3 +21,8 @@ module.exports =
                     res.end()
             else
                 res.status(404).send 'File not found'
+    # Log client errors
+    logClient: (req, res) ->
+        log.error req.body.data
+        log.error req.body.data.error?.stack
+        res.send 'ok'

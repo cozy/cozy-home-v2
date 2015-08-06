@@ -1,8 +1,8 @@
 .right
-    a(href="#{app.git}")
+    a.website(href="#{app.git}", target="_blank")
         img(src="img/git.png").img-btn
     if app.website !== undefined
-        a(href="#{app.website}")
+        a.website(href="#{app.website}", target="_blank")
             img(src="img/link.png").img-btn
 
 .app-img.left
