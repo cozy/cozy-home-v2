@@ -7733,104 +7733,6 @@ module.exports = NotificationsView = (function(_super) {
 })(ViewCollection);
 });
 
-;require.register("views/object-picker-photourl", function(exports, require, module) {
-var BaseView, ObjectPickerPhotoURL, proxyclient, _ref,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-proxyclient = require('lib/proxyclient');
-
-BaseView = require('lib/base_view');
-
-module.exports = ObjectPickerPhotoURL = (function(_super) {
-  __extends(ObjectPickerPhotoURL, _super);
-
-  function ObjectPickerPhotoURL() {
-    _ref = ObjectPickerPhotoURL.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  ObjectPickerPhotoURL.prototype.template = require('../templates/object_picker_photourl');
-
-  ObjectPickerPhotoURL.prototype.tagName = 'section';
-
-  ObjectPickerPhotoURL.prototype.initialize = function() {
-    this.render();
-    this.name = 'urlPhotoUpload';
-    this.tabLabel = 'url';
-    this.tab = $("<div class='fa fa-link'>" + this.tabLabel + "</div>")[0];
-    this.panel = this.el;
-    this.img = this.panel.querySelector('.url-preview');
-    this.blocContainer = this.panel.querySelector('.bloc-container');
-    this.url = void 0;
-    this.input = this.panel.querySelector('.modal-url-input');
-    return this._setupInput();
-  };
-
-  ObjectPickerPhotoURL.prototype.getObject = function() {
-    if (this.url) {
-      return {
-        urlToFetch: this.url
-      };
-    } else {
-      return false;
-    }
-  };
-
-  ObjectPickerPhotoURL.prototype.setFocusIfExpected = function() {
-    this.input.focus();
-    this.input.select();
-    return true;
-  };
-
-  ObjectPickerPhotoURL.prototype.keyHandler = function(e) {
-    return false;
-  };
-
-  /**
-   * manages the url typed in the input and update image
-  */
-
-
-  ObjectPickerPhotoURL.prototype._setupInput = function() {
-    var img, imgTmp, preloadImage, urlRegexp,
-      _this = this;
-    img = this.img;
-    urlRegexp = /\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i;
-    imgTmp = new Image();
-    imgTmp.onerror = function() {
-      img.style.backgroundImage = "";
-      return this.url = void 0;
-    };
-    imgTmp.onload = function() {
-      img.style.maxWidth = imgTmp.naturalWidth + 'px';
-      img.style.maxHeight = imgTmp.naturalHeight + 'px';
-      img.parentElement.style.display = 'flex';
-      img.style.backgroundImage = 'url(' + imgTmp.src + ')';
-      _this.url = imgTmp.src;
-      return _this.blocContainer.style.height = (imgTmp.naturalHeight + 40) + 'px';
-    };
-    preloadImage = function(src) {
-      return imgTmp.src = src;
-    };
-    return this.input.addEventListener('input', function(e) {
-      var newurl, url;
-      newurl = e.target.value;
-      if (urlRegexp.test(newurl)) {
-        url = 'api/proxy/?url=' + encodeURIComponent(newurl);
-        return preloadImage(url);
-      } else {
-        img.style.backgroundImage = "";
-        return this.url = void 0;
-      }
-    }, false);
-  };
-
-  return ObjectPickerPhotoURL;
-
-})(BaseView);
-});
-
 ;require.register("views/object_picker", function(exports, require, module) {
 var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -8481,6 +8383,104 @@ module.exports = ObjectPickerImage = (function(_super) {
   };
 
   return ObjectPickerImage;
+
+})(BaseView);
+});
+
+;require.register("views/object_picker_photourl", function(exports, require, module) {
+var BaseView, ObjectPickerPhotoURL, proxyclient, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+proxyclient = require('lib/proxyclient');
+
+BaseView = require('lib/base_view');
+
+module.exports = ObjectPickerPhotoURL = (function(_super) {
+  __extends(ObjectPickerPhotoURL, _super);
+
+  function ObjectPickerPhotoURL() {
+    _ref = ObjectPickerPhotoURL.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  ObjectPickerPhotoURL.prototype.template = require('../templates/object_picker_photourl');
+
+  ObjectPickerPhotoURL.prototype.tagName = 'section';
+
+  ObjectPickerPhotoURL.prototype.initialize = function() {
+    this.render();
+    this.name = 'urlPhotoUpload';
+    this.tabLabel = 'url';
+    this.tab = $("<div class='fa fa-link'>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    this.img = this.panel.querySelector('.url-preview');
+    this.blocContainer = this.panel.querySelector('.bloc-container');
+    this.url = void 0;
+    this.input = this.panel.querySelector('.modal-url-input');
+    return this._setupInput();
+  };
+
+  ObjectPickerPhotoURL.prototype.getObject = function() {
+    if (this.url) {
+      return {
+        urlToFetch: this.url
+      };
+    } else {
+      return false;
+    }
+  };
+
+  ObjectPickerPhotoURL.prototype.setFocusIfExpected = function() {
+    this.input.focus();
+    this.input.select();
+    return true;
+  };
+
+  ObjectPickerPhotoURL.prototype.keyHandler = function(e) {
+    return false;
+  };
+
+  /**
+   * manages the url typed in the input and update image
+  */
+
+
+  ObjectPickerPhotoURL.prototype._setupInput = function() {
+    var img, imgTmp, preloadImage, urlRegexp,
+      _this = this;
+    img = this.img;
+    urlRegexp = /\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i;
+    imgTmp = new Image();
+    imgTmp.onerror = function() {
+      img.style.backgroundImage = "";
+      return this.url = void 0;
+    };
+    imgTmp.onload = function() {
+      img.style.maxWidth = imgTmp.naturalWidth + 'px';
+      img.style.maxHeight = imgTmp.naturalHeight + 'px';
+      img.parentElement.style.display = 'flex';
+      img.style.backgroundImage = 'url(' + imgTmp.src + ')';
+      _this.url = imgTmp.src;
+      return _this.blocContainer.style.height = (imgTmp.naturalHeight + 40) + 'px';
+    };
+    preloadImage = function(src) {
+      return imgTmp.src = src;
+    };
+    return this.input.addEventListener('input', function(e) {
+      var newurl, url;
+      newurl = e.target.value;
+      if (urlRegexp.test(newurl)) {
+        url = 'api/proxy/?url=' + encodeURIComponent(newurl);
+        return preloadImage(url);
+      } else {
+        img.style.backgroundImage = "";
+        return this.url = void 0;
+      }
+    }, false);
+  };
+
+  return ObjectPickerPhotoURL;
 
 })(BaseView);
 });

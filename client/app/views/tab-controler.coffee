@@ -96,3 +96,4 @@ module.exports = tabControler =
         panel.setAttribute('aria-hidden', true)
         panel.setAttribute('aria-selected', true)
         panelsContainer.appendChild(panel)
+

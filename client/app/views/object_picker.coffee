@@ -84,7 +84,10 @@ module.exports = class PhotoPickerCroper extends Modal
         # init tabs
         tabControler.initializeTabs(body)
         @_listenTabsSelection()
-        @_selectDefaultTab(@params.defaultTab || @imagePanel.name)
+        tab = @params.defaultTab
+        tab = @imagePanel.name if not tab? and @imagePanel?
+        tab ?= @uploadPanel.name
+        @_selectDefaultTab tab
         ####
         # init the cropper
         @imgToCrop.addEventListener('load', @_onImgToCropLoaded, false)
@@ -228,7 +231,7 @@ module.exports = class PhotoPickerCroper extends Modal
             else # @state.currentStep == 'objectPicker'
                 @.onNo()
             return
-        @state.activePanel.keyHandler(e)
+        @state.activePanel?.keyHandler(e)
 
 
 
@@ -333,7 +336,7 @@ module.exports = class PhotoPickerCroper extends Modal
         @imgToCrop.removeAttribute('style')
         @imgToCrop.src = ''
         @objectPickerCont.setAttribute 'aria-hidden', false
-        @cropper$.setAttribute 'aria-hidden', true
+        @cropper$.setAttribute 'aria-hidden', tru?e
         @body.scrollTop = @currentPhotoScroll
         @el.dataset.step = @state.currentStep
         # manage focus wich was on the jcrop element
@@ -354,7 +357,7 @@ module.exports = class PhotoPickerCroper extends Modal
 
 
     _selectDefaultTab:(panelClassName)->
-        @tablist.querySelector("[aria-controls=#{panelClassName}]").click()
+        @tablist.querySelector("[aria-controls=#{panelClassName}]")?.click()
 
 
     _activatePanel: (panelClassName)->
