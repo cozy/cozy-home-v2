@@ -8064,7 +8064,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.imgToCrop.removeAttribute('style');
     this.imgToCrop.src = '';
     this.objectPickerCont.setAttribute('aria-hidden', false);
-    this.cropper$.setAttribute('aria-hidden', typeof tru === "function" ? tru(e) : void 0);
+    this.cropper$.setAttribute('aria-hidden', true);
     this.body.scrollTop = this.currentPhotoScroll;
     this.el.dataset.step = this.state.currentStep;
     return this._setFocus();
