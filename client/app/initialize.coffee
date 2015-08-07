@@ -68,11 +68,6 @@ class exports.Application
                 console.log "An error occured while attempting to install app"
                 console.log err
 
-
-            setTimeout ->
-                console.log toto
-            , 5000
-
         # Send client side errors to server
         catch e
             console.error e, e?.stack

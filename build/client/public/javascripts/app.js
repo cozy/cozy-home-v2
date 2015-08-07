@@ -449,13 +449,10 @@ exports.Application = (function() {
       this.routers.main = new MainRouter();
       Backbone.history.start();
       SocketListener = require('lib/socket_listener');
-      SocketListener.socket.on('installerror', function(err) {
+      return SocketListener.socket.on('installerror', function(err) {
         console.log("An error occured while attempting to install app");
         return console.log(err);
       });
-      return setTimeout(function() {
-        return console.log(toto);
-      }, 5000);
     } catch (_error) {
       e = _error;
       console.error(e, e != null ? e.stack : void 0);
