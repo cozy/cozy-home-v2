@@ -336,7 +336,7 @@ module.exports = class PhotoPickerCroper extends Modal
         @imgToCrop.removeAttribute('style')
         @imgToCrop.src = ''
         @objectPickerCont.setAttribute 'aria-hidden', false
-        @cropper$.setAttribute 'aria-hidden', tru?e
+        @cropper$.setAttribute 'aria-hidden', true
         @body.scrollTop = @currentPhotoScroll
         @el.dataset.step = @state.currentStep
         # manage focus wich was on the jcrop element
