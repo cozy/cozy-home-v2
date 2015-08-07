@@ -7781,7 +7781,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
   };
 
   PhotoPickerCroper.prototype.initialize = function(params, cb) {
-    var body, previewTops;
+    var body, previewTops, tab;
     this.id = 'object-picker';
     this.title = t('pick from files');
     this.config = {
@@ -7823,7 +7823,14 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
     tabControler.initializeTabs(body);
     this._listenTabsSelection();
-    this._selectDefaultTab(this.params.defaultTab || this.imagePanel.name);
+    tab = this.params.defaultTab;
+    if ((tab == null) && (this.imagePanel != null)) {
+      tab = this.imagePanel.name;
+    }
+    if (tab == null) {
+      tab = this.uploadPanel.name;
+    }
+    this._selectDefaultTab(tab);
     this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
     this.cropper$.setAttribute('aria-hidden', true);
     this.framePreview.style.width = THUMB_WIDTH + 'px';
@@ -7947,6 +7954,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
   };
 
   PhotoPickerCroper.prototype.onKeyStroke = function(e) {
+    var _ref1;
     if (e.which === 13) {
       e.stopPropagation();
       this.onYes();
@@ -7961,7 +7969,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
       }
       return;
     }
-    return this.state.activePanel.keyHandler(e);
+    return (_ref1 = this.state.activePanel) != null ? _ref1.keyHandler(e) : void 0;
   };
 
   PhotoPickerCroper.prototype._showCropingTool = function(url) {
@@ -8056,7 +8064,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.imgToCrop.removeAttribute('style');
     this.imgToCrop.src = '';
     this.objectPickerCont.setAttribute('aria-hidden', false);
-    this.cropper$.setAttribute('aria-hidden', true);
+    this.cropper$.setAttribute('aria-hidden', typeof tru === "function" ? tru(e) : void 0);
     this.body.scrollTop = this.currentPhotoScroll;
     this.el.dataset.step = this.state.currentStep;
     return this._setFocus();
@@ -8079,7 +8087,8 @@ module.exports = PhotoPickerCroper = (function(_super) {
   };
 
   PhotoPickerCroper.prototype._selectDefaultTab = function(panelClassName) {
-    return this.tablist.querySelector("[aria-controls=" + panelClassName + "]").click();
+    var _ref1;
+    return (_ref1 = this.tablist.querySelector("[aria-controls=" + panelClassName + "]")) != null ? _ref1.click() : void 0;
   };
 
   PhotoPickerCroper.prototype._activatePanel = function(panelClassName) {
