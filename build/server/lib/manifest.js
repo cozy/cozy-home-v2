@@ -32,6 +32,7 @@ exports.Manifest = (function() {
       return provider.getManifest((function(_this) {
         return function(err, data) {
           if (err != null) {
+            _this.config = {};
             return callback(err);
           } else {
             _this.config = data;
@@ -47,6 +48,7 @@ exports.Manifest = (function() {
         };
       })(this));
     } else {
+      this.config = {};
       logger.warn('App manifest without git URL');
       logger.raw(app);
       return callback(null);
@@ -54,7 +56,8 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getPermissions = function() {
-    if (this.config["cozy-permissions"] != null) {
+    var ref;
+    if (((ref = this.config) != null ? ref["cozy-permissions"] : void 0) != null) {
       return this.config["cozy-permissions"];
     } else {
       return {};
@@ -70,7 +73,8 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getVersion = function() {
-    if (this.config['version'] != null) {
+    var ref;
+    if (((ref = this.config) != null ? ref['version'] : void 0) != null) {
       return this.config['version'];
     } else {
       return "0.0.0";
@@ -78,7 +82,8 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getDescription = function() {
-    if (this.config['description'] != null) {
+    var ref;
+    if (((ref = this.config) != null ? ref['description'] : void 0) != null) {
       return this.config["description"];
     } else {
       return null;
@@ -86,7 +91,8 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getIconPath = function() {
-    if (this.config['icon-path'] != null) {
+    var ref;
+    if (((ref = this.config) != null ? ref['icon-path'] : void 0) != null) {
       return this.config['icon-path'];
     } else {
       return null;
@@ -94,7 +100,8 @@ exports.Manifest = (function() {
   };
 
   Manifest.prototype.getColor = function() {
-    if (this.config['cozy-color'] != null) {
+    var ref;
+    if (((ref = this.config) != null ? ref['cozy-color'] : void 0) != null) {
       return this.config['cozy-color'];
     } else {
       return null;

@@ -2546,6 +2546,19 @@ body {
   padding-bottom: 0;
   line-height: 30px;
 }
+#market-view #no-app-message h3 span.beta,
+.cozy-app h3 span.beta {
+  margin-left: 20px;
+  background-color: #ea202d;
+  color: #fff;
+  font-size: 0.6em;
+  font-style: italic;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  margin-top: 10px;
+  padding: 5px 15px;
+  vertical-align: top;
+}
 #market-view #no-app-message .comment,
 .cozy-app .comment {
   font-size: 14px;

@@ -105,11 +105,17 @@ helpers.createApp = (name, slug, index, state) -> (callback) ->
         state: state
         index: index
         slug: slug
+        version: 0.1
+    access =
+        name: name
+        slug: slug
         password: slug
         permissions:
             Event: description: 'access the events'
 
-    Application.create app, callback
+    Application.create app, (err, body) ->
+        access.app = body.id
+        Application.createAccess access, callback
 
 helpers.fakeServer = (json, code=200) ->
 
