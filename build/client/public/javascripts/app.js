@@ -6794,7 +6794,7 @@ module.exports = HomeView = (function(_super) {
       this.frames.css('top', '-9999px');
       this.frames.css('left', '-9999px');
       this.frames.css('position', 'absolute');
-      return frame.on('load', onLoad);
+      return frame.once('load', onLoad);
     } else if (hash) {
       contentWindow = frame.prop('contentWindow');
       currentHash = contentWindow.location.hash.substring(1);
