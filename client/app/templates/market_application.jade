@@ -1,3 +1,4 @@
+
 .right
     a.website(href="#{app.git}", target="_blank")
         img(src="img/git.png").img-btn
@@ -14,5 +15,7 @@
 
 .app-text
     h3 #{app.displayName}
+        if app.beta
+            span.beta Beta
     span.comment= t(app.comment)
     p.par2= t(app.description)
