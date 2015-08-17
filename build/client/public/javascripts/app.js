@@ -3067,7 +3067,12 @@ buf.push('/>');
 buf.push('<span class="installing-label">');
 var __val__ = t("market app install")
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
+buf.push('</span></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '');
+if ( app.beta)
+{
+buf.push('<span class="beta">Beta</span>');
+}
+buf.push('</h3><span class="comment">');
 var __val__ = t(app.comment)
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><p class="par2">');
