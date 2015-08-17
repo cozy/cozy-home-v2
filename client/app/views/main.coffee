@@ -242,7 +242,7 @@ module.exports = class HomeView extends BaseView
             @frames.css 'left', '-9999px'
             @frames.css 'position', 'absolute'
 
-            frame.on 'load', onLoad
+            frame.once 'load', onLoad
 
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
@@ -256,7 +256,6 @@ module.exports = class HomeView extends BaseView
             onLoad()
 
         else
-            #alert 'default'
             onLoad()
 
     createApplicationIframe: (slug, hash="") ->
