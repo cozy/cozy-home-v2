@@ -198,6 +198,7 @@ module.exports = class HomeView extends BaseView
     displayApplication: (slug, hash) ->
         if @apps.length is 0
             @apps.once ?= @apps.on
+            @apps.once ?= frame.on if typeof(@apps.once) isnt 'function'
             @apps.once 'reset', =>
                 @displayApplication slug, hash
             return null
@@ -244,6 +245,7 @@ module.exports = class HomeView extends BaseView
             @frames.css 'position', 'absolute'
 
             frame.once ?= frame.on
+            frame.once ?= frame.on if typeof(frame.once) isnt 'function'
             frame.once 'load', onLoad
 
         # if the app was already open, we want to change its hash
