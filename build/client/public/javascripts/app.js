@@ -7048,9 +7048,12 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
-    var contentWindow, currentHash, frame, onLoad,
+    var contentWindow, currentHash, frame, onLoad, _base,
       _this = this;
     if (this.apps.length === 0) {
+      if ((_base = this.apps).once == null) {
+        _base.once = this.apps.on;
+      }
       this.apps.once('reset', function() {
         return _this.displayApplication(slug, hash);
       });
@@ -7085,6 +7088,9 @@ module.exports = HomeView = (function(_super) {
       this.frames.css('top', '-9999px');
       this.frames.css('left', '-9999px');
       this.frames.css('position', 'absolute');
+      if (frame.once == null) {
+        frame.once = frame.on;
+      }
       return frame.once('load', onLoad);
     } else if (hash) {
       contentWindow = frame.prop('contentWindow');
