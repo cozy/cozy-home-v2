@@ -21,6 +21,7 @@ class exports.Manifest
             provider = new Provider app
             provider.getManifest (err, data) =>
                 if err?
+                    @config = {}
                     callback err
                 else
                     @config = data
@@ -31,13 +32,14 @@ class exports.Manifest
                             @config.stars = stars
                             callback null
         else
+            @config = {}
             logger.warn 'App manifest without git URL'
             logger.raw app
             callback null
 
 
     getPermissions: =>
-        if @config["cozy-permissions"]?
+        if @config?["cozy-permissions"]?
             return @config["cozy-permissions"]
         else
             return {}
@@ -49,25 +51,25 @@ class exports.Manifest
             return null
 
     getVersion: =>
-        if @config['version']?
+        if @config?['version']?
             return @config['version']
         else
             return "0.0.0"
 
     getDescription: =>
-        if @config['description']?
+        if @config?['description']?
             return  @config["description"]
         else
             return null
 
     getIconPath: =>
-        if @config['icon-path']?
+        if @config?['icon-path']?
             return @config['icon-path']
         else
             return null
 
     getColor: ->
-        if @config['cozy-color']?
+        if @config?['cozy-color']?
             return @config['cozy-color']
         else
             return null
