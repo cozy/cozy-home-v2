@@ -7056,7 +7056,7 @@ module.exports = HomeView = (function(_super) {
       }
       if (typeof this.apps.once !== 'function') {
         if ((_base1 = this.apps).once == null) {
-          _base1.once = frame.on;
+          _base1.once = this.apps.on;
         }
       }
       this.apps.once('reset', function() {
