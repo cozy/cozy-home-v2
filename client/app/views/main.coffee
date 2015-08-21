@@ -197,6 +197,7 @@ module.exports = class HomeView extends BaseView
     # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
         if @apps.length is 0
+            @apps.once ?= @apps.on
             @apps.once 'reset', =>
                 @displayApplication slug, hash
             return null
@@ -242,6 +243,7 @@ module.exports = class HomeView extends BaseView
             @frames.css 'left', '-9999px'
             @frames.css 'position', 'absolute'
 
+            frame.once ?= frame.on
             frame.once 'load', onLoad
 
         # if the app was already open, we want to change its hash
