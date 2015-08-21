@@ -703,21 +703,23 @@ body
 #market-view
     height 100%
 
+#market-applications-list
+    display         flex
+    flex-wrap       wrap
+    justify-content space-between
 
 #market-view #no-app-message,
 .cozy-app
     box-sizing border-box
-    float left
-    width 49%
-    height 200px
+    width 49.2%
+    height 11em
+    margin-top 1em
     background lightgrey
-    margin-right 0.5%
-    margin-top 0.5%
-    cursor pointer
-    transition background 0.3s
-    text-align left
     border-bottom 1px solid lightgrey - 10%
     border-right 1px solid lightgrey - 10%
+    cursor pointer
+    text-align left
+    transition background 0.3s ease-out
 
     &.install
         .app-text
@@ -732,24 +734,30 @@ body
         margin-bottom 10px
 
     h3
-        margin-top 30px
-        margin-bottom 0
+        margin-top     2.5rem
+        margin-bottom  0
         padding-bottom 0
-        line-height 30px
+        font-size      1.4em
+        line-height    3.4rem
 
         span.beta
-            margin-left: 20px
-            background-color: #EA202D
-            color: white
-            font-size: 0.6em
-            font-style: italic
-            border-radius: 7px
-            margin-top: 10px
-            padding: 5px 15px
-            vertical-align: top
+            margin-left      0.8em
+            padding          0.2em 0.5em
+            background-color #ea202d
+            border-radius    10em
+            vertical-align   middle
+            color            #fff
+            font-size        0.5em
+            font-style       italic
+            font-weight      normal
 
     .comment
-        font-size 14px
+        font-size  1em
+        font-style italic
+        color      #999
+
+    p.par2
+        margin-top 0.25em
 
     .btn
         float right
@@ -762,7 +770,6 @@ body
         width 180px
         height 180px
         padding 25px 20px 10px 25px
-        margin-right 10px
 
         img.svg
             border-radius 200px
@@ -770,6 +777,7 @@ body
             background-position center
             width 130px
             height 130px
+            margin 0
 
     .img-btn
         width 24px
@@ -781,20 +789,22 @@ body
         opacity 1
         cursor pointer
 
-.cozy-app:hover
-    background lightgrey - 10%
+.cozy-app
+    &:hover
+        background lightgreyblue
 
-    .right
-        display inline
+        .right
+            display inline
 
-    .img-btn
-        display inline
+        .img-btn
+            display inline
 
-.cozy-app.official
-    background lightgreyblue
+    &.official
+        background lightgreyblue
+        border-color lightgreyblue - 10%
 
-.cozy-app.official:hover
-    background lightgreyblue - 5%
+        &:hover
+            background lightgreyblue - 5%
 
 
 // Config application
@@ -1114,15 +1124,15 @@ body
 
 // Responsive
 
+@media (min-width 1600px)
+    #market-view .cozy-app
+        width 33%
 
 @media (max-width 1200px)
     .application .application-inner
         padding 0px 10px
 
-    #market-view
 
-        .cozy-app
-            width 100%
 
     #help-view
     #account-view
@@ -1134,6 +1144,11 @@ body
 
         .personalisation
             margin-bottom 30px
+
+
+@media (max-width 1000px)
+    #market-view .cozy-app
+        width 100%
 
 
 @media (max-width 850px)
