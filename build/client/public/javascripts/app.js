@@ -4222,11 +4222,19 @@ module.exports = ApplicationRow = (function(_super) {
     return this.model.uninstall({
       success: function() {
         _this.remove();
-        return Backbone.Mediator.pub('app-state-changed', true);
+        return Backbone.Mediator.pub('app-state:changed', {
+          status: 'uninstalled',
+          updated: false,
+          slug: _this.model.get('slug')
+        });
       },
       error: function() {
         _this.removeButton.displayRed(t("retry to install"));
-        return Backbone.Mediator.pub('app-state-changed', true);
+        return Backbone.Mediator.pub('app-state:changed', {
+          status: 'uninstalled',
+          updated: false,
+          slug: _this.model.get('slug')
+        });
       }
     });
   };
@@ -4268,7 +4276,11 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('stopped'));
-          return Backbone.Mediator.pub('app-state-changed', true);
+          return Backbone.Mediator.pub('app-state:changed', {
+            status: 'stopped',
+            updated: false,
+            slug: _this.model.get('slug')
+          });
         },
         error: function() {
           return _this.startStopBtn.spin(false);
@@ -4279,14 +4291,22 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('started'));
-          Backbone.Mediator.pub('app-state-changed', true);
+          Backbone.Mediator.pub('app-state:changed', {
+            status: 'started',
+            updated: false,
+            slug: _this.model.get('slug')
+          });
           return window.location.href = "#apps/" + (_this.model.get('slug'));
         },
         error: function() {
           var errormsg, msg;
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('stopped'));
-          Backbone.Mediator.pub('app-state-changed', true);
+          Backbone.Mediator.pub('app-state:changed', {
+            status: 'stopped',
+            updated: false,
+            slug: _this.model.get('slug')
+          });
           msg = 'This app cannot start.';
           errormsg = _this.model.get('errormsg');
           if (errormsg) {
@@ -4314,12 +4334,21 @@ module.exports = ApplicationRow = (function(_super) {
 
   ApplicationRow.prototype.updateApp = function() {
     var _this = this;
-    Backbone.Mediator.pub('app-state-changed', true);
     this.updateButton.spin(true);
     if (this.model.get('state') !== 'broken') {
       this.stateLabel.html(t('updating'));
+      Backbone.Mediator.pub('app-state:changed', {
+        status: 'updating',
+        updated: true,
+        slug: this.model.get('slug')
+      });
     } else {
-      this.stateLabel.html(t("installing"));
+      this.stateLabel.html(t('installing'));
+      Backbone.Mediator.pub('app-state:changed', {
+        status: 'installing',
+        updated: false,
+        slug: this.model.get('slug')
+      });
     }
     return this.model.updateApp({
       success: function() {
@@ -4331,7 +4360,11 @@ module.exports = ApplicationRow = (function(_super) {
         if (_this.model.get('state') === 'stopped') {
           _this.stateLabel.html(t('stopped'));
         }
-        Backbone.Mediator.pub('app-state-changed', true);
+        Backbone.Mediator.pub('app-state:changed', {
+          status: 'started',
+          updated: true,
+          slug: _this.model.get('slug')
+        });
         return setTimeout(function() {
           _this.updateButton.hide();
           return _this.updateLabel.hide();
@@ -4342,7 +4375,11 @@ module.exports = ApplicationRow = (function(_super) {
         alert(t('update error'));
         _this.stateLabel.html(t('broken'));
         _this.updateButton.displayRed(t("update failed"));
-        return Backbone.Mediator.pub('app-state-changed', true);
+        return Backbone.Mediator.pub('app-state:changed', {
+          status: 'broken',
+          updated: false,
+          slug: _this.model.get('slug')
+        });
       }
     });
   };
@@ -4482,7 +4519,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
   ConfigApplicationsView.prototype.template = require('templates/config_applications');
 
   ConfigApplicationsView.prototype.subscriptions = {
-    'app-state-changed': 'onAppStateChanged'
+    'app-state:changed': 'onAppStateChanged'
   };
 
   ConfigApplicationsView.prototype.events = {
@@ -6870,7 +6907,8 @@ module.exports = HomeView = (function(_super) {
   HomeView.prototype.template = require('templates/layout');
 
   HomeView.prototype.subscriptions = {
-    'backgroundChanged': 'changeBackground'
+    'backgroundChanged': 'changeBackground',
+    'app-state:changed': 'onAppStateChanged'
   };
 
   function HomeView() {
@@ -7164,6 +7202,18 @@ module.exports = HomeView = (function(_super) {
     }, 10);
   };
 
+  HomeView.prototype.getAppFrame = function(slug) {
+    return this.$("#" + slug + "-frame");
+  };
+
+  HomeView.prototype.onAppStateChanged = function(appState) {
+    var frame, _ref;
+    if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
+      frame = this.getAppFrame(appState.slug);
+      return frame.remove();
+    }
+  };
+
   return HomeView;
 
 })(BaseView);
@@ -7322,7 +7372,12 @@ module.exports = MarketView = (function(_super) {
           _this.waitApplication(appWidget, true);
           appWidget.$el.addClass('install');
           return _this.runInstallation(appWidget.app, function() {
-            return console.log('application installed', appWidget.app);
+            console.log('application installed', appWidget.app);
+            return Backbone.Mediator.pub('app-state:changed', {
+              status: 'started',
+              updated: false,
+              slug: appWidget.app.get('slug')
+            });
           }, function() {
             return _this.waitApplication(appWidget, false);
           });

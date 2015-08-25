@@ -8,6 +8,7 @@ module.exports = class DevicesListView extends ViewCollection
     template: require 'templates/config_device_list'
     itemView: require 'views/config_device'
 
+
     constructor: (devices) ->
         @devices = devices
         super collection: devices
