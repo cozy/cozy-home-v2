@@ -1,4 +1,4 @@
-ObjectPickerCroper = require '../views/object-picker'
+ObjectPickerCroper = require '../views/object_picker'
 
 module.exports = class MainRouter extends Backbone.Router
 

@@ -91,7 +91,7 @@ module.exports =
     "save":"Sauver"
     "saved":"Sauvé"
     "error": "Erreur"
-    "error proper email": "L'adresse mail forunie n'est pas correcte"
+    "error proper email": "L'adresse mail fournie n'est pas correcte"
     "error email empty": "L'adresse mail ne doit pas être vide"
     "market app install": "Installation…"
     "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre"
@@ -195,7 +195,7 @@ module.exports =
     "navbar logout": "Déconnexion"
     "navbar notifications": "Notifications"
     "or:": "ou :"
-    "app status": "Etats"
+    "app status": "États"
     "app store": "Ajouter"
     "settings": "Paramètres"
     "help": "Aide"
@@ -215,10 +215,10 @@ module.exports =
     "help wiki title": "Wiki :"
     "help send message title": "Ecrire directement à l'équipe Cozy"
     "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !"
-    "help send message action": "Send message to the Cozy Support Team"
-    "send message success": "Message successfully sent!"
+    "help send logs": "Joindre les logs des applications pour faciliter la résolution des problèmes"
+    "send message success": "Votre message a bien été envoyé !"
     "help send message action": "Envoyer un message à l'équipe support de Cozy"
-    "send message success": "Message envoyé avec succès !"
+    "send message success": "Votre message a bien été envoyé !"
     "send message error": "Une erreur est survenue lors de l'envoi du message. Essayez d'envoyer ce message à directement avec un client mail en écrivant à support@cozycloud.cc."
 
     "introduction market": """
@@ -255,6 +255,8 @@ module.exports =
     "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost."
     "leave google description": "Une application pour importer vos données de votre compte Google."
     "mstsc.js description": "Depuis votre Cozy, prenez contrôle de votre bureau Windows à distance à travers le protocole RDP."
+    "hastebin description": "Un simple pastebin, un outil pour partager facilement vos textes."
+    "polybios description": "Gérez vos clés PGP depuis votre navigateur."
     "reminder title email": "[Cozy-Calendar] Rappel"
     "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """
@@ -283,7 +285,7 @@ module.exports =
     "error github": 'Github semble indisponible. Vous pouvez vérifier son status sur https://status.github.com/.'
     'error npm': "L'installation des dépendances a échouée."
     'error user linux': "La création de l'utilisateur pour cette application a échouée."
-    'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application."
+    'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'informations dans les logs de l'application."
     "app msg":  """Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc
                 ou sur IRC #cozycloud sur irc.freenode.net."""
     'more details': "Plus de détails"
@@ -296,7 +298,7 @@ module.exports =
 
     # object picker
     "pick from files"         : "Choisissez une photo"
-    "Crop the photo"          : "Recadrez l'image"
+    "Crop the photo"          : "Recadrer l'image"
     "chooseAgain"             : "changer de photo"
     "modal ok"                : "OK"
     "modal cancel"            : "Annuler"

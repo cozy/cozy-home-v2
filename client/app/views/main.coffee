@@ -197,6 +197,8 @@ module.exports = class HomeView extends BaseView
     # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
         if @apps.length is 0
+            @apps.once ?= @apps.on
+            @apps.once ?= @apps.on if typeof(@apps.once) isnt 'function'
             @apps.once 'reset', =>
                 @displayApplication slug, hash
             return null
@@ -242,7 +244,9 @@ module.exports = class HomeView extends BaseView
             @frames.css 'left', '-9999px'
             @frames.css 'position', 'absolute'
 
-            frame.on 'load', onLoad
+            frame.once ?= frame.on
+            frame.once ?= frame.on if typeof(frame.once) isnt 'function'
+            frame.once 'load', onLoad
 
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
@@ -256,7 +260,6 @@ module.exports = class HomeView extends BaseView
             onLoad()
 
         else
-            #alert 'default'
             onLoad()
 
     createApplicationIframe: (slug, hash="") ->

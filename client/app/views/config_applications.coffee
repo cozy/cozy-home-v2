@@ -74,16 +74,18 @@ module.exports = class ConfigApplicationsView extends BaseView
             if err
                 alert t 'Server error occured, infos cannot be displayed.'
             else
+                diskUsed  = "#{data.usedDiskSpace} #{data.usedUnit or 'G'}"
+                diskTotal = "#{data.totalDiskSpace} #{data.totalUnit or 'G'}"
                 @displayMemory data.freeMem, data.totalMem
-                @displayDiskSpace data.usedDiskSpace, data.totalDiskSpace, data.unit
+                @displayDiskSpace diskUsed, diskTotal
 
     displayMemory: (amount, total) ->
         @memoryFree.find('.amount').html Math.floor((total - amount) / 1000)
         @memoryFree.find('.total').html Math.floor(total / 1000)
 
-    displayDiskSpace: (amount, total, unit) ->
+    displayDiskSpace: (amount, total) ->
         @diskSpace.find('.amount').html amount
-        @diskSpace.find('.total').html "#{total} #{unit or 'G'}"
+        @diskSpace.find('.total').html total
 
     onAppStateChanged: ->
         setTimeout @fetch, 10000
@@ -115,12 +117,12 @@ module.exports = class ConfigApplicationsView extends BaseView
                     @stackApplications.updateStack cb
                 error: (err) =>
                     @stackApplications.updateStack
-                        success: =>
+                        success: ->
                             if error
                                 error err
                             else
                                 success "ok"
-                        error: (stack_err) =>
+                        error: (stack_err) ->
                             err.stack = stack_err
                             error err if error
         @popoverManagement action

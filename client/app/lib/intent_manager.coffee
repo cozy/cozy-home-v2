@@ -1,4 +1,4 @@
-ObjectPicker = require 'views/object-picker'
+ObjectPicker = require 'views/object_picker'
 
 module.exports = class IntentManager
 

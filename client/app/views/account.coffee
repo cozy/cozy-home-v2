@@ -6,7 +6,7 @@ locales =   require('helpers/locales' ).locales
 request = require 'lib/request'
 BackgroundList = require 'views/background_list'
 Instance = require 'models/instance'
-ObjectPicker = require './object-picker'
+ObjectPicker = require './object_picker'
 
 
 # View describing main screen for user once he is logged
@@ -176,9 +176,10 @@ module.exports = class exports.AccountView extends BaseView
         domain = instance?.domain or t('no domain set')
         locale = instance?.locale or 'en'
 
-        saveDomain = @getSaveFunction 'domain', @domainField, 'instance'
-        @domainField.on 'keyup', (event) =>
-            saveDomain() if event.keyCode is 13 or event.which is 13
+        if not window.managed
+            saveDomain = @getSaveFunction 'domain', @domainField, 'instance'
+            @domainField.on 'keyup', (event) ->
+                saveDomain() if event.keyCode is 13 or event.which is 13
         @domainField.val domain
 
         saveLocale = @getSaveFunction 'locale', @localeField, 'instance'
@@ -231,7 +232,7 @@ module.exports = class exports.AccountView extends BaseView
                         @backgroundList.collection.add background
                         @backgroundList.select background
 
-                    error: (data) =>
+                    error: (data) ->
                         alert t 'account background added error'
                     complete: =>
                         @backgroundAddButton.spin false
