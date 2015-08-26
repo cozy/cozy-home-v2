@@ -199,6 +199,7 @@ module.exports =
     "help send message title": "Write directly to the Cozy Team"
     "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!"
     "help send message action": "Send message to the Cozy Support Team"
+    "help send logs": "Send server logs to ease debug"
     "send message success": "Message successfully sent!"
     "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc"
     "account change password success": "The password was changed successfully."
@@ -241,6 +242,9 @@ module.exports =
     "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform."
     "leave google description": "An app to import your current data from your Google account."
     "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol."
+    "hastebin description": "A simple pastebin, a tool to easily share texts."
+    "polybios description": "Manage your PGP keys from your browser."
+
     "reminder title email": "Reminder"
     "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})"
     "reminder message expanded": """

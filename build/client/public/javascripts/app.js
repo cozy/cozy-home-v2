@@ -1,59 +1,42 @@
-(function() {
+(function(/*! Brunch !*/) {
   'use strict';
 
-  var globals = typeof window === 'undefined' ? global : window;
+  var globals = typeof window !== 'undefined' ? window : global;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
-  var has = ({}).hasOwnProperty;
 
-  var aliases = {};
-
-  var endsWith = function(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  var has = function(object, name) {
+    return ({}).hasOwnProperty.call(object, name);
   };
 
-  var unalias = function(alias, loaderPath) {
-    var start = 0;
-    if (loaderPath) {
-      if (loaderPath.indexOf('components/' === 0)) {
-        start = 'components/'.length;
-      }
-      if (loaderPath.indexOf('/', start) > 0) {
-        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
+    }
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
       }
     }
-    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
-    if (result) {
-      return 'components/' + result.substring(0, result.length - '.js'.length);
-    }
-    return alias;
+    return results.join('/');
   };
 
-  var expand = (function() {
-    var reg = /^\.\.?(\/|$)/;
-    return function(root, name) {
-      var results = [], parts, part;
-      parts = (reg.test(name) ? root + '/' + name : name).split('/');
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part === '..') {
-          results.pop();
-        } else if (part !== '.' && part !== '') {
-          results.push(part);
-        }
-      }
-      return results.join('/');
-    };
-  })();
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
     return function(name) {
-      var absolute = expand(dirname(path), name);
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
       return globals.require(absolute, path);
     };
   };
@@ -68,26 +51,21 @@
   var require = function(name, loaderPath) {
     var path = expand(name, '.');
     if (loaderPath == null) loaderPath = '/';
-    path = unalias(name, loaderPath);
 
-    if (has.call(cache, path)) return cache[path].exports;
-    if (has.call(modules, path)) return initModule(path, modules[path]);
+    if (has(cache, path)) return cache[path].exports;
+    if (has(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+    if (has(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
-  require.alias = function(from, to) {
-    aliases[to] = from;
-  };
-
-  require.register = require.define = function(bundle, fn) {
+  var define = function(bundle, fn) {
     if (typeof bundle === 'object') {
       for (var key in bundle) {
-        if (has.call(bundle, key)) {
+        if (has(bundle, key)) {
           modules[key] = bundle[key];
         }
       }
@@ -96,18 +74,21 @@
     }
   };
 
-  require.list = function() {
+  var list = function() {
     var result = [];
     for (var item in modules) {
-      if (has.call(modules, item)) {
+      if (has(modules, item)) {
         result.push(item);
       }
     }
     return result;
   };
 
-  require.brunch = true;
   globals.require = require;
+  globals.require.define = define;
+  globals.require.register = define;
+  globals.require.list = list;
+  globals.require.brunch = true;
 })();
 require.register("collections/application", function(exports, require, module) {
 var Application, ApplicationCollection, BaseCollection, _ref,
@@ -393,6 +374,34 @@ Instance = require('models/instance');
 
 colorSet = require('../helpers/color-set');
 
+window.onerror = function(msg, url, line, col, error) {
+  var data, exception, xhr;
+  console.error(msg, url, line, col, error, error != null ? error.stack : void 0);
+  exception = (error != null ? error.toString() : void 0) || msg;
+  if (exception !== window.lastError) {
+    data = {
+      data: {
+        type: 'error',
+        error: {
+          msg: msg,
+          name: error != null ? error.name : void 0,
+          full: exception,
+          stack: error != null ? error.stack : void 0
+        },
+        url: url,
+        line: line,
+        col: col,
+        href: window.location.href
+      }
+    };
+    xhr = new XMLHttpRequest();
+    xhr.open('POST', 'log', true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(data));
+    return window.lastError = exception;
+  }
+};
+
 exports.Application = (function() {
   function Application() {
     this.initialize = __bind(this.initialize, this);
@@ -400,30 +409,58 @@ exports.Application = (function() {
   }
 
   Application.prototype.initialize = function() {
-    var SocketListener, err, locales, _ref;
-    this.instance = window.cozy_instance || {};
-    this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
+    var SocketListener, data, e, err, exception, locales, xhr, _ref;
     try {
-      locales = require('locales/' + this.locale);
+      this.instance = window.cozy_instance || {};
+      this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
+      try {
+        locales = require('locales/' + this.locale);
+      } catch (_error) {
+        err = _error;
+        locales = require('locales/en');
+      }
+      window.app = this;
+      this.polyglot = new Polyglot();
+      this.polyglot.extend(locales);
+      window.t = this.polyglot.t.bind(this.polyglot);
+      moment.locale(this.locale);
+      ColorHash.addScheme('cozy', colorSet);
+      this.routers = {};
+      this.mainView = new MainView();
+      this.routers.main = new MainRouter();
+      Backbone.history.start();
+      SocketListener = require('lib/socket_listener');
+      return SocketListener.socket.on('installerror', function(err) {
+        console.log("An error occured while attempting to install app");
+        return console.log(err);
+      });
     } catch (_error) {
-      err = _error;
-      locales = require('locales/en');
+      e = _error;
+      console.error(e, e != null ? e.stack : void 0);
+      exception = e.toString();
+      if (exception !== window.lastError) {
+        data = {
+          data: {
+            type: 'error',
+            error: {
+              msg: e.message,
+              name: e != null ? e.name : void 0,
+              full: exception,
+              stack: e != null ? e.stack : void 0
+            },
+            file: e != null ? e.fileName : void 0,
+            line: e != null ? e.lineNumber : void 0,
+            col: e != null ? e.columnNumber : void 0,
+            href: window.location.href
+          }
+        };
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', 'log', true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(data));
+        return window.lastError = exception;
+      }
     }
-    window.app = this;
-    this.polyglot = new Polyglot();
-    this.polyglot.extend(locales);
-    window.t = this.polyglot.t.bind(this.polyglot);
-    moment.locale(this.locale);
-    ColorHash.addScheme('cozy', colorSet);
-    this.routers = {};
-    this.mainView = new MainView();
-    this.routers.main = new MainRouter();
-    Backbone.history.start();
-    SocketListener = require('lib/socket_listener');
-    return SocketListener.socket.on('installerror', function(err) {
-      console.log("An error occured while attempting to install app");
-      return console.log(err);
-    });
   };
 
   return Application;
@@ -579,7 +616,7 @@ exports.del = function(url, callbacks) {
 var IntentManager, ObjectPicker,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-ObjectPicker = require('views/object-picker');
+ObjectPicker = require('views/object_picker');
 
 module.exports = IntentManager = (function() {
   function IntentManager() {
@@ -1226,6 +1263,7 @@ module.exports = {
   "help send message title": "Write directly to the Cozy Team",
   "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!",
   "help send message action": "Send message to the Cozy Support Team",
+  "help send logs": "Send server logs to ease debug",
   "send message success": "Message successfully sent!",
   "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc",
   "account change password success": "The password was changed successfully.",
@@ -1262,6 +1300,8 @@ module.exports = {
   "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform.",
   "leave google description": "An app to import your current data from your Google account.",
   "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
+  "hastebin description": "A simple pastebin, a tool to easily share texts.",
+  "polybios description": "Manage your PGP keys from your browser.",
   "reminder title email": "Reminder",
   "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
@@ -1553,7 +1593,7 @@ module.exports = {
   "save": "Sauver",
   "saved": "Sauvé",
   "error": "Erreur",
-  "error proper email": "L'adresse mail forunie n'est pas correcte",
+  "error proper email": "L'adresse mail fournie n'est pas correcte",
   "error email empty": "L'adresse mail ne doit pas être vide",
   "market app install": "Installation…",
   "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre",
@@ -1638,7 +1678,7 @@ module.exports = {
   "navbar logout": "Déconnexion",
   "navbar notifications": "Notifications",
   "or:": "ou :",
-  "app status": "Etats",
+  "app status": "États",
   "app store": "Ajouter",
   "settings": "Paramètres",
   "help": "Aide",
@@ -1658,10 +1698,10 @@ module.exports = {
   "help wiki title": "Wiki :",
   "help send message title": "Ecrire directement à l'équipe Cozy",
   "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !",
-  "help send message action": "Send message to the Cozy Support Team",
-  "send message success": "Message successfully sent!",
+  "help send logs": "Joindre les logs des applications pour faciliter la résolution des problèmes",
+  "send message success": "Votre message a bien été envoyé !",
   "help send message action": "Envoyer un message à l'équipe support de Cozy",
-  "send message success": "Message envoyé avec succès !",
+  "send message success": "Votre message a bien été envoyé !",
   "send message error": "Une erreur est survenue lors de l'envoi du message. Essayez d'envoyer ce message à directement avec un client mail en écrivant à support@cozycloud.cc.",
   "introduction market": "Bienvenue sur le marché d'applications Cozy. Vous pouvez ajouter des applications proposées par Cozy Cloud, d'autres développeurs ou même votre propre application !",
   "error connectivity issue": "Une erreur s'est produite lors de la récupération des données.<br />Merci de réessayer ultérieurement.",
@@ -1692,6 +1732,8 @@ module.exports = {
   "ghost description": "Partagez vos histoires avec le monde entier avec la plateforme de blog Ghost.",
   "leave google description": "Une application pour importer vos données de votre compte Google.",
   "mstsc.js description": "Depuis votre Cozy, prenez contrôle de votre bureau Windows à distance à travers le protocole RDP.",
+  "hastebin description": "Un simple pastebin, un outil pour partager facilement vos textes.",
+  "polybios description": "Gérez vos clés PGP depuis votre navigateur.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
@@ -1711,14 +1753,14 @@ module.exports = {
   "error github": 'Github semble indisponible. Vous pouvez vérifier son status sur https://status.github.com/.',
   'error npm': "L'installation des dépendances a échouée.",
   'error user linux': "La création de l'utilisateur pour cette application a échouée.",
-  'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application.",
+  'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'informations dans les logs de l'application.",
   "app msg": "Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc\nou sur IRC #cozycloud sur irc.freenode.net.",
   'more details': "Plus de détails",
   'noapps': {
     'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
   },
   "pick from files": "Choisissez une photo",
-  "Crop the photo": "Recadrez l'image",
+  "Crop the photo": "Recadrer l'image",
   "chooseAgain": "changer de photo",
   "modal ok": "OK",
   "modal cancel": "Annuler",
@@ -1877,6 +1919,292 @@ module.exports = {
 };
 });
 
+;require.register("locales/ru", function(exports, require, module) {
+module.exports = {
+  "home": "Домашняя страница",
+  "apps": "Приложения",
+  "account": "Учетная запись",
+  "email": "Email",
+  "timezone": "Часовой пояс",
+  "domain": "Домен",
+  "no domain set": "no.domain.set",
+  "locale": "Язык",
+  "change password": "Изменить пароль",
+  "input your current password": "Введите текущий пароль:",
+  "enter a new password": "Введите новый пароль:",
+  "confirm new password": "Подтвердите новый пароль:",
+  "send changes": "Сохранить",
+  "manage": "Управление",
+  "total": "Всего",
+  "memory consumption": "Потребление памяти",
+  "disk consumption": "Использование диска",
+  "you have no notifications": "Привет %{name}, на данный момент уведомлений нет.",
+  "dismiss all": "Отклонить всё",
+  "add application": "Добавить приложение?",
+  "install": "Установить",
+  "your app": "Ваше приложение!",
+  "community contribution": "Вклад сообщества",
+  "official application": "Официальное приложение",
+  "application description": "Описание приложения",
+  "downloading description": "Загрузить описание…",
+  "downloading permissions": "Загружаются разрешения…",
+  "Cancel": "Отмена",
+  "ok": "Ok",
+  "applications permissions": "Разрешения для приложения",
+  "confirm": "Подтвердить",
+  "installing": "Установка",
+  "remove": "Удалить",
+  "update": "Обновить",
+  "started": "запущено",
+  "notifications": "Уведомления",
+  "questions and help forum": "Форум поддержки",
+  "sign out": "Выйти",
+  "open in a new tab": "Открыть в новой вкладке",
+  "disk unit": "GB",
+  "memory unit": "MB",
+  "always on": "постоянно включено",
+  "keep always on": "оставить постоянно включенным",
+  "stop this app": "Остановить это приложение",
+  "update required": "Доступно обновление",
+  "navbar faq": "Часто Задаваемые Вопросы",
+  "application is installing": "Приложение устанавливается.\nДождитесь окончания установки, затем попытайтесь еще раз.",
+  "no app message": "В данный момент у Вас нет ни одного приложения для Cozy.\nПроследуйте <a href=\"#applications\">Магазин Cozy</a> и установите новые приложения!",
+  "welcome to app store": "Добро пожаловать в Ваш магазин Cozy, устанавливайте приложения отсюда или добавьте одно из списка доступных.",
+  "installed everything": "На данный момент Вы установили все доступные приложения!",
+  "already similarly named app": "У Вас уже есть приложение с похожим именем.",
+  "your app list": "Доступ к Вашим приложениям",
+  "customize your cozy": "Настройте внешний вид",
+  "manage your apps": "Приложения",
+  "choose your apps": "Выберите свои риложения",
+  "configure your cozy": "Настройте свой Cozy",
+  "ask for assistance": "Обратитесь за помощью",
+  "logout": "Выйти",
+  "navbar logout": "Выйти",
+  "welcome to your cozy": "Добро пожаловать в Cozy!",
+  "you have no apps": "У Вас нет ни одного приложения.",
+  "app management": "Управление приложениями",
+  "app store": "Добавить приложение",
+  "configuration": "Настройка",
+  "assistance": "Поддержка",
+  "hardware consumption": "Аппаратное обеспечение",
+  "hard drive gigabytes": "(Жесткий диск)",
+  "memory megabytes": "&nbsp;MB (ОЗУ)",
+  "manage your applications": "Приложения",
+  "manage your devices": "Управление Вашими устройствами",
+  "synchronized": "синхронизовано",
+  "revoke device access": "Отсоединить устройство",
+  "no application installed": "Нет установленных приложений.",
+  "your parameters": "Ваши настройки",
+  "alerts and password recovery email": "Мне необходим адрес Вашей электронной почты для отправки уведомлений и восстановления пароля:",
+  "public name description": "Для того, чтобы приложения упоминали Вас правильно, будет использовано Ваше видимое имя:",
+  "your timezone is required": "Указание Вашего часового пояса поможет отображать даты правильно:",
+  "domain name for urls and email": "Для того, чтобы поделиться ссылкой с собой или со своими контактами через электронную почту используется имя домена:",
+  "save": "Сохранить",
+  "saved": "Сохранено",
+  "Chose the language you want I use to speak with you:": "Выберите язык:",
+  "account background selection": "Выберите фоновое изображение для Вашей домашней страницы Cozy:",
+  "account localization": "Локализация",
+  "account identifiers": "Идентификаторы",
+  "account personalization": "Персонализация",
+  "account password": "Изменить пароль",
+  "french": "Французский",
+  "english": "Английский",
+  "german": "Немецкий",
+  "spanish": "Испанский",
+  "portuguese": "Португальский",
+  "change password procedure": "Последовательность действий для изменения Вашего пароля",
+  "current password": "текущий пароль",
+  "new password": "новый пароль",
+  "confirm your new password": "подтвердите Ваш новый пароль",
+  "save your new password": "Сохранить Ваш новый пароль",
+  "do you want assistance": "Вам нужна помощь?",
+  "Write an email to our support team at:": "Отправьте нашей команде поддержки электронное письмо:",
+  "Register and post on our forum: ": "Зарегистрироваться и оставить пост на нашем форуме:",
+  "Ask your question on Twitter: ": "Спросить в Twitter:",
+  "Chat with us on IRC:": "Побеседовать с нами в IRC:",
+  "Visit the project website and learn to build your app:": "Посетить веб-сайт проекта:",
+  "your own application": "Ваше собственное приложение",
+  "installed": "установлено",
+  "updated": "обновлено",
+  "updating": "обновляется",
+  "update all": "Обновить всё",
+  "show home logs": "Показать Журнал Домашней Страницы",
+  "show data system logs": "Показать Журнал Системы Данных",
+  "show proxy logs": "Показать Журнал Proxy",
+  "show logs": "Показать журналы",
+  "update stack": "Обновить",
+  "reboot stack waiting message": "Подождите пожалуйста, перезагрузка потребует несколько минут.",
+  "status no device": "Нет устройства для синхронизации.",
+  "update stack modal title": "Обновляем Ваш Cozy",
+  "update stack modal content": "Вы собираетесь обновить платформу. Ваша Cozy будет недоступна в течение нескольких минут. Вас это устраивает?",
+  "update stack modal confirm": "Обновить",
+  "update stack success": "Ваши приложения обновлены, страница будет перезагружена.",
+  "update stack error": "В процессе обновления возникла ошибка, страница будет перезагружена.",
+  "applications broken": "Приложения сломаны",
+  "cozy platform": "Платформа",
+  "navbar back button title": "Вернуться Домой",
+  "navbar notifications": "Уведомления",
+  "or:": "или:",
+  "reboot stack": "Перезагрузить",
+  "update error": "Во время обновления этого приложения возникла ошибка",
+  "error update uninstRlled app": "Вы не можете обновить неустановленное приложение.",
+  "notification open application": "Открыть приложение",
+  "notification update stack": "Обновить платформу",
+  "notification update application": "Обновить приложение",
+  "broken": "сломано",
+  "start this app": "Запустить это приложение",
+  "stopped": "остановлено",
+  "retry to install": "Повторить попытку установки",
+  "cozy account title": "Cozy - Настройки",
+  "cozy app store title": "Cozy - Магазин",
+  "cozy home title": "Cozy - Домашняя страница",
+  "cozy applications title": "Cozy - Статус",
+  "running": "работает",
+  "cozy help title": "Cozy - Помощь",
+  "help support title": "Официальная Поддержка",
+  "help community title": "Поддержка Сообщества",
+  "help documentation title": "Документация",
+  "help wiki title": "Вики:",
+  "changing locale requires reload": "Изменение языка потребует перезагрузки страницы.",
+  "cancel": "отмена",
+  "abort": "отказ",
+  "Once updated, this application will require the following permissions:": "Как только приложение будет обновлено, потребуются следующие разрешения:",
+  "confirm update": "подтвердить обновление",
+  "confirm install": "подтвердить установку",
+  "no specific permissions needed": "Это приложение не требует особых разрешений",
+  "removed": "удалено",
+  "removing": "удаляется",
+  "required permissions": "Необходимые разрешения",
+  "finish layout edition": "Сохранить",
+  "reset customization": "Сбросить",
+  "use icon": "Использовать иконку",
+  "home section favorites": "Избранное",
+  "home section leave": "Импорт",
+  "home section main": "Основы",
+  "home section productivity": "Производительность",
+  "home section data management": "Данные",
+  "home section personal watch": "Watch",
+  "home section misc": "Разное",
+  "home section platform": "Платформа",
+  "app status": "Статус",
+  "app store": "Магазин",
+  "settings": "Настройки",
+  "help": "Помощь",
+  "change layout": "Изменить разметку страницы",
+  "market app install": "Установка...",
+  "market install your app": "Вы можете установить приложение прямо из его git-репозитория. Вы можете просто скопировать/вставить его Git URL в поле, расположенное ниже. Для того, чтобы узнать больше о процессе сборки своего собственного приложения, читайте наше ",
+  "market app tutorial": " руководство",
+  "help send message title": "Написать команде Cozy",
+  "help send message explanation": "Для того, чтобы написать команде Cozy, Вы можете использовать область внизу. Вы можете отправить нам свои замечания и предложения, сообщить о багах и, конечно же, попросить помощи!",
+  "help send message action": "Послать сообщения Команде Поддержки Cozy",
+  "send message success": "Сообщение успешно отправлено!",
+  "send message error": "Во время отправки Вашего сообщения в службу поддержки возникла ошибка. Попробуйте отправить его посредством электронного письма на адрес support@cozycloud.cc",
+  "account change password success": "Пароль успешно изменён.",
+  "account change password short": "Новый пароль слишком короткий.",
+  "account change password difference": "Содержимое графы \"Подтверждение пароля\" не совпадает с новым паролем.",
+  "account change password error": "Что-то пошло не так при попытке изменить Ваш пароль. Убедитесь, что Ваш предыдущий пароль верен.",
+  "account background add": "Добавить фоновое изображение",
+  "introduction market": "Добро пожаловать в магазин Cozy!\nЗдесь Вы можете установить\nприложения, предоставленные Cozy Cloud, приложения от сообщества или приложения, собранные Вами!",
+  "error connectivity issue": "Во время загрузки данных произошла ошибка.<br />Пожалуйста, попытайтесь позднее.",
+  "package.json not found": "Невозможно загрузить package.json. Проверьте URL Вашего репозитория.",
+  "please wait data retrieval": "Пожалуйста, подождите пока данные загрузятся...",
+  "revoke device confirmation message": "Данное действие не позволит устройству получать доступ к Вашему Cozy. Вы уверены?",
+  "dashboard": "Панель наблюдения",
+  "calendars description": "Управляйте своими событиями и синхронизируйте их со своим смартфоном.",
+  "contacts description": "Управляйте своими контактами и синхронизируйте их со своим смартфоном.",
+  "emails description": "Читайте, отправляйте и храните резервные копии Ваших электронных писем.",
+  "files description": "Ваша онлайн файловая система, синхронизированная с Вашими устройствами.",
+  "photos description": "Организуйте Ваши фото и поделитесь ими с друзьями.",
+  "sync description": "Инструмент необходим для синхронизации Ваших контактов и календаря с Вашим смартфоном.",
+  "quickmarks description": "Сохраните и управляйте Вашими закладками.",
+  "cozic description": "Музыкальный проигрыватель для прослушивания Вашей музыки из браузера.",
+  "databrowser description": "Просматривайте и визуализуйте все Ваши данные (в формате raw).",
+  "zero-feeds description": "Объединяйте Ваши ленты и сохраняйте любимые ссылки в закладках.",
+  "kyou description": "Улучшите Ваше здоровье, измеряя себя.",
+  "konnectors description": "Импортируйте данные из внешних источников (Twitter, Jawbone...).",
+  "kresus description": "Дополнительные инструменты для Вашего персонального финансового менеджера.",
+  "nirc description": "Получите доступ к Вашим любимым IRC-каналам из Вашего Cozy.",
+  "notes description": "Организуйте и пишите заметки.",
+  "owm description": "Узнайте погоду в любой точке мира.",
+  "remote storage description": "Удаленное устройство накопления информации для хранения данных из Ваших приложений, не находящихся на Вашем оборудовании.",
+  "tasky description": "Очень быстрый и простой менеджер задач, основанный на тегах.",
+  "todos description": "Эффективно формулируйте свои задачи, приводите их в порядок и выполняйте.",
+  "term description": "Терминал для Вашего Cozy.",
+  "ghost description": "Делитесь Вашими историями с миром при помощи этого приложения, основанного на Ghost Blogging Platform.",
+  "leave google description": "Приложение для импорта данных из Вашей учетной записи Google.",
+  "reminder title email": "Напомнить",
+  "reminder title email expanded": "Напомнить: %{description} - %{date} (%{calendar})",
+  "reminder message expanded": "Напомнить: %{description}\nНачало: %{start} (%{timezone})\nКонец: %{end} (%{timezone})\nМесто: %{place}\nПодробности: %{details}",
+  "reminder message": "Напомнить: %{message}",
+  "warning unofficial app": "Это приложение от сообщества и не управляется командой Cozy.\nДля того, чтобы сообщить о баге, пожалуйста оформите вопрос по адресу <a href='https://forum.cozy.io'>our forum</a>.",
+  "installation message failure": "%{appName} не было установлено.",
+  "update available notification": "Доступна новая версия %{appName}.",
+  "stack update available notification": "Доступна новая версия платформы.",
+  "app broken title": 'Приложение сломано',
+  "app broken": 'Это приложение сломано. Попробуйте его переустановить: ',
+  "reinstall broken app": "переустановить его.",
+  "error git": "Мы не можем загрузить исходный код.",
+  "error github repo": 'Репозиторий приложения недоступен.',
+  "error github": 'Github недоступен. Вы можете проверить его статус по ссылке https://status.github.com/.',
+  'error npm': "Мы не можем установить зависимости для приложения.",
+  'error user linux': "Мы не можем создать специфичного пользователя linux для этого приложения.",
+  'error start': "Приложение не запускается. Вы сможете найти больше информации в журнале приложения.",
+  "app msg": 'Если ошибка повторяется, Вы можете связаться с нами по адресу contact@cozycloud.cc' + 'или по IRC #cozycloud на сервере irc.freenode.net.',
+  'more details': "Подробности",
+  'noapps': {
+    'first steps': "Вы можете <a href=\"%{wizard}\">использовать помощника</a> для установки и настройки Ваших приложений,\nили Вы можете пройти <a href=\"%{quicktour}\">краткий обзор</a> и узнать возможности Cozy.",
+    'customize your cozy': "Вы можете также <a href=\"%{account}\">проследовать в настройки</a> и изменить Ваш Cozy,\nили <a href=\"%{appstore}\">посетить Магазин Приложений</a> и установить Ваше первое приложение."
+  },
+  'relaunch install wizard': "Перезапустите помощника по установке",
+  'installwizard': {
+    'welcome title': "Добро пожаловать в Ваш новый Cozy",
+    'welcome content': "<p>Этот помощник поможет Вам выбрать, установить и настроить приложения для Вашего Cozy.</p>\n<p>Пожалуйста, не забывайте, что Cozy находится в состоянии beta-тестирования. Не стесняйтесь <a href=\"#help\">обращаться</a>, если столкнётесь с проблемой.</p>",
+    'yes': "Запустить приложение %{slug}^B",
+    'no': "Нет, спасибо",
+    'continue to files': "Настроить мои приложения",
+    'files title': "Настроить Файлы",
+    'files content': "<p>Хотите ли Вы, чтобы приложение хранило Ваши персональные файлы и папки, и разрешало защищенный доступ к ним?</p>",
+    'emails title': "Настройте Почту",
+    'emails content': "<p>Хотите ли Вы, чтобы клиент электронной почты связывался со всеми Вашими почтовыми ящиками, и обеспечивал Вам доступ к единому почтовому ящику?</p>",
+    'contacts title': "Настройте Контакты",
+    'contacts content': "<p>Хотите ли Вы, чтобы приложение Контакты управляло Вашей адресной книгой и позволяло получить мгновенный доступ к Вашим друзьям?</p>\n<p><small>Включив это приложение, Вы также включите приложение Синхронизация, которое необходимо для синхронизации Ваших данных со смартфоном и настольными приложениями.</small></p>",
+    'calendar title': "Настройте Календарь",
+    'calendar content': "<p>Хотите ли Вы, чтобы приложение Календарь помогло Вам устроить Вашу жизнь?</p>\n<p><small>Включив это приложение, Вы также включите приложение Синхронизация, которое необходимо для синхронизации Ваших данных со смартфоном и настольными приложениями.</small></p>",
+    'photos title': "Настройте Фото",
+    'photos content': "<p>Хотите ли Вы, чтобы приложение хранило Ваши фотографии и альбомы, и помогало Вам делиться ими с Вашими друзьями и семьёй?</p>\n<p><small>Совет профессионала: Если Вы используете устройство Android, Вы можете воспользоваться нашим приложением для автоматической загрузки фотографий в Ваш Cozy.</small></p>",
+    'thanks title': "Выполнено!",
+    'thanks content': "<p>Это так легко! Вы только что настроили Cozy для работы со следующими приложениями:</p>",
+    'go-to-my-cozy': "Я готов использовать мой Cozy",
+    'show-me-a-quick-tour': "Пожалуйста, расскажите мне больше о моём Cozy"
+  },
+  'quicktourwizard': {
+    'welcome title': "Добро пожаловать в Ваш Cozy!",
+    'welcome content': "            <p>\n            Cozy - это операционная система для Вашего личного облака. Она\nпозволяет с легкостью управлять Вашим удалённым сервером. Вы сможете\nустановить приложения, которые будут управлять Вашими данными.\nВы сможете получать доступ к Вашим данным посредством браузера\nне компрометируя свою личную информацию.</p>\n            <p>Далее перечислены преимущества личного облака с Cozy:</p>\n            <ul>\n              <li>Ваши данные остаются в сохранности и хранятся на Ващем собственном аппаратном обеспечении.</li>\n              <li>Больше никакой целевой рекламы.</li>\n              <li>Вам не нужно объединять 10 разных учетных записей для использования Ваших собственных инструментов.</li>\n              <li>Больше нет необходимости заполнять одинаковую информацию для каждого инструмента: приложения делят данные между собой.</li>\n            </ul>\n            <p></p>",
+    'continue to apps': "Какие приложения доступны?",
+    'apps title': "Доступные приложения",
+    'apps content': "            <p>По умолчанию Cozy предлагает 5 приложений:</p>\n            <ul>\n              <li>Календарь: Управляйте Вашими событиями.</li>\n              <li>Контакты: Контролируйте Вашу адресную и телефонную книги.</li>\n              <li>Файлы: Храните файлы и делитесь теми, что побольше.</li>\n              <li>Emails: Централизуйте Вашу почту.</li>\n              <li>Фото: Создавайте и делитесь фотоальбомами.</li>\n            </ul>\n            <p>Кроме этих основных приложений, Вы можете исследовать приложения,\n            созданные сообществом. Вы найдёте такие приложения, как менеджер\nбанковского счета, приложение для чтения лент, менеджер списка дел\nи многое другое! Отправляйтесь в Магазин Cozy и исследуйте все возможные\nприложения.\n            </p>",
+    'continue to sync': "Как синхронизировать мой телефон?",
+    'sync title': "Синхронизация Мобильных Устройств",
+    'sync content': "            <p><strong>Контакты и Календари</strong></p>\n<p>\nВы можете синхронизировать как контакты, так и календари при помощи протоколов CalDAV и CardDAV. За этими экзотичными названиями скрываются два стандарта, позволяющие синхронизировать Ваш Cozy со множеством менеджеров контактов и календарей. Это означает, что Вы можете синхронизировать Cozy с родными приложениями на Вашем смартфоне. Предлагаем два руководства, которые помогут Вам достичь, оговорённую ранее, цель:\n<ul>\n<li><a href=\"http://cozy.io/en/mobile/contacts.html\">Синхронизация Контактов</a></li>\n<li><a href=\"http://cozy.io/en/mobile/calendar.html\">Синхронизация Календаря</a></li>\n</ul>\n</p>\n            <p><strong>Файлы и Картинки (Android)</strong></p>\n            <p>\n              При помощи Cozy Вы можете не только делать резервные копии Ваших\nфотографий, но и смотреть Ваши файлы на мобильном устройстве.\nВы можете кэшировать файлы, которые всегда хотите иметь при себе\nи просматривать их, в то время, как Ваше мобильное устройство вне сети.\n            </p>\n            <p>Для установки приложения прочитайте наше <a href=\"http://cozy.io/en/mobile/files.html\">руководство</a> или проследуйте прямиком в <a href=\"https://play.google.com/store/apps/details?id=io.cozy.files_client\">Google PlayStore</a>\n            </p>",
+    'continue to import': "Каким образом мои данные импортируются?",
+    'import title': "Импорт Контактов и Календаря",
+    'import content': "<p>Большинство инструментов позволяет Вам экспортировать события календаря в формате .ical и Ваши контакты в формате .vcard или .vcf. Как только у Вас появятся нужные файлы, Вы можете импортировать их в Cozy при помощи инструментов импорта, доступных в приложениях Контакты и Календари.\n</p>\n<p>\nВаши обычные файлы могут быть загружены через интерфейс приложения Файлы.\n</p>\n<p>\nМы работаем над приложением, которое позволит загружать Ваши данные из Google. В скором времени мы рассчитываем предоставить эту функцию.\n</p>\n<p>\nНа этом введение Cozy окончено. Теперь Вы знаете всё, что Вам нужно для работы с Cozy. Мы предоставляем Вам возможность изучить платформу и доступные приложения!\n</p>",
+    'close wizard': "Начинайте использовать Ваш Cozy!"
+  },
+  "pick from files": "Выберите фото",
+  "Crop the photo": "Кадрировать изображение",
+  "chooseAgain": "выбрать другое фото",
+  "modal ok": "OK",
+  "modal cancel": "Отмена",
+  "no image": "На Вашем Cozy нет изображений",
+  "ObjPicker upload btn": "Загрузить файл",
+  "or": "или",
+  "drop a file": "Перетащите файл",
+  "url of an image": "URL изображение в интернете",
+  "you have no album": "<p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n    <a href=\"/#applications\" target='_blank'>l'application Photo</a>\n    <br>\n    et utilisez les photo de votre téléphone via\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
+};
+});
+
 ;require.register("models/application", function(exports, require, module) {
 var Application, client, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -2023,13 +2351,11 @@ module.exports = Application = (function(_super) {
     favorite = this.get('favorite');
     if (favorite) {
       section = 'favorite';
-    } else if (name === 'import-from-google') {
-      section = 'leave';
     } else if (name === 'calendar' || name === 'contacts' || name === 'emails' || name === 'files' || name === 'photos') {
       section = 'main';
     } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks' || name === 'quickmarks' || name === 'zero-feeds') {
       section = 'watch';
-    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser') {
+    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser' || name === 'import-from-google') {
       section = 'data';
     } else if (name === 'todos' || name === 'notes' || name === 'tasky') {
       section = 'productivity';
@@ -2373,7 +2699,7 @@ var MainRouter, ObjectPickerCroper, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-ObjectPickerCroper = require('../views/object-picker');
+ObjectPickerCroper = require('../views/object_picker');
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
@@ -2810,7 +3136,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><p class="help-text mt2">');
 var __val__ = t('help send message explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><textarea id="send-message-textarea" class="mt2 w100 h400"></textarea><button id="send-message-button" class="btn w100">');
+buf.push('</p><textarea id="send-message-textarea" class="mt2 w100 h400"></textarea><p class="help-logs"><input id="send-message-logs" type="checkbox" checked="checked"/><span>');
+var __val__ = t('help send logs')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></p><button id="send-message-button" class="btn w100">');
 var __val__ = t('help send message action')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><div id="send-message-error" class="alert main-alert alert-error w100">');
@@ -2987,12 +3316,12 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="right"><a');
-buf.push(attrs({ 'href':("" + (app.git) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("" + (app.git) + ""), 'target':("_blank"), "class": ('website') }, {"href":true,"target":true}));
 buf.push('><img src="img/git.png" class="img-btn"/></a>');
 if ( app.website !== undefined)
 {
 buf.push('<a');
-buf.push(attrs({ 'href':("" + (app.website) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank"), "class": ('website') }, {"href":true,"target":true}));
 buf.push('><img src="img/link.png" class="img-btn"/></a>');
 }
 buf.push('</div><div class="app-img left">');
@@ -3011,7 +3340,12 @@ buf.push('/>');
 buf.push('<span class="installing-label">');
 var __val__ = t("market app install")
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '</h3><span class="comment">');
+buf.push('</span></div><div class="app-text"><h3>' + escape((interp = app.displayName) == null ? '' : interp) + '');
+if ( app.beta)
+{
+buf.push('<span class="beta">Beta</span>');
+}
+buf.push('</h3><span class="comment">');
 var __val__ = t(app.comment)
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><p class="par2">');
@@ -3115,7 +3449,19 @@ return buf.join("");
 };
 });
 
-require.register("templates/object-picker-photoURL", function(exports, require, module) {
+require.register("templates/object_picker", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<!-- never displayed, just for downloading.--><img id="img-result"/><div class="objectPickerCont"><nav role="tablist" aria-controls="objectPickerCont" class="fp-nav-tabs"></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div id="frame-preview"><img id="img-preview"/></div></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/object_picker_photourl", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
@@ -3129,25 +3475,13 @@ return buf.join("");
 };
 });
 
-require.register("templates/object-picker-upload", function(exports, require, module) {
+require.register("templates/object_picker_upload", function(exports, require, module) {
 module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="photoUpload-btn"><button class="btn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button></div><div class="photoUpload-or"><div>' + escape((interp = t('or')) == null ? '' : interp) + '</div></div><div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div></div></div><input type="file" style="display:none" class="uploader"/>');
-}
-return buf.join("");
-};
-});
-
-require.register("templates/object-picker", function(exports, require, module) {
-module.exports = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<!-- never displayed, just for downloading.--><img id="img-result"/><div class="objectPickerCont"><nav role="tablist" aria-controls="objectPickerCont" class="fp-nav-tabs"></nav></div><div class="croperCont"><div class="frame-to-crop"><div id="img-to-crop"></div></div><div id="frame-preview"><img id="img-preview"/></div></div>');
 }
 return buf.join("");
 };
@@ -3343,7 +3677,7 @@ BackgroundList = require('views/background_list');
 
 Instance = require('models/instance');
 
-ObjectPicker = require('./object-picker');
+ObjectPicker = require('./object_picker');
 
 module.exports = exports.AccountView = (function(_super) {
   __extends(AccountView, _super);
@@ -3513,12 +3847,14 @@ module.exports = exports.AccountView = (function(_super) {
     this.instance = new Instance(instance);
     domain = (instance != null ? instance.domain : void 0) || t('no domain set');
     locale = (instance != null ? instance.locale : void 0) || 'en';
-    saveDomain = this.getSaveFunction('domain', this.domainField, 'instance');
-    this.domainField.on('keyup', function(event) {
-      if (event.keyCode === 13 || event.which === 13) {
-        return saveDomain();
-      }
-    });
+    if (!window.managed) {
+      saveDomain = this.getSaveFunction('domain', this.domainField, 'instance');
+      this.domainField.on('keyup', function(event) {
+        if (event.keyCode === 13 || event.which === 13) {
+          return saveDomain();
+        }
+      });
+    }
     this.domainField.val(domain);
     saveLocale = this.getSaveFunction('locale', this.localeField, 'instance');
     this.localeField.change(saveLocale);
@@ -4220,11 +4556,14 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.$('.amount').html("--");
     this.$('.total').html("--");
     return request.get('api/sys-data', function(err, data) {
+      var diskTotal, diskUsed;
       if (err) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
+        diskUsed = "" + data.usedDiskSpace + " " + (data.usedUnit || 'G');
+        diskTotal = "" + data.totalDiskSpace + " " + (data.totalUnit || 'G');
         _this.displayMemory(data.freeMem, data.totalMem);
-        return _this.displayDiskSpace(data.usedDiskSpace, data.totalDiskSpace, data.unit);
+        return _this.displayDiskSpace(diskUsed, diskTotal);
       }
     });
   };
@@ -4234,9 +4573,9 @@ module.exports = ConfigApplicationsView = (function(_super) {
     return this.memoryFree.find('.total').html(Math.floor(total / 1000));
   };
 
-  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total, unit) {
+  ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
     this.diskSpace.find('.amount').html(amount);
-    return this.diskSpace.find('.total').html("" + total + " " + (unit || 'G'));
+    return this.diskSpace.find('.total').html(total);
   };
 
   ConfigApplicationsView.prototype.onAppStateChanged = function() {
@@ -4573,15 +4912,17 @@ module.exports = exports.HelpView = (function(_super) {
   };
 
   HelpView.prototype.onSendMessageClicked = function() {
-    var messageText,
+    var messageText, sendLogs,
       _this = this;
     this.alertMessageError.hide();
     this.alertMessageSuccess.hide();
     messageText = this.sendMessageInput.val();
+    sendLogs = this.$('#send-message-logs').is(':checked');
     if (messageText.length > 0) {
       this.sendMessageButton.spin(true);
       return request.post("help/message", {
-        messageText: messageText
+        messageText: messageText,
+        sendLogs: sendLogs
       }, function(err) {
         _this.sendMessageButton.spin(false);
         if (err) {
@@ -6694,9 +7035,17 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
-    var contentWindow, currentHash, frame, onLoad,
+    var contentWindow, currentHash, frame, onLoad, _base, _base1,
       _this = this;
     if (this.apps.length === 0) {
+      if ((_base = this.apps).once == null) {
+        _base.once = this.apps.on;
+      }
+      if (typeof this.apps.once !== 'function') {
+        if ((_base1 = this.apps).once == null) {
+          _base1.once = this.apps.on;
+        }
+      }
       this.apps.once('reset', function() {
         return _this.displayApplication(slug, hash);
       });
@@ -6731,7 +7080,15 @@ module.exports = HomeView = (function(_super) {
       this.frames.css('top', '-9999px');
       this.frames.css('left', '-9999px');
       this.frames.css('position', 'absolute');
-      return frame.on('load', onLoad);
+      if (frame.once == null) {
+        frame.once = frame.on;
+      }
+      if (typeof frame.once !== 'function') {
+        if (frame.once == null) {
+          frame.once = frame.on;
+        }
+      }
+      return frame.once('load', onLoad);
     } else if (hash) {
       contentWindow = frame.prop('contentWindow');
       currentHash = contentWindow.location.hash.substring(1);
@@ -7120,6 +7477,7 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.template = require('templates/market_application');
 
   ApplicationRow.prototype.events = {
+    "click .website": "onWebsiteClicked",
     "click .btn": "onInstallClicked",
     "click": "onInstallClicked"
   };
@@ -7172,6 +7530,10 @@ module.exports = ApplicationRow = (function(_super) {
       return;
     }
     return this.marketView.showDescription(this, this.installButton);
+  };
+
+  ApplicationRow.prototype.onWebsiteClicked = function(e) {
+    return e.stopPropagation();
   };
 
   return ApplicationRow;
@@ -7245,24 +7607,84 @@ module.exports = AppsMenu = (function(_super) {
 
   AppsMenu.prototype.el = '#menu-applications-container';
 
+  AppsMenu.prototype.regExpHistory = {};
+
   function AppsMenu() {
-    var states, substringMatcher, typeah,
+    var highlightItem, states, substringMatcher, trackCharsToHighlight, typeah,
       _this = this;
-    substringMatcher = function(strs) {
-      return function(q, cb) {
-        var matches, substrRegex;
+    substringMatcher = function(items) {
+      return function(query, cb) {
+        var item, itemMatched, matches, queryWords, reg, regExp, regExpList, word, _i, _j, _k, _len, _len1, _len2;
         matches = [];
-        q = q.split(' ').join('');
-        substrRegex = new RegExp(q.split('').join('[\\S]*'), 'i');
-        $.each(strs, function(i, str) {
-          if (substrRegex.test(str)) {
-            matches.push(str);
+        queryWords = query.toLowerCase().trim().split(' ');
+        regExpList = [];
+        for (_i = 0, _len = queryWords.length; _i < _len; _i++) {
+          word = queryWords[_i];
+          if (!(reg = _this.regExpHistory[word])) {
+            reg = new RegExp(word.split('').join('.*?'), 'g');
+            _this.regExpHistory[word] = reg;
           }
-        });
-        cb(matches);
+          regExpList.push(reg);
+        }
+        for (_j = 0, _len1 = items.length; _j < _len1; _j++) {
+          item = items[_j];
+          itemMatched = true;
+          for (_k = 0, _len2 = regExpList.length; _k < _len2; _k++) {
+            regExp = regExpList[_k];
+            if (!regExp.test(item.toLowerCase())) {
+              itemMatched = false;
+              break;
+            }
+            regExp.lastIndex = 0;
+          }
+          if (itemMatched) {
+            matches.push(item);
+          }
+        }
+        return cb(matches);
       };
     };
     states = ["/Administratif", "/Administratif/Bank statements", "/Administratif/Bank statements/Bank Of America", "/Administratif/Bank statements/Deutsche Bank", "/Administratif/Bank statements/Société Générale", "/Administratif/CPAM", "/Administratif/EDF", "/Administratif/EDF/Contrat", "/Administratif/EDF/Factures", "/Administratif/Emploi", "/Administratif/Impôts", "/Administratif/Logement", "/Administratif/Logement/Loyer 158 rue de Verdun", "/Administratif/Orange", "/Administratif/Pièces identité", "/Administratif/Pièces identité/Carte identité", "/Administratif/Pièces identité/Passeport", "/Administratif/Pièces identité/Permis de conduire", "/Appareils photo", "/Boulot", "/Cours ISEN", "/Cours ISEN/CIR", "/Cours ISEN/CIR/LINUX", "/Cours ISEN/CIR/MICROCONTROLEUR", "/Cours ISEN/CIR/RESEAUX", "/Cours ISEN/CIR/TRAITEMENT_SIGNAL", "/Divers photo", "/Divers photo/wallpapers", "/Films", "/Notes", "/Notes/Communication", "/Notes/Notes techniques", "/Notes/Recrutement", "/Projet appartement à Lyon", "/Vacances Périgord"];
+    trackCharsToHighlight = function(item, charsToHighlight, startIndex, word) {
+      var char, charIndex, nChars, wordIndex;
+      charsToHighlight[startIndex] = true;
+      nChars = item.length;
+      charIndex = startIndex;
+      wordIndex = 1;
+      while (charIndex < nChars) {
+        char = item[charIndex];
+        if (char === word[wordIndex]) {
+          charsToHighlight[charIndex] = true;
+          if (++wordIndex >= word.length) {
+            return;
+          }
+        }
+        charIndex++;
+      }
+    };
+    highlightItem = function(item, charsToHighlight) {
+      var isToHighlight, n, previousWasToHighlight, res, _i, _len;
+      res = '<p>';
+      previousWasToHighlight = void 0;
+      for (n = _i = 0, _len = charsToHighlight.length; _i < _len; n = ++_i) {
+        isToHighlight = charsToHighlight[n];
+        if (isToHighlight === previousWasToHighlight) {
+          res += item[n];
+        } else {
+          if (previousWasToHighlight) {
+            res += '</strong>' + item[n];
+          } else {
+            res += '<strong class="tt-highlight">' + item[n];
+          }
+        }
+        previousWasToHighlight = isToHighlight;
+      }
+      if (previousWasToHighlight) {
+        return res += '</strong></p>';
+      } else {
+        return res += '</p>';
+      }
+    };
     typeah = $('#search-bar');
     typeah.typeahead({
       hint: true,
@@ -7273,33 +7695,35 @@ module.exports = AppsMenu = (function(_super) {
       name: 'states',
       source: substringMatcher(states),
       templates: {
-        suggestion: function(string) {
-          var car, matchWithHighlights, matchedPositions, res, stringIndex, tokenIndex, tokens;
-          tokens = typeah.typeahead('val');
-          tokens = tokens.split(' ').join('');
-          console.log(string, tokens);
-          tokenIndex = 0;
-          stringIndex = 0;
-          matchWithHighlights = '';
-          matchedPositions = [];
-          string = string.toLowerCase();
-          while (stringIndex < string.length) {
-            car = string[stringIndex];
-            if (car === tokens[tokenIndex]) {
-              matchWithHighlights += '<strong class="tt-highlight">' + car + '</strong>';
-              matchedPositions.push(stringIndex);
-              tokenIndex++;
-              if (tokenIndex >= tokens.length) {
-                matchWithHighlights += string.slice(stringIndex + 1);
-                break;
+        suggestion: function(item) {
+          var fullWordMatch_N, fullWordsToHighlight, fuzzyWordsToHighlight, html, isToHighlight, itemLC, match, n, queryWords, word, wordRegexp, _i, _j, _len, _len1;
+          queryWords = typeah.typeahead('val').toLowerCase().trim().split(' ');
+          itemLC = item.toLowerCase();
+          fullWordsToHighlight = Array(item.length);
+          for (_i = 0, _len = queryWords.length; _i < _len; _i++) {
+            word = queryWords[_i];
+            wordRegexp = _this.regExpHistory[word];
+            wordRegexp.lastIndex = 0;
+            fullWordMatch_N = 0;
+            fuzzyWordsToHighlight = Array(item.length);
+            while (match = wordRegexp.exec(itemLC)) {
+              if (match[0].length === word.length) {
+                fullWordMatch_N++;
+                trackCharsToHighlight(itemLC, fullWordsToHighlight, match.index, word);
+              } else if (fullWordMatch_N === 0) {
+                trackCharsToHighlight(itemLC, fuzzyWordsToHighlight, match.index, word);
               }
-            } else {
-              matchWithHighlights += car;
             }
-            stringIndex++;
+            if (fullWordMatch_N === 0) {
+              for (n = _j = 0, _len1 = fuzzyWordsToHighlight.length; _j < _len1; n = ++_j) {
+                isToHighlight = fuzzyWordsToHighlight[n];
+                if (isToHighlight) {
+                  fullWordsToHighlight[n] = true;
+                }
+              }
+            }
           }
-          res = '<p>' + matchWithHighlights + '</p>';
-          return res;
+          return html = highlightItem(item, fullWordsToHighlight);
         }
       }
     });
@@ -7750,7 +8174,384 @@ module.exports = NotificationsView = (function(_super) {
 })(ViewCollection);
 });
 
-;require.register("views/object-picker-album", function(exports, require, module) {
+;require.register("views/object_picker", function(exports, require, module) {
+var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Modal = require('../views/modal');
+
+template = require('../templates/object_picker');
+
+ObjectPickerPhotoURL = require('./object_picker_photourl');
+
+ObjectPickerUpload = require('./object_picker_upload');
+
+ObjectPickerImage = require('./object_picker_image');
+
+ObjectPickerAlbum = require('./object_picker_album');
+
+tabControler = require('views/tab-controler');
+
+MARGIN_BETWEEN_IMG_AND_CROPED = 30;
+
+THUMB_WIDTH = 100;
+
+THUMB_HEIGHT = 100;
+
+module.exports = PhotoPickerCroper = (function(_super) {
+  __extends(PhotoPickerCroper, _super);
+
+  function PhotoPickerCroper() {
+    this._updateCropedPreview = __bind(this._updateCropedPreview, this);
+    this._onImgToCropLoaded = __bind(this._onImgToCropLoaded, this);
+    this._showCropingTool = __bind(this._showCropingTool, this);
+    this._onImgResultLoaded = __bind(this._onImgResultLoaded, this);
+    this.resizeHandler = __bind(this.resizeHandler, this);
+    _ref = PhotoPickerCroper.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  PhotoPickerCroper.prototype.events = function() {
+    return _.extend(PhotoPickerCroper.__super__.events.apply(this, arguments), {
+      'click a.next': 'displayMore',
+      'click a.prev': 'displayPrevPage',
+      'click .back': '_chooseAgain'
+    });
+  };
+
+  PhotoPickerCroper.prototype.initialize = function(params, cb) {
+    var body, previewTops, tab;
+    this.id = 'object-picker';
+    this.title = t('pick from files');
+    this.config = {
+      cssSpaceName: "object-picker",
+      singleSelection: true,
+      numPerPage: 50,
+      yes: t('modal ok'),
+      no: t('modal cancel'),
+      cb: cb,
+      target_h: 100,
+      target_w: 100
+    };
+    this.params = params;
+    this.state = {
+      currentStep: 'objectPicker',
+      img_naturalW: 0,
+      img_naturalH: 0
+    };
+    this.el.dataset.step = this.state.currentStep;
+    PhotoPickerCroper.__super__.initialize.call(this, this.config);
+    body = this.el.querySelector('.modalCY-body');
+    body.innerHTML = template();
+    this.body = body;
+    this.objectPickerCont = body.querySelector('.objectPickerCont');
+    this.tablist = body.querySelector('[role=tablist]');
+    this.imgResult = body.querySelector('#img-result');
+    this.cropper$ = this.el.querySelector('.croperCont');
+    this.framePreview = this.cropper$.querySelector('#frame-preview');
+    this.frameToCrop = this.cropper$.querySelector('.frame-to-crop');
+    this.imgToCrop = this.cropper$.querySelector('#img-to-crop');
+    this.imgPreview = this.cropper$.querySelector('#img-preview');
+    this.chooseAgain = this.el.querySelector('.back');
+    this.panelsControlers = {};
+    this.imagePanel = new ObjectPickerImage(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
+    this.panelsControlers[this.imagePanel.name] = this.imagePanel;
+    this.albumPanel = new ObjectPickerAlbum(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.albumPanel);
+    this.panelsControlers[this.albumPanel.name] = this.albumPanel;
+    this.uploadPanel = new ObjectPickerUpload(this);
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.uploadPanel);
+    this.panelsControlers[this.uploadPanel.name] = this.uploadPanel;
+    this.photoURLpanel = new ObjectPickerPhotoURL();
+    tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
+    this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
+    tabControler.initializeTabs(body);
+    this._listenTabsSelection();
+    tab = this.params.defaultTab;
+    if ((tab == null) && (this.imagePanel != null)) {
+      tab = this.imagePanel.name;
+    }
+    if (tab == null) {
+      tab = this.uploadPanel.name;
+    }
+    this._selectDefaultTab(tab);
+    this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
+    this.cropper$.setAttribute('aria-hidden', true);
+    this.framePreview.style.width = THUMB_WIDTH + 'px';
+    this.framePreview.style.height = THUMB_HEIGHT + 'px';
+    previewTops = this.cropper$.clientHeight - THUMB_HEIGHT;
+    this.imgResult.addEventListener('load', this._onImgResultLoaded, false);
+    window.addEventListener('resize', this.resizeHandler);
+    return true;
+  };
+
+  PhotoPickerCroper.prototype.onYes = function() {
+    var dimension, obj, url;
+    obj = this.state.activePanel.getObject();
+    if (!this.params.isCropped) {
+      this._sendResult(obj);
+      return;
+    }
+    if (this.state.currentStep === 'objectPicker') {
+      url = this._getUrlForCropping(obj);
+      if (url) {
+        return this._showCropingTool(url);
+      }
+    } else {
+      dimension = this._getCroppedDimensions();
+      this.cb(true, this._getResultDataURL(this.imgPreview, dimension));
+      return this.close();
+    }
+  };
+
+  PhotoPickerCroper.prototype.resizeHandler = function(event) {
+    if (this.state.activePanel.resizeHandler) {
+      return this.state.activePanel.resizeHandler();
+    }
+  };
+
+  PhotoPickerCroper.prototype._sendResult = function(obj) {
+    if (obj.dataUrl) {
+      this.cb(true, obj.dataUrl);
+      this.close();
+      return;
+    }
+    if (obj.urlToFetch) {
+      this.imgResult.src = obj.urlToFetch;
+      return;
+    }
+    if ((obj.docType != null) && obj.docType === 'file' && (obj.id != null)) {
+      if (obj.id) {
+        this.imgResult.src = "files/photo/" + obj.id + ".jpg";
+      }
+    }
+  };
+
+  PhotoPickerCroper.prototype._getUrlForCropping = function(obj) {
+    if (obj.urlToFetch) {
+      return obj.urlToFetch;
+    }
+    if (obj.dataUrl) {
+      return obj.dataUrl;
+    }
+    if ((obj.docType != null) && obj.docType === 'file' && (obj.id != null)) {
+      return "files/photo/screens/" + obj.id + ".jpg";
+    }
+  };
+
+  PhotoPickerCroper.prototype._onImgResultLoaded = function(e) {
+    this.cb(true, this._getResultDataURL(this.imgResult, null));
+    return this.close();
+  };
+
+  /**
+   * returns the coordonates of the region to cropp into the original image
+   * (imgPreview)
+   * @return {Object} #
+   *   # sx      : x of the top left corner
+   *   # sy      : y of the top left corner
+   *   # sWidth  : widht of the region to crop
+   *   # sHeight : height of the region to crop
+  */
+
+
+  PhotoPickerCroper.prototype._getCroppedDimensions = function() {
+    var d, r, s;
+    s = this.imgPreview.style;
+    r = this.state.img_naturalW / this.imgPreview.width;
+    d = {
+      sx: Math.round(-parseInt(s.marginLeft) * r),
+      sy: Math.round(-parseInt(s.marginTop) * r),
+      sWidth: Math.round(this.config.target_h * r),
+      sHeight: Math.round(this.config.target_w * r)
+    };
+    if (d.sx < 0) {
+      d.sx = 0;
+    }
+    if (d.sy < 0) {
+      d.sy = 0;
+    }
+    if (d.sx + d.sWidth > this.imgPreview.naturalWidth) {
+      d.sWidth = this.imgPreview.naturalWidth - d.sx;
+    }
+    if (d.sy + d.sHeight > this.imgPreview.naturalHeight) {
+      d.sHeight = this.imgPreview.naturalHeight - d.sy;
+    }
+    return d;
+  };
+
+  PhotoPickerCroper.prototype._getResultDataURL = function(img, dimensions) {
+    var IMAGE_DIMENSION, canvas, ctx, d, dataUrl;
+    IMAGE_DIMENSION = 600;
+    canvas = document.createElement('canvas');
+    ctx = canvas.getContext('2d');
+    if (dimensions) {
+      canvas.height = canvas.width = IMAGE_DIMENSION;
+      d = dimensions;
+      ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
+    } else {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img, 0, 0);
+    }
+    return dataUrl = canvas.toDataURL('image/jpeg');
+  };
+
+  PhotoPickerCroper.prototype.onKeyStroke = function(e) {
+    var _ref1;
+    if (e.which === 13) {
+      e.stopPropagation();
+      this.onYes();
+      return;
+    }
+    if (e.which === 27) {
+      e.stopPropagation();
+      if (this.state.currentStep === 'croper') {
+        this._chooseAgain();
+      } else {
+        this.onNo();
+      }
+      return;
+    }
+    return (_ref1 = this.state.activePanel) != null ? _ref1.keyHandler(e) : void 0;
+  };
+
+  PhotoPickerCroper.prototype._showCropingTool = function(url) {
+    this.state.currentStep = 'croper';
+    this.currentPhotoScroll = this.body.scrollTop;
+    this.el.dataset.step = this.state.currentStep;
+    this.objectPickerCont.setAttribute('aria-hidden', true);
+    this.cropper$.setAttribute('aria-hidden', false);
+    this._imgToCropTemp = new Image();
+    this._imgToCropTemp.id = 'img-to-crop';
+    this._imgToCropTemp.addEventListener('load', this._onImgToCropLoaded, false);
+    this._imgToCropTemp.src = url;
+    return this.imgPreview.src = url;
+  };
+
+  /**
+   * triggered when the image to crop is loaded, will compute the geometry
+   * and initialize jCrop
+  */
+
+
+  PhotoPickerCroper.prototype._onImgToCropLoaded = function() {
+    var cropTop, frame_H, frame_W, img_h, img_w, margin, natural_h, natural_w, options, selection_w, t, x, y;
+    console.debug(this._imgToCropTemp);
+    natural_h = this._imgToCropTemp.naturalHeight;
+    natural_w = this._imgToCropTemp.naturalWidth;
+    frame_H = this.cropper$.clientHeight;
+    frame_W = this.cropper$.clientWidth - MARGIN_BETWEEN_IMG_AND_CROPED - THUMB_WIDTH;
+    if (frame_H < natural_h || frame_W < natural_w) {
+      if (frame_H / frame_W > natural_h / natural_w) {
+        img_w = Math.round(frame_W);
+        img_h = Math.round(frame_W * natural_h / natural_w);
+      } else {
+        img_h = Math.round(frame_H);
+        img_w = Math.round(frame_H * natural_w / natural_h);
+      }
+      this._imgToCropTemp.style.width = img_w + 'px';
+      this._imgToCropTemp.style.height = img_h + 'px';
+    } else {
+      img_w = natural_w;
+      img_h = natural_h;
+    }
+    this.frameToCrop.style.width = img_w + 'px';
+    this.frameToCrop.style.height = img_h + 'px';
+    this.img_w = img_w;
+    this.img_h = img_h;
+    this.state.img_naturalW = natural_w;
+    this.state.img_naturalH = natural_h;
+    this.imgToCrop.parentElement.appendChild(this._imgToCropTemp);
+    this.imgToCrop.parentElement.removeChild(this.imgToCrop);
+    this.imgToCrop = this._imgToCropTemp;
+    margin = Math.round((frame_W - img_w) / 2);
+    this.frameToCrop.style.left = margin + 'px';
+    cropTop = Math.round((frame_H - img_h) / 2);
+    this.frameToCrop.style.top = cropTop + 'px';
+    this.framePreview.style.top = cropTop + 'px';
+    this.framePreview.style.right = margin + 'px';
+    selection_w = Math.round(Math.min(this.img_h, this.img_w) * 1);
+    x = Math.round((this.img_w - selection_w) / 2);
+    y = Math.round((this.img_h - selection_w) / 2);
+    options = {
+      onChange: this._updateCropedPreview,
+      onSelect: this._updateCropedPreview,
+      aspectRatio: 1,
+      setSelect: [x, y, x + selection_w, y + selection_w]
+    };
+    t = this;
+    this.imgToCrop.offsetHeight;
+    $(this.imgToCrop).Jcrop(options, function() {
+      return t.jcrop_api = this;
+    });
+    return t.jcrop_api.focus();
+  };
+
+  PhotoPickerCroper.prototype._updateCropedPreview = function(coords) {
+    var prev_h, prev_w, prev_x, prev_y, s;
+    prev_w = this.img_w / coords.w * this.config.target_w;
+    prev_h = this.img_h / coords.h * this.config.target_h;
+    prev_x = this.config.target_w / coords.w * coords.x;
+    prev_y = this.config.target_h / coords.h * coords.y;
+    s = this.imgPreview.style;
+    s.width = Math.round(prev_w) + 'px';
+    s.height = Math.round(prev_h) + 'px';
+    s.marginLeft = '-' + Math.round(prev_x) + 'px';
+    s.marginTop = '-' + Math.round(prev_y) + 'px';
+    return true;
+  };
+
+  PhotoPickerCroper.prototype._chooseAgain = function() {
+    this.state.currentStep = 'objectPicker';
+    this.jcrop_api.destroy();
+    this.imgToCrop.removeAttribute('style');
+    this.imgToCrop.src = '';
+    this.objectPickerCont.setAttribute('aria-hidden', false);
+    this.cropper$.setAttribute('aria-hidden', true);
+    this.body.scrollTop = this.currentPhotoScroll;
+    this.el.dataset.step = this.state.currentStep;
+    return this._setFocus();
+  };
+
+  PhotoPickerCroper.prototype._setFocus = function() {
+    if (!this.state.activePanel.setFocusIfExpected) {
+      return;
+    }
+    if (!this.state.activePanel.setFocusIfExpected()) {
+      return this.el.focus();
+    }
+  };
+
+  PhotoPickerCroper.prototype._listenTabsSelection = function() {
+    var _this = this;
+    return this.objectPickerCont.addEventListener('panelSelect', function(event) {
+      return _this._activatePanel(event.target.classList[0]);
+    });
+  };
+
+  PhotoPickerCroper.prototype._selectDefaultTab = function(panelClassName) {
+    var _ref1;
+    return (_ref1 = this.tablist.querySelector("[aria-controls=" + panelClassName + "]")) != null ? _ref1.click() : void 0;
+  };
+
+  PhotoPickerCroper.prototype._activatePanel = function(panelClassName) {
+    this.state.activePanel = this.panelsControlers[panelClassName];
+    if (this.state.activePanel.resizeHandler) {
+      this.state.activePanel.resizeHandler();
+    }
+    return this._setFocus();
+  };
+
+  return PhotoPickerCroper;
+
+})(Modal);
+});
+
+;require.register("views/object_picker_album", function(exports, require, module) {
 var BaseView, ObjectPickerAlbum, Photo, client,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -7976,7 +8777,7 @@ module.exports = ObjectPickerAlbum = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/object-picker-image", function(exports, require, module) {
+;require.register("views/object_picker_image", function(exports, require, module) {
 var BaseView, LongList, ObjectPickerImage, Photo,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8042,7 +8843,7 @@ module.exports = ObjectPickerImage = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/object-picker-photoURL", function(exports, require, module) {
+;require.register("views/object_picker_photourl", function(exports, require, module) {
 var BaseView, ObjectPickerPhotoURL, proxyclient, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8059,7 +8860,7 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
     return _ref;
   }
 
-  ObjectPickerPhotoURL.prototype.template = require('../templates/object-picker-photoURL');
+  ObjectPickerPhotoURL.prototype.template = require('../templates/object_picker_photourl');
 
   ObjectPickerPhotoURL.prototype.tagName = 'section';
 
@@ -8140,7 +8941,7 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/object-picker-upload", function(exports, require, module) {
+;require.register("views/object_picker_upload", function(exports, require, module) {
 var BaseView, ObjectPickerUpload,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -8151,7 +8952,7 @@ BaseView = require('lib/base_view');
 module.exports = ObjectPickerUpload = (function(_super) {
   __extends(ObjectPickerUpload, _super);
 
-  ObjectPickerUpload.prototype.template = require('../templates/object-picker-upload');
+  ObjectPickerUpload.prototype.template = require('../templates/object_picker_upload');
 
   ObjectPickerUpload.prototype.tagName = "section";
 
@@ -8259,374 +9060,6 @@ module.exports = ObjectPickerUpload = (function(_super) {
   return ObjectPickerUpload;
 
 })(BaseView);
-});
-
-;require.register("views/object-picker", function(exports, require, module) {
-var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Modal = require('../views/modal');
-
-template = require('../templates/object-picker');
-
-ObjectPickerPhotoURL = require('./object-picker-photoURL');
-
-ObjectPickerUpload = require('./object-picker-upload');
-
-ObjectPickerImage = require('./object-picker-image');
-
-ObjectPickerAlbum = require('./object-picker-album');
-
-tabControler = require('views/tab-controler');
-
-MARGIN_BETWEEN_IMG_AND_CROPED = 30;
-
-THUMB_WIDTH = 100;
-
-THUMB_HEIGHT = 100;
-
-module.exports = PhotoPickerCroper = (function(_super) {
-  __extends(PhotoPickerCroper, _super);
-
-  function PhotoPickerCroper() {
-    this._updateCropedPreview = __bind(this._updateCropedPreview, this);
-    this._onImgToCropLoaded = __bind(this._onImgToCropLoaded, this);
-    this._showCropingTool = __bind(this._showCropingTool, this);
-    this._onImgResultLoaded = __bind(this._onImgResultLoaded, this);
-    this.resizeHandler = __bind(this.resizeHandler, this);
-    _ref = PhotoPickerCroper.__super__.constructor.apply(this, arguments);
-    return _ref;
-  }
-
-  PhotoPickerCroper.prototype.events = function() {
-    return _.extend(PhotoPickerCroper.__super__.events.apply(this, arguments), {
-      'click a.next': 'displayMore',
-      'click a.prev': 'displayPrevPage',
-      'click .back': '_chooseAgain'
-    });
-  };
-
-  PhotoPickerCroper.prototype.initialize = function(params, cb) {
-    var body, previewTops;
-    this.id = 'object-picker';
-    this.title = t('pick from files');
-    this.config = {
-      cssSpaceName: "object-picker",
-      singleSelection: true,
-      numPerPage: 50,
-      yes: t('modal ok'),
-      no: t('modal cancel'),
-      cb: cb,
-      target_h: 100,
-      target_w: 100
-    };
-    this.params = params;
-    this.state = {
-      currentStep: 'objectPicker',
-      img_naturalW: 0,
-      img_naturalH: 0
-    };
-    this.el.dataset.step = this.state.currentStep;
-    PhotoPickerCroper.__super__.initialize.call(this, this.config);
-    body = this.el.querySelector('.modalCY-body');
-    body.innerHTML = template();
-    this.body = body;
-    this.objectPickerCont = body.querySelector('.objectPickerCont');
-    this.tablist = body.querySelector('[role=tablist]');
-    this.imgResult = body.querySelector('#img-result');
-    this.cropper$ = this.el.querySelector('.croperCont');
-    this.framePreview = this.cropper$.querySelector('#frame-preview');
-    this.frameToCrop = this.cropper$.querySelector('.frame-to-crop');
-    this.imgToCrop = this.cropper$.querySelector('#img-to-crop');
-    this.imgPreview = this.cropper$.querySelector('#img-preview');
-    this.chooseAgain = this.el.querySelector('.back');
-    this.panelsControlers = {};
-    this.imagePanel = new ObjectPickerImage(this);
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
-    this.panelsControlers[this.imagePanel.name] = this.imagePanel;
-    this.albumPanel = new ObjectPickerAlbum(this);
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.albumPanel);
-    this.panelsControlers[this.albumPanel.name] = this.albumPanel;
-    this.uploadPanel = new ObjectPickerUpload(this);
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.uploadPanel);
-    this.panelsControlers[this.uploadPanel.name] = this.uploadPanel;
-    this.photoURLpanel = new ObjectPickerPhotoURL();
-    tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
-    this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
-    tabControler.initializeTabs(body);
-    this._listenTabsSelection();
-    this._selectDefaultTab(this.params.defaultTab || this.imagePanel.name);
-    this.imgToCrop.addEventListener('load', this._onImgToCropLoaded, false);
-    this.cropper$.setAttribute('aria-hidden', true);
-    this.framePreview.style.width = THUMB_WIDTH + 'px';
-    this.framePreview.style.height = THUMB_HEIGHT + 'px';
-    previewTops = this.cropper$.clientHeight - THUMB_HEIGHT;
-    this.imgResult.addEventListener('load', this._onImgResultLoaded, false);
-    window.addEventListener('resize', this.resizeHandler);
-    return true;
-  };
-
-  PhotoPickerCroper.prototype.onYes = function() {
-    var dimension, obj, url;
-    obj = this.state.activePanel.getObject();
-    if (!this.params.isCropped) {
-      this._sendResult(obj);
-      return;
-    }
-    if (this.state.currentStep === 'objectPicker') {
-      url = this._getUrlForCropping(obj);
-      if (url) {
-        return this._showCropingTool(url);
-      }
-    } else {
-      dimension = this._getCroppedDimensions();
-      this.cb(true, this._getResultDataURL(this.imgPreview, dimension));
-      return this.close();
-    }
-  };
-
-  PhotoPickerCroper.prototype.resizeHandler = function(event) {
-    if (this.state.activePanel.resizeHandler) {
-      return this.state.activePanel.resizeHandler();
-    }
-  };
-
-  PhotoPickerCroper.prototype._sendResult = function(obj) {
-    if (obj.dataUrl) {
-      this.cb(true, obj.dataUrl);
-      this.close();
-      return;
-    }
-    if (obj.urlToFetch) {
-      this.imgResult.src = obj.urlToFetch;
-      return;
-    }
-    if ((obj.docType != null) && obj.docType === 'file' && (obj.id != null)) {
-      if (obj.id) {
-        this.imgResult.src = "files/photo/" + obj.id + ".jpg";
-      }
-    }
-  };
-
-  PhotoPickerCroper.prototype._getUrlForCropping = function(obj) {
-    if (obj.urlToFetch) {
-      return obj.urlToFetch;
-    }
-    if (obj.dataUrl) {
-      return obj.dataUrl;
-    }
-    if ((obj.docType != null) && obj.docType === 'file' && (obj.id != null)) {
-      return "files/photo/screens/" + obj.id + ".jpg";
-    }
-  };
-
-  PhotoPickerCroper.prototype._onImgResultLoaded = function(e) {
-    this.cb(true, this._getResultDataURL(this.imgResult, null));
-    return this.close();
-  };
-
-  /**
-   * returns the coordonates of the region to cropp into the original image
-   * (imgPreview)
-   * @return {Object} #
-   *   # sx      : x of the top left corner
-   *   # sy      : y of the top left corner
-   *   # sWidth  : widht of the region to crop
-   *   # sHeight : height of the region to crop
-  */
-
-
-  PhotoPickerCroper.prototype._getCroppedDimensions = function() {
-    var d, r, s;
-    s = this.imgPreview.style;
-    r = this.state.img_naturalW / this.imgPreview.width;
-    d = {
-      sx: Math.round(-parseInt(s.marginLeft) * r),
-      sy: Math.round(-parseInt(s.marginTop) * r),
-      sWidth: Math.round(this.config.target_h * r),
-      sHeight: Math.round(this.config.target_w * r)
-    };
-    if (d.sx < 0) {
-      d.sx = 0;
-    }
-    if (d.sy < 0) {
-      d.sy = 0;
-    }
-    if (d.sx + d.sWidth > this.imgPreview.naturalWidth) {
-      d.sWidth = this.imgPreview.naturalWidth - d.sx;
-    }
-    if (d.sy + d.sHeight > this.imgPreview.naturalHeight) {
-      d.sHeight = this.imgPreview.naturalHeight - d.sy;
-    }
-    return d;
-  };
-
-  PhotoPickerCroper.prototype._getResultDataURL = function(img, dimensions) {
-    var IMAGE_DIMENSION, canvas, ctx, d, dataUrl;
-    IMAGE_DIMENSION = 600;
-    canvas = document.createElement('canvas');
-    ctx = canvas.getContext('2d');
-    if (dimensions) {
-      canvas.height = canvas.width = IMAGE_DIMENSION;
-      d = dimensions;
-      ctx.drawImage(img, d.sx, d.sy, d.sWidth, d.sHeight, 0, 0, IMAGE_DIMENSION, IMAGE_DIMENSION);
-    } else {
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      ctx.drawImage(img, 0, 0);
-    }
-    return dataUrl = canvas.toDataURL('image/jpeg');
-  };
-
-  PhotoPickerCroper.prototype.onKeyStroke = function(e) {
-    if (e.which === 13) {
-      e.stopPropagation();
-      this.onYes();
-      return;
-    }
-    if (e.which === 27) {
-      e.stopPropagation();
-      if (this.state.currentStep === 'croper') {
-        this._chooseAgain();
-      } else {
-        this.onNo();
-      }
-      return;
-    }
-    return this.state.activePanel.keyHandler(e);
-  };
-
-  PhotoPickerCroper.prototype._showCropingTool = function(url) {
-    this.state.currentStep = 'croper';
-    this.currentPhotoScroll = this.body.scrollTop;
-    this.el.dataset.step = this.state.currentStep;
-    this.objectPickerCont.setAttribute('aria-hidden', true);
-    this.cropper$.setAttribute('aria-hidden', false);
-    this._imgToCropTemp = new Image();
-    this._imgToCropTemp.id = 'img-to-crop';
-    this._imgToCropTemp.addEventListener('load', this._onImgToCropLoaded, false);
-    this._imgToCropTemp.src = url;
-    return this.imgPreview.src = url;
-  };
-
-  /**
-   * triggered when the image to crop is loaded, will compute the geometry
-   * and initialize jCrop
-  */
-
-
-  PhotoPickerCroper.prototype._onImgToCropLoaded = function() {
-    var cropTop, frame_H, frame_W, img_h, img_w, margin, natural_h, natural_w, options, selection_w, t, x, y;
-    console.debug(this._imgToCropTemp);
-    natural_h = this._imgToCropTemp.naturalHeight;
-    natural_w = this._imgToCropTemp.naturalWidth;
-    frame_H = this.cropper$.clientHeight;
-    frame_W = this.cropper$.clientWidth - MARGIN_BETWEEN_IMG_AND_CROPED - THUMB_WIDTH;
-    if (frame_H < natural_h || frame_W < natural_w) {
-      if (frame_H / frame_W > natural_h / natural_w) {
-        img_w = Math.round(frame_W);
-        img_h = Math.round(frame_W * natural_h / natural_w);
-      } else {
-        img_h = Math.round(frame_H);
-        img_w = Math.round(frame_H * natural_w / natural_h);
-      }
-      this._imgToCropTemp.style.width = img_w + 'px';
-      this._imgToCropTemp.style.height = img_h + 'px';
-    } else {
-      img_w = natural_w;
-      img_h = natural_h;
-    }
-    this.frameToCrop.style.width = img_w + 'px';
-    this.frameToCrop.style.height = img_h + 'px';
-    this.img_w = img_w;
-    this.img_h = img_h;
-    this.state.img_naturalW = natural_w;
-    this.state.img_naturalH = natural_h;
-    this.imgToCrop.parentElement.appendChild(this._imgToCropTemp);
-    this.imgToCrop.parentElement.removeChild(this.imgToCrop);
-    this.imgToCrop = this._imgToCropTemp;
-    margin = Math.round((frame_W - img_w) / 2);
-    this.frameToCrop.style.left = margin + 'px';
-    cropTop = Math.round((frame_H - img_h) / 2);
-    this.frameToCrop.style.top = cropTop + 'px';
-    this.framePreview.style.top = cropTop + 'px';
-    this.framePreview.style.right = margin + 'px';
-    selection_w = Math.round(Math.min(this.img_h, this.img_w) * 1);
-    x = Math.round((this.img_w - selection_w) / 2);
-    y = Math.round((this.img_h - selection_w) / 2);
-    options = {
-      onChange: this._updateCropedPreview,
-      onSelect: this._updateCropedPreview,
-      aspectRatio: 1,
-      setSelect: [x, y, x + selection_w, y + selection_w]
-    };
-    t = this;
-    this.imgToCrop.offsetHeight;
-    $(this.imgToCrop).Jcrop(options, function() {
-      return t.jcrop_api = this;
-    });
-    return t.jcrop_api.focus();
-  };
-
-  PhotoPickerCroper.prototype._updateCropedPreview = function(coords) {
-    var prev_h, prev_w, prev_x, prev_y, s;
-    prev_w = this.img_w / coords.w * this.config.target_w;
-    prev_h = this.img_h / coords.h * this.config.target_h;
-    prev_x = this.config.target_w / coords.w * coords.x;
-    prev_y = this.config.target_h / coords.h * coords.y;
-    s = this.imgPreview.style;
-    s.width = Math.round(prev_w) + 'px';
-    s.height = Math.round(prev_h) + 'px';
-    s.marginLeft = '-' + Math.round(prev_x) + 'px';
-    s.marginTop = '-' + Math.round(prev_y) + 'px';
-    return true;
-  };
-
-  PhotoPickerCroper.prototype._chooseAgain = function() {
-    this.state.currentStep = 'objectPicker';
-    this.jcrop_api.destroy();
-    this.imgToCrop.removeAttribute('style');
-    this.imgToCrop.src = '';
-    this.objectPickerCont.setAttribute('aria-hidden', false);
-    this.cropper$.setAttribute('aria-hidden', true);
-    this.body.scrollTop = this.currentPhotoScroll;
-    this.el.dataset.step = this.state.currentStep;
-    return this._setFocus();
-  };
-
-  PhotoPickerCroper.prototype._setFocus = function() {
-    if (!this.state.activePanel.setFocusIfExpected) {
-      return;
-    }
-    if (!this.state.activePanel.setFocusIfExpected()) {
-      return this.el.focus();
-    }
-  };
-
-  PhotoPickerCroper.prototype._listenTabsSelection = function() {
-    var _this = this;
-    return this.objectPickerCont.addEventListener('panelSelect', function(event) {
-      return _this._activatePanel(event.target.classList[0]);
-    });
-  };
-
-  PhotoPickerCroper.prototype._selectDefaultTab = function(panelClassName) {
-    return this.tablist.querySelector("[aria-controls=" + panelClassName + "]").click();
-  };
-
-  PhotoPickerCroper.prototype._activatePanel = function(panelClassName) {
-    this.state.activePanel = this.panelsControlers[panelClassName];
-    if (this.state.activePanel.resizeHandler) {
-      this.state.activePanel.resizeHandler();
-    }
-    return this._setFocus();
-  };
-
-  return PhotoPickerCroper;
-
-})(Modal);
 });
 
 ;require.register("views/popover_description", function(exports, require, module) {

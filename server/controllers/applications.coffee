@@ -76,42 +76,43 @@ randomString = (length) ->
 
 updateApp = (app, callback) ->
     data = {}
-    access = {}
-    manager.updateApp app, (err, result) ->
-        return callback err if err?
-        if app.state isnt "stopped"
-            data.state = "installed"
-
-        manifest = new Manifest()
-        manifest.download app, (err) =>
-            if err?
-                callback err
-            else
-                # Retrieve access
-                access.permissions = manifest.getPermissions()
-                access.slug = app.slug
-                # Retrieve application
-                data.widget = manifest.getWidget()
-                data.version = manifest.getVersion()
-                data.iconPath = manifest.getIconPath()
-                data.color = manifest.getColor()
-                data.needsUpdate = false
-                try
-                    # `icons.getIconInfos` needs info from 'data' and 'app'.
-                    infos =
-                        git: app.git
-                        name: app.name
-                        icon: app.icon
-                        iconPath: data.iconPath
-                        slug: app.slug
-                    iconInfos = icons.getIconInfos infos
-                catch err
-                    console.log err
-                    iconInfos = null
-                data.iconType = iconInfos?.extension or null
-                # Update access
-                app.updateAccess access, (err) ->
+    manifest = new Manifest()
+    manifest.download app, (err) =>
+        if err?
+            callback err
+        else
+            app.password = randomString 32
+            # Retrieve access
+            access =
+                permissions: manifest.getPermissions()
+                slug: app.slug
+                password: app.password
+            # Retrieve application
+            data.widget = manifest.getWidget()
+            data.version = manifest.getVersion()
+            data.iconPath = manifest.getIconPath()
+            data.color = manifest.getColor()
+            data.needsUpdate = false
+            try
+                # `icons.getIconInfos` needs info from 'data' and 'app'.
+                infos =
+                    git: app.git
+                    name: app.name
+                    icon: app.icon
+                    iconPath: data.iconPath
+                    slug: app.slug
+                iconInfos = icons.getIconInfos infos
+            catch err
+                console.log err
+                iconInfos = null
+            data.iconType = iconInfos?.extension or null
+            # Update access
+            app.updateAccess access, (err) ->
+                return callback err if err?
+                manager.updateApp app, (err, result) ->
                     return callback err if err?
+                    if app.state isnt "stopped"
+                        data.state = "installed"
                     # Update application
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
@@ -370,21 +371,30 @@ module.exports =
                 cb()
 
         updateApps = (app, callback) ->
-            if app.needsUpdate? and app.needsUpdate
-                switch app.state
-                    when "installed", "stopped"
-                        # Update application
-                        console.log("Update #{app.name} (#{app.state})")
-                        updateApp app, (err) ->
-                            if err?
-                                error[app.name] = err
-                                broken app, err, callback
+            manifest = new Manifest()
+            manifest.download app, (err) =>
+                if err?
+                    sendError res, message: error
+                else
+                    app.getAccess (err, access) =>
+                        if JSON.stringify(access.permissions) isnt
+                                JSON.stringify(manifest.getPermissions())
+                            return callback()
+                        if app.needsUpdate? and app.needsUpdate or
+                                app.version isnt manifest.getVersion()
+                            if app.state in ["installed", "stopped"]
+                                # Update application
+                                console.log("Update #{app.name} (#{app.state})")
+                                updateApp app, (err) ->
+                                    if err?
+                                        error[app.name] = err
+                                        broken app, err, callback
+                                    else
+                                        callback()
                             else
                                 callback()
-                    else
-                        callback()
-            else
-                callback()
+                        else
+                            callback()
 
         Application.all (err, apps) =>
             async.forEachSeries apps, updateApps, () ->

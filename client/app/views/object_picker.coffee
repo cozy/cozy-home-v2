@@ -1,9 +1,9 @@
 Modal                = require '../views/modal'
-template             = require '../templates/object-picker'
-ObjectPickerPhotoURL = require './object-picker-photoURL'
-ObjectPickerUpload   = require './object-picker-upload'
-ObjectPickerImage    = require './object-picker-image'
-ObjectPickerAlbum    = require './object-picker-album'
+template             = require '../templates/object_picker'
+ObjectPickerPhotoURL = require './object_picker_photourl'
+ObjectPickerUpload   = require './object_picker_upload'
+ObjectPickerImage    = require './object_picker_image'
+ObjectPickerAlbum    = require './object_picker_album'
 tabControler         = require 'views/tab-controler'
 
 
@@ -84,7 +84,10 @@ module.exports = class PhotoPickerCroper extends Modal
         # init tabs
         tabControler.initializeTabs(body)
         @_listenTabsSelection()
-        @_selectDefaultTab(@params.defaultTab || @imagePanel.name)
+        tab = @params.defaultTab
+        tab = @imagePanel.name if not tab? and @imagePanel?
+        tab ?= @uploadPanel.name
+        @_selectDefaultTab tab
         ####
         # init the cropper
         @imgToCrop.addEventListener('load', @_onImgToCropLoaded, false)
@@ -228,7 +231,7 @@ module.exports = class PhotoPickerCroper extends Modal
             else # @state.currentStep == 'objectPicker'
                 @.onNo()
             return
-        @state.activePanel.keyHandler(e)
+        @state.activePanel?.keyHandler(e)
 
 
 
@@ -354,7 +357,7 @@ module.exports = class PhotoPickerCroper extends Modal
 
 
     _selectDefaultTab:(panelClassName)->
-        @tablist.querySelector("[aria-controls=#{panelClassName}]").click()
+        @tablist.querySelector("[aria-controls=#{panelClassName}]")?.click()
 
 
     _activatePanel: (panelClassName)->

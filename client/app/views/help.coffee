@@ -39,9 +39,10 @@ module.exports = class exports.HelpView extends BaseView
         @alertMessageSuccess.hide()
 
         messageText = @sendMessageInput.val()
+        sendLogs = @$('#send-message-logs').is(':checked')
         if messageText.length > 0
             @sendMessageButton.spin true
-            request.post "help/message", {messageText}, (err) =>
+            request.post "help/message", {messageText, sendLogs}, (err) =>
                 @sendMessageButton.spin false
                 if err
                     @alertMessageError.show()
