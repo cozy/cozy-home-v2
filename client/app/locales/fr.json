@@ -1,4 +1,4 @@
-module.exports = {
+{
   "home": "Bureau",
   "apps": "Apps",
   "account": "Réglages",
@@ -252,4 +252,3 @@ module.exports = {
   "url of an image": "URL d'une image sur le web",
   "you have no album": "<p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Create some with the\n    <a href=\"/#applications\" target='_blank'>Photo application</a>\n    <br>\n    and use photo from your phone with the\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 }
-;
