@@ -74,7 +74,7 @@ task "lint", "Run Coffeelint", ->
         else
             console.log stdout
 
-# convert JSON lang files to JS and append them to app.js
+# convert JSON lang files to JS
 buildJsInLocales = ->
     path = require 'path'
     for file in fs.readdirSync './client/app/locales/'
@@ -84,12 +84,6 @@ buildJsInLocales = ->
         name     = file.replace '.json', '.js'
         fs.writeFileSync "./build/client/app/locales/#{name}", exported
         # add locales at the end of app.js
-        required = """
-            \n\n\n;require.register("locales/#{file.replace /\.json/, ''}", function(exports, require, module) {
-               #{exported}
-            });\n
-        """
-        fs.appendFileSync "./build/client/public/javascripts/app.js", required
     exec "rm -rf build/client/app/locales/*.json"
 
 buildJade = ->
