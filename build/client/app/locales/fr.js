@@ -226,19 +226,19 @@ module.exports = {
   "notification update application": "Mettre à jour l'application",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
-  "app broken title": 'Application cassée',
-  "app broken": 'Cette application est cassée. Vous pouvez essayer de la réinstaller: ',
+  "app broken title": "Application cassée",
+  "app broken": "Cette application est cassée. Vous pouvez essayer de la réinstaller: ",
   "reinstall broken app": "réinstallation.",
   "error git": "Nous n'arrivons pas à récuperer le code source.",
   "error github repo": "Le dépot de l'application ne semble pas disponible.",
-  "error github": 'Github semble indisponible. Vous pouvez vérifier son status sur https://status.github.com/.',
-  'error npm': "L'installation des dépendances a échouée.",
-  'error user linux': "La création de l'utilisateur pour cette application a échouée.",
-  'error start': "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application.",
+  "error github": "Github semble indisponible. Vous pouvez vérifier son status sur https://status.github.com/.",
+  "error npm": "L'installation des dépendances a échouée.",
+  "error user linux": "La création de l'utilisateur pour cette application a échouée.",
+  "error start": "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application.",
   "app msg": "Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc\nou sur IRC #cozycloud sur irc.freenode.net.",
-  'more details': "Plus de détails",
-  'noapps': {
-    'customize your cozy': "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
+  "more details": "Plus de détails",
+  "noapps": {
+    "customize your cozy": "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
   },
   "pick from files": "Choisissez une photo",
   "Crop the photo": "Recadrez l'image",
