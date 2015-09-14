@@ -1,8 +1,8 @@
 {exec} = require 'child_process'
 fs     = require 'fs'
 logger = require('printit')
-            date: false
-            prefix: 'cake'
+    date: false
+    prefix: 'cake'
 
 option '-f', '--file [FILE*]' , 'List of test files to run'
 option '-d', '--dir [DIR*]' , 'Directory of test files to run'
@@ -74,6 +74,18 @@ task "lint", "Run Coffeelint", ->
         else
             console.log stdout
 
+# convert JSON lang files to JS
+buildJsInLocales = ->
+    path = require 'path'
+    for file in fs.readdirSync './client/app/locales/'
+        filename = './client/app/locales/' + file
+        template = fs.readFileSync filename, 'utf8'
+        exported = "module.exports = #{template};\n"
+        name     = file.replace '.json', '.js'
+        fs.writeFileSync "./build/client/app/locales/#{name}", exported
+        # add locales at the end of app.js
+    exec "rm -rf build/client/app/locales/*.json"
+
 buildJade = ->
     jade = require 'jade'
     path = require 'path'
@@ -91,9 +103,12 @@ task 'build', 'Build CoffeeScript to Javascript', ->
     logger.info "Start compilation..."
     command = "coffee -cb --output build/server server && " + \
               "coffee -cb --output build/ server.coffee  && " + \
-              "coffee -cb --output build/client/app/locales client/app/locales && " + \
+              "mkdir -p build/client/app/locales/ && " + \
+              "rm -rf build/client/app/locales/* && " + \
               "rm -rf build/client/public && " + \
-              "cp -rf client/public build/client/public && " + \
+              "mkdir -p build/client/public/ && " + \
+              # does not work when brunch is not launched
+              "cp -rf client/public/* build/client/public && " + \
               "mkdir -p build/server/views/"
     exec command, (err, stdout, stderr) ->
         if err
@@ -101,6 +116,7 @@ task 'build', 'Build CoffeeScript to Javascript', ->
             process.exit 1
         else
             buildJade()
+            buildJsInLocales()
             logger.info "Compilation succeeded."
             process.exit 0
 

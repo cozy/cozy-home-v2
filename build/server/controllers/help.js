@@ -52,7 +52,9 @@ module.exports = {
             ];
           }
           return cozydb.api.sendMailFromUser(data, function(err) {
-            fs.unlink(path);
+            if (path != null) {
+              fs.unlink(path);
+            }
             if (err) {
               return next(err);
             }
