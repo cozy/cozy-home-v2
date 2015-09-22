@@ -12,7 +12,7 @@ REPOREGEX =  /// ^
     (:[0-9]{1,5})?                 #optional domain's port
     ([/\w \.-]*)*                  #path to repo
     (?:\.git)?                     #.git extension
-    (@[\da-zA-Z/-]+)?              #branch
+    (@[-\da-zA-Z\./]+)?            #branch
      $ ///
 
 module.exports = class MarketView extends BaseView
