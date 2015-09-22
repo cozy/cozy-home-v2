@@ -102,6 +102,7 @@ module.exports = class MarketView extends BaseView
 
     # pop up with application description
     showDescription: (appWidget) ->
+
         @popover = new PopoverDescriptionView
             model: appWidget.app
             confirm: (application) =>
@@ -114,6 +115,11 @@ module.exports = class MarketView extends BaseView
                     @runInstallation appWidget.app
                     , =>
                         console.log 'application installed', appWidget.app
+                        Backbone.Mediator.pub 'app-state:changed',
+                            status: 'started'
+                            updated: false
+                            slug: appWidget.app.get 'slug'
+
                     , =>
                         @waitApplication appWidget, false
                 else
@@ -122,6 +128,7 @@ module.exports = class MarketView extends BaseView
             cancel: (application) =>
                 @popover.hide()
                 @appList.show()
+
         @$el.append @popover.$el
         @popover.show()
 
