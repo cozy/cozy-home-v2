@@ -9472,8 +9472,13 @@ module.exports = HomeView = (function(_super) {
     }
   };
 
-  /* Configuration*/
-
+  HomeView.prototype.onAppStateChanged = function(appState) {
+    var frame, _ref;
+    if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
+      frame = this.getAppFrame(appState.slug);
+      return frame.remove();
+    }
+  };
 
   HomeView.prototype.forceIframeRendering = function() {
     var _this = this;
@@ -9485,14 +9490,6 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.getAppFrame = function(slug) {
     return this.$("#" + slug + "-frame");
-  };
-
-  HomeView.prototype.onAppStateChanged = function(appState) {
-    var frame, _ref;
-    if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
-      frame = this.getAppFrame(appState.slug);
-      return frame.remove();
-    }
   };
 
   return HomeView;
@@ -9520,7 +9517,7 @@ Application = require('models/application');
 
 slugify = require('helpers/slugify');
 
-REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[\da-zA-Z\/-]+)?$/;
+REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[-\da-zA-Z\.\/]+)?$/;
 
 module.exports = MarketView = (function(_super) {
   __extends(MarketView, _super);
