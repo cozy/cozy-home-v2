@@ -67,7 +67,7 @@ Apps icons by [Elegant Themes](http://www.elegantthemes.com/blog/freebie-of-the-
 ## Contribute with Transifex
 
 Transifex can be used the same way as git. It can push or pull translations. The config file in the .tx repository configure the way Transifex is working : it will get the json files from the client/app/locales repository.
-If you want to learn more about how to use this tool, I'll invite you to check [this](docs.transifex.com/tutorials/) tutorial.
+If you want to learn more about how to use this tool, I'll invite you to check [this](http://docs.transifex.com/introduction/) tutorial.
 
 ## License
 
