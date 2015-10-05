@@ -2,26 +2,35 @@
 @import '_base'
 @import '_help'
 
-@import '_modal'
-@import '_object-picker'
+@import 'base/_colors'
+@import 'base/_grid'
+@import 'base/_alerts'
+@import 'base/_buttons'
+@import 'base/_form'
+
+@import 'components/_modal'
+@import 'components/_object-picker'
+
+$page-background
+    min-height calc(100vh - 36px)
+    background-color grey-01
+
 
 
 *
     outline none
 
 .home-body
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items stretch
+    overflow hidden
+    box-sizing border-box
     width 100%
     height 100%
     padding 36px 0 0 0
     margin 0
-    background bgcolor
-    background #FDFDFD
-    overflow hidden
-    box-sizing border-box
-    display: flex
-    flex-direction: column
-    justify-content: flex-start
-    align-items: stretch
 
 #app-frames
     height 100%
@@ -31,36 +40,12 @@ body
 
 .navbar
     position fixed
-    background darkgrey
+    background grey-08
     z-index 1500
     top 0
     width 100%
     height 36px
     padding 0
-
-
-.back-button
-    margin-left 15px
-    margin-top .8rem
-
-    font-family 'Maven Pro', sans-serif
-    font-weight normal
-    font-size .8em
-    text-transform lowercase
-
-    color white
-    opacity 0.5
-    transition opacity 0.2s ease
-
-    &::before
-        margin-right .5em
-        vertical-align middle
-        font-size 2rem
-
-    &:hover
-        color white
-        opacity 1
-
 
 
 /* content */
@@ -89,12 +74,11 @@ body
 
 
 .platform-section
-    min-height 100%
+    @extend $page-background
     border-radius 0
     border-right 1px solid #DDD
     border-bottom 1px solid #DDD
     padding 20px
-    background rgba(255, 255, 255, 0.95)
 
     .buttons
         button.btn
@@ -112,7 +96,6 @@ body
 #menu-applications-toggle
     height 36px
     color white
-    font-family 'Maven Pro', sans-serif
     margin auto
     text-transform capitalize
     opacity 1
@@ -522,10 +505,8 @@ body
         font-size 24px
 
     #account-form
-        background rgba(255, 255, 255, 0.95)
+        @extend $page-background
         padding 20px
-        border-right 1px solid #DDD
-        border-bottom 1px solid #DDD
 
     .account-field
         display flex
@@ -603,8 +584,8 @@ body
         text-align left
 
     .help-section
-        height 100%
-        background rgba(255, 255, 255, 0.95)
+        @extend $page-background
+
         .w50
             padding 30px
 
@@ -811,7 +792,6 @@ body
 
 .title-app a.subtitle
     display inline-block
-    font-family 'Maven Pro', sans-serif
     font-size 15px
 
 .sys-infos
@@ -957,7 +937,6 @@ body
         width 60px
     .change-layout a
         color black
-        font-family 'Maven Pro', sans-serif
         font-weight normal
         &:hover
             color orange

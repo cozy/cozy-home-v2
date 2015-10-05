@@ -1,0 +1,58 @@
+button::-moz-focus-inner
+    border 0
+
+.btn
+    margin 0
+    padding 5px
+
+    background blue
+    border 1px blue - 20%
+    cursor pointer
+
+    font-family 'Source Sans Pro', sans-serif
+    color white
+
+    transition all 0.3s
+
+    &.btn-green
+        background-color green
+
+    &:hover
+        background orange
+        border-color 1px solid orange
+
+        color white
+
+    &:active
+        box-shadow 0 0
+        background orange - 10%
+
+
+.light-btn
+    margin 0
+    padding 5px
+    margin-right 5px
+
+    background transparent
+
+    font-family 'Source Sans Pro', sans-serif
+    color blue
+
+
+.back-button
+    margin-left 15px
+    margin-top .8rem
+
+    font-family 'Source Sans Pro', sans-serif
+    text-transform uppercase
+    color grey-05
+
+    transition color 0.2s ease
+
+    &::before
+        vertical-align middle
+        margin-right .5em
+        font-size 2rem
+
+    &:hover
+        color grey-02
