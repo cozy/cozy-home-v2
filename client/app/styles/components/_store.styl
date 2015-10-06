@@ -1,0 +1,207 @@
+// MARKET PAGE
+
+#your-app
+    box-sizing border-box
+    width 99%
+
+    p
+        margin-bottom 0
+
+    .text
+        padding 20px
+
+
+    .add-app-field
+        display flex
+        justify-content flex-end
+        align-items stretch
+        max-width 800px
+
+        #app-git-field
+            text-align left
+            box-sizing border-box
+            width 100%
+            font-size 24px
+            padding 10px
+
+        .btn
+            width 60px
+
+    .error
+        box-sizing border-box
+        width 100%
+        max-width 615px
+        margin-top 10px
+        font-size 0.8em
+        padding 5px
+
+#app-market-list
+    box-sizing border-box
+    margin-top 20px
+
+    .app-install-button
+        button
+        div
+            display inline
+
+        .app-text
+            padding 10px
+            word-wrap normal
+            overflow-x hidden
+
+        .app-text p
+            margin-right 20px
+
+
+#market-view
+    height 100%
+
+#market-applications-list
+    display         flex
+    flex-wrap       wrap
+    justify-content space-between
+
+#market-view #no-app-message
+.cozy-app
+    box-sizing border-box
+    width 49.2%
+    height 11em
+    margin-top 1em
+    border-radius 4px
+    cursor pointer
+    text-align left
+    transition background 0.3s ease-out
+
+    &.install
+        .app-text
+            h3, span, p
+                opacity 0.4
+
+        .installing-label
+            display inline
+
+    .installing-label
+        display none
+        margin-bottom 10px
+
+    h3
+        margin-top     2.5rem
+        margin-bottom  0
+        padding-bottom 0
+        font-size      1.4em
+        line-height    3.4rem
+
+        span.beta
+            margin-left      0.8em
+            padding          0.2em 0.5em
+            background-color red
+            border-radius    10em
+            vertical-align   middle
+            color            #fff
+            font-size        0.5em
+            font-style       italic
+            font-weight      normal
+
+    .comment
+        font-size  1em
+        font-style italic
+        color      grey-05
+
+    p.par2
+        margin-top 0.25em
+
+    .btn
+        float right
+        margin 10px 10px 10px 10px
+
+    .app-img
+        text-align center
+        vertical-align center
+        box-sizing border-box
+        width 180px
+        height 180px
+        padding 25px 20px 10px 25px
+
+        img.svg
+            border-radius 200px
+            display block
+            background-position center
+            width 130px
+            height 130px
+            margin 0
+
+    .img-btn
+        width 24px
+        opacity 0.3
+        margin 10px 5px
+        display none
+
+    .img-btn:hover
+        opacity 1
+        cursor pointer
+
+.cozy-app
+    background white
+    border 1px solid grey-03
+
+    &:hover
+        background grey-02
+
+        .right
+            display inline
+
+        .img-btn
+            display inline
+
+    &.official
+        background grey-02
+
+        &:hover
+            background grey-03
+
+#no-app-message
+    margin auto
+    margin-top 30px
+    width 80%
+    background white
+    border-bottom-left-radius 5px
+    border-bottom-right-radius 5px
+    padding-bottom 20px
+
+    #start-title
+        padding 20px
+        font-size 28px
+        margin-bottom 30px
+
+        img
+            float left
+
+    p
+        padding-left 20px
+        padding-right 20px
+
+    img
+        width 32px
+        margin-right 10px
+
+    img.logo
+        width auto
+
+    a
+        border-bottom 0
+
+
+// Related to tutorial
+// not sure if it is still used
+.darkbg
+    background grey-08
+    color white
+
+.section-title
+    background grey-08
+    color white
+    padding 5px 20px
+    position absolute
+    top 0
+    margin auto
+

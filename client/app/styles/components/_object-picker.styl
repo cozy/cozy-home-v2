@@ -23,7 +23,7 @@
         background-color white
 
     .fp-nav-tabs
-        background-color #ddd
+        background-color grey-02
         display          flex
         // force webkit to not shrink tabnav
         flex             0 0
@@ -37,7 +37,7 @@
 
     [role=tab]
         padding     0.7em
-        color       #3F3F3F
+        color       grey-07
         cursor      pointer
         text-align  center
         line-height 35px
@@ -173,7 +173,7 @@
         p
             font-size   1.3em
             font-weight bold
-            color       #B5ADAD
+            color       grey-04
             color       white
             line-height 1em
             text-align  center
@@ -298,15 +298,15 @@
 
             &:hover
                 cursor           pointer
-                background-color lightgreyedblue
+                background-color grey-01
                 z-index          0
 
             &[aria-selected=true]
-                background-color lightgreyblue
+                background-color grey-01
                 z-index 1
 
                 .label
-                    color darkgrey
+                    color grey-08
 
                 &::after
                     background-color blue
@@ -342,7 +342,7 @@
         position         absolute
         opacity          1
         border           0
-        background-color #F5F5F5
+        background-color grey-01
 
         &[aria-selected=true]::after
             content    ''

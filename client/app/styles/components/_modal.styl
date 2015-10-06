@@ -1,12 +1,163 @@
+// MODAL
+
+.application
+    .permissionsLine
+        p
+            text-shadow none
+            color red
+
+.md-open
+    overflow hidden
+
+.md-modal
+    position fixed
+    top 12%
+    left 50%
+    width 50%
+    max-width 630px
+    min-width 320px
+    height auto
+    z-index 2000
+    visibility hidden
+    backface-visibility hidden
+    transform translateX(-50%)
+
+
+.md-modal .md-content
+    transform translateY(33%)
+    opacity 0
+    transition all 3s
+    background white
+    position relative
+    margin 0 auto
+    transition all 0.3s
+
+.md-show.md-content
+    transform translateY(0)
+    opacity 1
+    transition all 0.3s
+
+.md-overlay
+    position fixed
+    width 100%
+    height 100%
+    visibility hidden
+    top 0
+    left 0
+    z-index 1000
+    opacity 0
+    background rgba(grey-08,0.8)
+    transition all 0.6s
+    cursor pointer
+
+.md-header
+    padding 10px 20px
+    background grey-05
+
+    h3
+        color white
+        margin-bottom 0px
+        margin-top 10px
+
+    img
+        width 32px
+
+    p
+        margin-top 0px
+        font-size 18px
+        color white
+
+    a
+        color white
+        opacity 0.7
+        transition all 0.3s
+        line-height 32px
+        font-size 24px
+
+        &:hover
+            color white
+            opacity 1
+
+    .repo-stars
+        right 60px
+        padding-top 3px
+        position absolute
+
+.noncozy-warning
+    margin-top 20px
+    padding 5px 10px
+    border-radius 5px
+    background red
+
+    .fa
+        float left
+        font-size 28px
+        margin 5px 10px 5px 0
+        color white
+
+    span
+    a
+        font-size 1em
+        line-height 1.25em
+        color white
+
+
+.md-body
+    background white
+    padding 20px
+    color grey-08
+    overflow-y auto
+
+    &.loading
+        text-align center
+
+    &.error
+        color red
+
+    .spinner
+        display inline-block
+
+    p
+        margin-top 0
+
+    h4
+        margin-bottom 20px
+        font-size 20px
+
+.md-footer
+    background white
+    padding 10px
+
+
+.md-show
+    opacity 1
+    visibility visible
+
+#tutorial-view
+    div.question
+        display none
+
+        &.active
+            display block
+
+        button
+            padding 10px
+            font-size 16px
+
+    #end-screen
+        ul
+            margin 10px 150px
+
+
+// MODAL IMAGE
 .modalCY-backdrop
     position         fixed
     top              -50px
     right            -50px
     bottom           -50px
     left             -50px
-    background-color #000000
+    background-color rgba(grey-08,0.8)
     z-index          100000
-    opacity          0.85
 
 .fade
     opacity 0
@@ -36,11 +187,11 @@
     background-color white
 
     .modalCY-header
-        flex-shrink             0
-        background-color        #333
-        color                   #fff
-        font-size               1.4em
-        padding                 20px
+        flex-shrink      0
+        background-color grey-05
+        color            white
+        font-size        1.4em
+        padding          20px
 
         p
             margin 0
@@ -49,7 +200,7 @@
             padding    .35em 0
             border     0
             font-size  .8em
-            color      #fff
+            color      white
             background transparent
             opacity    .35
             cursor     pointer
@@ -65,8 +216,7 @@
 
     .modalCY-footer
         flex-shrink      0
-        box-shadow       inset 0 1px 0 #ffffff
-        background-color #f5f5f5
+        background-color grey-01
         text-align       right
         padding          14px 15px 15px
 

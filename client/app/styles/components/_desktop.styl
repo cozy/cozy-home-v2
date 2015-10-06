@@ -1,0 +1,104 @@
+// Desktop view
+
+#app-list
+    margin auto
+    max-width 720px
+    padding-bottom 20px
+
+    .preview-holder
+        padding 10px
+        display block
+        list-style-type none
+        background-color orange
+
+    section
+        background rgba(255, 255, 255, 0.8)
+        border-radius 15px
+        display none
+        padding 0px 12px 0px
+
+        &.show
+            display block
+
+        h2
+            font-size 16px
+            text-transform uppercase
+            color grey-08
+            background-color transparent
+            padding 20px 10px 0px 18px
+            margin-top 20px
+            margin-bottom 0px
+
+
+.application
+    cursor pointer
+    padding 10px
+
+    .application-inner
+        padding-top 5px
+        border-radius 200px
+        padding 20px 10px
+
+        .vertical-aligner
+            height 100%
+            width 100%
+
+        img.icon
+            height auto
+            display block
+            padding 20px
+            margin 0px auto 2% auto
+            text-align center
+            border-radius 200px
+            margin-bottom 10px
+            width 100%
+            transition background 0.2s ease
+
+        img.spinner
+            border-radius 200px
+            display block
+            background-position center
+            width 100%
+            margin-bottom 10px
+            margin-top 0px
+
+        p
+            margin 0
+            font-family 'Source Sans Pro', sans-serif
+            color grey-08
+
+        .app-title
+            height 20%
+
+            text-align center
+            font-family 'Source Sans Pro', sans-serif
+            text-transform uppercase
+            font-size 15px
+            color grey-08
+            text-decoration none
+            margin-top 2px
+
+        .state-label
+            font-size 18px
+            font-weight normal
+            color red
+
+    &:active
+        box-shadow none
+
+    &.broken
+        .broken-notifier
+            display block
+
+// app icons
+.platform-app
+    .application-inner
+        img
+            padding 25px
+            border-radius 100px
+            background #338CF7 + 20%
+
+        &:hover
+            img
+                background #338CF7 + 40%
+                border-radius 100px
