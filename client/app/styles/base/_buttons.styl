@@ -3,14 +3,17 @@ button::-moz-focus-inner
 
 .btn
     margin 0
-    padding 5px
+    padding (8/16)em (12/16)em
 
     background blue
     border 1px blue - 20%
+    border-radius 2px
     cursor pointer
 
     font-family 'Source Sans Pro', sans-serif
+    font-size 1em
     color white
+    text-transform uppercase
 
     transition all 0.3s
 
@@ -29,14 +32,15 @@ button::-moz-focus-inner
 
 
 .light-btn
-    margin 0
-    padding 5px
     margin-right 5px
 
     background transparent
 
-    font-family 'Source Sans Pro', sans-serif
     color blue
+
+    &:hover
+        background-color grey-01
+        color blue
 
 
 .back-button
@@ -49,13 +53,11 @@ button::-moz-focus-inner
 
     transition color 0.2s ease
 
-    &::before
-        vertical-align middle
-        margin-right .5em
-        font-size 2rem
-
     &:hover
         color grey-02
+
+    span
+        margin-left 0.5em
 
 button.btn
     display inline-flex
