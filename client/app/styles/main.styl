@@ -19,9 +19,6 @@
 
 
 
-*
-    outline none
-
 .home-body
     display flex
     flex-direction column
@@ -37,9 +34,6 @@
 #app-frames
     height 100%
 
-body
-    box-sizing border-box
-
 .navbar
     position fixed
     background grey-08
@@ -48,9 +42,6 @@ body
     width 100%
     height 36px
     padding 0
-
-
-/* content */
 
 #content
     height 100%
@@ -61,7 +52,6 @@ body
     background-attachment fixed
     background-size cover
 
-
 #home-content
     display flex
     min-height 100%
@@ -69,57 +59,17 @@ body
     section
         flex 1
 
+// related to store, status, settings and help pages
 .platform-section
 #help-view .help-section
 #account-view #account-form
     min-height calc(100vh - 36px)
-    padding 20px
+    padding (30/16)em
     background-color grey-01
 
 
-
-// STORE + STATUS
-
-.platform-section
-    border-radius 0
-    border-right 1px solid #DDD
-    border-bottom 1px solid #DDD
-
-    .buttons
-        button.btn
-            display block
-        .fa
-            width 10px
-            display inline
-
-        span
-            display inline
-            width auto
-
-
-
-
-
-
-
-#home-view
-    overflow hidden
-    background grey-01
-    width 100%
-    height 100%
-    padding 0
-    margin 0
-
-.app-introduction
-    margin-top 60px
-    margin-bottom 20px
-
-
-
-
-
 // Status - Config device
-
+// ========================================================
 .config-device
     padding 0
     margin-bottom 5px
@@ -147,35 +97,33 @@ body
         .btn
             font-weight normal
 
-.config-device:hover
-    .dataLine
-        text-shadow none
-    .docTypeLine
-        text-shadow none
+    &:hover
+        .dataLine
+            text-shadow none
+
+        .docTypeLine
+            text-shadow none
 
 #config-applications-view
     .w50
         padding 20px
 
-    .change-layout img
-        margin-left 5px
-        margin-bottom 7px
-        width 60px
+    .change-layout
+        img
+            margin-left 5px
+            margin-bottom 7px
+            width 60px
 
-    .change-layout a
-        color black
-        font-weight normal
+        a
+            color grey-08
+            font-weight normal
 
-        &:hover
-            color orange
+            &:hover
+                color blue
 
 
 // Responsive
-
-@media (min-width 1600px)
-    #market-view .cozy-app
-        width 33%
-
+// ========================================================
 @media (max-width 1200px)
     .application .application-inner
         padding 0px 10px
@@ -189,11 +137,6 @@ body
 
         .personalisation
             margin-bottom 30px
-
-
-@media (max-width 1000px)
-    #market-view .cozy-app
-        width 100%
 
 
 @media (max-width 850px)
@@ -290,18 +233,8 @@ body
                 height 20px
 
     #market-view
-        .app-img
-            padding 20px 0
-
-            img
-                margin 0
-
         h3
             margin-bottom 10px
-
-        .cozy-app
-            width 100%
-            height 180px
 
     #notifications
         .notification
@@ -370,14 +303,6 @@ body
             img
                 display none
 
-        #market-application-list
-            .cozy-app
-                height 300px
-
-        .app-img
-            img
-                padding 10px
-
     #help-view
         p.help-text
             font-size 20px
@@ -432,27 +357,11 @@ body
                 font-size 16px
 
         .cozy-app
-            height auto
-            margin-top 10px
-            padding 20px 10px
-
             h3
                 font-size 26px
 
         .app-text
             padding 10px
-
-        .app-img
-            display block
-            padding 0
-            width 100%
-            height 120px
-            text-align left
-
-            img
-                margin 10px 0 0 10px
-                width 100px
-                height 100px
 
     #notifications
     #notifications-buttons
