@@ -1,4 +1,4 @@
-module.exports = {
+{
   "home": "Home",
   "apps": "Apps",
   "account": "Account",
@@ -175,4 +175,3 @@ module.exports = {
     "customize your cozy": "Sie können außerdem <a href=\"%{account}\">zu den Einstellungen gehen</a> um Ihr Cozy anzupassen,\noder <a href=\"%{appstore}\">den App Store besuchen</a> um Ihre erste App zu installieren."
   }
 }
-;

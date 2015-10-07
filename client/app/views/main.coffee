@@ -22,6 +22,7 @@ module.exports = class HomeView extends BaseView
 
     subscriptions:
         'backgroundChanged': 'changeBackground'
+        'app-state:changed': 'onAppStateChanged'
 
 
     constructor: ->
@@ -37,6 +38,9 @@ module.exports = class HomeView extends BaseView
         super
 
 
+    # Initialize all views, register main widgets and ensure that currently
+    # displayed iframe is rerendered to be rendered properly after everything
+    # is loaded.
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps, @market
@@ -89,6 +93,7 @@ module.exports = class HomeView extends BaseView
             error: =>
                 alert 'Server error occured, logout failed.'
 
+
     displayView: (view, title) =>
 
         if title?
@@ -130,24 +135,30 @@ module.exports = class HomeView extends BaseView
         else
             displayView()
 
+
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
         window.document.title = t "cozy home title"
 
+
     displayApplicationsListEdit: =>
         @displayView @applicationListView, t "cozy home title"
+
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView, t "cozy app store title"
 
+
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView, t 'cozy account title'
 
+
     displayHelp: =>
         @displayView @helpView, t "cozy help title"
+
 
     displayConfigApplications: =>
         @displayView @configApplications, t "cozy applications title"
@@ -262,6 +273,7 @@ module.exports = class HomeView extends BaseView
         else
             onLoad()
 
+
     createApplicationIframe: (slug, hash="") ->
 
         # prepends '#' only if there is an actual hash
@@ -284,6 +296,7 @@ module.exports = class HomeView extends BaseView
 
         return iframe$
 
+
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             currentHash = location.hash.substring "#apps/#{slug}/".length
@@ -294,7 +307,14 @@ module.exports = class HomeView extends BaseView
             # breaks the iframe layout.
             @forceIframeRendering()
 
-    ### Configuration ###
+
+    # If an application is broken, removed or updating, its corresponding
+    # iframe is removed.
+    onAppStateChanged: (appState) ->
+        if appState.status in ['updating', 'broken', 'uninstalled']
+            frame = @getAppFrame appState.slug
+            frame.remove()
+
 
     # Ugly trick for redrawing iframes. It's required because sometimes the
     # browser breaks the Iframe layout (I didn't find any reason for that).
@@ -303,4 +323,9 @@ module.exports = class HomeView extends BaseView
         setTimeout =>
             @frames.find('iframe').height "100%"
         , 10
+
+
+    # Returns app iframe corresponding for given app slug.
+    getAppFrame: (slug) ->
+        return @$("##{slug}-frame")
 

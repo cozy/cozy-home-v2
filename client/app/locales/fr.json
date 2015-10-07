@@ -1,4 +1,4 @@
-module.exports = {
+{
   "home": "Bureau",
   "apps": "Apps",
   "account": "Réglages",
@@ -214,7 +214,7 @@ module.exports = {
   "leave google description": "Une application pour importer vos données de votre compte Google.",
   "mstsc.js description": "Depuis votre Cozy, prenez contrôle de votre bureau Windows à distance à travers le protocole RDP.",
   "hastebin description": "Un simple pastebin, un outil pour partager facilement vos textes.",
-  "polybios description": "Gérez vos clés PGP depuis votre navigateur.",
+  "polybios description": "Gérer vos clés PGP depuis votre navigateur.",
   "reminder title email": "[Cozy-Calendar] Rappel",
   "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
   "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDetails: %{details}",
@@ -252,4 +252,3 @@ module.exports = {
   "url of an image": "URL d'une image sur le web",
   "you have no album": "<p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Create some with the\n    <a href=\"/#applications\" target='_blank'>Photo application</a>\n    <br>\n    and use photo from your phone with the\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 }
-;

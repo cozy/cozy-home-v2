@@ -13,7 +13,7 @@ module.exports = class ConfigApplicationsView extends BaseView
     template: require 'templates/config_applications'
 
     subscriptions:
-        'app-state-changed': 'onAppStateChanged'
+        'app-state:changed': 'onAppStateChanged'
 
     events:
         "click .update-all"        : "onUpdateClicked"

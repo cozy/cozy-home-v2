@@ -2549,26 +2549,44 @@ body {
 #market-view {
   height: 100%;
 }
+#market-applications-list {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: multiple;
+  -o-box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -o-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
 #market-view #no-app-message,
 .cozy-app {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  float: left;
-  width: 49%;
-  height: 200px;
+  width: 49.2%;
+  height: 11em;
+  margin-top: 1em;
   background: #f7f4f0;
-  margin-right: 0.5%;
-  margin-top: 0.5%;
-  cursor: pointer;
-  -webkit-transition: background 0.3s;
-  -moz-transition: background 0.3s;
-  -o-transition: background 0.3s;
-  -ms-transition: background 0.3s;
-  transition: background 0.3s;
-  text-align: left;
   border-bottom: 1px solid #e6ddd0;
   border-right: 1px solid #e6ddd0;
+  cursor: pointer;
+  text-align: left;
+  -webkit-transition: background 0.3s ease-out;
+  -moz-transition: background 0.3s ease-out;
+  -o-transition: background 0.3s ease-out;
+  -ms-transition: background 0.3s ease-out;
+  transition: background 0.3s ease-out;
 }
 #market-view #no-app-message.install .app-text h3,
 .cozy-app.install .app-text h3,
@@ -2591,27 +2609,34 @@ body {
 }
 #market-view #no-app-message h3,
 .cozy-app h3 {
-  margin-top: 30px;
+  margin-top: 2.5rem;
   margin-bottom: 0;
   padding-bottom: 0;
-  line-height: 30px;
+  font-size: 1.4em;
+  line-height: 3.4rem;
 }
 #market-view #no-app-message h3 span.beta,
 .cozy-app h3 span.beta {
-  margin-left: 20px;
+  margin-left: 0.8em;
+  padding: 0.2em 0.5em;
   background-color: #ea202d;
+  -webkit-border-radius: 10em;
+  border-radius: 10em;
+  vertical-align: middle;
   color: #fff;
-  font-size: 0.6em;
+  font-size: 0.5em;
   font-style: italic;
-  -webkit-border-radius: 7px;
-  border-radius: 7px;
-  margin-top: 10px;
-  padding: 5px 15px;
-  vertical-align: top;
+  font-weight: normal;
 }
 #market-view #no-app-message .comment,
 .cozy-app .comment {
-  font-size: 14px;
+  font-size: 1em;
+  font-style: italic;
+  color: #999;
+}
+#market-view #no-app-message p.par2,
+.cozy-app p.par2 {
+  margin-top: 0.25em;
 }
 #market-view #no-app-message .btn,
 .cozy-app .btn {
@@ -2628,7 +2653,6 @@ body {
   width: 180px;
   height: 180px;
   padding: 25px 20px 10px 25px;
-  margin-right: 10px;
 }
 #market-view #no-app-message .app-img img.svg,
 .cozy-app .app-img img.svg {
@@ -2638,6 +2662,7 @@ body {
   background-position: center;
   width: 130px;
   height: 130px;
+  margin: 0;
 }
 #market-view #no-app-message .img-btn,
 .cozy-app .img-btn {
@@ -2656,7 +2681,7 @@ body {
   cursor: pointer;
 }
 .cozy-app:hover {
-  background: #e6ddd0;
+  background: #f0f4f7;
 }
 .cozy-app:hover .right {
   display: inline;
@@ -2666,6 +2691,7 @@ body {
 }
 .cozy-app.official {
   background: #f0f4f7;
+  border-color: #d0dde6;
 }
 .cozy-app.official:hover {
   background: #e0e8ef;
@@ -3036,12 +3062,14 @@ body {
 #tutorial-view #end-screen ul {
   margin: 10px 150px;
 }
+@media (min-width: 1600px) {
+  #market-view .cozy-app {
+    width: 33%;
+  }
+}
 @media (max-width: 1200px) {
   .application .application-inner {
     padding: 0px 10px;
-  }
-  #market-view .cozy-app {
-    width: 100%;
   }
   #help-view .w50,
   #account-view .w50,
@@ -3053,6 +3081,11 @@ body {
   #account-view .personalisation,
   #config-applications-view .personalisation {
     margin-bottom: 30px;
+  }
+}
+@media (max-width: 1000px) {
+  #market-view .cozy-app {
+    width: 100%;
   }
 }
 @media (max-width: 850px) {
