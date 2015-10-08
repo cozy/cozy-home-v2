@@ -2,5 +2,5 @@ a.dismiss &times;
 div.notification-text #{model.text}
 div.notification-date #{model.date}
 if model.actionText !== undefined && model.actionText !== null
-    a.doaction.btn= t(model.actionText)
+    a.doaction.btn.grey= t(model.actionText)
 

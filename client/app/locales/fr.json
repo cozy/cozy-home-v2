@@ -226,7 +226,7 @@
   "installation message failure": "Échec de l'installation de %{appName}.",
   "notification open application": "Ouvrir l'application",
   "notification update stack": "Mettre à jour la plateforme",
-  "notification update application": "Mettre à jour l'application",
+  "notification update application": "Mettre à jour",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
   "app broken title": "Application cassée",

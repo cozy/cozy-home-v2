@@ -1,204 +1,135 @@
-#menu-applications-toggle
-    height 36px
-    color white
-    margin auto
-    text-transform capitalize
-    opacity 1
+// NOTIFICATION BUTTON
+// ========================================================
+#notifications-container
+    position relative
+    padding  0
 
-    span
-        font-size 22px
-        padding-top 5px
+    // hide the right side menu
+    #clickcatcher
+        z-index 10
+        position fixed
+        top 36px
+        left 0
+        width calc(100vw - 26em)
+        height 100%
+        background-color transparent
 
-    #current-application
-        cursor default
-        font-size 18px
-        opacity 0.8
-        color white
-        font-weight normal
-        text-transform uppercase
-        line-height 34px
+.btn-navbar
+    display      block
+    padding      0 (10/16)em
 
-#menu-applications-container
-    margin auto
-    max-width 300px
-    text-align center
-    height 30px
+    cursor       pointer
+    line-height  (36/16)em
 
-#notifications-toggle
-    transition all 0.3s
-    display block
-    height 36px
-    line-height 34px
-    width auto
-    cursor pointer
-    margin 0 5px 0 0
-    padding 0 10px
-    width 36px
-    height 36px
+    transition   all 0.3s
+
+    &.sign-out
+        margin-right (5/16)em
+        // sign out icon a bit bigger
+        font-size    (20/16)em
+        line-height  (36/20)em
 
     i
         color grey-05
         transition color 0.2s ease
 
-    &:hover
-        i
-            color grey-02
+    &:hover i
+        color grey-01
+        transition none
 
-    #notifications-counter
-        position absolute
-        top 3px
-        right 3px
+#notifications-counter
+    position absolute
+    top 3px
+    right -2px
+    height 20px
+    width 20px
 
-        height 20px
-        width 20px
-        border-radius 50%
-        line-height 17px
-        font-size 15px
+    border-radius 50%
+    background red
+    border 2px solid grey-08
 
-        text-align center
-        background red
-        color #fff
-        border 2px solid grey-08
-        transition background 0.2s ease
+    font-size (14/16)em
+    font-weight bold
+    line-height 1em
+    color white
+    text-align center
 
-        &:empty
-            padding 0
+    transition background 0.2s ease
 
-
-    .backcolor
-        position absolute
-        top 15px
-        left 12px
-        border-radius 10px
-        z-index -1
-        display block
-        background-color white
-        width 20px
-        height 20px
-        opacity 0
-        transition all 0.3s
-
-
-#notifications-toggle.highlight
-    img
-        opacity 1
+    &:empty
+        padding 0
 
 
 
-#notifications-container
-    position relative
-    padding 0
-
-    a
-        color blue
-
-    .badge
-        padding 1px 2px 1px 3px
-        position absolute
-        top 2px
-        right 2px
-
-    .badge:empty
-        display none
-
-    #clickcatcher
-        position fixed
-        width 100%
-        height 100%
-        background-color red
-        opacity 0.001
-        top 40px
-        left -420px
-        z-index 10
-
+// SIDE CONTENT
+// ========================================================
+.right-menu
+    z-index          200
+    position         fixed
+    top              36px
+    right            0
+    bottom           0
+    width            26em
+    background-color rgba(grey-08, .95)
+    box-shadow       -2px 0 20px rgba(grey-07, .5)
 
 #notifications
-    position fixed
-    right 0
-    top 36px
-    bottom 100px
-    padding 5px
-    width 26em
-    z-index 50
-    color white
+    color      white
     text-align left
-    background-color rgba(grey-08, .95)
-    overflow-y auto
 
     ul
-        margin 0
-        padding 10px
+        margin  0
+        padding 0 (20/16)em
 
         li
-            padding 10px 0
-            border-bottom 1px solid grey-07
+            padding         (10/16)em 0
+            border-bottom   1px solid grey-07
             list-style-type none
-            line-height 1.25em
+            line-height     1.25em
 
-    .notification:hover
-        a.dismiss
-            cursor pointer
-            display block
+            &:last-child
+                border 0
 
     .notification
         .notification-date
-            color grey-03
-            font-size 12px
+            color      grey-04
+            font-size  (13/16)em
+            font-style italic
 
         a.dismiss
-            display none
-            float right
-            line-height 20px
-            padding 5px
-            color white
-
-        a.doaction
-            display none
-            color white
-            cursor pointer
-            margin-top 5px
-            font-size 12px
-            padding 3px
-            background blue
-            text-align center
+            cursor    pointer
+            float     right
+            color     grey-06
+            font-size (32/16)em
 
             &:hover
-                background blue - 20%
+                color white
 
-        &:hover
-            a.doaction
-                display block
+        a.doaction
+            display      block
+            margin-top   (5/16)em
+            padding      (4/12)em (8/12)em
+            font-size    (12/16)em
+            text-align   center
 
 
+// NOTIFICATION BUTTONS
+// ========================================================
 #notifications-buttons
-    position fixed
-    bottom 0
-    right 0
-    height 100px
-    width 26em
-    padding 10px
-    z-index 50
-    overflow-y none
-    background-color rgba(grey-08, .95)
+    padding (15/16)em (20/16)em (10/16)em
 
     .btn
         display block
-        margin-bottom 10px
-        text-align center
-        cursor pointer
-        font-size 16px
-        padding 5px
         width 100%
-
-        &:last-child
-            margin-bottom 0
+        transition-delay 0
 
         &:hover
-            background-color blue - 20%
+            transition-delay 0.2s
+
 
 
 @media screen and (-webkit-min-device-pixel-ratio: 0)
 
     #menu-applications-toggle
         span
-            padding-top 10px
+            padding-top (10/16)em

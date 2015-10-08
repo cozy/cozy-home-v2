@@ -134,7 +134,7 @@
   "error update uninstRlled app": "You can't update an app that is not installed.",
   "notification open application": "Open application",
   "notification update stack": "Update the platform",
-  "notification update application": "Update application",
+  "notification update application": "Update now",
   "broken": "broken",
   "start this app": "Start this app",
   "stopped": "stopped",
