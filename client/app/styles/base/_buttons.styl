@@ -10,7 +10,7 @@ button
 
     background blue
     border 1px blue - 20%
-    border-radius 2px
+    border-radius 3px
     cursor pointer
 
     font-family 'Source Sans Pro', sans-serif
@@ -34,10 +34,11 @@ button
         background-color green
 
     &.grey
-        background-color grey-04
+        background-color grey-05
+        color grey-08
 
         &:hover
-            background-color grey-05
+            background-color grey-06
 
     &.transparent-grey
         background transparent
@@ -57,6 +58,19 @@ button
             border-color blue
             color white
 
+    &.outline-darkgrey
+        background-color transparent
+        border 2px solid grey-06
+        color grey-04
+
+        &:hover
+            background-color grey-05
+            border-color grey-05
+            color grey-08
+
+
+
+
     &.small
         font-size (14/16)em
         padding (4/14)em (8/14)em
@@ -73,12 +87,10 @@ button
 
 
 .back-button
-    margin-left 15px
-    margin-top .8rem
-
-    font-family 'Source Sans Pro', sans-serif
     text-transform uppercase
+    padding 0 0.5em
     color grey-05
+    line-height 36px
 
     transition color 0.2s ease
 
@@ -87,6 +99,7 @@ button
 
     span
         margin-left 0.5em
+
 
 button.btn
     display inline-flex
