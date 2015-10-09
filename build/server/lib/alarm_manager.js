@@ -132,7 +132,7 @@ module.exports = AlarmManager = (function() {
         titleOptions = {
           description: event.description,
           date: event.start.format('llll'),
-          calendarName: agenda
+          calendar: agenda
         };
         contentKey = 'reminder message expanded';
         contentOptions = {

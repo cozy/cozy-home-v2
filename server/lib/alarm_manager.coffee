@@ -95,7 +95,7 @@ module.exports = class AlarmManager
                 titleOptions =
                     description: event.description
                     date: event.start.format 'llll'
-                    calendarName: agenda
+                    calendar: agenda
 
                 contentKey = 'reminder message expanded'
                 contentOptions =
