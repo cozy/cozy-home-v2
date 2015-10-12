@@ -1,34 +1,43 @@
 input
 select
 textarea
-    padding 10px
+    padding 0 (15/18)em
 
     background white
     border 0
-    border-bottom 1px solid grey-04
+    border 1px solid grey-03
     box-shadow 0 0 0 0
 
     transition all 0.2s
 
     &:hover
-        border-left 3px solid blue
-        border-bottom 1px solid blue
+        border-color blue
 
     &:focus
-        border-left 3px solid blue
-        border-bottom 1px solid blue
+        border-color blue
         box-shadow 0 0 0 0
 
 input
 select
-    height 60px
+    height 52px
     width 550px
 
-    color blue
-    font-size 30px
-    line-height 30px
+    color grey-08
+    font-size (18/16)em
+    line-height 1em
     text-align center
 
+.fied-with-btn
+    display         flex
+    justify-content flex-end
+    align-items     stretch
+
+    input
+        border-radius 3px 0 0 3px
+        border-right none
+
+    .btn
+        border-radius 0 3px 3px 0
 
 input[type=checkbox]
     margin-top 8px
