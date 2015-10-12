@@ -229,7 +229,7 @@ module.exports =
     # * database
     # Send an error if an application already has same slug.
     install: (req, res, next) ->
-        req.body.slug = slugify req.body.name
+        req.body.slug = req.body.slug or slugify req.body.name
         req.body.state = "installing"
         access =
             password: randomString 32
