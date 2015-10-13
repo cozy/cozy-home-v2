@@ -38,7 +38,7 @@ module.exports = class ObjectPickerUpload extends BaseView
         @btn.focus()
         return true
 
-    keyHandler : (e)=>
+    keyHandler : (e) ->
         return false
 
 
@@ -78,8 +78,8 @@ module.exports = class ObjectPickerUpload extends BaseView
             @_handleFile(files[0])
 
         dragover = dragenter
-        dropbox.addEventListener("dragover", dragover, false);
-        dropbox.addEventListener("drop", drop, false);
+        dropbox.addEventListener "dragover", dragover, false
+        dropbox.addEventListener "drop", drop, false
 
 
     _changePhotoFromUpload: () =>

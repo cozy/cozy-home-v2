@@ -82,12 +82,12 @@ module.exports = class HomeView extends BaseView
     # Send a logout request to server then reload current window to redirect
     # user to automatically redirect user to login page (he's not logged
     # anymore, so cozy proxy will do the redirection).
-    logout: (event) =>
+    logout: (event) ->
         user = new User()
         user.logout
-            success: (data) =>
+            success: (data) ->
                 window.location = window.location.origin + '/login/'
-            error: =>
+            error: ->
                 alert 'Server error occured, logout failed.'
 
 

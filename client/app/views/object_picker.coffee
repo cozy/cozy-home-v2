@@ -184,21 +184,21 @@ module.exports = class PhotoPickerCroper extends Modal
      *   # sHeight : height of the region to crop
     ###
     _getCroppedDimensions: ()->
-            s = @imgPreview.style
-            r = @state.img_naturalW / @imgPreview.width
-            d =
-                sx      : Math.round(- parseInt(s.marginLeft)*r)
-                sy      : Math.round(- parseInt(s.marginTop )*r)
-                sWidth  : Math.round(@config.target_h*r)
-                sHeight : Math.round(@config.target_w*r)
-            # check the size of the cropped image is strictly into imgPreview
-            if d.sx < 0 then d.sx = 0
-            if d.sy < 0 then d.sy = 0
-            if d.sx + d.sWidth > @imgPreview.naturalWidth
-                d.sWidth = @imgPreview.naturalWidth - d.sx
-            if d.sy + d.sHeight > @imgPreview.naturalHeight
-                d.sHeight = @imgPreview.naturalHeight - d.sy
-            return d
+        s = @imgPreview.style
+        r = @state.img_naturalW / @imgPreview.width
+        d =
+            sx      : Math.round(- parseInt(s.marginLeft)*r)
+            sy      : Math.round(- parseInt(s.marginTop )*r)
+            sWidth  : Math.round(@config.target_h*r)
+            sHeight : Math.round(@config.target_w*r)
+        # check the size of the cropped image is strictly into imgPreview
+        if d.sx < 0 then d.sx = 0
+        if d.sy < 0 then d.sy = 0
+        if d.sx + d.sWidth > @imgPreview.naturalWidth
+            d.sWidth = @imgPreview.naturalWidth - d.sx
+        if d.sy + d.sHeight > @imgPreview.naturalHeight
+            d.sHeight = @imgPreview.naturalHeight - d.sy
+        return d
 
 
     _getResultDataURL:(img, dimensions)->

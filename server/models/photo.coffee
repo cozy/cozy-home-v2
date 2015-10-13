@@ -41,7 +41,8 @@ Photo::destroyWithBinary = (callback) ->
     if @binary? and typeof(@binary) is 'object'
         async.eachSeries Object.keys(@binary), (bin, cb) =>
             @removeBinary bin, (err) =>
-                console.log "Cannot destroy binary linked to photo #{@id}" if err
+                if err
+                    console.log "Cannot destroy binary linked to photo #{@id}"
                 cb()
         , (err) =>
             @destroy callback

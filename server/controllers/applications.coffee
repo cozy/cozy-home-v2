@@ -77,7 +77,7 @@ randomString = (length) ->
 updateApp = (app, callback) ->
     data = {}
     manifest = new Manifest()
-    manifest.download app, (err) =>
+    manifest.download app, (err) ->
         if err?
             callback err
         else
@@ -122,9 +122,9 @@ updateApp = (app, callback) ->
                             manager.resetProxy callback
 
 baseIdController = new cozydb.SimpleController
-     model: Application
-     reqProp: 'application'
-     reqParamID: 'id'
+    model: Application
+    reqProp: 'application'
+    reqParamID: 'id'
 
 
 module.exports =
@@ -258,7 +258,7 @@ module.exports =
                     return sendError res, err if err
                     access.app = appli.id
                     # Create application access in database
-                    Application.createAccess access, (err, app) =>
+                    Application.createAccess access, (err, app) ->
                         return sendError res, err if err
 
                         res.send success: true, app: appli, 201
@@ -296,14 +296,16 @@ module.exports =
                                     icons.save appli, iconInfos, (err) ->
                                         if err? then console.log err.stack
                                         else console.info 'icon attached'
-                                        console.info 'saved port in db', appli.port
+                                        console.info 'saved port in db', \
+                                            appli.port
                                         # Reset proxy
                                         manager.resetProxy (err) ->
                                             return sendErrorSocket err if err?
-                                            console.info 'proxy reset', appli.port
+                                            console.info 'proxy reset', \
+                                                appli.port
                             else
                                 err = new Error "Controller has no " + \
-                                                "informations about #{appli.name}"
+                                              "informations about #{appli.name}"
                                 return sendErrorSocket err if err
 
 
@@ -372,11 +374,11 @@ module.exports =
 
         updateApps = (app, callback) ->
             manifest = new Manifest()
-            manifest.download app, (err) =>
+            manifest.download app, (err) ->
                 if err?
                     sendError res, message: error
                 else
-                    app.getAccess (err, access) =>
+                    app.getAccess (err, access) ->
                         if JSON.stringify(access.permissions) isnt
                                 JSON.stringify(manifest.getPermissions())
                             return callback()
@@ -396,7 +398,7 @@ module.exports =
                         else
                             callback()
 
-        Application.all (err, apps) =>
+        Application.all (err, apps) ->
             async.forEachSeries apps, updateApps, () ->
                 if Object.keys(error).length > 0
                     sendError res, message: error
