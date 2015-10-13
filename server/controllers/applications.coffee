@@ -501,7 +501,7 @@ module.exports =
 
 
     fetchMarket: (req, res, next) ->
-        market.download (err, data) ->
+        market.getApps (err, data) ->
             if err?
                 res.send
                     error: true
