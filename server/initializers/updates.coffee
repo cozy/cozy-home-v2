@@ -32,7 +32,7 @@ checkUpdate = (app, callback) ->
 # Remove a notification if applications is up to date
 removeAppUpdateNotification = (notifier, app) ->
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.name
+    message = localization.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?
@@ -49,7 +49,7 @@ removeStackUpdateNotification = (notifier, app) ->
 # Creates a notification to inform the app can be updated
 createAppUpdateNotification = (notifier, app) ->
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.name
+    message = localization.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.createOrUpdatePersistent notificationSlug,
         app: 'konnectors'

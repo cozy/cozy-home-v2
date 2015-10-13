@@ -28,7 +28,7 @@ module.exports = (app, callback) ->
             switch app.state
                 when 'broken'
                     messageKey = 'installation message failure'
-                    message = localization.t messageKey, appName: app.name
+                    message = localization.t messageKey, appName: app.displayName
                     notifhelper.createTemporary
                         text: message
                         resource: app: 'home'
