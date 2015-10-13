@@ -26,6 +26,9 @@
         justify-content space-between
         margin-top (12/16)em
 
+        @media (max-width (540/16)em)
+            flex-wrap wrap
+
     .btn-big-icon
         display flex
         flex-direction column
@@ -37,6 +40,10 @@
         border 2px solid grey-03
         color grey-08
         text-align center
+
+        @media (max-width (540/16)em)
+            width 100%
+            margin-bottom (10/16)em
 
         .fa
             margin-right 0
@@ -84,7 +91,7 @@
 
     .help-section
         .mod
-            padding (30/16)em
+            padding (30/16)em 0
             width 100%
             max-width (600/16)em
 
