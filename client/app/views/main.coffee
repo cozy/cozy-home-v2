@@ -260,11 +260,19 @@ module.exports = class HomeView extends BaseView
         # only if there is a hash in the home given url.
         else if hash
             contentWindow = frame.prop('contentWindow')
-            currentHash = contentWindow.location.hash.substring 1
+            # Same origin policy may prevent to access location hash
+            try
+                currentHash = contentWindow.location.hash.substring 1
+            catch err
+                console.err err
             onLoad()
 
         else if frame.is(':visible')
-            frame.prop('contentWindow').location.hash = ''
+            # Same origin policy may prevent to access location hash
+            try
+                frame.prop('contentWindow').location.hash = ''
+            catch err
+                console.err err
             onLoad()
 
         else
