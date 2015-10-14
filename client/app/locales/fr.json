@@ -106,8 +106,8 @@
   "installed": "installée",
   "updated": "mis à jour réussie",
   "updating": "m.à.j en cours",
-  "update all": "Mettre tout à jour",
-  "update stack": "Mettre à jour",
+  "update all": "Mettre à jour la plateforme et les applciations",
+  "update stack": "Mettre à jour la plateforme",
   "show home logs": "Voir les logs de la Home",
   "show data system logs": "Voir les logs du Data System",
   "show proxy logs": "Voir les logs du Proxy",
@@ -235,7 +235,7 @@
   "error npm": "L'installation des dépendances a échouée.",
   "error user linux": "La création de l'utilisateur pour cette application a échouée.",
   "error start": "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application.",
-  "app msg": "Si l'erreur persiste, vous pouvez nous contacter par mail à contact@@cozycloud.cc\nou sur IRC #cozycloud sur irc.freenode.net.",
+  "app msg": "Si l'erreur persiste, vous pouvez nous contacter par mail à contact@cozycloud.cc\nou sur IRC #cozycloud sur irc.freenode.net.",
   "more details": "Plus de détails",
   "noapps": {
     "customize your cozy": "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
