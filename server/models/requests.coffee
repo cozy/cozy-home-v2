@@ -23,6 +23,7 @@ module.exports =
         all: cozydb.defaultRequests.all
 
     notification:
+        all: cozydb.defaultRequests.all
         byDate: (doc) ->
             emit doc.publishDate, doc
         byApps: byApps
