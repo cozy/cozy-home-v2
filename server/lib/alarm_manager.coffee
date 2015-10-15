@@ -29,7 +29,8 @@ module.exports = class AlarmManager
     clearTimeouts: (id) ->
         if @timeouts[id]?
             log.info "Remove notification #{id}"
-            clearTimeout timeout for timeout in @timeouts[id]
+            for index in Object.keys(@timeouts[id])
+                clearTimeout @timeouts[id][index]
             delete @timeouts[id]
 
     # Analyze upcoming event from Data System and act with it.
@@ -68,9 +69,9 @@ module.exports = class AlarmManager
 
             log.info "Notification in #{delta/1000} seconds."
 
-            @timeouts[alarm._id] ?= []
+            @timeouts[alarm._id] ?= {}
             timeout = setTimeout @handleNotification.bind(@), delta, alarm
-            @timeouts[alarm._id].push timeout
+            @timeouts[alarm._id][alarm.index] = timeout
 
     # immediately create the Notification object
     # and/or send Email for a given alarm
