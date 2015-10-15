@@ -23,7 +23,10 @@ module.exports = class AlarmManager
     fetchAlarms: =>
         @dailytimer = setTimeout @fetchAlarms, oneDay
         Event.all (err, events) =>
-            @addEventCounters event for event in events
+            if err
+                log.error err
+            else
+                @addEventCounters event for event in events
 
     # cancel all timeouts for a given id
     clearTimeouts: (id) ->
@@ -38,7 +41,10 @@ module.exports = class AlarmManager
         switch event
             when "event.create", "event.update"
                 Event.find msg, (err, event) =>
-                    @addEventCounters event if event?
+                    if err
+                        log.error err
+                    else
+                        @addEventCounters event if event?
 
             when "event.delete"
                 @clearTimeouts msg

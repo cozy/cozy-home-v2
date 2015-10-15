@@ -2,21 +2,20 @@
   "name": "cozy-home",
   "version": "2.0.10",
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
-  "licenses": [
-    {
-      "type": "AGPL v3",
-      "url": "http://www.gnu.org/licenses/agpl-3.0.html"
-    }
-  ],
+  "license": "AGPL-3.0",
   "engine": {
     "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cozy/cozy-home.git"
   },
   "main": "server.js",
   "dependencies": {
     "americano": "0.3.11",
     "americano-cozy": "0.2.11",
     "async": "0.2.10",
-    "bcrypt": "0.7.7",
+    "bcrypt": "0.8.5",
     "cozy-clearance": "0.1.19",
     "cozy-clients": "1.0.3",
     "cozy-notifications-helper": "1.0.2",
@@ -54,7 +53,6 @@
     "mocha": "1.17.1",
     "nock": "0.29.0",
     "numeral": "^1.5.3",
-    "request": "2.34.0",
     "should": "^4.6.1",
     "sinon": "^1.12.2"
   },

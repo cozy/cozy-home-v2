@@ -103,7 +103,7 @@ updateApp = (app, callback) ->
                     slug: app.slug
                 iconInfos = icons.getIconInfos infos
             catch err
-                console.log err
+                console.log err if process.env.NODE_ENV isnt 'test'
                 iconInfos = null
             data.iconType = iconInfos?.extension or null
             # Update access
@@ -117,7 +117,8 @@ updateApp = (app, callback) ->
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
                         icons.save app, iconInfos, (err) ->
-                            if err then console.log err.stack
+                            if err and process.env.NODE_ENV isnt 'test'
+                                console.log err.stack
                             else console.info 'icon attached'
                             manager.resetProxy callback
 
@@ -286,7 +287,8 @@ module.exports =
                                 try
                                     iconInfos = icons.getIconInfos appli
                                 catch err
-                                    console.log err
+                                    if process.env.NODE_ENV isnt 'test'
+                                        console.log err
                                     iconInfos = null
                                 appli.iconType = iconInfos?.extension or null
 
@@ -294,7 +296,9 @@ module.exports =
                                 appli.updateAttributes updatedData, (err) ->
                                     return sendErrorSocket err if err?
                                     icons.save appli, iconInfos, (err) ->
-                                        if err? then console.log err.stack
+                                        if err and
+                                           process.env.NODE_ENV isnt 'test'
+                                            console.log err.stack
                                         else console.info 'icon attached'
                                         console.info 'saved port in db', \
                                             appli.port

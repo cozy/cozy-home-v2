@@ -97,7 +97,7 @@ describe "Applications management", ->
                 should.exist body.start.scripts
 
             it "And the proxy have been requested to update its routes", ->
-                 @proxy.lastCall().request.url.should.equal "/routes/reset"
+                @proxy.lastCall().request.url.should.equal "/routes/reset"
 
             it "When I send a request to retrieve all applications", (done) ->
                 @client.get "api/applications", done
@@ -110,7 +110,8 @@ describe "Applications management", ->
                 Application.all key:"my-app", (err, apps) =>
                     ds = new Client "http://localhost:9101/"
                     ds.setBasicAuth 'home', 'token'
-                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
                         @password = body[0].value.token
                         done()
 
@@ -179,7 +180,8 @@ describe "Applications management", ->
                 Application.all key:"my-app", (err, apps) =>
                     ds = new Client "http://localhost:9101/"
                     ds.setBasicAuth 'home', 'token'
-                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
                         @password = body[0].value.token
                         done()
 
@@ -265,7 +267,8 @@ describe "Applications management", ->
                 Application.all key:"my-app", (err, apps) =>
                     ds = new Client "http://localhost:9101/"
                     ds.setBasicAuth 'home', 'token'
-                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
                         @password = body[0].value.token
                         done()
 
