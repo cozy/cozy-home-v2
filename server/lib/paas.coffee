@@ -162,13 +162,21 @@ reseting routes"
         else
             callback null
 
+    checkAppStopped: (app, callback) ->
+        @client.get 'running', (err, res, body) =>
+            return callback err if err
+            if app.slug in  Object.keys(body.app)
+                @client.stop app.slug, (err, res, body) =>
+                    callback err
+            else
+                callback()
 
     # Send a start request to controller server
     start: (app, callback) ->
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for starting #{app.name}..."
-
-        @client.stop app.slug, (err, res, body) =>
+        @checkAppStopped app, (err) =>
+            console.log err if err?
             @checkMemory (err) ->
                 return callback err if err
 

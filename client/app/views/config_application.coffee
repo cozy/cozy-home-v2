@@ -82,7 +82,9 @@ module.exports = class ApplicationRow extends BaseView
                 @startStopBtn.displayGrey t 'start this app'
 
         @updateIcon.toggle @model.get 'needsUpdate'
-        @$(".update-app").hide() unless @model.get('needsUpdate')
+        if (not @model.get("branch")? or @model.get 'branch' is 'master') and
+            not(@model.get('needsUpdate'))
+                @$(".update-app").hide()
 
         bool = @model.get 'isStoppable'
         @$('.app-stoppable').attr 'checked', bool
