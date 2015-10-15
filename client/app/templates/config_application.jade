@@ -1,48 +1,33 @@
-.line
-    .left.mod.w66
-        .line
-            span.favorite.mr1
-                if app.favorite
-                    i.fa.fa-star(title='config application unmark favorite')
-                else
-                    i.fa.fa-star-o(title='config application mark favorite')
-            strong
-                a(href="#apps/#{app.name}")= app.displayName
-            if app.version
-                span &nbsp;-&nbsp; #{app.version}
-            span &nbsp;-&nbsp;
-            if app.state === 'installed'
-                span.state-label= t('running')
-            else
-                span.state-label
-                    | #{app.state}
-        .line
-            if app.needsUpdate
-                span.to-update-label= t('update required')
-        .line
-            .comments
-                a(href="#{app.website}", target="_blank")= app.website
-            .comments
-                a
-                    | #{app.branch}
-    .buttons.left.mod.w33
-        div
-            button.btn.update-app
-                i.fa.fa-refresh.mr1
-                | 
-                span.label= t('update')
-        div
-            button.btn.remove-app
-                i.fa.fa-trash.mr1
-                | 
-                span.label= t('remove')
-        div
-            button.btn.btn-large.start-stop-btn
-                i.fa.fa-power-off.mr1
-                | 
-                span.label= t('stop this app')
-        div
-            a.btn.btn-large(href="/logs/#{app.slug}", target="_blank")
-                i.fa.fa-cog.mr1
-                | 
-                span.label= t('show logs')
+.mod
+    .line
+        strong
+            a(href="#apps/#{app.name}")= app.displayName
+        button.update-app.outline-blue(title="#{t('update')}")
+            i.fa.fa-refresh
+            span= t('update')
+    .line
+        if app.version
+            span #{app.version}
+        span &nbsp;-&nbsp;
+        if app.state === 'installed'
+            span.state-label= t('running')
+        else
+            span.state-label
+                | #{app.state}
+    .line
+        .comments
+            a(href="#{app.website}", target="_blank")= app.website
+            span
+                | (#{app.branch})
+.buttons.mod
+    button.transparent-grey.favorite
+        if app.favorite
+            i.fa.fa-star(title="#{t('config application unmark favorite')}")
+        else
+            i.fa.fa-star-o(title="#{t('config application mark favorite')}")
+    a.transparent-grey(href="/logs/#{app.slug}", target="_blank", title="#{t('show logs')}", role="button")
+        i.fa.fa-code
+    button.transparent-grey.start-stop-btn(title="#{t('stop this app')}")
+        i.fa.fa-power-off
+    button.transparent-grey.remove-app(title="#{t('remove')}")
+        i.fa.fa-trash

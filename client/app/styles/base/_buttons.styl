@@ -9,7 +9,7 @@ button
     padding (8/16)em (12/16)em
 
     background blue
-    border 1px blue - 20%
+    border 1px blue
     border-radius 3px
     cursor pointer
 
@@ -45,10 +45,18 @@ button
         color grey-05
 
         &:hover
-            background-color grey-01
-            color grey-07
+            background-color grey-02
+            color grey-08
 
     &.transparent-blue
+        background transparent
+        color blue
+
+        &:hover
+            background-color blue
+            color white
+
+    &.outline-blue
         background transparent
         border 1px solid blue + 50%
         color blue
@@ -72,8 +80,8 @@ button
 
 
     &.small
-        font-size (14/16)em
         padding (4/14)em (8/14)em
+        font-size (14/16)em
 
     .fa
         margin-right (6/16)em

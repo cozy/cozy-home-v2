@@ -1,3 +1,7 @@
+.platform-section
+    & > .mod
+        padding (20/16)em
+
 // Status - Config application
 
 .title-app a.subtitle
@@ -10,18 +14,25 @@
 #config-application-list
     margin-top 10px
 
+// update all application button
+button.update-all
+    position absolute
+    top (16/14)em
+    right (20/14)em
+
 .config-application:first-child
     border-top 0
 
 .config-application
+    display flex
+    justify-content space-between
     border-top 1px solid grey-03
-    padding 10px 0
-    margin-bottom 10px
-    border-radius 5px
+    padding (10/16)em 0
+    margin-bottom (10/16)em
 
     strong
         text-transform lowercase
-        font-size 20px
+        font-size (20/16)em
 
         a
             color grey-08
@@ -47,23 +58,25 @@
             font-weight normal
 
     .buttons
-        align-items center
+        flex none
 
         button
-        a
-            width 100%
-            display inline-block
-            margin 0 0 2px
-            min-width 24px
-            min-height 24px
-            font-size 12px
-            text-align left
+        [role=button]
+            padding 0.25em 0.5em
+
+            .fa
+                margin 0
+
+    button.update-app
+        padding (3/13)em (6/13)em
+        margin-left (10/13)em
+        font-size (13/16)em
+
 
     .comments
-        clear both
-        font-size 14px
-        line-height 20px
-        margin-left 2em
+        font-size (14/16)em
+        line-height (20/14)em
+        color grey-05
 
         img
             overflow hidden
@@ -73,42 +86,83 @@
         a
             color grey-05
 
-        @media (max-width: 800px)
-            margin-left 0
-
-    .to-update-label
-        background-color green
-        color white
-        padding 3px 6px
-        margin-left 26px
-        font-size 12px
-        border-radius 3px
-        text-transform lowercase
-
-.platform-section
-    .buttons
-        button.btn
-            display block
-        .fa
-            width 10px
-            display inline
+            &:hover
+                color blue
 
         span
-            display inline
-            width auto
+            margin-left 0.25em
+            font-style italic
+
+    .to-update-label
+        padding (3/12)em (6/12)em
+        background-color green
+        border-radius 3px
+        color white
+        font-size (12/16)em
+        text-transform lowercase
+
 
 #config-applications-view
-    .stack-app
+    .w60
+        position relative
+        padding (20/16)em
 
-        .app
-            font-weight normal
+// HARDWARE
+.block-container
+    display flex
+    align-items center
+    justify-content space-between
 
-        .btn
-            width 100%
-            text-align left
-            margin-bottom 2px
-            display block
-            font-size 12px
+.info-block
+    display flex
+    align-items center
+    width 49%
 
-            .fa
-                margin-top 2px
+    .title
+        font-size (14/16)em
+        text-transform uppercase
+        color grey-06
+
+    .amount
+        font-size 1.75em
+        line-height 1em
+
+    .lowlight
+        display inline-block
+        font-size (14/16)em
+        color grey-07
+
+    .fa
+        margin-right (10/48)em
+        font-size (48/16)em
+
+// PLATFORM
+.platform
+    position relative
+
+    .buttons
+        display flex
+        position absolute
+        top 0
+        right 0
+
+        button:not(:last-child)
+            margin-right (4/14)em
+
+    .version
+        display flex
+        justify-content space-between
+
+        .line
+            .app
+                font-size (14/16)em
+                text-transform uppercase
+                font-weight normal
+                color grey-06
+
+            span
+                display block
+
+            .version-number
+                font-size 1.75em
+                line-height 1em

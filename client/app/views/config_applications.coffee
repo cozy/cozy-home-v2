@@ -65,7 +65,7 @@ module.exports = class ConfigApplicationsView extends BaseView
         if not(@devices.length is 0)
             @$el.find('.title-device').after @deviceList.$el
         else
-            @$el.find('.title-device').after "<p>#{t 'status no device'}</p>"
+            @$el.find('.title-device').after "<p>#{t 'status no device'}</p><p>#{t 'mobile app promo'}</p><a target='_blank' href='https://play.google.com/store/apps/details?id=io.cozy.files_client'><img src='http://developer.android.com/images/brand/en_app_rgb_wo_45.png'></a>"
 
     fetch: =>
         @$('.amount').html "--"
@@ -74,8 +74,8 @@ module.exports = class ConfigApplicationsView extends BaseView
             if err
                 alert t 'Server error occured, infos cannot be displayed.'
             else
-                diskUsed  = "#{data.usedDiskSpace} #{data.usedUnit or 'G'}"
-                diskTotal = "#{data.totalDiskSpace} #{data.totalUnit or 'G'}"
+                diskUsed  = "#{data.usedDiskSpace}"
+                diskTotal = "#{data.totalDiskSpace}"
                 @displayMemory data.freeMem, data.totalMem
                 @displayDiskSpace diskUsed, diskTotal
 
