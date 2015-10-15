@@ -51,19 +51,24 @@
 
             h4= t('account password')
             #change-password-form
-                p
-                    label= t('input your current password')
-                input#account-password0-field(type="password", placeholder="#{t('current password')}")
+                .account-field
+                    p
+                        label= t('input your current password')
+                    input#account-password0-field(type="password", placeholder="#{t('current password')}")
+
+                .account-field
+                    p
+                        label= t('enter a new password')
+                    input#account-password1-field(type="password", placeholder="#{t('new password')}")
+
+                .account-field
+                    p
+                        label= t('confirm new password')
+                    input#account-password2-field(type="password", placeholder="#{t('new password')}")
 
                 p
-                    label= t('enter a new password')
-                input#account-password1-field(type="password", placeholder="#{t('new password')}")
-                p
-                    label= t('confirm new password')
-                input#account-password2-field(type="password", placeholder="#{t('new password')}")
-
-                p
-                    button#account-form-button(class="btn")= t('save your new password')
+                    .account-field
+                        button#account-form-button.full-width= t('save your new password')
 
                     p.loading-indicator &nbsp;
 
