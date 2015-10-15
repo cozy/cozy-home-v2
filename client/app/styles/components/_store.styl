@@ -135,6 +135,7 @@
 
     p
         margin 0.25em 0 0.5em
+        line-height 1.25em
 
     .app-img
         flex none
@@ -143,6 +144,10 @@
         height (120/16)em
         text-align center
         vertical-align center
+
+        @media (max-width (400/16)em)
+            width (80/16)em
+            height (80/16)em
 
         img.svg
             width 100%
