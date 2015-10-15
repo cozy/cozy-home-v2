@@ -113,10 +113,18 @@ button.update-all
     align-items center
     justify-content space-between
 
+    @media (max-width (500/16)em)
+        flex-wrap wrap
+
 .info-block
     display flex
     align-items center
     width 49%
+
+    @media (max-width (500/16)em)
+        width 100%
+        margin-bottom 1em
+
 
     .title
         font-size (14/16)em
@@ -153,7 +161,14 @@ button.update-all
         display flex
         justify-content space-between
 
+        @media (max-width (500/16)em)
+            flex-wrap wrap
+
         .line
+            @media (max-width (500/16)em)
+                width 50%
+                margin-bottom 1em
+
             .app
                 font-size (14/16)em
                 text-transform uppercase
