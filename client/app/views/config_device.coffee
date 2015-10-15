@@ -23,7 +23,7 @@ module.exports = class DeviceRow extends BaseView
             $.ajax("/api/devices/#{@model.get('id')}",
                 type: "DELETE"
                 success: =>
-                    @$el.fadeOut =>
+                    @$el.fadeOut ->
                 error: =>
                     @$('.remove-device').html t 'revoke device access'
                     console.log "error while revoking the device access"

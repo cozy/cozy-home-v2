@@ -50,7 +50,7 @@ module.exports = tabControler =
         Array.prototype.forEach.call( tablists, (tablist)->
             panelList = tablist.getAttribute('aria-controls')
             panelList = document.querySelector(".#{panelList}")
-            tablist.addEventListener 'click', (event) =>
+            tablist.addEventListener 'click', (event) ->
                 if event.target.getAttribute('role') != 'tab'
                     return
                 panelName = event.target.getAttribute 'aria-controls'
