@@ -48,7 +48,7 @@ download = module.exports.download = (callback) ->
         branch = process.env.MARKET
     else
         # Use default market
-        url = "https://github.com/cozy-labs/cozy-registry.git"
+        url = "https://github.com/cozy/cozy-registry.git"
         branch = "master"
 
     # Clone market (cannot use github API due to rate limit)
