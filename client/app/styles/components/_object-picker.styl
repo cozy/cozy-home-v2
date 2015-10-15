@@ -111,50 +111,24 @@
         flex-direction column
         align-content  flex-end
 
-    .photoUpload-btn.btn
-        display block
+        .photoUpload-btn
+            z-index 2
+            position  absolute
+            top       62%
+            left      50%
+            transform translateX(-50%) translateY(-50%)
 
-    .photoUpload-btn
-        flex-grow       1
-        display         flex
-        justify-content center
-        align-items     center
-
-        .btn
-            flex-grow        0
-            padding          0.8em
-            background-color blue
-            font-size        1.2em
-
-        .btn:hover
-            background-color orange
-
-
-    .photoUpload-or
-        display         flex
-        justify-content center
-        z-index         1
-
-        div
-            display          block
-            position         relative
-            transform        translateY(+50%)
-            width            10em
-            padding          0.3em
-            border           1px solid blue
-            border-radius    1em
-            text-align       center
-            color            black
-            background-color white
+            .btn
+                flex-grow 0
+                padding   0.8em 1.6em
 
     .modal-file-drop-zone
         flex-grow        3
         position         relative
-        background-color blue
 
-        > div
-            RL-margin = 15%
-            TB-margin = 15%
+        > .drop-zone
+            RL-margin = 1em
+            TB-margin = 1em
 
             position     absolute
             left         RL-margin
@@ -162,19 +136,21 @@
             top          TB-margin
             bottom       TB-margin
             z-index      1
-            border-color lightgreyedblue
+            border-color grey-02
             border-style dashed
             border-width 5px
             margin       0px
 
+            @media (max-width: 39em)
+                display none
+
             .dragging
-                border-color white
+                border-color blue
 
         p
-            font-size   1.3em
-            font-weight bold
-            color       grey-04
-            color       white
+            font-size   1.25em
+            font-style  italic
+            color       grey-06
             line-height 1em
             text-align  center
             position    absolute
@@ -182,11 +158,13 @@
             left        50%
             transform   translateX(-50%) translateY(-50%)
 
+            @media (max-width: 39em)
+                display none
+
 
     // ========================================= //
     // urlPhotoUpload panel
     margin-urlUpload = 1.3em
-    url-input-height = 1.8em
 
     .urlPhotoUpload
         flex-direction  column
@@ -199,7 +177,7 @@
         flex-direction  column
         justify-content stretch
         align-items     stretch
-        height          url-input-height
+        padding         1em
 
     .img-container
         position        relative
@@ -227,15 +205,8 @@
 
     .modal-url-input
         margin    0 auto
-        max-width 40em
-        border    2px solid blue
-        font-size 1em
-
-    .modal-url-input focus
-        border-width 2px
-
-    .modal-url-input hover
-        border-color #fe8800
+        max-width 36em
+        width     80%
 
 
     // ========================================= //

@@ -68,7 +68,7 @@ class Modal extends Backbone.View
 
         foot  = $('<div class="modalCY-footer">')
         backBtn = $("""
-            <button id="modal-dialog-back" class="btn light-btn left back">
+            <button id="modal-dialog-back" class="btn transparent-grey left back">
                 <i class="fa fa-chevron-left"/> #{@back}
             </button>
         """).appendTo foot
@@ -76,7 +76,7 @@ class Modal extends Backbone.View
                 .text(@yes)
                 .appendTo foot
         noBtn = if @no
-            $('<button id="modal-dialog-no" class="btn light-btn right"/>')
+            $('<button id="modal-dialog-no" class="btn transparent-grey right"/>')
             .text(@no)
             .appendTo foot
 

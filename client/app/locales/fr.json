@@ -259,7 +259,7 @@
   "no image": "Il n'y a pas d'image sur votre Cozy",
   "ObjPicker upload btn": "Sélectionnez un fichier local",
   "or": "ou",
-  "drop a file": "Glissez et déposez un fichier",
-  "url of an image": "URL d'une image sur le web",
+  "drop a file": "Glissez et déposez un fichier ou",
+  "url of an image": "Coller l'URL d'une image sur le web",
   "you have no album": "<p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Create some with the\n    <a href=\"/#applications\" target='_blank'>Photo application</a>\n    <br>\n    and use photo from your phone with the\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 }
