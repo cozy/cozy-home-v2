@@ -29,16 +29,17 @@ module.exports = function(app, callback) {
   realtime = RealtimeAdapter(app.server, eventsToForward);
   realtime.on('application.update', function(event, id) {
     return Application.find(id, function(err, app) {
-      var message, messageKey;
+      var message, messageKey, options;
       if (err) {
         return console.log(err.stack);
       }
       switch (app.state) {
         case 'broken':
           messageKey = 'installation message failure';
-          message = localization.t(messageKey, {
-            appName: app.name
-          });
+          options = {
+            appName: app.displayName
+          };
+          message = localization.t(messageKey, options);
           return notifhelper.createTemporary({
             text: message,
             resource: {

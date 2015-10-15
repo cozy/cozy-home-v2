@@ -35,18 +35,14 @@ haibuClient = new ControllerClient({
 updateRoutes = function(occurence) {
   if (occurence < 10) {
     resetRoutes();
-    return setTimeout((function(_this) {
-      return function() {
-        return updateRoutes(occurence + 1);
-      };
-    })(this), 30000);
+    return setTimeout(function() {
+      return updateRoutes(occurence + 1);
+    }, 30000);
   } else if (occurence < 15) {
     resetRoutes();
-    return setTimeout((function(_this) {
-      return function() {
-        return updateRoutes(occurence + 1);
-      };
-    })(this), 60000);
+    return setTimeout(function() {
+      return updateRoutes(occurence + 1);
+    }, 60000);
   }
 };
 

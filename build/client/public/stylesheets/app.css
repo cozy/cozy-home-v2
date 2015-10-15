@@ -1810,9 +1810,8 @@ body {
   -o-transition: 0.6s background-image ease-in-out;
   -ms-transition: 0.6s background-image ease-in-out;
   transition: 0.6s background-image ease-in-out;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;

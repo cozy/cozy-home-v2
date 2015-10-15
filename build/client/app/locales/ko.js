@@ -66,7 +66,7 @@ module.exports = {
     "assistance": "지원",
     "hardware consumption": "하드웨어",
     "hard drive gigabytes": "(하드 드라이브)",
-    "memory megabytes": " MB(램)",
+    "memory megabytes": "MB(램)",
     "manage your applications": "앱",
     "manage your devices": "장치관리",
     "synchronized": "동기화됨",
@@ -178,6 +178,7 @@ module.exports = {
     "help send message title": "개발자팀에게 보내기",
     "help send message explanation": "개발자에게 메시지를 보내기 위해서 아래의 입력란을 사용하세요. 피드백, 버그 리포트, 지원에 대한문의를 할 수 있습니다.",
     "help send message action": "우리의 개발자에게 메시지를 보내세요.",
+    "help send logs": "디버깅을 위해 서버로그 보내기",
     "send message success": "메시지를 성공적으로 보냈습니다!",
     "send message error": "메시지를 보내는 동안 오류가 발생 하였습니다. support@cozycloud.cc에게 다시 시도하세요.",
     "account change password success": "비밀번호를 변경 하였습니다.",
@@ -213,6 +214,9 @@ module.exports = {
     "term description": "터미널 앱",
     "ghost description": "Ghost 블로그 플랫폼을 사용하는 전세계 사람들과 여러분의 이야기를 공유하세요.",
     "leave google description": "구글 계정에서 데이터를 가져오는 앱입니다.",
+    "mstsc.js description": "RDP 프로토콜을 이용하여 원격 데스크탑 관리",
+    "hastebin description": "간단 붙여넣기, 텍스트를 쉽게 공유하기 위한 툴 입니다.",
+    "polybios description": "브라우저에서 PGP 키 관리",
     "reminder title email": "알림",
     "reminder title email expanded": "알림:%{description} - %{date} (%{calendar})",
     "reminder message expanded": "알림: %{description}\n시작: %{start} (%{timezone})\n종료: %{end} (%{timezone})\n장소: %{place}\n자세히: %{details}",
@@ -246,5 +250,4 @@ module.exports = {
     "drop a file": "드래그 & 드롭 파일",
     "url of an image": "인터넷 상의 이미지 주소",
     "you have no album": "<p>사진관리앱에 오신것을 환영 합니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n<a href=\"/#applications\" target='_blank'>사진관리</a>\n<br>\n사진 또는 전화번호\n<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>내 모바일 !</a></p>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
-}
-;
+};

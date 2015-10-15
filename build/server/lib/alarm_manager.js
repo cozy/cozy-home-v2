@@ -48,13 +48,13 @@ module.exports = AlarmManager = (function() {
   };
 
   AlarmManager.prototype.clearTimeouts = function(id) {
-    var i, len, ref, timeout;
+    var i, index, len, ref;
     if (this.timeouts[id] != null) {
       log.info("Remove notification " + id);
-      ref = this.timeouts[id];
+      ref = Object.keys(this.timeouts[id]);
       for (i = 0, len = ref.length; i < len; i++) {
-        timeout = ref[i];
-        clearTimeout(timeout);
+        index = ref[i];
+        clearTimeout(this.timeouts[id][index]);
       }
       return delete this.timeouts[id];
     }
@@ -101,10 +101,10 @@ module.exports = AlarmManager = (function() {
       delta = triggerDate.valueOf() - now.valueOf();
       log.info("Notification in " + (delta / 1000) + " seconds.");
       if ((base = this.timeouts)[name = alarm._id] == null) {
-        base[name] = [];
+        base[name] = {};
       }
       timeout = setTimeout(this.handleNotification.bind(this), delta, alarm);
-      return this.timeouts[alarm._id].push(timeout);
+      return this.timeouts[alarm._id][alarm.index] = timeout;
     }
   };
 
