@@ -49,17 +49,17 @@ module.exports = class PopoverDescriptionView extends BaseView
         @body.html ""
 
         description = @model.get "description"
-        @header.parent().append "<p class=\"line left\"> #{description} </p>"
+        @header.parent().append "<p class=\"line\"> #{description} </p>"
 
         if Object.keys(@model.get("permissions")).length is 0
             permissionsDiv = $ """
                 <div class='permissionsLine'>
-                    <h4>#{t('no specific permissions needed')} </h4>
+                    <h5>#{t('no specific permissions needed')} </h5>
                 </div>
             """
             @body.append permissionsDiv
         else
-            @body.append "<h4>#{t('required permissions')}</h4>"
+            @body.append "<h5>#{t('required permissions')}</h5>"
             for docType, permission of @model.get("permissions")
                 permissionsDiv = $ "<div class='permissionsLine'> <strong> #{docType} </strong> <p> #{permission.description} </p> </div>"
                 @body.append permissionsDiv

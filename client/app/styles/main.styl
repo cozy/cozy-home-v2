@@ -173,22 +173,34 @@
     .application .application-inner
         padding 0
 
-        .app-title
-            font-size 14px
-
     .md-content
         overflow auto
+        height 100%
 
     .md-modal
         position fixed
+        top 36px
         bottom 0
         width 100%
-        height 90%
         z-index 2000
         visibility hidden
         backface-visibility hidden
         margin 0
         padding 0
+
+        .md-content
+        .md-header
+        .md-footer
+            border-radius 0
+
+         .md-content
+             display flex
+             flex-direction column
+
+            .md-body
+                flex 1
+                // overwrite JS resizing
+                max-height 100% !important
 
     .section-title
         display none
@@ -204,9 +216,6 @@
         margin-bottom 0
         padding-bottom 0
         line-height 16px
-
-    .comment
-        font-size 14px
 
     #buttons
         width 100%
@@ -284,7 +293,6 @@
         input
         select
             width 100%
-            font-size 16px
 
     #home-content
         padding 0
@@ -302,10 +310,6 @@
     #config-applications-view
         .w66
             padding-right 10px
-
-    .application .application-inner
-        .app-title
-            font-size 12px
 
     #app-list
         section
@@ -331,11 +335,6 @@
         .logout-menu-icon
             display block
 
-    #app-list
-        section
-            h2
-                font-size 12px
-
     .application .application-inner
         padding 0
 
@@ -344,19 +343,9 @@
 
         .app-title
             margin-top 4px
-            font-size 9px
             text-transform capitalize
 
     #market-view
-        #your-app
-
-            #app-git-field
-                font-size 16px
-
-        .cozy-app
-            h3
-                font-size 26px
-
         .app-text
             padding 10px
 
