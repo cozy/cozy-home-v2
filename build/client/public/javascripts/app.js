@@ -9399,6 +9399,9 @@ module.exports = HomeView = (function(_super) {
       _this.selectedApp = slug;
       name = _this.apps.get(slug).get('displayName');
       if (name == null) {
+        name = _this.apps.get(slug).get('name');
+      }
+      if (name == null) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
