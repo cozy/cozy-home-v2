@@ -9397,12 +9397,15 @@ module.exports = HomeView = (function(_super) {
       _this.$('#app-frames').find('iframe').hide();
       frame.show();
       _this.selectedApp = slug;
-      name = _this.apps.get(slug).get('name');
+      name = _this.apps.get(slug).get('displayName');
+      if (name == null) {
+        name = _this.apps.get(slug).get('name');
+      }
       if (name == null) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
-      $("#current-application").html(name);
+      $("#current-application").html(_this.apps.get(slug).get('name'));
       _this.$("#app-btn-" + slug + " .spinner").hide();
       return _this.$("#app-btn-" + slug + " .icon").show();
     };
