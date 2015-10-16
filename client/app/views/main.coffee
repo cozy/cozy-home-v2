@@ -238,7 +238,8 @@ module.exports = class HomeView extends BaseView
             name = @apps.get(slug).get('name') if not name?
             name = '' if not name?
             window.document.title = "Cozy - #{name}"
-            $("#current-application").html name
+
+            $("#current-application").html @apps.get(slug).get('name')
 
             @$("#app-btn-#{slug} .spinner").hide()
             @$("#app-btn-#{slug} .icon").show()

@@ -9405,7 +9405,7 @@ module.exports = HomeView = (function(_super) {
         name = '';
       }
       window.document.title = "Cozy - " + name;
-      $("#current-application").html(name);
+      $("#current-application").html(_this.apps.get(slug).get('name'));
       _this.$("#app-btn-" + slug + " .spinner").hide();
       return _this.$("#app-btn-" + slug + " .icon").show();
     };
