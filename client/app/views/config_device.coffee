@@ -2,7 +2,7 @@ BaseView = require 'lib/base_view'
 
 # Row displaying device name and attributes
 module.exports = class DeviceRow extends BaseView
-    className: "line config-device clearfix"
+    className: "config-device"
     tagName: "div"
     template: require 'templates/config_device'
 

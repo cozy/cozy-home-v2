@@ -107,6 +107,31 @@ button.update-all
         position relative
         padding (20/16)em
 
+
+// CONNECTED DEVICES
+.config-device
+    display flex
+    align-items center
+    justify-content space-between
+
+    &:not(:last-child)
+        border-bottom 1px solid grey-03
+
+    button
+        padding 0.25em 0.5em
+
+    span
+        font-size (14/16)em
+
+    @media (max-width (500/16)em)
+        button
+            i
+                margin 0
+
+            span
+                display none
+
+
 // HARDWARE
 .block-container
     display flex
