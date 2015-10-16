@@ -9397,7 +9397,7 @@ module.exports = HomeView = (function(_super) {
       _this.$('#app-frames').find('iframe').hide();
       frame.show();
       _this.selectedApp = slug;
-      name = _this.apps.get(slug).get('name');
+      name = _this.apps.get(slug).get('displayName');
       if (name == null) {
         name = '';
       }
