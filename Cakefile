@@ -124,7 +124,13 @@ task 'build', 'Build CoffeeScript to Javascript', ->
 SVGIMAGES = 'client/app/assets/img/apps'
 
 task 'build-icons', "Sprite the icons in #{SVGIMAGES}", ->
-    Iconizr = require 'iconizr'
+    try Iconizr = require 'iconizr'
+    catch err then
+        return console.log """
+            iconizr is not compatible with node 4 and therefore not included
+            in dependencies. You need to run `npm install iconizr` before
+            using the `build-icons` script.
+        """
     out = 'client/app/assets/app-icons'
     Iconizr.createIconKit SVGIMAGES, out,
         render: css: true
