@@ -1,6 +1,6 @@
 cozydb              = require 'cozydb'
 multiparty          = require 'multiparty'
-localizationManager = require '../lib/localization_manager'
+localizationManager = require '../helpers/localization_manager'
 Background          = require '../models/background'
 
 baseController = new cozydb.SimpleController

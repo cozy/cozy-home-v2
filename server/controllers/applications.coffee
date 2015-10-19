@@ -9,7 +9,7 @@ log = require('printit')
 
 Application = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
-localizationManager = require '../lib/localization_manager'
+localizationManager = require '../helpers/localization_manager'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 market = require '../lib/market'

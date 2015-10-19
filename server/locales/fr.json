@@ -28,5 +28,8 @@
   "file not found": "Fichier non trouvé",
   "notification not found": "Notification non trouvé",
   "notification created": "Notification créée",
-  "wrong usage": "Mauvais usage"
+  "wrong usage": "Mauvais usage",
+  "an error occured": "Erreur rencontrée",
+  "not found": " : Non Trouvé",
+  "not allowed": "Non autorisé"
 }

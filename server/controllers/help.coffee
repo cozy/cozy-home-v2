@@ -4,7 +4,7 @@ CozyInstance        = require '../models/cozyinstance'
 CozyUser            = require '../models/user'
 Application         = require '../models/application'
 logs                = require '../lib/logs'
-localizationManager = require '../lib/localization_manager'
+localizationManager = require '../helpers/localization_manager'
 
 module.exports =
 

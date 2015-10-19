@@ -1,15 +1,15 @@
-async = require 'async'
+async               = require 'async'
 
 NotificationsHelper = require 'cozy-notifications-helper'
-RealtimeAdapter = require 'cozy-realtime-adapter'
-autostop = require '../lib/autostop'
-AlarmManager = require '../lib/alarm_manager'
+RealtimeAdapter     = require 'cozy-realtime-adapter'
+autostop            = require '../lib/autostop'
+AlarmManager        = require '../lib/alarm_manager'
 localizationManager = require '../lib/localization_manager'
 
-User = require '../models/user'
-CozyInstance = require '../models/cozyinstance'
-Application = require '../models/application'
-Notification = require '../models/notification'
+User                = require '../models/user'
+CozyInstance        = require '../models/cozyinstance'
+Application         = require '../models/application'
+Notification        = require '../models/notification'
 
 
 # notification and application events should be proxyed to client
