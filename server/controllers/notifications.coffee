@@ -1,6 +1,7 @@
 # Deprecated, won't be used with cozy-notifications-helper >0.3.3
 
-Notification = require '../models/notification'
+Notification        = require '../models/notification'
+localizationManager = require '../lib/localization_manager'
 
 module.exports =
     all: (req, res, next) ->

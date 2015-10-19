@@ -4,7 +4,7 @@ cozydb = require 'cozydb'
 
 Album = require '../models/album'
 
-localizationManager = require '../helpers/localization_manager'
+localizationManager = require '../lib/localization_manager'
 
 
 getDisplayName = (callback) ->

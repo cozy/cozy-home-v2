@@ -9,7 +9,7 @@ log = require('printit')
 
 Application = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
-localization = require '../lib/localization_manager'
+localizationManager = require '../lib/localization_manager'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
 market = require '../lib/market'
@@ -27,7 +27,7 @@ startedApplications = {}
 removeAppUpdateNotification = (app) ->
     notifier = new NotificationsHelper 'home'
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.displayName
+    message = localizationManager.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?

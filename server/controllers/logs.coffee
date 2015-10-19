@@ -2,6 +2,7 @@ fs = require 'fs'
 logs = require '../lib/logs'
 log = require('printit')
     prefix: 'home:client'
+localizationManager = require '../lib/localization_manager'
 
 module.exports =
 

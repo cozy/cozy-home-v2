@@ -4,7 +4,7 @@ NotificationsHelper = require 'cozy-notifications-helper'
 RealtimeAdapter = require 'cozy-realtime-adapter'
 autostop = require '../lib/autostop'
 AlarmManager = require '../lib/alarm_manager'
-localization = require '../lib/localization_manager'
+localizationManager = require '../lib/localization_manager'
 
 User = require '../models/user'
 CozyInstance = require '../models/cozyinstance'
@@ -29,7 +29,7 @@ module.exports = (app, callback) ->
                 when 'broken'
                     messageKey = 'installation message failure'
                     options = appName: app.displayName
-                    message = localization.t messageKey, options
+                    message = localizationManager.t messageKey, options
                     notifhelper.createTemporary
                         text: message
                         resource: app: 'home'

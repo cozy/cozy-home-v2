@@ -1,7 +1,7 @@
-File            = require '../models/file'
-#onThumbCreation = require('../../init').onThumbCreation
-fs              = require('fs')
-
+File                = require '../models/file'
+#onThumbCreation    = require('../../init').onThumbCreation
+fs                  = require('fs')
+localizationManager = require '../lib/localization_manager'
 ###*
  * Get given file, returns 404 if photo is not found.
 ###

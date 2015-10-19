@@ -2,7 +2,7 @@ utils = require '../lib/passport_utils'
 Adapter = require '../lib/adapter'
 User = require '../models/user'
 CozyInstance = require '../models/cozyinstance'
-localizationManager = require '../helpers/localization_manager'
+localizationManager = require '../lib/localization_manager'
 adapter = new Adapter()
 
 EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
