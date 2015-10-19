@@ -26,7 +26,11 @@ resetTestServers = ->
 
 #initiate fake servers
 startTestServers = ->
-    @controller = helpers.fakeServer { drone: { port: 8001 } }, 200
+    controllerFn = (req, body) ->
+        if req.url is '/drones/running' then {app: {}}
+        else { drone: { port: 8001 } }
+
+    @controller = helpers.fakeServer controllerFn, 200
     @controller.listen 9002
 
     @proxy = helpers.fakeServer msg: "ok", 200
