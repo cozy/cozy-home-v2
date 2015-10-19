@@ -76,15 +76,16 @@
         position absolute
 
 .noncozy-warning
-    margin-top 20px
-    padding 5px 10px
+    display flex
+    align-items center
+    margin-top (10/16)em
+    padding (12/16)em (16/16)em
     border-radius 5px
     background red
 
     .fa
-        float left
-        font-size 28px
-        margin 5px 10px 5px 0
+        font-size (32/16)em
+        margin-right (10/32)em
         color white
 
     span
@@ -96,7 +97,7 @@
 
 .md-body
     background white
-    padding 20px
+    padding (20/16)em
     color grey-08
     overflow-y auto
 
@@ -145,6 +146,9 @@
     opacity 1
     visibility visible
 
+
+// No idea what is `#tutorial-view`
+// TODO: we probably need to remove it
 #tutorial-view
     div.question
         display none
@@ -153,8 +157,8 @@
             display block
 
         button
-            padding 10px
-            font-size 16px
+            padding (10/16)em
+            font-size 1em
 
     #end-screen
         ul
@@ -214,13 +218,17 @@
             margin 0
 
         button
-            padding    .35em 0
-            border     0
-            font-size  .8em
-            color      white
-            background transparent
-            opacity    .35
-            cursor     pointer
+            padding     0
+            background  transparent
+            border      0
+            opacity     .5
+            font-size   1.5em
+            line-height 1
+            color       white
+            cursor      pointer
+
+            &:hover
+                opacity 1
 
     .modalCY-body
         overflow hidden

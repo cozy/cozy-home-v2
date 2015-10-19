@@ -60,7 +60,7 @@ class Modal extends Backbone.View
         super
 
     render: ->
-        close = $('<button class="close fa fa-close" data-dismiss="modal"/>')
+        close = $('<button class="close" data-dismiss="modal">×</button>')
         title = $('<p>').text @title
         head  = $('<div class="modalCY-header">').append close, title
 
