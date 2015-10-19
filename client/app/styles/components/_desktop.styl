@@ -6,61 +6,63 @@
     padding-bottom 20px
 
     .preview-holder
-        padding 10px
+        padding (10/16)em
         display block
         list-style-type none
-        background-color orange
+        background-color blue
 
     section
-        background rgba(255, 255, 255, 0.8)
-        border-radius 15px
         display none
-        padding 0px 12px 0px
+        margin-top 2em
+        padding (15/16)em (20/16)em (20/16)em
+        background rgba(255,255,255,.67)
+        border-radius 12px
+
+
+        &:last-child
+            margin-bottom 2em
 
         &.show
             display block
 
         h2
-            font-size 16px
+            padding-bottom 0.25em
+            margin 0
+            background-color transparent
+            font-size 1em
             text-transform uppercase
             color grey-08
-            background-color transparent
-            padding 20px 10px 0px 18px
-            margin-top 20px
-            margin-bottom 0px
+            text-align center
 
 
 .application
     cursor pointer
-    padding 10px
 
     .application-inner
-        padding-top 5px
-        border-radius 200px
-        padding 20px 10px
+        border-radius 5px
+        padding (10/16)em (16/16)em (6/16)em
 
         .vertical-aligner
             height 100%
             width 100%
 
-        img.icon
+        img
+            display block
+            margin-bottom (4/16)em
             height auto
-            display block
-            padding 20px
-            margin 0px auto 2% auto
-            text-align center
-            border-radius 200px
-            margin-bottom 10px
             width 100%
-            transition background 0.2s ease
-
-        img.spinner
-            border-radius 200px
-            display block
+            border-radius 50em
             background-position center
-            width 100%
-            margin-bottom 10px
-            margin-top 0px
+
+            &.icon
+                padding (20/16)em
+                text-align center
+                box-shadow 0 2px 6px rgba(0,0,0,.16)
+                transition all 0.2s ease-out
+
+        &:hover img.icon
+            transform scale(1.06)
+            box-shadow 0 4px 12px rgba(0,0,0,.24)
 
         p
             margin 0
@@ -69,17 +71,14 @@
 
         .app-title
             height 20%
-
             text-align center
-            font-family 'Source Sans Pro', sans-serif
-            text-transform uppercase
-            font-size 15px
+            text-transform capitalize
+            font-size (16/16)em
             color grey-08
-            text-decoration none
-            margin-top 2px
+            text-shadow 0 1px 3px rgba(255,255,255,.35)
 
         .state-label
-            font-size 18px
+            font-size (18/15)em
             font-weight normal
             color red
 
@@ -97,8 +96,4 @@
             padding 25px
             border-radius 100px
             background #338CF7 + 20%
-
-        &:hover
-            img
-                background #338CF7 + 40%
-                border-radius 100px
+            box-shadow 0 2px 6px rgba(0,0,0,.16)

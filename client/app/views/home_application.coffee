@@ -20,7 +20,7 @@ module.exports = class ApplicationRow extends BaseView
     ### Constructor ####
 
     onMouseOver: ->
-        @background.css 'background-color', '#FF9D3B'
+        @background.css 'background-color', 'background-color'
 
     onMouseOut: ->
         @background.css 'background-color', @color or 'transparent'
