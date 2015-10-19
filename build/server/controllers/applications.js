@@ -138,7 +138,9 @@ updateApp = function(app, callback) {
         iconInfos = icons.getIconInfos(infos);
       } catch (error1) {
         err = error1;
-        console.log(err);
+        if (process.env.NODE_ENV !== 'test') {
+          console.log(err);
+        }
         iconInfos = null;
       }
       data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
@@ -156,7 +158,7 @@ updateApp = function(app, callback) {
           return app.updateAttributes(data, function(err) {
             removeAppUpdateNotification(app);
             return icons.save(app, iconInfos, function(err) {
-              if (err) {
+              if (err && process.env.NODE_ENV !== 'test') {
                 console.log(err.stack);
               } else {
                 console.info('icon attached');
@@ -380,7 +382,9 @@ module.exports = {
                   iconInfos = icons.getIconInfos(appli);
                 } catch (error1) {
                   err = error1;
-                  console.log(err);
+                  if (process.env.NODE_ENV !== 'test') {
+                    console.log(err);
+                  }
                   iconInfos = null;
                 }
                 appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
@@ -389,7 +393,7 @@ module.exports = {
                     return sendErrorSocket(err);
                   }
                   return icons.save(appli, iconInfos, function(err) {
-                    if (err != null) {
+                    if (err && process.env.NODE_ENV !== 'test') {
                       console.log(err.stack);
                     } else {
                       console.info('icon attached');

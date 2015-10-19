@@ -37,12 +37,16 @@ module.exports = AlarmManager = (function() {
     return Event.all((function(_this) {
       return function(err, events) {
         var event, i, len, results;
-        results = [];
-        for (i = 0, len = events.length; i < len; i++) {
-          event = events[i];
-          results.push(_this.addEventCounters(event));
+        if (err) {
+          return log.error(err);
+        } else {
+          results = [];
+          for (i = 0, len = events.length; i < len; i++) {
+            event = events[i];
+            results.push(_this.addEventCounters(event));
+          }
+          return results;
         }
-        return results;
       };
     })(this));
   };
@@ -66,8 +70,12 @@ module.exports = AlarmManager = (function() {
       case "event.update":
         return Event.find(msg, (function(_this) {
           return function(err, event) {
-            if (event != null) {
-              return _this.addEventCounters(event);
+            if (err) {
+              return log.error(err);
+            } else {
+              if (event != null) {
+                return _this.addEventCounters(event);
+              }
             }
           };
         })(this));
