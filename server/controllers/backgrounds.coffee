@@ -39,5 +39,5 @@ module.exports =
                     res.send background
 
             else
-                next new Error 'Can\'t change background, no file is attached.'
+                next new Error localizationManager.t 'cant change background'
 

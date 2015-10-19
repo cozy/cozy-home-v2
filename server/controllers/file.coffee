@@ -14,7 +14,7 @@ module.exports.fetch = (req, res, next, id) ->
             console.log 'not file in fetch id'
             console.log id
             # console.log req
-            return res.error 404, 'File not found'
+            return res.error 404, localizationManager.t 'File not found'
 
         req.file = file
         next()

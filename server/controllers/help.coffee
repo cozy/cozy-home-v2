@@ -32,7 +32,7 @@ module.exports =
                     data =
                         to: "support@cozycloud.cc"
                         'reply-to': email
-                        subject: "Demande d'assistance depuis un Cozy"
+                        subject: localizationManager.t "ask for assistance"
                         content: content
 
                     if path?
@@ -46,7 +46,7 @@ module.exports =
                         return next err if err
 
                         res.send
-                            success: 'Mail successully sent to support.'
+                            success: localizationManager.t 'mail successully sent'
 
                 if req.body.sendLogs
                     logs.getCompressLogs onLogs

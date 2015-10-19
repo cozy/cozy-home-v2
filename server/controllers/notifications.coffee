@@ -17,7 +17,7 @@ module.exports =
         Notification.find req.params.notifid, (err, notif) =>
             if err then next err
             else if not notif
-                res.send 404, error: 'Notification not found'
+                res.send 404, error: localizationManager.t 'notification not found'
             else
                 res.send 200, notif
 
@@ -25,7 +25,7 @@ module.exports =
         Notification.find req.params.notifid, (err, notif) =>
             if err then next err
             else if not notif
-                res.send 404, error: 'Notification not found'
+                res.send 404, error: localizationManager.t 'notification not found'
             else
                 notif.destroy (err) ->
                     if err then next err
@@ -43,11 +43,11 @@ module.exports =
         Notification.create attributes, (err, notif) =>
             if err then next err
             else
-                res.send 201, success: 'Notification created'
+                res.send 201, success: localizationManager.t 'notification created'
 
     updateOrCreate: (req, res, next) ->
         if not req.params.app or not req.params.ref
-            return res.send 500, error: 'Wrong usage'
+            return res.send 500, error: localizationManager.t 'wrong usage'
 
         attributes = req.body
         attributes.type = 'persistent'

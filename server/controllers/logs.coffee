@@ -20,7 +20,7 @@ module.exports =
                 stream.on 'end', ->
                     res.end()
             else
-                res.status(404).send 'File not found'
+                res.status(404).send localizationManager.t 'file not found'
     # Log client errors
     logClient: (req, res) ->
         log.error req.body.data
