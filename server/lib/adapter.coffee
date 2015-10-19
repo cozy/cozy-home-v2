@@ -16,7 +16,7 @@ module.exports = class Adapter
             client.setBasicAuth name, token
 
         # Update password
-        client.put "accounts/password/", password: pwd, (err, res, body) =>
+        client.put "accounts/password/", password: pwd, (err, res, body) ->
             callback err
 
     initializeKeys: (pwd, callback) ->
@@ -30,7 +30,7 @@ module.exports = class Adapter
             client.setBasicAuth name, token
 
         # Update password
-        client.post "accounts/password/", password: pwd, (err, res, body) =>
+        client.post "accounts/password/", password: pwd, (err, res, body) ->
             callback err
 
 
@@ -45,6 +45,6 @@ module.exports = class Adapter
             client.setBasicAuth name, token
 
         # Update password
-        client.put "user/merge/#{user.id}", data, (err, res, body) =>
+        client.put "user/merge/#{user.id}", data, (err, res, body) ->
             callback err
 

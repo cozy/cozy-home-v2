@@ -82,12 +82,12 @@ module.exports = class HomeView extends BaseView
     # Send a logout request to server then reload current window to redirect
     # user to automatically redirect user to login page (he's not logged
     # anymore, so cozy proxy will do the redirection).
-    logout: (event) =>
+    logout: (event) ->
         user = new User()
         user.logout
-            success: (data) =>
+            success: (data) ->
                 window.location = window.location.origin + '/login/'
-            error: =>
+            error: ->
                 alert 'Server error occured, logout failed.'
 
 
@@ -260,11 +260,19 @@ module.exports = class HomeView extends BaseView
         # only if there is a hash in the home given url.
         else if hash
             contentWindow = frame.prop('contentWindow')
-            currentHash = contentWindow.location.hash.substring 1
+            # Same origin policy may prevent to access location hash
+            try
+                currentHash = contentWindow.location.hash.substring 1
+            catch err
+                console.err err
             onLoad()
 
         else if frame.is(':visible')
-            frame.prop('contentWindow').location.hash = ''
+            # Same origin policy may prevent to access location hash
+            try
+                frame.prop('contentWindow').location.hash = ''
+            catch err
+                console.err err
             onLoad()
 
         else

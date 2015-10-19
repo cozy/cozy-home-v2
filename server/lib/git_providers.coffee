@@ -28,13 +28,13 @@ module.exports.GithubProvider = class GithubProvider extends GitProvider
         else
             path = @basePath + '/master'
 
-        client.get path + '/package.json', (err, res, body) =>
+        client.get path + '/package.json', (err, res, body) ->
             callback err, body
 
     getStars: (callback) ->
         client = request.newClient "https://api.github.com/"
         path = "repos/#{@basePath}/stargazers"
-        client.get path, (err, res, body) =>
+        client.get path, (err, res, body) ->
             callback err, body.length
 
 

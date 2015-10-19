@@ -26,7 +26,8 @@ module.exports = class PopoverDescriptionView extends BaseView
         @header.html @model.get 'displayName'
 
         @body.addClass 'loading'
-        @body.html t('please wait data retrieval') + '<div class="spinner-container" />'
+        @body.html t('please wait data retrieval') + \
+            '<div class="spinner-container" />'
         @body.find('.spinner-container').spin true
         @model.getMetaData
             success: =>
@@ -61,7 +62,12 @@ module.exports = class PopoverDescriptionView extends BaseView
         else
             @body.append "<h4>#{t('required permissions')}</h4>"
             for docType, permission of @model.get("permissions")
-                permissionsDiv = $ "<div class='permissionsLine'> <strong> #{docType} </strong> <p> #{permission.description} </p> </div>"
+                permissionsDiv = $ """
+                  <div class='permissionsLine'>
+                    <strong> #{docType} </strong>
+                    <p> #{permission.description} </p>
+                  </div>
+                """
                 @body.append permissionsDiv
 
         @handleContentHeight()

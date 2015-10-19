@@ -23,13 +23,17 @@ module.exports = class AlarmManager
     fetchAlarms: =>
         @dailytimer = setTimeout @fetchAlarms, oneDay
         Event.all (err, events) =>
-            @addEventCounters event for event in events
+            if err
+                log.error err
+            else
+                @addEventCounters event for event in events
 
     # cancel all timeouts for a given id
     clearTimeouts: (id) ->
         if @timeouts[id]?
             log.info "Remove notification #{id}"
-            clearTimeout timeout for timeout in @timeouts[id]
+            for index in Object.keys(@timeouts[id])
+                clearTimeout @timeouts[id][index]
             delete @timeouts[id]
 
     # Analyze upcoming event from Data System and act with it.
@@ -37,7 +41,10 @@ module.exports = class AlarmManager
         switch event
             when "event.create", "event.update"
                 Event.find msg, (err, event) =>
-                    @addEventCounters event if event?
+                    if err
+                        log.error err
+                    else
+                        @addEventCounters event if event?
 
             when "event.delete"
                 @clearTimeouts msg
@@ -68,9 +75,9 @@ module.exports = class AlarmManager
 
             log.info "Notification in #{delta/1000} seconds."
 
-            @timeouts[alarm._id] ?= []
+            @timeouts[alarm._id] ?= {}
             timeout = setTimeout @handleNotification.bind(@), delta, alarm
-            @timeouts[alarm._id].push timeout
+            @timeouts[alarm._id][alarm.index] = timeout
 
     # immediately create the Notification object
     # and/or send Email for a given alarm

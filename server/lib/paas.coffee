@@ -145,7 +145,7 @@ reseting routes"
             manifest = app.getHaibuDescriptor()
             console.info "Request controller for cleaning #{app.name}..."
 
-            @client.clean manifest, (err, res, body) =>
+            @client.clean manifest, (err, res, body) ->
                 err ?= body.error unless status2XX res
                 errMsg = 'application not installed'
                 if err? and err.indexOf? and err.indexOf(errMsg) is -1
@@ -162,17 +162,25 @@ reseting routes"
         else
             callback null
 
+    checkAppStopped: (app, callback) ->
+        @client.get 'running', (err, res, body) =>
+            return callback err if err
+            if app.slug in  Object.keys(body.app)
+                @client.stop app.slug, (err, res, body) =>
+                    callback err
+            else
+                callback()
 
     # Send a start request to controller server
     start: (app, callback) ->
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for starting #{app.name}..."
-
-        @client.stop app.slug, (err, res, body) =>
+        @checkAppStopped app, (err) =>
+            console.log err if err?
             @checkMemory (err) ->
                 return callback err if err
 
-                @client.start manifest, (err, res, body) =>
+                @client.start manifest, (err, res, body) ->
                     err ?= new Error body.error.message unless status2XX res
 
                     if err
@@ -190,7 +198,7 @@ reseting routes"
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for stopping #{app.name}..."
 
-        @client.stop app.slug, (err,res, body) =>
+        @client.stop app.slug, (err,res, body) ->
             err ?= body.error unless status2XX res
             if err and err.indexOf('application not started') is -1
                 err = new Error err

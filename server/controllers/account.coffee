@@ -80,11 +80,11 @@ module.exports =
             user = users[0]
             data = {}
 
-            updatePassword user, req.body, data, (libErr, userErr) =>
+            updatePassword user, req.body, data, (libErr, userErr) ->
                 return res.send 500, error: libErr if libErr
                 return res.send 400, error: userErr if userErr
 
-                updateData user, req.body, data, (libErr, userErr) =>
+                updateData user, req.body, data, (libErr, userErr) ->
                     return res.send 500, error: libErr if libErr
                     return res.send 400, error: userErr if userErr
 

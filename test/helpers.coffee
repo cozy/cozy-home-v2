@@ -72,7 +72,7 @@ _clearDb = (callback) ->
 helpers.setup = (port) ->
     (done) ->
         @timeout 15000
-        _init this, port, (err) =>
+        _init this, port, (err) ->
             return done err if err
             _clearDb done
 
@@ -142,7 +142,7 @@ helpers.getClient = (port, context) ->
 
     store = if context? then context else {}
 
-    callbackFactory = (done) -> (error, response, body) =>
+    callbackFactory = (done) -> (error, response, body) ->
         #throw error if error? and not body
         store.response = response
         store.body = body
