@@ -125,7 +125,7 @@ SVGIMAGES = 'client/app/assets/img/apps'
 
 task 'build-icons', "Sprite the icons in #{SVGIMAGES}", ->
     try Iconizr = require 'iconizr'
-    catch err then
+    catch err
         return console.log """
             iconizr is not compatible with node 4 and therefore not included
             in dependencies. You need to run `npm install iconizr` before
