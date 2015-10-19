@@ -305,6 +305,7 @@ describe "Applications management", ->
         describe "DELETE /api/applications/:slug/uninstall Remove an app", ->
 
             it "When I send a request to uninstall an application", (done) ->
+                @timeout 5000
                 @client.del "api/applications/my-app/uninstall", done
 
             it "Then it sends me a success response", ->
