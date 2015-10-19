@@ -16,7 +16,7 @@
   "total": "Total",
   "memory consumption": "Utilisation mémoire",
   "disk consumption": "Utilisation disque",
-  "you have no notifications": "Bonjour %{name}, vous n'avez aucune notification pour le moment.",
+  "you have no notifications": "<span>Bonjour %{name}</span><br>Vous n'avez aucune notification pour le moment.",
   "dismiss all": "Tout effacer",
   "add application": "Ajouter l'application ?",
   "install": "Installer",

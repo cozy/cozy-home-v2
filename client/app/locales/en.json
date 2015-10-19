@@ -16,7 +16,7 @@
   "total": "Total",
   "memory consumption": "Memory usage",
   "disk consumption": "Disk usage",
-  "you have no notifications": "Hello %{name}, you have currently no notification.",
+  "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
   "dismiss all": "Dismiss all",
   "add application": "Add app?",
   "install": "Install",
