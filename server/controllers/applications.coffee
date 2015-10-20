@@ -1,20 +1,20 @@
-request = require 'request-json'
-fs = require 'fs'
-slugify = require 'cozy-slug'
-{exec} = require 'child_process'
-async = require 'async'
-cozydb = require 'cozydb'
-log = require('printit')
-    prefix: "applications"
+request             = require 'request-json'
+fs                  = require 'fs'
+slugify             = require 'cozy-slug'
+{exec}              = require 'child_process'
+async               = require 'async'
+cozydb              = require 'cozydb'
+log                 = require('printit')
+prefix: "applications"
 
-Application = require '../models/application'
+Application         = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
 localizationManager = require '../helpers/localization_manager'
-manager = require('../lib/paas').get()
-{Manifest} = require '../lib/manifest'
-market = require '../lib/market'
-autostop = require '../lib/autostop'
-icons = require '../lib/icon'
+manager             = require('../lib/paas').get()
+{Manifest}          = require '../lib/manifest'
+market              = require '../lib/market'
+autostop            = require '../lib/autostop'
+icons               = require '../lib/icon'
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -112,7 +112,7 @@ updateApp = (app, callback) ->
                 manager.updateApp app, (err, result) ->
                     return callback err if err?
                     if app.state isnt "stopped"
-                        data.state = localizationManager.t "installed"
+                        data.state = "installed"
                     # Update application
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
@@ -276,7 +276,7 @@ module.exports =
 
                             if result.drone?
                                 updatedData =
-                                    state: localizationManager.t "installed"
+                                    state: "installed"
                                     port: result.drone.port
 
                                 msg = "install succeeded on port #{appli.port}"
@@ -366,7 +366,7 @@ module.exports =
             console.log "Marking app #{app.name} as broken because"
             console.log err.stack
             data =
-                state: localizationManager.t 'broken'
+                state: 'broken'
                 password: null
             if err.result?
                 data.errormsg = err.message + ' :\n' + err.result
@@ -445,7 +445,7 @@ module.exports =
                         delete startedApplications[req.application.id]
                         data =
                             errormsg: err
-                            state: localizationManager.t 'stopped'
+                            state: 'stopped'
                         # Update state application
                         req.application.updateAttributes data, (saveErr) ->
                             return sendError res, saveErr if saveErr
@@ -459,7 +459,7 @@ module.exports =
                             , 500
                     else
                         data =
-                            state: localizationManager.t 'installed'
+                            state: 'installed'
                             port: result.drone.port
                         # Update state application
                         req.application.updateAttributes data, (err) ->
@@ -492,7 +492,7 @@ module.exports =
             return markBroken res, req.application, err if err
 
             data =
-                state: localizationManager.t 'stopped'
+                state: 'stopped'
                 port : 0
             # Update application state
             req.application.updateAttributes data, (err) ->

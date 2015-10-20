@@ -85,7 +85,16 @@ buildJsInLocales = ->
         name     = file.replace '.json', '.js'
         fs.writeFileSync "./build/client/app/locales/#{name}", exported
         # add locales at the end of app.js
+    for file in fs.readdirSync './server/locales/'
+        filename = './server/locales/' + file
+        template = fs.readFileSync filename, 'utf8'
+        exported = "module.exports = #{template};\n"
+        name     = file.replace '.json', '.js'
+        fs.writeFileSync "./build/server/locales/#{name}", exported
+        # add locales at the end of app.js
+
     exec "rm -rf build/client/app/locales/*.json"
+    exec "rm -rf build/server/locales/*.json"
 
 buildJade = ->
     jade = require 'jade'
@@ -108,8 +117,10 @@ task 'build', 'Build CoffeeScript to Javascript', ->
               "rm -rf build/client/app/locales/* && " + \
               "rm -rf build/client/public && " + \
               "mkdir -p build/client/public/ && " + \
+              "mkdir -p build/server/locales/ && " + \
               # does not work when brunch is not launched
               "cp -rf client/public/* build/client/public && " + \
+              "cp -rf server/locales/*.json build/server/locales && " + \
               "mkdir -p build/server/views/"
     exec command, (err, stdout, stderr) ->
         if err
