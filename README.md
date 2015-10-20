@@ -7,7 +7,7 @@ launchers and widgets.
 
 ## Install
 
-We assume here that the Cozy platform is correctly [installed](https://raw.github.com/mycozycloud/cozy-setup/gh-pages/assets/images/happycloud.png)
+We assume here that the Cozy platform is correctly [installed](https://raw.github.com/cozy/cozy-setup/gh-pages/assets/images/happycloud.png)
  on your server.
 
 Type this command to install the home application:
@@ -18,8 +18,10 @@ Type this command to install the home application:
 
 You can contribute to the Cozy Home in many ways:
 
-* Pick up an [issue](https://github.com/mycozycloud/cozy-home/issues?state=open) and solve it.
-* Translate it in [a new language](https://github.com/mycozycloud/cozy-home/tree/master/client/app/locales).
+* Pick up an [issue](https://github.com/cozy/cozy-home/issues?state=open) and solve it.
+* Translate it in [a new language](https://www.transifex.com/cozy/cozy-home/)
+  (ask us to be added to the contributors, we will also help you to make your
+  first steps with transifex).
 * Add the capability to backup the Cozy (replicate it to another Cozy instance
   from) from the User Interface.
 
@@ -29,7 +31,7 @@ To be hacked, the Cozy Home dev environment requires that a CouchDB instance
 and a Cozy Data System instance are running. Then you can start the Cozy Home
 this way:
 
-    git clone https://github.com/mycozycloud/cozy-home.git
+    git clone https://github.com/cozy/cozy-home.git
     node server.js
 
 Each modification requires a new build, here is how to run a build:
@@ -39,7 +41,7 @@ Each modification requires a new build, here is how to run a build:
 ## Tests
 
 ![Build
-Status](https://travis-ci.org/mycozycloud/cozy-home.png?branch=master)
+Status](https://travis-ci.org/cozy/cozy-home.png?branch=master)
 
 To run tests type the following command into the Cozy Home folder:
 
@@ -75,7 +77,7 @@ Cozy Home is developed by Cozy Cloud and distributed under the AGPL v3 license.
 
 ## What is Cozy?
 
-![Cozy Logo](https://raw.github.com/mycozycloud/cozy-setup/gh-pages/assets/images/happycloud.png)
+![Cozy Logo](https://raw.github.com/cozy/cozy-setup/gh-pages/assets/images/happycloud.png)
 
 [Cozy](http://cozy.io) is a platform that brings all your web services in the
 same private space.  With it, your web apps and your devices can share data
