@@ -26,7 +26,11 @@ resetTestServers = ->
 
 #initiate fake servers
 startTestServers = ->
-    @controller = helpers.fakeServer { drone: { port: 8001 } }, 200
+    controllerFn = (req, body) ->
+        if req.url is '/drones/running' then {app: {}}
+        else { drone: { port: 8001 } }
+
+    @controller = helpers.fakeServer controllerFn, 200
     @controller.listen 9002
 
     @proxy = helpers.fakeServer msg: "ok", 200
@@ -97,7 +101,7 @@ describe "Applications management", ->
                 should.exist body.start.scripts
 
             it "And the proxy have been requested to update its routes", ->
-                 @proxy.lastCall().request.url.should.equal "/routes/reset"
+                @proxy.lastCall().request.url.should.equal "/routes/reset"
 
             it "When I send a request to retrieve all applications", (done) ->
                 @client.get "api/applications", done
@@ -110,7 +114,8 @@ describe "Applications management", ->
                 Application.all key:"my-app", (err, apps) =>
                     ds = new Client "http://localhost:9101/"
                     ds.setBasicAuth 'home', 'token'
-                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
                         @password = body[0].value.token
                         done()
 
@@ -179,7 +184,8 @@ describe "Applications management", ->
                 Application.all key:"my-app", (err, apps) =>
                     ds = new Client "http://localhost:9101/"
                     ds.setBasicAuth 'home', 'token'
-                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
                         @password = body[0].value.token
                         done()
 
@@ -265,7 +271,8 @@ describe "Applications management", ->
                 Application.all key:"my-app", (err, apps) =>
                     ds = new Client "http://localhost:9101/"
                     ds.setBasicAuth 'home', 'token'
-                    ds.post 'request/access/byApp/', key: apps[0].id, (err, res, body) =>
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
                         @password = body[0].value.token
                         done()
 
@@ -298,6 +305,7 @@ describe "Applications management", ->
         describe "DELETE /api/applications/:slug/uninstall Remove an app", ->
 
             it "When I send a request to uninstall an application", (done) ->
+                @timeout 5000
                 @client.del "api/applications/my-app/uninstall", done
 
             it "Then it sends me a success response", ->

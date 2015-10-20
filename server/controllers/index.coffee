@@ -19,7 +19,7 @@ module.exports =
             notifications:       (cb) -> Notification.all cb
             cozy_instance:       (cb) -> CozyInstance.first cb
             stack_application:   (cb) -> StackApplication.all cb
-            market_applications: (cb) -> Market.download cb
+            market_applications: (cb) -> Market.getApps cb
         , (err, results) ->
             if err then next err
             else

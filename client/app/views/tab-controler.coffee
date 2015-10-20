@@ -50,7 +50,7 @@ module.exports = tabControler =
         Array.prototype.forEach.call( tablists, (tablist)->
             panelList = tablist.getAttribute('aria-controls')
             panelList = document.querySelector(".#{panelList}")
-            tablist.addEventListener 'click', (event) =>
+            tablist.addEventListener 'click', (event) ->
                 if event.target.getAttribute('role') != 'tab'
                     return
                 panelName = event.target.getAttribute 'aria-controls'
@@ -96,3 +96,4 @@ module.exports = tabControler =
         panel.setAttribute('aria-hidden', true)
         panel.setAttribute('aria-selected', true)
         panelsContainer.appendChild(panel)
+

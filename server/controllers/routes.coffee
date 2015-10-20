@@ -85,6 +85,9 @@ module.exports =
     # Logs
     'logs/:moduleslug':
         get: logs.logs
+    # log client errors
+    'log':
+        post: logs.logClient
 
     # Help
     'help/message':

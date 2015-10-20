@@ -9,6 +9,7 @@ module.exports = class ApplicationRow extends BaseView
     template: require 'templates/market_application'
 
     events:
+        "click .website": "onWebsiteClicked"
         "click .btn": "onInstallClicked"
         "click": "onInstallClicked"
 
@@ -47,3 +48,7 @@ module.exports = class ApplicationRow extends BaseView
     onInstallClicked: =>
         return if @installInProgress
         @marketView.showDescription this, @installButton
+
+    onWebsiteClicked: (e) ->
+        # prevent starting installation when clicking on Github or website links
+        e.stopPropagation()

@@ -82,10 +82,13 @@ module.exports = class ApplicationRow extends BaseView
                 @startStopBtn.displayGrey t 'start this app'
 
         @updateIcon.toggle @model.get 'needsUpdate'
-        @$(".update-app").hide() unless @model.get('needsUpdate')
+        if (not @model.get("branch")? or @model.get 'branch' is 'master') and
+            not(@model.get('needsUpdate'))
+                @$(".update-app").hide()
 
         bool = @model.get 'isStoppable'
         @$('.app-stoppable').attr 'checked', bool
+
 
     onStoppableClicked: (event) =>
         bool = not @model.get('isStoppable')
@@ -94,21 +97,31 @@ module.exports = class ApplicationRow extends BaseView
             error: =>
                 @$('.app-stoppable').attr 'checked', !bool
 
+
     onRemoveClicked: (event) =>
         event.preventDefault()
         @removeButton.spin true
         @stateLabel.html t 'removing'
+
         @model.uninstall
             success: =>
                 @remove()
-                Backbone.Mediator.pub 'app-state-changed', true
+                Backbone.Mediator.pub 'app-state:changed',
+                    status: 'uninstalled'
+                    updated: false
+                    slug: @model.get 'slug'
             error: =>
                 @removeButton.displayRed t "retry to install"
-                Backbone.Mediator.pub 'app-state-changed', true
+                Backbone.Mediator.pub 'app-state:changed',
+                    status: 'uninstalled'
+                    updated: false
+                    slug: @model.get 'slug'
+
 
     onUpdateClicked: (event) =>
         event.preventDefault()
         @openPopover()
+
 
     openPopover: ->
         @popover.hide() if @popover?
@@ -135,7 +148,10 @@ module.exports = class ApplicationRow extends BaseView
                 success: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'stopped'
-                    Backbone.Mediator.pub 'app-state-changed', true
+                    Backbone.Mediator.pub 'app-state:changed',
+                        status: 'stopped'
+                        updated: false
+                        slug: @model.get 'slug'
                 error: =>
                     @startStopBtn.spin false
 
@@ -144,12 +160,18 @@ module.exports = class ApplicationRow extends BaseView
                 success: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'started'
-                    Backbone.Mediator.pub 'app-state-changed', true
+                    Backbone.Mediator.pub 'app-state:changed',
+                        status: 'started'
+                        updated: false
+                        slug: @model.get 'slug'
                     window.location.href = "#apps/#{@model.get('slug')}"
                 error: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'stopped'
-                    Backbone.Mediator.pub 'app-state-changed', true
+                    Backbone.Mediator.pub 'app-state:changed',
+                        status: 'stopped'
+                        updated: false
+                        slug: @model.get 'slug'
                     msg = 'This app cannot start.'
                     errormsg = @model.get 'errormsg'
                     msg += " Error was : #{errormsg}" if errormsg
@@ -165,12 +187,22 @@ module.exports = class ApplicationRow extends BaseView
         , 1000
 
     updateApp: ->
-        Backbone.Mediator.pub 'app-state-changed', true
         @updateButton.spin true
+
         if @model.get('state') isnt 'broken'
             @stateLabel.html t 'updating'
+            Backbone.Mediator.pub 'app-state:changed',
+                status: 'updating'
+                updated: true
+                slug: @model.get 'slug'
+
         else
-            @stateLabel.html t "installing"
+            @stateLabel.html t 'installing'
+            Backbone.Mediator.pub 'app-state:changed',
+                status: 'installing'
+                updated: false
+                slug: @model.get 'slug'
+
         @model.updateApp
             success: =>
                 @updateButton.displayGreen t "updated"
@@ -179,7 +211,10 @@ module.exports = class ApplicationRow extends BaseView
                     @stateLabel.html t 'started'
                 if @model.get('state') is 'stopped'
                     @stateLabel.html t 'stopped'
-                Backbone.Mediator.pub 'app-state-changed', true
+                Backbone.Mediator.pub 'app-state:changed',
+                        status: 'started'
+                        updated: true
+                        slug: @model.get 'slug'
                 setTimeout =>
                     @updateButton.hide()
                     @updateLabel.hide()
@@ -190,7 +225,10 @@ module.exports = class ApplicationRow extends BaseView
                 alert t 'update error'
                 @stateLabel.html t 'broken'
                 @updateButton.displayRed t "update failed"
-                Backbone.Mediator.pub 'app-state-changed', true
+                Backbone.Mediator.pub 'app-state:changed',
+                    status: 'broken'
+                    updated: false
+                    slug: @model.get 'slug'
 
 
     # When favorite button is clicked, the favorite flag is toggled.

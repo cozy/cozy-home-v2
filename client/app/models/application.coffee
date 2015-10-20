@@ -97,13 +97,17 @@ module.exports = class Application extends Backbone.Model
 
         if favorite
             section = 'favorite'
-        else if name in ['import-from-google']
-            section = 'leave'
-        else if name in ['calendar', 'contacts', 'emails', 'files', 'photos']
+        else if name in [
+            'calendar', 'contacts', 'emails', 'files', 'photos'
+        ]
             section = 'main'
-        else if name in ['blog', 'feeds', 'bookmarks', 'quickmarks', 'zero-feeds']
+        else if name in [
+            'blog', 'feeds', 'bookmarks', 'quickmarks', 'zero-feeds'
+        ]
             section = 'watch'
-        else if name in ['kresus', 'konnectors', 'kyou', 'databrowser']
+        else if name in [
+            'kresus', 'konnectors', 'kyou', 'databrowser', 'import-from-google'
+        ]
             section = 'data'
         else if name in ['todos', 'notes', 'tasky']
             section = 'productivity'

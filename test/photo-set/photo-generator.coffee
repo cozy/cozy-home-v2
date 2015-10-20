@@ -14,7 +14,7 @@ numeral.language 'fr',
     currency:
         symbol: '€'
 
-numeral.language('fr');
+numeral.language 'fr'
 
 MONTHS = [
             {nPhotos : 3  , month : '201504'},

@@ -19,7 +19,7 @@ StackApplication.all = (params, callback) ->
 # callback: function(err, needsUpdate)
 StackApplication::checkForUpdate = (callback) ->
     setFlag = (repoVersion, cb) =>
-        @updateAttributes lastVersion: repoVersion, (err) =>
+        @updateAttributes lastVersion: repoVersion, (err) ->
             if err
                 cb err
             else
@@ -42,9 +42,8 @@ StackApplication::checkForUpdate = (callback) ->
                     if not @version? or @version isnt repoVersion
                         # if the app has not version but the version on the repo
                         # has one, we set the needsUpdate flag, in doubt. In the
-                        # worst case, the app on the cozy has the same version, but
-                        # there's no way we can
-                        # figure out.
+                        # worst case, the app on the cozy has the same version,
+                        # but there's no way we can figure out.
                         callback null, true
                     else
                         callback null, false

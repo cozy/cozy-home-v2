@@ -7,7 +7,7 @@ fs              = require('fs')
 ###
 module.exports.fetch = (req, res, next, id) ->
     id = id.substring 0, id.length - 4 if id.indexOf('.jpg') > 0
-    File.find id, (err, file) =>
+    File.find id, (err, file) ->
         if err
             return res.error 500, 'An error occured', err
         if not file
@@ -46,7 +46,7 @@ module.exports.photoRange = (req, res, next) ->
         limit      : limit
         skip       : skip
         descending : true
-    File.imageByDate options, (err, photos) =>
+    File.imageByDate options, (err, photos) ->
         if err
             return res.error 500, 'An error occured', err
         else
@@ -62,7 +62,8 @@ module.exports.photoRange = (req, res, next) ->
  * [{nPhotos:`number`, month:'YYYYMM'}, ...]
 ###
 module.exports.photoMonthDistribution = (req, res, next) ->
-    File.imageByMonth {group : true , group_level : 2 , reduce: true }, (error, distribution_raw) ->
+    File.imageByMonth {group : true , group_level : 2 , reduce: true }, \
+     (error, distribution_raw) ->
         distribution = []
         for k in [distribution_raw?.length-1..0]
             month = distribution_raw[k]

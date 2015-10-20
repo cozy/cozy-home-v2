@@ -64,6 +64,11 @@ Here are the source for the backgrounds:
 by [iconmonstr](http://iconmonstr.com/)
 Apps icons by [Elegant Themes](http://www.elegantthemes.com/blog/freebie-of-the-week/beautiful-flat-icons-for-free).
 
+## Contribute with Transifex
+
+Transifex can be used the same way as git. It can push or pull translations. The config file in the .tx repository configure the way Transifex is working : it will get the json files from the client/app/locales repository.
+If you want to learn more about how to use this tool, I'll invite you to check [this](http://docs.transifex.com/introduction/) tutorial.
+
 ## License
 
 Cozy Home is developed by Cozy Cloud and distributed under the AGPL v3 license.

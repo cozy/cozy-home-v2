@@ -27,7 +27,7 @@ startedApplications = {}
 removeAppUpdateNotification = (app) ->
     notifier = new NotificationsHelper 'home'
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.name
+    message = localization.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?
@@ -77,7 +77,7 @@ randomString = (length) ->
 updateApp = (app, callback) ->
     data = {}
     manifest = new Manifest()
-    manifest.download app, (err) =>
+    manifest.download app, (err) ->
         if err?
             callback err
         else
@@ -103,7 +103,7 @@ updateApp = (app, callback) ->
                     slug: app.slug
                 iconInfos = icons.getIconInfos infos
             catch err
-                console.log err
+                console.log err if process.env.NODE_ENV isnt 'test'
                 iconInfos = null
             data.iconType = iconInfos?.extension or null
             # Update access
@@ -117,14 +117,15 @@ updateApp = (app, callback) ->
                     app.updateAttributes data, (err) ->
                         removeAppUpdateNotification app
                         icons.save app, iconInfos, (err) ->
-                            if err then console.log err.stack
+                            if err and process.env.NODE_ENV isnt 'test'
+                                console.log err.stack
                             else console.info 'icon attached'
                             manager.resetProxy callback
 
 baseIdController = new cozydb.SimpleController
-     model: Application
-     reqProp: 'application'
-     reqParamID: 'id'
+    model: Application
+    reqProp: 'application'
+    reqParamID: 'id'
 
 
 module.exports =
@@ -229,7 +230,7 @@ module.exports =
     # * database
     # Send an error if an application already has same slug.
     install: (req, res, next) ->
-        req.body.slug = slugify req.body.name
+        req.body.slug = req.body.slug or slugify req.body.name
         req.body.state = "installing"
         access =
             password: randomString 32
@@ -258,7 +259,7 @@ module.exports =
                     return sendError res, err if err
                     access.app = appli.id
                     # Create application access in database
-                    Application.createAccess access, (err, app) =>
+                    Application.createAccess access, (err, app) ->
                         return sendError res, err if err
 
                         res.send success: true, app: appli, 201
@@ -286,7 +287,8 @@ module.exports =
                                 try
                                     iconInfos = icons.getIconInfos appli
                                 catch err
-                                    console.log err
+                                    if process.env.NODE_ENV isnt 'test'
+                                        console.log err
                                     iconInfos = null
                                 appli.iconType = iconInfos?.extension or null
 
@@ -294,16 +296,20 @@ module.exports =
                                 appli.updateAttributes updatedData, (err) ->
                                     return sendErrorSocket err if err?
                                     icons.save appli, iconInfos, (err) ->
-                                        if err? then console.log err.stack
+                                        if err and
+                                           process.env.NODE_ENV isnt 'test'
+                                            console.log err.stack
                                         else console.info 'icon attached'
-                                        console.info 'saved port in db', appli.port
+                                        console.info 'saved port in db', \
+                                            appli.port
                                         # Reset proxy
                                         manager.resetProxy (err) ->
                                             return sendErrorSocket err if err?
-                                            console.info 'proxy reset', appli.port
+                                            console.info 'proxy reset', \
+                                                appli.port
                             else
                                 err = new Error "Controller has no " + \
-                                                "informations about #{appli.name}"
+                                              "informations about #{appli.name}"
                                 return sendErrorSocket err if err
 
 
@@ -372,11 +378,11 @@ module.exports =
 
         updateApps = (app, callback) ->
             manifest = new Manifest()
-            manifest.download app, (err) =>
+            manifest.download app, (err) ->
                 if err?
                     sendError res, message: error
                 else
-                    app.getAccess (err, access) =>
+                    app.getAccess (err, access) ->
                         if JSON.stringify(access.permissions) isnt
                                 JSON.stringify(manifest.getPermissions())
                             return callback()
@@ -396,7 +402,7 @@ module.exports =
                         else
                             callback()
 
-        Application.all (err, apps) =>
+        Application.all (err, apps) ->
             async.forEachSeries apps, updateApps, () ->
                 if Object.keys(error).length > 0
                     sendError res, message: error
@@ -501,7 +507,7 @@ module.exports =
 
 
     fetchMarket: (req, res, next) ->
-        market.download (err, data) ->
+        market.getApps (err, data) ->
             if err?
                 res.send
                     error: true

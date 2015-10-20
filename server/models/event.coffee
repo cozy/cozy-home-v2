@@ -109,7 +109,8 @@ Event::getAlarms = (userTimezone) ->
 
             # formats like a Cozy alarm
             cozyAlarm =
-                _id: "#{@_id}_#{index}"
+                _id: "#{@_id}"
+                index: "#{index}"
                 action: alarm.action
                 trigg: trigg.toISOString() # Cozy alarm uses UTC.
                 description: @description

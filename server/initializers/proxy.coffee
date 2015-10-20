@@ -25,12 +25,12 @@ haibuClient =  new ControllerClient
 updateRoutes = (occurence) ->
     if occurence < 10
         resetRoutes()
-        setTimeout () =>
+        setTimeout () ->
             updateRoutes(occurence + 1)
         , 30000
     else if occurence < 15
         resetRoutes()
-        setTimeout () =>
+        setTimeout () ->
             updateRoutes(occurence + 1)
         , 60000
 

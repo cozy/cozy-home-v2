@@ -34,7 +34,7 @@ module.exports = class ApplicationsListView extends ViewCollection
 
     afterRender: =>
         @$("#no-app-message").hide()
-        $(".menu-btn a").click (event) =>
+        $(".menu-btn a").click (event) ->
             $(".menu-btn").removeClass 'active'
             $(event.target).closest('.menu-btn').addClass 'active'
 
