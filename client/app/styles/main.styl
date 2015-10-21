@@ -121,30 +121,24 @@
             padding 0
 
         .personalisation
-            margin-bottom 30px
+            margin-bottom (60/16)em
 
 
 @media (max-width 850px)
-
     #applications-view
-        padding 10px
-        margin-bottom 20px
+        padding 0 (10/16)em
+        margin-bottom (20/16)em
 
     #market-view
         span
+            // hide desciption about who developed the app
             display none
 
     dialog
         width 96vw
 
-    #app-list
-        section
-            h2
-                padding-left 13px
-
 
 @media (max-width 800px)
-
     #config-applications-view
         .mod.w25
         .mod.w75
@@ -155,22 +149,31 @@
         .mod.w50
             width 100%
 
+    #app-list section
+        margin-top 1em
+
     .back-button
         span
             display none
 
     .pa2
-        padding 10px
+        padding (10/16)em
 
     #config-applications-view
         .w50
-            padding 10px
+            padding (10/16)em
 
     .platform-section
-        padding 10px
+        padding (10/16)em
 
     .application .application-inner
-        padding 0
+        // reduce padding in the home icon
+        padding (6/16)em 12% (3/16)em
+
+        img.icon
+            // padding relative to the viewport
+            padding 18%
+
 
     .md-content
         overflow auto
@@ -208,10 +211,10 @@
         box-shadow none
 
     img
-        margin 10px 10px 0 0
+        margin (10/16)em (10/16)em 0 0
 
     h3
-        margin-top 20px
+        margin-top (20/16)em
         margin-bottom 0
         padding-bottom 0
         line-height 16px
@@ -303,10 +306,6 @@
         .w66
             padding-right 10px
 
-    #app-list
-        section
-            h2
-                padding-left 8px
 
 @media (max-width 500px)
 
@@ -327,16 +326,6 @@
         .logout-menu-icon
             display block
 
-    .application .application-inner
-        padding 0
-
-        img.icon
-            padding 5px
-
-        .app-title
-            margin-top 4px
-            text-transform capitalize
-
     #market-view
         .app-text
             padding 10px
@@ -355,6 +344,9 @@
 
                 span
                     display none
+
+    .application .application-inner .app-title
+        font-size (14/16)em
 
 
 span.app
