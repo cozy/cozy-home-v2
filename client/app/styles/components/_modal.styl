@@ -240,6 +240,8 @@
             display none
 
     .modalCY-footer
+        display flex
+        justify-content space-between
         flex-shrink      0
         background-color white
         padding (10/16)em
@@ -250,7 +252,17 @@
             border-radius 0
 
         button
-            margin-right 0.3em
+            margin 0 0.15em
+            flex 1
+
+        #modal-dialog-back
+            order 1
+
+        #modal-dialog-no
+            order 2
+
+        #modal-dialog-yes
+            order 3
 
 
     // Back (aka "choose again") button
