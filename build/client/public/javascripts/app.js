@@ -9766,8 +9766,13 @@ module.exports = HomeView = (function(_super) {
     }
   };
 
-  /* Configuration*/
-
+  HomeView.prototype.onAppStateChanged = function(appState) {
+    var frame, _ref;
+    if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
+      frame = this.getAppFrame(appState.slug);
+      return frame.remove();
+    }
+  };
 
   HomeView.prototype.forceIframeRendering = function() {
     var _this = this;
@@ -9779,14 +9784,6 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.getAppFrame = function(slug) {
     return this.$("#" + slug + "-frame");
-  };
-
-  HomeView.prototype.onAppStateChanged = function(appState) {
-    var frame, _ref;
-    if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
-      frame = this.getAppFrame(appState.slug);
-      return frame.remove();
-    }
   };
 
   return HomeView;
