@@ -137,11 +137,17 @@ button.update-all
 
         &[role=button]
             padding 0.625em 0.875em
-            margin (5/16)em 0 0 (10/16)em
             background-color green
 
             &:hover
                 background-color green - 10%
+
+        &:not([role=button])
+            margin (5/16)em (10/16)em (5/16)em 0
+
+            img
+                @media (max-width: 800px)
+                    margin 0
 
 
 // HARDWARE
