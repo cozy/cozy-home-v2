@@ -23,10 +23,10 @@
         background-color white
 
     .fp-nav-tabs
-        background-color #ddd
+        background-color grey-02
         display          flex
         // force webkit to not shrink tabnav
-        flex             0 0
+        flex             none
 
         :first-child
             margin-left auto
@@ -37,7 +37,7 @@
 
     [role=tab]
         padding     0.7em
-        color       #3F3F3F
+        color       grey-07
         cursor      pointer
         text-align  center
         line-height 35px
@@ -111,50 +111,24 @@
         flex-direction column
         align-content  flex-end
 
-    .photoUpload-btn.btn
-        display block
+        .photoUpload-btn
+            z-index 2
+            position  absolute
+            top       62%
+            left      50%
+            transform translateX(-50%) translateY(-50%)
 
-    .photoUpload-btn
-        flex-grow       1
-        display         flex
-        justify-content center
-        align-items     center
-
-        .btn
-            flex-grow        0
-            padding          0.8em
-            background-color blue
-            font-size        1.2em
-
-        .btn:hover
-            background-color orange
-
-
-    .photoUpload-or
-        display         flex
-        justify-content center
-        z-index         1
-
-        div
-            display          block
-            position         relative
-            transform        translateY(+50%)
-            width            10em
-            padding          0.3em
-            border           1px solid blue
-            border-radius    1em
-            text-align       center
-            color            black
-            background-color white
+            .btn
+                flex-grow 0
+                padding   0.8em 1.6em
 
     .modal-file-drop-zone
         flex-grow        3
         position         relative
-        background-color blue
 
-        > div
-            RL-margin = 15%
-            TB-margin = 15%
+        > .drop-zone
+            RL-margin = 1em
+            TB-margin = 1em
 
             position     absolute
             left         RL-margin
@@ -162,19 +136,21 @@
             top          TB-margin
             bottom       TB-margin
             z-index      1
-            border-color lightgreyedblue
+            border-color grey-02
             border-style dashed
             border-width 5px
             margin       0px
 
+            @media (max-width: 39em)
+                display none
+
             .dragging
-                border-color white
+                border-color blue
 
         p
-            font-size   1.3em
-            font-weight bold
-            color       #B5ADAD
-            color       white
+            font-size   1.25em
+            font-style  italic
+            color       grey-06
             line-height 1em
             text-align  center
             position    absolute
@@ -182,11 +158,13 @@
             left        50%
             transform   translateX(-50%) translateY(-50%)
 
+            @media (max-width: 39em)
+                display none
+
 
     // ========================================= //
     // urlPhotoUpload panel
     margin-urlUpload = 1.3em
-    url-input-height = 1.8em
 
     .urlPhotoUpload
         flex-direction  column
@@ -199,43 +177,28 @@
         flex-direction  column
         justify-content stretch
         align-items     stretch
-        height          url-input-height
+        padding         1em
 
     .img-container
-        position        relative
-        flex-grow       1
-        flex-shrink     1
-        // will be replaced by 'flex' when the first image is loaded
         display         none
-        justify-content center
-        align-items     center
         margin-top      margin-urlUpload
         margin-bottom   0.5em
         margin-right    margin-urlUpload
         margin-left     margin-urlUpload
 
     .url-preview
-        position            absolute
-        top                 50%
-        left                50%
-        transform           translateX(-50%) translateY(-50%)
         width               100%
-        height              100%
         background-repeat   no-repeat
         background-position center
         background-size     contain
+        max-width 64em
+        max-height (380/16)em
 
     .modal-url-input
+        flex none
         margin    0 auto
-        max-width 40em
-        border    2px solid blue
-        font-size 1em
-
-    .modal-url-input focus
-        border-width 2px
-
-    .modal-url-input hover
-        border-color #fe8800
+        max-width 36em
+        width     80%
 
 
     // ========================================= //
@@ -298,15 +261,15 @@
 
             &:hover
                 cursor           pointer
-                background-color lightgreyedblue
+                background-color grey-01
                 z-index          0
 
             &[aria-selected=true]
-                background-color lightgreyblue
+                background-color grey-01
                 z-index 1
 
                 .label
-                    color darkgrey
+                    color grey-08
 
                 &::after
                     background-color blue
@@ -342,7 +305,7 @@
         position         absolute
         opacity          1
         border           0
-        background-color #F5F5F5
+        background-color grey-01
 
         &[aria-selected=true]::after
             content    ''

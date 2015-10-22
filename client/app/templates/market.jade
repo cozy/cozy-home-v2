@@ -1,21 +1,23 @@
 .platform-section
-    p.mt2 #{t('introduction market')}
+    //- p.mt2 #{t('introduction market')}
     #app-market-list
         #market-applications-list
             #no-app-message= t('installed everything')
-    .mt2.mb2
-        #your-app.clearfix
-            .text
-                p
-                    = t('market install your app')
-                    | &nbsp;
-                    a(href="http://cozy.io/hack/getting-started/",
-                      target="_blank")= t('market app tutorial')
-                    | .
-                p.add-app-field
-                    input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
-                    button.btn.app-install-button= t('install')
 
-                .error.alert-error
-                .info.alert
+    #your-app.clearfix
+        h2= t('install your app')
+        .text
+            p
+                = t('market install your app')
+            p.add-app-field.fied-with-btn
+                input(type="text", class="span3", id="app-git-field", placeholder="https://github.com/username/repository.git@branch")
+                button.btn.app-install-button= t('install')
+
+            .error.alert-error
+            .info.alert
+            p.more
+                = t('market install your app tutorial')
+                a(href="http://cozy.io/hack/getting-started/",
+                  target="_blank")= t('market app tutorial')
+                | .
 .md-overlay

@@ -4,7 +4,7 @@ Modal = require './error_modal'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
-    className: "application w20 mod left"
+    className: "application w360-33 w640-25 full-20 mod left"
     tagName: "div"
 
     template: require 'templates/home_application'
@@ -20,7 +20,7 @@ module.exports = class ApplicationRow extends BaseView
     ### Constructor ####
 
     onMouseOver: ->
-        @background.css 'background-color', '#FF9D3B'
+        @background.css 'background-color', 'background-color'
 
     onMouseOut: ->
         @background.css 'background-color', @color or 'transparent'

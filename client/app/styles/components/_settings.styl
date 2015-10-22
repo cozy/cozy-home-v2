@@ -1,0 +1,72 @@
+// Account page
+
+#account-view
+    p
+        margin 0
+        margin-bottom 5px
+
+    input
+    select
+        margin-bottom 0.5em
+
+    .account-field
+        margin-bottom 20px
+        max-width     550px
+
+        input
+            margin 0
+            width 100%
+
+        input[disabled]
+            border-width 0
+            color blue
+
+        select
+            margin 0
+            width 100%
+            cursor pointer
+
+        button.full-width
+            width 100%
+            padding (12/16)em
+
+    .error
+        color red
+
+    button
+        text-align center
+
+    .background-list
+        margin-top 10px
+
+        .background-button
+            position relative
+            text-align center
+            cursor pointer
+
+            img
+                transition border 0.2s ease
+                border 5px solid transparent
+                margin 0
+
+            button
+                display none
+                position absolute
+                top 0
+                right 0
+
+                .fa
+                    margin 0
+
+            &:hover
+                button
+                    display inline
+
+        .background-button:hover
+            img
+                border-color blue
+
+        .background-button.selected
+            img
+                border-color green
+                outline 0

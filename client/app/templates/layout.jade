@@ -1,17 +1,14 @@
 header#header.navbar
 
+.right-menu
+    #notifications-buttons
+        button#dismiss-all.btn.outline-darkgrey
+            i.fa.fa-times-circle
+            span= t('dismiss all')
 
-#notifications.right-menu
-    ul#notifications-list
-        li#no-notif-msg= t('you have no notifications')
-
-#notifications-buttons.right-menu
-    button#dismiss-all.btn
-        i.fa.fa-trash.mr1
-        span= t('dismiss all')
-    a#logout-button.btn(href="#logout")
-        i.fa.fa-sign-out.mr1
-        span= t('navbar logout')
+    #notifications
+        ul#notifications-list
+            li#no-notif-msg
 
 
 .home-body

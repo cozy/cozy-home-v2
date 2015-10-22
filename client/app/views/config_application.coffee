@@ -5,7 +5,7 @@ PopoverDescriptionView = require 'views/popover_description'
 
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
-    className: "line config-application clearfix"
+    className: "config-application"
     tagName: "div"
     template: require 'templates/config_application'
 
