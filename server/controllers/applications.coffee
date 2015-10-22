@@ -505,11 +505,15 @@ module.exports =
 
 
     changeBranch: (req, res, next) ->
-        data = {}
+        branch = req.params.branch
         manifest = new Manifest()
         app = req.application
-        manifest.branch = req.params.branch
-        branch = req.params.branch
+        if app.branch is branch
+            err = new Error "This application is already on branch #{branch}"
+            return sendError res, err
+
+        app.branch = branch
+        # Retrieve manifest
         manifest.download app, (err) =>
             if err?
                 callback err
@@ -521,11 +525,12 @@ module.exports =
                     slug: app.slug
                     password: app.password
                 # Retrieve application
-                data.widget = manifest.getWidget()
-                data.version = manifest.getVersion()
-                data.iconPath = manifest.getIconPath()
-                data.color = manifest.getColor()
-                data.needsUpdate = false
+                data =
+                    widget: manifest.getWidget()
+                    version: manifest.getVersion()
+                    iconPath: manifest.getIconPath()
+                    color: manifest.getColor()
+                    needsUpdate: false
                 try
                     # `icons.getIconInfos` needs info from 'data' and 'app'.
                     infos =
@@ -539,15 +544,15 @@ module.exports =
                     console.log err
                     iconInfos = null
                 data.iconType = iconInfos?.extension or null
+
                 # Update access
                 app.updateAccess access, (err) ->
                     return callback err if err?
                     manager.changeBranch app, branch, (err, result) ->
                         return sendError res, err if err
-                        if app.state isnt "stopped"
-                            data.state = "installed"
-                        data.branch = branch
+
                         # Update application
+                        data.branch = branch
                         app.updateAttributes data, (err) ->
                             icons.save app, iconInfos, (err) ->
                                 if err then console.log err.stack
