@@ -1,0 +1,141 @@
+// NOTIFICATION BUTTON
+// ========================================================
+#notifications-container
+    position relative
+    padding  0
+
+    // hide the right side menu
+    #clickcatcher
+        z-index 10
+        position fixed
+        top 36px
+        left 0
+        width calc(100vw - 26em)
+        height 100%
+        background-color transparent
+
+.btn-navbar
+    display      block
+    padding      0 (8/16)em
+
+    cursor       pointer
+    line-height  (36/16)em
+
+    transition   all 0.3s
+
+    &.sign-out
+        margin-right (5/16)em
+        // sign out icon a bit bigger
+        font-size    (20/16)em
+        line-height  (36/20)em
+
+    i
+        color grey-05
+        transition color 0.2s ease
+
+    &:hover i
+        color grey-01
+        transition none
+
+#notifications-counter
+    position absolute
+    top 3px
+    right -4px
+    height 20px
+    width 20px
+
+    border-radius 50%
+    background red
+    border 2px solid grey-08
+
+    font-size (14/16)em
+    font-weight bold
+    line-height 1em
+    color white
+    text-align center
+
+    transition background 0.2s ease
+
+    &:empty
+        padding 0
+
+
+
+// SIDE CONTENT
+// ========================================================
+.right-menu
+    z-index          200
+    position         fixed
+    top              36px
+    right            0
+    bottom           0
+    width            26em
+    max-width        100%
+    background-color rgba(grey-08,.95)
+    box-shadow       -2px 0 20px rgba(0,0,0,.4)
+
+#no-notif-msg
+    span
+        font-size 1.25em
+        line-height 1.5em
+
+#notifications
+    color      white
+    text-align left
+
+    ul
+        margin  0
+        padding 0 (20/16)em
+
+        li
+            padding         (10/16)em 0
+            border-bottom   1px solid grey-07
+            list-style-type none
+            line-height     1.25em
+
+            &:last-child
+                border 0
+
+    .notification
+        .notification-date
+            color      grey-04
+            font-size  (13/16)em
+            font-style italic
+
+        a.dismiss
+            cursor    pointer
+            float     right
+            color     grey-06
+            font-size (32/16)em
+
+            &:hover
+                color white
+
+        a.doaction
+            display      block
+            margin-top   (5/16)em
+            padding      (4/12)em (8/12)em
+            font-size    (12/16)em
+            text-align   center
+
+
+// NOTIFICATION BUTTONS
+// ========================================================
+#notifications-buttons
+    padding (15/16)em (20/16)em (10/16)em
+
+    .btn
+        display block
+        width 100%
+        transition-delay 0
+
+        &:hover
+            transition-delay 0.1s
+
+
+
+@media screen and (-webkit-min-device-pixel-ratio: 0)
+
+    #menu-applications-toggle
+        span
+            padding-top (10/16)em

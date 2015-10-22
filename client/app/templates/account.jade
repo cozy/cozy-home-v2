@@ -15,19 +15,19 @@
 
             .input
                 p= t('alerts and password recovery email')
-                p.account-field
+                div.account-field.fied-with-btn
                     input#account-email-field
                     button.btn= t('save')
                 p.error.email.hide
             .input
                 p= t('public name description')
-                p.account-field
+                div.account-field.fied-with-btn
                     input#account-public-name-field
                     button.btn= t('save')
                 p.error.public-name.hide
             .input
                 p= t('domain name for urls and email')
-                p.account-field
+                div.account-field.fied-with-btn
                     input#account-domain-field
                     button.btn= t('save')
                 p.error.domain.hide
@@ -37,35 +37,38 @@
 
             .input
                 p= t('your timezone is required')
-                p.account-field
+                div.account-field
                     select#account-timezone-field
-                    button.btn= t('save')
 
             .input
                 p= t('Chose the language you want I use to speak with you:')
-                p.account-field
+                div.account-field
                     select#account-locale-field
                         option(value="fr")= t('french')
                         option(value="en")= t('english')
                         option(value="de")= t('german')
                         option(value="es")= t('spanish')
-                    button.btn= t('save')
 
             h4= t('account password')
             #change-password-form
-                p
-                    label= t('input your current password')
-                input#account-password0-field(type="password", placeholder="#{t('current password')}")
+                .account-field
+                    p
+                        label= t('input your current password')
+                    input#account-password0-field(type="password", placeholder="#{t('current password')}")
+
+                .account-field
+                    p
+                        label= t('enter a new password')
+                    input#account-password1-field(type="password", placeholder="#{t('new password')}")
+
+                .account-field
+                    p
+                        label= t('confirm new password')
+                    input#account-password2-field(type="password", placeholder="#{t('new password')}")
 
                 p
-                    label= t('enter a new password')
-                input#account-password1-field(type="password", placeholder="#{t('new password')}")
-                p
-                    label= t('confirm new password')
-                input#account-password2-field(type="password", placeholder="#{t('new password')}")
-
-                p
-                    button#account-form-button(class="btn")= t('save your new password')
+                    .account-field
+                        button#account-form-button.full-width= t('save your new password')
 
                     p.loading-indicator &nbsp;
 

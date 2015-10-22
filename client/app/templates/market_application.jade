@@ -1,11 +1,5 @@
-.right
-    a.website(href="#{app.git}", target="_blank")
-        img(src="img/git.png").img-btn
-    if app.website !== undefined
-        a.website(href="#{app.website}", target="_blank")
-            img(src="img/link.png").img-btn
 
-.app-img.left
+.app-img
     if app.svgSpriteSlug
         img(class=app.svgSpriteSlug)
     else
@@ -14,5 +8,16 @@
 
 .app-text
     h3 #{app.displayName}
+        if app.beta
+            span.beta Beta
     span.comment= t(app.comment)
-    p.par2= t(app.description)
+    p= t(app.description)
+    .btn-group
+        button.outline-blue.small= t("install")
+        a.transparent-grey.small.website(href="#{app.git}", target="_blank", role="button")
+            .fa.fa-github
+            span= t("github")
+        if app.website !== undefined
+            a.transparent-grey.small.website(href="#{app.website}", target="_blank", role="button")
+                .fa.fa-link
+                span= t("website")

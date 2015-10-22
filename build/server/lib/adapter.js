@@ -17,11 +17,9 @@ module.exports = Adapter = (function() {
     }
     return client.put("accounts/password/", {
       password: pwd
-    }, (function(_this) {
-      return function(err, res, body) {
-        return callback(err);
-      };
-    })(this));
+    }, function(err, res, body) {
+      return callback(err);
+    });
   };
 
   Adapter.prototype.initializeKeys = function(pwd, callback) {
@@ -33,11 +31,9 @@ module.exports = Adapter = (function() {
     }
     return client.post("accounts/password/", {
       password: pwd
-    }, (function(_this) {
-      return function(err, res, body) {
-        return callback(err);
-      };
-    })(this));
+    }, function(err, res, body) {
+      return callback(err);
+    });
   };
 
   Adapter.prototype.updateUser = function(user, data, callback) {
@@ -47,11 +43,9 @@ module.exports = Adapter = (function() {
       token = process.env.TOKEN;
       client.setBasicAuth(name, token);
     }
-    return client.put("user/merge/" + user.id, data, (function(_this) {
-      return function(err, res, body) {
-        return callback(err);
-      };
-    })(this));
+    return client.put("user/merge/" + user.id, data, function(err, res, body) {
+      return callback(err);
+    });
   };
 
   return Adapter;

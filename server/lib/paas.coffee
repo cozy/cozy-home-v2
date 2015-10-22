@@ -109,7 +109,7 @@ reseting routes"
                     callback null, body
 
 
-    # Remove and reinstall app inside Haibu.
+    # Update app inside Controller.
     updateApp: (app, callback) ->
         method = 'processUpdate'
         @queue.push {method, app, callback}
@@ -133,6 +133,30 @@ reseting routes"
                     console.info "Successfully updated app: #{app.name}"
                     callback null, body
 
+    # Change application branch inside Controller.
+    changeBranch: (app, branch, callback) ->
+        method = 'processChangeBranch'
+        app = [app, branch]
+        @queue.push {method, app, callback}
+
+
+    processChangeBranch: (params, callback) ->
+        [app, branch] = params
+        manifest = app.getHaibuDescriptor()
+
+        console.info "Request controller for change #{app.name} branch..."
+
+        @client.changeBranch manifest, branch, (err, res, body) ->
+            err ?= new Error body.error.message unless status2XX res
+
+            if err
+                console.log "Error change branch of app: #{app.name}"
+                console.log err.stack
+                callback err
+            else
+                console.info "Successfully branch change for app: #{app.name}"
+                callback null, body
+
 
     # Send a uninstall request to controller server ("clean" request).
     uninstallApp: (app, callback) ->
@@ -145,7 +169,7 @@ reseting routes"
             manifest = app.getHaibuDescriptor()
             console.info "Request controller for cleaning #{app.name}..."
 
-            @client.clean manifest, (err, res, body) =>
+            @client.clean manifest, (err, res, body) ->
                 err ?= body.error unless status2XX res
                 errMsg = 'application not installed'
                 if err? and err.indexOf? and err.indexOf(errMsg) is -1
@@ -162,17 +186,25 @@ reseting routes"
         else
             callback null
 
+    checkAppStopped: (app, callback) ->
+        @client.get 'running', (err, res, body) =>
+            return callback err if err
+            if app.slug in  Object.keys(body.app)
+                @client.stop app.slug, (err, res, body) =>
+                    callback err
+            else
+                callback()
 
     # Send a start request to controller server
     start: (app, callback) ->
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for starting #{app.name}..."
-
-        @client.stop app.slug, (err, res, body) =>
+        @checkAppStopped app, (err) =>
+            console.log err if err?
             @checkMemory (err) ->
                 return callback err if err
 
-                @client.start manifest, (err, res, body) =>
+                @client.start manifest, (err, res, body) ->
                     err ?= new Error body.error.message unless status2XX res
 
                     if err
@@ -190,7 +222,7 @@ reseting routes"
         manifest = app.getHaibuDescriptor()
         console.info "Request controller for stopping #{app.name}..."
 
-        @client.stop app.slug, (err,res, body) =>
+        @client.stop app.slug, (err,res, body) ->
             err ?= body.error unless status2XX res
             if err and err.indexOf('application not started') is -1
                 err = new Error err

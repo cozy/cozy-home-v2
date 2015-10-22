@@ -15,18 +15,16 @@ module.exports.fetch = function(req, res, next, id) {
   if (id.indexOf('.jpg') > 0) {
     id = id.substring(0, id.length - 4);
   }
-  return Photo.find(id, (function(_this) {
-    return function(err, photo) {
-      if (err) {
-        return next(err);
-      } else if (!photo) {
-        return next(NotFound("Photo " + id));
-      } else {
-        req.photo = photo;
-        return next();
-      }
-    };
-  })(this));
+  return Photo.find(id, function(err, photo) {
+    if (err) {
+      return next(err);
+    } else if (!photo) {
+      return next(NotFound("Photo " + id));
+    } else {
+      req.photo = photo;
+      return next();
+    }
+  });
 };
 
 doPipe = function(req, which, download, res, next) {

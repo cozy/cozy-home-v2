@@ -12,7 +12,7 @@ REPOREGEX =  /// ^
     (:[0-9]{1,5})?                 #optional domain's port
     ([/\w \.-]*)*                  #path to repo
     (?:\.git)?                     #.git extension
-    (@[\da-zA-Z/-]+)?              #branch
+    (@[-\da-zA-Z\./]+)?            #branch
      $ ///
 
 module.exports = class MarketView extends BaseView
@@ -102,6 +102,7 @@ module.exports = class MarketView extends BaseView
 
     # pop up with application description
     showDescription: (appWidget) ->
+
         @popover = new PopoverDescriptionView
             model: appWidget.app
             confirm: (application) =>
@@ -112,8 +113,13 @@ module.exports = class MarketView extends BaseView
                     @waitApplication appWidget, true
                     appWidget.$el.addClass 'install'
                     @runInstallation appWidget.app
-                    , =>
+                    , ->
                         console.log 'application installed', appWidget.app
+                        Backbone.Mediator.pub 'app-state:changed',
+                            status: 'started'
+                            updated: false
+                            slug: appWidget.app.get 'slug'
+
                     , =>
                         @waitApplication appWidget, false
                 else
@@ -122,6 +128,7 @@ module.exports = class MarketView extends BaseView
             cancel: (application) =>
                 @popover.hide()
                 @appList.show()
+
         @$el.append @popover.$el
         @popover.show()
 
@@ -141,12 +148,12 @@ module.exports = class MarketView extends BaseView
 
 
 
-    hideApplication: (appWidget, callback) =>
+    hideApplication: (appWidget, callback) ->
         # Test if application is installed by the market
         # or directly with a repo github
         if appWidget.$el?
-            appWidget.$el.fadeOut =>
-                setTimeout =>
+            appWidget.$el.fadeOut ->
+                setTimeout ->
                     callback() if typeof callback is 'function'
                 , 600
         else
@@ -170,7 +177,7 @@ module.exports = class MarketView extends BaseView
                 else if shouldRedirect
                     app?.routers.main.navigate 'home', true
 
-            error: (jqXHR) =>
+            error: (jqXHR) ->
                 alert t JSON.parse(jqXHR.responseText).message
                 errCallback() if typeof errCallback is 'function'
 

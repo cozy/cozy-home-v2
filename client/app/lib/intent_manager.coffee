@@ -8,7 +8,7 @@ module.exports = class IntentManager
         talker.onMessage = @handleIntent
 
 
-    handleIntent : (message) =>
+    handleIntent : (message) ->
         intent = message.data
         switch intent.type
 
@@ -19,14 +19,16 @@ module.exports = class IntentManager
                 switch intent.params.objectType
                     when 'singlePhoto'
                         if intent.params.isCropped
-                            new ObjectPicker(intent.params , (newPhotoChosen, dataUrl) ->
+                            new ObjectPicker(intent.params , \
+                              (newPhotoChosen, dataUrl) ->
                                 message.respond(
                                     newPhotoChosen :newPhotoChosen
                                     dataUrl        :dataUrl
                                 )
                             )
                         else
-                            new ObjectPicker(intent.params , (newPhotoChosen, dataUrl) ->
+                            new ObjectPicker(intent.params , \
+                              (newPhotoChosen, dataUrl) ->
                                 message.respond(
                                     newPhotoChosen :newPhotoChosen
                                     dataUrl        :dataUrl

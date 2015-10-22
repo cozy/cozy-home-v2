@@ -22,6 +22,7 @@ module.exports = class HomeView extends BaseView
 
     subscriptions:
         'backgroundChanged': 'changeBackground'
+        'app-state:changed': 'onAppStateChanged'
 
 
     constructor: ->
@@ -37,6 +38,9 @@ module.exports = class HomeView extends BaseView
         super
 
 
+    # Initialize all views, register main widgets and ensure that currently
+    # displayed iframe is rerendered to be rendered properly after everything
+    # is loaded.
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps, @market
@@ -81,13 +85,14 @@ module.exports = class HomeView extends BaseView
     # Send a logout request to server then reload current window to redirect
     # user to automatically redirect user to login page (he's not logged
     # anymore, so cozy proxy will do the redirection).
-    logout: (event) =>
+    logout: (event) ->
         user = new User()
         user.logout
-            success: (data) =>
+            success: (data) ->
                 window.location = window.location.origin + '/login/'
-            error: =>
+            error: ->
                 alert 'Server error occured, logout failed.'
+
 
     displayView: (view, title) =>
 
@@ -130,24 +135,30 @@ module.exports = class HomeView extends BaseView
         else
             displayView()
 
+
     # Display application manager page, hides app frames, active home button.
     displayApplicationsList: =>
         @displayView @applicationListView
         window.document.title = t "cozy home title"
 
+
     displayApplicationsListEdit: =>
         @displayView @applicationListView, t "cozy home title"
+
 
     # Display application manager page, hides app frames, active home button.
     displayMarket: =>
         @displayView @marketView, t "cozy app store title"
 
+
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView, t 'cozy account title'
 
+
     displayHelp: =>
         @displayView @helpView, t "cozy help title"
+
 
     displayConfigApplications: =>
         @displayView @configApplications, t "cozy applications title"
@@ -197,6 +208,8 @@ module.exports = class HomeView extends BaseView
     # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
         if @apps.length is 0
+            @apps.once ?= @apps.on
+            @apps.once ?= @apps.on if typeof(@apps.once) isnt 'function'
             @apps.once 'reset', =>
                 @displayApplication slug, hash
             return null
@@ -221,8 +234,9 @@ module.exports = class HomeView extends BaseView
 
             @selectedApp = slug
 
-            name = @apps.get(slug).get('name')
-            name = '' if not name?
+            app = @apps.get slug
+            name = app.get('displayName') or app.get('name') or ''
+
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
 
@@ -242,22 +256,32 @@ module.exports = class HomeView extends BaseView
             @frames.css 'left', '-9999px'
             @frames.css 'position', 'absolute'
 
-            frame.on 'load', onLoad
+            frame.once ?= frame.on
+            frame.once ?= frame.on if typeof(frame.once) isnt 'function'
+            frame.once 'load', onLoad
 
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
         else if hash
             contentWindow = frame.prop('contentWindow')
-            currentHash = contentWindow.location.hash.substring 1
+            # Same origin policy may prevent to access location hash
+            try
+                currentHash = contentWindow.location.hash.substring 1
+            catch err
+                console.err err
             onLoad()
 
         else if frame.is(':visible')
-            frame.prop('contentWindow').location.hash = ''
+            # Same origin policy may prevent to access location hash
+            try
+                frame.prop('contentWindow').location.hash = ''
+            catch err
+                console.err err
             onLoad()
 
         else
-            #alert 'default'
             onLoad()
+
 
     createApplicationIframe: (slug, hash="") ->
 
@@ -281,6 +305,7 @@ module.exports = class HomeView extends BaseView
 
         return iframe$
 
+
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             currentHash = location.hash.substring "#apps/#{slug}/".length
@@ -291,7 +316,14 @@ module.exports = class HomeView extends BaseView
             # breaks the iframe layout.
             @forceIframeRendering()
 
-    ### Configuration ###
+
+    # If an application is broken, removed or updating, its corresponding
+    # iframe is removed.
+    onAppStateChanged: (appState) ->
+        if appState.status in ['updating', 'broken', 'uninstalled']
+            frame = @getAppFrame appState.slug
+            frame.remove()
+
 
     # Ugly trick for redrawing iframes. It's required because sometimes the
     # browser breaks the Iframe layout (I didn't find any reason for that).
@@ -300,4 +332,9 @@ module.exports = class HomeView extends BaseView
         setTimeout =>
             @frames.find('iframe').height "100%"
         , 10
+
+
+    # Returns app iframe corresponding for given app slug.
+    getAppFrame: (slug) ->
+        return @$("##{slug}-frame")
 

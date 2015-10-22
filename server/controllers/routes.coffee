@@ -41,6 +41,7 @@ module.exports =
     'api/applications/:slug/stop'     : post: applications.stop
     'api/applications/:slug/uninstall': delete: applications.uninstall
     'api/applications/:slug/update'   : put: applications.update
+    'api/applications/:slug/branch/:branch'   : put: applications.changeBranch
     'api/applications/update/all'     : put: applications.updateAll
 
     'api/applications/market'         : get: applications.fetchMarket

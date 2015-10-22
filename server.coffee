@@ -24,10 +24,6 @@ application = module.exports = (callback) ->
         if process.env.NODE_ENV isnt "test"
             initProxy()
 
-        # initialize market when app starts
-        market = require './server/lib/market'
-        market.download ->
-
         localization.initialize ->
             setupRealtime app, ->
                 versionChecking()

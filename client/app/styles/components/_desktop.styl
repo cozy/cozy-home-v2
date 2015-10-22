@@ -1,0 +1,95 @@
+// Desktop view
+
+#app-list
+    margin auto
+    max-width 720px
+    padding-bottom 20px
+
+    .preview-holder
+        padding (10/16)em
+        display block
+        list-style-type none
+        background-color blue
+
+    section
+        display none
+        margin-top 2em
+        padding (20/16)em (20/16)em (24/16)em
+        background rgba(255,255,255,.75)
+        border-radius 12px
+
+
+        &:last-child
+            margin-bottom 2em
+
+        &.show
+            display block
+
+        h2
+            padding-bottom 0.25em
+            margin 0
+            background-color transparent
+            font-size 1em
+            text-transform uppercase
+            color grey-08
+            text-align center
+
+
+.application
+    cursor pointer
+
+    .application-inner
+        border-radius 5px
+        padding (10/16)em (20/16)em (6/16)em
+
+        .vertical-aligner
+            height 100%
+            width 100%
+
+        img
+            display block
+            margin-bottom (4/16)em
+            height auto
+            width 100%
+            border-radius 50em
+            background-position center
+
+            &.icon
+                padding (20/16)em
+                text-align center
+                box-shadow 0 2px 6px rgba(0,0,0,.16)
+                transition all 0.2s ease-out
+
+        &:hover img.icon
+            transform scale(1.1)
+            box-shadow 0 6px 20px rgba(0,0,0,.24)
+
+        .app-title
+            height 20%
+            margin 0
+            text-align center
+            text-transform capitalize
+            font-size (16/16)em
+            color grey-08
+            text-shadow 0 1px rgba(255,255,255,.25), 0 0 1px rgba(255,255,255,.25)
+
+        .state-label
+            font-size (18/15)em
+            font-weight normal
+            color red
+
+    &:active
+        box-shadow none
+
+    &.broken
+        .broken-notifier
+            display block
+
+// app icons
+.platform-app
+    .application-inner
+        img
+            padding 25px
+            border-radius 100px
+            background #338CF7 + 20%
+            box-shadow 0 2px 6px rgba(0,0,0,.16)

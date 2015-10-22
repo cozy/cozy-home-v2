@@ -90,8 +90,10 @@ Photo  = require '../models/photo'
 #
 #
 # 7/ thumb
-#      prev    : {thumb}   # previous thumb in the buffer    : older, lower in the list
-#      next    : {thumb}   # next thumb in the buffer    : more recent, higher in the list
+#      prev    : {thumb}   # previous thumb in the buffer : older, lower
+#                            in the list
+#      next    : {thumb}   # next thumb in the buffer : more recent, higher
+#                            in the list
 #      el      : {thumb$}  # element in the DOM of the thumb
 #      rank    : {integer} # rank of the corresponding image
 #      monthRk : monthRk
@@ -429,9 +431,10 @@ module.exports = class LongList
                 return
             ##
             # 1/ GET DIMENSIONS.
-            # It is possible only when the longList is inserted into the DOM, that's
-            # why we had to wait for _init() which occurs after both the reception
-            # of the array of photo and after the parent view has launched init().
+            # It is possible only when the longList is inserted into the DOM,
+            # that's why we had to wait for _init() which occurs after both
+            # the reception # of the array of photo and after the parent view
+            # has launched init().
             viewPortHeight = @viewPort$.clientHeight
             VP_width       = @viewPort$.clientWidth
             # the list has no width or height : geometry can not be computed
@@ -505,7 +508,8 @@ module.exports = class LongList
                 h = h / d
                 h += MONTH_LABEL_HEIGHT
                 y += h
-                label$ = $("<div style='height:#{h}px; right:0px'>#{txt}</div>")[0]
+                div = "<div style='height:#{h}px; right:0px'>#{txt}</div>"
+                label$ = $(div)[0]
                 label$.dataset.monthRk = rk
                 @index$.appendChild(label$)
             ##
@@ -558,7 +562,12 @@ module.exports = class LongList
                     id   : null
                 previousCreatedThb.prev = thumb
                 previousCreatedThb = thumb
-                thumb$.style.cssText = "top:#{rowY}px;left:#{marginLeft + col*colWidth}px;height:#{thumbHeight}px;width:#{thumbHeight}px;"
+                thumb$.style.cssText = """
+                    top:#{rowY}px;
+                    left:#{marginLeft + col*colWidth}px;
+                    height:#{thumbHeight}px;
+                    width:#{thumbHeight}px;
+                """
                 @thumbs$.appendChild(thumb$)
                 localRk += 1
                 if localRk == month.nPhotos
@@ -643,9 +652,9 @@ module.exports = class LongList
          * will hide the index 2s after its last call
         ###
         lazyHideIndex =  _.debounce () =>
-                @index$.classList.remove('visible')
-                indexVisible = false
-            , 2000
+            @index$.classList.remove('visible')
+            indexVisible = false
+        , 2000
 
 
 
@@ -744,7 +753,8 @@ module.exports = class LongList
                     targetY       = safeZone.endY
 
                 if nToMove > 0
-                    Photo.listFromFiles targetRk - nToMove + 1 , nToMove, (error, res) ->
+                    Photo.listFromFiles targetRk - nToMove + 1 , nToMove, \
+                      (error, res) ->
                         if error
                             console.error error
                         _updateThumb(res.files, res.firstRank)
@@ -857,8 +867,10 @@ module.exports = class LongList
                 fileId                       = file.id
                 thumb$                       = thumb.el
                 thumb$.file                  = file
-                thumb$.firstElementChild.src = "files/photo/thumbs/#{fileId}.jpg"
-                # thumb$.src                 = 'files/photo/thumbs/fast/#{fileId}'
+                thumb$.firstElementChild.src = \
+                    "files/photo/thumbs/#{fileId}.jpg"
+                # thumb$.src                 = \
+                #   'files/photo/thumbs/fast/#{fileId}'
                 thumb$.dataset.id            = fileId
                 thumb.id                     = fileId
                 thumb                        = thumb.prev
@@ -893,7 +905,7 @@ module.exports = class LongList
                 isDefaultToSelect = false
 
 
-        _getBufferNextFirst = ()=>
+        _getBufferNextFirst = () ->
             bufr = buffer
             nextFirstRk     = bufr.firstRk - 1
             if nextFirstRk == -1
@@ -908,7 +920,8 @@ module.exports = class LongList
             bufr.nextFirstMonthRk = monthRk
             localRk               = nextFirstRk - month.firstRk
             inMonthRow            = Math.floor(localRk/nThumbsPerRow)
-            bufr.nextFirstY       = month.y + monthTopPadding + inMonthRow*rowHeight
+            bufr.nextFirstY       = month.y + monthTopPadding + \
+                                    inMonthRow*rowHeight
             bufr.nextFirstCol     = localRk % nThumbsPerRow
 
 
@@ -927,13 +940,14 @@ module.exports = class LongList
             bufr.nextLastMonthRk = monthRk
             localRk              = nextLastRk - month.firstRk
             inMonthRow           = Math.floor(localRk/nThumbsPerRow)
-            bufr.nextLastY       = month.y + monthTopPadding + inMonthRow*rowHeight
+            bufr.nextLastY       = month.y + monthTopPadding + \
+                                   inMonthRow*rowHeight
             bufr.nextLastCol     = localRk % nThumbsPerRow
 
         ###*
          * after a scroll throttle, will compute the safe zone
         ###
-        _computeSafeZone = () =>
+        _computeSafeZone = () ->
             # 1/ init the start of the safe zone at the start of the viewport
             _SZ_initStartPoint()
             # 2/ move the start of the safe zone in order to have a margin
@@ -959,12 +973,14 @@ module.exports = class LongList
                 # happens if the viewport is in the header of a month
                 inMonthRow = 0
             SZ.firstRk            = month.firstRk + inMonthRow * nThumbsPerRow
-            SZ.firstY             = month.y + monthTopPadding + inMonthRow * rowHeight
+            SZ.firstY             = month.y + monthTopPadding + \
+                                    inMonthRow * rowHeight
             SZ.firstMonthRk       = monthRk
             SZ.firstCol           = 0
             SZ.firstThumbToUpdate = null
             SZ.firstInMonthRow    = inMonthRow
-            SZ.firstVisibleRk     = SZ.firstRk # true because it is the init of SZ
+            SZ.firstVisibleRk     = SZ.firstRk # true because it is the init
+                                               # of SZ
             _selectCurrentIndex(monthRk)
 
 
@@ -992,9 +1008,12 @@ module.exports = class LongList
                 for j in [SZ.firstMonthRk-1..0] by -1
                     month = @months[j]
                     if rowsSeen + month.nRows >= nRowsInSafeZoneMargin
-                        inMonthRow         = month.nRows - nRowsInSafeZoneMargin + rowsSeen
-                        SZ.firstRk         = month.firstRk + inMonthRow * nThumbsPerRow
-                        SZ.firstY          = month.y + monthTopPadding + inMonthRow*rowHeight
+                        inMonthRow         = month.nRows - \
+                                            nRowsInSafeZoneMargin + rowsSeen
+                        SZ.firstRk         = month.firstRk + \
+                                            inMonthRow * nThumbsPerRow
+                        SZ.firstY          = month.y + monthTopPadding + \
+                                            inMonthRow*rowHeight
                         SZ.firstInMonthRow = inMonthRow
                         SZ.firstMonthRk    = j
                         return
@@ -1605,28 +1624,28 @@ module.exports = class LongList
      * appears
     ###
     _getScrollBarWidth : ()->
-      inner = document.createElement('p')
-      inner.style.width  = "100%"
-      inner.style.height = "200px"
+        inner = document.createElement('p')
+        inner.style.width  = "100%"
+        inner.style.height = "200px"
 
-      outer = document.createElement('div')
-      outer.style.position   = "absolute"
-      outer.style.top        = "0px"
-      outer.style.left       = "0px"
-      outer.style.visibility = "hidden"
-      outer.style.width      = "200px"
-      outer.style.height     = "150px"
-      outer.style.overflow   = "hidden"
-      outer.appendChild (inner)
+        outer = document.createElement('div')
+        outer.style.position   = "absolute"
+        outer.style.top        = "0px"
+        outer.style.left       = "0px"
+        outer.style.visibility = "hidden"
+        outer.style.width      = "200px"
+        outer.style.height     = "150px"
+        outer.style.overflow   = "hidden"
+        outer.appendChild (inner)
 
-      document.body.appendChild (outer)
-      w1 = inner.offsetWidth
-      outer.style.overflow = 'scroll'
-      w2 = inner.offsetWidth
-      if (w1 == w2)
-        w2 = outer.clientWidth
+        document.body.appendChild (outer)
+        w1 = inner.offsetWidth
+        outer.style.overflow = 'scroll'
+        w2 = inner.offsetWidth
+        if (w1 == w2)
+            w2 = outer.clientWidth
 
-      document.body.removeChild (outer)
+        document.body.removeChild (outer)
 
-      return (w1 - w2)
+        return (w1 - w2)
 

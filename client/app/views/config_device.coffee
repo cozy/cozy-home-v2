@@ -2,7 +2,7 @@ BaseView = require 'lib/base_view'
 
 # Row displaying device name and attributes
 module.exports = class DeviceRow extends BaseView
-    className: "line config-device clearfix"
+    className: "config-device"
     tagName: "div"
     template: require 'templates/config_device'
 
@@ -23,7 +23,7 @@ module.exports = class DeviceRow extends BaseView
             $.ajax("/api/devices/#{@model.get('id')}",
                 type: "DELETE"
                 success: =>
-                    @$el.fadeOut =>
+                    @$el.fadeOut ->
                 error: =>
                     @$('.remove-device').html t 'revoke device access'
                     console.log "error while revoking the device access"

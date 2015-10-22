@@ -1,0 +1,102 @@
+.help-text
+    text-align center
+
+    .small
+        font-size (14/16)em
+
+        img
+            width 24px
+
+.help-section
+    display flex
+    flex-direction column
+    align-items center
+
+    .cover
+        width 100%
+
+    textarea
+        min-height 8em
+        padding (10/16)em 1em
+        line-height 1.25em
+        margin-top (12/16)em
+
+    .btn-group-big
+        display flex
+        justify-content space-between
+        margin-top (12/16)em
+
+        @media (max-width (540/16)em)
+            flex-wrap wrap
+
+    .btn-big-icon
+        display flex
+        flex-direction column
+        align-items center
+        justify-content center
+        padding (12/16)em
+        width 32%
+        background-color transparent
+        border 2px solid grey-03
+        color grey-08
+        text-align center
+
+        @media (max-width (540/16)em)
+            width 100%
+            margin-bottom (10/16)em
+
+        .fa
+            margin-right 0
+            font-size 2em
+            color grey-04
+
+            transition color 0.3s ease-out
+
+        span
+            padding-top (8/18)em
+            font-size 1.125em
+
+        span:last-child
+            padding 0
+            font-size 1em
+            font-style italic
+            color grey-06
+            text-transform none
+            line-height 1.2em
+
+        &:hover
+            background-color grey-04
+            border-color grey-04
+            color white
+
+            .fa
+                color white
+
+            span:last-child
+                color grey-02
+
+
+#help-view
+    p
+        margin 0
+
+        &.mt2
+            margin-top 20px
+
+        &.help-text
+            text-align left
+
+        &.help-logs
+            margin-bottom (10/16)em
+
+    .help-section
+        .mod
+            padding (30/16)em 0
+            width 100%
+            max-width (600/16)em
+
+            &:first-child
+                padding-top (10/16)em
+
+    .alert
+        margin-top 10px

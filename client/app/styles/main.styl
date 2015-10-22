@@ -1,906 +1,90 @@
+
 @import 'nib'
-@import '_base'
-@import '_help'
 
-@import '_modal'
-@import '_object-picker'
+@import 'base/_colors'
+@import 'base/_grid'
+@import 'base/_alerts'
+@import 'base/_buttons'
+@import 'base/_form'
+@import 'base/_reset'
+
+@import 'components/_modal'
+@import 'components/_notifications'
+@import 'components/_desktop'
+@import 'components/_help'
+@import 'components/_settings'
+@import 'components/_status'
+@import 'components/_store'
+@import 'components/_object-picker'
 
 
-*
-    outline none
 
 .home-body
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items stretch
+    overflow hidden
+    box-sizing border-box
     width 100%
     height 100%
     padding 36px 0 0 0
     margin 0
-    background bgcolor
-    background #FDFDFD
-    overflow hidden
-    box-sizing border-box
-    display: flex
-    flex-direction: column
-    justify-content: flex-start
-    align-items: stretch
 
 #app-frames
     height 100%
 
-body
-    box-sizing border-box
+#content
+    height 100%
+    overflow auto
+    transition 0.6s background-image ease-in-out
+    background-position center
+    background-repeat no-repeat
+    background-size cover
 
+#home-content
+    display flex
+    min-height 100%
+
+    & > section
+        flex 1
+
+// related to store, status, settings and help pages
+.platform-section
+#help-view .help-section
+#account-view #account-form
+    min-height calc(100vh - 36px)
+    padding (30/16)em
+    background-color grey-01
+
+
+// navbar
+// ========================================================
 .navbar
     position fixed
-    background darkgrey
+    background grey-08
     z-index 1500
     top 0
     width 100%
     height 36px
     padding 0
 
-
-.back-button
-    margin-left 15px
-    margin-top .8rem
-
-    font-family 'Maven Pro', sans-serif
-    font-weight normal
-    font-size .8em
-    text-transform lowercase
-
-    color white
-    opacity 0.5
-    transition opacity 0.2s ease
-
-    &::before
-        margin-right .5em
-        vertical-align middle
-        font-size 2rem
-
-    &:hover
-        color white
-        opacity 1
-
-
-
-/* content */
-
-#content
-    height 100%
-    overflow auto
-    transition 0.6s background-image ease-in-out
-    background-position center center
-    background-repeat no-repeat
-    background-attachment fixed
-    background-size cover
-
-
-#home-content
-    display flex
-    min-height 100%
-
-    section
-        flex 1
-
-
-.help-section
-    .cover
-        width 100%
-
-
-.platform-section
-    min-height 100%
-    border-radius 0
-    border-right 1px solid #DDD
-    border-bottom 1px solid #DDD
-    padding 20px
-    background rgba(255, 255, 255, 0.95)
-
-    .buttons
-        button.btn
-            display block
-        .fa
-            width 10px
-            display inline
-
-        span
-            display inline
-            width auto
-
-/** Notifications */
-
-#menu-applications-toggle
-    height 36px
-    color white
-    font-family 'Maven Pro', sans-serif
-    margin auto
-    text-transform capitalize
-    opacity 1
-
-    span
-        font-size 22px
-        padding-top 5px
-
-    #current-application
-        cursor default
-        font-size 18px
-        opacity 0.8
-        color white
-        font-weight normal
-        text-transform uppercase
-        line-height 34px
-
 #menu-applications-container
     margin auto
-    max-width 300px
+    max-width 50%
     text-align center
-    height 30px
+    color grey-03
+    text-transform uppercase
 
+    #current-application
+        line-height 36px
 
-#notifications-toggle
-    transition all 0.3s
-    display block
-    height 36px
-    line-height 34px
-    width auto
-    cursor pointer
-    margin 0 5px 0 0
-    padding 0 10px
-    width 36px
-    height 36px
 
-    i
-        color blue
-        transition color 0.2s ease
-
-    &:hover
-        i
-            color orange
-
-        #notifications-counter
-            background orange
-
-    #notifications-counter
-        position absolute
-        top 3px
-        right 3px
-
-        height 20px
-        width 20px
-        border-radius 50%
-        line-height 17px
-        font-size 15px
-
-        text-align center
-        background #338CF7
-        color #fff
-        border 2px solid #363a46
-        transition background 0.2s ease
-
-        &:empty
-            padding 0
-
-
-    .backcolor
-        position absolute
-        top 15px
-        left 12px
-        border-radius 10px
-        z-index -1
-        display block
-        background-color white
-        width 20px
-        height 20px
-        opacity 0
-        transition all 0.3s
-
-
-#notifications-toggle.highlight
-    img
-        opacity 1
-
-.active
-    #notifications-toggle
-        background rgba(20, 20, 22, 0.3)
-        margin-top 0
-        cursor pointer
-        box-shadow inset 2px 2px 2px #000
-
-        .backcolor
-            display none
-
-
-#notifications-container
-    position relative
-    padding 0
-
-    a
-        color darkblue
-
-    .badge
-        padding 1px 2px 1px 3px
-        position absolute
-        top 2px
-        right 2px
-
-    .badge:empty
-        display none
-
-    #clickcatcher
-        position fixed
-        width 100%
-        height 100%
-        background-color red
-        opacity 0.001
-        top 40px
-        left -420px
-        z-index 10
-
-
-#notifications
-    position fixed
-    right 0
-    top 36px
-    bottom 100px
-    padding 5px
-    width 420px
-    z-index 50
-    color white
-    text-align left
-    background #333
-    overflow-y auto
-
-    ul
-        margin 0
-        padding 10px
-
-        li
-            list-style-type none
-            border-bottom 1px solid #555
-            padding 10px 0
-
-    .separator
-        border-bottom 1px solid #338CF7 + 30%
-
-    .notification:hover
-        a.dismiss
-            cursor pointer
-            display inline
-            opacity 1
-
-        a.dismiss:hover
-            color orange
-
-    .notification
-
-        .notification-date
-            color #CCC
-            font-size 12px
-
-        a.dismiss
-            display none
-            float right
-            line-height 20px
-            padding 5px
-            color #338CF7
-
-        a.doaction
-            display none
-            color white
-            cursor pointer
-            margin-top 5px
-            font-size 12px
-            padding 3px
-            background #338CF7
-            text-align center
-
-            &:hover
-                background orange + 10%
-
-        &:hover
-            a.doaction
-                display block
-
-
-#notifications-buttons
-    position fixed
-    bottom 0px
-    right 0px
-    height 100px
-    width 420px
-    padding 10px
-    z-index 50
-    overflow-y none
-    background #333
-
-    #dismiss-all.btn
-        display block
-        text-align center
-        background-color #338CF7
-        margin-bottom 10px
-        cursor pointer
-        font-size 16px
-        padding 5px
-        width 100%
-
-        &:hover
-            background-color orange + 10%
-
-    #logout-button.btn
-        display block
-        text-align center
-        background-color #338CF7
-        cursor pointer
-        font-size 16px
-        padding 5px
-        width 100%
-
-        &:hover
-            background-color orange + 10%
-
-
-@media screen and (-webkit-min-device-pixel-ratio: 0)
-
-    #menu-applications-toggle
-        span
-            padding-top 10px
-
-/** Applications */
-
-#app-list
-    margin auto
-    max-width 720px
-    padding-bottom 20px
-
-    .preview-holder
-        padding 10px
-        display block
-        list-style-type none
-        background-color orange
-
-    section
-        background rgba(255, 255, 255, 0.8)
-        border-radius 15px
-        display none
-        padding 0px 12px 0px
-
-        &.show
-            display block
-
-        h2
-            font-size 16px
-            text-transform uppercase
-            color darkgrey
-            background-color transparent
-            padding 20px 10px 0px 18px
-            margin-top 20px
-            margin-bottom 0px
-
-
-.application
-    cursor pointer
-    padding 10px
-
-    .application-inner
-        padding-top 5px
-        border-radius 200px
-        padding 20px 10px
-
-        .vertical-aligner
-            height 100%
-            width 100%
-
-        img.icon
-            height auto
-            display block
-            padding 20px
-            margin 0px auto 2% auto
-            text-align center
-            border-radius 200px
-            margin-bottom 10px
-            width 100%
-            transition background 0.2s ease
-
-        img.spinner
-            border-radius 200px
-            display block
-            background-position center
-            width 100%
-            margin-bottom 10px
-            margin-top 0px
-
-        p
-            margin 0
-            font-family 'Source Sans Pro', sans-serif
-            color textcolor
-
-        .app-title
-            height 20%
-
-            text-align center
-            font-family 'Source Sans Pro', sans-serif
-            text-transform uppercase
-            font-size 15px
-            color darkblue
-            text-decoration none
-            margin-top 2px
-
-        .state-label
-            font-size 18px
-            font-weight normal
-            color red
-
-    &:active
-        box-shadow none
-
-    &.broken
-        .broken-notifier
-            display block
-
-.platform-app
-    .application-inner
-        img
-            padding 25px
-            border-radius 100px
-            background #338CF7 + 20%
-
-        &:hover
-            img
-                background orange + 20%
-                border-radius 100px
-
-.app-tools
-    width 50%
-    margin-left auto
-    margin-right auto
-    margin-top 12px
-    color text-color
-    text-align center
-    margin-bottom 20px
-
-#no-app-message
-    margin auto
-    margin-top 30px
-    width 80%
-    background white
-    border-bottom-left-radius 5px
-    border-bottom-right-radius 5px
-    padding-bottom 20px
-
-    #start-title
-        padding 20px
-        font-size 28px
-        margin-bottom 30px
-
-        img
-            float left
-
-    p
-        padding-left 20px
-        padding-right 20px
-
-    img
-        width 32px
-        margin-right 10px
-
-    img.logo
-        width auto
-
-    a
-        border-bottom 0
-
-.darkbg
-    background darkblue
-    //background orangewhite - 40%
-    color white
-
-.section-title
-    background darkblue
-    color white
-    padding 5px 20px
-    position absolute
-    top 0
-    margin auto
-
-.install-info
-    width 40%
-    text-align center
-
-
-// Account page
-
-#account-view
-
-    p
-        margin 0
-        margin-bottom 5px
-
-    input
-    select
-        text-align left
-        margin-bottom 10px
-        font-size 24px
-
-    #account-form
-        background rgba(255, 255, 255, 0.95)
-        padding 20px
-        border-right 1px solid #DDD
-        border-bottom 1px solid #DDD
-
-    .account-field
-        display flex
-        justify-content flex-end
-        align-items stretch
-        margin-bottom 20px
-        max-width 550px
-
-        input
-            margin 0
-            width 100%
-
-        input[disabled]
-            border-width 0
-            color darkblue
-
-        select
-            margin 0
-            width 100%
-            cursor pointer
-
-        button
-            width 60px
-
-    .error
-        color red
-
-    button
-        text-align center
-
-    .background-list
-        margin-top 10px
-
-        .background-button
-            position relative
-            text-align center
-            cursor pointer
-
-            img
-                transition border 0.2s ease
-                border 5px solid transparent
-                margin 0
-
-            button
-                display none
-                position absolute
-                top 10px
-                right 10px
-
-            &:hover
-                button
-                    display inline
-
-        .background-button:hover
-
-            img
-                border 5px solid orange
-
-        .background-button.selected
-
-            img
-                border 5px solid #6AF
-                outline 0
-
-#help-view
-    p
-        margin 0
-        margin-bottom 0
-
-    p.mt2
-        margin-top 20px
-
-    p.help-text
-        font-size 20px
-        text-align left
-
-    .help-section
-        height 100%
-        background rgba(255, 255, 255, 0.95)
-        .w50
-            padding 30px
-
-    .alert
-        margin-top 10px
-
-#home-view
-    overflow hidden
-    background bgcolor
-    width 100%
-    height 100%
-    padding 0
-    margin 0
-
-.app-introduction
-    margin-top 60px
-    margin-bottom 20px
-
-// MARKET PAGE
-
-#your-app
-    box-sizing border-box
-    width 99%
-
-    p
-        margin-bottom 0
-
-    .text
-        padding 20px
-
-
-    .add-app-field
-        display flex
-        justify-content flex-end
-        align-items stretch
-        max-width 800px
-
-        #app-git-field
-            text-align left
-            box-sizing border-box
-            width 100%
-            font-size 24px
-            padding 10px
-
-        .btn
-            width 60px
-
-    .error
-        box-sizing border-box
-        width 100%
-        max-width 615px
-        margin-top 10px
-        font-size 0.8em
-        padding 5px
-
-#app-market-list
-    box-sizing border-box
-    margin-top 20px
-
-    .app-install-button
-        button
-        div
-            display inline
-
-        .app-text
-            padding 10px
-            word-wrap normal
-            overflow-x hidden
-
-        .app-text p
-            margin-right 20px
-
-        .app-install
-            border 0
-            outline 0
-            font-weight bold
-            color orange - 10%
-            box-shadow none
-            font-size 0.8em
-            padding 4px 8px
-            float right
-
-        .app-install-text
-            display none
-            float right
-            font-size 0.8em
-            padding 4px
-            padding-left 8px
-            cursor pointer
-            font-weight bold
-            color orange - 10%
-            box-shadow none
-            height 20px
-
-
-#market-view
-    height 100%
-
-
-#market-view #no-app-message,
-.cozy-app
-    box-sizing border-box
-    float left
-    width 49%
-    height 200px
-    background lightgrey
-    margin-right 0.5%
-    margin-top 0.5%
-    cursor pointer
-    transition background 0.3s
-    text-align left
-    border-bottom 1px solid lightgrey - 10%
-    border-right 1px solid lightgrey - 10%
-
-    &.install
-        .app-text
-            h3, span, p
-                opacity 0.4
-
-        .installing-label
-            display inline
-
-    .installing-label
-        display none
-        margin-bottom 10px
-
-    h3
-        margin-top 30px
-        margin-bottom 0
-        padding-bottom 0
-        line-height 30px
-
-    .comment
-        font-size 14px
-
-    .btn
-        float right
-        margin 10px 10px 10px 10px
-
-    .app-img
-        text-align center
-        vertical-align center
-        box-sizing border-box
-        width 180px
-        height 180px
-        padding 25px 20px 10px 25px
-        margin-right 10px
-
-        img.svg
-            border-radius 200px
-            display block
-            background-position center
-            width 130px
-            height 130px
-
-    .img-btn
-        width 24px
-        opacity 0.3
-        margin 10px 5px
-        display none
-
-    .img-btn:hover
-        opacity 1
-        cursor pointer
-
-.cozy-app:hover
-    background lightgrey - 10%
-
-    .right
-        display inline
-
-    .img-btn
-        display inline
-
-.cozy-app.official
-    background lightgreyblue
-
-.cozy-app.official:hover
-    background lightgreyblue - 5%
-
-
-// Config application
-
-.title-app a.subtitle
-    display inline-block
-    font-family 'Maven Pro', sans-serif
-    font-size 15px
-
-.sys-infos
-   padding-right 20px
-
-#config-application-list
-    margin-top 10px
-
-.config-application:first-child
-    border-top 0
-
-.config-application
-    border-top 1px solid lightgrey - 10%
-    padding 10px 0
-    margin-bottom 10px
-    border-radius 5px
-
-    strong
-        text-transform lowercase
-        font-size 20px
-        a
-            color black
-
-    .smaller
-        font-family 'Source Sans Pro', sans-serif
-        display flex
-        align-items center
-
-        input
-            margin 0 5px 0
-
-    .favorite
-        cursor pointer
-
-    .md-header
-        background transparent
-
-    .md-footer
-        padding 0
-
-        .btn
-            font-weight normal
-
-    .buttons
-        align-items center
-
-        button
-        a
-            width 100%
-            display inline-block
-            margin 0 0 2px
-            min-width 24px
-            min-height 24px
-            font-size 12px
-            text-align left
-
-    .comments
-        clear both
-        font-size 14px
-        line-height 20px
-        margin-left 2em
-
-        img
-            overflow hidden
-            display inline-block
-            margin 0 5px 0 0
-
-        a
-            color grey
-
-        @media (max-width: 800px)
-            margin-left 0
-
-    .to-update-label
-        background #6C6
-        color white
-        padding 3px 6px
-        margin-left 26px
-        font-size 12px
-        border-radius 3px
-        text-transform lowercase
-
-
-#config-applications-view
-    .stack-app
-
-        .app
-            font-weight normal
-
-        .btn
-            width 100%
-            text-align left
-            margin-bottom 2px
-            display block
-            font-size 12px
-
-            .fa
-                margin-top 2px
-
-// Config device
-
-
+// Status - Config device
+// Everything below is probably useless
+// TODO => remove all of this code
+// ========================================================
 .config-device
-    padding 0
-    margin-bottom 5px
-    border-radius 5px
-
-    .btn
-        text-align left
-
     strong
     .mod
         display inline-block
@@ -908,9 +92,6 @@ body
     .mod.left
         margin 0
 
-    .smaller
-        font-family 'Source Sans Pro', sans-serif
-
     .md-header
         background transparent
 
@@ -920,265 +101,108 @@ body
         .btn
             font-weight normal
 
-.config-device:hover
-    .dataLine
-        text-shadow none
-    .docTypeLine
-        text-shadow none
-
-#config-applications-view
-    .w50
-        padding 20px
-
-    .change-layout img
-        margin-left 5px
-        margin-bottom 7px
-        width 60px
-    .change-layout a
-        color black
-        font-family 'Maven Pro', sans-serif
-        font-weight normal
-        &:hover
-            color orange
-
-
-// modals
-
-.application
-    .permissionsLine
-        p
+    &:hover
+        .dataLine
             text-shadow none
-            color grey + 20%
 
-.md-open
-    overflow hidden
-
-.md-modal
-    position fixed
-    top 50%
-    left 50%
-    width 50%
-    max-width 630px
-    min-width 320px
-    height auto
-    z-index 2000
-    visibility hidden
-    backface-visibility hidden
-    transform translateX(-50%) translateY(-50%)
-
-
-.md-modal .md-content
-    transform translateX(20%)
-    opacity 0
-    transition all 3s
-    background white
-    position relative
-    margin 0 auto
-    transition all 0.3s
-
-.md-show.md-content
-    transform translateX(0)
-    opacity 1
-    transition all 0.3s
-
-.md-overlay
-    position fixed
-    width 100%
-    height 100%
-    visibility hidden
-    top 0
-    left 0
-    z-index 1000
-    opacity 0
-    background rgba(143,140,140,0.6)
-    transition all 0.6s
-    cursor pointer
-
-.md-header
-    padding 10px 20px
-    background #333
-
-    h3
-        color white
-        margin-bottom 0px
-        margin-top 10px
-
-    img
-        width 32px
-
-    span
-        padding-top 30px
-
-    p
-        margin-top 0px
-        font-size 18px
-        color white
-
-    a
-        color white
-        opacity 0.7
-        transition all 0.3s
-        line-height 32px
-        font-size 24px
-
-    a:hover
-        color white
-        opacity 1
-
-    .repo-stars
-        right 60px
-        padding-top 3px
-        position absolute
-
-.noncozy-warning
-    margin-top 20px
-    padding 5px 10px
-    border-radius 5px
-    background lightgreyblue
-
-    .fa
-        float left
-        font-size 28px
-        margin 5px 10px 5px 0
-        color blue
-
-    span
-    a
-        font-weight bold
-        font-size 14px
-        color black
-
-    a
-        color blue
-
-        &:hover
-            color orange
-
-
-.md-body
-
-    background white
-    padding 20px
-    color darkgrey
-    overflow-y auto
-
-    &.loading
-        text-align center
-    &.error
-        color red
-
-    .spinner
-        display inline-block
-
-    p
-        margin-top 0
-
-    h4
-        margin-bottom 20px
-        font-size 20px
-
-.md-footer
-    background white
-    padding 10px
-
-
-.md-show
-    opacity 1
-    visibility visible
-
-#tutorial-view
-    div.question
-        display none
-        &.active
-            display block
-
-        button
-            padding 10px
-            font-size 16px
-
-    #end-screen
-        ul
-            margin 10px 150px
+        .docTypeLine
+            text-shadow none
 
 
 // Responsive
-
-
+// ========================================================
 @media (max-width 1200px)
-    .application .application-inner
-        padding 0px 10px
-
-    #market-view
-
-        .cozy-app
-            width 100%
-
     #help-view
     #account-view
     #config-applications-view
-
         .w50
             width 100%
             padding 0
 
         .personalisation
-            margin-bottom 30px
+            margin-bottom (60/16)em
 
 
 @media (max-width 850px)
-
     #applications-view
-        padding 10px
-        margin-bottom 20px
+        padding 0 (10/16)em
+        margin-bottom (20/16)em
 
     #market-view
-        span
+        span.comment
+            // hide desciption about who developed the app
             display none
 
     dialog
         width 96vw
 
-    #app-list
-        section
-            h2
-                padding-left 13px
-
 
 @media (max-width 800px)
+    #config-applications-view
+        .mod.w25
+        .mod.w75
+        .mod.w33
+        .mod.w66
+        .mod.w40
+        .mod.w60
+        .mod.w50
+            width 100%
+
+    #app-list section
+        margin-top 1em
 
     .back-button
         span
             display none
 
     .pa2
-        padding 10px
+        padding (10/16)em
 
     #config-applications-view
         .w50
-            padding 10px
+            padding (10/16)em
 
     .platform-section
-        padding 10px
+        padding (10/16)em
 
     .application .application-inner
-        padding 0
+        // reduce padding in the home icon
+        padding (6/16)em 12% (3/16)em
 
-        .app-title
-            font-size 14px
+        img.icon
+            // padding relative to the viewport
+            padding 18%
+
 
     .md-content
         overflow auto
+        height 100%
 
     .md-modal
         position fixed
+        top 36px
         bottom 0
         width 100%
-        height 90%
+        max-width 100%
         z-index 2000
         visibility hidden
         backface-visibility hidden
         margin 0
         padding 0
+
+        .md-content
+        .md-header
+        .md-footer
+            border-radius 0
+
+         .md-content
+             display flex
+             flex-direction column
+
+            .md-body
+                flex 1
+                // overwrite JS resizing
+                max-height 100% !important
 
     .section-title
         display none
@@ -1187,16 +211,13 @@ body
         box-shadow none
 
     img
-        margin 10px 10px 0 0
+        margin (10/16)em (10/16)em 0 0
 
     h3
-        margin-top 20px
+        margin-top (20/16)em
         margin-bottom 0
         padding-bottom 0
         line-height 16px
-
-    .comment
-        font-size 14px
 
     #buttons
         width 100%
@@ -1219,23 +240,8 @@ body
                 height 20px
 
     #market-view
-        .app-img
-            padding 20px 0
-
-            img
-                margin 0
-
         h3
             margin-bottom 10px
-
-        .cozy-app
-            width 100%
-            height 180px
-
-    #notifications
-        .notification
-            a.doaction
-                width 300px
 
     #config-applications-view
         .w33
@@ -1260,8 +266,6 @@ body
             clear none
 
         .sys-infos div
-            // clear both
-            // height 37px
             margin-top 5px
 
         .platform .line
@@ -1269,9 +273,6 @@ body
                 width 32px
                 margin 0px
                 margin-right 5px
-
-        h4
-            margin-bottom 20px
 
         .stack-app
             .line
@@ -1282,11 +283,6 @@ body
     #account-view
         p
             margin 10px 0
-
-        input
-        select
-            width 100%
-            font-size 16px
 
     #home-content
         padding 0
@@ -1301,30 +297,10 @@ body
             img
                 display none
 
-        #market-application-list
-            .cozy-app
-                height 300px
-
-        .app-img
-            img
-                padding 10px
-
-    #help-view
-        p.help-text
-            font-size 20px
-
     #config-applications-view
         .w66
             padding-right 10px
 
-    .application .application-inner
-        .app-title
-            font-size 12px
-
-    #app-list
-        section
-            h2
-                padding-left 8px
 
 @media (max-width 500px)
 
@@ -1333,65 +309,21 @@ body
         .mod.w75
         .mod.w33
         .mod.w66
+        .mod.w40
+        .mod.w60
         .mod.w50
             width 100%
+
+        .mod.w60
+            margin-top (30/16)em
 
     #home-menu
         .logout-menu-icon
             display block
 
-    #app-list
-        section
-            h2
-                font-size 12px
-
-    .application .application-inner
-        padding 0
-
-        img.icon
-            padding 5px
-
-        .app-title
-            margin-top 4px
-            font-size 9px
-            text-transform capitalize
-
     #market-view
-        #your-app
-
-            #app-git-field
-                font-size 16px
-
-        .cozy-app
-            height auto
-            margin-top 10px
-            padding 20px 10px
-
-            h3
-                font-size 26px
-
         .app-text
             padding 10px
-
-        .app-img
-            display block
-            padding 0
-            width 100%
-            height 120px
-            text-align left
-
-            img
-                margin 10px 0 0 10px
-                width 100px
-                height 100px
-
-    #notifications
-    #notifications-buttons
-        width 310px
-
-        .notification
-            a.doaction
-                width 260px
 
     #config-applications-view
         .config-application
@@ -1407,6 +339,9 @@ body
 
                 span
                     display none
+
+    .application .application-inner .app-title
+        font-size (14/16)em
 
 
 span.app

@@ -60,7 +60,7 @@ class Modal extends Backbone.View
         super
 
     render: ->
-        close = $('<button class="close fa fa-close" data-dismiss="modal"/>')
+        close = $('<button class="close" data-dismiss="modal">×</button>')
         title = $('<p>').text @title
         head  = $('<div class="modalCY-header">').append close, title
 
@@ -68,7 +68,7 @@ class Modal extends Backbone.View
 
         foot  = $('<div class="modalCY-footer">')
         backBtn = $("""
-            <button id="modal-dialog-back" class="btn light-btn left back">
+            <button id="modal-dialog-back" class="btn transparent-grey left back">
                 <i class="fa fa-chevron-left"/> #{@back}
             </button>
         """).appendTo foot
@@ -76,7 +76,7 @@ class Modal extends Backbone.View
                 .text(@yes)
                 .appendTo foot
         noBtn = if @no
-            $('<button id="modal-dialog-no" class="btn light-btn right"/>')
+            $('<button id="modal-dialog-no" class="btn transparent-grey right"/>')
             .text(@no)
             .appendTo foot
 

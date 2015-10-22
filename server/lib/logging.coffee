@@ -3,12 +3,12 @@ path = require 'path'
 
 exports.stream = null
 
-exports.init = (compound, callback) =>
+exports.init = (compound, callback) ->
     app = compound.app
     logDir = path.join compound.root, 'log'
     logFile = path.join logDir, app.get('env') + '.log'
 
-    fs.exists logDir, (exists) =>
+    fs.exists logDir, (exists) ->
         if exists
             options =
                 flags: 'a',
@@ -19,6 +19,6 @@ exports.init = (compound, callback) =>
         else
             callback null
 
-exports.write = (text) =>
+exports.write = (text) ->
     stream = exports.stream || process.stdout
     stream.write text + '\n' || console.log text
