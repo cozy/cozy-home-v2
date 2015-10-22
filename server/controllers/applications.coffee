@@ -202,8 +202,6 @@ module.exports =
     # Update application parameters like autostop or favorite.
     updateData: (req, res, next) ->
         app = req.application
-        console.log app
-        console.log req.body
         if req.body.isStoppable? and req.body.isStoppable isnt app.isStoppable
             Stoppable = req.body.isStoppable
             Stoppable = if Stoppable? then Stoppable else app.isStoppable
@@ -504,6 +502,65 @@ module.exports =
                         success: true
                         msg: 'Application stopped'
                         app: req.application
+
+
+    changeBranch: (req, res, next) ->
+        branch = req.params.branch
+        manifest = new Manifest()
+        app = req.application
+        if app.branch is branch
+            err = new Error "This application is already on branch #{branch}"
+            return sendError res, err
+
+        app.branch = branch
+        # Retrieve manifest
+        manifest.download app, (err) =>
+            if err?
+                callback err
+            else
+                app.password = randomString 32
+                # Retrieve access
+                access =
+                    permissions: manifest.getPermissions()
+                    slug: app.slug
+                    password: app.password
+                # Retrieve application
+                data =
+                    widget: manifest.getWidget()
+                    version: manifest.getVersion()
+                    iconPath: manifest.getIconPath()
+                    color: manifest.getColor()
+                    needsUpdate: false
+                try
+                    # `icons.getIconInfos` needs info from 'data' and 'app'.
+                    infos =
+                        git: app.git
+                        name: app.name
+                        icon: app.icon
+                        iconPath: data.iconPath
+                        slug: app.slug
+                    iconInfos = icons.getIconInfos infos
+                catch err
+                    console.log err
+                    iconInfos = null
+                data.iconType = iconInfos?.extension or null
+
+                # Update access
+                app.updateAccess access, (err) ->
+                    return callback err if err?
+                    manager.changeBranch app, branch, (err, result) ->
+                        return sendError res, err if err
+
+                        # Update application
+                        data.branch = branch
+                        app.updateAttributes data, (err) ->
+                            icons.save app, iconInfos, (err) ->
+                                if err then console.log err.stack
+                                else console.info 'icon attached'
+                                manager.resetProxy () ->
+                                    res.send
+                                        success: true
+                                        msg: 'Branch succesfuly changed'
 
 
     fetchMarket: (req, res, next) ->
