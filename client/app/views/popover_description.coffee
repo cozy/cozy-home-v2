@@ -38,6 +38,9 @@ module.exports = class PopoverDescriptionView extends BaseView
                 @body.addClass 'error'
                 if error.responseText.indexOf('Not Found') isnt -1
                     @body.html t 'package.json not found'
+                else if error.responseText.indexOf('unknown provider') isnt -1
+                    @body.html t 'unknown provider'
+                    @$("#confirmbtn").hide()
                 else
                     @body.html t 'error connectivity issue'
 

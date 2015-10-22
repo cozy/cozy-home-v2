@@ -43,7 +43,7 @@ sendError = (res, err, code=500) ->
     res.send code,
         error: true
         success: false
-        message: err.message
+        message: err.message? or err
         stack: err.stack
 
 sendErrorSocket = (err) ->

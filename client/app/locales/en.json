@@ -190,6 +190,7 @@
   "introduction market": "Welcome to the Cozy store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
   "error connectivity issue": "An error occurred while retrieving the data.<br />Please try again later.",
   "package.json not found": "Unable to fetch package.json. Check your repo url.",
+  "unknown provider": "For now, applications can only be installed from Github or CozyCloud Market",
   "please wait data retrieval": "Please wait while the data is being retrieved…",
   "revoke device confirmation message": "This will prevent the device from accessing your Cozy. Are you sure?",
   "dashboard": "Dashboard",
