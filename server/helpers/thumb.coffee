@@ -14,7 +14,7 @@ resize = (raw, file, name, callback) ->
     fs.openSync options.dstPath, 'w'
 
     # create a resized file and push it to db
-    im[options.mode] options, (err, stdout, stderr) =>
+    im[options.mode] options, (err, stdout, stderr) ->
         return callback err if err
         file.attachBinary options.dstPath, {name}, (err) ->
             fs.unlink options.dstPath, ->
@@ -33,8 +33,8 @@ module.exports.create = (file, callback) ->
                 return callback err if err
             stream.pipe fs.createWriteStream rawFile
             stream.on 'error', callback
-            stream.on 'end', =>
-                resize rawFile, file, 'thumb', (err) =>
+            stream.on 'end', ->
+                resize rawFile, file, 'thumb', (err) ->
                     fs.unlink rawFile, ->
                         console.log "createThumb #{file.id} : done"
                         callback(err)

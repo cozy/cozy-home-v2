@@ -48,7 +48,8 @@ task 'tests', "Run tests #{taskDetails}", (opts) ->
     env += " NAME=home TOKEN=token"
     logger.info "Running tests with #{env}..."
     command = "#{env} mocha " + files.join(" ") + " --reporter spec --colors "
-    command += "--compilers coffee:coffee-script/register"
+    command += "--compilers coffee:coffee-script/register "
+    command += "--timeout 10000 " # longer timeout before test failure
     exec command, (err, stdout, stderr) ->
         console.log stdout
         if err?
@@ -123,7 +124,13 @@ task 'build', 'Build CoffeeScript to Javascript', ->
 SVGIMAGES = 'client/app/assets/img/apps'
 
 task 'build-icons', "Sprite the icons in #{SVGIMAGES}", ->
-    Iconizr = require 'iconizr'
+    try Iconizr = require 'iconizr'
+    catch err
+        return console.log """
+            iconizr is not compatible with node 4 and therefore not included
+            in dependencies. You need to run `npm install iconizr` before
+            using the `build-icons` script.
+        """
     out = 'client/app/assets/app-icons'
     Iconizr.createIconKit SVGIMAGES, out,
         render: css: true

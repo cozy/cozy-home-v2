@@ -40,7 +40,7 @@ removeAppUpdateNotification = function(app) {
   notifier = new NotificationsHelper('home');
   messageKey = 'update available notification';
   message = localization.t(messageKey, {
-    appName: app.name
+    appName: app.displayName
   });
   notificationSlug = "home_update_notification_app_" + app.name;
   return notifier.destroy(notificationSlug, function(err) {
@@ -111,65 +111,65 @@ updateApp = function(app, callback) {
   var data, manifest;
   data = {};
   manifest = new Manifest();
-  return manifest.download(app, (function(_this) {
-    return function(err) {
-      var access, error1, iconInfos, infos;
-      if (err != null) {
-        return callback(err);
-      } else {
-        app.password = randomString(32);
-        access = {
-          permissions: manifest.getPermissions(),
-          slug: app.slug,
-          password: app.password
+  return manifest.download(app, function(err) {
+    var access, error1, iconInfos, infos;
+    if (err != null) {
+      return callback(err);
+    } else {
+      app.password = randomString(32);
+      access = {
+        permissions: manifest.getPermissions(),
+        slug: app.slug,
+        password: app.password
+      };
+      data.widget = manifest.getWidget();
+      data.version = manifest.getVersion();
+      data.iconPath = manifest.getIconPath();
+      data.color = manifest.getColor();
+      data.needsUpdate = false;
+      try {
+        infos = {
+          git: app.git,
+          name: app.name,
+          icon: app.icon,
+          iconPath: data.iconPath,
+          slug: app.slug
         };
-        data.widget = manifest.getWidget();
-        data.version = manifest.getVersion();
-        data.iconPath = manifest.getIconPath();
-        data.color = manifest.getColor();
-        data.needsUpdate = false;
-        try {
-          infos = {
-            git: app.git,
-            name: app.name,
-            icon: app.icon,
-            iconPath: data.iconPath,
-            slug: app.slug
-          };
-          iconInfos = icons.getIconInfos(infos);
-        } catch (error1) {
-          err = error1;
+        iconInfos = icons.getIconInfos(infos);
+      } catch (error1) {
+        err = error1;
+        if (process.env.NODE_ENV !== 'test') {
           console.log(err);
-          iconInfos = null;
         }
-        data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
-        return app.updateAccess(access, function(err) {
+        iconInfos = null;
+      }
+      data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
+      return app.updateAccess(access, function(err) {
+        if (err != null) {
+          return callback(err);
+        }
+        return manager.updateApp(app, function(err, result) {
           if (err != null) {
             return callback(err);
           }
-          return manager.updateApp(app, function(err, result) {
-            if (err != null) {
-              return callback(err);
-            }
-            if (app.state !== "stopped") {
-              data.state = "installed";
-            }
-            return app.updateAttributes(data, function(err) {
-              removeAppUpdateNotification(app);
-              return icons.save(app, iconInfos, function(err) {
-                if (err) {
-                  console.log(err.stack);
-                } else {
-                  console.info('icon attached');
-                }
-                return manager.resetProxy(callback);
-              });
+          if (app.state !== "stopped") {
+            data.state = "installed";
+          }
+          return app.updateAttributes(data, function(err) {
+            removeAppUpdateNotification(app);
+            return icons.save(app, iconInfos, function(err) {
+              if (err && process.env.NODE_ENV !== 'test') {
+                console.log(err.stack);
+              } else {
+                console.info('icon attached');
+              }
+              return manager.resetProxy(callback);
             });
           });
         });
-      }
-    };
-  })(this));
+      });
+    }
+  });
 };
 
 baseIdController = new cozydb.SimpleController({
@@ -319,7 +319,7 @@ module.exports = {
   },
   install: function(req, res, next) {
     var access;
-    req.body.slug = slugify(req.body.name);
+    req.body.slug = req.body.slug || slugify(req.body.name);
     req.body.state = "installing";
     access = {
       password: randomString(32)
@@ -350,71 +350,71 @@ module.exports = {
             return sendError(res, err);
           }
           access.app = appli.id;
-          return Application.createAccess(access, (function(_this) {
-            return function(err, app) {
-              var infos;
+          return Application.createAccess(access, function(err, app) {
+            var infos;
+            if (err) {
+              return sendError(res, err);
+            }
+            res.send({
+              success: true,
+              app: appli
+            }, 201);
+            infos = JSON.stringify(appli);
+            console.info("attempt to install app " + infos);
+            appli.password = access.password;
+            return manager.installApp(appli, function(err, result) {
+              var error1, iconInfos, msg, updatedData;
               if (err) {
-                return sendError(res, err);
+                markBroken(res, appli, err);
+                sendErrorSocket(err);
+                return;
               }
-              res.send({
-                success: true,
-                app: appli
-              }, 201);
-              infos = JSON.stringify(appli);
-              console.info("attempt to install app " + infos);
-              appli.password = access.password;
-              return manager.installApp(appli, function(err, result) {
-                var error1, iconInfos, msg, updatedData;
-                if (err) {
-                  markBroken(res, appli, err);
-                  sendErrorSocket(err);
-                  return;
-                }
-                if (result.drone != null) {
-                  updatedData = {
-                    state: 'installed',
-                    port: result.drone.port
-                  };
-                  msg = "install succeeded on port " + appli.port;
-                  console.info(msg);
-                  appli.iconPath = manifest.getIconPath();
-                  appli.color = manifest.getColor();
-                  try {
-                    iconInfos = icons.getIconInfos(appli);
-                  } catch (error1) {
-                    err = error1;
+              if (result.drone != null) {
+                updatedData = {
+                  state: 'installed',
+                  port: result.drone.port
+                };
+                msg = "install succeeded on port " + appli.port;
+                console.info(msg);
+                appli.iconPath = manifest.getIconPath();
+                appli.color = manifest.getColor();
+                try {
+                  iconInfos = icons.getIconInfos(appli);
+                } catch (error1) {
+                  err = error1;
+                  if (process.env.NODE_ENV !== 'test') {
                     console.log(err);
-                    iconInfos = null;
                   }
-                  appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
-                  return appli.updateAttributes(updatedData, function(err) {
-                    if (err != null) {
-                      return sendErrorSocket(err);
-                    }
-                    return icons.save(appli, iconInfos, function(err) {
-                      if (err != null) {
-                        console.log(err.stack);
-                      } else {
-                        console.info('icon attached');
-                      }
-                      console.info('saved port in db', appli.port);
-                      return manager.resetProxy(function(err) {
-                        if (err != null) {
-                          return sendErrorSocket(err);
-                        }
-                        return console.info('proxy reset', appli.port);
-                      });
-                    });
-                  });
-                } else {
-                  err = new Error("Controller has no " + ("informations about " + appli.name));
-                  if (err) {
+                  iconInfos = null;
+                }
+                appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
+                return appli.updateAttributes(updatedData, function(err) {
+                  if (err != null) {
                     return sendErrorSocket(err);
                   }
+                  return icons.save(appli, iconInfos, function(err) {
+                    if (err && process.env.NODE_ENV !== 'test') {
+                      console.log(err.stack);
+                    } else {
+                      console.info('icon attached');
+                    }
+                    console.info('saved port in db', appli.port);
+                    return manager.resetProxy(function(err) {
+                      if (err != null) {
+                        return sendErrorSocket(err);
+                      }
+                      return console.info('proxy reset', appli.port);
+                    });
+                  });
+                });
+              } else {
+                err = new Error("Controller has no " + ("informations about " + appli.name));
+                if (err) {
+                  return sendErrorSocket(err);
                 }
-              });
-            };
-          })(this));
+              }
+            });
+          });
         });
       });
     });
@@ -490,56 +490,52 @@ module.exports = {
     updateApps = function(app, callback) {
       var manifest;
       manifest = new Manifest();
-      return manifest.download(app, (function(_this) {
-        return function(err) {
-          if (err != null) {
-            return sendError(res, {
-              message: error
-            });
-          } else {
-            return app.getAccess(function(err, access) {
-              var ref;
-              if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
-                return callback();
-              }
-              if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
-                if ((ref = app.state) === "installed" || ref === "stopped") {
-                  console.log("Update " + app.name + " (" + app.state + ")");
-                  return updateApp(app, function(err) {
-                    if (err != null) {
-                      error[app.name] = err;
-                      return broken(app, err, callback);
-                    } else {
-                      return callback();
-                    }
-                  });
-                } else {
-                  return callback();
-                }
+      return manifest.download(app, function(err) {
+        if (err != null) {
+          return sendError(res, {
+            message: error
+          });
+        } else {
+          return app.getAccess(function(err, access) {
+            var ref;
+            if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
+              return callback();
+            }
+            if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
+              if ((ref = app.state) === "installed" || ref === "stopped") {
+                console.log("Update " + app.name + " (" + app.state + ")");
+                return updateApp(app, function(err) {
+                  if (err != null) {
+                    error[app.name] = err;
+                    return broken(app, err, callback);
+                  } else {
+                    return callback();
+                  }
+                });
               } else {
                 return callback();
               }
-            });
-          }
-        };
-      })(this));
+            } else {
+              return callback();
+            }
+          });
+        }
+      });
     };
-    return Application.all((function(_this) {
-      return function(err, apps) {
-        return async.forEachSeries(apps, updateApps, function() {
-          if (Object.keys(error).length > 0) {
-            return sendError(res, {
-              message: error
-            });
-          } else {
-            return res.send({
-              success: true,
-              msg: 'Application succesfuly updated'
-            });
-          }
-        });
-      };
-    })(this));
+    return Application.all(function(err, apps) {
+      return async.forEachSeries(apps, updateApps, function() {
+        if (Object.keys(error).length > 0) {
+          return sendError(res, {
+            message: error
+          });
+        } else {
+          return res.send({
+            success: true,
+            msg: 'Application succesfuly updated'
+          });
+        }
+      });
+    });
   },
   start: function(req, res, next) {
     var data;
@@ -643,7 +639,7 @@ module.exports = {
     });
   },
   fetchMarket: function(req, res, next) {
-    return market.download(function(err, data) {
+    return market.getApps(function(err, data) {
       if (err != null) {
         return res.send({
           error: true,

@@ -39,7 +39,7 @@ module.exports = {
         return StackApplication.all(cb);
       },
       market_applications: function(cb) {
-        return Market.download(cb);
+        return Market.getApps(cb);
       }
     }, function(err, results) {
       var imports, key, value;

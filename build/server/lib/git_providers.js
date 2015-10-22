@@ -33,22 +33,18 @@ module.exports.GithubProvider = GithubProvider = (function(superClass) {
     } else {
       path = this.basePath + '/master';
     }
-    return client.get(path + '/package.json', (function(_this) {
-      return function(err, res, body) {
-        return callback(err, body);
-      };
-    })(this));
+    return client.get(path + '/package.json', function(err, res, body) {
+      return callback(err, body);
+    });
   };
 
   GithubProvider.prototype.getStars = function(callback) {
     var client, path;
     client = request.newClient("https://api.github.com/");
     path = "repos/" + this.basePath + "/stargazers";
-    return client.get(path, (function(_this) {
-      return function(err, res, body) {
-        return callback(err, body.length);
-      };
-    })(this));
+    return client.get(path, function(err, res, body) {
+      return callback(err, body.length);
+    });
   };
 
   return GithubProvider;

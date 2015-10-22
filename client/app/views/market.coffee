@@ -113,7 +113,7 @@ module.exports = class MarketView extends BaseView
                     @waitApplication appWidget, true
                     appWidget.$el.addClass 'install'
                     @runInstallation appWidget.app
-                    , =>
+                    , ->
                         console.log 'application installed', appWidget.app
                         Backbone.Mediator.pub 'app-state:changed',
                             status: 'started'
@@ -148,12 +148,12 @@ module.exports = class MarketView extends BaseView
 
 
 
-    hideApplication: (appWidget, callback) =>
+    hideApplication: (appWidget, callback) ->
         # Test if application is installed by the market
         # or directly with a repo github
         if appWidget.$el?
-            appWidget.$el.fadeOut =>
-                setTimeout =>
+            appWidget.$el.fadeOut ->
+                setTimeout ->
                     callback() if typeof callback is 'function'
                 , 600
         else
@@ -177,7 +177,7 @@ module.exports = class MarketView extends BaseView
                 else if shouldRedirect
                     app?.routers.main.navigate 'home', true
 
-            error: (jqXHR) =>
+            error: (jqXHR) ->
                 alert t JSON.parse(jqXHR.responseText).message
                 errCallback() if typeof errCallback is 'function'
 

@@ -72,7 +72,7 @@ _clearDb = (callback) ->
 helpers.setup = (port) ->
     (done) ->
         @timeout 15000
-        _init this, port, (err) =>
+        _init this, port, (err) ->
             return done err if err
             _clearDb done
 
@@ -117,9 +117,12 @@ helpers.createApp = (name, slug, index, state) -> (callback) ->
         access.app = body.id
         Application.createAccess access, callback
 
-helpers.fakeServer = (json, code=200) ->
+helpers.fakeServer = (resMaker, code=200) ->
 
     lastCall = {}
+    unless typeof resMaker is 'function'
+        json = resMaker
+        resMaker = -> json
 
     server = http.createServer (req, res) ->
         body = ""
@@ -127,7 +130,7 @@ helpers.fakeServer = (json, code=200) ->
             body += chunk
         req.on 'end', ->
             res.writeHead code, 'Content-Type': 'application/json'
-            res.end(JSON.stringify json)
+            res.end JSON.stringify resMaker req, body
             data = JSON.parse body if body? and body.length > 0
             lastCall = request:req, body:data
 
@@ -142,7 +145,7 @@ helpers.getClient = (port, context) ->
 
     store = if context? then context else {}
 
-    callbackFactory = (done) -> (error, response, body) =>
+    callbackFactory = (done) -> (error, response, body) ->
         #throw error if error? and not body
         store.response = response
         store.body = body

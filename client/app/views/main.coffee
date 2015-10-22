@@ -38,6 +38,9 @@ module.exports = class HomeView extends BaseView
         super
 
 
+    # Initialize all views, register main widgets and ensure that currently
+    # displayed iframe is rerendered to be rendered properly after everything
+    # is loaded.
     afterRender: =>
         @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps, @market
@@ -82,12 +85,12 @@ module.exports = class HomeView extends BaseView
     # Send a logout request to server then reload current window to redirect
     # user to automatically redirect user to login page (he's not logged
     # anymore, so cozy proxy will do the redirection).
-    logout: (event) =>
+    logout: (event) ->
         user = new User()
         user.logout
-            success: (data) =>
+            success: (data) ->
                 window.location = window.location.origin + '/login/'
-            error: =>
+            error: ->
                 alert 'Server error occured, logout failed.'
 
 
@@ -231,8 +234,9 @@ module.exports = class HomeView extends BaseView
 
             @selectedApp = slug
 
-            name = @apps.get(slug).get('name')
-            name = '' if not name?
+			app = @apps.get slug
+    		name = app.get('displayName') or app.get('name') or ''
+
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
 
@@ -260,11 +264,19 @@ module.exports = class HomeView extends BaseView
         # only if there is a hash in the home given url.
         else if hash
             contentWindow = frame.prop('contentWindow')
-            currentHash = contentWindow.location.hash.substring 1
+            # Same origin policy may prevent to access location hash
+            try
+                currentHash = contentWindow.location.hash.substring 1
+            catch err
+                console.err err
             onLoad()
 
         else if frame.is(':visible')
-            frame.prop('contentWindow').location.hash = ''
+            # Same origin policy may prevent to access location hash
+            try
+                frame.prop('contentWindow').location.hash = ''
+            catch err
+                console.err err
             onLoad()
 
         else
@@ -304,7 +316,13 @@ module.exports = class HomeView extends BaseView
             # breaks the iframe layout.
             @forceIframeRendering()
 
-    ### Configuration ###
+
+    # If an application is broken, removed or updating, its corresponding
+    # iframe is removed.
+    onAppStateChanged: (appState) ->
+        if appState.status in ['updating', 'broken', 'uninstalled']
+            frame = @getAppFrame appState.slug
+            frame.remove()
 
 
     # Ugly trick for redrawing iframes. It's required because sometimes the
@@ -316,15 +334,7 @@ module.exports = class HomeView extends BaseView
         , 10
 
 
-
+    # Returns app iframe corresponding for given app slug.
     getAppFrame: (slug) ->
         return @$("##{slug}-frame")
-
-
-    # If an application is broken, removed or updating, its corresponding
-    # iframe is removed.
-    onAppStateChanged: (appState) ->
-        if appState.status in ['updating', 'broken', 'uninstalled']
-            frame = @getAppFrame appState.slug
-            frame.remove()
 
