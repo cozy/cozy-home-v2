@@ -173,6 +173,39 @@ AppManager = (function() {
     })(this));
   };
 
+  AppManager.prototype.changeBranch = function(app, branch, callback) {
+    var method;
+    method = 'processChangeBranch';
+    app = [app, branch];
+    return this.queue.push({
+      method: method,
+      app: app,
+      callback: callback
+    });
+  };
+
+  AppManager.prototype.processChangeBranch = function(params, callback) {
+    var app, branch, manifest;
+    app = params[0], branch = params[1];
+    manifest = app.getHaibuDescriptor();
+    console.info("Request controller for change " + app.name + " branch...");
+    return this.client.changeBranch(manifest, branch, function(err, res, body) {
+      if (!status2XX(res)) {
+        if (err == null) {
+          err = new Error(body.error.message);
+        }
+      }
+      if (err) {
+        console.log("Error change branch of app: " + app.name);
+        console.log(err.stack);
+        return callback(err);
+      } else {
+        console.info("Successfully branch change for app: " + app.name);
+        return callback(null, body);
+      }
+    });
+  };
+
   AppManager.prototype.uninstallApp = function(app, callback) {
     var method;
     method = 'processUninstall';

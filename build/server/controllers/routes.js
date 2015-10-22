@@ -88,6 +88,9 @@ module.exports = {
   'api/applications/:slug/update': {
     put: applications.update
   },
+  'api/applications/:slug/branch/:branch': {
+    put: applications.changeBranch
+  },
   'api/applications/update/all': {
     put: applications.updateAll
   },

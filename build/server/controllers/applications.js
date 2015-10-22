@@ -287,8 +287,6 @@ module.exports = {
   updateData: function(req, res, next) {
     var Stoppable, app, changes;
     app = req.application;
-    console.log(app);
-    console.log(req.body);
     if ((req.body.isStoppable != null) && req.body.isStoppable !== app.isStoppable) {
       Stoppable = req.body.isStoppable;
       Stoppable = Stoppable != null ? Stoppable : app.isStoppable;
@@ -637,6 +635,80 @@ module.exports = {
         });
       });
     });
+  },
+  changeBranch: function(req, res, next) {
+    var app, branch, err, manifest;
+    branch = req.params.branch;
+    manifest = new Manifest();
+    app = req.application;
+    if (app.branch === branch) {
+      err = new Error("This application is already on branch " + branch);
+      return sendError(res, err);
+    }
+    app.branch = branch;
+    return manifest.download(app, (function(_this) {
+      return function(err) {
+        var access, data, iconInfos, infos;
+        if (err != null) {
+          return callback(err);
+        } else {
+          app.password = randomString(32);
+          access = {
+            permissions: manifest.getPermissions(),
+            slug: app.slug,
+            password: app.password
+          };
+          data = {
+            widget: manifest.getWidget(),
+            version: manifest.getVersion(),
+            iconPath: manifest.getIconPath(),
+            color: manifest.getColor(),
+            needsUpdate: false
+          };
+          try {
+            infos = {
+              git: app.git,
+              name: app.name,
+              icon: app.icon,
+              iconPath: data.iconPath,
+              slug: app.slug
+            };
+            iconInfos = icons.getIconInfos(infos);
+          } catch (_error) {
+            err = _error;
+            console.log(err);
+            iconInfos = null;
+          }
+          data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
+          return app.updateAccess(access, function(err) {
+            if (err != null) {
+              return callback(err);
+            }
+            return manager.changeBranch(app, branch, function(err, result) {
+              if (err) {
+                return sendError(res, err);
+              }
+              data.branch = branch;
+              return app.updateAttributes(data, function(err) {
+                return icons.save(app, iconInfos, function(err) {
+                  if (err) {
+                    console.log(err.stack);
+                  } else {
+                    console.info('icon attached');
+                  }
+                  return manager.resetProxy(function() {
+                    return res.send({
+                      success: true,
+                      msg: 'Branch succesfuly changed'
+                    });
+                  });
+                });
+              });
+            });
+          });
+        }
+      };
+    })(this));
   },
   fetchMarket: function(req, res, next) {
     return market.getApps(function(err, data) {
