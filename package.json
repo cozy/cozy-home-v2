@@ -17,7 +17,7 @@
     "async": "0.2.10",
     "bcrypt": "0.8.5",
     "cozy-clearance": "0.1.19",
-    "cozy-clients": "1.0.3",
+    "cozy-clients": "1.0.4",
     "cozy-notifications-helper": "1.0.2",
     "cozy-realtime-adapter": "1.0.0",
     "cozy-slug": "0.1.2",

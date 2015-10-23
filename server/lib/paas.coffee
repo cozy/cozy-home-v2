@@ -109,7 +109,7 @@ reseting routes"
                     callback null, body
 
 
-    # Remove and reinstall app inside Haibu.
+    # Update app inside Controller.
     updateApp: (app, callback) ->
         method = 'processUpdate'
         @queue.push {method, app, callback}
@@ -132,6 +132,30 @@ reseting routes"
                 else
                     console.info "Successfully updated app: #{app.name}"
                     callback null, body
+
+    # Change application branch inside Controller.
+    changeBranch: (app, branch, callback) ->
+        method = 'processChangeBranch'
+        app = [app, branch]
+        @queue.push {method, app, callback}
+
+
+    processChangeBranch: (params, callback) ->
+        [app, branch] = params
+        manifest = app.getHaibuDescriptor()
+
+        console.info "Request controller for change #{app.name} branch..."
+
+        @client.changeBranch manifest, branch, (err, res, body) ->
+            err ?= new Error body.error.message unless status2XX res
+
+            if err
+                console.log "Error change branch of app: #{app.name}"
+                console.log err.stack
+                callback err
+            else
+                console.info "Successfully branch change for app: #{app.name}"
+                callback null, body
 
 
     # Send a uninstall request to controller server ("clean" request).

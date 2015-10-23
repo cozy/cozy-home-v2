@@ -1,0 +1,226 @@
+.platform-section
+    & > .mod
+        padding (20/16)em
+
+// Status - Config application
+
+.title-app a.subtitle
+    display inline-block
+    font-size 15px
+
+.sys-infos
+   padding-right 20px
+
+#config-application-list
+    margin-top 10px
+
+// update all application button
+button.update-all
+    position absolute
+    top (16/14)em
+    right (20/14)em
+
+.config-application:first-child
+    border-top 0
+
+.config-application
+    display flex
+    justify-content space-between
+    border-top 1px solid grey-03
+    padding (10/16)em 0
+    margin-bottom (10/16)em
+
+    strong
+        text-transform lowercase
+        font-size (20/16)em
+
+        a
+            color grey-08
+
+    .smaller
+        font-family 'Source Sans Pro', sans-serif
+        display flex
+        align-items center
+
+        input
+            margin 0 5px 0
+
+    .favorite
+        cursor pointer
+
+    .md-header
+        background transparent
+
+    .md-footer
+        padding 0
+
+        .btn
+            font-weight normal
+
+    .buttons
+        flex none
+
+        button
+        [role=button]
+            padding 0.25em 0.5em
+
+            .fa
+                margin 0
+
+    button.update-app
+        padding (3/13)em (6/13)em
+        margin-left (10/13)em
+        font-size (13/16)em
+
+
+    .comments
+        font-size (14/16)em
+        line-height (20/14)em
+        color grey-05
+
+        img
+            overflow hidden
+            display inline-block
+            margin 0 5px 0 0
+
+        a
+            color grey-05
+
+            &:hover
+                color blue
+
+        span
+            margin-left 0.25em
+            font-style italic
+
+    .to-update-label
+        padding (3/12)em (6/12)em
+        background-color green
+        border-radius 3px
+        color white
+        font-size (12/16)em
+        text-transform lowercase
+
+
+#config-applications-view
+    .w60
+        position relative
+        padding (20/16)em
+
+
+// CONNECTED DEVICES
+.config-device
+    display flex
+    align-items center
+    justify-content space-between
+
+    &:not(:last-child)
+        border-bottom 1px solid grey-03
+
+    button
+        padding 0.25em 0.5em
+
+    span
+        font-size (14/16)em
+
+    @media (max-width (500/16)em)
+        button
+            i
+                margin 0
+
+            span
+                display none
+
+.no-device
+    a
+        display inline-block
+
+        &[role=button]
+            padding 0.625em 0.875em
+            background-color green
+
+            &:hover
+                background-color green - 10%
+
+        &:not([role=button])
+            margin (5/16)em (10/16)em (5/16)em 0
+
+            img
+                @media (max-width: 800px)
+                    margin 0
+
+
+// HARDWARE
+.block-container
+    display flex
+    align-items center
+    justify-content space-between
+
+    @media (max-width (500/16)em)
+        flex-wrap wrap
+
+.info-block
+    display flex
+    align-items center
+    width 49%
+
+    @media (max-width (500/16)em)
+        width 100%
+        margin-bottom 1em
+
+
+    .title
+        font-size (14/16)em
+        text-transform uppercase
+        color grey-06
+
+    .amount
+        font-size 1.75em
+        line-height 1em
+
+    .lowlight
+        display inline-block
+        font-size (14/16)em
+        color grey-07
+
+    .fa
+        margin-right (10/48)em
+        font-size (48/16)em
+
+// PLATFORM
+.platform
+    position relative
+
+    .buttons
+        display flex
+        position absolute
+        top 0
+        right 0
+
+        button:not(:last-child)
+            margin-right (4/14)em
+
+    .version
+        display flex
+        justify-content space-between
+
+        @media (max-width (500/16)em)
+            flex-wrap wrap
+
+        .line
+            @media (max-width (500/16)em)
+                width 50%
+                margin-bottom 1em
+
+            .app
+                font-size (14/16)em
+                text-transform uppercase
+                font-weight normal
+                color grey-06
+
+            span
+                display block
+
+            .version-number
+                font-size 1.75em
+                line-height 1em

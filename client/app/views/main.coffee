@@ -234,8 +234,9 @@ module.exports = class HomeView extends BaseView
 
             @selectedApp = slug
 
-            name = @apps.get(slug).get('name')
-            name = '' if not name?
+            app = @apps.get slug
+            name = app.get('displayName') or app.get('name') or ''
+
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
 

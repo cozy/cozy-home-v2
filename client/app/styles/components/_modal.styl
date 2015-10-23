@@ -1,0 +1,312 @@
+// MODAL
+
+.application
+    .permissionsLine
+        p
+            text-shadow none
+            color red
+
+.md-open
+    overflow hidden
+
+.md-modal
+    position fixed
+    top 12%
+    left 50%
+    width 100%
+    max-width (560/16)em
+    height auto
+    z-index 2000
+    visibility hidden
+    backface-visibility hidden
+    transform translateX(-50%)
+
+
+.md-modal .md-content
+    transform translateY(33%)
+    opacity 0
+    transition all 0.5s
+    background white
+    position relative
+    margin 0 auto
+    transition all 0.3s
+    border-radius 8px
+
+.md-show.md-content
+    transform translateY(0)
+    opacity 1
+    transition all 0.3s
+
+.md-overlay
+    position fixed
+    width 100%
+    height 100%
+    visibility hidden
+    top 0
+    left 0
+    z-index 1000
+    opacity 0
+    background rgba(grey-08,0.8)
+    transition all 0.6s
+    cursor pointer
+
+.md-header
+    padding (20/16)em
+    background grey-06
+    border-radius 5px 5px 0 0
+
+    h3
+        color white
+        margin 0
+        padding 0
+
+    p
+        margin 0
+        padding-top (5/18)em
+        font-size (18/16)em
+        line-height 1.125em
+        color grey-02
+
+    a
+        text-decoration underline
+
+    .repo-stars
+        right 60px
+        padding-top 3px
+        position absolute
+
+.noncozy-warning
+    display flex
+    align-items center
+    margin-top (10/16)em
+    padding (12/16)em (16/16)em
+    border-radius 5px
+    background red
+
+    .fa
+        font-size (32/16)em
+        margin-right (10/32)em
+        color white
+
+    span
+    a
+        font-size 1em
+        line-height 1.25em
+        color white
+
+
+.md-body
+    background white
+    padding (20/16)em
+    color grey-08
+    overflow-y auto
+
+    &.loading
+        text-align center
+
+    &.error
+        color red
+
+    .spinner
+        display inline-block
+
+    p
+        margin-top 0
+
+    h5
+        padding-bottom (10/16)em
+        font-weight normal
+        font-size 1em
+        text-transform uppercase
+        color grey-06
+
+    .permissionsLine
+        display flex
+        padding-bottom (12/16)em
+
+        strong
+            margin-right (8/16)em
+
+        p
+            color grey-07
+
+.md-footer
+    display flex
+    justify-content space-between
+    background white
+    padding (10/16)em
+    border-radius 0 0 5px 5px
+    border-top 1px solid grey-02
+
+    button
+        width 49%
+
+
+.md-show
+    opacity 1
+    visibility visible
+
+
+// No idea what is `#tutorial-view`
+// TODO: we probably need to remove it
+#tutorial-view
+    div.question
+        display none
+
+        &.active
+            display block
+
+        button
+            padding (10/16)em
+            font-size 1em
+
+    #end-screen
+        ul
+            margin 10px 150px
+
+
+// MODAL IMAGE
+.modalCY-backdrop
+    position         fixed
+    top              -50px
+    right            -50px
+    bottom           -50px
+    left             -50px
+    background-color rgba(grey-08,0.8)
+    z-index          100000
+
+.fade
+    opacity 0
+    top     -50%
+
+.fade.in
+    opacity    1
+    top        50%
+    transition opacity 0.15s linear, top 0.15s ease-out
+
+.fade.out
+    opacity    0
+    top        -25%
+    transition opacity 0.15s linear, top 0.15s ease-out
+
+.modalCY
+    display          flex
+    flex-direction   column
+    position         absolute
+    left             50%
+    transform        translateX(-50%) translateY(-50%)
+    height           80%
+    width            90%
+    max-width        (1024/16)em
+    z-index          100001
+    overflow         hidden
+    border-radius    6px
+    background-color white
+
+    .modalCY-header
+        flex-shrink      0
+        background-color grey-06
+        color            white
+        font-size        (22/16)em
+        padding          (20/22)em
+        border-radius 5px 5px 0 0
+
+        @media (max-width: 39em)
+            border-radius 0
+
+        p
+            margin 0
+
+        button
+            padding     0
+            background  transparent
+            border      0
+            opacity     .5
+            font-size   1.5em
+            line-height 1
+            color       white
+            cursor      pointer
+
+            &:hover
+                opacity 1
+
+    .modalCY-body
+        overflow hidden
+        // Inherited flex layout for children
+        display  flex
+        flex     1
+
+        [aria-hidden=true]
+            display none
+
+    .modalCY-footer
+        display flex
+        justify-content space-between
+        flex-shrink      0
+        background-color white
+        padding (10/16)em
+        border-radius 0 0 5px 5px
+        border-top 1px solid grey-02
+
+        @media (max-width: 39em)
+            border-radius 0
+
+        button
+            margin 0 0.15em
+            flex 1
+
+        #modal-dialog-back
+            order 1
+
+        #modal-dialog-no
+            order 2
+
+        #modal-dialog-yes
+            order 3
+
+
+    // Back (aka "choose again") button
+    .back
+        display     inline
+        white-space nowrap
+
+    &:not([data-step=croper]) .back
+        display none
+
+
+@media (max-height: 38em)
+    .modalCY
+        height 90%
+        width  90%
+
+        .modalCY-header
+            font-size      1.3em
+            padding-top    7px
+            padding-bottom 7px
+
+        .modalCY-footer
+            padding-top    4px
+            padding-bottom 4px
+
+
+@media (max-width: 39em)
+    .modalCY
+        height        100%
+        width         100%
+        border-radius 0
+
+        .modalCY-header
+            font-size      1.1em
+            padding-top    7px
+            padding-bottom 7px
+
+        .modalCY-footer
+            padding-top    4px
+            padding-bottom 4px
+
+
+@media (max-height: 17em)
+    .modalCY
+        height        100%
+        width         100%
+        border-radius 0

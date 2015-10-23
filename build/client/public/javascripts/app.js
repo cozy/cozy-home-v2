@@ -1186,13 +1186,15 @@ module.exports = {
   "total": "Total",
   "memory consumption": "Memory usage",
   "disk consumption": "Disk usage",
-  "you have no notifications": "Hello %{name}, you have currently no notification.",
+  "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
   "dismiss all": "Dismiss all",
   "add application": "Add app?",
   "install": "Install",
+  "github": "Github",
+  "website": "Website",
   "your app": "Your app!",
   "community contribution": "Community contribution",
-  "official application": "Official App",
+  "official application": "Developed by Cozy",
   "application description": "App Description",
   "downloading description": "Downloading description…",
   "downloading permissions": "Downloading permissions…",
@@ -1203,6 +1205,8 @@ module.exports = {
   "installing": "Installing",
   "remove": "Remove",
   "update": "Update",
+  "config application unmark favorite": "Remove from Favorites",
+  "config application mark favorite": "Add to Favorites",
   "started": "started",
   "notifications": "Notifications",
   "questions and help forum": "Questions and help forum",
@@ -1235,18 +1239,20 @@ module.exports = {
   "configuration": "Configuration",
   "assistance": "Assistance",
   "hardware consumption": "Hardware",
-  "hard drive gigabytes": "(Hard Drive)",
-  "memory megabytes": "&nbsp;MB (RAM)",
+  "hard drive gigabytes": "Storage",
+  "gigabytes": "GB",
+  "megabytes": "MB",
+  "memory megabytes": "Memory",
   "manage your applications": "Applications",
-  "manage your devices": "Manage your devices",
+  "manage your devices": "Connected devices",
   "synchronized": "synchronized",
   "revoke device access": "Revoke device",
   "no application installed": "There is no app installed.",
   "your parameters": "Your settings",
-  "alerts and password recovery email": "I need your email address for notifications or password recovery:",
-  "public name description": "Your public name will be used by your Cozy and its apps to mention you properly:",
-  "your timezone is required": "Your time zone helps display dates properly:",
-  "domain name for urls and email": "The domain name is used to build sharing URLs sent via email to yourself or your contacts:",
+  "alerts and password recovery email": "Your email is used for notifications or password recovery.",
+  "public name description": "Your username will be displayed when you share files with people or invite them to events.",
+  "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
+  "your timezone is required": "Your time zone helps to properly display your calendar.",
   "save": "Save",
   "saved": "Saved",
   "error": "Error",
@@ -1255,9 +1261,9 @@ module.exports = {
   "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
   "account background selection": "Select your background for your Cozy Home:",
   "account localization": "Localization",
-  "account identifiers": "Identifiers",
-  "account personalization": "Personalization",
-  "account password": "Change Password",
+  "account identifiers": "Account",
+  "account personalization": "Customization",
+  "account password": "Password",
   "french": "French",
   "english": "English",
   "german": "German",
@@ -1267,12 +1273,14 @@ module.exports = {
   "current password": "current password",
   "new password": "new password",
   "confirm your new password": "confirm your new password",
-  "save your new password": "Save your new password",
+  "save your new password": "Save new password",
   "do you want assistance": "Do you need some help?",
-  "Write an email to our support team at:": "Send our support team an email:",
-  "Register and post on our forum: ": "Register and post to our forum:",
-  "Ask your question on Twitter: ": "Ask questions on Twitter:",
-  "Chat with us on IRC:": "Chat with us on IRC:",
+  "contact us more options": "There are still a few more options to be in touch with us:",
+  "community support content": "Our Community grows everyday and will be happy to give you a hand on these medias:",
+  "twitter: ": "Twitter",
+  "forum": "Forum",
+  "Chat with us on IRC:": "IRC",
+  "help wiki title": "Wiki",
   "Visit the project website and learn to build your app:": "Visit the project website:",
   "your own application": "your own app",
   "installed": "installed",
@@ -1286,7 +1294,9 @@ module.exports = {
   "update stack": "Update the platform",
   "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
   "update stack waiting message": "Wait please, updating takes several minutes.",
-  "status no device": "No device registered for synchronization.",
+  "status no device": "There is no device connected to your Cozy.",
+  "download apk": "Download .APK",
+  "mobile app promo": "Backup you photos and synchronize your contacts and calendars with our mobile app:",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
@@ -1302,7 +1312,7 @@ module.exports = {
   "error update uninstRlled app": "You can't update an app that is not installed.",
   "notification open application": "Open application",
   "notification update stack": "Update the platform",
-  "notification update application": "Update application",
+  "notification update application": "Update now",
   "broken": "broken",
   "start this app": "Start this app",
   "stopped": "stopped",
@@ -1316,7 +1326,6 @@ module.exports = {
   "help support title": "Official Support",
   "help community title": "Community Support",
   "help documentation title": "Documentation",
-  "help wiki title": "Wiki:",
   "changing locale requires reload": "Changing the locale requires to reload the page.",
   "cancel": "cancel",
   "abort": "abort",
@@ -1332,7 +1341,7 @@ module.exports = {
   "use icon": "Use icon",
   "home section favorites": "Favorites",
   "home section leave": "Import",
-  "home section main": "Basics",
+  "home section main": "Daily",
   "home section productivity": "Productivity",
   "home section data management": "Data",
   "home section personal watch": "Watch",
@@ -1344,11 +1353,13 @@ module.exports = {
   "help": "Help",
   "change layout": "Change the layout",
   "market app install": "Installing...",
-  "market install your app": "You can install an application directly from its git repository. You can simply copy/paste its Git URL in the field below. To know more about how to build you own app, go read our ",
+  "install your app": "Install apps from its Git Repository",
+  "market install your app": "Just copy/paste its Git URL in the field below:",
+  "market install your app tutorial": "To know more about how to build you own app, feel free to read our ",
   "market app tutorial": " tutorial",
   "help send message title": "Write directly to the Cozy Team",
-  "help send message explanation": "To send a message to the Cozy Team, you can use the text field below. You can send us your feedback, report bugs and of course, ask for assistance!",
-  "help send message action": "Send message to the Cozy Support Team",
+  "help send message explanation": "Here you can send us feedback, report bugs and ask for assistance. We will get back to you as soon as possible.",
+  "help send message action": "Send us a message",
   "help send logs": "Send server logs to ease debug",
   "send message success": "Message successfully sent!",
   "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc",
@@ -1418,8 +1429,8 @@ module.exports = {
   "no image": "There is no image on your Cozy",
   "ObjPicker upload btn": "Upload a local file",
   "or": "or",
-  "drop a file": "Drag & drop a file",
-  "url of an image": "URL of an image on the web",
+  "drop a file": "Drag & drop a file or",
+  "url of an image": "Paste URL of an image from the web",
   "you have no album": "<p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n    <a href=\"/#applications\" target='_blank'>l'application Photo</a>\n    <br>\n    et utilisez les photo de votre téléphone via\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 }
 ;
@@ -1956,13 +1967,15 @@ module.exports = {
   "total": "Total",
   "memory consumption": "Utilisation mémoire",
   "disk consumption": "Utilisation disque",
-  "you have no notifications": "Bonjour %{name}, vous n'avez aucune notification pour le moment.",
+  "you have no notifications": "<span>Bonjour %{name}</span><br>Vous n'avez aucune notification pour le moment.",
   "dismiss all": "Tout effacer",
   "add application": "Ajouter l'application ?",
   "install": "Installer",
+  "github": "Github",
+  "website": "Site Internet",
   "your app": "Votre application !",
   "community contribution": "Développeur indépendant",
-  "official application": "Application officielle",
+  "official application": "Développée par Cozy",
   "application description": "Description de l'application",
   "downloading description": "Téléchargement de la description…",
   "downloading permissions": "Téléchargement des permissions…",
@@ -1973,6 +1986,8 @@ module.exports = {
   "installing": "Installation en cours",
   "remove": "Enlever",
   "update": "Mettre à jour",
+  "config application unmark favorite": "Enlever des Favoris",
+  "config application mark favorite": "Ajouter aux Favoris",
   "started": "démarrée",
   "notifications": "Notifications",
   "questions and help forum": "Forum d'aide",
@@ -2003,11 +2018,15 @@ module.exports = {
   "configuration": "Configuration",
   "assistance": "Aide",
   "hardware consumption": "Matériel",
-  "hard drive gigabytes": "(Disque Dur)",
-  "memory megabytes": "&nbsp;Mo (RAM)",
+  "hard drive gigabytes": "Disque Dur",
+  "gigabytes": "Go",
+  "megabytes": "Mo",
+  "memory megabytes": "RAM",
   "manage your applications": "Applications",
-  "manage your devices": "Mobiles et tablettes",
+  "manage your devices": "Appareils connectés",
   "status no device": "Aucun appareil enregistré pour synchronisation.",
+  "download apk": "Télécharger .APK",
+  "mobile app promo": "Sauvegarder vos photos et synchroniser vos contacts et agendas avec notre application mobile :",
   "revoke device access": "Révoquer l'appareil",
   "synchronized": "synchronisé",
   "no application installed": "Il n'y a pas d'applications installées.",
@@ -2017,13 +2036,15 @@ module.exports = {
   "error proper email": "L'adresse mail forunie n'est pas correcte",
   "error email empty": "L'adresse mail ne doit pas être vide",
   "market app install": "Installation…",
-  "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre",
+  "install your app": "Installer applications à partir de son dépôt Git",
+  "market install your app": "Juste copiez/collez son URL Git dans le champ en dessous:",
+  "market install your app tutorial": "Pour savoir comment faire votre propre application, suivez notre ",
   "market app tutorial": "didacticiel",
   "your parameters": "Vos paramètres",
-  "alerts and password recovery email": "J'ai besoin de votre email pour la récupération de mot de passe ou\npour vous envoyer des informations :",
-  "public name description": "Votre nom sera utilisé par votre Cozy et ses applications pour communiquer avec vous et vos contacts :",
-  "your timezone is required": "Votre fuseau horaire est nécessaire pour vous afficher les dates correctement :",
-  "domain name for urls and email": "Le nom de domaine est utilisé pour construire les URL de partage\nenvoyées par mail à vos contacts :",
+  "alerts and password recovery email": "Votre email est utilisé pour la récupération de mot de passe ou afin de recevoir des notifications.",
+  "public name description": "Votre nom apparaitra dans les messages de partages et les invitations calendrier.",
+  "your timezone is required": "Votre fuseau horaire permet d'afficher correctement les heures dans les agendas.",
+  "domain name for urls and email": "Le nom de domaine est utilisé pour vous connecter à votre Cozy à partir d'autres appareils et construire les URL de partage.",
   "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez pour votre Cozy :",
   "french": "Français",
   "english": "Anglais",
@@ -2033,13 +2054,16 @@ module.exports = {
   "enter a new password": "Votre nouveau mot de passe :",
   "new password": "Nouveau mot de passe",
   "confirm your new password": "Confirmez votre nouveau mot de passe :",
-  "save your new password": "Sauvegarder votre nouveau mot de passe",
+  "save your new password": "Sauvegarder nouveau mot de passe",
   "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
-  "Write an email to our support team at:": "Ecrivez un email à notre équipe support :",
+  "contact us": "Contactez nous",
+  "contact us more options": "Il reste encore quelques possibilités pour nous contacter:",
   "account background add": "Ajouter un fond d'écran",
-  "Register and post on our forum: ": "Postez un message sur notre forum :",
-  "Ask your question on Twitter: ": "Posez votre question sur Twitter :",
-  "Chat with us on IRC:": "Discutez avec nous sur IRC :",
+  "community support content": "Notre communauté grandissante sera heureuse de vous donner un coups de main:",
+  "twitter: ": "Twitter",
+  "forum": "Forum",
+  "Chat with us on IRC:": "IRC",
+  "help wiki title": "Wiki",
   "Visit the project website and learn to build your app:": "Visitez le site du projet et trouvez les guides pour synchroniser vos périphériques.",
   "your own application": "votre propre application",
   "broken": "cassée",
@@ -2103,12 +2127,12 @@ module.exports = {
   "app store": "Ajouter",
   "settings": "Paramètres",
   "help": "Aide",
-  "account identifiers": "Identifiants",
+  "account identifiers": "Compte",
   "account localization": "Régionalisation",
   "spanish": "Espagnol",
   "account personalization": "Personnalisation",
   "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
-  "account password": "Changement de mot de passe",
+  "account password": "Mot de Passe",
   "account change password success": "Le mot de passe a été changé avec succès.",
   "account change password short": "Le mot de passe est trop court.",
   "account change password difference": "La confirmation de votre nouveau mot de passe est différente du nouveau mot de passe.",
@@ -2116,9 +2140,8 @@ module.exports = {
   "help support title": "Support officiel",
   "help community title": "Support via la communauté",
   "help documentation title": "Documentation",
-  "help wiki title": "Wiki :",
-  "help send message title": "Ecrire directement à l'équipe Cozy",
-  "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !",
+  "help send message title": "Nous envoyer un message",
+  "help send message explanation": "Ici vous pouvez nous envoyer des retours, rapporter des bugs et demander de l'aide :",
   "help send logs": "Joindre les logs des applications pour faciliter la résolution des problèmes",
   "send message success": "Message successfully sent!",
   "help send message action": "Envoyer un message à l'équipe support de Cozy",
@@ -2163,7 +2186,7 @@ module.exports = {
   "installation message failure": "Échec de l'installation de %{appName}.",
   "notification open application": "Ouvrir l'application",
   "notification update stack": "Mettre à jour la plateforme",
-  "notification update application": "Mettre à jour l'application",
+  "notification update application": "Mettre à jour",
   "update available notification": "Une nouvelle version de %{appName} est disponible.",
   "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
   "app broken title": "Application cassée",
@@ -2188,8 +2211,8 @@ module.exports = {
   "no image": "Il n'y a pas d'image sur votre Cozy",
   "ObjPicker upload btn": "Sélectionnez un fichier local",
   "or": "ou",
-  "drop a file": "Glissez et déposez un fichier",
-  "url of an image": "URL d'une image sur le web",
+  "drop a file": "Glissez et déposez un fichier ou",
+  "url of an image": "Coller l'URL d'une image sur le web",
   "you have no album": "<p>You have no photo album yet<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Create some with the\n    <a href=\"/#applications\" target='_blank'>Photo application</a>\n    <br>\n    and use photo from your phone with the\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
 }
 ;
@@ -5390,34 +5413,31 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
 var __val__ = t('alerts and password recovery email')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="account-field"><input id="account-email-field"/><button class="btn">');
+buf.push('</p><div class="account-field fied-with-btn"><input id="account-email-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><p class="error email hide"></p></div><div class="input"><p>');
+buf.push('</button></div><p class="error email hide"></p></div><div class="input"><p>');
 var __val__ = t('public name description')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="account-field"><input id="account-public-name-field"/><button class="btn">');
+buf.push('</p><div class="account-field fied-with-btn"><input id="account-public-name-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><p class="error public-name hide"></p></div><div class="input"><p>');
+buf.push('</button></div><p class="error public-name hide"></p></div><div class="input"><p>');
 var __val__ = t('domain name for urls and email')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="account-field"><input id="account-domain-field"/><button class="btn">');
+buf.push('</p><div class="account-field fied-with-btn"><input id="account-domain-field"/><button class="btn">');
 var __val__ = t('save')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><p class="error domain hide"></p></div><h4>');
+buf.push('</button></div><p class="error domain hide"></p></div><h4>');
 var __val__ = t('account localization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
 var __val__ = t('your timezone is required')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="account-field"><select id="account-timezone-field"></select><button class="btn">');
-var __val__ = t('save')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><div class="input"><p>');
+buf.push('</p><div class="account-field"><select id="account-timezone-field"></select></div></div><div class="input"><p>');
 var __val__ = t('Chose the language you want I use to speak with you:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="account-field"><select id="account-locale-field"><option value="fr">');
+buf.push('</p><div class="account-field"><select id="account-locale-field"><option value="fr">');
 var __val__ = t('french')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="en">');
@@ -5429,31 +5449,28 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="es">');
 var __val__ = t('spanish')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</option></select><button class="btn">');
-var __val__ = t('save')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p></div><h4>');
+buf.push('</option></select></div></div><h4>');
 var __val__ = t('account password')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div id="change-password-form"><p><label>');
+buf.push('</h4><div id="change-password-form"><div class="account-field"><p><label>');
 var __val__ = t('input your current password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</label></p><input');
 buf.push(attrs({ 'id':('account-password0-field'), 'type':("password"), 'placeholder':("" + (t('current password')) + "") }, {"type":true,"placeholder":true}));
-buf.push('/><p><label>');
+buf.push('/></div><div class="account-field"><p><label>');
 var __val__ = t('enter a new password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</label></p><input');
 buf.push(attrs({ 'id':('account-password1-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
-buf.push('/><p><label>');
+buf.push('/></div><div class="account-field"><p><label>');
 var __val__ = t('confirm new password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</label></p><input');
 buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
-buf.push('/><p><button id="account-form-button" class="btn">');
+buf.push('/></div><p><div class="account-field"><button id="account-form-button" class="full-width">');
 var __val__ = t('save your new password')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text">');
+buf.push('</button></div><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text">');
 var __val__ = t('account change password success')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text">');
@@ -5522,24 +5539,20 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="line"><div class="left mod w66"><div class="line"><span class="favorite mr1">');
-if ( app.favorite)
-{
-buf.push('<i title="config application unmark favorite" class="fa fa-star"></i>');
-}
-else
-{
-buf.push('<i title="config application mark favorite" class="fa fa-star-o"></i>');
-}
-buf.push('</span><strong><a');
+buf.push('<div class="mod"><div class="line"><strong><a');
 buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
 buf.push('>');
 var __val__ = app.displayName
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></strong>');
+buf.push('</a></strong><button');
+buf.push(attrs({ 'title':("" + (t('update')) + ""), "class": ('update-app') + ' ' + ('outline-blue') }, {"title":true}));
+buf.push('><i class="fa fa-refresh"></i><span>');
+var __val__ = t('update')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div><div class="line">');
 if ( app.version)
 {
-buf.push('<span>&nbsp;-&nbsp; ' + escape((interp = app.version) == null ? '' : interp) + '</span>');
+buf.push('<span>' + escape((interp = app.version) == null ? '' : interp) + '</span>');
 }
 buf.push('<span>&nbsp;-&nbsp;</span>');
 if ( app.state === 'installed')
@@ -5553,34 +5566,31 @@ else
 {
 buf.push('<span class="state-label">' + escape((interp = app.state) == null ? '' : interp) + '</span>');
 }
-buf.push('</div><div class="line">');
-if ( app.needsUpdate)
-{
-buf.push('<span class="to-update-label">');
-var __val__ = t('update required')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span>');
-}
 buf.push('</div><div class="line"><div class="comments"><a');
 buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href":true,"target":true}));
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div><div class="comments"><a>' + escape((interp = app.branch) == null ? '' : interp) + '</a></div></div></div><div class="buttons left mod w33"><div><button class="btn update-app"><i class="fa fa-refresh mr1"></i> <span class="label">');
-var __val__ = t('update')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div><div><button class="btn remove-app"><i class="fa fa-trash mr1"></i> <span class="label">');
-var __val__ = t('remove')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div><div><button class="btn btn-large start-stop-btn"><i class="fa fa-power-off mr1"></i> <span class="label">');
-var __val__ = t('stop this app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div><div><a');
-buf.push(attrs({ 'href':("/logs/" + (app.slug) + ""), 'target':("_blank"), "class": ('btn') + ' ' + ('btn-large') }, {"href":true,"target":true}));
-buf.push('><i class="fa fa-cog mr1"></i> <span class="label">');
-var __val__ = t('show logs')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a></div></div></div>');
+buf.push('</a><span>(' + escape((interp = app.branch) == null ? '' : interp) + ')</span></div></div></div><div class="buttons mod"><button class="transparent-grey favorite">');
+if ( app.favorite)
+{
+buf.push('<i');
+buf.push(attrs({ 'title':("" + (t('config application unmark favorite')) + ""), "class": ('fa') + ' ' + ('fa-star') }, {"title":true}));
+buf.push('></i>');
+}
+else
+{
+buf.push('<i');
+buf.push(attrs({ 'title':("" + (t('config application mark favorite')) + ""), "class": ('fa') + ' ' + ('fa-star-o') }, {"title":true}));
+buf.push('></i>');
+}
+buf.push('</button><a');
+buf.push(attrs({ 'href':("/logs/" + (app.slug) + ""), 'target':("_blank"), 'title':("" + (t('show logs')) + ""), 'role':("button"), "class": ('transparent-grey') }, {"href":true,"target":true,"title":true,"role":true}));
+buf.push('><i class="fa fa-code"></i></a><button');
+buf.push(attrs({ 'title':("" + (t('stop this app')) + ""), "class": ('transparent-grey') + ' ' + ('start-stop-btn') }, {"title":true}));
+buf.push('><i class="fa fa-power-off"></i></button><button');
+buf.push(attrs({ 'title':("" + (t('remove')) + ""), "class": ('transparent-grey') + ' ' + ('remove-app') }, {"title":true}));
+buf.push('><i class="fa fa-trash"></i></button></div>');
 }
 return buf.join("");
 };
@@ -5603,40 +5613,46 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="md-overlay"></div><div class="line platform-section"><div class="mod left w50"><h4>');
-var __val__ = t('hardware consumption')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line"><div class="disk-space mt2 left w50 mod"><div class="line"><img src="img/hard-drive.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('hard drive gigabytes')) == null ? '' : interp) + '</div></div><div class="memory-free mt2 left w50 mod"><div class="line"><img src="img/ram.png"/></div><div class="line"><span class="amount">0</span> / <span class="total">0</span> ' + escape((interp = t('memory megabytes')) == null ? '' : interp) + '</div></div></div><h4>');
+buf.push('<div class="md-overlay"></div><div class="line platform-section"><div class="mod left w40"><div class="platform"><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="stack-app mt2 line"><div class="mod w66 left"><div class="line"><span class="app">Data System: </span><span class="data-system">--</span></div><div class="line"><span class="app">Proxy: </span><span class="proxy">--</span></div><div class="line"><span class="app">Home: </span><span class="home">--</span></div><div class="line"><span class="app">Controller: </span><span class="controller">--</span></div><div class="line"><span class="refresh">');
+buf.push('</h4><div class="stack-app mt2 line"><div class="version"><div class="line"><span class="app">Data System: </span><span class="version-number data-system">--</span><a href="/logs/data-system" target="_blank" class="small">');
+var __val__ = t('show logs')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div><div class="line"><span class="app">Proxy: </span><span class="version-number proxy">--</span><a href="/logs/proxy" target="_blank" class="small">');
+var __val__ = t('show logs')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div><div class="line"><span class="app">Home: </span><span class="version-number home">--</span><a href="/logs/home" target="_blank" class="small">');
+var __val__ = t('show logs')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a></div><div class="line"><span class="app">Controller: </span><span class="version-number controller">--</span></div><div class="line"><span class="refresh">');
 var __val__ = t('reboot stack waiting message')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="mod buttons w33 right"><button class="btn update-stack"><i class="fa fa-refresh mr1"></i><span>');
+buf.push('</span></div></div><div class="mod buttons"><button class="update-stack small"><i class="fa fa-refresh mr1"></i><span>');
 var __val__ = t('update stack')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn update-all"><i class="fa fa-refresh mr1"></i><span>');
-var __val__ = t('update all')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><button class="btn reboot-stack"><i class="fa fa-power-off mr1"></i><span>');
+buf.push('</span></button><button class="reboot-stack small outline-blue"><i class="fa fa-power-off mr1"></i><span>');
 var __val__ = t('reboot stack')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><a href="/logs/home" target="_blank" class="btn btn-large"><i class="fa fa-cog mr1"></i> <span>');
-var __val__ = t('show home logs')
+buf.push('</span></button></div></div></div><h4>');
+var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><a href="/logs/data-system" target="_blank" class="btn btn-large"><i class="fa fa-cog mr1"></i> <span>');
-var __val__ = t('show data system logs')
+buf.push('</h4><div class="block-container"><div class="info-block disk-space"><div class="fa fa-hdd-o"></div><div><span class="title">');
+var __val__ = t('hard drive gigabytes')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><a href="/logs/proxy" target="_blank" class="btn btn-large"><i class="fa fa-cog mr1"></i> <span>');
-var __val__ = t('show proxy logs')
+buf.push('</span><div class="line"><span class="amount">0</span><div class="lowlight"> / <span class="total">0</span> ' + escape((interp = t('gigabytes')) == null ? '' : interp) + '</div></div></div></div><div class="info-block memory-free"><div class="fa fa-tachometer"></div><div><span class="title">');
+var __val__ = t('memory megabytes')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a></div></div><h4 class="title-device h4 mb3">');
+buf.push('</span><div class="line"><span class="amount">0</span><div class="lowlight"> / <span class="total">0</span> ' + escape((interp = t('megabytes')) == null ? '' : interp) + '</div></div></div></div></div><h4 class="title-device h4">');
 var __val__ = t('manage your devices')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4></div><div class="mod left w50"><h4 class="title-app h4 mb3">');
+buf.push('</h4></div><div class="mod left w60"><h4 class="title-app h4">');
 var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4></div></div>');
+buf.push('</h4><button class="update-all small"><i class="fa fa-refresh mr1"></i><span>');
+var __val__ = t('update all')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></button></div></div>');
 }
 return buf.join("");
 };
@@ -5648,10 +5664,10 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="clearfix"><div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong></div><div class="buttons right w33"><button class="remove-device btn w100"><i class="fa fa-trash mr1"></i> <span class="label">');
+buf.push('<div class="mod"><strong>' + escape((interp = device.login) == null ? '' : interp) + '</strong></div><div class="buttons"><button class="remove-device transparent-grey"><i class="fa fa-trash mr1"></i> <span class="label">');
 var __val__ = t('revoke device access')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div></div>');
+buf.push('</span></button></div>');
 }
 return buf.join("");
 };
@@ -5698,49 +5714,52 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="line lightgrey help-section"><div class="mod w50 left pa2"><img src="img/contribute.jpg" class="cover"/><h4>');
+buf.push('<div class="line lightgrey help-section"><div class="mod pa2"><h4>');
 var __val__ = t('help community title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
-var __val__ = t('Register and post on our forum: ') + " "
+var __val__ = t('community support content')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://forum.cozy.io">forum.cozy.io</a></P><p class="help-text mt2">');
-var __val__ = t('Chat with us on IRC:') + " "
+buf.push('</p><div class="btn-group-big"><a href="https://forum.cozy.io" target="-blank" role="button" class="btn-big-icon"><div class="fa fa-users"></div><span>');
+var __val__ = t('forum')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://webchat.freenode.net/?channels=cozycloud">#cozycloud (irc.freenode.net)</a></P><p class="help-text mt2">');
-var __val__ = t('help wiki title') + " "
+buf.push('</span><span>forum.cozy.io</span></a><a href="https://webchat.freenode.net/?channels=cozycloud" target="-blank" role="button" class="btn-big-icon"> <div class="fa fa-comment"></div><span>');
+var __val__ = t('Chat with us on IRC:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://github.com/cozy/cozy-setup/wiki">github.com/cozy/cozy-setup/wiki</a></P></div></div><div class="mod w50 left pa2"><div style="text-align: right;"><a href="http://cozy.io" target="_blank"><img src="img/logo-brand.png" class="w350"/></a></div><h4>');
+buf.push('</span><span>#cozycloud (irc.freenode.net)</span></a><a href="https://github.com/cozy/cozy-setup/wiki" target="-blank" role="button" class="btn-big-icon"> <div class="fa fa-book"></div><span>');
+var __val__ = t('help wiki title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><span>github.com/cozy/cozy-setup/wiki</span></a></div></div></div><div class="mod pa2"><h4>');
 var __val__ = t('help support title')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><p class="help-text mt2">');
+buf.push('</h4><p class="help-text">');
 var __val__ = t('help send message explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><textarea id="send-message-textarea" class="mt2 w100 h400"></textarea><p class="help-logs"><input id="send-message-logs" type="checkbox" checked="checked"/><span>');
+buf.push('</p><textarea id="send-message-textarea" class="mt2 w100"></textarea><p class="help-logs"><input id="send-message-logs" type="checkbox" checked="checked"/><span>');
 var __val__ = t('help send logs')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></p><button id="send-message-button" class="btn w100">');
+buf.push('</span></p><button id="send-message-button" class="btn w100"><div class="fa fa-paper-plane"></div><span>');
 var __val__ = t('help send message action')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><div id="send-message-error" class="alert main-alert alert-error w100">');
+buf.push('</span></button><div id="send-message-error" class="alert main-alert alert-error w100">');
 var __val__ = t('send message error')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><div id="send-message-success" class="alert main-alert alert-success w100">');
 var __val__ = t('send message success')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div><br/><br/><div class="line"><p class="help-text mt2">');
-var __val__ = t('Write an email to our support team at:')
+var __val__ = t('contact us more options')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="mailto:support@cozycloud.cc">support@cozycloud.cc</a></P><p class="help-text mt2">');
-var __val__ = t('Ask your question on Twitter: ') + " "
+buf.push('</p><div class="btn-group-big"><a href="mailto:support@cozycloud.cc" role="button" class="btn-big-icon"><div class="fa fa-envelope"></div><span>');
+var __val__ = t('contact us')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://twitter.com/mycozycloud">@mycozycloud</a></P></div><h4>');
+buf.push('</span><span>support@cozycloud.cc</span></a><a href="https://twitter.com/mycozycloud" target="-blank" role="button" class="btn-big-icon"><div class="fa fa-twitter"></div><span>');
+var __val__ = t('twitter')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span><span>@mycozycloud</span></a><a href="https://cozy.io" target="-blank" role="button" class="btn-big-icon"><div class="fa fa-file-text"></div><span>');
 var __val__ = t('help documentation title')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><div class="line"><p class="help-text mt2">');
-var __val__ = t('Visit the project website and learn to build your app:')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><P class="help-text"><a href="https://cozy.io">cozy.io</a></P></div></div><div class="clearfix"></div></div>');
+buf.push('</span><span>cozy.io</span></a></div></div></div></div>');
 }
 return buf.join("");
 };
@@ -5802,16 +5821,16 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2></section><section id="apps-platform" class="line show"><h2>');
 var __val__ = t('home section platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
+buf.push('</h2><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/state.svg" class="icon svg"/><p class="app-title">');
+buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/state.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('app status')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
+buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('settings')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w20 left platform-app"><div href="#help" class="application-inner"><a href="#help"><img src="img/apps/help.svg" class="icon svg"/><p class="app-title">');
+buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#help" class="application-inner"><a href="#help"><img src="img/apps/help.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('help')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div></section></div>');
@@ -5838,16 +5857,10 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<header id="header" class="navbar"></header><div id="notifications" class="right-menu"><ul id="notifications-list"><li id="no-notif-msg">');
-var __val__ = t('you have no notifications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</li></ul></div><div id="notifications-buttons" class="right-menu"><button id="dismiss-all" class="btn"><i class="fa fa-trash mr1"></i><span>');
+buf.push('<header id="header" class="navbar"></header><div class="right-menu"><div id="notifications-buttons"><button id="dismiss-all" class="btn outline-darkgrey"><i class="fa fa-times-circle"></i><span>');
 var __val__ = t('dismiss all')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button><a id="logout-button" href="#logout" class="btn"><i class="fa fa-sign-out mr1"></i><span>');
-var __val__ = t('navbar logout')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a></div><div class="home-body"><div id="app-frames"></div><div id="content"><!-- Preload spinners and hover icons--><img src="/img/spinner.svg" class="hidden"/><img src="/img/spinner-white.svg" class="hidden"/><img src="/img/notification-orange.png" class="hidden"/><div id="home-content"></div></div></div>');
+buf.push('</span></button></div><div id="notifications"><ul id="notifications-list"><li id="no-notif-msg"></li></ul></div></div><div class="home-body"><div id="app-frames"></div><div id="content"><!-- Preload spinners and hover icons--><img src="/img/spinner.svg" class="hidden"/><img src="/img/spinner-white.svg" class="hidden"/><img src="/img/notification-orange.png" class="hidden"/><div id="home-content"></div></div></div>');
 }
 return buf.join("");
 };
@@ -5871,19 +5884,25 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="platform-section"><p class="mt2">' + escape((interp = t('introduction market')) == null ? '' : interp) + '</p><div id="app-market-list"><div id="market-applications-list"><div id="no-app-message">');
+buf.push('<div class="platform-section"><div id="app-market-list"><div id="market-applications-list"><div id="no-app-message">');
 var __val__ = t('installed everything')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div></div><div class="mt2 mb2"><div id="your-app" class="clearfix"><div class="text"><p>');
+buf.push('</div></div></div><div id="your-app" class="clearfix"><h2>');
+var __val__ = t('install your app')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h2><div class="text"><p>');
 var __val__ = t('market install your app')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('&nbsp;<a href="http://cozy.io/hack/getting-started/" target="_blank">');
-var __val__ = t('market app tutorial')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a>.</p><p class="add-app-field"><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
+buf.push('</p><p class="add-app-field fied-with-btn"><input type="text" id="app-git-field" placeholder="https://github.com/username/repository.git@branch" class="span3"/><button class="btn app-install-button">');
 var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div></div></div></div></div><div class="md-overlay"></div>');
+buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div><p class="more">');
+var __val__ = t('market install your app tutorial')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('<a href="http://cozy.io/hack/getting-started/" target="_blank">');
+var __val__ = t('market app tutorial')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>.</p></div></div></div><div class="md-overlay"></div>');
 }
 return buf.join("");
 };
@@ -5895,16 +5914,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="right"><a');
-buf.push(attrs({ 'href':("" + (app.git) + ""), 'target':("_blank"), "class": ('website') }, {"href":true,"target":true}));
-buf.push('><img src="img/git.png" class="img-btn"/></a>');
-if ( app.website !== undefined)
-{
-buf.push('<a');
-buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank"), "class": ('website') }, {"href":true,"target":true}));
-buf.push('><img src="img/link.png" class="img-btn"/></a>');
-}
-buf.push('</div><div class="app-img left">');
+buf.push('<div class="app-img">');
 if ( app.svgSpriteSlug)
 {
 buf.push('<img');
@@ -5928,10 +5938,28 @@ buf.push('<span class="beta">Beta</span>');
 buf.push('</h3><span class="comment">');
 var __val__ = t(app.comment)
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><p class="par2">');
+buf.push('</span><p>');
 var __val__ = t(app.description)
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div>');
+buf.push('</p><div class="btn-group"><button class="outline-blue small">');
+var __val__ = t("install")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><a');
+buf.push(attrs({ 'href':("" + (app.git) + ""), 'target':("_blank"), 'role':("button"), "class": ('transparent-grey') + ' ' + ('small') + ' ' + ('website') }, {"href":true,"target":true,"role":true}));
+buf.push('><div class="fa fa-github"></div><span>');
+var __val__ = t("github")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></a>');
+if ( app.website !== undefined)
+{
+buf.push('<a');
+buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank"), 'role':("button"), "class": ('transparent-grey') + ' ' + ('small') + ' ' + ('website') }, {"href":true,"target":true,"role":true}));
+buf.push('><div class="fa fa-link"></div><span>');
+var __val__ = t("website")
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></a>');
+}
+buf.push('</div></div>');
 }
 return buf.join("");
 };
@@ -5957,7 +5985,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<a id="menu-applications-toggle"><span id="current-application"></span></a><div id="menu-applications"><div id="home-btn" class="menu-application"></div></div><div class="clickcatcher"></div>');
+buf.push('<div id="menu-applications-toggle"><span id="current-application"></span></div>');
 }
 return buf.join("");
 };
@@ -5969,9 +5997,11 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar clearfix"><div id="notifications-container" class="right"></div><a');
-buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('fa') + ' ' + ('fa-chevron-left') + ' ' + ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
-buf.push('><span>');
+buf.push('<div class="navbar clearfix"><a');
+buf.push(attrs({ 'id':('logout-button'), 'href':("#logout"), 'title':("" + (t('logout')) + ""), "class": ('btn-navbar') + ' ' + ('sign-out') + ' ' + ('right') }, {"href":true,"title":true}));
+buf.push('><i class="fa fa-sign-out"></i></a><div id="notifications-container" class="right"></div><a');
+buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title')) + ""), "class": ('back-button') + ' ' + ('left') }, {"href":true,"title":true}));
+buf.push('><div class="fa fa-chevron-left"></div><span>');
 var __val__ = t("navbar back button title")
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></a><div id="menu-applications-container"></div></div>');
@@ -6005,7 +6035,7 @@ var interp;
 buf.push('<a class="dismiss">&times;</a><div class="notification-text">' + escape((interp = model.text) == null ? '' : interp) + '</div><div class="notification-date">' + escape((interp = model.date) == null ? '' : interp) + '</div>');
 if ( model.actionText !== undefined && model.actionText !== null)
 {
-buf.push('<a class="doaction btn">');
+buf.push('<a class="doaction btn grey">');
 var __val__ = t(model.actionText)
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>');
@@ -6022,7 +6052,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<a');
-buf.push(attrs({ 'id':('notifications-toggle'), 'title':("" + (t('navbar notifications')) + "") }, {"title":true}));
+buf.push(attrs({ 'id':('notifications-toggle'), 'title':("" + (t('navbar notifications')) + ""), "class": ('btn-navbar') }, {"title":true}));
 buf.push('><i class="fa fa-bell"></i><span id="notifications-counter"></span></a><div id="clickcatcher"></div>');
 }
 return buf.join("");
@@ -6061,7 +6091,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="photoUpload-btn"><button class="btn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button></div><div class="photoUpload-or"><div>' + escape((interp = t('or')) == null ? '' : interp) + '</div></div><div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div></div></div><input type="file" style="display:none" class="uploader"/>');
+buf.push('<div class="modal-file-drop-zone"><p>' + escape((interp = t('drop a file')) == null ? '' : interp) + '</p><div class="drop-zone"></div><div class="photoUpload-btn"><button class="btn">' + escape((interp = t('ObjPicker upload btn')) == null ? '' : interp) + '</button></div></div><input type="file" style="display:none" class="uploader"/>');
 }
 return buf.join("");
 };
@@ -6081,11 +6111,11 @@ var __val__ = t('warning unofficial app')
 buf.push(null == __val__ ? "" : __val__);
 buf.push('</span></div>');
 }
-buf.push('</div><div class="md-body"></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
-var __val__ = t('install')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
+buf.push('</div><div class="md-body"></div><div class="md-footer"><button id="cancelbtn" class="btn transparent-grey">');
 var __val__ = t('cancel')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="confirmbtn" class="btn">');
+var __val__ = t('install')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div></div>');
 }
@@ -6102,25 +6132,25 @@ var interp;
 buf.push('<div class="md-header mt2">');
 var __val__ = t('Once updated, this application will require the following permissions:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2">');
+buf.push('</div><div class="md-body"><div>&nbsp;</div></div><div class="md-footer mt2"><a id="cancelbtn" class="btn transparent-grey">');
+var __val__ = t('cancel')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>');
 if ( model.state === 'broken')
 {
-buf.push('<a id="confirmbtn" class="btn right">');
+buf.push('<a id="confirmbtn" class="btn">');
 var __val__ = t('confirm install')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>');
 }
 else
 {
-buf.push('<a id="confirmbtn" class="btn right">');
+buf.push('<a id="confirmbtn" class="btn">');
 var __val__ = t('confirm update')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>');
 }
-buf.push('<a id="cancelbtn" class="btn light-btn right">');
-var __val__ = t('cancel')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div>');
+buf.push('</div>');
 }
 return buf.join("");
 };
@@ -6222,14 +6252,14 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="error">');
 var __val__ = t('update stack error')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div><div class="md-footer clearfix"><button id="confirmbtn" class="btn right">');
+buf.push('</p></div><div class="md-footer clearfix"><button id="cancelbtn" class="transparent-grey">');
+var __val__ = t('cancel')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><button id="confirmbtn">');
 var __val__ = t('update stack modal confirm')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><button id="ok" class="btn right">');
+buf.push('</button><button id="ok">');
 var __val__ = t('ok')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><button id="cancelbtn" class="btn light-btn right">');
-var __val__ = t('cancel')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></div></div>');
 }
@@ -6659,7 +6689,7 @@ PopoverDescriptionView = require('views/popover_description');
 module.exports = ApplicationRow = (function(_super) {
   __extends(ApplicationRow, _super);
 
-  ApplicationRow.prototype.className = "line config-application clearfix";
+  ApplicationRow.prototype.className = "config-application";
 
   ApplicationRow.prototype.tagName = "div";
 
@@ -7164,7 +7194,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
     if (!(this.devices.length === 0)) {
       return this.$el.find('.title-device').after(this.deviceList.$el);
     } else {
-      return this.$el.find('.title-device').after("<p>" + (t('status no device')) + "</p>");
+      return this.$el.find('.title-device').after("<div class='no-device'><p>" + (t('status no device')) + "</p><p>" + (t('mobile app promo')) + "</p><a target='_blank' href='https://play.google.com/store/apps/details?id=io.cozy.files_client'><img src='http://developer.android.com/images/brand/en_app_rgb_wo_45.png'></a><a role='button' href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'><i class='fa fa-android'></i><span>" + (t('download apk')) + "<span></a></div>");
     }
   };
 
@@ -7177,8 +7207,8 @@ module.exports = ConfigApplicationsView = (function(_super) {
       if (err) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
-        diskUsed = "" + data.usedDiskSpace + " " + (data.usedUnit || 'G');
-        diskTotal = "" + data.totalDiskSpace + " " + (data.totalUnit || 'G');
+        diskUsed = "" + data.usedDiskSpace;
+        diskTotal = "" + data.totalDiskSpace;
         _this.displayMemory(data.freeMem, data.totalMem);
         return _this.displayDiskSpace(diskUsed, diskTotal);
       }
@@ -7293,7 +7323,7 @@ BaseView = require('lib/base_view');
 module.exports = DeviceRow = (function(_super) {
   __extends(DeviceRow, _super);
 
-  DeviceRow.prototype.className = "line config-device clearfix";
+  DeviceRow.prototype.className = "config-device";
 
   DeviceRow.prototype.tagName = "div";
 
@@ -7664,7 +7694,7 @@ Modal = require('./error_modal');
 module.exports = ApplicationRow = (function(_super) {
   __extends(ApplicationRow, _super);
 
-  ApplicationRow.prototype.className = "application w20 mod left";
+  ApplicationRow.prototype.className = "application w360-33 w640-25 full-20 mod left";
 
   ApplicationRow.prototype.tagName = "div";
 
@@ -7686,7 +7716,7 @@ module.exports = ApplicationRow = (function(_super) {
 
 
   ApplicationRow.prototype.onMouseOver = function() {
-    return this.background.css('background-color', '#FF9D3B');
+    return this.background.css('background-color', 'background-color');
   };
 
   ApplicationRow.prototype.onMouseOut = function() {
@@ -9671,7 +9701,7 @@ module.exports = HomeView = (function(_super) {
     this.$("#app-btn-" + slug + " .icon").hide();
     frame = this.$("#" + slug + "-frame");
     onLoad = function() {
-      var name;
+      var app, name;
       _this.frames.css('top', '0');
       _this.frames.css('left', '0');
       _this.frames.css('position', 'inherit');
@@ -9681,10 +9711,8 @@ module.exports = HomeView = (function(_super) {
       _this.$('#app-frames').find('iframe').hide();
       frame.show();
       _this.selectedApp = slug;
-      name = _this.apps.get(slug).get('name');
-      if (name == null) {
-        name = '';
-      }
+      app = _this.apps.get(slug);
+      name = app.get('displayName') || app.get('name') || '';
       window.document.title = "Cozy - " + name;
       $("#current-application").html(name);
       _this.$("#app-btn-" + slug + " .spinner").hide();
@@ -10336,14 +10364,14 @@ Modal = (function(_super) {
 
   Modal.prototype.render = function() {
     var backBtn, body, close, foot, head, noBtn, title, yesBtn;
-    close = $('<button class="close fa fa-close" data-dismiss="modal"/>');
+    close = $('<button class="close" data-dismiss="modal">×</button>');
     title = $('<p>').text(this.title);
     head = $('<div class="modalCY-header">').append(close, title);
     body = $('<div class="modalCY-body"></div>').append(this.renderContent());
     foot = $('<div class="modalCY-footer">');
-    backBtn = $("<button id=\"modal-dialog-back\" class=\"btn light-btn left back\">\n    <i class=\"fa fa-chevron-left\"/> " + this.back + "\n</button>").appendTo(foot);
+    backBtn = $("<button id=\"modal-dialog-back\" class=\"btn transparent-grey left back\">\n    <i class=\"fa fa-chevron-left\"/> " + this.back + "\n</button>").appendTo(foot);
     yesBtn = $('<button id="modal-dialog-yes" class="btn right"/>').text(this.yes).appendTo(foot);
-    noBtn = this.no ? $('<button id="modal-dialog-no" class="btn light-btn right"/>').text(this.no).appendTo(foot) : void 0;
+    noBtn = this.no ? $('<button id="modal-dialog-no" class="btn transparent-grey right"/>').text(this.no).appendTo(foot) : void 0;
     this.backdrop = document.createElement('div');
     this.backdrop.classList.add('modalCY-backdrop');
     $("body").append(this.backdrop);
@@ -11395,12 +11423,11 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
       return this.url = void 0;
     };
     imgTmp.onload = function() {
-      img.style.maxWidth = imgTmp.naturalWidth + 'px';
-      img.style.maxHeight = imgTmp.naturalHeight + 'px';
+      img.style.height = imgTmp.naturalHeight + 'px';
       img.parentElement.style.display = 'flex';
       img.style.backgroundImage = 'url(' + imgTmp.src + ')';
       _this.url = imgTmp.src;
-      return _this.blocContainer.style.height = (imgTmp.naturalHeight + 40) + 'px';
+      return _this.blocContainer.style.height = (imgTmp.naturalHeight / 2) + 'px';
     };
     preloadImage = function(src) {
       return imgTmp.src = src;
@@ -11621,12 +11648,12 @@ module.exports = PopoverDescriptionView = (function(_super) {
     var description, docType, permission, permissionsDiv, _ref1;
     this.body.html("");
     description = this.model.get("description");
-    this.header.parent().append("<p class=\"line left\"> " + description + " </p>");
+    this.header.parent().append("<p class=\"line\"> " + description + " </p>");
     if (Object.keys(this.model.get("permissions")).length === 0) {
-      permissionsDiv = $("<div class='permissionsLine'>\n    <h4>" + (t('no specific permissions needed')) + " </h4>\n</div>");
+      permissionsDiv = $("<div class='permissionsLine'>\n    <h5>" + (t('no specific permissions needed')) + " </h5>\n</div>");
       this.body.append(permissionsDiv);
     } else {
-      this.body.append("<h4>" + (t('required permissions')) + "</h4>");
+      this.body.append("<h5>" + (t('required permissions')) + "</h5>");
       _ref1 = this.model.get("permissions");
       for (docType in _ref1) {
         permission = _ref1[docType];

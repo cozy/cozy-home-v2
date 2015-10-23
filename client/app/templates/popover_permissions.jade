@@ -2,8 +2,8 @@
 .md-body
     div &nbsp;
 .md-footer.mt2
+    a#cancelbtn.btn.transparent-grey= t('cancel')
     if model.state === 'broken'
-        a#confirmbtn.btn.right= t('confirm install')
+        a#confirmbtn.btn= t('confirm install')
     else
-        a#confirmbtn.btn.right= t('confirm update')
-    a#cancelbtn.btn.light-btn.right= t('cancel')
+        a#confirmbtn.btn= t('confirm update')

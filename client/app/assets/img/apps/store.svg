@@ -1,1 +1,16 @@
-<svg xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><title>store</title><desc>Created with Sketch.</desc><path sketch:type="MSShapeGroup" fill="#fff" fill-opacity=".011" d="M30 58.75c15.878 0 28.75-12.872 28.75-28.75s-12.872-28.75-28.75-28.75-28.75 12.872-28.75 28.75 12.872 28.75 28.75 28.75zm0 1.25c-16.569 0-30-13.432-30-30 0-16.569 13.431-30 30-30 16.568 0 30 13.431 30 30 0 16.568-13.432 30-30 30z"/><path d="M29 10c-11.046 0-20 8.954-20 20s8.954 20 20 20 20-8.954 20-20-8.954-20-20-20zm12 21.5h-10.5v10.5h-3v-10.5h-10.5v-3h10.5v-10.5h3v10.5h10.5v3z" fill="none"/><path d="M29 7c-12.703 0-23 10.297-23 23s10.297 23 23 23 23-10.297 23-23-10.297-23-23-23zm0 43c-11.046 0-20-8.954-20-20s8.954-20 20-20 20 8.954 20 20-8.954 20-20 20zM30.5 18h-3v10.5h-10.5v3h10.5v10.5h3v-10.5h10.5v-3h-10.5z"/></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px"
+	 viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
+<title>store</title>
+<desc>Created with Sketch.</desc>
+<path sketch:type="MSShapeGroup" fill="#FFFFFF" fill-opacity="0.011" d="M30,58.75c15.878,0,28.75-12.872,28.75-28.75
+	S45.878,1.25,30,1.25S1.25,14.122,1.25,30S14.122,58.75,30,58.75z M30,60C13.431,60,0,46.568,0,30C0,13.431,13.431,0,30,0
+	c16.568,0,30,13.431,30,30C60,46.568,46.568,60,30,60z"/>
+<path fill="none" d="M30,10c-11.046,0-20,8.954-20,20s8.954,20,20,20s20-8.954,20-20S41.046,10,30,10z M42,31.5H31.5V42h-3V31.5H18
+	v-3h10.5V18h3v10.5H42V31.5z"/>
+<path d="M30,7C17.297,7,7,17.297,7,30s10.297,23,23,23s23-10.297,23-23S42.703,7,30,7z M30,50c-11.046,0-20-8.954-20-20
+	s8.954-20,20-20s20,8.954,20,20S41.046,50,30,50z M31.5,18h-3v10.5H18v3h10.5V42h3V31.5H42v-3H31.5V18z"/>
+</svg>

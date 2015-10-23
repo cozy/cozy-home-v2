@@ -56,12 +56,11 @@ module.exports = class ObjectPickerPhotoURL extends BaseView
             @url = undefined
 
         imgTmp.onload =  () =>
-            img.style.maxWidth  = imgTmp.naturalWidth  + 'px'
-            img.style.maxHeight = imgTmp.naturalHeight + 'px'
+            img.style.height = imgTmp.naturalHeight + 'px'
             img.parentElement.style.display = 'flex'
             img.style.backgroundImage = 'url(' + imgTmp.src + ')'
             @url = imgTmp.src
-            @blocContainer.style.height = (imgTmp.naturalHeight+40) + 'px'
+            @blocContainer.style.height = (imgTmp.naturalHeight/2) + 'px'
 
         preloadImage = (src) ->
             imgTmp.src = src
