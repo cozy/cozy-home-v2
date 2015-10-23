@@ -46,6 +46,30 @@ module.exports = class ApplicationRow extends BaseView
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
 
+        @icon = @$ '.icon'
+        if @model.isIconSvg()
+            @setBackgroundColor()
+            extension = 'svg'
+            @icon.addClass 'svg'
+        else
+            extension = 'png'
+            @icon.removeClass 'svg'
+
+        @icon.attr 'src', "api/applications/#{@model.get 'slug'}.#{extension}"
+
+        @setBackgroundColor()
+
+
+    setBackgroundColor: ->
+        slug = @model.get 'slug'
+        color = @model.get 'color'
+        unless color?
+            color = hashColor = ColorHash.getColor slug, 'cozy'
+            # By default, look for the color in the market.
+            #color = @inMarket?.get('color') or hashColor
+        @color = color
+        @icon.css 'background-color', color
+
 
     ### Listener ###
 

@@ -51,15 +51,23 @@ module.exports = class ConfigApplicationsView extends BaseView
             currentVersion = app.get('version').split('.')
             lastVersion = app.get('lastVersion') or '0.0.0'
             newVersion = lastVersion.split('.')
+
+            @toUpdate = false
             if parseInt(currentVersion[2]) < parseInt(newVersion[2])
                 @$(".#{app.get 'name'}").css 'font-weight', "bold"
                 @$(".#{app.get 'name'}").css 'color', "Orange"
+                @toUpdate = true
+
             if parseInt(currentVersion[1]) < parseInt(newVersion[1])
                 @$(".#{app.get 'name'}").css 'font-weight', "bold"
                 @$(".#{app.get 'name'}").css 'color', "OrangeRed"
+                @toUpdate = true
+
             if parseInt(currentVersion[0]) < parseInt(newVersion[0])
                 @$(".#{app.get 'name'}").css 'font-weight', "bold"
                 @$(".#{app.get 'name'}").css 'color', "Red"
+                @toUpdate = true
+
 
     displayDevices: =>
         if not(@devices.length is 0)
