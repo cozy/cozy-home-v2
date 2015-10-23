@@ -207,6 +207,7 @@
     "konnectors description": "Importation de données depuis des services externes (Twitter, Jawbone…).",
     "kresus description": "Des outils supplémentaires pour gérer vos comptes.",
     "nirc description": "Accédez à votre canal IRC préféré depuis votre Cozy.",
+    "shout description": "Accédez à votre canal IRC préféré depuis votre Cozy avec l'application Shout",
     "notes description": "Écrivez et organisez des notes intelligentes.",
     "owm description": "Soyez au courant du temps qu'il fait partout dans le monde !",
     "remote storage description": "Un module Remote Storage pour vos applications Unhosted.",

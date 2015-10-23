@@ -208,6 +208,7 @@
   "konnectors description": "Import data from external services (Twitter, Jawbone…).",
   "kresus description": "Additional tools for your personal finance manager.",
   "nirc description": "Access to your favorite IRC channels from your Cozy.",
+  "shout description": "Access to your favorite IRC channels from your Cozy with the Shout Web application",
   "notes description": "Organize and write smart notes.",
   "owm description": "Know the weather anywhere in the world.",
   "remote storage description": "A Remote Storage appliance to store data from your Unhosted applications.",

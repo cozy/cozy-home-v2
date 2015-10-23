@@ -189,7 +189,7 @@
     "introduction market": "Bienvenido(a) a la tienda de aplicaciones Cozy.\nDesde aquí usted puede instalar una aplicación de su propia creación o escoger entre\nlas que propone Cozycloud u otros desarrolladores.",
     "error connectivity issue": "Un error se produjo durante la recuperación de los datos. <br/>Por favor, vuelva a ensayar más tarde.",
     "package.json not found": "Imposible recuperar el archivo package.json. Verifique la url de su depósito git.",
-    "unknown provider": "For now, applications can only be installed from Github or CozyCloud Market",
+    "unknown provider": "Por ahora, las aplicaciones sólo pueden instalarse desde Github o CozyCloud Market",
     "please wait data retrieval": "Por favor, espere que los datos se carguen...",
     "revoke device confirmation message": "Esta acción impedirá que el periférico asociado acceda a su Cozy. ¿Está usted seguro(a)?",
     "dashboard": "Tablero de Control",
