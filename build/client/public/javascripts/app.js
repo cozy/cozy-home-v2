@@ -5539,7 +5539,9 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="mod"><div class="line"><strong><a');
+buf.push('<div class="icon-container mod"><a');
+buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
+buf.push('><img src="" class="icon"/></a></div><div class="mod infos"><div class="line"><strong><a');
 buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
 buf.push('>');
 var __val__ = app.displayName
@@ -5628,8 +5630,8 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div><div class="line"><span class="app">Controller: </span><span class="version-number controller">--</span></div><div class="line"><span class="refresh">');
 var __val__ = t('reboot stack waiting message')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="mod buttons"><button class="update-stack small"><i class="fa fa-refresh mr1"></i><span>');
-var __val__ = t('update stack')
+buf.push('</span></div></div><div class="mod buttons"><button class="update-all small"><i class="fa fa-refresh mr1"></i><span>');
+var __val__ = t('update all')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button><button class="reboot-stack small outline-blue"><i class="fa fa-power-off mr1"></i><span>');
 var __val__ = t('reboot stack')
@@ -5649,10 +5651,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4></div><div class="mod left w60"><h4 class="title-app h4">');
 var __val__ = t('manage your applications')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4><button class="update-all small"><i class="fa fa-refresh mr1"></i><span>');
-var __val__ = t('update all')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div></div>');
+buf.push('</h4></div></div>');
 }
 return buf.join("");
 };
@@ -6746,7 +6745,28 @@ module.exports = ApplicationRow = (function(_super) {
     this.appStoppable = this.$(".app-stoppable");
     this.updateLabel = this.$(".to-update-label");
     this.listenTo(this.model, 'change', this.onAppChanged);
-    return this.onAppChanged(this.model);
+    this.onAppChanged(this.model);
+    this.icon = this.$('.icon');
+    return this.setIcon();
+  };
+
+  ApplicationRow.prototype.setIcon = function() {
+    var color, extension, hashColor, slug;
+    if (this.model.isIconSvg()) {
+      extension = 'svg';
+      this.icon.addClass('svg');
+    } else {
+      extension = 'png';
+      this.icon.removeClass('svg');
+    }
+    this.icon.attr('src', "api/applications/" + (this.model.get('slug')) + "." + extension);
+    slug = this.model.get('slug');
+    color = this.model.get('color');
+    if (color == null) {
+      color = hashColor = ColorHash.getColor(slug, 'cozy');
+    }
+    this.color = color;
+    return this.icon.css('background-color', color);
   };
 
   /* Listener*/
@@ -7121,7 +7141,6 @@ module.exports = ConfigApplicationsView = (function(_super) {
 
   ConfigApplicationsView.prototype.events = {
     "click .update-all": "onUpdateClicked",
-    "click .update-stack": "onUpdateStackClicked",
     "click .reboot-stack": "onRebootStackClicked"
   };
 
@@ -7144,7 +7163,6 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.memoryFree = this.$('.memory-free');
     this.diskSpace = this.$('.disk-space');
     this.updateBtn = new ColorButton(this.$('.update-all'));
-    this.updateStackBtn = new ColorButton(this.$('.update-stack'));
     this.rebootStackBtn = new ColorButton(this.$('.reboot-stack'));
     this.fetch();
     this.applicationList = new ConfigApplicationList(this.apps, this.market);
@@ -7155,7 +7173,20 @@ module.exports = ConfigApplicationsView = (function(_super) {
       reset: true
     });
     this.displayDevices();
-    return this.stackApplications = new StackApplication;
+    this.stackApplications = new StackApplication;
+    return this.showOrHideUpdateBtn();
+  };
+
+  ConfigApplicationsView.prototype.showOrHideUpdateBtn = function() {
+    var appNeedUpdate;
+    appNeedUpdate = this.apps.where({
+      needsUpdate: true
+    }).length > 0;
+    if (this.toUpdate || appNeedUpdate) {
+      return this.updateBtn.show();
+    } else {
+      return this.updateBtn.hide();
+    }
   };
 
   ConfigApplicationsView.prototype.openUpdatePopover = function(slug) {
@@ -7163,31 +7194,32 @@ module.exports = ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
-    var app, currentVersion, lastVersion, newVersion, _i, _len, _ref, _results;
+    var app, currentVersion, lastVersion, newVersion, _i, _len, _ref;
     _ref = this.stackApps.models;
-    _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       app = _ref[_i];
       this.$("." + (app.get('name'))).html(app.get('version'));
       currentVersion = app.get('version').split('.');
       lastVersion = app.get('lastVersion') || '0.0.0';
       newVersion = lastVersion.split('.');
+      this.toUpdate = false;
       if (parseInt(currentVersion[2]) < parseInt(newVersion[2])) {
         this.$("." + (app.get('name'))).css('font-weight', "bold");
         this.$("." + (app.get('name'))).css('color', "Orange");
+        this.toUpdate = true;
       }
       if (parseInt(currentVersion[1]) < parseInt(newVersion[1])) {
         this.$("." + (app.get('name'))).css('font-weight', "bold");
         this.$("." + (app.get('name'))).css('color', "OrangeRed");
+        this.toUpdate = true;
       }
       if (parseInt(currentVersion[0]) < parseInt(newVersion[0])) {
         this.$("." + (app.get('name'))).css('font-weight', "bold");
-        _results.push(this.$("." + (app.get('name'))).css('color', "Red"));
-      } else {
-        _results.push(void 0);
+        this.$("." + (app.get('name'))).css('color', "Red");
+        this.toUpdate = true;
       }
     }
-    return _results;
+    return this.showOrHideUpdateBtn();
   };
 
   ConfigApplicationsView.prototype.displayDevices = function() {
@@ -7287,15 +7319,6 @@ module.exports = ConfigApplicationsView = (function(_super) {
           });
         }
       });
-    };
-    return this.popoverManagement(action);
-  };
-
-  ConfigApplicationsView.prototype.onUpdateStackClicked = function() {
-    var action,
-      _this = this;
-    action = function(cb) {
-      return _this.stackApplications.updateStack(cb);
     };
     return this.popoverManagement(action);
   };

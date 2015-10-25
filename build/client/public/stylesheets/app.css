@@ -2055,11 +2055,6 @@ h4 {
 #config-application-list {
   margin-top: 10px;
 }
-button.update-all {
-  position: absolute;
-  top: 1.142857142857143em;
-  right: 1.428571428571429em;
-}
 .config-application:first-child {
   border-top: 0;
 }
@@ -2134,6 +2129,25 @@ button.update-all {
 .config-application .buttons [role=button] .fa {
   margin: 0;
 }
+.config-application .icon-container {
+  margin-right: 1em;
+  min-width: 60px;
+}
+.config-application .icon-container .icon {
+  -webkit-border-radius: 30em;
+  border-radius: 30em;
+  padding: 0.8em;
+}
+.config-application .infos {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+.config-application #update-all,
 .config-application button.update-app {
   padding: 0.230769230769231em 0.461538461538462em;
   margin-left: 0.769230769230769em;
