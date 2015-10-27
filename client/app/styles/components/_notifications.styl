@@ -74,6 +74,18 @@
     background-color rgba(grey-08,.95)
     box-shadow       -2px 0 20px rgba(0,0,0,.4)
 
+    .top-title
+        display flex
+        justify-content space-between
+        align-items center
+        padding 1em
+
+        h2
+            padding 0
+            color white
+            font-size 1.25em
+            font-weight normal
+
 #no-notif-msg
     span
         font-size 1.25em
@@ -95,6 +107,8 @@
 
             &:last-child
                 border 0
+            &:first-child
+                border-top 1px solid grey-07
 
     .notification
         .notification-date
@@ -112,26 +126,9 @@
                 color white
 
         a.doaction
-            display      block
-            margin-top   (5/16)em
-            padding      (4/12)em (8/12)em
+            padding      (2/12)em (6/12)em
             font-size    (12/16)em
             text-align   center
-
-
-// NOTIFICATION BUTTONS
-// ========================================================
-#notifications-buttons
-    padding (15/16)em (20/16)em (10/16)em
-
-    .btn
-        display block
-        width 100%
-        transition-delay 0
-
-        &:hover
-            transition-delay 0.1s
-
 
 
 @media screen and (-webkit-min-device-pixel-ratio: 0)
