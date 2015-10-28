@@ -2,6 +2,9 @@
     & > .mod
         padding (20/16)em
 
+    section
+        margin-top (50/16)em
+
 // Status - Config application
 
 .title-app a.subtitle
@@ -21,8 +24,7 @@
     display flex
     justify-content space-between
     border-top 1px solid grey-03
-    padding (10/16)em 0
-    margin-bottom (10/16)em
+    padding (15/16)em 0
 
     strong
         text-transform lowercase
@@ -32,7 +34,6 @@
             color grey-08
 
     .smaller
-        font-family 'Source Sans Pro', sans-serif
         display flex
         align-items center
 
@@ -58,16 +59,46 @@
         [role=button]
             padding 0.25em 0.5em
 
+            .fa-star
+                color gold
+
+            span
+                display none
+                color white
+                margin-right 0.5em
+
+            &:hover
+                color white
+
+                span
+                    display inline-block
+
+                &.favorite
+                    background-color gold
+
+                    .fa-star
+                        color white
+
+                &.logs
+                    background-color joker
+
+                &.start-stop-btn
+                    background-color tomato-dry
+
+                &.remove-app
+                    background-color red
+
             .fa
                 margin 0
 
     .icon-container
         margin-right 1em
-        min-width 60px
 
         .icon
             border-radius 30em
             padding 0.8em
+            width (72/16)em
+            box-shadow 0 2px 6px rgba(0,0,0,.16)
 
     .infos
         flex 1 0 auto
@@ -166,6 +197,16 @@
 
     @media (max-width (500/16)em)
         flex-wrap wrap
+
+    .icon-hard-drive::before
+        @extend $icon-hard-drive
+        @extend $icon-48
+        margin-right 0.5em
+
+    .icon-speed-counter::before
+        @extend $icon-speed-counter
+        @extend $icon-48
+        margin-right 0.5em
 
 .info-block
     display flex
