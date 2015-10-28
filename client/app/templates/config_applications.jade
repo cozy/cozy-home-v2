@@ -30,30 +30,32 @@
                         i.fa.fa-power-off.mr1
                         span= t('reboot stack')
 
-        h4= t('hardware consumption')
-        .block-container
-            .info-block.disk-space
-                .fa.fa-hdd-o
-                div
-                    span.title= t('hard drive gigabytes')
-                    .line
-                        span.amount 0
-                        div.lowlight
-                            |  / 
-                            span.total 0
-                            |  #{t('gigabytes')}
-            .info-block.memory-free
-                .fa.fa-tachometer
-                div
-                    span.title= t('memory megabytes')
-                    .line
-                        span.amount 0
-                        div.lowlight
-                            |  / 
-                            span.total 0
-                            |  #{t('megabytes')}
+        section
+            h4= t('hardware consumption')
+            .block-container
+                .info-block.disk-space
+                    .icon-hard-drive
+                    div
+                        span.title= t('hard drive gigabytes')
+                        .line
+                            span.amount 0
+                            div.lowlight
+                                |  / 
+                                span.total 0
+                                |  #{t('gigabytes')}
+                .info-block.memory-free
+                    .icon-speed-counter
+                    div
+                        span.title= t('memory megabytes')
+                        .line
+                            span.amount 0
+                            div.lowlight
+                                |  / 
+                                span.total 0
+                                |  #{t('megabytes')}
 
-        h4.title-device.h4= t('manage your devices')
+        section
+            h4.title-device.h4= t('manage your devices')
 
     .mod.left.w60
         h4.title-app.h4= t('manage your applications')

@@ -1,7 +1,7 @@
-.icon-container.mod
+.icon-container
     a(href="#apps/#{app.name}")
         img.icon(src="")
-.mod.infos
+.infos
     .line
         strong
             a(href="#apps/#{app.name}")= app.displayName
@@ -23,15 +23,20 @@
             span
                 | (#{app.branch})
 
-.buttons.mod
+.buttons
     button.transparent-grey.favorite
         if app.favorite
+            span= t('config application unmark favorite')
             i.fa.fa-star(title="#{t('config application unmark favorite')}")
         else
+            span= t('config application mark favorite')
             i.fa.fa-star-o(title="#{t('config application mark favorite')}")
-    a.transparent-grey(href="/logs/#{app.slug}", target="_blank", title="#{t('show logs')}", role="button")
+    a.transparent-grey.logs(href="/logs/#{app.slug}", target="_blank", title="#{t('show logs')}", role="button")
+        span= t('show logs')
         i.fa.fa-code
     button.transparent-grey.start-stop-btn(title="#{t('stop this app')}")
+        span= t('stop this app')
         i.fa.fa-power-off
     button.transparent-grey.remove-app(title="#{t('remove')}")
+        span= t('remove')
         i.fa.fa-trash
