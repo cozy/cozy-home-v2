@@ -65,7 +65,7 @@ sendError = function(res, err, code) {
   return res.send(code, {
     error: true,
     success: false,
-    message: err.message,
+    message: err.message || err,
     stack: err.stack
   });
 };

@@ -22,31 +22,36 @@ exports.Manifest = (function() {
     var Provider, provider, providerName;
     if (app.git != null) {
       providerName = app.git.match(/(github\.com|gitlab\.cozycloud\.cc)/);
-      providerName = providerName[0];
-      if (providerName === "gitlab.cozycloud.cc") {
-        Provider = require('./git_providers').CozyGitlabProvider;
+      if (providerName == null) {
+        logger.error("Unknown provider '" + app.git + "'");
+        return callback("unknown provider");
       } else {
-        Provider = require('./git_providers').GithubProvider;
+        providerName = providerName[0];
+        if (providerName === "gitlab.cozycloud.cc") {
+          Provider = require('./git_providers').CozyGitlabProvider;
+        } else {
+          Provider = require('./git_providers').GithubProvider;
+        }
+        provider = new Provider(app);
+        return provider.getManifest((function(_this) {
+          return function(err, data) {
+            if (err != null) {
+              _this.config = {};
+              return callback(err);
+            } else {
+              _this.config = data;
+              return provider.getStars(function(err, stars) {
+                if (err != null) {
+                  return callback(err);
+                } else {
+                  _this.config.stars = stars;
+                  return callback(null);
+                }
+              });
+            }
+          };
+        })(this));
       }
-      provider = new Provider(app);
-      return provider.getManifest((function(_this) {
-        return function(err, data) {
-          if (err != null) {
-            _this.config = {};
-            return callback(err);
-          } else {
-            _this.config = data;
-            return provider.getStars(function(err, stars) {
-              if (err != null) {
-                return callback(err);
-              } else {
-                _this.config.stars = stars;
-                return callback(null);
-              }
-            });
-          }
-        };
-      })(this));
     } else {
       this.config = {};
       logger.warn('App manifest without git URL');

@@ -189,6 +189,7 @@ module.exports = {
     "introduction market": "스토어에 오신 것을 환영 합니다.\n커뮤니티 앱 또는 자신의 앱을 설치 할 수 있습니다.",
     "error connectivity issue": "데이터를 검색 하는 동안 오류가 발생 하였습니다.<br/>잠시 후에 다시 시도하세요.",
     "package.json not found": "package.json을 불러 올수 없습니다. 저장소 주소를 확인하세요.",
+    "unknown provider": "Github 또는 CozyCloud 마켓 에서만 설치가 가능 합니다.",
     "please wait data retrieval": "데이터를 검색 하는 중입니다...",
     "revoke device confirmation message": "클라우드에서 접근이 금지된 장치 입니다. 그래도 사용 하시겠습니까?",
     "dashboard": "대시보드",
@@ -250,4 +251,5 @@ module.exports = {
     "drop a file": "드래그 & 드롭 파일",
     "url of an image": "인터넷 상의 이미지 주소",
     "you have no album": "<p>사진관리앱에 오신것을 환영 합니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n<a href=\"/#applications\" target='_blank'>사진관리</a>\n<br>\n사진 또는 전화번호\n<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>내 모바일 !</a></p>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
-};
+}
+;
