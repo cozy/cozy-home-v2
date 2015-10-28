@@ -1,3 +1,8 @@
+// ================================================
+// TODO => CLEAN UNUSED CSS
+// in comments, according to the icon set we choose
+// ================================================
+
 .help-text
     text-align center
 
@@ -21,6 +26,10 @@
         line-height 1.25em
         margin-top (12/16)em
 
+        @media (max-width (540/16)em)
+            min-height (192/16)em
+
+
     .btn-group-big
         display flex
         justify-content space-between
@@ -34,23 +43,16 @@
         flex-direction column
         align-items center
         justify-content center
-        padding (12/16)em
+        padding (16/16)em (16/16)em (20/16)em
         width 32%
-        background-color transparent
-        border 2px solid grey-03
+        background-color white
+        border 1px solid transparent
         color grey-08
         text-align center
 
         @media (max-width (540/16)em)
             width 100%
             margin-bottom (10/16)em
-
-        .fa
-            margin-right 0
-            font-size 2em
-            color grey-04
-
-            transition color 0.3s ease-out
 
         span
             padding-top (8/18)em
@@ -60,20 +62,63 @@
             padding 0
             font-size 1em
             font-style italic
-            color grey-06
+            color grey-05
             text-transform none
             line-height 1.2em
+            transition color ease-out 0.3s
+
+        &.btn-forum
+            color pink
+
+            &:hover
+                // background-color pink
+                // border-color pink
+
+        &.btn-irc
+            color turquoise
+
+            &:hover
+                // background-color turquoise
+                // border-color turquoise
+
+        &.btn-wiki
+            color tomato-dry
+
+            &:hover
+                // background-color tomato-dry
+                // border-color tomato-dry
+
+        &.btn-contact
+            color joker
+
+            &:hover
+                // background-color joker
+                // border-color joker
+
+        &.btn-twitter
+            color twitter
+
+            &:hover
+                // background-color twitter
+                // border-color twitter
+
+        &.btn-doc
+            color gold
+
+            &:hover
+                // background-color gold
+                // border-color gold
 
         &:hover
-            background-color grey-04
-            border-color grey-04
-            color white
+            // color white
+            transform scale(1.1)
+            box-shadow 0 2px 6px rgba(0,0,0,.16)
 
-            .fa
-                color white
+            // span:last-child
+            //     color rgba(255,255,255,.75)
 
-            span:last-child
-                color grey-02
+            // .icon-big
+            //     background-position-y -100px
 
 
 #help-view
@@ -91,12 +136,19 @@
 
     .help-section
         .mod
-            padding (30/16)em 0
+            padding (40/16)em 0
             width 100%
-            max-width (600/16)em
+            max-width (800/16)em
+            overflow visible
 
             &:first-child
                 padding-top (10/16)em
+
+        .send-message-btn
+            width (256/16)em
+
+            @media (max-width (540/16)em)
+                width 100%
 
     .alert
         margin-top 10px

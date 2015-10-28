@@ -5,18 +5,18 @@
         .line
             p.help-text= t('community support content')
             .btn-group-big
-                a.btn-big-icon(href="https://forum.cozy.io", target="-blank", role="button")
-                    .fa.fa-users
+                a.btn-big-icon.btn-forum(href="https://forum.cozy.io", target="-blank", role="button")
+                    .icon-big.forum
                     span= t('forum')
                     span
                         | forum.cozy.io
-                a.btn-big-icon(href="https://webchat.freenode.net/?channels=cozycloud", target="-blank", role="button") 
-                    .fa.fa-comment
+                a.btn-big-icon.btn-irc(href="https://webchat.freenode.net/?channels=cozycloud", target="-blank", role="button") 
+                    .icon-big.irc
                     span= t('Chat with us on IRC:')
                     span
                         | #cozycloud (irc.freenode.net)
-                a.btn-big-icon(href="https://github.com/cozy/cozy-setup/wiki", target="-blank", role="button") 
-                    .fa.fa-book
+                a.btn-big-icon.btn-wiki(href="https://github.com/cozy/cozy-setup/wiki", target="-blank", role="button") 
+                    .icon-big.wiki
                     span= t('help wiki title')
                     span
                         | github.com/cozy/cozy-setup/wiki
@@ -28,7 +28,7 @@
         p.help-logs
             input#send-message-logs(type='checkbox', checked='checked')
             span= t('help send logs')
-        button#send-message-button.btn.w100
+        button#send-message-button.btn.send-message-btn
             .fa.fa-paper-plane
             span= t('help send message action')
         #send-message-error.alert.main-alert.alert-error.w100= t('send message error')
@@ -39,18 +39,18 @@
         .line
             p.help-text.mt2= t('contact us more options')
             .btn-group-big
-                a.btn-big-icon(href="mailto:support@cozycloud.cc", role="button")
-                    .fa.fa-envelope
+                a.btn-big-icon.btn-contact(href="mailto:support@cozycloud.cc", role="button")
+                    .icon-big.contact
                     span= t('contact us')
                     span
                         | support@cozycloud.cc
-                a.btn-big-icon(href="https://twitter.com/mycozycloud", target="-blank", role="button")
-                    .fa.fa-twitter
+                a.btn-big-icon.btn-twitter(href="https://twitter.com/mycozycloud", target="-blank", role="button")
+                    .icon-big.twitter
                     span= t('twitter')
                     span
                         | @mycozycloud
-                a.btn-big-icon(href="https://cozy.io", target="-blank", role="button")
-                    .fa.fa-file-text
+                a.btn-big-icon.btn-doc(href="https://cozy.io", target="-blank", role="button")
+                    .icon-big.doc
                     span= t('help documentation title')
                     span
                         | cozy.io
