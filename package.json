@@ -15,7 +15,7 @@
     "americano": "0.3.11",
     "americano-cozy": "0.2.11",
     "async": "0.2.10",
-    "bcrypt": "0.8.5",
+    "bcrypt": "0.8.1",
     "cozy-clearance": "0.1.19",
     "cozy-clients": "1.0.4",
     "cozy-notifications-helper": "1.0.2",
