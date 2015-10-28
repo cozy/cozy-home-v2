@@ -10,27 +10,32 @@ class exports.Manifest
         # we can be smarter here
         if app.git?
             providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
-            providerName = providerName[0]
+            if not providerName?
+                logger.error "Unknown provider '#{app.git}'"
+                callback "unknown provider"
 
-            # This could be moved to a separate factory class...
-            if providerName is "gitlab.cozycloud.cc"
-                Provider = require('./git_providers').CozyGitlabProvider
-            else # fallback to github
-                Provider = require('./git_providers').GithubProvider
+            else
+                providerName = providerName[0]
 
-            provider = new Provider app
-            provider.getManifest (err, data) =>
-                if err?
-                    @config = {}
-                    callback err
-                else
-                    @config = data
-                    provider.getStars (err, stars) =>
-                        if err?
-                            callback err
-                        else
-                            @config.stars = stars
-                            callback null
+                # This could be moved to a separate factory class...
+                if providerName is "gitlab.cozycloud.cc"
+                    Provider = require('./git_providers').CozyGitlabProvider
+                else # fallback to github
+                    Provider = require('./git_providers').GithubProvider
+
+                provider = new Provider app
+                provider.getManifest (err, data) =>
+                    if err?
+                        @config = {}
+                        callback err
+                    else
+                        @config = data
+                        provider.getStars (err, stars) =>
+                            if err?
+                                callback err
+                            else
+                                @config.stars = stars
+                                callback null
         else
             @config = {}
             logger.warn 'App manifest without git URL'

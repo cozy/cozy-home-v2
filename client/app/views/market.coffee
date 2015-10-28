@@ -177,8 +177,8 @@ module.exports = class MarketView extends BaseView
                 else if shouldRedirect
                     app?.routers.main.navigate 'home', true
 
-            error: (jqXHR) ->
-                alert t JSON.parse(jqXHR.responseText).message
+            error: (jqXHR) =>
+                @displayError t JSON.parse(jqXHR.responseText).message
                 errCallback() if typeof errCallback is 'function'
 
     parseGitUrl: (url) ->
@@ -192,6 +192,11 @@ module.exports = class MarketView extends BaseView
                 msg: t "Git url should be of form https://.../my-repo.git"
             return error
         [git, proto, domain, port, path, branch] = parsed
+        if not (proto? and domain? and path?)
+            error =
+                error: true
+                msg: t "Git url should be of form https://.../my-repo.git"
+            return error
         path = path.replace '.git', ''
         parts = path.split "/"
         name = parts[parts.length - 1]
