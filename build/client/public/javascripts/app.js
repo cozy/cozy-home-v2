@@ -5729,13 +5729,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="line"><p class="help-text">');
 var __val__ = t('community support content')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><div class="btn-group-big"><a href="https://forum.cozy.io" target="-blank" role="button" class="btn-big-icon btn-forum"><div class="icon-big forum"></div><span>');
+buf.push('</p><div class="btn-group-big"><a href="https://forum.cozy.io" target="_blank" role="button" class="btn-big-icon btn-forum"><div class="icon-big forum"></div><span>');
 var __val__ = t('forum')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><span>forum.cozy.io</span></a><a href="https://webchat.freenode.net/?channels=cozycloud" target="-blank" role="button" class="btn-big-icon btn-irc"> <div class="icon-big irc"></div><span>');
+buf.push('</span><span>forum.cozy.io</span></a><a href="https://webchat.freenode.net/?channels=cozycloud" target="_blank" role="button" class="btn-big-icon btn-irc"><div class="icon-big irc"></div><span>');
 var __val__ = t('Chat with us on IRC:')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><span>#cozycloud (irc.freenode.net)</span></a><a href="https://github.com/cozy/cozy-setup/wiki" target="-blank" role="button" class="btn-big-icon btn-wiki"> <div class="icon-big wiki"></div><span>');
+buf.push('</span><span>#cozycloud (irc.freenode.net)</span></a><a href="https://github.com/cozy/cozy-setup/wiki" target="_blank" role="button" class="btn-big-icon btn-wiki"><div class="icon-big wiki"></div><span>');
 var __val__ = t('help wiki title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><span>github.com/cozy/cozy-setup/wiki</span></a></div></div></div><div class="mod pa2"><h4>');
@@ -5762,10 +5762,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="btn-group-big"><a href="mailto:support@cozycloud.cc" role="button" class="btn-big-icon btn-contact"><div class="icon-big contact"></div><span>');
 var __val__ = t('contact us')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><span>support@cozycloud.cc</span></a><a href="https://twitter.com/mycozycloud" target="-blank" role="button" class="btn-big-icon btn-twitter"><div class="icon-big twitter"></div><span>');
+buf.push('</span><span>support@cozycloud.cc</span></a><a href="https://twitter.com/intent/tweet?text=@mycozycloud%20" target="_blank" role="button" class="btn-big-icon btn-twitter"><div class="icon-big twitter"></div><span>');
 var __val__ = t('twitter')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><span>@mycozycloud</span></a><a href="https://cozy.io" target="-blank" role="button" class="btn-big-icon btn-doc"><div class="icon-big doc"></div><span>');
+buf.push('</span><span>@mycozycloud</span></a><a href="https://cozy.io" target="_blank" role="button" class="btn-big-icon btn-doc"><div class="icon-big doc"></div><span>');
 var __val__ = t('help documentation title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><span>cozy.io</span></a></div></div></div></div>');
