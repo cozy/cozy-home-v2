@@ -52,13 +52,13 @@ module.exports = logs =
             callback null, logContents
 
     getCompressLogs: (callback) ->
-        path = path.join __dirname, '..', '..', 'cozy.tar.gz'
+        archivePath = path.join __dirname, '..', '..', 'cozy.tar.gz'
         logPath = '/usr/local/var/log/cozy'
         readStream = fstream.Reader 'path': logPath, 'type': 'Directory'
         readStream.pipe(tar.Pack())
         .pipe(zlib.Gzip())
-        .pipe fstream.Writer('path': path)
+        .pipe fstream.Writer('path': archivePath)
         readStream.on 'end', () ->
-            callback path
+            callback archivePath
 
 
