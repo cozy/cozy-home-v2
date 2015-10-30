@@ -115,22 +115,27 @@ module.exports =
     updateInstance: (req, res, next) ->
         {domain, locale, helpUrl, background, connectedOnce} = req.body
 
-        if domain? or locale? or helpUrl? or background? or connectedOnce?
-            CozyInstance.all (err, instances) ->
-                data = {domain, locale, helpUrl, background, connectedOnce}
-
-                if err then next err
-
-                else if instances.length is 0
-                    CozyInstance.create data, (err, instance) ->
-                        if err then next err
-                        else
-                            res.send success: true, msg: localizationManager.t "instance updated"
-
-                else
-                    instances[0].updateAttributes data, ->
-                        res.send success: true, msg: localizationManager.t "instance updated"
+        unless domain? or locale? or helpUrl? or background? or connectedOnce?
+            res.send 400,
+                error: true
+                msg: localizationManager.t 'No accepted parameter given'
 
         else
-            res.send 400, error: true, msg: localizationManager.t 'No accepted parameter given'
+            CozyInstance.all (err, instances) ->
+                return next err if err
+                data = {domain, locale, helpUrl, background, connectedOnce}
 
+
+                if instances.length is 0
+                    makeChange = CozyInstance.create.bind CozyInstance
+                else
+                    instance = instances[0]
+                    makeChange = instance.updateAttributes.bind instance
+
+                makeChange data, (err, instance) ->
+                    return next err if err
+                    console.log "reinitializing"
+                    localizationManager.initialize ->
+                        res.send
+                            success: true,
+                            msg: localizationManager.t "instance updated"
