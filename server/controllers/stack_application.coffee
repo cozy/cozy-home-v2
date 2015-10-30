@@ -12,7 +12,7 @@ localizationManager = require '../helpers/localization_manager'
 sendError = (res, err, code=500) ->
     err ?=
         stack:   null
-        message: localizationManager "server error"
+        message: localizationManager.t "server error"
 
     console.log "Sending error to client:"
     console.log err.stack

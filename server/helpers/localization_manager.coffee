@@ -1,41 +1,40 @@
+fs = require 'fs'
 Polyglot = require 'node-polyglot'
-cozydb = require 'cozydb'
+Instance = require '../models/cozyinstance'
+
+# Seeks the proper locale files, depending if we run from build/ or from sources
+path = require 'path'
+LOCALE_PATH = path.resolve __dirname, '../locales'
 
 class LocalizationManager
 
     polyglot: null
 
     # should be run when app starts
-    initialize: (callback = () ->) ->
-        @ensureReady callback
-
-    setRenderer: (renderer) ->
-        @renderer = renderer
+    initialize: (callback) ->
+        @retrieveLocale (err, locale) =>
+            if err? then callback err
+            else
+                @polyglot = @getPolyglotByLocale locale
+                callback null, @polyglot
 
     retrieveLocale: (callback) ->
-        cozydb.api.getCozyLocale (err, locale) ->
+        Instance.getLocale (err, locale) ->
             if err? or not locale then locale = 'en' # default value
-            callback null, locale
+            callback err, locale
 
-    ensureReady: (callback) ->
-        return callback null, @polyglot if @polyglot
-        # we are not ready, let's get ready
-        @retrieveLocale (err, locale) =>
-            return callback err if err
-            phrases = try require "../locales/#{locale}"
-            catch err then require '../locales/en'
-
-            @polyglot = new Polyglot locale: locale, phrases: phrases
-            callback null, @polyglot
+    getPolyglotByLocale: (locale) ->
+        try
+            phrases = require "#{LOCALE_PATH}/#{locale}"
+        catch err
+            phrases = require "#{LOCALE_PATH}/en"
+        return new Polyglot locale: locale, phrases: phrases
 
     # execute polyglot.t, for server-side localization
     t: (key, params = {}) ->
-        return @polyglot?.t key, params
+        return @polyglot?.t(key, params) or key
 
-    render: (name, options, callback) ->
-        @ensureReady (err) =>
-            return callback err if err
-            viewName = "#{@polyglot.currentLocale}_#{name}"
-            @renderer viewName, options, callback
+    # for template localization
+    getPolyglot: -> return @polyglot
 
 module.exports = new LocalizationManager()

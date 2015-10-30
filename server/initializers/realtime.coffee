@@ -4,7 +4,7 @@ NotificationsHelper = require 'cozy-notifications-helper'
 RealtimeAdapter     = require 'cozy-realtime-adapter'
 autostop            = require '../lib/autostop'
 AlarmManager        = require '../lib/alarm_manager'
-localizationManager = require '../lib/localization_manager'
+localizationManager = require '../helpers/localization_manager'
 
 User                = require '../models/user'
 CozyInstance        = require '../models/cozyinstance'

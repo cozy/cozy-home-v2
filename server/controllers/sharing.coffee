@@ -4,7 +4,7 @@ cozydb              = require 'cozydb'
 
 Album               = require '../models/album'
 
-localization        = require '../lib/localization_manager'
+localization        = require '../helpers/localization_manager'
 localizationManager = require '../helpers/localization_manager'
 
 

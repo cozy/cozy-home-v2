@@ -5,7 +5,7 @@ log = require('printit')
 
 Application = require '../models/application'
 StackApplication = require '../models/stack_application'
-localizationManager = require '../lib/localization_manager'
+localizationManager = require '../helpers/localization_manager'
 market = require '../lib/market'
 
 # Time (in ms) between two checks for updates, for all apps
