@@ -12,7 +12,7 @@ log = require('printit')({
   prefix: 'alarm-manager'
 });
 
-localization = require('./localization_manager');
+localization = require('../helpers/localization_manager');
 
 Event = require('../models/event');
 
