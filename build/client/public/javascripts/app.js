@@ -11691,11 +11691,12 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.renderDescription = function() {
-    var description, docType, permission, permissionsDiv, _ref1;
+    var description, docType, permission, permissions, permissionsDiv, _ref1;
     this.body.html("");
     description = this.model.get("description");
     this.header.parent().append("<p class=\"line\"> " + description + " </p>");
-    if (Object.keys(this.model.get("permissions")).length === 0) {
+    permissions = this.model.get("permissions");
+    if ((permissions == null) || Object.keys(permissions).length === 0) {
       permissionsDiv = $("<div class='permissionsLine'>\n    <h5>" + (t('no specific permissions needed')) + " </h5>\n</div>");
       this.body.append(permissionsDiv);
     } else {
