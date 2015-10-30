@@ -28,5 +28,7 @@
   "wrong usage": "Mauvais usage",
   "an error occured": "Erreur rencontrée",
   "not found": " : Non Trouvé",
-  "not allowed": "Non autorisé"
+  "not allowed": "Non autorisé",
+  "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
+  "update available notification": "Une nouvelle version de %{appName} est disponible."
 }
