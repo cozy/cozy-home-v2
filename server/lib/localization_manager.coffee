@@ -4,13 +4,7 @@ Instance = require '../models/cozyinstance'
 
 # Seeks the proper locale files, depending if we run from build/ or from sources
 path = require 'path'
-buildLocalePath = '../../client/app/locales/'
-buildLocalePath = path.resolve __dirname, buildLocalePath
-useBuildLocales = fs.existsSync buildLocalePath
-if useBuildLocales
-    LOCALE_PATH = buildLocalePath
-else
-    LOCALE_PATH = path.resolve __dirname, '../client/app/locales/'
+LOCALE_PATH = path.resolve __dirname, '../locales'
 
 class LocalizationManager
 
@@ -37,7 +31,8 @@ class LocalizationManager
         return new Polyglot locale: locale, phrases: phrases
 
     # execute polyglot.t, for server-side localization
-    t: (key, params = {}) -> return @polyglot?.t key, params
+    t: (key, params = {}) ->
+        return @polyglot?.t(key, params) or key
 
     # for template localization
     getPolyglot: -> return @polyglot
