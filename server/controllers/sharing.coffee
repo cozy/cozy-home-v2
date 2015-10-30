@@ -1,9 +1,10 @@
-async = require 'async'
-clearance = require 'cozy-clearance'
-cozydb = require 'cozydb'
+async               = require 'async'
+clearance           = require 'cozy-clearance'
+cozydb              = require 'cozydb'
 
-Album = require '../models/album'
+Album               = require '../models/album'
 
+localization        = require '../lib/localization_manager'
 localizationManager = require '../helpers/localization_manager'
 
 
@@ -13,7 +14,7 @@ getDisplayName = (callback) ->
             callback null, user.public_name
         else
             localizationManager.ensureReady (err) ->
-                callback null, localizationManager.t 'default user name'
+                callback null, localization.t 'default user name'
 
 clearanceCtl = clearance.controller
     mailTemplate: (options, callback) ->
@@ -23,7 +24,7 @@ clearanceCtl = clearance.controller
 
     mailSubject: (options, callback) ->
         getDisplayName (err, displayName) ->
-            callback null, localizationManager.t 'email sharing subject',
+            callback null, localization.t 'email sharing subject',
                 displayName: displayName
                 name: options.doc.title
 
@@ -34,7 +35,7 @@ module.exports.fetch = (req, res, next, id) ->
             req.doc = album
             next()
         else
-            err = new Error 'bad usage'
+            err = new Error localizationManager.t "wrong usage"
             err.status = 400
             next err
 

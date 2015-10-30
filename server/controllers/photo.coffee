@@ -4,12 +4,11 @@
 # multiparty = require 'multiparty'
 # path = require 'path'
 # os = require 'os'
-
-Photo = require '../models/photo'
-# thumbHelpers = require '../helpers/thumb'
-# photoHelpers = require '../helpers/photo'
-# sharing = require './sharing'
-downloader = require '../helpers/downloader'
+Photo               = require '../models/photo'
+# thumbHelpers      = require '../helpers/thumb'
+# photoHelpers      = require '../helpers/photo'
+# sharing           = require './sharing'
+downloader          = require '../helpers/downloader'
 # {NotFound, NotAllowed} = require '../helpers/errors'
 
 

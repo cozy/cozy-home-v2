@@ -1,20 +1,20 @@
-request = require 'request-json'
-fs = require 'fs'
-slugify = require 'cozy-slug'
-{exec} = require 'child_process'
-async = require 'async'
-cozydb = require 'cozydb'
-log = require('printit')
-    prefix: "applications"
+request             = require 'request-json'
+fs                  = require 'fs'
+slugify             = require 'cozy-slug'
+{exec}              = require 'child_process'
+async               = require 'async'
+cozydb              = require 'cozydb'
+log                 = require('printit')
+prefix: "applications"
 
-Application = require '../models/application'
+Application         = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
-localization = require '../lib/localization_manager'
-manager = require('../lib/paas').get()
-{Manifest} = require '../lib/manifest'
-market = require '../lib/market'
-autostop = require '../lib/autostop'
-icons = require '../lib/icon'
+localizationManager = require '../helpers/localization_manager'
+manager             = require('../lib/paas').get()
+{Manifest}          = require '../lib/manifest'
+market              = require '../lib/market'
+autostop            = require '../lib/autostop'
+icons               = require '../lib/icon'
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
@@ -27,7 +27,7 @@ startedApplications = {}
 removeAppUpdateNotification = (app) ->
     notifier = new NotificationsHelper 'home'
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.displayName
+    message = localizationManager.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?
@@ -35,7 +35,7 @@ removeAppUpdateNotification = (app) ->
 sendError = (res, err, code=500) ->
     err ?=
         stack:   null
-        message: "Server error occured"
+        message: localizationManager.t "server error"
 
     console.log "Sending error to client :"
     console.log err.stack
@@ -139,7 +139,7 @@ module.exports =
             if err
                 next err
             else if apps is null or apps.length is 0
-                res.send 404, error: 'Application not found'
+                res.send 404, error: localizationManager.t 'Application not found'
             else
                 req.application = apps[0]
                 next()
@@ -178,7 +178,7 @@ module.exports =
         Application.find req.params.id, (err, app) ->
             if err then sendError res, err
             else if app is null
-                sendError res, new Error('Application not found'), 404
+                sendError res, new Error(localizationManager.t 'Application not found'), 404
             else
                 res.send app
 
@@ -238,7 +238,7 @@ module.exports =
 
             if apps.length > 0 or req.body.slug is "proxy" or
                     req.body.slug is "home" or req.body.slug is "data-system"
-                err = new Error "already similarly named app"
+                err = new Error localizationManager.t "already similarly named app"
                 return sendError res, err, 400
 
             manifest = new Manifest()
@@ -274,7 +274,7 @@ module.exports =
 
                             if result.drone?
                                 updatedData =
-                                    state: 'installed'
+                                    state: "installed"
                                     port: result.drone.port
 
                                 msg = "install succeeded on port #{appli.port}"
@@ -329,7 +329,7 @@ module.exports =
                         return sendError res, err if err
                     res.send
                         success: true
-                        msg: 'Application successfuly uninstalled'
+                        msg: localizationManager.t 'application successfuly uninstalled'
 
 
         manager.uninstallApp req.application, (err, result) ->
@@ -350,7 +350,7 @@ module.exports =
             return markBroken res, req.application, err if err?
             res.send
                 success: true
-                msg: 'Application succesfuly updated'
+                msg: localizationManager.t 'application successfuly updated'
 
 
     # Update all applications :
@@ -407,7 +407,7 @@ module.exports =
                 else
                     res.send
                         success: true
-                        msg: 'Application succesfuly updated'
+                        msg: localizationManager.t 'application successfuly updated'
 
 
 
@@ -436,7 +436,7 @@ module.exports =
             req.application.updateAccess data, (err) ->
                 # Start application
                 manager.start req.application, (err, result) ->
-                    if err and err isnt "Not enough Memory"
+                    if err and err isnt localizationManager.t "not enough memory"
                         delete startedApplications[req.application.id]
                         return markBroken res, req.application, err
                     else if err
@@ -474,13 +474,13 @@ module.exports =
                                 else
                                     res.send
                                         success: true
-                                        msg: 'Application running'
+                                        msg: localizationManager.t 'application running'
                                         app: req.application
 
         else
             res.send
                 error: true
-                msg: 'Application is already starting'
+                msg: localizationManager.t 'application is already starting'
                 app: req.application
 
 
@@ -500,7 +500,7 @@ module.exports =
                     return markBroken res, req.application, err if err
                     res.send
                         success: true
-                        msg: 'Application stopped'
+                        msg: localizationManager.t 'application stopped'
                         app: req.application
 
 

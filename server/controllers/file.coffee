@@ -1,7 +1,7 @@
-File            = require '../models/file'
-#onThumbCreation = require('../../init').onThumbCreation
-fs              = require('fs')
-
+File                = require '../models/file'
+#onThumbCreation    = require('../../init').onThumbCreation
+fs                  = require('fs')
+localizationManager = require '../helpers/localization_manager'
 ###*
  * Get given file, returns 404 if photo is not found.
 ###
@@ -9,12 +9,12 @@ module.exports.fetch = (req, res, next, id) ->
     id = id.substring 0, id.length - 4 if id.indexOf('.jpg') > 0
     File.find id, (err, file) ->
         if err
-            return res.error 500, 'An error occured', err
+            return res.error 500, localizationManager.t 'an error occured', err
         if not file
             console.log 'not file in fetch id'
             console.log id
             # console.log req
-            return res.error 404, 'File not found'
+            return res.error 404, localizationManager.t 'File not found'
 
         req.file = file
         next()
@@ -48,7 +48,7 @@ module.exports.photoRange = (req, res, next) ->
         descending : true
     File.imageByDate options, (err, photos) ->
         if err
-            return res.error 500, 'An error occured', err
+            return res.error 500, localizationManager.t 'an error occured', err
         else
             if photos.length == limit
                 hasNext = true
