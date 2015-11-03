@@ -37,16 +37,18 @@ download = module.exports.download = (callback) ->
         path = "https://registry.cozycloud.cc/cozy-registry.json"
 
     version = 0
+    commit = 0
     if fs.existsSync './market.json'
         data = fs.readFileSync './market.json', 'utf8'
         oldMarket = JSON.parse(data)
         version = oldMarket.version
+        commit = oldMarket.commit
     path = path + "?version=#{version}"
     path = url.parse path
     client = new Client "#{path.protocol}//#{path.host}"
     client.headers['user-agent'] = 'cozy'
-    client.get path.pathname, (err, res, body) ->
-        if not err and body.apps_list?
+    client.get "#{path.pathname}?version=#{version}&commit=#{commit}", (err, res, body) ->
+        if not err and body.apps_list? and Object.keys(body.apps_list).length > 0
             apps = body.apps_list
             fs.writeFileSync './market.json', JSON.stringify(body)
         else if oldMarket?
