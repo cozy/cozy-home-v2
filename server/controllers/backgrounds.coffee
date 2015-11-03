@@ -1,7 +1,7 @@
-cozydb = require 'cozydb'
-multiparty = require 'multiparty'
-
-Background = require '../models/background'
+cozydb              = require 'cozydb'
+multiparty          = require 'multiparty'
+localizationManager = require '../helpers/localization_manager'
+Background          = require '../models/background'
 
 baseController = new cozydb.SimpleController
     model: Background
@@ -39,5 +39,5 @@ module.exports =
                     res.send background
 
             else
-                next new Error 'Can\'t change background, no file is attached.'
+                next new Error localizationManager.t 'cant change background'
 

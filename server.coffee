@@ -6,7 +6,7 @@ process.on 'uncaughtException', (err) ->
 application = module.exports = (callback) ->
     americano = require 'americano'
     request = require 'request-json'
-    localization = require './server/lib/localization_manager'
+    localization = require './server/helpers/localization_manager'
     initProxy = require './server/initializers/proxy'
     setupRealtime = require './server/initializers/realtime'
     versionChecking = require './server/initializers/updates'

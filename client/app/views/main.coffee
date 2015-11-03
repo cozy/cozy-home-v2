@@ -233,7 +233,6 @@ module.exports = class HomeView extends BaseView
             frame.show()
 
             @selectedApp = slug
-
             app = @apps.get slug
             name = app.get('displayName') or app.get('name') or ''
 
