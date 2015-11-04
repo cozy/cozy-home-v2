@@ -9,6 +9,7 @@ LOCALE_PATH = path.resolve __dirname, '../locales'
 class LocalizationManager
 
     polyglot: null
+    defaultPolyglot: null
 
     # should be run when app starts
     initialize: (callback) ->
@@ -24,14 +25,20 @@ class LocalizationManager
             callback err, locale
 
     getPolyglotByLocale: (locale) ->
+        defaultPhrases = require "#{LOCALE_PATH}/en"
         try
             phrases = require "#{LOCALE_PATH}/#{locale}"
         catch err
-            phrases = require "#{LOCALE_PATH}/en"
+            phrases = defaultPhrases
+        @defaultPolyglot  = new Polyglot
+            locale: 'en'
+            phrases: defaultPhrases
         return new Polyglot locale: locale, phrases: phrases
 
     # execute polyglot.t, for server-side localization
     t: (key, params = {}) ->
+        unless params._?
+            params._ = @defaultPolyglot?.t key, params
         return @polyglot?.t(key, params) or key
 
     # for template localization
