@@ -9494,15 +9494,7 @@ module.exports = HomeView = (function(_super) {
       this.frames.css('top', '-9999px');
       this.frames.css('left', '-9999px');
       this.frames.css('position', 'absolute');
-      if (frame.once == null) {
-        frame.once = frame.on;
-      }
-      if (typeof frame.once !== 'function') {
-        if (frame.once == null) {
-          frame.once = frame.on;
-        }
-      }
-      return frame.once('load', onLoad);
+      return frame.on('load', _.once(onLoad));
     } else if (hash) {
       contentWindow = frame.prop('contentWindow');
       try {
@@ -9526,7 +9518,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.createApplicationIframe = function(slug, hash) {
-    var iframe, iframe$, iframeHTML,
+    var iframe$, iframeHTML,
       _this = this;
     if (hash == null) {
       hash = "";
@@ -9538,8 +9530,7 @@ module.exports = HomeView = (function(_super) {
       id: slug,
       hash: hash
     });
-    iframe = this.frames.append(iframeHTML)[0].lastChild;
-    iframe$ = $(iframe);
+    iframe$ = $(iframeHTML).appendTo(this.frames);
     iframe$.prop('contentWindow').addEventListener('hashchange', function() {
       var location, newhash;
       location = iframe$.prop('contentWindow').location;
@@ -9547,7 +9538,7 @@ module.exports = HomeView = (function(_super) {
       return _this.onAppHashChanged(slug, newhash);
     });
     this.forceIframeRendering();
-    this.intentManager.registerIframe(iframe, '*');
+    this.intentManager.registerIframe(iframe$[0], '*');
     return iframe$;
   };
 
@@ -9568,7 +9559,8 @@ module.exports = HomeView = (function(_super) {
     var frame, _ref;
     if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
       frame = this.getAppFrame(appState.slug);
-      return frame.remove();
+      frame.remove();
+      return frame.off('load');
     }
   };
 
