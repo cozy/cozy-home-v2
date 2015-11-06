@@ -27,10 +27,10 @@
     button.transparent-grey.favorite
         if app.favorite
             span= t('config application unmark favorite')
-            i.fa.fa-star(title="#{t('config application unmark favorite')}")
+            i.fa.fa-star(title=t('config application unmark favorite'))
         else
             span= t('config application mark favorite')
-            i.fa.fa-star-o(title="#{t('config application mark favorite')}")
+            i.fa.fa-star-o(title=t('config application mark favorite'))
     a.transparent-grey.logs(href="/logs/#{app.slug}", target="_blank", title="#{t('show logs')}", role="button")
         span= t('show logs')
         i.fa.fa-code

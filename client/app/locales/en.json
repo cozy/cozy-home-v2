@@ -263,5 +263,7 @@
   "or": "or",
   "drop a file": "Drag & drop a file or",
   "url of an image": "Paste URL of an image from the web",
-  "you have no album": "<p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n    <a href=\"/#applications\" target='_blank'>l'application Photo</a>\n    <br>\n    et utilisez les photo de votre téléphone via\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
+  "you have no album": "<p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n    <a href=\"/#applications\" target='_blank'>l'application Photo</a>\n    <br>\n    et utilisez les photo de votre téléphone via\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)",
+  "config application mark favorite": "mark as favorite",
+  "config application unmark favorite": "unmark as favorite"
 }
