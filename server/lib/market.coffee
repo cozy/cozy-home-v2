@@ -28,33 +28,33 @@ download = module.exports.download = (callback) ->
 
     isDownloading = true
 
-    # Retrieve market path
+    # Retrieve market url
     if process.env.MARKET?
         # Use a specific market
-        path = process.env.MARKET
+        urlRegistry =  url.parse process.env.MARKET
     else
         # Use default market
-        path = "https://registry.cozycloud.cc/cozy-registry.json"
+        urlRegistry =  url.parse "https://registry.cozycloud.cc/cozy-registry.json"
 
     version = 0
     commit = 0
     if fs.existsSync './market.json'
         data = fs.readFileSync './market.json', 'utf8'
-        oldMarket = JSON.parse(data)
-        version = oldMarket.version
-        commit = oldMarket.commit
-    path = path + "?version=#{version}"
-    path = url.parse path
-    client = new Client "#{path.protocol}//#{path.host}"
+        try
+            oldMarket = JSON.parse(data)
+            version = oldMarket.version
+            commit = oldMarket.commit
+
+    client = new Client "#{urlRegistry.protocol}//#{urlRegistry.host}"
     client.headers['user-agent'] = 'cozy'
-    client.get "#{path.pathname}?version=#{version}&commit=#{commit}", (err, res, body) ->
+    client.get "#{urlRegistry.pathname}?version=#{version}&commit=#{commit}", (err, res, body) ->
         if not err and body.apps_list? and Object.keys(body.apps_list).length > 0
             apps = body.apps_list
             fs.writeFileSync './market.json', JSON.stringify(body)
         else if oldMarket?
             apps = oldMarket.apps_list
         else
-            apps = null
+            apps = {}
         callback err, apps
 
 
@@ -74,7 +74,7 @@ getApps = module.exports.getApps = (cb) ->
             download cb
 
 module.exports.getApp = (app) ->
-    if apps.app?
+    if apps[app]?
         return [null, apps[app]]
     else
         return ['not found', null]
