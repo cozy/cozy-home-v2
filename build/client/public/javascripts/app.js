@@ -9390,7 +9390,7 @@ module.exports = HomeView = (function(_super) {
         title = t('home');
       }
     }
-    window.document.title = title;
+    window.document.title = "Cozy - " + title;
     $('#current-application').html(title);
     if (view === this.applicationListView) {
       this.backButton.hide();
@@ -9508,6 +9508,9 @@ module.exports = HomeView = (function(_super) {
       _this.selectedApp = slug;
       app = _this.apps.get(slug);
       name = app.get('displayName') || app.get('name') || '';
+      if (name.length > 0) {
+        name = name.replace(/^./, name[0].toUpperCase());
+      }
       window.document.title = "Cozy - " + name;
       $("#current-application").html(name);
       _this.$("#app-btn-" + slug + " .spinner").hide();
