@@ -16,6 +16,8 @@ LocalizationManager = (function() {
 
   LocalizationManager.prototype.polyglot = null;
 
+  LocalizationManager.prototype.defaultPolyglot = null;
+
   LocalizationManager.prototype.initialize = function(callback) {
     return this.retrieveLocale((function(_this) {
       return function(err, locale) {
@@ -39,13 +41,18 @@ LocalizationManager = (function() {
   };
 
   LocalizationManager.prototype.getPolyglotByLocale = function(locale) {
-    var err, phrases;
+    var defaultPhrases, err, phrases;
+    defaultPhrases = require(LOCALE_PATH + "/en");
     try {
       phrases = require(LOCALE_PATH + "/" + locale);
     } catch (_error) {
       err = _error;
-      phrases = require(LOCALE_PATH + "/en");
+      phrases = defaultPhrases;
     }
+    this.defaultPolyglot = new Polyglot({
+      locale: 'en',
+      phrases: defaultPhrases
+    });
     return new Polyglot({
       locale: locale,
       phrases: phrases
@@ -53,11 +60,14 @@ LocalizationManager = (function() {
   };
 
   LocalizationManager.prototype.t = function(key, params) {
-    var ref;
+    var ref, ref1;
     if (params == null) {
       params = {};
     }
-    return ((ref = this.polyglot) != null ? ref.t(key, params) : void 0) || key;
+    if (params._ == null) {
+      params._ = (ref = this.defaultPolyglot) != null ? ref.t(key, params) : void 0;
+    }
+    return ((ref1 = this.polyglot) != null ? ref1.t(key, params) : void 0) || key;
   };
 
   LocalizationManager.prototype.getPolyglot = function() {

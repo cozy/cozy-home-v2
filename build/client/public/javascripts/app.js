@@ -428,20 +428,35 @@ exports.Application = (function() {
   }
 
   Application.prototype.initialize = function() {
-    var SocketListener, data, e, err, exception, locales, xhr, _ref;
+    var SocketListener, data, defaultLocales, e, err, exception, locales, xhr, _ref,
+      _this = this;
     try {
       this.instance = window.cozy_instance || {};
       this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
+      defaultLocales = require('locales/en');
       try {
         locales = require('locales/' + this.locale);
       } catch (_error) {
         err = _error;
-        locales = require('locales/en');
+        locales = defaultLocales;
       }
       window.app = this;
       this.polyglot = new Polyglot();
       this.polyglot.extend(locales);
-      window.t = this.polyglot.t.bind(this.polyglot);
+      this.defaultPolyglot = new Polyglot({
+        locale: 'en',
+        phrases: defaultLocales
+      });
+      window.t = function(key, params) {
+        var _ref1, _ref2;
+        if (params == null) {
+          params = {};
+        }
+        if (params._ == null) {
+          params._ = (_ref1 = _this.defaultPolyglot) != null ? _ref1.t(key, params) : void 0;
+        }
+        return (_ref2 = _this.polyglot) != null ? _ref2.t(key, params) : void 0;
+      };
       moment.locale(this.locale);
       ColorHash.addScheme('cozy', colorSet);
       this.routers = {};
