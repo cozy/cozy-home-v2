@@ -1,9 +1,13 @@
 .platform-section
-    & > .mod
-        padding (20/16)em
+    .status-section
+        max-width (1600/16)em
+        margin auto
 
-    section
-        margin-top (50/16)em
+        & > .mod
+            padding (20/16)em
+
+        section
+            margin-bottom (50/16)em
 
 // Status - Config application
 
@@ -13,9 +17,6 @@
 
 .sys-infos
    padding-right 20px
-
-#config-application-list
-    margin-top 10px
 
 .config-application:first-child
     border-top 0
@@ -62,16 +63,8 @@
             .fa-star
                 color gold
 
-            span
-                display none
-                color white
-                margin-right 0.5em
-
             &:hover
                 color white
-
-                span
-                    display inline-block
 
                 &.favorite
                     background-color gold
@@ -92,6 +85,7 @@
                 margin 0
 
     .icon-container
+        flex none
         margin-right 1em
 
         .icon
@@ -100,8 +94,12 @@
             width (72/16)em
             box-shadow 0 2px 6px rgba(0,0,0,.16)
 
+            @media (max-width (500/16)em)
+                width (52/16)em
+                padding 0.5em
+
     .infos
-        flex 1 0 auto
+        flex 1
 
 
 
@@ -181,7 +179,7 @@
             &:hover
                 background-color green - 10%
 
-        &:not([role=button])
+        &[role=button]
             margin (5/16)em (10/16)em (5/16)em 0
 
             img
@@ -195,25 +193,25 @@
     align-items center
     justify-content space-between
 
-    @media (max-width (500/16)em)
+    @media (max-width (1280/16)em)
         flex-wrap wrap
 
     .icon-hard-drive::before
         @extend $icon-hard-drive
         @extend $icon-48
-        margin-right 0.5em
+        margin-right 0.75em
 
     .icon-speed-counter::before
         @extend $icon-speed-counter
         @extend $icon-48
-        margin-right 0.5em
+        margin-right 0.75em
 
 .info-block
     display flex
     align-items center
     width 49%
 
-    @media (max-width (500/16)em)
+    @media (max-width (1280/16)em)
         width 100%
         margin-bottom 1em
 
@@ -245,6 +243,14 @@
         position absolute
         top 0
         right 0
+
+        @media (max-width (500/16)em)
+            button
+                span
+                    display none
+
+                 .fa
+                     margin 0
 
         button:not(:last-child)
             margin-right (4/14)em

@@ -73,17 +73,18 @@
     padding 1.5em
 
     background white
-    border 2px solid grey-03
+    border 1px solid grey-03
     border-radius 4px
     cursor pointer
 
     text-align left
 
-    transition background 0.3s ease-out
+    transition all 0.2s ease-out
 
     &:hover
-        border-color grey-04
-        box-shadow 0 0 0 2px grey-04
+        transform scale(1.05)
+        box-shadow 0 4px 12px rgba(0,0,0,.2)
+        z-index 100
 
     &.official
         border-color blue + 20%
@@ -91,15 +92,9 @@
         .comment
             color blue
 
-        &:hover
-            border-color blue + 20%
-            box-shadow 0 0 0 2px blue + 20%
-
     &.install
-        justify-content center
-
         .app-text
-            display none
+            opacity 0.5
 
         .installing-label
             display block

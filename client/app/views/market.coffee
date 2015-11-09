@@ -139,7 +139,7 @@ module.exports = class MarketView extends BaseView
     waitApplication: (appWidget, toggle = true) ->
         if toggle
             appWidget.installInProgress = true
-            appWidget.$('.app-img img').attr 'src', '/img/spinner.svg'
+            appWidget.$('.app-img img').attr 'src', '/img/spinner-white-thin.svg'
 
         else
             appWidget.installInProgress = false
