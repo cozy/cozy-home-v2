@@ -1,61 +1,62 @@
 .md-overlay
 .line.platform-section
-    .mod.left.w40
-        .platform
-            h4= t('cozy platform')
-            .stack-app.mt2.line
-                .version
-                    .line
-                        span.app Data System: 
-                        span.version-number.data-system --
-                        a.small(href="/logs/data-system", target="_blank")= t('show logs')
-                    .line
-                        span.app Proxy: 
-                        span.version-number.proxy --
-                        a.small(href="/logs/proxy", target="_blank")= t('show logs')
-                    .line
-                        span.app Home: 
-                        span.version-number.home --
-                        a.small(href="/logs/home", target="_blank")= t('show logs')
-                    .line
-                        span.app Controller: 
-                        span.version-number.controller --
-                    .line
-                        span.refresh= t('reboot stack waiting message')
-                .mod.buttons
-                    button.update-all.small
-                        i.fa.fa-refresh.mr1
-                        span= t('update all')
-                    button.reboot-stack.small.outline-blue
-                        i.fa.fa-power-off.mr1
-                        span= t('reboot stack')
-
-        section
-            h4= t('hardware consumption')
-            .block-container
-                .info-block.disk-space
-                    .icon-hard-drive
-                    div
-                        span.title= t('hard drive gigabytes')
+    .status-section
+        .mod.left.w70
+            .platform
+                h4= t('cozy platform')
+                .stack-app.mt2.line
+                    .version
                         .line
-                            span.amount 0
-                            div.lowlight
-                                |  / 
-                                span.total 0
-                                |  #{t('gigabytes')}
-                .info-block.memory-free
-                    .icon-speed-counter
-                    div
-                        span.title= t('memory megabytes')
+                            span.app Data System: 
+                            span.version-number.data-system --
+                            a.small(href="/logs/data-system", target="_blank")= t('show logs')
                         .line
-                            span.amount 0
-                            div.lowlight
-                                |  / 
-                                span.total 0
-                                |  #{t('megabytes')}
+                            span.app Proxy: 
+                            span.version-number.proxy --
+                            a.small(href="/logs/proxy", target="_blank")= t('show logs')
+                        .line
+                            span.app Home: 
+                            span.version-number.home --
+                            a.small(href="/logs/home", target="_blank")= t('show logs')
+                        .line
+                            span.app Controller: 
+                            span.version-number.controller --
+                        .line
+                            span.refresh= t('reboot stack waiting message')
+                    .mod.buttons
+                        button.update-all.small
+                            i.fa.fa-refresh.mr1
+                            span= t('update all')
+                        button.reboot-stack.small.outline-blue
+                            i.fa.fa-power-off.mr1
+                            span= t('reboot stack')
 
-        section
-            h4.title-device.h4= t('manage your devices')
+            h4.title-app.h4= t('manage your applications')
 
-    .mod.left.w60
-        h4.title-app.h4= t('manage your applications')
+        .mod.left.w30
+            section
+                h4= t('hardware consumption')
+                .block-container
+                    .info-block.disk-space
+                        .icon-hard-drive
+                        div
+                            span.title= t('hard drive gigabytes')
+                            .line
+                                span.amount 0
+                                div.lowlight
+                                    |  / 
+                                    span.total 0
+                                    |  #{t('gigabytes')}
+                    .info-block.memory-free
+                        .icon-speed-counter
+                        div
+                            span.title= t('memory megabytes')
+                            .line
+                                span.amount 0
+                                div.lowlight
+                                    |  / 
+                                    span.total 0
+                                    |  #{t('megabytes')}
+
+            section
+                h4.title-device.h4= t('manage your devices')
