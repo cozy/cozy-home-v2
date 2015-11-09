@@ -23,11 +23,13 @@
                 | (#{app.branch})
 
 .buttons
-    button.transparent-grey.favorite
-        if app.favorite
-            i.fa.fa-star(title="#{t('config application unmark favorite')}")
-        else
-            i.fa.fa-star-o(title="#{t('config application mark favorite')}")
+    if app.favorite
+        button.transparent-grey.favorite(title="#{t('config application unmark favorite')}")
+
+            i.fa.fa-star    
+    else
+        button.transparent-grey.favorite(title="#{t('config application mark favorite')}")
+            i.fa.fa-star-o    
     a.transparent-grey.logs(href="/logs/#{app.slug}", target="_blank", title="#{t('show logs')}", role="button")
         i.fa.fa-code
     button.transparent-grey.start-stop-btn(title="#{t('stop this app')}")
