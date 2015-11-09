@@ -6827,7 +6827,8 @@ module.exports = ApplicationsListView = (function(_super) {
   }
 
   ApplicationsListView.prototype.afterRender = function() {
-    return this.appList = this.$("#app-list");
+    this.appList = this.$("#app-list");
+    return this.apps.sort();
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
