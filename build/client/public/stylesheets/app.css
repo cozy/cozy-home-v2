@@ -940,6 +940,8 @@ button .fa,
 }
 .back-button span {
   margin-left: 0.5em;
+  vertical-align: top;
+  font-size: 0.85em;
 }
 button.btn {
   display: inline-block;
@@ -966,7 +968,7 @@ textarea {
   padding: 0 0.666666666666667em;
   background: #fff;
   border: 0;
-  border: 1px solid #c8d5df;
+  border: 1px solid #acb8c5;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
   -webkit-border-radius: 3px;
@@ -1288,7 +1290,7 @@ h4 {
   padding: 0.75em 1em;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  background: #ff3713;
+  background: #4f5b69;
 }
 .noncozy-warning .fa {
   font-size: 2em;
@@ -2128,11 +2130,15 @@ h4 {
   border-color: #16d943;
   outline: 0;
 }
-.platform-section > .mod {
+.platform-section .status-section {
+  max-width: 100em;
+  margin: auto;
+}
+.platform-section .status-section > .mod {
   padding: 1.25em;
 }
-.platform-section section {
-  margin-top: 3.125em;
+.platform-section .status-section section {
+  margin-bottom: 3.125em;
 }
 .title-app a.subtitle {
   display: inline-block;
@@ -2140,9 +2146,6 @@ h4 {
 }
 .sys-infos {
   padding-right: 20px;
-}
-#config-application-list {
-  margin-top: 10px;
 }
 .config-application:first-child {
   border-top: 0;
@@ -2216,19 +2219,9 @@ h4 {
 .config-application .buttons [role=button] .fa-star {
   color: #ffc644;
 }
-.config-application .buttons button span,
-.config-application .buttons [role=button] span {
-  display: none;
-  color: #fff;
-  margin-right: 0.5em;
-}
 .config-application .buttons button:hover,
 .config-application .buttons [role=button]:hover {
   color: #fff;
-}
-.config-application .buttons button:hover span,
-.config-application .buttons [role=button]:hover span {
-  display: inline-block;
 }
 .config-application .buttons button:hover.favorite,
 .config-application .buttons [role=button]:hover.favorite {
@@ -2255,6 +2248,13 @@ h4 {
   margin: 0;
 }
 .config-application .icon-container {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -o-box-flex: 0;
+  box-flex: 0;
+  -webkit-flex: none;
+  -ms-flex: none;
+  flex: none;
   margin-right: 1em;
 }
 .config-application .icon-container .icon {
@@ -2265,14 +2265,20 @@ h4 {
   -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.16);
   box-shadow: 0 2px 6px rgba(0,0,0,0.16);
 }
+@media (max-width: 31.25em) {
+  .config-application .icon-container .icon {
+    width: 3.25em;
+    padding: 0.5em;
+  }
+}
 .config-application .infos {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -o-box-flex: 1;
   box-flex: 1;
-  -webkit-flex: 1 0 auto;
-  -ms-flex: 1 0 auto;
-  flex: 1 0 auto;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .config-application #update-all,
 .config-application button.update-app {
@@ -2360,11 +2366,11 @@ h4 {
 .no-device a[role=button]:hover {
   background-color: #14c33c;
 }
-.no-device a:not([role=button]) {
+.no-device a[role=button] {
   margin: 0.3125em 0.625em 0.3125em 0;
 }
 @media (max-width: 800px) {
-  .no-device a:not([role=button]) img {
+  .no-device a[role=button] img {
     margin: 0;
   }
 }
@@ -2388,7 +2394,7 @@ h4 {
   -webkit-justify-content: space-between;
   justify-content: space-between;
 }
-@media (max-width: 31.25em) {
+@media (max-width: 80em) {
   .block-container {
     -webkit-box-lines: multiple;
     -moz-box-lines: multiple;
@@ -2399,10 +2405,10 @@ h4 {
   }
 }
 .block-container .icon-hard-drive::before {
-  margin-right: 0.5em;
+  margin-right: 0.75em;
 }
 .block-container .icon-speed-counter::before {
-  margin-right: 0.5em;
+  margin-right: 0.75em;
 }
 .info-block {
   display: -webkit-box;
@@ -2419,7 +2425,7 @@ h4 {
   align-items: center;
   width: 49%;
 }
-@media (max-width: 31.25em) {
+@media (max-width: 80em) {
   .info-block {
     width: 100%;
     margin-bottom: 1em;
@@ -2456,6 +2462,14 @@ h4 {
   position: absolute;
   top: 0;
   right: 0;
+}
+@media (max-width: 31.25em) {
+  .platform .buttons button span {
+    display: none;
+  }
+  .platform .buttons button .fa {
+    margin: 0;
+  }
 }
 .platform .buttons button:not(:last-child) {
   margin-right: 0.285714285714286em;
@@ -2601,16 +2615,16 @@ h4 {
   margin-bottom: 1em;
   padding: 1.5em;
   background: #fff;
-  border: 2px solid #c8d5df;
+  border: 1px solid #c8d5df;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   cursor: pointer;
   text-align: left;
-  -webkit-transition: background 0.3s ease-out;
-  -moz-transition: background 0.3s ease-out;
-  -o-transition: background 0.3s ease-out;
-  -ms-transition: background 0.3s ease-out;
-  transition: background 0.3s ease-out;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 @media (max-width: 25em) {
   #market-view #no-app-message,
@@ -2637,9 +2651,14 @@ h4 {
 }
 #market-view #no-app-message:hover,
 .cozy-app:hover {
-  border-color: #acb8c5;
-  -webkit-box-shadow: 0 0 0 2px #acb8c5;
-  box-shadow: 0 0 0 2px #acb8c5;
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.05);
+  -webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 100;
 }
 #market-view #no-app-message.official,
 .cozy-app.official {
@@ -2649,24 +2668,11 @@ h4 {
 .cozy-app.official .comment {
   color: #33a6ff;
 }
-#market-view #no-app-message.official:hover,
-.cozy-app.official:hover {
-  border-color: #5cb8ff;
-  -webkit-box-shadow: 0 0 0 2px #5cb8ff;
-  box-shadow: 0 0 0 2px #5cb8ff;
-}
-#market-view #no-app-message.install,
-.cozy-app.install {
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -o-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
 #market-view #no-app-message.install .app-text,
 .cozy-app.install .app-text {
-  display: none;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
 }
 #market-view #no-app-message.install .installing-label,
 .cozy-app.install .installing-label {
@@ -3397,7 +3403,7 @@ h4 {
 #account-view #account-form {
   min-height: calc(100vh - 36px);
   padding: 1.875em;
-  background-color: #f2f5f7;
+  background-color: #fff;
 }
 .navbar {
   position: fixed;
@@ -3472,7 +3478,9 @@ h4 {
   #config-applications-view .mod.w66,
   #config-applications-view .mod.w40,
   #config-applications-view .mod.w60,
-  #config-applications-view .mod.w50 {
+  #config-applications-view .mod.w50,
+  #config-applications-view .mod.w30,
+  #config-applications-view .mod.w70 {
     width: 100%;
   }
   #app-list section {
@@ -3551,9 +3559,6 @@ h4 {
   .home-body {
     -webkit-box-shadow: none;
     box-shadow: none;
-  }
-  img {
-    margin: 0.625em 0.625em 0 0;
   }
   h3 {
     margin-top: 1.25em;

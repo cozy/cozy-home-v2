@@ -1435,7 +1435,9 @@ module.exports = {
   "or": "or",
   "drop a file": "Drag & drop a file or",
   "url of an image": "Paste URL of an image from the web",
-  "you have no album": "<p>Vous n'avez pas encore d'album photo  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p>\n<p>Créez en à partir de\n    <a href=\"/#applications\" target='_blank'>l'application Photo</a>\n    <br>\n    et utilisez les photo de votre téléphone via\n    <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'app mobile !</a></p>\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)"
+  "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+  "config application mark favorite": "mark as favorite",
+  "config application unmark favorite": "unmark as favorite"
 }
 ;
 });
@@ -5060,7 +5062,7 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.initialize = function() {
     var _this = this;
     return window.addEventListener('message', function(event) {
-      var intent, intentType;
+      var e, intent, intentType;
       if (event.origin !== window.location.origin) {
         return false;
       }
@@ -5070,8 +5072,14 @@ module.exports = MainRouter = (function(_super) {
           return _this.navigate("apps/" + intent.params, true);
         case void 0:
           intentType = 'application/x-talkerjs-v1+json';
-          if (JSON.parse(intent).type !== intentType) {
-            return console.log("Weird intent, cannot handle it.", intent);
+          try {
+            if (JSON.parse(intent).type !== intentType) {
+              return console.log("Weird intent, cannot handle it", intent);
+            }
+          } catch (_error) {
+            e = _error;
+            console.log("Weird intent, cannot handle it", intent);
+            return window.onerror("Error handling intent: " + intent, "MainRouter.initialize", null, null, new Error());
           }
           break;
         default:
@@ -5268,9 +5276,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="icon-container"><a');
-buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
-buf.push('><img src="" class="icon"/></a></div><div class="infos"><div class="line"><strong><a');
+buf.push('<div class="icon-container"><img src="" class="icon"/></div><div class="infos"><div class="line"><strong><a');
 buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
 buf.push('>');
 var __val__ = app.displayName
@@ -5302,41 +5308,26 @@ buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a><span>(' + escape((interp = app.branch) == null ? '' : interp) + ')</span></div></div></div><div class="buttons"><button class="transparent-grey favorite">');
+buf.push('</a><span>(' + escape((interp = app.branch) == null ? '' : interp) + ')</span></div></div></div><div class="buttons">');
 if ( app.favorite)
 {
-buf.push('<span>');
-var __val__ = t('config application unmark favorite')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><i');
-buf.push(attrs({ 'title':("" + (t('config application unmark favorite')) + ""), "class": ('fa') + ' ' + ('fa-star') }, {"title":true}));
-buf.push('></i>');
+buf.push('<button');
+buf.push(attrs({ 'title':("" + (t('config application unmark favorite')) + ""), "class": ('transparent-grey') + ' ' + ('favorite') }, {"title":true}));
+buf.push('><i class="fa fa-star">   </i></button>');
 }
 else
 {
-buf.push('<span>');
-var __val__ = t('config application mark favorite')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><i');
-buf.push(attrs({ 'title':("" + (t('config application mark favorite')) + ""), "class": ('fa') + ' ' + ('fa-star-o') }, {"title":true}));
-buf.push('></i>');
+buf.push('<button');
+buf.push(attrs({ 'title':("" + (t('config application mark favorite')) + ""), "class": ('transparent-grey') + ' ' + ('favorite') }, {"title":true}));
+buf.push('><i class="fa fa-star-o">   </i></button>');
 }
-buf.push('</button><a');
+buf.push('<a');
 buf.push(attrs({ 'href':("/logs/" + (app.slug) + ""), 'target':("_blank"), 'title':("" + (t('show logs')) + ""), 'role':("button"), "class": ('transparent-grey') + ' ' + ('logs') }, {"href":true,"target":true,"title":true,"role":true}));
-buf.push('><span>');
-var __val__ = t('show logs')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><i class="fa fa-code"></i></a><button');
+buf.push('><i class="fa fa-code"></i></a><button');
 buf.push(attrs({ 'title':("" + (t('stop this app')) + ""), "class": ('transparent-grey') + ' ' + ('start-stop-btn') }, {"title":true}));
-buf.push('><span>');
-var __val__ = t('stop this app')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><i class="fa fa-power-off"></i></button><button');
+buf.push('><i class="fa fa-power-off"></i></button><button');
 buf.push(attrs({ 'title':("" + (t('remove')) + ""), "class": ('transparent-grey') + ' ' + ('remove-app') }, {"title":true}));
-buf.push('><span>');
-var __val__ = t('remove')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span><i class="fa fa-trash"></i></button></div>');
+buf.push('><i class="fa fa-trash"></i></button></div>');
 }
 return buf.join("");
 };
@@ -5359,7 +5350,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="md-overlay"></div><div class="line platform-section"><div class="mod left w40"><div class="platform"><h4>');
+buf.push('<div class="md-overlay"></div><div class="line platform-section"><div class="status-section"><div class="mod left w70"><div class="platform"><h4>');
 var __val__ = t('cozy platform')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="stack-app mt2 line"><div class="version"><div class="line"><span class="app">Data System: </span><span class="version-number data-system">--</span><a href="/logs/data-system" target="_blank" class="small">');
@@ -5380,7 +5371,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button><button class="reboot-stack small outline-blue"><i class="fa fa-power-off mr1"></i><span>');
 var __val__ = t('reboot stack')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div></div></div><section><h4>');
+buf.push('</span></button></div></div></div><h4 class="title-app h4">');
+var __val__ = t('manage your applications')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4></div><div class="mod left w30"><section><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="block-container"><div class="info-block disk-space"><div class="icon-hard-drive"></div><div><span class="title">');
@@ -5392,10 +5386,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><div class="line"><span class="amount">0</span><div class="lowlight"> / <span class="total">0</span> ' + escape((interp = t('megabytes')) == null ? '' : interp) + '</div></div></div></div></div></section><section><h4 class="title-device h4">');
 var __val__ = t('manage your devices')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4></section></div><div class="mod left w60"><h4 class="title-app h4">');
-var __val__ = t('manage your applications')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h4></div></div>');
+buf.push('</h4></section></div></div></div>');
 }
 return buf.join("");
 };
@@ -6973,7 +6964,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
     if (!(this.devices.length === 0)) {
       return this.$el.find('.title-device').after(this.deviceList.$el);
     } else {
-      return this.$el.find('.title-device').after("<div class='no-device'><p>" + (t('status no device')) + "</p><p>" + (t('mobile app promo')) + "</p><a target='_blank' href='https://play.google.com/store/apps/details?id=io.cozy.files_client'><img src='http://developer.android.com/images/brand/en_app_rgb_wo_45.png'></a><a role='button' href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'><i class='fa fa-android'></i><span>" + (t('download apk')) + "<span></a></div>");
+      return this.$el.find('.title-device').after("<div class='no-device'><p>" + (t('status no device')) + "</p><p>" + (t('mobile app promo')) + "</p><a role='button' href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'><i class='fa fa-android'></i><span>" + (t('download apk')) + "<span></a><a target='_blank' href='https://play.google.com/store/apps/details?id=io.cozy.files_client'><img src='http://developer.android.com/images/brand/en_app_rgb_wo_45.png'></a></div>");
     }
   };
 
@@ -9765,7 +9756,7 @@ module.exports = MarketView = (function(_super) {
     }
     if (toggle) {
       appWidget.installInProgress = true;
-      return appWidget.$('.app-img img').attr('src', '/img/spinner.svg');
+      return appWidget.$('.app-img img').attr('src', '/img/spinner-white-thin.svg');
     } else {
       appWidget.installInProgress = false;
       appWidget.$('.app-img img').attr('src', '');
