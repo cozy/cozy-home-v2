@@ -38,17 +38,24 @@ class exports.Application
             @instance = window.cozy_instance or {}
             @locale = @instance?.locale or 'en'
 
+            defaultLocales = require 'locales/en'
             try
                 locales = require 'locales/' + @locale
             catch err
-                locales = require 'locales/en'
+                locales = defaultLocales
 
             window.app = @
 
             # Translation
             @polyglot = new Polyglot()
             @polyglot.extend locales
-            window.t = @polyglot.t.bind @polyglot
+            @defaultPolyglot  = new Polyglot
+                locale: 'en'
+                phrases: defaultLocales
+            window.t = (key, params = {}) =>
+                unless params._?
+                    params._ = @defaultPolyglot?.t(key, params)
+                return @polyglot?.t(key, params)
 
             # Date parser and format library
             moment.locale(@locale)
