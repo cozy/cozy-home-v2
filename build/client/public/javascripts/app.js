@@ -147,6 +147,21 @@ module.exports = ApplicationCollection = (function(_super) {
     }
   };
 
+  ApplicationCollection.prototype.comparator = function(modelLeft, modelRight) {
+    var leftIsOfficial, rightIsOfficial;
+    leftIsOfficial = modelLeft.isOfficial();
+    rightIsOfficial = modelRight.isOfficial();
+    if (leftIsOfficial && rightIsOfficial) {
+      return modelLeft.get('name').localeCompare(modelRight.get('name'));
+    } else if (leftIsOfficial) {
+      return -1;
+    } else if (rightIsOfficial) {
+      return 1;
+    } else {
+      return modelLeft.get('name').localeCompare(modelRight.get('name'));
+    }
+  };
+
   return ApplicationCollection;
 
 })(BaseCollection);
@@ -4717,6 +4732,10 @@ module.exports = Application = (function(_super) {
   Application.prototype.updateAll = function(callbacks) {
     this.prepareCallbacks(callbacks);
     return client.put("/api/applications/update/all", {}, callbacks);
+  };
+
+  Application.prototype.isOfficial = function() {
+    return this.get('comment') === 'official application';
   };
 
   return Application;
