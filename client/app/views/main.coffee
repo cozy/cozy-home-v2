@@ -101,7 +101,7 @@ module.exports = class HomeView extends BaseView
         else
             title ?= t 'home'
 
-        window.document.title = title
+        window.document.title = "Cozy - #{title}"
         $('#current-application').html title
 
         if view is @applicationListView
@@ -235,6 +235,7 @@ module.exports = class HomeView extends BaseView
             @selectedApp = slug
             app = @apps.get slug
             name = app.get('displayName') or app.get('name') or ''
+            name = name.replace /^./, name[0].toUpperCase() if name.length > 0
 
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
