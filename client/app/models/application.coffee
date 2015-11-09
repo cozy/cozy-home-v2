@@ -120,3 +120,8 @@ module.exports = class Application extends Backbone.Model
         @prepareCallbacks callbacks
         client.put "/api/applications/update/all", {}, callbacks
 
+
+    # Return true is the app is considered as an official Cozy application.
+    isOfficial: ->
+        @get('comment') is 'official application'
+

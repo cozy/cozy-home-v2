@@ -18,3 +18,16 @@ module.exports = class ApplicationCollection extends BaseCollection
         for app in @models
             return app if idorslug is app.get 'id'
 
+    comparator: (modelLeft, modelRight) ->
+        leftIsOfficial = modelLeft.isOfficial()
+        rightIsOfficial = modelRight.isOfficial()
+
+        if leftIsOfficial and rightIsOfficial
+            modelLeft.get('name').localeCompare modelRight.get 'name'
+        else if leftIsOfficial
+            -1
+        else if rightIsOfficial
+            1
+        else
+            modelLeft.get('name').localeCompare modelRight.get 'name'
+
