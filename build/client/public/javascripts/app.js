@@ -152,13 +152,13 @@ module.exports = ApplicationCollection = (function(_super) {
     leftIsOfficial = modelLeft.isOfficial();
     rightIsOfficial = modelRight.isOfficial();
     if (leftIsOfficial && rightIsOfficial) {
-      return modelLeft.get('name').localeCompare(modelRight.get('name'));
+      return modelLeft.get('name').localeCompare(modelRight.get('displayName'));
     } else if (leftIsOfficial) {
       return -1;
     } else if (rightIsOfficial) {
       return 1;
     } else {
-      return modelLeft.get('name').localeCompare(modelRight.get('name'));
+      return modelLeft.get('name').localeCompare(modelRight.get('displayName'));
     }
   };
 
