@@ -53,8 +53,7 @@ class exports.Application
                 locale: 'en'
                 phrases: defaultLocales
             window.t = (key, params = {}) =>
-                unless params._?
-                    params._ = @defaultPolyglot?.t(key, params)
+                params._ ?= @defaultPolyglot?.t(key, params)
                 return @polyglot?.t(key, params)
 
             # Date parser and format library
