@@ -43,7 +43,7 @@ module.exports =
                         ]
 
                     cozydb.api.sendMailFromUser data, (err) ->
-                        fs.unlink path
+                        fs.unlink path if path?
                         return next err if err
 
                         res.send
@@ -53,3 +53,4 @@ module.exports =
                     logs.getCompressLogs onLogs
                 else
                     onLogs()
+
