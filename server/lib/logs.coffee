@@ -55,10 +55,12 @@ module.exports = logs =
         archivePath = path.join __dirname, '..', '..', 'cozy.tar.gz'
         logPath = '/usr/local/var/log/cozy'
         readStream = fstream.Reader 'path': logPath, 'type': 'Directory'
-        readStream.pipe(tar.Pack())
-        .pipe(zlib.Gzip())
-        .pipe fstream.Writer('path': archivePath)
-        readStream.on 'end', () ->
-            callback archivePath
+        readStream
+            .pipe(tar.Pack())
+            .pipe(zlib.Gzip())
+            .pipe fstream.Writer('path': archivePath)
+
+        readStream.on 'end', ->
+            callback null, archivePath
 
 

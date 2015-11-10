@@ -28,7 +28,9 @@ module.exports =
                 content += '\n\n---- User message\n\n'
                 content += req.body.messageText
 
-                onLogs = (path) ->
+                onLogs = (err, path) ->
+
+                    console.log err if err
 
                     data =
                         to: "support@cozycloud.cc"
