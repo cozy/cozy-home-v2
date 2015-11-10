@@ -29,10 +29,12 @@ module.exports = class ApplicationRow extends BaseView
         @id = "app-btn-#{options.model.id}"
         super
 
+
     initialize: ->
         # only re-render when 'version' changes, because it's the only displayed
         # field that can change during the update
         @listenTo @model, 'change:version', @render
+
 
     afterRender: =>
         @updateButton = new ColorButton @$ ".update-app"
@@ -45,6 +47,31 @@ module.exports = class ApplicationRow extends BaseView
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
+        @icon = @$ '.icon'
+
+        @setIcon()
+
+
+    # Build icon from model information (depending of icon format and model
+    # name).
+    setIcon: ->
+        if @model.isIconSvg()
+            extension = 'svg'
+            @icon.addClass 'svg'
+        else
+            extension = 'png'
+            @icon.removeClass 'svg'
+
+        @icon.attr 'src', "api/applications/#{@model.get 'slug'}.#{extension}"
+
+        slug = @model.get 'slug'
+        color = @model.get 'color'
+        unless color?
+            color = hashColor = ColorHash.getColor slug, 'cozy'
+            # By default, look for the color in the market.
+            # color = @inMarket?.get('color') or hashColor
+        @color = color
+        @icon.css 'background-color', color
 
 
     ### Listener ###

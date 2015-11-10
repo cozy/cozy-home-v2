@@ -20,7 +20,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
 
     afterRender: ->
-        @model.set "description", ""
+        #@model.set "description", ""
         @body = @$ ".md-body"
         @header = @$ ".md-header h3"
         @header.html @model.get 'displayName'
@@ -38,6 +38,9 @@ module.exports = class PopoverDescriptionView extends BaseView
                 @body.addClass 'error'
                 if error.responseText.indexOf('Not Found') isnt -1
                     @body.html t 'package.json not found'
+                else if error.responseText.indexOf('unknown provider') isnt -1
+                    @body.html t 'unknown provider'
+                    @$("#confirmbtn").hide()
                 else
                     @body.html t 'error connectivity issue'
 
@@ -49,10 +52,11 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.html ""
 
-        description = @model.get "description"
+        description = t @model.get "description"
         @header.parent().append "<p class=\"line\"> #{description} </p>"
 
-        if Object.keys(@model.get("permissions")).length is 0
+        permissions = @model.get("permissions")
+        if not permissions? or Object.keys(permissions).length is 0
             permissionsDiv = $ """
                 <div class='permissionsLine'>
                     <h5>#{t('no specific permissions needed')} </h5>

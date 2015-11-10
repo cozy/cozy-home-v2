@@ -2,7 +2,7 @@ utils = require '../lib/passport_utils'
 Adapter = require '../lib/adapter'
 User = require '../models/user'
 CozyInstance = require '../models/cozyinstance'
-
+localizationManager = require '../helpers/localization_manager'
 adapter = new Adapter()
 
 EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
@@ -51,17 +51,17 @@ module.exports =
 
             if newPassword?
                 if newPassword.length < 5
-                    errors.push "The new password is too short."
+                    errors.push localizationManager.t "password too short"
                     return cb null, errors
 
                 unless utils.checkPassword oldPassword, user.password
-                    errors.push "The current password is incorrect."
+                    errors.push localizationManager.t "current password incorrect"
 
                 unless newPassword is newPassword2
-                    errors.push "The new passwords don't match."
+                    errors.push localizationManager.t "passwords don't match"
 
                 unless newPassword.length > 5
-                    errors.push "The new password is too short."
+                    errors.push localizationManager.t "password too short"
 
                 if errors.length
                     return cb null, errors
@@ -75,7 +75,7 @@ module.exports =
         User.all (err, users) ->
             next err if err
             if users.length is 0
-                return res.send 400, error: "No user registered"
+                return res.send 400, error: localizationManager.t "no user registered"
 
             user = users[0]
             data = {}
@@ -90,14 +90,14 @@ module.exports =
 
                     res.send
                         success: true
-                        msg: 'Your new password is set'
+                        msg: localizationManager.t 'new password set'
 
 
     # Return list of available users
     users: (req, res, next) ->
         User.all (err, users) ->
             if err
-                res.send 500, error: "Retrieve users failed."
+                res.send 500, error: localizationManager.t "Retrieve users failed."
             else
                 res.send rows: users
 
@@ -106,7 +106,7 @@ module.exports =
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->
             if err
-                res.send 500, error: "Retrieve instances failed."
+                res.send 500, error: localizationManager.t "retrieve instances failed"
             else
                 res.send rows: instances
 
@@ -115,22 +115,27 @@ module.exports =
     updateInstance: (req, res, next) ->
         {domain, locale, helpUrl, background, connectedOnce} = req.body
 
-        if domain? or locale? or helpUrl? or background? or connectedOnce?
-            CozyInstance.all (err, instances) ->
-                data = {domain, locale, helpUrl, background, connectedOnce}
-
-                if err then next err
-
-                else if instances.length is 0
-                    CozyInstance.create data, (err, instance) ->
-                        if err then next err
-                        else
-                            res.send success: true, msg: 'Instance updated.'
-
-                else
-                    instances[0].updateAttributes data, ->
-                        res.send success: true, msg: 'Instance updated.'
+        unless domain? or locale? or helpUrl? or background? or connectedOnce?
+            res.send 400,
+                error: true
+                msg: localizationManager.t 'No accepted parameter given'
 
         else
-            res.send 400, error: true, msg: 'No accepted parameter given'
+            CozyInstance.all (err, instances) ->
+                return next err if err
+                data = {domain, locale, helpUrl, background, connectedOnce}
 
+
+                if instances.length is 0
+                    makeChange = CozyInstance.create.bind CozyInstance
+                else
+                    instance = instances[0]
+                    makeChange = instance.updateAttributes.bind instance
+
+                makeChange data, (err, instance) ->
+                    return next err if err
+                    console.log "reinitializing"
+                    localizationManager.initialize ->
+                        res.send
+                            success: true,
+                            msg: localizationManager.t "instance updated"

@@ -1,4 +1,4 @@
-{MemoryManager} = require('../lib/memory')
+{MemoryManager}     = require('../lib/memory')
 
 module.exports =
     # Return as JSON data about memory and hard disk consumption

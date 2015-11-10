@@ -50,18 +50,18 @@ module.exports = logs = {
     });
   },
   getCompressLogs: function(callback) {
-    var logPath, readStream;
-    path = path.join(__dirname, '..', '..', 'cozy.tar.gz');
+    var archivePath, logPath, readStream;
+    archivePath = path.join(__dirname, '..', '..', 'cozy.tar.gz');
     logPath = '/usr/local/var/log/cozy';
     readStream = fstream.Reader({
       'path': logPath,
       'type': 'Directory'
     });
     readStream.pipe(tar.Pack()).pipe(zlib.Gzip()).pipe(fstream.Writer({
-      'path': path
+      'path': archivePath
     }));
     return readStream.on('end', function() {
-      return callback(path);
+      return callback(null, archivePath);
     });
   }
 };

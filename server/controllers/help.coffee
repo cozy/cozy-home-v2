@@ -1,9 +1,10 @@
-cozydb = require 'cozydb'
-fs = require 'fs'
-CozyInstance = require '../models/cozyinstance'
-CozyUser = require '../models/user'
-Application = require '../models/application'
-logs = require '../lib/logs'
+cozydb              = require 'cozydb'
+fs                  = require 'fs'
+CozyInstance        = require '../models/cozyinstance'
+CozyUser            = require '../models/user'
+Application         = require '../models/application'
+logs                = require '../lib/logs'
+localizationManager = require '../helpers/localization_manager'
 
 module.exports =
 
@@ -27,12 +28,14 @@ module.exports =
                 content += '\n\n---- User message\n\n'
                 content += req.body.messageText
 
-                onLogs = (path) ->
+                onLogs = (err, path) ->
+
+                    console.log err if err
 
                     data =
                         to: "support@cozycloud.cc"
                         'reply-to': email
-                        subject: "Demande d'assistance depuis un Cozy"
+                        subject: localizationManager.t "ask for assistance"
                         content: content
 
                     if path?
@@ -42,13 +45,14 @@ module.exports =
                         ]
 
                     cozydb.api.sendMailFromUser data, (err) ->
-                        fs.unlink path
+                        fs.unlink path if path?
                         return next err if err
 
                         res.send
-                            success: 'Mail successully sent to support.'
+                            success: localizationManager.t 'mail successully sent'
 
                 if req.body.sendLogs
                     logs.getCompressLogs onLogs
                 else
                     onLogs()
+

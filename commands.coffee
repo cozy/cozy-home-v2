@@ -75,15 +75,15 @@ runCmd = ->
             break
 
         when 'getdomain'
-            CozyInstance.all (err, instances) ->
+            client.get 'api/instances', (err, res, instances) ->
                 if err
                     console.log '{domain:"error"}'
                     process.exit 1
-                else if instances.length is 0
+                else if instances.rows.length is 0
                     console.log '{domain:null}'
                     process.exit 0
                 else
-                    console.log "{domain:\"#{instances[0].domain}}\""
+                    console.log "{domain:\"#{instances.rows[0].domain}}\""
                     process.exit 0
             break
 

@@ -34,6 +34,9 @@ module.exports = class exports.HelpView extends BaseView
     # When send message is clicked, the content of the message textarea is
     # send to the server. That way he can send an email to the Cozy support
     # team.
+    # It grabs the send logs checkbox state and add this as parameter of the
+    # server request. That way, the server knows if it must add the logs to the
+    # sent message.
     onSendMessageClicked: =>
         @alertMessageError.hide()
         @alertMessageSuccess.hide()

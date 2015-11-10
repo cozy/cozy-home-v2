@@ -32,8 +32,15 @@ module.exports = class MainRouter extends Backbone.Router
                     @navigate "apps/#{intent.params}", true
                 when undefined
                     intentType = 'application/x-talkerjs-v1+json'
-                    if JSON.parse(intent).type isnt  intentType
-                        console.log "Weird intent, cannot handle it.", intent
+                    try
+                        if JSON.parse(intent).type isnt intentType
+                            console.log "Weird intent, cannot handle it", intent
+                    catch e
+                        console.log "Weird intent, cannot handle it", intent
+                        # Log error server side
+                        window.onerror "Error handling intent: " + intent, \
+                            "MainRouter.initialize", null, null, \
+                            new Error()
                 else
                     console.log "Weird intent, cannot handle it.", intent
 

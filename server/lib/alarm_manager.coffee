@@ -3,7 +3,7 @@ RRule = require('rrule').RRule
 moment = require 'moment-timezone'
 log = require('printit')
     prefix: 'alarm-manager'
-localization = require './localization_manager'
+localization = require '../helpers/localization_manager'
 Event = require '../models/event'
 
 oneDay = 24 * 60 * 60 * 1000

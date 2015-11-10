@@ -5,7 +5,7 @@ log = require('printit')
 
 Application = require '../models/application'
 StackApplication = require '../models/stack_application'
-localization = require '../lib/localization_manager'
+localizationManager = require '../helpers/localization_manager'
 market = require '../lib/market'
 
 # Time (in ms) between two checks for updates, for all apps
@@ -33,7 +33,7 @@ checkUpdate = (app, callback) ->
 # Remove a notification if applications is up to date
 removeAppUpdateNotification = (notifier, app) ->
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.displayName
+    message = localizationManager.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?
@@ -41,7 +41,7 @@ removeAppUpdateNotification = (notifier, app) ->
 # Remove a notification if stack is up to date
 removeStackUpdateNotification = (notifier, app) ->
     messageKey = 'stack update available notification'
-    message = localization.t messageKey
+    message = localizationManager.t messageKey
     notificationSlug = "home_update_notification_stack"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?
@@ -50,7 +50,7 @@ removeStackUpdateNotification = (notifier, app) ->
 # Creates a notification to inform the app can be updated
 createAppUpdateNotification = (notifier, app) ->
     messageKey = 'update available notification'
-    message = localization.t messageKey, appName: app.displayName
+    message = localizationManager.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.createOrUpdatePersistent notificationSlug,
         app: 'konnectors'
@@ -64,7 +64,7 @@ createAppUpdateNotification = (notifier, app) ->
 
 createStackUpdateNotification = (notifier) ->
     messageKey = 'stack update available notification'
-    message = localization.t messageKey
+    message = localizationManager.t messageKey
     notificationSlug = "home_update_notification_stack"
     notifier.createOrUpdatePersistent notificationSlug,
         app: 'konnectors'

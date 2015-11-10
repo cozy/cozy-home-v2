@@ -20,8 +20,11 @@ module.exports = class ApplicationsListView extends ViewCollection
         @market = market
         super collection: @apps
 
+
     afterRender: =>
         @appList = @$ "#app-list"
+        @apps.sort()
+
 
     appendView: (view) ->
         if @$el.is ':empty'
@@ -37,6 +40,7 @@ module.exports = class ApplicationsListView extends ViewCollection
             if index >= 0
                 previous = @$el.find ".config-application:eq(#{index})"
                 view.$el.insertAfter previous
+
 
     openUpdatePopover: (slug) ->
         appToUpdateView = null

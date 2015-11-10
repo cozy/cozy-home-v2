@@ -6,6 +6,7 @@ log = require('printit')
 module.exports = icons = {}
 market = require './market'
 
+
 ###
 Get right icon path depending on app configuration:
 * returns root folder + path mentioned in the manifest file if path is in the
@@ -60,6 +61,7 @@ icons.getPath = (root, appli) ->
             extension: extension
         return result
 
+
 # Retrieves icon information
 icons.getIconInfos = (appli) ->
     if appli?
@@ -85,6 +87,7 @@ icons.getIconInfos = (appli) ->
     else
         throw new Error 'Appli cannot be reached'
 
+
 # Save app's icon into the data system. The home displays this icon.
 icons.save = (appli, iconInfos, callback = ->) ->
 
@@ -95,6 +98,7 @@ icons.save = (appli, iconInfos, callback = ->) ->
         appli.attachFile iconInfos.path, name: name, (err) ->
             if err then callback err
             else callback()
+
     else
         callback new Error('icon information not found')
 

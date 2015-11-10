@@ -64,110 +64,122 @@
 	background-image: url(icons/icons.svg);
 }
 
-.svg-konnectors { 
+.svg-isen { 
 	background-position: 0 -660px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
-.svg-kresus { 
+.svg-konnectors { 
 	background-position: 0 -720px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
-.svg-kyou { 
+.svg-kresus { 
 	background-position: 0 -780px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
-.svg-leave-google { 
+.svg-kyou { 
 	background-position: 0 -840px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
+.svg-leave-google { 
+	background-position: 0 -900px;
+	background-repeat: no-repeat;
+	background-image: url(icons/icons.svg);
+}
+
 .svg-mstsc { 
-	background-position: 0 -940px;
+	background-position: 0 -960px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-nirc { 
-	background-position: 0 -1000px;
+	background-position: 0 -1020px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-notes { 
-	background-position: 0 -1060px;
+	background-position: 0 -1080px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-owm { 
-	background-position: 0 -1120px;
+	background-position: 0 -1140px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-photos { 
-	background-position: 0 -1180px;
+	background-position: 0 -1200px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-polybios { 
-	background-position: 0 -1240px;
+	background-position: 0 -1260px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-remote_storage { 
-	background-position: 0 -1300px;
+	background-position: 0 -1320px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-settings { 
-	background-position: 0 -1360px;
+	background-position: 0 -1380px;
+	background-repeat: no-repeat;
+	background-image: url(icons/icons.svg);
+}
+
+.svg-shout { 
+	background-position: 0 -1440px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-state { 
-	background-position: 0 -1420px;
+	background-position: 0 -1500px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-store { 
-	background-position: 0 -1480px;
+	background-position: 0 -1560px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-sync { 
-	background-position: 0 -1540px;
+	background-position: 0 -1620px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-tasky { 
-	background-position: 0 -1600px;
+	background-position: 0 -1680px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-term { 
-	background-position: 0 -1660px;
+	background-position: 0 -1740px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }
 
 .svg-todos { 
-	background-position: 0 -1720px;
+	background-position: 0 -1800px;
 	background-repeat: no-repeat;
 	background-image: url(icons/icons.svg);
 }

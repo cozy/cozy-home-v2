@@ -101,7 +101,7 @@ module.exports = class HomeView extends BaseView
         else
             title ?= t 'home'
 
-        window.document.title = title
+        window.document.title = "Cozy - #{title}"
         $('#current-application').html title
 
         if view is @applicationListView
@@ -233,9 +233,9 @@ module.exports = class HomeView extends BaseView
             frame.show()
 
             @selectedApp = slug
-
             app = @apps.get slug
             name = app.get('displayName') or app.get('name') or ''
+            name = name.replace /^./, name[0].toUpperCase() if name.length > 0
 
             window.document.title = "Cozy - #{name}"
             $("#current-application").html name
@@ -256,9 +256,7 @@ module.exports = class HomeView extends BaseView
             @frames.css 'left', '-9999px'
             @frames.css 'position', 'absolute'
 
-            frame.once ?= frame.on
-            frame.once ?= frame.on if typeof(frame.once) isnt 'function'
-            frame.once 'load', onLoad
+            frame.on 'load', _.once onLoad
 
         # if the app was already open, we want to change its hash
         # only if there is a hash in the home given url.
@@ -289,8 +287,7 @@ module.exports = class HomeView extends BaseView
         hash = "##{hash}" if hash?.length > 0
 
         iframeHTML = appIframeTemplate(id: slug, hash:hash)
-        iframe     = @frames.append(iframeHTML)[0].lastChild
-        iframe$    = $(iframe)
+        iframe$    = $(iframeHTML).appendTo @frames
         iframe$.prop('contentWindow').addEventListener 'hashchange', =>
             location = iframe$.prop('contentWindow').location
             newhash  = location.hash.replace '#', ''
@@ -301,7 +298,7 @@ module.exports = class HomeView extends BaseView
         # TODO : when each iFrame will
         # have its own domain, then precise it
         # (ex : https://app1.joe.cozycloud.cc:8080)
-        @intentManager.registerIframe iframe, '*'
+        @intentManager.registerIframe iframe$[0], '*'
 
         return iframe$
 
@@ -323,6 +320,7 @@ module.exports = class HomeView extends BaseView
         if appState.status in ['updating', 'broken', 'uninstalled']
             frame = @getAppFrame appState.slug
             frame.remove()
+            frame.off 'load'
 
 
     # Ugly trick for redrawing iframes. It's required because sometimes the

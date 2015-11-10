@@ -6,6 +6,7 @@
 @import 'base/_alerts'
 @import 'base/_buttons'
 @import 'base/_form'
+@import 'base/_icons'
 @import 'base/_reset'
 
 @import 'components/_modal'
@@ -55,7 +56,7 @@
 #account-view #account-form
     min-height calc(100vh - 36px)
     padding (30/16)em
-    background-color grey-01
+    background-color white
 
 
 // navbar
@@ -146,6 +147,8 @@
         .mod.w40
         .mod.w60
         .mod.w50
+        .mod.w30
+        .mod.w70
             width 100%
 
     #app-list section
@@ -209,9 +212,6 @@
 
     .home-body
         box-shadow none
-
-    img
-        margin (10/16)em (10/16)em 0 0
 
     h3
         margin-top (20/16)em
@@ -348,8 +348,7 @@ span.app
     font-weight bold
 
 button.btn
-    display inline-flex
-    vertical-align top
+    display inline-block
     text-align center
 
     .spinholder

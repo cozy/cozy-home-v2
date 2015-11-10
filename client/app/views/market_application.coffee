@@ -8,23 +8,27 @@ module.exports = class ApplicationRow extends BaseView
     className: "cozy-app"
     template: require 'templates/market_application'
 
+
     events:
         "click .website": "onWebsiteClicked"
         "click .btn": "onInstallClicked"
         "click": "onInstallClicked"
 
+
     getRenderData: ->
         app = @app.toJSON()
-        if match = app.icon.match(REGEXP_SPRITED_SVG)
+        if match = app.icon.match REGEXP_SPRITED_SVG
             [all, slug] = match
             app = _.extend {}, app, svgSpriteSlug: 'svg-' + slug
 
         return {app}
 
+
     constructor: (@app, @marketView) ->
         super()
         @mouseOut = true
         @installInProgress = false
+
 
     afterRender: =>
         @$el.attr 'id', "market-app-#{@app.get 'slug'}"
@@ -34,21 +38,25 @@ module.exports = class ApplicationRow extends BaseView
 
         slug = @app.get 'slug'
         color = @app.get 'color'
+        @addClass 'install' if @app.get('state') is 'installing'
 
         # Only set a background color for SVG icons
         if @app.get('icon').indexOf('.svg') isnt -1
+
             # if there is no set color, we use an auto-generated one
-            unless color?
-                color = ColorHash.getColor slug, 'cozy'
+            color = ColorHash.getColor slug, 'cozy' unless color?
 
             iconNode = @$ '.app-img img'
             iconNode.addClass 'svg'
             iconNode.css 'background-color', color
 
+
     onInstallClicked: =>
         return if @installInProgress
         @marketView.showDescription this, @installButton
 
+
     onWebsiteClicked: (e) ->
         # prevent starting installation when clicking on Github or website links
         e.stopPropagation()
+

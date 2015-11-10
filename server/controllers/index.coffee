@@ -1,11 +1,11 @@
-async = require 'async'
-Device = require '../models/device'
-Application = require '../models/application'
+async            = require 'async'
+Device           = require '../models/device'
+Application      = require '../models/application'
 StackApplication = require '../models/stack_application'
-CozyInstance = require '../models/cozyinstance'
-CozyUser = require '../models/user'
-Notification = require '../models/notification'
-Market = require '../lib/market'
+CozyInstance     = require '../models/cozyinstance'
+CozyUser         = require '../models/user'
+Notification     = require '../models/notification'
+Market           = require '../lib/market'
 
 
 module.exports =

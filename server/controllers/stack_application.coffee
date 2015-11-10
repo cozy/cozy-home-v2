@@ -1,17 +1,18 @@
-request = require("request-json")
-fs = require('fs')
-slugify = require 'cozy-slug'
-{AppManager} = require '../lib/paas'
-spawn = require('child_process').spawn
-log = require('printit')
-    prefix: "applications"
+request             = require("request-json")
+fs                  = require('fs')
+slugify             = require 'cozy-slug'
+{AppManager}        = require '../lib/paas'
+spawn               = require('child_process').spawn
+log                 = require('printit')
+prefix: "applications"
 
-StackApplication = require '../models/stack_application'
+StackApplication    = require '../models/stack_application'
+localizationManager = require '../helpers/localization_manager'
 
 sendError = (res, err, code=500) ->
     err ?=
         stack:   null
-        message: "Server error occured"
+        message: localizationManager.t "server error"
 
     console.log "Sending error to client:"
     console.log err.stack
