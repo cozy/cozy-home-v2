@@ -46,7 +46,13 @@ download = module.exports.download = (callback) ->
             commit = oldMarket.commit
 
     client = new Client "#{urlRegistry.protocol}//#{urlRegistry.host}"
-    client.headers['user-agent'] = 'cozy'
+    switch process.env.NODE_ENV
+        when 'production'
+            client.headers['user-agent'] = 'cozy'
+        when 'test'
+            client.headers['user-agent'] = 'cozy-test'
+        else
+            client.headers['user-agent'] = 'cozy-dev'
     client.get "#{urlRegistry.pathname}?version=#{version}&commit=#{commit}", (err, res, body) ->
         if not err and body.apps_list? and Object.keys(body.apps_list).length > 0
             apps = body.apps_list
