@@ -251,11 +251,13 @@ module.exports =
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
                 req.body.color = manifest.getColor()
+                req.body.state = 'installing'
 
                 # Create application in database
                 Application.create req.body, (err, appli) ->
                     return sendError res, err if err
                     access.app = appli.id
+
                     # Create application access in database
                     Application.createAccess access, (err, app) ->
                         return sendError res, err if err
@@ -265,50 +267,58 @@ module.exports =
                         infos = JSON.stringify appli
                         console.info "attempt to install app #{infos}"
                         appli.password = access.password
-                        # Install / Start application
-                        manager.installApp appli, (err, result) ->
-                            if err
-                                markBroken res, appli, err
-                                sendErrorSocket err
-                                return
 
-                            if result.drone?
-                                updatedData =
-                                    state: "installed"
-                                    port: result.drone.port
+                        # Save icon first.
+                        appli.iconPath = manifest.getIconPath()
+                        appli.color = manifest.getColor()
+                        try
+                            iconInfos = icons.getIconInfos appli
+                        catch err
+                            if process.env.NODE_ENV isnt 'test'
+                                console.log err
+                            iconInfos = null
+                        appli.iconType = iconInfos?.extension or null
+                        icons.save appli, iconInfos, (err) ->
 
-                                msg = "install succeeded on port #{appli.port}"
-                                console.info msg
+                            if err and process.env.NODE_ENV isnt 'test'
+                                console.log err.stack
 
-                                appli.iconPath = manifest.getIconPath()
-                                appli.color = manifest.getColor()
-                                try
-                                    iconInfos = icons.getIconInfos appli
-                                catch err
-                                    if process.env.NODE_ENV isnt 'test'
-                                        console.log err
-                                    iconInfos = null
-                                appli.iconType = iconInfos?.extension or null
+                            else
+                                console.info 'icon attached'
 
-                                # Manage state and icon for application
-                                appli.updateAttributes updatedData, (err) ->
-                                    return sendErrorSocket err if err?
-                                    icons.save appli, iconInfos, (err) ->
-                                        if err and
-                                           process.env.NODE_ENV isnt 'test'
-                                            console.log err.stack
-                                        else console.info 'icon attached'
+                            # Install / Start application
+                            manager.installApp appli, (err, result) ->
+                                if err
+                                    markBroken res, appli, err
+                                    sendErrorSocket err
+                                    return
+
+                                if result.drone?
+                                    msg = "install succeeded on " + \
+                                          "port #{appli.port}"
+                                    console.info msg
+                                    updatedData =
+                                        state: "installed"
+                                        port: result.drone.port
+
+                                    appli.updateAttributes updatedData, (err) ->
+                                        return sendErrorSocket err if err?
+
                                         console.info 'saved port in db', \
                                             appli.port
+
                                         # Reset proxy
                                         manager.resetProxy (err) ->
                                             return sendErrorSocket err if err?
-                                            console.info 'proxy reset', \
-                                                appli.port
-                            else
-                                err = new Error "Controller has no " + \
-                                              "informations about #{appli.name}"
-                                return sendErrorSocket err if err
+                                            console.info(
+                                                'proxy reset', appli.port)
+
+                                else
+                                    err = new Error(
+                                        "Controller has no " + \
+                                        "informations about #{appli.name}"
+                                    )
+                                    return sendErrorSocket err if err
 
 
     # Remove app from 3 places :

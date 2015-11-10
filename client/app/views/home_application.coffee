@@ -2,6 +2,7 @@ BaseView = require 'lib/base_view'
 ColorButton = require 'widgets/install_button'
 Modal = require './error_modal'
 
+
 # Row displaying application name and attributes
 module.exports = class ApplicationRow extends BaseView
     className: "application w360-33 w640-25 full-20 mod left"
@@ -17,19 +18,13 @@ module.exports = class ApplicationRow extends BaseView
         "mouseover .application-inner": "onMouseOver"
         "mouseout .application-inner": "onMouseOut"
 
-    ### Constructor ####
-
-    onMouseOver: ->
-        @background.css 'background-color', 'background-color'
-
-    onMouseOut: ->
-        @background.css 'background-color', @color or 'transparent'
 
     constructor: (options) ->
         @id = "app-btn-#{options.model.id}"
         @enabled = true
         super
         @inMarket = options.market.findWhere slug: @model.get('slug')
+
 
     afterRender: =>
         @icon = @$ 'img.icon'
@@ -49,6 +44,15 @@ module.exports = class ApplicationRow extends BaseView
 
 
     ### Listener ###
+
+
+    onMouseOver: ->
+        @background.css 'background-color', 'background-color'
+
+
+    onMouseOut: ->
+        @background.css 'background-color', @color or 'transparent'
+
 
     onAppChanged: (app) =>
         switch @model.get 'state'
