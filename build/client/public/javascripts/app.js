@@ -2175,6 +2175,7 @@ module.exports = {
     "change layout": "Modifier la disposition",
     "market app install": "Installation…",
     "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous :",
+    "market install your app tutorial": "Pour en savoir plus sur comment développer votre propre application, vous pouvez vous rendre sur notre ",
     "market app tutorial": "didacticiel",
     "help send message title": "Écrire directement à l'équipe Cozy",
     "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !",
