@@ -37,8 +37,11 @@ module.exports = {
         }) + '\n';
         content += '\n\n---- User message\n\n';
         content += req.body.messageText;
-        onLogs = function(path) {
+        onLogs = function(err, path) {
           var data;
+          if (err) {
+            console.log(err);
+          }
           data = {
             to: "support@cozycloud.cc",
             'reply-to': email,

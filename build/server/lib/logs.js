@@ -61,7 +61,7 @@ module.exports = logs = {
       'path': archivePath
     }));
     return readStream.on('end', function() {
-      return callback(archivePath);
+      return callback(null, archivePath);
     });
   }
 };

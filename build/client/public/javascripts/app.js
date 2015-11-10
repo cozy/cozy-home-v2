@@ -5369,9 +5369,20 @@ buf.push('><i class="fa fa-star-o">   </i></button>');
 }
 buf.push('<a');
 buf.push(attrs({ 'href':("/logs/" + (app.slug) + ""), 'target':("_blank"), 'title':("" + (t('show logs')) + ""), 'role':("button"), "class": ('transparent-grey') + ' ' + ('logs') }, {"href":true,"target":true,"title":true,"role":true}));
-buf.push('><i class="fa fa-code"></i></a><button');
+buf.push('><i class="fa fa-code"></i></a>');
+if ( app.state === "stopped")
+{
+buf.push('<button');
+buf.push(attrs({ 'title':("" + (t('start this app')) + ""), "class": ('transparent-grey') + ' ' + ('stopped') + ' ' + ('start-stop-btn') }, {"title":true}));
+buf.push('><i class="fa fa-power-off"></i></button>');
+}
+else
+{
+buf.push('<button');
 buf.push(attrs({ 'title':("" + (t('stop this app')) + ""), "class": ('transparent-grey') + ' ' + ('start-stop-btn') }, {"title":true}));
-buf.push('><i class="fa fa-power-off"></i></button><button');
+buf.push('><i class="fa fa-power-off"></i></button>');
+}
+buf.push('<button');
 buf.push(attrs({ 'title':("" + (t('remove')) + ""), "class": ('transparent-grey') + ' ' + ('remove-app') }, {"title":true}));
 buf.push('><i class="fa fa-trash"></i></button></div>');
 }
