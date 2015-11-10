@@ -20,7 +20,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
 
     afterRender: ->
-        @model.set "description", ""
+        #@model.set "description", ""
         @body = @$ ".md-body"
         @header = @$ ".md-header h3"
         @header.html @model.get 'displayName'
@@ -52,7 +52,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.html ""
 
-        description = @model.get "description"
+        description = t @model.get "description"
         @header.parent().append "<p class=\"line\"> #{description} </p>"
 
         permissions = @model.get("permissions")
