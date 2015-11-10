@@ -54,7 +54,16 @@ download = module.exports.download = function(callback) {
     } catch (_error) {}
   }
   client = new Client(urlRegistry.protocol + "//" + urlRegistry.host);
-  client.headers['user-agent'] = 'cozy';
+  switch (process.env.NODE_ENV) {
+    case 'production':
+      client.headers['user-agent'] = 'cozy';
+      break;
+    case 'test':
+      client.headers['user-agent'] = 'cozy-test';
+      break;
+    default:
+      client.headers['user-agent'] = 'cozy-dev';
+  }
   return client.get(urlRegistry.pathname + "?version=" + version + "&commit=" + commit, function(err, res, body) {
     if (!err && (body.apps_list != null) && Object.keys(body.apps_list).length > 0) {
       apps = body.apps_list;

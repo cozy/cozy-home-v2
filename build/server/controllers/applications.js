@@ -345,13 +345,14 @@ module.exports = {
         req.body.widget = manifest.getWidget();
         req.body.version = manifest.getVersion();
         req.body.color = manifest.getColor();
+        req.body.state = 'installing';
         return Application.create(req.body, function(err, appli) {
           if (err) {
             return sendError(res, err);
           }
           access.app = appli.id;
           return Application.createAccess(access, function(err, app) {
-            var infos;
+            var iconInfos, infos;
             if (err) {
               return sendError(res, err);
             }
@@ -362,41 +363,41 @@ module.exports = {
             infos = JSON.stringify(appli);
             console.info("attempt to install app " + infos);
             appli.password = access.password;
-            return manager.installApp(appli, function(err, result) {
-              var iconInfos, msg, updatedData;
-              if (err) {
-                markBroken(res, appli, err);
-                sendErrorSocket(err);
-                return;
+            appli.iconPath = manifest.getIconPath();
+            appli.color = manifest.getColor();
+            try {
+              iconInfos = icons.getIconInfos(appli);
+            } catch (_error) {
+              err = _error;
+              if (process.env.NODE_ENV !== 'test') {
+                console.log(err);
               }
-              if (result.drone != null) {
-                updatedData = {
-                  state: "installed",
-                  port: result.drone.port
-                };
-                msg = "install succeeded on port " + appli.port;
-                console.info(msg);
-                appli.iconPath = manifest.getIconPath();
-                appli.color = manifest.getColor();
-                try {
-                  iconInfos = icons.getIconInfos(appli);
-                } catch (_error) {
-                  err = _error;
-                  if (process.env.NODE_ENV !== 'test') {
-                    console.log(err);
-                  }
-                  iconInfos = null;
+              iconInfos = null;
+            }
+            appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
+            return icons.save(appli, iconInfos, function(err) {
+              if (err && process.env.NODE_ENV !== 'test') {
+                console.log(err.stack);
+              } else {
+                console.info('icon attached');
+              }
+              return manager.installApp(appli, function(err, result) {
+                var msg, updatedData;
+                if (err) {
+                  markBroken(res, appli, err);
+                  sendErrorSocket(err);
+                  return;
                 }
-                appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
-                return appli.updateAttributes(updatedData, function(err) {
-                  if (err != null) {
-                    return sendErrorSocket(err);
-                  }
-                  return icons.save(appli, iconInfos, function(err) {
-                    if (err && process.env.NODE_ENV !== 'test') {
-                      console.log(err.stack);
-                    } else {
-                      console.info('icon attached');
+                if (result.drone != null) {
+                  msg = "install succeeded on " + ("port " + appli.port);
+                  console.info(msg);
+                  updatedData = {
+                    state: "installed",
+                    port: result.drone.port
+                  };
+                  return appli.updateAttributes(updatedData, function(err) {
+                    if (err != null) {
+                      return sendErrorSocket(err);
                     }
                     console.info('saved port in db', appli.port);
                     return manager.resetProxy(function(err) {
@@ -406,13 +407,13 @@ module.exports = {
                       return console.info('proxy reset', appli.port);
                     });
                   });
-                });
-              } else {
-                err = new Error("Controller has no " + ("informations about " + appli.name));
-                if (err) {
-                  return sendErrorSocket(err);
+                } else {
+                  err = new Error("Controller has no " + ("informations about " + appli.name));
+                  if (err) {
+                    return sendErrorSocket(err);
+                  }
                 }
-              }
+              });
             });
           });
         });

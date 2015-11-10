@@ -7508,17 +7508,6 @@ module.exports = ApplicationRow = (function(_super) {
     "mouseout .application-inner": "onMouseOut"
   };
 
-  /* Constructor*/
-
-
-  ApplicationRow.prototype.onMouseOver = function() {
-    return this.background.css('background-color', 'background-color');
-  };
-
-  ApplicationRow.prototype.onMouseOut = function() {
-    return this.background.css('background-color', this.color || 'transparent');
-  };
-
   function ApplicationRow(options) {
     this.showSpinner = __bind(this.showSpinner, this);
     this.launchApp = __bind(this.launchApp, this);
@@ -7548,6 +7537,14 @@ module.exports = ApplicationRow = (function(_super) {
 
   /* Listener*/
 
+
+  ApplicationRow.prototype.onMouseOver = function() {
+    return this.background.css('background-color', 'background-color');
+  };
+
+  ApplicationRow.prototype.onMouseOut = function() {
+    return this.background.css('background-color', this.color || 'transparent');
+  };
 
   ApplicationRow.prototype.onAppChanged = function(app) {
     var extension;
@@ -9762,12 +9759,7 @@ module.exports = MarketView = (function(_super) {
           _this.waitApplication(appWidget, true);
           appWidget.$el.addClass('install');
           return _this.runInstallation(appWidget.app, function() {
-            console.log('application installed', appWidget.app);
-            return Backbone.Mediator.pub('app-state:changed', {
-              status: 'started',
-              updated: false,
-              slug: appWidget.app.get('slug')
-            });
+            return console.log('application installation started', appWidget.app);
           }, function() {
             return _this.waitApplication(appWidget, false);
           });
@@ -9979,6 +9971,9 @@ module.exports = ApplicationRow = (function(_super) {
     }
     slug = this.app.get('slug');
     color = this.app.get('color');
+    if (this.app.get('state') === 'installing') {
+      this.addClass('install');
+    }
     if (this.app.get('icon').indexOf('.svg') !== -1) {
       if (color == null) {
         color = ColorHash.getColor(slug, 'cozy');
