@@ -6688,6 +6688,7 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('stopped'));
+          _this.render();
           return Backbone.Mediator.pub('app-state:changed', {
             status: 'stopped',
             updated: false,
@@ -6703,6 +6704,7 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('started'));
+          _this.render();
           Backbone.Mediator.pub('app-state:changed', {
             status: 'started',
             updated: false,
