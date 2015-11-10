@@ -175,6 +175,7 @@ module.exports = class ApplicationRow extends BaseView
                 success: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'stopped'
+                    @render()
                     Backbone.Mediator.pub 'app-state:changed',
                         status: 'stopped'
                         updated: false
@@ -187,6 +188,7 @@ module.exports = class ApplicationRow extends BaseView
                 success: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'started'
+                    @render()
                     Backbone.Mediator.pub 'app-state:changed',
                         status: 'started'
                         updated: false
