@@ -1237,8 +1237,8 @@ module.exports = {
   "installing": "Installing",
   "remove": "Remove",
   "update": "Update",
-  "config application unmark favorite": "Remove from Favorites",
-  "config application mark favorite": "Add to Favorites",
+  "config application unmark favorite": "Remove from Favorites (remove from top of the home screen)",
+  "config application mark favorite": "Add to Favorites (added to the top of the home screen)",
   "started": "started",
   "notifications": "Notifications",
   "questions and help forum": "Questions and help forum",
@@ -1307,11 +1307,12 @@ module.exports = {
   "confirm your new password": "confirm your new password",
   "save your new password": "Save new password",
   "do you want assistance": "Do you need some help?",
-  "contact us more options": "There are still a few more options to be in touch with us:",
+  "contact us more options": "There are still a few more options to contact us:",
   "community support content": "Our Community grows everyday and will be happy to give you a hand on these medias:",
-  "twitter: ": "Twitter",
-  "forum": "Forum",
-  "Chat with us on IRC:": "IRC",
+  "help email title": "Email",
+  "help twitter title": "Twitter",
+  "help forum title": "Forum",
+  "help IRC title": "IRC",
   "help wiki title": "Wiki",
   "Visit the project website and learn to build your app:": "Visit the project website:",
   "your own application": "your own app",
@@ -1328,7 +1329,7 @@ module.exports = {
   "update stack waiting message": "Wait please, updating takes several minutes.",
   "status no device": "There is no device connected to your Cozy.",
   "download apk": "Download .APK",
-  "mobile app promo": "Backup you photos and synchronize your contacts and calendars with our mobile app:",
+  "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
@@ -2027,6 +2028,8 @@ module.exports = {
     "started": "démarrée",
     "notifications": "Notifications",
     "questions and help forum": "Forum d'aide",
+    "config application unmark favorite": "Enlever des apps favories (retirer du haut du bureau)",
+    "config application mark favorite": "Ajouter aux apps favories (placer en haut du bureau)",
     "sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
     "disk unit": "Go",
@@ -2093,9 +2096,15 @@ module.exports = {
     "Write an email to our support team at:": "Écrivez un email à notre équipe support :",
     "Register and post on our forum: ": "Postez un message sur notre forum :",
     "Ask your question on Twitter: ": "Posez votre question sur Twitter :",
-    "Chat with us on IRC:": "Discutez avec nous sur IRC :",
     "Visit the project website and learn to build your app:": "Visitez le site du projet et trouvez les guides pour synchroniser vos périphériques.",
+    "contact us more options": "Vous pouvez aussi nous contacter par d'autres moyens :",
+    "help email title": "Email",
+    "help twitter title": "Twitter",
+    "help forum title": "Forum",
+    "help IRC title": "IRC",
+    "help wiki title": "Wiki",
     "your own application": "votre propre application",
+    "community support content": "Notre communauté grandit chaque jour. Les cozynautes seront ravis de vous aider. Vous pouvez les contacter sur un de ces médias:",
     "installed": "installée",
     "updated": "mis à jour réussie",
     "updating": "m.à.j en cours",
@@ -2111,6 +2120,7 @@ module.exports = {
     "update stack modal title": "Mise à jour de votre Cozy",
     "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Voulez-vous vraiment continuer ?",
     "update stack modal confirm": "Mettre à jour",
+    "mobile app promo": "Sauvegardez vos photos, synchronisez vos contacts et agendas de votre mobile en installant l'application dédiée:",
     "update stack success": "Vos applications ont bien été mises à jour, la page va se rafraichir.",
     "update stack error": "Une erreur s'est produite pendant la mise à jour, la page va se rafraichir.",
     "applications broken": "Applications cassées",
@@ -2137,7 +2147,7 @@ module.exports = {
     "help support title": "Support officiel",
     "help community title": "Support via la communauté",
     "help documentation title": "Documentation",
-    "help wiki title": "Wiki :",
+    "help wiki title": "Wiki",
     "changing locale requires reload": "Le changement de langue nécessite le rechargement de la page.",
     "cancel": "annuler",
     "abort": "interrompre",
@@ -2164,7 +2174,7 @@ module.exports = {
     "help": "Aide",
     "change layout": "Modifier la disposition",
     "market app install": "Installation…",
-    "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous. Pour savoir comment faire votre propre application, suivez notre",
+    "market install your app": "Vous pouvez installer une application directement depuis l'URL de son dépôt Git. Vous pouvez la copier/coller dans le champ en dessous :",
     "market app tutorial": "didacticiel",
     "help send message title": "Écrire directement à l'équipe Cozy",
     "help send message explanation": "Pour envoyer un message à l'équipe Cozy, vous pouvez utiliser le champ texte en dessous. Vous pouvez nous envoyer des retours, rapporter des bugs et bien sûr demander de l'aide !",
@@ -4622,6 +4632,7 @@ module.exports = Application = (function(_super) {
     _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
     if (presuccess == null) {
       presuccess = function(data) {
+        delete data.app.description;
         return _this.set(data.app);
       };
     }
@@ -5489,10 +5500,10 @@ buf.push('</h4><div class="line"><p class="help-text">');
 var __val__ = t('community support content')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="btn-group-big"><a href="https://forum.cozy.io" target="_blank" role="button" class="btn-big-icon btn-forum"><div class="icon-big forum"></div><span>');
-var __val__ = t('forum')
+var __val__ = t('help forum title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><span>forum.cozy.io</span></a><a href="https://webchat.freenode.net/?channels=cozycloud" target="_blank" role="button" class="btn-big-icon btn-irc"><div class="icon-big irc"></div><span>');
-var __val__ = t('Chat with us on IRC:')
+var __val__ = t('help IRC title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><span>#cozycloud (irc.freenode.net)</span></a><a href="https://github.com/cozy/cozy-setup/wiki" target="_blank" role="button" class="btn-big-icon btn-wiki"><div class="icon-big wiki"></div><span>');
 var __val__ = t('help wiki title')
@@ -5519,10 +5530,10 @@ buf.push('</div><br/><br/><div class="line"><p class="help-text mt2">');
 var __val__ = t('contact us more options')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="btn-group-big"><a href="mailto:support@cozycloud.cc" role="button" class="btn-big-icon btn-contact"><div class="icon-big contact"></div><span>');
-var __val__ = t('contact us')
+var __val__ = t('help email title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><span>support@cozycloud.cc</span></a><a href="https://twitter.com/intent/tweet?text=@mycozycloud%20" target="_blank" role="button" class="btn-big-icon btn-twitter"><div class="icon-big twitter"></div><span>');
-var __val__ = t('twitter')
+var __val__ = t('help twitter title')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><span>@mycozycloud</span></a><a href="https://cozy.io" target="_blank" role="button" class="btn-big-icon btn-doc"><div class="icon-big doc"></div><span>');
 var __val__ = t('help documentation title')
@@ -11409,7 +11420,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
 
   PopoverDescriptionView.prototype.afterRender = function() {
     var _this = this;
-    this.model.set("description", "");
     this.body = this.$(".md-body");
     this.header = this.$(".md-header h3");
     this.header.html(this.model.get('displayName'));
@@ -11443,7 +11453,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
   PopoverDescriptionView.prototype.renderDescription = function() {
     var description, docType, permission, permissions, permissionsDiv, _ref1;
     this.body.html("");
-    description = this.model.get("description");
+    description = t(this.model.get("description"));
     this.header.parent().append("<p class=\"line\"> " + description + " </p>");
     permissions = this.model.get("permissions");
     if ((permissions == null) || Object.keys(permissions).length === 0) {
