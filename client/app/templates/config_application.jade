@@ -31,8 +31,12 @@
             i.fa.fa-star-o    
     a.transparent-grey.logs(href="/logs/#{app.slug}", target="_blank", title="#{t('show logs')}", role="button")
         i.fa.fa-code
-    button.transparent-grey.start-stop-btn(title="#{t('stop this app')}")
-        i.fa.fa-power-off
+    if app.state === "stopped"
+        button.transparent-grey.stopped.start-stop-btn(title="#{t('start this app')}")
+            i.fa.fa-power-off
+    else
+        button.transparent-grey.start-stop-btn(title="#{t('stop this app')}")
+            i.fa.fa-power-off
     button.transparent-grey.remove-app(title="#{t('remove')}")
         i.fa.fa-trash
 
