@@ -9997,7 +9997,7 @@ module.exports = ApplicationRow = (function(_super) {
     slug = this.app.get('slug');
     color = this.app.get('color');
     if (this.app.get('state') === 'installing') {
-      this.addClass('install');
+      this.$el.addClass('install');
     }
     if (this.app.get('icon').indexOf('.svg') !== -1) {
       if (color == null) {
