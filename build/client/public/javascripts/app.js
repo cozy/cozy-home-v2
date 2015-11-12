@@ -6857,7 +6857,7 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
-    var index, previous, sortedViews, views;
+    var index, next, previous, sortedViews, views;
     if (this.$el.is(':empty')) {
       return this.$el.append(view.el);
     } else {
@@ -6874,6 +6874,9 @@ module.exports = ApplicationsListView = (function(_super) {
       if (index >= 0) {
         previous = this.$el.find(".config-application:eq(" + index + ")");
         return view.$el.insertAfter(previous);
+      } else {
+        next = this.$el.find(".config-application:eq(" + (index + 2) + ")");
+        return view.$el.insertBefore(next);
       }
     }
   };
