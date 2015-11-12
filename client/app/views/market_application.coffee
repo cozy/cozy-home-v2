@@ -38,7 +38,7 @@ module.exports = class ApplicationRow extends BaseView
 
         slug = @app.get 'slug'
         color = @app.get 'color'
-        @addClass 'install' if @app.get('state') is 'installing'
+        @$el.addClass 'install' if @app.get('state') is 'installing'
 
         # Only set a background color for SVG icons
         if @app.get('icon').indexOf('.svg') isnt -1
