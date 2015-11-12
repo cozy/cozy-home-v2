@@ -6875,7 +6875,7 @@ module.exports = ApplicationsListView = (function(_super) {
         previous = this.$el.find(".config-application:eq(" + index + ")");
         return view.$el.insertAfter(previous);
       } else {
-        next = this.$el.find(".config-application:eq(" + (index + 2) + ")");
+        next = this.$el.find(".config-application:eq(" + (index + 1) + ")");
         return view.$el.insertBefore(next);
       }
     }
