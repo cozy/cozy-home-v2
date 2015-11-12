@@ -7,7 +7,7 @@ checkUpdates = require "#{helpers.prefix}server/initializers/updates"
 Application = require "#{helpers.prefix}server/models/application"
 StackApplication = require "#{helpers.prefix}server/models/stack_application"
 Notification = require "#{helpers.prefix}server/models/notification"
-localizationManager = require "#{helpers.prefix}server/lib/localization_manager"
+localizationManager = require "#{helpers.prefix}server/helpers/localization_manager"
 
 describe 'Update notifications', ->
 
