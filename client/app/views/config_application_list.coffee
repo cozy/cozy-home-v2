@@ -41,7 +41,7 @@ module.exports = class ApplicationsListView extends ViewCollection
                 previous = @$el.find ".config-application:eq(#{index})"
                 view.$el.insertAfter previous
             else
-                next = @$el.find ".config-application:eq(#{index + 2})"
+                next = @$el.find ".config-application:eq(#{index + 1})"
                 view.$el.insertBefore next
 
 
