@@ -4633,8 +4633,13 @@ module.exports = Application = (function(_super) {
     _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
     if (presuccess == null) {
       presuccess = function(data) {
-        delete data.app.description;
-        return _this.set(data.app);
+        var _ref2;
+        if (((_ref2 = data.app) != null ? _ref2.description : void 0) != null) {
+          delete data.app.description;
+        }
+        if (data.app != null) {
+          return _this.set(data.app);
+        }
       };
     }
     this.trigger('request', this, null, callbacks);
@@ -5323,7 +5328,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="icon-container"><img src="" class="icon"/></div><div class="infos"><div class="line"><strong><a');
-buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("#apps/" + (app.slug) + "") }, {"href":true}));
 buf.push('>');
 var __val__ = app.displayName
 buf.push(escape(null == __val__ ? "" : __val__));
