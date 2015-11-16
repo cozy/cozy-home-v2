@@ -1,6 +1,6 @@
 {
   "name": "cozy-home",
-  "version": "2.0.13",
+  "version": "2.1.0",
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
   "license": "AGPL-3.0",
   "engine": {
@@ -58,8 +58,9 @@
   "scripts": {
     "test": "cake --use-js tests",
     "start": "node build/server.js",
+    "build:clean": "rm -rf build",
     "build:client": "cd client && brunch b",
     "build:server": "cake build",
-    "build": "npm run build:client && npm run build:server"
+    "build": "npm run build:clean && npm run build:client && npm run build:server"
   }
 }

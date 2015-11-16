@@ -4778,8 +4778,13 @@ module.exports = Application = (function(_super) {
     _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
     if (presuccess == null) {
       presuccess = function(data) {
-        delete data.app.description;
-        return _this.set(data.app);
+        var _ref2;
+        if (((_ref2 = data.app) != null ? _ref2.description : void 0) != null) {
+          delete data.app.description;
+        }
+        if (data.app != null) {
+          return _this.set(data.app);
+        }
       };
     }
     this.trigger('request', this, null, callbacks);
@@ -5468,7 +5473,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="icon-container"><img src="" class="icon"/></div><div class="infos"><div class="line"><strong><a');
-buf.push(attrs({ 'href':("#apps/" + (app.name) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("#apps/" + (app.slug) + "") }, {"href":true}));
 buf.push('>');
 var __val__ = app.displayName
 buf.push(escape(null == __val__ ? "" : __val__));
@@ -7002,7 +7007,7 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
-    var index, previous, sortedViews, views;
+    var index, next, previous, sortedViews, views;
     if (this.$el.is(':empty')) {
       return this.$el.append(view.el);
     } else {
@@ -7019,6 +7024,9 @@ module.exports = ApplicationsListView = (function(_super) {
       if (index >= 0) {
         previous = this.$el.find(".config-application:eq(" + index + ")");
         return view.$el.insertAfter(previous);
+      } else {
+        next = this.$el.find(".config-application:eq(" + (index + 1) + ")");
+        return view.$el.insertBefore(next);
       }
     }
   };
@@ -10142,7 +10150,7 @@ module.exports = ApplicationRow = (function(_super) {
     slug = this.app.get('slug');
     color = this.app.get('color');
     if (this.app.get('state') === 'installing') {
-      this.addClass('install');
+      this.$el.addClass('install');
     }
     if (this.app.get('icon').indexOf('.svg') !== -1) {
       if (color == null) {
