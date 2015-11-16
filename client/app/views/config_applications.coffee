@@ -97,11 +97,21 @@ module.exports = class ConfigApplicationsView extends BaseView
         @$('.amount').html "--"
         @$('.total').html "--"
         request.get 'api/sys-data', (err, data) =>
+
             if err
                 alert t 'Server error occured, infos cannot be displayed.'
+
             else
-                diskUsed  = "#{data.usedDiskSpace}"
-                diskTotal = "#{data.totalDiskSpace}"
+                if data.usedUnit is 'T'
+                    data.usedUnit = 'G'
+                    data.usedDiskSpace *= 1000
+
+                if data.totalUnit is 'T'
+                    data.totalUnit = 'G'
+                    data.totalDiskSpace *= 1000
+
+                diskUsed  = "#{data.usedDiskSpace} "
+                diskTotal = "#{data.totalDiskSpace} "
                 @displayMemory data.freeMem, data.totalMem
                 @displayDiskSpace diskUsed, diskTotal
 
