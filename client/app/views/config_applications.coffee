@@ -61,13 +61,13 @@ module.exports = class ConfigApplicationsView extends BaseView
 
 
     displayStackVersion: =>
+        @toUpdate = false
         for app in @stackApps.models
             @$(".#{app.get 'name'}").html app.get 'version'
             currentVersion = app.get('version').split('.')
             lastVersion = app.get('lastVersion') or '0.0.0'
             newVersion = lastVersion.split('.')
 
-            @toUpdate = false
             if parseInt(currentVersion[2]) < parseInt(newVersion[2])
                 @$(".#{app.get 'name'}").css 'font-weight', "bold"
                 @$(".#{app.get 'name'}").css 'color', "Orange"
