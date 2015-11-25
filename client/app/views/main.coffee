@@ -197,7 +197,7 @@ module.exports = class HomeView extends BaseView
         # wait for 500ms before triggering the popover opening, because
         # the configApplications view is not completely rendered yet (??)
         setTimeout =>
-            @configApplications.onUpdateStackClicked()
+            @configApplications.onUpdateClicked()
         , 500
 
 
