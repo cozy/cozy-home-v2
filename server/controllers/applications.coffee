@@ -26,8 +26,6 @@ startedApplications = {}
 # Remove a notification after an update
 removeAppUpdateNotification = (app) ->
     notifier = new NotificationsHelper 'home'
-    messageKey = 'update available notification'
-    message = localizationManager.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?

@@ -61,13 +61,13 @@ module.exports = class ConfigApplicationsView extends BaseView
 
 
     displayStackVersion: =>
+        @toUpdate = false
         for app in @stackApps.models
             @$(".#{app.get 'name'}").html app.get 'version'
             currentVersion = app.get('version').split('.')
             lastVersion = app.get('lastVersion') or '0.0.0'
             newVersion = lastVersion.split('.')
 
-            @toUpdate = false
             if parseInt(currentVersion[2]) < parseInt(newVersion[2])
                 @$(".#{app.get 'name'}").css 'font-weight', "bold"
                 @$(".#{app.get 'name'}").css 'color', "Orange"
@@ -90,7 +90,21 @@ module.exports = class ConfigApplicationsView extends BaseView
         if not(@devices.length is 0)
             @$el.find('.title-device').after @deviceList.$el
         else
-            @$el.find('.title-device').after "<div class='no-device'><p>#{t 'status no device'}</p><p>#{t 'mobile app promo'}</p><a role='button' href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'><i class='fa fa-android'></i><span>#{t 'download apk'}<span></a><a target='_blank' href='https://play.google.com/store/apps/details?id=io.cozy.files_client'><img src='https://developer.android.com/images/brand/en_app_rgb_wo_45.png'></a></div>"
+            @$el.find('.title-device').after """
+<div class='no-device'>
+  <p>#{t 'status no device'}</p>
+  <p>#{t 'mobile app promo'}</p>
+  <a role='button'
+     href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'>
+    <i class='fa fa-android'></i>
+    <span>#{t 'download apk'}<span>
+  </a>
+  <a target='_blank'
+     href='https://play.google.com/store/apps/details?id=io.cozy.files_client'>
+    <img src='https://developer.android.com/images/brand/en_app_rgb_wo_45.png'>
+  </a>
+</div>"
+            """
 
 
     fetch: =>
