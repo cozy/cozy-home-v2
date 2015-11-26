@@ -38,12 +38,8 @@ icons = require('../lib/icon');
 startedApplications = {};
 
 removeAppUpdateNotification = function(app) {
-  var message, messageKey, notificationSlug, notifier;
+  var notificationSlug, notifier;
   notifier = new NotificationsHelper('home');
-  messageKey = 'update available notification';
-  message = localizationManager.t(messageKey, {
-    appName: app.displayName
-  });
   notificationSlug = "home_update_notification_app_" + app.name;
   return notifier.destroy(notificationSlug, function(err) {
     if (err != null) {
