@@ -1312,6 +1312,7 @@ module.exports = {
   "english": "English",
   "german": "German",
   "spanish": "Spanish",
+  "korean": "Korean",
   "portuguese": "Portuguese",
   "change password procedure": "Steps to change your password",
   "current password": "current password",
@@ -1398,7 +1399,7 @@ module.exports = {
   "help": "Help",
   "change layout": "Change the layout",
   "market app install": "Installing...",
-  "install your app": "Install apps from its Git Repository",
+  "install your app": "Install an app from its Git Repository",
   "market install your app": "Just copy/paste its Git URL in the field below:",
   "market install your app tutorial": "To know more about how to build you own app, feel free to read our ",
   "market app tutorial": " tutorial",
@@ -5343,6 +5344,9 @@ var __val__ = t('german')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="es">');
 var __val__ = t('spanish')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option><option value="ko">');
+var __val__ = t('korean')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select></div></div><h4>');
 var __val__ = t('account password')
