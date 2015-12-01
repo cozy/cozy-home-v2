@@ -49,7 +49,8 @@ module.exports = class ApplicationsListView extends ViewCollection
     appendView: (view) ->
         sectionName = view.model.getSection()
         section = @$ "section#apps-#{sectionName}"
-        section.append view.$el
+        section_apps= @$ "section#apps-#{sectionName} .application-container"
+        section_apps.append view.$el
         section.addClass 'show'
         section.show()
 
