@@ -26,6 +26,8 @@ module.exports = Application = cozydb.getModel('Application', {
   icon: String,
   iconPath: String,
   iconType: String,
+  path: String,
+  type: String,
   color: {
     type: String,
     "default": null
@@ -154,6 +156,7 @@ Application.prototype.getHaibuDescriptor = function() {
   descriptor = {
     user: this.slug,
     name: this.slug,
+    type: this.type,
     domain: "127.0.0.1",
     repository: {
       type: "git",

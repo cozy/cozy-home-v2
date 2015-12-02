@@ -137,7 +137,7 @@ module.exports =
             if err
                 next err
             else if apps is null or apps.length is 0
-                res.send 404, error: localizationManager.t 'Application not found'
+                res.send 404, error: localizationManager.t 'app not found'
             else
                 req.application = apps[0]
                 next()
@@ -176,13 +176,13 @@ module.exports =
         Application.find req.params.id, (err, app) ->
             if err then sendError res, err
             else if app is null
-                sendError res, new Error(localizationManager.t 'Application not found'), 404
+                sendError res,
+                    new Error(localizationManager.t 'app not found'), 404
             else
                 res.send app
 
 
     icon: (req, res, next) ->
-
         if req.application?._attachments?['icon.svg']
             stream = req.application.getFile('icon.svg', (->))
             stream.pipefilter = (res, dest) ->
@@ -236,7 +236,7 @@ module.exports =
 
             if apps.length > 0 or req.body.slug is "proxy" or
                     req.body.slug is "home" or req.body.slug is "data-system"
-                err = new Error localizationManager.t "already similarly named app"
+                err = new Error localizationManager.t "similarly named app"
                 return sendError res, err, 400
 
             manifest = new Manifest()
@@ -245,11 +245,14 @@ module.exports =
                 # Retrieve access
                 access.permissions = manifest.getPermissions()
                 access.slug = req.body.slug
+
                 # Retrieve application
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
                 req.body.color = manifest.getColor()
                 req.body.state = 'installing'
+                # get type to see if it's a static app
+                req.body.type = manifest.getType()
 
                 # Create application in database
                 Application.create req.body, (err, appli) ->
@@ -269,6 +272,7 @@ module.exports =
                         # Save icon first.
                         appli.iconPath = manifest.getIconPath()
                         appli.color = manifest.getColor()
+
                         try
                             iconInfos = icons.getIconInfos appli
                         catch err
@@ -290,27 +294,36 @@ module.exports =
                                     markBroken res, appli, err
                                     sendErrorSocket err
                                     return
-
-                                if result.drone?
-                                    msg = "install succeeded on " + \
-                                          "port #{appli.port}"
-                                    console.info msg
-                                    updatedData =
-                                        state: "installed"
-                                        port: result.drone.port
-
+                                if result.drone
+                                    if result.drone.type is 'static'
+                                        # save the path for static app
+                                        updatedData =
+                                            state: "installed"
+                                            type: result.drone.type
+                                            path: result.drone.path
+                                        msg = 'install succeeded on type ' +
+                                            appli.type
+                                    else
+                                        updatedData =
+                                            state: "installed"
+                                            port: result.drone.port
+                                        msg = 'install succeeded on port ' +
+                                            appli.port
                                     appli.updateAttributes updatedData, (err) ->
                                         return sendErrorSocket err if err?
 
-                                        console.info 'saved port in db', \
+                                        if appli.port
+                                            console.info 'saved port in db', \
                                             appli.port
-
+                                        else console.info 'saved type in db', \
+                                            appli.type
+                                        
                                         # Reset proxy
                                         manager.resetProxy (err) ->
                                             return sendErrorSocket err if err?
-                                            console.info(
-                                                'proxy reset', appli.port)
-
+                                            console.info 'proxy reset', \
+                                            if appli.port?
+                                            then appli.port else appli.type
                                 else
                                     err = new Error(
                                         "Controller has no " + \
@@ -337,7 +350,7 @@ module.exports =
                         return sendError res, err if err
                     res.send
                         success: true
-                        msg: localizationManager.t 'application successfuly uninstalled'
+                        msg: localizationManager.t 'successfuly uninstalled'
 
 
         manager.uninstallApp req.application, (err, result) ->
@@ -358,7 +371,7 @@ module.exports =
             return markBroken res, req.application, err if err?
             res.send
                 success: true
-                msg: localizationManager.t 'application successfuly updated'
+                msg: localizationManager.t 'successfuly updated'
 
 
     # Update all applications :
@@ -415,7 +428,7 @@ module.exports =
                 else
                     res.send
                         success: true
-                        msg: localizationManager.t 'application successfuly updated'
+                        msg: localizationManager.t 'successfuly updated'
 
 
 
@@ -444,7 +457,8 @@ module.exports =
             req.application.updateAccess data, (err) ->
                 # Start application
                 manager.start req.application, (err, result) ->
-                    if err and err isnt localizationManager.t "not enough memory"
+                    if err and
+                    err isnt localizationManager.t "not enough memory"
                         delete startedApplications[req.application.id]
                         return markBroken res, req.application, err
                     else if err
@@ -482,7 +496,7 @@ module.exports =
                                 else
                                     res.send
                                         success: true
-                                        msg: localizationManager.t 'application running'
+                                        msg: localizationManager.t 'running'
                                         app: req.application
 
         else
@@ -549,7 +563,6 @@ module.exports =
                         slug: app.slug
                     iconInfos = icons.getIconInfos infos
                 catch err
-                    console.log err
                     iconInfos = null
                 data.iconType = iconInfos?.extension or null
 

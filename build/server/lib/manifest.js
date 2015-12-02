@@ -11,6 +11,7 @@ logger = require('printit')({
 exports.Manifest = (function() {
   function Manifest() {
     this.getMetaData = bind(this.getMetaData, this);
+    this.getType = bind(this.getType, this);
     this.getIconPath = bind(this.getIconPath, this);
     this.getDescription = bind(this.getDescription, this);
     this.getVersion = bind(this.getVersion, this);
@@ -113,6 +114,11 @@ exports.Manifest = (function() {
     }
   };
 
+  Manifest.prototype.getType = function() {
+    var ref;
+    return ((ref = this.config) != null ? ref['cozy-type'] : void 0) || {};
+  };
+
   Manifest.prototype.getMetaData = function() {
     var metaData;
     metaData = {};
@@ -121,6 +127,9 @@ exports.Manifest = (function() {
     }
     if (this.config.name != null) {
       metaData.name = this.config.name.replace('cozy-', '');
+    }
+    if (this.config['cozy-type'] != null) {
+      metaData.type = this.config['cozy-type'];
     }
     if (this.config['cozy-displayName'] != null) {
       metaData.displayName = this.config['cozy-displayName'];

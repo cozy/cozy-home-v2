@@ -13,6 +13,11 @@ TESTAPP =
     description: "description",
     git: "https://github.com/mycozycloud/my-app.git"
 
+TESTAPPSTATIC =
+    name: "front"
+    git: "https://github.com/lemelon/cozy-front.git"
+    type: 'static'
+
 TESTAPPBRANCH =
     name: "My App 2",
     description: "description",
@@ -331,6 +336,52 @@ describe "Applications management", ->
                 expect(@body).to.have.property('rows').with.length 2
                 expect(@body.rows[0].branch).to.not.equal "My App"
 
+    describe "Static application install", ->
+
+        before resetTestServers
+
+        describe "POST Install a new static application without permissions", ->
+<<<<<<< HEAD
+=======
+
+>>>>>>> bb9b791... add tests for static app with permissions
+            it "Request to install a static application", (done) ->
+                this.timeout 10000
+                @client.post "api/applications/install", TESTAPPSTATIC,  done
+
+            it "Then it sends me back my static app with an id and a state", ->
+                @response.statusCode.should.equal 201
+                expect(@body.success).to.be.ok
+                expect(@body).to.have.property 'app'
+                expect(@body.app.state).to.equal 'installing'
+                expect(@body.app.slug).to.equal 'front'
+
+            it "When I send a request to retrieve all applications", (done) ->
+                @client.get "api/applications", done
+
+            it "Then I get my new application in the list", ->
+                expect(@body).to.have.property('rows').with.length 3
+                expect(@body.rows[0].name).to.equal "front"
+
+            it 'Then static application has an access', (done) ->
+                Application.all key:"front", (err, apps) =>
+                    ds = new Client "http://localhost:9101/"
+                    ds.setBasicAuth 'home', 'token'
+                    ds.post 'request/access/byApp/', key: apps[0].id, \
+                     (err, res, body) =>
+                        @password = body[0].value.token
+                        done()
+
+            it "Then application can't access to other docType", (done) ->
+                ds = new Client "http://localhost:9101/"
+                ds.setBasicAuth 'my-app', @password
+                data =
+                    docType: 'test'
+                    slug: "blabla"
+                ds.post 'data/', data, (err, res, body) ->
+                    should.exist body.error
+                    body.error.should.equal 'Application is not authenticated'
+                    done()
 
     describe "Users", ->
 

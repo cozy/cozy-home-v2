@@ -16,6 +16,8 @@ module.exports = Application = cozydb.getModel 'Application',
     icon: String
     iconPath: String
     iconType: String
+    path: String
+    type: String
     color: {type: String, default: null}
     git: String
     errormsg: String
@@ -102,8 +104,6 @@ Application::checkForUpdate = (callback) ->
             if err
                 callback err
             else
-
-
                 # Maybe set the needsUpdate flag
                 repoVersion = manifest.getVersion()
                 if not repoVersion?
@@ -128,6 +128,7 @@ Application::getHaibuDescriptor = () ->
     descriptor =
         user: @slug
         name: @slug
+        type: @type
         domain: "127.0.0.1"
         repository:
             type: "git",
