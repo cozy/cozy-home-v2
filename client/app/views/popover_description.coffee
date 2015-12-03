@@ -52,8 +52,13 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.html ""
 
-        description = t @model.get "description"
-        @header.parent().append "<p class=\"line\"> #{description} </p>"
+        description = @model.get 'description'
+        localeKey = "#{@model.get 'name'} description"
+        localeDesc = t localeKey
+        if localeDesc is localeKey
+            # description is not translated
+            localeDesc = t description
+        @header.parent().append "<p class=\"line\"> #{localeDesc} </p>"
 
         permissions = @model.get("permissions")
         if not permissions? or Object.keys(permissions).length is 0
