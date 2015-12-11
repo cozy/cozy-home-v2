@@ -173,7 +173,7 @@ reseting routes"
                 err ?= body.error unless status2XX res
                 errMsg = 'application not installed'
                 # err may be a string or an error object
-                if err? and typeof err is string and
+                if err? and typeof err is 'string' and
                    err.indexOf? and err.indexOf(errMsg) is -1
                     err = new Error err
                     console.log "Error cleaning app: #{app.name}"
