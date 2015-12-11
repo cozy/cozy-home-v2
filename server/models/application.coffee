@@ -68,7 +68,10 @@ Application::updateAccess = (access, callback) ->
 Application::getAccess = (callback) ->
     dataClient.setBasicAuth 'home', getToken()
     dataClient.post "request/access/byApp/", key: @id, (err, res, body) ->
-        callback err, body[0].value
+        if err
+            callback err
+        else
+            callback null, body[0].value
 
 
 Application.all = (params, callback) ->
