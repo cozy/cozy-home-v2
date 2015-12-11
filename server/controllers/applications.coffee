@@ -5,7 +5,7 @@ slugify             = require 'cozy-slug'
 async               = require 'async'
 cozydb              = require 'cozydb'
 log                 = require('printit')
-prefix: "applications"
+    prefix: "applications"
 
 Application         = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
