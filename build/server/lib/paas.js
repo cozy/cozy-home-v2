@@ -229,7 +229,7 @@ AppManager = (function() {
           }
         }
         errMsg = 'application not installed';
-        if ((err != null) && (err.indexOf != null) && err.indexOf(errMsg) === -1) {
+        if ((err != null) && typeof err === 'string' && (err.indexOf != null) && err.indexOf(errMsg) === -1) {
           err = new Error(err);
           console.log("Error cleaning app: " + app.name);
           console.log(err.message);

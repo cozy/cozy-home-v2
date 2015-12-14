@@ -92,7 +92,11 @@ Application.prototype.getAccess = function(callback) {
   return dataClient.post("request/access/byApp/", {
     key: this.id
   }, function(err, res, body) {
-    return callback(err, body[0].value);
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(null, body[0].value);
+    }
   });
 };
 

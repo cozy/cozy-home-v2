@@ -29,9 +29,5 @@
     "not found": ": Non Trouvé",
     "not allowed": "Non autorisé",
     "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
-    "update available notification": "Une nouvelle version de %{appName} est disponible.",
-    "reminder title email": "[Cozy-Calendar] Rappel",
-    "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
-    "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDétails: %{details}",
-    "reminder message": "Rappel : %{message}"
+    "update available notification": "Une nouvelle version de %{appName} est disponible."
 }

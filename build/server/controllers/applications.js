@@ -13,9 +13,7 @@ async = require('async');
 
 cozydb = require('cozydb');
 
-log = require('printit');
-
-({
+log = require('printit')({
   prefix: "applications"
 });
 
