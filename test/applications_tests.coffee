@@ -341,10 +341,6 @@ describe "Applications management", ->
         before resetTestServers
 
         describe "POST Install a new static application without permissions", ->
-<<<<<<< HEAD
-=======
-
->>>>>>> bb9b791... add tests for static app with permissions
             it "Request to install a static application", (done) ->
                 this.timeout 10000
                 @client.post "api/applications/install", TESTAPPSTATIC,  done
