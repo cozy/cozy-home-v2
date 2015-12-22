@@ -1,4 +1,6 @@
 ObjectPickerCroper = require '../views/object_picker'
+Token = require "../models/token"
+
 
 module.exports = class MainRouter extends Backbone.Router
 
@@ -23,11 +25,16 @@ module.exports = class MainRouter extends Backbone.Router
         # messages. Messages between app and home are possible only when the
         # app is displayed with the home top bar.
         window.addEventListener 'message', (event) =>
-
             return false unless event.origin is window.location.origin
-
             intent = event.data
             switch intent.action
+                when 'getToken'
+                    token = new Token intent.id
+                    token.getToken
+                        success: (data) ->
+                            app.mainView.displayToken data, intent.name
+                        error: ->
+                            alert 'Server error occured, get token failed.'
                 when 'goto'
                     @navigate "apps/#{intent.params}", true
                 when undefined
@@ -73,4 +80,3 @@ module.exports = class MainRouter extends Backbone.Router
 
     logout: ->
         app.mainView.logout()
-

@@ -18,6 +18,7 @@ module.exports = Application = cozydb.getModel 'Application',
     iconType: String
     path: String
     type: String
+    permission: Boolean
     color: {type: String, default: null}
     git: String
     errormsg: String
@@ -52,6 +53,8 @@ getToken = ->
 Application.createAccess = (access, callback) ->
     dataClient.setBasicAuth 'home', getToken()
     access.type = "application"
+    console.log 'access'
+    console.log access
     dataClient.post 'access/', access, (err, res, body) ->
         callback err, new Application(body)
 
@@ -75,6 +78,13 @@ Application::getAccess = (callback) ->
         else
             callback null, body[0].value
 
+# get token for static app
+Application.getToken = (id, callback) ->
+    dataClient.post "request/access/byApp/", key: id, (err, res, body) ->
+        if err
+            callback err
+        else
+            callback null, body[0].value
 
 Application.all = (params, callback) ->
     Application.request "bySlug", params, callback
