@@ -53,8 +53,6 @@ getToken = ->
 Application.createAccess = (access, callback) ->
     dataClient.setBasicAuth 'home', getToken()
     access.type = "application"
-    console.log 'access'
-    console.log access
     dataClient.post 'access/', access, (err, res, body) ->
         callback err, new Application(body)
 
