@@ -386,27 +386,30 @@ module.exports =
             manifest = new Manifest()
             manifest.download app, (err) ->
                 if err?
-                    sendError res, message: error
+                    sendError res, message: err
                 else
                     app.getAccess (err, access) ->
-                        if JSON.stringify(access.permissions) isnt
-                                JSON.stringify(manifest.getPermissions())
-                            return callback()
-                        if app.needsUpdate? and app.needsUpdate or
-                                app.version isnt manifest.getVersion()
-                            if app.state in ["installed", "stopped"]
-                                # Update application
-                                console.log("Update #{app.name} (#{app.state})")
-                                updateApp app, (err) ->
-                                    if err?
-                                        error[app.name] = err
-                                        broken app, err, callback
-                                    else
-                                        callback()
+                        if err?
+                            sendError res, message: err
+                        else
+                            if JSON.stringify(access.permissions) isnt
+                                    JSON.stringify(manifest.getPermissions())
+                                return callback()
+                            if app.needsUpdate? and app.needsUpdate or
+                                    app.version isnt manifest.getVersion()
+                                if app.state in ["installed", "stopped"]
+                                    # Update application
+                                    console.log("Update #{app.name} (#{app.state})")
+                                    updateApp app, (err) ->
+                                        if err?
+                                            error[app.name] = err
+                                            broken app, err, callback
+                                        else
+                                            callback()
+                                else
+                                    callback()
                             else
                                 callback()
-                        else
-                            callback()
 
         Application.all (err, apps) ->
             async.forEachSeries apps, updateApps, () ->
