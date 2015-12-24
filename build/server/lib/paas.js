@@ -304,26 +304,31 @@ AppManager = (function() {
     var manifest;
     manifest = app.getHaibuDescriptor();
     console.info("Request controller for stopping " + app.name + "...");
-    return this.client.stop(app.slug, function(err, res, body) {
-      if (!status2XX(res)) {
-        if (err == null) {
-          err = body.error;
+    if (app.type === 'static') {
+      console.info("Successfully stopping app: " + app.name);
+      return callback(null);
+    } else {
+      return this.client.stop(app.slug, function(err, res, body) {
+        if (!status2XX(res)) {
+          if (err == null) {
+            err = body.error;
+          }
         }
-      }
-      if (err && err.indexOf('application not started') === -1) {
-        err = new Error(err);
-        console.log("Error stopping app: " + app.name);
-        console.log(err.message);
-        console.log(err.stack);
-        return callback(err);
-      } else {
-        if (err) {
-          console.log("[Warning] " + err);
+        if (err && err.indexOf('application not started') === -1) {
+          err = new Error(err);
+          console.log("Error stopping app: " + app.name);
+          console.log(err.message);
+          console.log(err.stack);
+          return callback(err);
+        } else {
+          if (err) {
+            console.log("[Warning] " + err);
+          }
+          console.info("Successfully stopping app: " + app.name);
+          return callback(null);
         }
-        console.info("Successfully stopping app: " + app.name);
-        return callback(null);
-      }
-    });
+      });
+    }
   };
 
   AppManager.prototype.updateStack = function(callback) {

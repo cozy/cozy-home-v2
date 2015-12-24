@@ -184,7 +184,7 @@ module.exports = {
         return next(err);
       } else if (apps === null || apps.length === 0) {
         return res.send(404, {
-          error: localizationManager.t('Application not found')
+          error: localizationManager.t('app not found')
         });
       } else {
         req.application = apps[0];
@@ -257,7 +257,7 @@ module.exports = {
       if (err) {
         return sendError(res, err);
       } else if (app === null) {
-        return sendError(res, new Error(localizationManager.t('Application not found')), 404);
+        return sendError(res, new Error(localizationManager.t('app not found')), 404);
       } else {
         return res.send(app);
       }
@@ -326,7 +326,7 @@ module.exports = {
         return sendError(res, err);
       }
       if (apps.length > 0 || req.body.slug === "proxy" || req.body.slug === "home" || req.body.slug === "data-system") {
-        err = new Error(localizationManager.t("already similarly named app"));
+        err = new Error(localizationManager.t("similarly named app"));
         return sendError(res, err, 400);
       }
       manifest = new Manifest();
@@ -340,6 +340,7 @@ module.exports = {
         req.body.version = manifest.getVersion();
         req.body.color = manifest.getColor();
         req.body.state = 'installing';
+        req.body.type = manifest.getType();
         return Application.create(req.body, function(err, appli) {
           if (err) {
             return sendError(res, err);
@@ -382,23 +383,35 @@ module.exports = {
                   sendErrorSocket(err);
                   return;
                 }
-                if (result.drone != null) {
-                  msg = "install succeeded on " + ("port " + appli.port);
-                  console.info(msg);
-                  updatedData = {
-                    state: "installed",
-                    port: result.drone.port
-                  };
+                if (result.drone) {
+                  if (result.drone.type === 'static') {
+                    updatedData = {
+                      state: "installed",
+                      type: result.drone.type,
+                      path: result.drone.path
+                    };
+                    msg = 'install succeeded on type ' + appli.type;
+                  } else {
+                    updatedData = {
+                      state: "installed",
+                      port: result.drone.port
+                    };
+                    msg = 'install succeeded on port ' + appli.port;
+                  }
                   return appli.updateAttributes(updatedData, function(err) {
                     if (err != null) {
                       return sendErrorSocket(err);
                     }
-                    console.info('saved port in db', appli.port);
+                    if (appli.port) {
+                      console.info('saved port in db', appli.port);
+                    } else {
+                      console.info('saved type in db', appli.type);
+                    }
                     return manager.resetProxy(function(err) {
                       if (err != null) {
                         return sendErrorSocket(err);
                       }
-                      return console.info('proxy reset', appli.port);
+                      return console.info('proxy reset', appli.port != null ? appli.port : appli.type);
                     });
                   });
                 } else {
@@ -433,7 +446,7 @@ module.exports = {
           });
           return res.send({
             success: true,
-            msg: localizationManager.t('application successfuly uninstalled')
+            msg: localizationManager.t('successfuly uninstalled')
           });
         });
       });
@@ -455,7 +468,7 @@ module.exports = {
       }
       return res.send({
         success: true,
-        msg: localizationManager.t('application successfuly updated')
+        msg: localizationManager.t('successfuly updated')
       });
     });
   },
@@ -526,7 +539,7 @@ module.exports = {
         } else {
           return res.send({
             success: true,
-            msg: localizationManager.t('application successfuly updated')
+            msg: localizationManager.t('successfuly updated')
           });
         }
       });
@@ -589,7 +602,7 @@ module.exports = {
                 } else {
                   return res.send({
                     success: true,
-                    msg: localizationManager.t('application running'),
+                    msg: localizationManager.t('running'),
                     app: req.application
                   });
                 }
@@ -673,7 +686,6 @@ module.exports = {
             iconInfos = icons.getIconInfos(infos);
           } catch (error1) {
             err = error1;
-            console.log(err);
             iconInfos = null;
           }
           data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
