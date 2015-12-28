@@ -296,14 +296,11 @@ module.exports =
                                     return
                                 if result.drone
                                     if result.drone.type is 'static'
-                                        perm = access.permissions
-                                        p = Object.keys(perm).length > 0
                                         # save the path for static app
                                         updatedData =
                                             state: "installed"
                                             type: result.drone.type
                                             path: result.drone.path
-                                            permission: p
                                         msg = 'install succeeded on type ' +
                                             appli.type
                                     else

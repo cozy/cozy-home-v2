@@ -18,7 +18,6 @@ module.exports = Application = cozydb.getModel 'Application',
     iconType: String
     path: String
     type: String
-    permission: Boolean
     color: {type: String, default: null}
     git: String
     errormsg: String

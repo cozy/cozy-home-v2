@@ -234,44 +234,7 @@ module.exports = class HomeView extends BaseView
             app = @apps.get slug
             name = app.get('displayName') or app.get('name') or ''
             name = name.replace /^./, name[0].toUpperCase() if name.length > 0
-            iframeWin = document.getElementById("#{slug}-frame").contentWindow
-            iframeWin.addEventListener "message", (event) ->
-                intent = event.data
-                # if intent.token
-                #     location = window.location
-                #     id = app.get 'id'
-                #     url = "#{location.protocol}//#{location.host}/ds-api/request/contact/all/"
-                #     xhr = new XMLHttpRequest()
-                #     xhr.open 'POST', url, true
-                #     xhr.onload = ->
-                #         console.log 'onload'
-                #         console.log xhr.response
-                #     xhr.onerror = (e) ->
-                #         err = "Request failed : #{e.target.status}" 
-                #         console.error err
-                #     xhr.setRequestHeader 'Content-Type', 'application/json'
-                #     token = btoa "#{slug}:#{intent.token}"
-                #     authorization = "Basic#{token}" 
-                #     xhr.setRequestHeader "Authorization", authorization
-                #     xhr.send()
-                # else
-                #     console.log "Weird intent, cannot handle it", intent
-                #     # Log error server side
-                #     window.onerror "Error handling intent: " + intent, \
-                #         "MainRouter.initialize", null, null, \
-                #         new Error()
-            , false
-            type = app.get 'type'
-            permission = app.get 'permission'
-            if type is 'static' and permission is true
-                window.parent.postMessage
-                    action: 'getToken'
-                    id: app.get 'id'
-                    name: slug
-                    '*'
-
             window.document.title = "Cozy - #{name}"
-
             $("#current-application").html name
 
             @$("#app-btn-#{slug} .spinner").hide()
