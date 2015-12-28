@@ -7,4 +7,4 @@ module.exports = class Token
         @id = id
    
     getToken: (callbacks) ->
-        client.get "api/getToken/:id", callbacks
+        client.get "api/getToken/#{@id}", callbacks
