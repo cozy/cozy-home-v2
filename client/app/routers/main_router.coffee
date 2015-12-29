@@ -1,7 +1,6 @@
 ObjectPickerCroper = require '../views/object_picker'
 Token = require "../models/token"
 
-
 module.exports = class MainRouter extends Backbone.Router
 
     routes :
@@ -29,7 +28,7 @@ module.exports = class MainRouter extends Backbone.Router
             intent = event.data
             switch intent.action
                 when 'getToken'
-                    token = new Token intent.id
+                    token = new Token intent.name
                     token.getToken
                         success: (data) ->
                             app.mainView.displayToken data, intent.name
