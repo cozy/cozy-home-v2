@@ -28,10 +28,12 @@ module.exports = class MainRouter extends Backbone.Router
             intent = event.data
             switch intent.action
                 when 'getToken'
-                    token = new Token intent.name
+                    iframeName = document.activeElement.id
+                    appName = iframeName.substring 0, iframeName.indexOf '-'
+                    token = new Token appName
                     token.getToken
                         success: (data) ->
-                            app.mainView.displayToken data, intent.name
+                            app.mainView.displayToken data, iframeName
                         error: ->
                             alert 'Server error occured, get token failed.'
                 when 'goto'
