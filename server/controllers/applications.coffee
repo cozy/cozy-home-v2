@@ -51,7 +51,6 @@ sendErrorSocket = (err) ->
 markBroken = (res, app, err) ->
     console.log "Marking app #{app.name} as broken because"
     console.log err.stack
-
     data =
         state: 'broken'
         password: null
@@ -598,15 +597,17 @@ module.exports =
             else
                 res.send 200, data
 
-
+    # get token for static application access
     getToken: (req, res, next) ->
-        Application.getToken req.params.id, (err, access) ->
-            if err?
-                res.send
-                    error: true
-                    success: false
-                    message: err
-                , 500
-            else
-                res.send 200, access.token
-    
+        Application.all key: req.params.name, (err, apps) ->
+            return sendError res, err if err
+            Application.getToken apps[0]._id, (err, access) ->
+                if err?
+                    res.send
+                        error: true
+                        success: false
+                        message: err
+                    , 500
+                else
+                    res.send 200, access.token
+
