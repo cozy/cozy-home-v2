@@ -77,6 +77,7 @@ Application::getAccess = (callback) ->
 
 # get token for static app
 Application.getToken = (id, callback) ->
+    dataClient.setBasicAuth 'home', getToken()
     dataClient.post "request/access/byApp/", key: id, (err, res, body) ->
         if err
             callback err
