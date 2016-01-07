@@ -61,6 +61,6 @@
     "build:client": "cd client && brunch b",
     "build:server": "cake build",
     "build": "npm run build:clean && npm run build:client && npm run build:server",
-	"postinstall": "node postinstall.js"
+    "postinstall": "node postinstall.js"
   }
 }
