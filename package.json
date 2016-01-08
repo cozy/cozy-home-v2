@@ -15,7 +15,6 @@
     "americano": "0.3.11",
     "americano-cozy": "0.2.11",
     "async": "0.2.10",
-    "bcrypt": "0.8.1",
     "cozy-clearance": "0.1.22",
     "cozy-clients": "1.0.4",
     "cozy-notifications-helper": "1.0.2",
@@ -61,6 +60,7 @@
     "build:clean": "rm -rf build",
     "build:client": "cd client && brunch b",
     "build:server": "cake build",
-    "build": "npm run build:clean && npm run build:client && npm run build:server"
+    "build": "npm run build:clean && npm run build:client && npm run build:server",
+    "postinstall": "node postinstall.js"
   }
 }
