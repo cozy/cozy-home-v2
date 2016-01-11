@@ -501,30 +501,36 @@ module.exports = {
       return manifest.download(app, function(err) {
         if (err != null) {
           return sendError(res, {
-            message: error
+            message: err
           });
         } else {
           return app.getAccess(function(err, access) {
             var ref;
-            if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
-              return callback();
-            }
-            if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
-              if ((ref = app.state) === "installed" || ref === "stopped") {
-                console.log("Update " + app.name + " (" + app.state + ")");
-                return updateApp(app, function(err) {
-                  if (err != null) {
-                    error[app.name] = err;
-                    return broken(app, err, callback);
-                  } else {
-                    return callback();
-                  }
-                });
+            if (err != null) {
+              return sendError(res, {
+                message: err
+              });
+            } else {
+              if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
+                return callback();
+              }
+              if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
+                if ((ref = app.state) === "installed" || ref === "stopped") {
+                  console.log("Update " + app.name + " (" + app.state + ")");
+                  return updateApp(app, function(err) {
+                    if (err != null) {
+                      error[app.name] = err;
+                      return broken(app, err, callback);
+                    } else {
+                      return callback();
+                    }
+                  });
+                } else {
+                  return callback();
+                }
               } else {
                 return callback();
               }
-            } else {
-              return callback();
             }
           });
         }
@@ -730,6 +736,26 @@ module.exports = {
       } else {
         return res.send(200, data);
       }
+    });
+  },
+  getToken: function(req, res, next) {
+    return Application.all({
+      key: req.params.name
+    }, function(err, apps) {
+      if (err) {
+        return sendError(res, err);
+      }
+      return Application.getToken(apps[0]._id, function(err, access) {
+        if (err != null) {
+          return res.send({
+            error: true,
+            success: false,
+            message: err
+          }, 500);
+        } else {
+          return res.send(200, access.token);
+        }
+      });
     });
   }
 };

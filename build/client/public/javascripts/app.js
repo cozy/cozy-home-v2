@@ -6,19 +6,19 @@
 
   var modules = {};
   var cache = {};
-  var aliases = {};
   var has = ({}).hasOwnProperty;
+
+  var aliases = {};
 
   var endsWith = function(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   };
 
-  var _cmp = 'components/';
   var unalias = function(alias, loaderPath) {
     var start = 0;
     if (loaderPath) {
-      if (loaderPath.indexOf(_cmp) === 0) {
-        start = _cmp.length;
+      if (loaderPath.indexOf('components/' === 0)) {
+        start = 'components/'.length;
       }
       if (loaderPath.indexOf('/', start) > 0) {
         loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
@@ -26,32 +26,33 @@
     }
     var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
     if (result) {
-      return _cmp + result.substring(0, result.length - '.js'.length);
+      return 'components/' + result.substring(0, result.length - '.js'.length);
     }
     return alias;
   };
 
-  var _reg = /^\.\.?(\/|$)/;
-  var expand = function(root, name) {
-    var results = [], part;
-    var parts = (_reg.test(name) ? root + '/' + name : name).split('/');
-    for (var i = 0, length = parts.length; i < length; i++) {
-      part = parts[i];
-      if (part === '..') {
-        results.pop();
-      } else if (part !== '.' && part !== '') {
-        results.push(part);
+  var expand = (function() {
+    var reg = /^\.\.?(\/|$)/;
+    return function(root, name) {
+      var results = [], parts, part;
+      parts = (reg.test(name) ? root + '/' + name : name).split('/');
+      for (var i = 0, length = parts.length; i < length; i++) {
+        part = parts[i];
+        if (part === '..') {
+          results.pop();
+        } else if (part !== '.' && part !== '') {
+          results.push(part);
+        }
       }
-    }
-    return results.join('/');
-  };
-
+      return results.join('/');
+    };
+  })();
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
-    return function expanded(name) {
+    return function(name) {
       var absolute = expand(dirname(path), name);
       return globals.require(absolute, path);
     };
@@ -106,7 +107,6 @@
   };
 
   require.brunch = true;
-  require._cache = cache;
   globals.require = require;
 })();
 require.register("collections/application", function(exports, require, module) {
@@ -1807,7 +1807,7 @@ module.exports = {
     "confirm": "Confirmar",
     "installing": "Se está instalando",
     "remove": "Suprimir",
-    "update": "actualizar",
+    "update": "Actualizar",
     "config application unmark favorite": "desmarcar como favorita",
     "config application mark favorite": "marcar como favorita",
     "started": "lanzada",
@@ -1817,7 +1817,7 @@ module.exports = {
     "open in a new tab": "Abrir en una nueva pestaña",
     "always on": "Siempre se está ejecutando",
     "keep always on": "mantener siempre ejecutándose",
-    "stop this app": "Pare esta aplicación",
+    "stop this app": "Parar esta aplicación",
     "update required": "Actualización disponible",
     "navbar faq": "Preguntas más frecuentes",
     "application is installing": "Se está instalando una aplicación.\nEspere que esté instalada antes de lanzar una nueva.",
@@ -2238,7 +2238,7 @@ module.exports = {
     "market app install": "Installation…",
     "install your app": "Installer une application depuis son dépôt Git",
     "market install your app": "Copiez/collez juste son URL Git dans le champ ci-dessous :",
-    "market install your app tutorial": "Pour savoir comment faire votre propre application, suivez notre",
+    "market install your app tutorial": "Pour savoir comment faire votre propre application, suivez notre ",
     "market app tutorial": "didacticiel",
     "help send message title": "Écrire directement à l'équipe Cozy",
     "help send message explanation": "Ici vous pouvez nous envoyer des retours, rapporter des bogues et demander de l'assistance. Nous reviendrons vers vous aussi vite que possible.",
@@ -3541,89 +3541,89 @@ module.exports = {
     "help IRC title": "IRC",
     "help wiki title": "Wiki",
     "Visit the project website and learn to build your app:": "Visite o website do projeto:",
-    "your own application": "your own app",
-    "installed": "installed",
-    "updated": "updated",
-    "updating": "updating",
-    "update all": "Update all",
-    "show home logs": "Show Home Logs",
-    "show data system logs": "Show Data System Logs",
-    "show proxy logs": "Show Proxy Logs",
-    "show logs": "Show Logs",
-    "update stack": "Update",
-    "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
-    "update stack waiting message": "Wait please, updating takes several minutes.",
-    "status no device": "There is no device connected to your Cozy.",
-    "download apk": "Download .APK",
-    "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
-    "update stack modal title": "Updating your Cozy",
-    "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
-    "update stack modal confirm": "Update",
-    "update stack success": "Your applications are updated, page will refresh.",
-    "update stack error": "An error occured during update, page will refresh.",
-    "applications broken": "Applications broken",
-    "cozy platform": "Platform",
-    "navbar back button title": "Back Home",
-    "navbar notifications": "Notifications",
-    "or:": "or:",
-    "reboot stack": "Reboot",
-    "update error": "An error occured while updating the app",
-    "error update uninstRlled app": "You can't update an app that is not installed.",
-    "notification open application": "Open application",
-    "notification update stack": "Update the platform",
-    "notification update application": "Update now",
-    "broken": "broken",
-    "start this app": "Start this app",
-    "stopped": "stopped",
-    "retry to install": "Retry installation",
-    "cozy account title": "Cozy - Settings",
-    "cozy app store title": "Cozy - Store",
-    "cozy home title": "Cozy - Home",
-    "cozy applications title": "Cozy - Status",
-    "running": "running",
-    "cozy help title": "Cozy - Help",
-    "help support title": "Official Support",
-    "help community title": "Community Support",
-    "help documentation title": "Documentation",
-    "changing locale requires reload": "Changing the locale requires to reload the page.",
-    "cancel": "cancel",
-    "abort": "abort",
-    "Once updated, this application will require the following permissions:": "Once updated, this app will require the following permissions:",
-    "confirm update": "confirm update",
-    "confirm install": "confirm install",
-    "no specific permissions needed": "This app doesn't require any permission",
-    "removed": "removed",
-    "removing": "removing",
-    "required permissions": "Required permissions",
-    "finish layout edition": "Save",
-    "reset customization": "Reset",
-    "use icon": "Use icon",
-    "home section favorites": "Favorites",
-    "home section leave": "Import",
-    "home section main": "Daily",
-    "home section productivity": "Productivity",
-    "home section data management": "Data",
-    "home section personal watch": "Watch",
-    "home section misc": "Misc",
-    "home section platform": "Platform",
-    "app status": "Status",
-    "settings": "Settings",
-    "help": "Help",
-    "change layout": "Change the layout",
-    "market app install": "Installing...",
-    "install your app": "Install an app from its Git Repository",
-    "market install your app": "Just copy/paste its Git URL in the field below:",
-    "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
+    "your own application": "seu próprio aplicativo",
+    "installed": "instalado",
+    "updated": "atualizado",
+    "updating": "atualizando",
+    "update all": "Atualizar o Stack e os aplicativos",
+    "show home logs": "Mostrar registros do Home",
+    "show data system logs": "Mostrar registros do Data System",
+    "show proxy logs": "Mostrar registros do Proxy",
+    "show logs": "Mostrar Registros",
+    "update stack": "Atualizar a plataforma",
+    "reboot stack waiting message": "Espere por favor, vários minutos são necessários para reiniciar.",
+    "update stack waiting message": "Espere por favor, alguns minutos são necessários para atualizar.",
+    "status no device": "Nenhum dispositivo está conectado a seu Cozy.",
+    "download apk": "Baixar .APK",
+    "mobile app promo": "Faça uma cópia de segurança dos seus fotos e sincronize seus contatos e seus calendários com seu celular utilizando o aplicativo destinado:",
+    "update stack modal title": "Atualizando seu Cozy",
+    "update stack modal content": "Você está prestes a atualizar a plataforma. Seu Cozy não vai estar disponível durante alguns minutos. Está bom para você?",
+    "update stack modal confirm": "Atualizar",
+    "update stack success": "Seus aplicativos estão atualizados, a página vai atualizar.",
+    "update stack error": "Um erro ocorreu durante a atualização, a página vai atualizar.",
+    "applications broken": "Aplicativos quebrados",
+    "cozy platform": "Plataforma",
+    "navbar back button title": "Voltar no Início",
+    "navbar notifications": "Notificações",
+    "or:": "ou:",
+    "reboot stack": "Reiniciar",
+    "update error": "Um erro ocorreu durante a atualização do aplicativo",
+    "error update uninstRlled app": "Você não pode atualizar um aplicativo que não está instalado.",
+    "notification open application": "Abrir o aplicativo",
+    "notification update stack": "Atualizar a plataforma",
+    "notification update application": "Atualizar agora",
+    "broken": "quebrado",
+    "start this app": "Iniciar este aplicativo",
+    "stopped": "parado",
+    "retry to install": "Tentar a instalação de novo",
+    "cozy account title": "Cozy - Configurações",
+    "cozy app store title": "Cozy - Loja",
+    "cozy home title": "Cozy - Início",
+    "cozy applications title": "Cozy - Estado",
+    "running": "em execução",
+    "cozy help title": "Cozy - Ajuda",
+    "help support title": "Suporte Oficial",
+    "help community title": "Suporte da Comunidade",
+    "help documentation title": "Documentação",
+    "changing locale requires reload": "É necessário recarregar a página para mudar de localização.",
+    "cancel": "cancelar",
+    "abort": "abortar",
+    "Once updated, this application will require the following permissions:": "Uma vez atualizado, este aplicativo vai precisar das permissões seguintes:",
+    "confirm update": "confirmar atualização",
+    "confirm install": "confirmar instalação",
+    "no specific permissions needed": "Esta aplicativo não precisa de nenhuma permissão",
+    "removed": "removido",
+    "removing": "removindo",
+    "required permissions": "Permissões necessárias",
+    "finish layout edition": "Salvar",
+    "reset customization": "Reiniciar",
+    "use icon": "Utilizar ícone",
+    "home section favorites": "Favoritos",
+    "home section leave": "Importar",
+    "home section main": "Diário",
+    "home section productivity": "Produtividade",
+    "home section data management": "Dados",
+    "home section personal watch": "Observar",
+    "home section misc": "Diverso",
+    "home section platform": "Plataforma",
+    "app status": "Estado",
+    "settings": "Configurações",
+    "help": "Ajuda",
+    "change layout": "Mudar o layout",
+    "market app install": "Instalando...",
+    "install your app": "Instalar um aplicativo do repositório Github dele",
+    "market install your app": "Só copie/cole o URL do Git dele no campo abaixo:",
+    "market install your app tutorial": "Para saber mais sobre como construir seu próprio aplicativo, sinta-se livre para ler nosso",
     "market app tutorial": "tutorial",
-    "help send message title": "Write directly to the Cozy Team",
-    "help send message explanation": "Here you can send us feedback, report bugs and ask for assistance. We will get back to you as soon as possible.",
-    "help send message action": "Send us a message",
-    "help send logs": "Send server logs to ease debug",
-    "send message success": "Message successfully sent!",
-    "send message error": "An error occured while sending your support message. Try to send it via an email client to support@cozycloud.cc",
-    "account change password success": "The password was changed successfully.",
-    "account change password short": "The new password is too short.",
-    "account change password difference": "The password confirmation doesn't match the new password.",
+    "help send message title": "Escrever diretamente ao time Cozy",
+    "help send message explanation": "Aqui você pode nos dar suas opiniões, reportar erros e solicitar assistência. Nós responderemos o mais rápido possível.",
+    "help send message action": "Envie nos uma mensagem",
+    "help send logs": "Envie registros do servidor para facilitar a eliminação dos erros.",
+    "send message success": "Mensagem enviada com sucesso!",
+    "send message error": "Um erro ocorreu enviando sua mensagem para o suporte. Tente envia-lo utilizando um cliente e-mail a support@cozycloud.cc",
+    "account change password success": "A senha foi alterada com sucesso.",
+    "account change password short": "A nova senha está muito curta.",
+    "account change password difference": "A confirmação da senha não corresponde a nova senha.",
     "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct.",
     "account background add": "Add background",
     "introduction market": "Welcome to the Cozy store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
@@ -4990,6 +4990,25 @@ module.exports = StackApplication = (function(_super) {
 })(Backbone.Model);
 });
 
+;require.register("models/token", function(exports, require, module) {
+var Token, client;
+
+client = require('helpers/client');
+
+module.exports = Token = (function() {
+  function Token(name) {
+    this.name = name;
+  }
+
+  Token.prototype.getToken = function(callbacks) {
+    return client.get("api/getToken/" + this.name, callbacks);
+  };
+
+  return Token;
+
+})();
+});
+
 ;require.register("models/user", function(exports, require, module) {
 var BaseModel, User, client,
   __hasProp = {}.hasOwnProperty,
@@ -5018,11 +5037,13 @@ module.exports = User = (function(_super) {
 });
 
 ;require.register("routers/main_router", function(exports, require, module) {
-var MainRouter, ObjectPickerCroper, _ref,
+var MainRouter, ObjectPickerCroper, Token, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 ObjectPickerCroper = require('../views/object_picker');
+
+Token = require("../models/token");
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
@@ -5051,12 +5072,24 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.initialize = function() {
     var _this = this;
     return window.addEventListener('message', function(event) {
-      var e, intent, intentType;
+      var appName, e, iframeName, intent, intentType, token;
       if (event.origin !== window.location.origin) {
         return false;
       }
       intent = event.data;
       switch (intent.action) {
+        case 'getToken':
+          iframeName = document.activeElement.id;
+          appName = iframeName.substring(0, iframeName.indexOf('-'));
+          token = new Token(appName);
+          return token.getToken({
+            success: function(data) {
+              return app.mainView.displayToken(data, iframeName);
+            },
+            error: function() {
+              return alert('Server error occured, get token failed.');
+            }
+          });
         case 'goto':
           return _this.navigate("apps/" + intent.params, true);
         case void 0:
@@ -5525,7 +5558,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+buf.push('<div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="https://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('welcome to your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><p class="bigger">');
@@ -5639,7 +5672,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div><p class="more">');
 var __val__ = t('market install your app tutorial')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('<a href="http://cozy.io/hack/getting-started/" target="_blank">');
+buf.push('<a href="https://docs.cozy.io/en/hack/getting-started/" target="_blank">');
 var __val__ = t('market app tutorial')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>.</p></div></div></div><div class="md-overlay"></div>');
@@ -5953,13 +5986,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p></div><div id="end-screen" class="line pa2 question"><p class="help-text mt2">');
 var __val__ = t('tutorial final headline')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><ul><li><a href="http://cozy.io/mobile/files.html">');
+buf.push('</p><ul><li><a href="https://docs.cozy.io/en/mobile/files.html">');
 var __val__ = t('tutorial doc files link')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></li><li><a href="http://cozy.io/mobile/contacts.html">');
+buf.push('</a></li><li><a href="https://docs.cozy.io/en/mobile/contacts.html">');
 var __val__ = t('tutorial doc contacts link')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></li><li><a href="http://cozy.io/mobile/calendar.html">');
+buf.push('</a></li><li><a href="https://docs.cozy.io/en/mobile/calendar.html">');
 var __val__ = t('tutorial doc calendar link')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></li></ul><p class="center"><a href="#home" class="btn">');
@@ -9583,6 +9616,14 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.getAppFrame = function(slug) {
     return this.$("#" + slug + "-frame");
+  };
+
+  HomeView.prototype.displayToken = function(token, slug) {
+    var iframeWin;
+    iframeWin = document.getElementById("" + slug).contentWindow;
+    return iframeWin.postMessage({
+      token: token
+    }, '*');
   };
 
   return HomeView;

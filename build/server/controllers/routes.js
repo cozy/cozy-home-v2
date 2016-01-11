@@ -106,6 +106,9 @@ module.exports = {
   'api/applications/reboot/stack': {
     put: stackApplications.reboot
   },
+  'api/getToken/:name': {
+    get: applications.getToken
+  },
   'api/devices': {
     get: devices.devices
   },

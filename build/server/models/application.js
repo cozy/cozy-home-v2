@@ -102,6 +102,19 @@ Application.prototype.getAccess = function(callback) {
   });
 };
 
+Application.getToken = function(id, callback) {
+  dataClient.setBasicAuth('home', getToken());
+  return dataClient.post("request/access/byApp/", {
+    key: id
+  }, function(err, res, body) {
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(null, body[0].value);
+    }
+  });
+};
+
 Application.all = function(params, callback) {
   return Application.request("bySlug", params, callback);
 };
