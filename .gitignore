@@ -4,6 +4,7 @@ node_modules
 
 # the apps fetched from the registry
 market
+market.json
 
 # no need to track build twice
 client/public
