@@ -333,6 +333,6 @@ module.exports = class HomeView extends BaseView
 
     # Returns app iframe corresponding for given app slug.
     displayToken: (token, slug) ->
-        iframeWin = document.getElementById("#{slug}").contentWindow
-        iframeWin.postMessage token: token, '*'
+        iframeWin = document.getElementById("#{slug}-frame").contentWindow
+        iframeWin.postMessage token: token, appName:slug, '*'
         
