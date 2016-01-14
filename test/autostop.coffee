@@ -483,18 +483,19 @@ describe "Auto-stop manager", ->
         it "Then I wait for 4 minutes", =>
             @sandbox.clock.tick 4 * minute
 
-        it "Then it should still be running", ->
+        it "Then it should still be running", (done) ->
             Application.all key: 'test-app', (err, apps) ->
                 should.not.exist err
                 should.exist apps
                 apps[0].state.should.equal 'installed'
+                done()
 
-        it "Then I wait for one more minute", =>
+        it "Then I wait for two more minutes", =>
             @sandbox.clock.tick 2 * minute
             @sandbox.clock.restore()
 
         it "Then after a while", (done) ->
-            @timeout 4500
+            @timeout 5000
             setTimeout done, 4000
 
         it "Then the application should be stopped", (done) =>
