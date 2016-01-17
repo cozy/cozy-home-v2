@@ -6,7 +6,8 @@ exec = require('child_process').exec
 fs = require 'fs'
 del = require 'del'
 url = require 'url'
-apps = {}
+
+apps = []
 isDownloading = false
 
 # sort the applications list by official/community status, then by name
@@ -60,7 +61,7 @@ download = module.exports.download = (callback) ->
         else if oldMarket?
             apps = oldMarket.apps_list
         else
-            apps = {}
+            apps = []
         callback err, apps
 
 
@@ -79,8 +80,8 @@ getApps = module.exports.getApps = (cb) ->
         else
             download cb
 
-module.exports.getApp = (app) ->
-    if apps[app]?
-        return [null, apps[app]]
-    else
-        return ['not found', null]
+module.exports.getApp = (appli) ->
+    appsMap = {}
+    appsMap[app.slug] = app for app in apps
+    return appsMap[appli]
+

@@ -3,6 +3,8 @@ async = require 'async'
 HttpClient = require("request-json").JsonClient
 {ControllerClient} = require 'cozy-clients'
 {MemoryManager} = require './memory'
+log = require('printit')
+    prefix: 'Paas'
 
 
 # Class to facilitate communications with Haibu, the application server
@@ -67,7 +69,7 @@ class AppManager
     # Because route commands are public, we can't allow that someone add or
     # remove routes.
     resetProxy: (callback) ->
-        console.info "Request for proxy reseting..."
+        log.info "Request for proxy reseting..."
         @proxyClient.get "routes/reset", (err, res, body) ->
 
             unless status2XX res
@@ -80,7 +82,7 @@ reseting routes"
                 console.log err.stack
                 callback err
             else
-                console.info "Proxy successfully reseted."
+                log.info "Proxy successfully reseted."
                 callback null
 
 

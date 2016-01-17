@@ -16,7 +16,7 @@ Get right icon path depending on app configuration:
 * returns null otherwise
 ###
 icons.getPath = (root, appli) ->
-    [err, marketApp] = market.getApp(appli.slug)
+    marketApp = market.getApp appli.slug
     iconPath = null
 
     # try to retrieve icon path from manifest, if developer set it.
