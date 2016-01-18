@@ -46,7 +46,8 @@ class AppManager
 
     # Get token from token file if in production mode.
     getAuthController: ->
-        if process.env.NODE_ENV is 'production'
+        if process.env.NODE_ENV is 'production' or
+                process.env.NODE_ENV is 'test'
             try
                 token = process.env.TOKEN
                 return token
@@ -170,7 +171,7 @@ reseting routes"
                 errMsg = 'application not installed'
                 # err may be a string or an error object
                 if err? and typeof err is 'string' and
-                   err.indexOf? and err.indexOf(errMsg) is -1
+                        err.indexOf? and err.indexOf(errMsg) is -1
                     err = new Error err
                     console.log "Error cleaning app: #{app.name}"
                     console.log err.message
