@@ -78,6 +78,10 @@ class exports.Manifest
             return @config['cozy-color']
         else
             return null
+    
+    getType: =>
+        return @config?['cozy-type'] or {}
+
 
     getMetaData: =>
         metaData = {}
@@ -87,6 +91,10 @@ class exports.Manifest
 
         if @config.name?
             metaData.name = @config.name.replace 'cozy-', ''
+
+        # add the fact it's a static app in metadata
+        if @config['cozy-type']?
+            metaData.type = @config['cozy-type']
 
         if @config['cozy-displayName']?
             metaData.displayName = @config['cozy-displayName']

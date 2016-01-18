@@ -50,6 +50,8 @@ module.exports =
     'api/applications/update/stack'   : put: stackApplications.update
     'api/applications/reboot/stack'   : put: stackApplications.reboot
 
+    'api/getToken/:name'                :
+        get: applications.getToken
 
     # Devices routes
     'api/devices'    : get: devices.devices

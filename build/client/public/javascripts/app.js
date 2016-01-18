@@ -986,8 +986,6 @@ module.exports = {
     "questions and help forum": "Fragen und Hilfe Forum",
     "sign out": "Abmelden",
     "open in a new tab": "In neuem Tab öffnen",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "Immer eingeschaltet",
     "keep always on": "Immer eingeschaltet lassen",
     "stop this app": "Diese App stoppen",
@@ -1008,15 +1006,28 @@ module.exports = {
     "navbar logout": "Abmelden",
     "welcome to your cozy": "Willkommen zu Ihrem Cozy!",
     "you have no apps": "Sie haben kein Apps.",
-    "app management": "App Management",
-    "app store": "App Store",
+    "app management": "App management",
+    "app store": "Store",
     "configuration": "Konfiguration",
     "assistance": "Unterstützung",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Ihre Apps managen",
     "manage your devices": "Connected devices",
     "synchronized": "synchronisiert",
@@ -1042,6 +1053,7 @@ module.exports = {
     "english": "Englisch",
     "german": "Deutsch",
     "spanish": "Spanisch",
+    "korean": "Korean",
     "portuguese": "Portuguisisch",
     "change password procedure": "Schritte um Ihr Passwort zu ändern",
     "current password": "Aktuelles Passwort",
@@ -1092,8 +1104,8 @@ module.exports = {
     "start this app": "Diese App starten",
     "stopped": "Gestoppt",
     "retry to install": "Installation wiederholen",
-    "cozy account title": "Cozy - Account",
-    "cozy app store title": "Cozy - App Store",
+    "cozy account title": "Cozy - Settings",
+    "cozy app store title": "Cozy - Store",
     "cozy home title": "Cozy - Home",
     "cozy applications title": "Cozy - App Konfiguration",
     "running": "Läuft",
@@ -1127,7 +1139,11 @@ module.exports = {
     "help": "Hilfe",
     "change layout": "Layout verändern",
     "market app install": "Installiere...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "Anleitung",
@@ -1175,10 +1191,10 @@ module.exports = {
     "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
     "hastebin description": "A simple pastebin, a tool to easily share texts.",
     "polybios description": "Manage your PGP keys from your browser.",
-    "reminder title email": "Erinnerung",
-    "reminder title email expanded": "Erinnerung: %{description} - %{date} (%{calendar})",
+    "reminder title email": "Reminder",
+    "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
-    "reminder message": "Erinnerung: %{message}",
+    "reminder message": "Reminder: %{message}",
     "warning unofficial app": "Diese App is eine aus der Gemeinschaft und wird nicht durch das Cozy Team betreut.\nUm einen Bug zu berichten; bitte das Problem beschreiben in <a href='https://forum.cozy.io'>our forum</a>.",
     "installation message failure": "%{appName}'s Installation fehlgeschlagen.",
     "update available notification": "Eine neue Version von %{appName} ist verfügbar.",
@@ -1256,8 +1272,6 @@ module.exports = {
   "questions and help forum": "Questions and help forum",
   "sign out": "Sign out",
   "open in a new tab": "Open in a new tab",
-  "disk unit": "GB",
-  "memory unit": "MB",
   "always on": "always on",
   "keep always on": "keep always on",
   "stop this app": "Stop this app",
@@ -1265,7 +1279,7 @@ module.exports = {
   "navbar faq": "Frequently Asked Questions",
   "application is installing": "An app is already installing.\nWait for it to finish, then try again.",
   "no app message": "You currently have no app installed on your Cozy.\nGo to the <a href=\"#applications\">Cozy store</a> and install new apps!",
-  "welcome to app store": "Welcome to your Cozy store, install your own app from here\nor add one from the available list.",
+  "welcome to app store": "Welcome to your Cozy store, install your own app from here\nor add one from the list of available ones.",
   "installed everything": "You have already installed everything!",
   "already similarly named app": "You already have an app with a similar name.",
   "your app list": "Access your apps",
@@ -1283,10 +1297,16 @@ module.exports = {
   "configuration": "Configuration",
   "assistance": "Assistance",
   "hardware consumption": "Hardware",
-  "hard drive gigabytes": "Storage",
   "gigabytes": "GB",
   "megabytes": "MB",
-  "memory megabytes": "Memory",
+  "terabyte": "MB",
+  "G": "GB",
+  "M": "MB",
+  "T": "MB",
+  "disk unit": "GB",
+  "memory unit": "MB",
+  "status hard drive label": "Storage",
+  "status memory label": "Memory",
   "manage your applications": "Applications",
   "manage your devices": "Connected devices",
   "synchronized": "synchronized",
@@ -1312,15 +1332,16 @@ module.exports = {
   "english": "English",
   "german": "German",
   "spanish": "Spanish",
+  "korean": "Korean",
   "portuguese": "Portuguese",
   "change password procedure": "Steps to change your password",
   "current password": "current password",
   "new password": "new password",
   "confirm your new password": "confirm your new password",
   "save your new password": "Save new password",
-  "do you want assistance": "Do you need some help?",
+  "do you want assistance": "Do you need any help?",
   "contact us more options": "There are still a few more options to contact us:",
-  "community support content": "Our Community grows everyday and will be happy to give you a hand on these medias:",
+  "community support content": "Our Community grows everyday and will be happy to give you a helping hand on these medias:",
   "help email title": "Email",
   "help twitter title": "Twitter",
   "help forum title": "Forum",
@@ -1398,7 +1419,7 @@ module.exports = {
   "help": "Help",
   "change layout": "Change the layout",
   "market app install": "Installing...",
-  "install your app": "Install apps from its Git Repository",
+  "install your app": "Install an app from its Git Repository",
   "market install your app": "Just copy/paste its Git URL in the field below:",
   "market install your app tutorial": "To know more about how to build you own app, feel free to read our ",
   "market app tutorial": " tutorial",
@@ -1460,8 +1481,8 @@ module.exports = {
   "error git": "We can't retrieve source code.",
   "error github repo": "Application repository seems unavailable.",
   "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-  "error npm": "We can't installed application dependencies.",
-  "error user linux": "We can't create specific linux user for this application.",
+  "error npm": "We can't install application dependencies.",
+  "error user linux": "We can't create specific Linux user for this application.",
   "error start": "Application can't start. You can find more details in log application.",
   "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
   "more details": "More details",
@@ -1478,7 +1499,7 @@ module.exports = {
   "or": "or",
   "drop a file": "Drag & drop a file or",
   "url of an image": "Paste URL of an image from the web",
-  "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+  "you have no album": "<p>You haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
   "config application mark favorite": "mark as favorite",
   "config application unmark favorite": "unmark as favorite"
 }
@@ -1530,8 +1551,6 @@ module.exports = {
     "questions and help forum": "Questions and help forum",
     "sign out": "Sign out",
     "open in a new tab": "Open in a new tab",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "always on",
     "keep always on": "keep always on",
     "stop this app": "Stop this app",
@@ -1557,10 +1576,23 @@ module.exports = {
     "configuration": "Configuration",
     "assistance": "Assistance",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Applications",
     "manage your devices": "Connected devices",
     "synchronized": "synchronized",
@@ -1586,6 +1618,7 @@ module.exports = {
     "english": "English",
     "german": "German",
     "spanish": "Spanish",
+    "korean": "Korean",
     "portuguese": "Portuguese",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
@@ -1671,7 +1704,11 @@ module.exports = {
     "help": "Help",
     "change layout": "Change the layout",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -1757,7 +1794,11 @@ module.exports = {
 
 require.register("locales/es", function(exports, require, module) {
 module.exports = {
+<<<<<<< HEAD
     "home": "Escritorio",
+=======
+    "home": "Inicio",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "apps": "Aplicaciones",
     "account": "Cuenta",
     "email": "Correo electrónico",
@@ -1767,8 +1808,8 @@ module.exports = {
     "locale": "Idioma",
     "change password": "Cambiar la contraseña",
     "input your current password": "Esribir su contraseña actual",
-    "enter a new password": "usar este campo para crear una nueva contraseña",
-    "confirm new password": "confirmar la nueva contraseña",
+    "enter a new password": "Usar este campo para crear una nueva contraseña",
+    "confirm new password": "Confirmar la nueva contraseña",
     "send changes": "Guardar",
     "manage": "Administración",
     "total": "Total",
@@ -1792,24 +1833,33 @@ module.exports = {
     "confirm": "Confirmar",
     "installing": "Se está instalando",
     "remove": "Suprimir",
+<<<<<<< HEAD
     "update": "actualizar",
     "config application unmark favorite": "desmarcar como favorita",
     "config application mark favorite": "marcar como favorita",
     "started": "Se está ejecutando",
+=======
+    "update": "Actualizar",
+    "config application unmark favorite": "desmarcar como favorita",
+    "config application mark favorite": "marcar como favorita",
+    "started": "lanzada",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "notifications": "Notificaciones",
     "questions and help forum": "Foro de ayuda",
     "sign out": "Salir",
     "open in a new tab": "Abrir en una nueva pestaña",
-    "disk unit": "Go",
-    "memory unit": "Mo",
     "always on": "Siempre se está ejecutando",
     "keep always on": "mantener siempre ejecutándose",
+<<<<<<< HEAD
     "stop this app": "Pare esta aplicación",
+=======
+    "stop this app": "Parar esta aplicación",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "update required": "Actualización disponible",
     "navbar faq": "Preguntas más frecuentes",
     "application is installing": "Se está instalando una aplicación.\nEspere que esté instalada antes de lanzar una nueva.",
-    "no app message": "¡ Usted no ha instalado ninguna aplicación en su Cozy.\nVaya a <a href=\"#applications\">app store</a> para instalar al menos una !",
-    "welcome to app store": "Bienvenido(a) a App store, usted puede instalar su propia aplicación desde aquí\no añadir una que esté en la lista.",
+    "no app message": "¡ Usted no ha instalado ninguna aplicación en su Cozy.\nVaya a <a href=\"#applications\">Apliteca</a> para instalar al menos una !",
+    "welcome to app store": "Bienvenido(a) a Apliteca, usted puede instalar su propia aplicación desde aquí\no añadir una que esté en la lista.",
     "installed everything": "¡Usted ya ha instalado todo!",
     "already similarly named app": "Una aplicación con nombre similar ya ha sido instalada.",
     "your app list": "Acceder a sus aplicaciones",
@@ -1827,10 +1877,23 @@ module.exports = {
     "configuration": "Configuración",
     "assistance": "Ayuda",
     "hardware consumption": "Material",
+<<<<<<< HEAD
     "hard drive gigabytes": "Almacenamiento",
     "gigabytes": "Go",
     "megabytes": "Mo",
     "memory megabytes": "Memoria",
+=======
+    "gigabytes": "Go",
+    "megabytes": "Mo",
+    "terabyte": "MO",
+    "G": "GO",
+    "M": "MO",
+    "T": "MO",
+    "disk unit": "Go",
+    "memory unit": "Mo",
+    "status hard drive label": "Almacenamiento",
+    "status memory label": "Memoria",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Administrar sus aplicaciones",
     "manage your devices": "Periféricos conectados",
     "synchronized": "sincronizado",
@@ -1841,13 +1904,18 @@ module.exports = {
     "public name description": "Su nombre de usuario será visualizado cuando  comparta archivos con personas o cuando las invite a eventos.",
     "domain name for urls and email": "El nombre de dominio se usa para conectarse a su Cozy desde cualquier periférico y lograr compartir URLs.",
     "your timezone is required": "El huso horario  ayuda a visualizar correctamente su agenda.",
+<<<<<<< HEAD
     "save": "guardar",
     "saved": "guardado",
+=======
+    "save": "Guardar",
+    "saved": "Guardado",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "error": "Error",
     "error proper email": "El email que usted señala no es el correcto",
     "error email empty": "La casilla email está vacía",
     "Chose the language you want I use to speak with you:": "Escoja el idioma que usted desea que yo utilice para comunicarme con usted:",
-    "account background selection": "Seleccionar el fondo de pantalla de su página Escritorio:",
+    "account background selection": "Seleccionar el fondo de pantalla de su página Inicio:",
     "account localization": "Regionalización",
     "account identifiers": "Cuenta",
     "account personalization": "Personalización",
@@ -1856,6 +1924,7 @@ module.exports = {
     "english": "Inglés",
     "german": "Alemán",
     "spanish": "Español",
+    "korean": "Coreano",
     "portuguese": "Portugués",
     "change password procedure": "Pasos a seguir para cambiar la contraseña",
     "current password": "contraseña actual",
@@ -1863,11 +1932,19 @@ module.exports = {
     "confirm your new password": "confirme su nueva contraseña",
     "save your new password": "Guardar la nueva contraseña",
     "do you want assistance": "¿Quiere ayuda?",
+<<<<<<< HEAD
     "contact us more options": "There are still a few more options to contact us:",
     "community support content": "Nuestra Comunidad crece cada día y nos gustaría ayudarle sobre estos medias:",
     "help email title": "Email",
     "help twitter title": "Twitter",
     "help forum title": "Forum",
+=======
+    "contact us more options": "Hay aún algunas posibilidades adicionales para contactarnos:",
+    "community support content": "Nuestra Comunidad crece cada día y nos gustaría ayudarle sobre estos medias:",
+    "help email title": "Email",
+    "help twitter title": "Twitter",
+    "help forum title": "Foro",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "help IRC title": "IRC",
     "help wiki title": "Wiki",
     "Visit the project website and learn to build your app:": "Visite el sitio web del Proyecto y aprenda a crear aplicaciones:",
@@ -1876,7 +1953,7 @@ module.exports = {
     "updated": "actualizada",
     "updating": "actualización en curso",
     "update all": "Actualizar todo",
-    "show home logs": "Mostrar Logs de Escritorio",
+    "show home logs": "Mostrar Logs de Inicio",
     "show data system logs": "Mostrar Logs del Data System",
     "show proxy logs": "Motrar Logs del Proxy",
     "show logs": "Mostrar Logs",
@@ -1885,7 +1962,11 @@ module.exports = {
     "update stack waiting message": "Por favor, tenga paciencia, la actualización puede tomar algunos minutos.",
     "status no device": "No hay ningún periférico conectado a su Cozy.",
     "download apk": "Descargar APK",
+<<<<<<< HEAD
     "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
+=======
+    "mobile app promo": "Haga una copia de seguridad de sus fotos y sincronice sus contactos con su celular por medio de la aplicación :",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "update stack modal title": "Actualización de su Cozy",
     "update stack modal content": "Usted está a punto de actualizar la plataforma. Su Cozy estará indisponible algunos instantes. ¿Está usted seguro(a)?",
     "update stack modal confirm": "Actualizar",
@@ -1893,7 +1974,7 @@ module.exports = {
     "update stack error": "Se produjo un error durante la actualización, la página se va a recargar",
     "applications broken": "Aplicaciones averiadas",
     "cozy platform": "Plataforma",
-    "navbar back button title": "Volver a Escritorio",
+    "navbar back button title": "Volver a Inicio",
     "navbar notifications": "Notificaciones",
     "or:": "o:",
     "reboot stack": "Reiniciar",
@@ -1908,7 +1989,7 @@ module.exports = {
     "retry to install": "trate de instalarla de nuevo",
     "cozy account title": "Cozy - Cuenta",
     "cozy app store title": "Cozy - Apliteca",
-    "cozy home title": "Cozy - Escritoriio",
+    "cozy home title": "Cozy - Inicio",
     "cozy applications title": "Cozy - Configuración de Aplicaciones",
     "running": "se está ejecutando",
     "cozy help title": "Cozy - Ayuda",
@@ -1930,18 +2011,30 @@ module.exports = {
     "use icon": "Modo ícono",
     "home section favorites": "Favoritos",
     "home section leave": "Importar",
+<<<<<<< HEAD
     "home section main": "Diariamente",
     "home section productivity": "Productividad",
     "home section data management": "Datos",
     "home section personal watch": "Ver",
     "home section misc": "Misc",
+=======
+    "home section main": "Aplicaciones principales",
+    "home section productivity": "Aplicaciones de productividad",
+    "home section data management": "Aplicaciones de datos",
+    "home section personal watch": "Observar",
+    "home section misc": "Aplicaciones diversas",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "home section platform": "Plataforma",
     "app status": "Estatus",
     "settings": "Ajustes",
     "help": "Ayuda",
     "change layout": "Modificar la disposición",
     "market app install": "Se está instalando...",
+<<<<<<< HEAD
     "install your app": "Instalar aplicaciones desde su Repositorio Git",
+=======
+    "install your app": "Instalar una aplicación desde su Repositorio Git",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Copie/pegue su Git URL en el campo siguiente:",
     "market install your app tutorial": "Para saber más cómo hacer su propia aplicación, siéntase libre de leer nuestro",
     "market app tutorial": "guía",
@@ -1991,7 +2084,7 @@ module.exports = {
     "polybios description": "Administrar sus claves PGP desde su navegador.",
     "reminder title email": "Recordatorio",
     "reminder title email expanded": "Recordatorio:  %{description} - %{date} (%{calendar})",
-    "reminder message expanded": "Recordatorio: %{description}\nInicio: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLugar: %{place}\nDetalles: %{details}",
+    "reminder message expanded": "Recordatorio: %{description}\nComienzo: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLugar: %{place}\nDetalles: %{details}",
     "reminder message": "Recordatorio: %{message}",
     "warning unofficial app": "Esta aplicación es una aplicación comunitaria y no la mantiene el equipo Cozy.\nPara señalar un problema, le rogamos llevarlo a <a href='https://forum.cozy.io'>nuestro foro</a>.",
     "installation message failure": "Falla en la instalación de %{appName}.",
@@ -2021,7 +2114,11 @@ module.exports = {
     "or": "o",
     "drop a file": "Arrastrar & soltar un archivo o",
     "url of an image": "Pegar la URL de una imagen desde el web",
+<<<<<<< HEAD
     "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+=======
+    "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación Mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
 };
 });
 
@@ -2049,10 +2146,17 @@ module.exports = {
     "add application": "Ajouter l'application ?",
     "install": "Installer",
     "github": "Github",
+<<<<<<< HEAD
     "website": "Website",
     "your app": "Votre application !",
     "community contribution": "Développeur indépendant",
     "official application": "Développé par Cozy",
+=======
+    "website": "Site web",
+    "your app": "Votre application !",
+    "community contribution": "Développeur indépendant",
+    "official application": "Développée par Cozy",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "application description": "Description de l'application",
     "downloading description": "Téléchargement de la description…",
     "downloading permissions": "Téléchargement des permissions…",
@@ -2064,14 +2168,16 @@ module.exports = {
     "remove": "Enlever",
     "update": "Mettre à jour",
     "config application unmark favorite": "Supprimer des favoris",
+<<<<<<< HEAD
     "config application mark favorite": "Marquer en favoris",
+=======
+    "config application mark favorite": "Marquer en favori",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "started": "démarrée",
     "notifications": "Notifications",
     "questions and help forum": "Forum d'aide",
     "sign out": "Sortir",
     "open in a new tab": "Ouvrir dans un onglet",
-    "disk unit": "Go",
-    "memory unit": "Mo",
     "always on": "toujours démarrée",
     "keep always on": "garder toujours démarrée",
     "stop this app": "Arrêter cette application",
@@ -2097,10 +2203,23 @@ module.exports = {
     "configuration": "Configuration",
     "assistance": "Aide",
     "hardware consumption": "Matériel",
+<<<<<<< HEAD
     "hard drive gigabytes": "Stockage",
     "gigabytes": "Go",
     "megabytes": "Mo",
     "memory megabytes": "Mémoire",
+=======
+    "gigabytes": "Go",
+    "megabytes": "Mo",
+    "terabyte": "Mo",
+    "G": "Go",
+    "M": "Mo",
+    "T": "Mo",
+    "disk unit": "Go",
+    "memory unit": "Mo",
+    "status hard drive label": "Stockage",
+    "status memory label": "Mémoire",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Applications",
     "manage your devices": "Appareils connectés",
     "synchronized": "synchronisé",
@@ -2108,14 +2227,20 @@ module.exports = {
     "no application installed": "Il n'y a pas d'applications installées.",
     "your parameters": "Vos paramètres",
     "alerts and password recovery email": "Votre adresse électronique est utilisée pour les notifications ou la récupération du mot de passe perdu.",
+<<<<<<< HEAD
     "public name description": "Your username will be displayed when you share files with people or invite them to events.",
     "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
     "your timezone is required": "Your time zone helps to properly display your calendar.",
+=======
+    "public name description": "Votre nom d'utilisateur est affiché lorsque vous partagez des fichiers avec des gens ou les invitez à des événements.",
+    "domain name for urls and email": "Le nom de domaine est utilisé pour vous connecter à votre Cozy depuis n'importe quel appareil et pour construire des URLs de partage.",
+    "your timezone is required": "Votre fuseau horaire aide à afficher correctement votre calendrier.",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "save": "Sauver",
     "saved": "Sauvé",
     "error": "Erreur",
     "error proper email": "L'adresse mail fournie n'est pas correcte",
-    "error email empty": "L'adresse mail ne doit pas être vide",
+    "error email empty": "L'adresse email ne doit pas être vide",
     "Chose the language you want I use to speak with you:": "Choisissez la langue que vous souhaitez pour votre Cozy :",
     "account background selection": "Choisissez votre fond d'écran pour votre bureau Cozy :",
     "account localization": "Régionalisation",
@@ -2126,6 +2251,7 @@ module.exports = {
     "english": "Anglais",
     "german": "Allemand",
     "spanish": "Espagnol",
+    "korean": "Coréen",
     "portuguese": "Portugais",
     "change password procedure": "Procédure de changement de mot de passe",
     "current password": "Mot de passe actuel",
@@ -2133,8 +2259,13 @@ module.exports = {
     "confirm your new password": "Confirmez votre nouveau mot de passe :",
     "save your new password": "Enregistrer le nouveau mot de passe",
     "do you want assistance": "Est-ce que vous cherchez de l'aide ?",
+<<<<<<< HEAD
     "contact us more options": "There are still a few more options to contact us:",
     "community support content": "Our Community grows everyday and will be happy to give you a hand on these medias:",
+=======
+    "contact us more options": "Il y a d'autres possibilités pour nous contacter :",
+    "community support content": "Notre communauté grandit chaque jour et sera heureuse de vous donner un coup de main via ces médias :",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "help email title": "Email",
     "help twitter title": "Twitter",
     "help forum title": "Forum",
@@ -2153,6 +2284,7 @@ module.exports = {
     "update stack": "Mettre à jour la plateforme",
     "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes.",
     "update stack waiting message": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
+<<<<<<< HEAD
     "status no device": "There is no device connected to your Cozy.",
     "download apk": "Download .APK",
     "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
@@ -2161,6 +2293,16 @@ module.exports = {
     "update stack modal confirm": "Mettre à jour",
     "update stack success": "Vos applications ont bien été mises à jour, la page va se rafraichir.",
     "update stack error": "Une erreur s'est produite pendant la mise à jour, la page va se rafraichir.",
+=======
+    "status no device": "Aucun n'appareil n'est connecté à votre Cozy.",
+    "download apk": "Télécharger le .APK",
+    "mobile app promo": "Sauvegardez vos photos et synchronisez vos contacts et calendriers avec notre application mobile :",
+    "update stack modal title": "Mise à jour de votre Cozy",
+    "update stack modal content": "Vous êtes sur le point de mettre à jour la plateforme. Votre Cozy sera indisponible quelques instants. Voulez-vous vraiment continuer ?",
+    "update stack modal confirm": "Mettre à jour",
+    "update stack success": "Vos applications ont bien été mises à jour, la page va se rafraîchir.",
+    "update stack error": "Une erreur s'est produite pendant la mise à jour, la page va se rafraîchir.",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "applications broken": "Applications cassées",
     "cozy platform": "Plateforme",
     "navbar back button title": "Retour bureau",
@@ -2171,7 +2313,11 @@ module.exports = {
     "error update uninstRlled app": "Vous ne pouvez pas mettre à jour une application qui n'est pas installée.",
     "notification open application": "Ouvrir l'application",
     "notification update stack": "Mettre à jour la plateforme",
+<<<<<<< HEAD
     "notification update application": "Update now",
+=======
+    "notification update application": "Mettre à jour",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "broken": "cassée",
     "start this app": "Démarrer cette application",
     "stopped": "stoppée",
@@ -2200,7 +2346,11 @@ module.exports = {
     "use icon": "Mode icône",
     "home section favorites": "Applications favorites",
     "home section leave": "Service d'import",
+<<<<<<< HEAD
     "home section main": "Daily",
+=======
+    "home section main": "Chaque jour",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "home section productivity": "Applications de productivité",
     "home section data management": "Applications de données",
     "home section personal watch": "Applications de veille",
@@ -2211,6 +2361,7 @@ module.exports = {
     "help": "Aide",
     "change layout": "Modifier la disposition",
     "market app install": "Installation…",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
@@ -2218,6 +2369,15 @@ module.exports = {
     "help send message title": "Écrire directement à l'équipe Cozy",
     "help send message explanation": "Here you can send us feedback, report bugs and ask for assistance. We will get back to you as soon as possible.",
     "help send message action": "Send us a message",
+=======
+    "install your app": "Installer une application depuis son dépôt Git",
+    "market install your app": "Copiez/collez juste son URL Git dans le champ ci-dessous :",
+    "market install your app tutorial": "Pour savoir comment faire votre propre application, suivez notre ",
+    "market app tutorial": "didacticiel",
+    "help send message title": "Écrire directement à l'équipe Cozy",
+    "help send message explanation": "Ici vous pouvez nous envoyer des retours, rapporter des bogues et demander de l'assistance. Nous reviendrons vers vous aussi vite que possible.",
+    "help send message action": "Envoyez-nous un message",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "help send logs": "Joindre les logs des applications pour faciliter la résolution des problèmes",
     "send message success": "Message envoyé avec succès !",
     "send message error": "Une erreur est survenue lors de l'envoi du message. Essayez d'envoyer ce message à directement avec un client mail en écrivant à support@cozycloud.cc.",
@@ -2258,11 +2418,11 @@ module.exports = {
     "leave google description": "Une application pour importer vos données de votre compte Google.",
     "mstsc.js description": "Depuis votre Cozy, prenez contrôle de votre bureau Windows à distance à travers le protocole RDP.",
     "hastebin description": "Un simple pastebin, un outil pour partager facilement vos textes.",
-    "polybios description": "Gérer vos clés PGP depuis votre navigateur.",
-    "reminder title email": "[Cozy-Calendar] Rappel",
-    "reminder title email expanded": "Rappel: %{description} - %{date} (%{calendar})",
-    "reminder message expanded": "Rappel: %{description}\nDébut: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLieu: %{place}\nDétails: %{details}",
-    "reminder message": "Rappel : %{message}",
+    "polybios description": "Gérez vos clés PGP depuis votre navigateur.",
+    "reminder title email": "Rappel",
+    "reminder title email expanded": "Rappel : %{description} - %{date} (%{calendar})",
+    "reminder message expanded": "Rappel : %{description}\nDébut : %{start} (%{timezone})\nFin : %{end} (%{timezone})\nEmplacement : %{place}\nDétails : %{details}",
+    "reminder message": "Rappel : %{message}",
     "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
     "installation message failure": "Échec de l'installation de %{appName}.",
     "update available notification": "Une nouvelle version de %{appName} est disponible.",
@@ -2289,9 +2449,15 @@ module.exports = {
     "no image": "Il n'y a pas d'image sur votre Cozy",
     "ObjPicker upload btn": "Sélectionnez un fichier local",
     "or": "ou",
+<<<<<<< HEAD
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
     "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+=======
+    "drop a file": "Glissez et déposez un fichier ou",
+    "url of an image": "Collez l'URL d'une image depuis le web",
+    "you have no album": "<p>Vous n'avez aucun album photo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Créez en un depuis <a href='/#applications' target='_blank'>l'application Photo </a><br>et utilisez des photos prises depuis votre smartphone avec <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'application mobile !</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
 };
 });
 
@@ -2340,8 +2506,6 @@ module.exports = {
     "questions and help forum": "Questions and help forum",
     "sign out": "Sign out",
     "open in a new tab": "Open in a new tab",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "always on",
     "keep always on": "keep always on",
     "stop this app": "Stop this app",
@@ -2367,10 +2531,23 @@ module.exports = {
     "configuration": "Configuration",
     "assistance": "Assistance",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Applications",
     "manage your devices": "Connected devices",
     "synchronized": "synchronized",
@@ -2396,6 +2573,7 @@ module.exports = {
     "english": "English",
     "german": "German",
     "spanish": "Spanish",
+    "korean": "Korean",
     "portuguese": "Portuguese",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
@@ -2481,7 +2659,11 @@ module.exports = {
     "help": "Help",
     "change layout": "Change the layout",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -2585,7 +2767,11 @@ module.exports = {
     "memory consumption": "메모리 사용량",
     "disk consumption": "디스크 사용량",
     "you have no notifications": "<span>%{name}님 안녕하세요</span><br>알림 메시지가 없습니다.",
+<<<<<<< HEAD
     "dismiss all": "전체 취소",
+=======
+    "dismiss all": "전체 읽음",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "add application": "앱 추가?",
     "install": "설치",
     "github": "Github",
@@ -2610,8 +2796,6 @@ module.exports = {
     "questions and help forum": "질문답변",
     "sign out": "회원탈퇴",
     "open in a new tab": "새로운 탭에서 실행",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "항상 켜기",
     "keep always on": "항상 켜기 사용",
     "stop this app": "앱 정지",
@@ -2637,10 +2821,23 @@ module.exports = {
     "configuration": "설정",
     "assistance": "지원",
     "hardware consumption": "하드웨어",
+<<<<<<< HEAD
     "hard drive gigabytes": "스토리지",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "메모리",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "저장소",
+    "status memory label": "메모리",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "앱",
     "manage your devices": "접속된 장치",
     "synchronized": "동기화됨",
@@ -2660,12 +2857,17 @@ module.exports = {
     "account background selection": "배경화면을 선택하세요:",
     "account localization": "지역",
     "account identifiers": "계정",
+<<<<<<< HEAD
     "account personalization": "사용자화",
+=======
+    "account personalization": "배경화면 설정",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "account password": "비밀번호",
     "french": "프랑스어",
     "english": "영어",
     "german": "독일어",
     "spanish": "스페인어",
+    "korean": "한국어",
     "portuguese": "포르투칼어",
     "change password procedure": "비밀번호를 변경 단계",
     "current password": "현재 비밀번호",
@@ -2673,11 +2875,19 @@ module.exports = {
     "confirm your new password": "새 비밀번호 확인",
     "save your new password": "새 비밀번호 저장",
     "do you want assistance": "도움이 필요하세요?",
+<<<<<<< HEAD
     "contact us more options": "There are still a few more options to contact us:",
     "community support content": "우리의 커뮤니티는 매일 개선되고, 여러분에 도움을 주는 것을 기쁘게 생각합니다.",
     "help email title": "Email",
     "help twitter title": "Twitter",
     "help forum title": "Forum",
+=======
+    "contact us more options": "몇 개의 옵션이 더 남아 있습니다.:",
+    "community support content": "우리의 커뮤니티는 매일 개선되고, 여러분에 도움을 주는 것을 기쁘게 생각합니다.",
+    "help email title": "이메일",
+    "help twitter title": "트위터",
+    "help forum title": "포럼",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "help IRC title": "IRC",
     "help wiki title": "위키",
     "Visit the project website and learn to build your app:": "프로젝트 홈페이지 방문:",
@@ -2695,7 +2905,11 @@ module.exports = {
     "update stack waiting message": "기다려 주세요, 업데이트 하는 시간이 걸립니다.",
     "status no device": "연결된 장치가 없습니다.",
     "download apk": "안드로이드 앱 다운로드",
+<<<<<<< HEAD
     "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
+=======
+    "mobile app promo": "사진을 백업하고, 모바일 앱과 연락처, 일정 동기화 :",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "update stack modal title": "클라우드 업데이트중",
     "update stack modal content": "클라우드를 업데이트 할 것입니다. 잠시동안 사용 할 수 없습니다. 계속 하시겠습니까?",
     "update stack modal confirm": "업데이트",
@@ -2710,7 +2924,11 @@ module.exports = {
     "update error": "앱을 업데이트 하는 동안 오류가 발생 하였습니다",
     "error update uninstRlled app": "설치 되지 않은 업데이트 할 수 없습니다",
     "notification open application": "오픈 앱",
+<<<<<<< HEAD
     "notification update stack": "플랫폼 업데이트",
+=======
+    "notification update stack": "시스템 업데이트",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "notification update application": "지금 업데이트",
     "broken": "깨짐",
     "start this app": "앱 시작",
@@ -2745,8 +2963,8 @@ module.exports = {
     "home section data management": "데이터",
     "home section personal watch": "보기",
     "home section misc": "기타",
-    "home section platform": "플랫폼",
-    "app status": "상태",
+    "home section platform": "시스템",
+    "app status": "시스템 상태",
     "settings": "설정",
     "help": "도움말",
     "change layout": "레이아웃 변경",
@@ -2800,8 +3018,8 @@ module.exports = {
     "hastebin description": "간단 붙여넣기, 텍스트를 쉽게 공유하기 위한 툴 입니다.",
     "polybios description": "브라우저에서 PGP 키 관리",
     "reminder title email": "알림",
-    "reminder title email expanded": "알림:%{description} - %{date} (%{calendar})",
-    "reminder message expanded": "알림: %{description}\n시작: %{start} (%{timezone})\n종료: %{end} (%{timezone})\n장소: %{place}\n자세히: %{details}",
+    "reminder title email expanded": "알림: %{description} - %{date} (%{calendar})",
+    "reminder message expanded": "알림: %{description}\n시작: %{start} (%{timezone})\n종료: %{end} (%{timezone})\n장소: %{place}\n내용: %{details}",
     "reminder message": "알림: %{message}",
     "warning unofficial app": "이 앱은 커뮤니티 앱이며, Cozy팀에서 지원하지 않습니다.\n버그 리포트는  <a href='https://forum.cozy.io'>포럼 게시판</a>을 이용하세요.",
     "installation message failure": "%{appName} 설치 실패",
@@ -2835,7 +3053,7 @@ module.exports = {
 };
 });
 
-require.register("locales/ko_KR", function(exports, require, module) {
+require.register("locales/pl", function(exports, require, module) {
 module.exports = {
     "home": "Home",
     "apps": "Apps",
@@ -2880,8 +3098,6 @@ module.exports = {
     "questions and help forum": "Questions and help forum",
     "sign out": "Sign out",
     "open in a new tab": "Open in a new tab",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "always on",
     "keep always on": "keep always on",
     "stop this app": "Stop this app",
@@ -2907,10 +3123,23 @@ module.exports = {
     "configuration": "Configuration",
     "assistance": "Assistance",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Applications",
     "manage your devices": "Connected devices",
     "synchronized": "synchronized",
@@ -2936,6 +3165,7 @@ module.exports = {
     "english": "English",
     "german": "German",
     "spanish": "Spanish",
+    "korean": "Korean",
     "portuguese": "Portuguese",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
@@ -3021,7 +3251,11 @@ module.exports = {
     "help": "Help",
     "change layout": "Change the layout",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -3105,23 +3339,24 @@ module.exports = {
 };
 });
 
-require.register("locales/pl", function(exports, require, module) {
+require.register("locales/pt", function(exports, require, module) {
 module.exports = {
-    "home": "Home",
-    "apps": "Apps",
-    "account": "Account",
+    "home": "Inicio",
+    "apps": "Aplicações",
+    "account": "Conta",
     "email": "Email",
-    "timezone": "Time zone",
-    "domain": "Domain",
-    "no domain set": "no.domain.set",
+    "timezone": "Fuso Horário",
+    "domain": "Dominio",
+    "no domain set": "nenhum.dominio.configurado",
     "locale": "Locale",
-    "change password": "Change password",
-    "input your current password": "Enter your current password:",
-    "enter a new password": "Enter your new password:",
-    "confirm new password": "Confirm your new password:",
-    "send changes": "Save",
-    "manage": "Manage",
+    "change password": "Mudar Password",
+    "input your current password": "coloque a sua password actual",
+    "enter a new password": "preencha este campo para colocar a sua nova password",
+    "confirm new password": "confirme a sua nova password",
+    "send changes": "Gravar Mudanças",
+    "manage": "Gerir",
     "total": "Total",
+<<<<<<< HEAD
     "memory consumption": "Memory usage",
     "disk consumption": "Disk usage",
     "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
@@ -3156,27 +3391,62 @@ module.exports = {
     "keep always on": "keep always on",
     "stop this app": "Stop this app",
     "update required": "Update available",
+=======
+    "memory consumption": "Consumo de Memória",
+    "disk consumption": "Consumo de Disco",
+    "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
+    "dismiss all": "Dispensar Tudo",
+    "add application": "adicionar aplicação ?",
+    "install": "Instalar",
+    "github": "Github",
+    "website": "Website",
+    "your app": "a tua aplicação!",
+    "community contribution": "contribuição da comunidade",
+    "official application": "Developed by Cozy",
+    "application description": "Descrição da Aplicação",
+    "downloading description": "A fazer download da descrição…",
+    "downloading permissions": "A fazer download das permissões…",
+    "Cancel": "Cancelar",
+    "ok": "Ok",
+    "applications permissions": "Permissões da Aplicação",
+    "confirm": "Confirmar",
+    "installing": "A instalar",
+    "remove": "remover",
+    "update": "actualizar",
+    "config application unmark favorite": "unmark as favorite",
+    "config application mark favorite": "mark as favorite",
+    "started": "inicidada",
+    "notifications": "Notificações",
+    "questions and help forum": "Perguntas e fórum de ajuda",
+    "sign out": "Sair",
+    "open in a new tab": "Abrir numa nova janela",
+    "always on": "sempre ligada",
+    "keep always on": "manter sempre ligada",
+    "stop this app": "parar esta aplicação",
+    "update required": "Atualização disponível",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "navbar faq": "Frequently Asked Questions",
-    "application is installing": "An app is already installing.\nWait for it to finish, then try again.",
-    "no app message": "You currently have no app installed on your Cozy.\nGo to the <a href=\"#applications\">Cozy store</a> and install new apps!",
-    "welcome to app store": "Welcome to your Cozy store, install your own app from here\nor add one from the available list.",
-    "installed everything": "You have already installed everything!",
-    "already similarly named app": "You already have an app with a similar name.",
-    "your app list": "Access your apps",
-    "customize your cozy": "Customize your layout",
-    "manage your apps": "Applications",
-    "choose your apps": "Choose your apps",
-    "configure your cozy": "Configure your cozy",
-    "ask for assistance": "Ask for help",
-    "logout": "Sign out",
+    "application is installing": "Uma aplicação já está a ser instalada.\nPor favor espere que acabe a instalçaõ e tente de novo.",
+    "no app message": "Não tem aplicações instaladas no seu Cozy.\nVá á <a href=\"#applications\">loja</a> para instalar algumas!",
+    "welcome to app store": "Bem vindo á loja de aplicações, instale a sua aplicação\nou escolha uma da lista.",
+    "installed everything": "Já instalou tudo!",
+    "already similarly named app": "Já existe uma aplicação com um nome igual.",
+    "your app list": "Acceso ás tua aplicações",
+    "customize your cozy": "Muda o teu layout",
+    "manage your apps": "Gere a tua aplicação",
+    "choose your apps": "Escolhe as tuas aplicações",
+    "configure your cozy": "Configura o teu Cozy",
+    "ask for assistance": "Pede assistência",
+    "logout": "sair",
     "navbar logout": "Sign out",
-    "welcome to your cozy": "Welcome to your Cozy!",
-    "you have no apps": "You have no apps.",
-    "app management": "App management",
-    "app store": "Store",
-    "configuration": "Configuration",
-    "assistance": "Assistance",
+    "welcome to your cozy": "Ben vindo ao teu Cozy!",
+    "you have no apps": "Não tens aplicações instaladas",
+    "app management": "Gestão de aplicações",
+    "app store": "Loja de aplicações",
+    "configuration": "Configuração",
+    "assistance": "Assistência",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
@@ -3187,21 +3457,45 @@ module.exports = {
     "revoke device access": "Revoke device",
     "no application installed": "There is no app installed.",
     "your parameters": "Your settings",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+    "manage your applications": "Gere as tuas aplicações",
+    "manage your devices": "Connected devices",
+    "synchronized": "sincronizado",
+    "revoke device access": "Revoke device access",
+    "no application installed": "Não há aplicações instaladas.",
+    "your parameters": "Os seus parâmetros",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "alerts and password recovery email": "Your email is used for notifications or password recovery.",
     "public name description": "Your username will be displayed when you share files with people or invite them to events.",
     "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
     "your timezone is required": "Your time zone helps to properly display your calendar.",
+<<<<<<< HEAD
     "save": "Save",
     "saved": "Saved",
+=======
+    "save": "guardar",
+    "saved": "saved",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "error": "Error",
     "error proper email": "Given email is not correct",
     "error email empty": "Given email is empty",
-    "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
+    "Chose the language you want I use to speak with you:": "Escolha a lingua que quer que fale:",
     "account background selection": "Select your background for your Cozy Home:",
     "account localization": "Localization",
     "account identifiers": "Account",
     "account personalization": "Customization",
     "account password": "Password",
+<<<<<<< HEAD
     "french": "French",
     "english": "English",
     "german": "German",
@@ -3472,10 +3766,13 @@ module.exports = {
     "account identifiers": "Account",
     "account personalization": "Customization",
     "account password": "Password",
+=======
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "french": "Francês",
     "english": "Inglês",
     "german": "German",
     "spanish": "Spanish",
+    "korean": "Korean",
     "portuguese": "Português",
     "change password procedure": "Mudar procedimento de password",
     "current password": "password actual",
@@ -3496,6 +3793,7 @@ module.exports = {
     "updated": "actualizada",
     "updating": "a actualizar",
     "update all": "Actualizar todos",
+<<<<<<< HEAD
     "show home logs": "Show Home Logs",
     "show data system logs": "Show Data System Logs",
     "show proxy logs": "Show Proxy Logs",
@@ -3766,19 +4064,27 @@ module.exports = {
     "updated": "updated",
     "updating": "updating",
     "update all": "Update all",
+=======
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "show home logs": "Show Home Logs",
     "show data system logs": "Show Data System Logs",
     "show proxy logs": "Show Proxy Logs",
     "show logs": "Show Logs",
-    "update stack": "Update",
+    "update stack": "Actualizar",
     "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
     "update stack waiting message": "Wait please, updating takes several minutes.",
     "status no device": "There is no device connected to your Cozy.",
     "download apk": "Download .APK",
     "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
+<<<<<<< HEAD
     "update stack modal title": "Updating your Cozy",
     "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
     "update stack modal confirm": "Update",
+=======
+    "update stack modal title": "Update of your Cozy",
+    "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Are you sure?",
+    "update stack modal confirm": "Actualizar",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "update stack success": "Your applications are updated, page will refresh.",
     "update stack error": "An error occured during update, page will refresh.",
     "applications broken": "Applications broken",
@@ -3787,11 +4093,12 @@ module.exports = {
     "navbar notifications": "Notifications",
     "or:": "or:",
     "reboot stack": "Reboot",
-    "update error": "An error occured while updating the app",
+    "update error": "Ocurreu um erro durante a actualização da aplicação",
     "error update uninstRlled app": "You can't update an app that is not installed.",
     "notification open application": "Open application",
     "notification update stack": "Update the platform",
     "notification update application": "Update now",
+<<<<<<< HEAD
     "broken": "broken",
     "start this app": "Start this app",
     "stopped": "stopped",
@@ -3810,14 +4117,34 @@ module.exports = {
     "abort": "abort",
     "Once updated, this application will require the following permissions:": "Once updated, this app will require the following permissions:",
     "confirm update": "confirm update",
+=======
+    "broken": "quebrado",
+    "start this app": "iniciar esta aplicação",
+    "stopped": "parada",
+    "retry to install": "repita para instalar",
+    "cozy account title": "Cozy - Conta",
+    "cozy app store title": "Cozy - Loja",
+    "cozy home title": "Cozy - Inicio",
+    "cozy applications title": "Cozy - Configurações de aplicações",
+    "running": "a correr",
+    "cozy help title": "Cozy - Ajuda",
+    "help support title": "Official Support",
+    "help community title": "Community Support",
+    "help documentation title": "Documentation",
+    "changing locale requires reload": "Mudar o locale requer que faça refresh á página.",
+    "cancel": "cancelar",
+    "abort": "abortar",
+    "Once updated, this application will require the following permissions:": "Depois de actualizada a aplicação irá requerer as seguintes permissões:",
+    "confirm update": "confirmar actualização",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "confirm install": "confirm install",
-    "no specific permissions needed": "This app doesn't require any permission",
-    "removed": "removed",
+    "no specific permissions needed": "Esta aplicação necssita de permissões especificas",
+    "removed": "removido",
     "removing": "removing",
-    "required permissions": "Required permissions",
-    "finish layout edition": "Save",
-    "reset customization": "Reset",
-    "use icon": "Use icon",
+    "required permissions": "Permissões necessárias:",
+    "finish layout edition": "Guardar",
+    "reset customization": "Repo",
+    "use icon": "Usar icon",
     "home section favorites": "Favorites",
     "home section leave": "Import",
     "home section main": "Daily",
@@ -3829,9 +4156,13 @@ module.exports = {
     "app status": "Status",
     "settings": "Settings",
     "help": "Help",
-    "change layout": "Change the layout",
+    "change layout": "Mudar o layout",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -3844,6 +4175,281 @@ module.exports = {
     "account change password success": "The password was changed successfully.",
     "account change password short": "The new password is too short.",
     "account change password difference": "The password confirmation doesn't match the new password.",
+    "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct.",
+    "account background add": "Add background",
+    "introduction market": "Bem vindo á loja de aplicações do Cozy. Este é o sitio onde podes personalizar o teu Cozy\nao adicionar aplicações.\nApartir dai podes instalar a aplicação que construiste ou escolher entre\naplicações criadas pela Cozy Cloud e outros programadores.",
+    "error connectivity issue": "Ocurreu um erro ao receber os teus dados.<br />Por favor tenta de novo.",
+    "package.json not found": "Unable to fetch package.json. Check your repo url.",
+    "unknown provider": "For now, applications can only be installed from Github or CozyCloud Market",
+    "please wait data retrieval": "Por favor aguarda enquanto os teus dados são recebidos…",
+    "revoke device confirmation message": "This will prevent the related device to access your Cozy. Are you sure?",
+    "dashboard": "Dashboard",
+    "calendars description": "Manage your events and sync them with your smartphone.",
+    "contacts description": "Manage your contacts and sync them with your smartphone.",
+    "emails description": "Read, send and back up your emails.",
+    "files description": "Your online file-system, synced with your devices.",
+    "photos description": "Organize your photos and share them with friends.",
+    "sync description": "The tool required to sync your contacts and calendar with your smartphone.",
+    "quickmarks description": "Save and manage your bookmarks.",
+    "cozic description": "An audio player to listen to your music from your browser.",
+    "databrowser description": "Browse and visualize all your data (raw format).",
+    "zero-feeds description": "Aggregate your feeds and save your favorite links as bookmarks.",
+    "kyou description": "Improve your health and happiness by quantifying yourself.",
+    "konnectors description": "Import data from external services (Twitter, Jawbone…).",
+    "kresus description": "Additional tools for your personal finance manager.",
+    "nirc description": "Access to your favorite IRC channels from your Cozy.",
+    "shout description": "Access to your favorite IRC channels from your Cozy with the Shout Web application",
+    "notes description": "Organize and write smart notes.",
+    "owm description": "Know the weather anywhere in the world.",
+    "remote storage description": "A Remote Storage appliance to store data from your Unhosted applications.",
+    "tasky description": "Super fast and simple tag-based task manager.",
+    "todos description": "Write your tasks, order them and complete them efficiently.",
+    "term description": "A terminal app for your Cozy.",
+    "ghost description": "Share your stories with the world with this app based on the Ghost Blogging Platform.",
+    "leave google description": "An app to import your current data from your Google account.",
+    "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
+    "hastebin description": "A simple pastebin, a tool to easily share texts.",
+    "polybios description": "Manage your PGP keys from your browser.",
+    "reminder title email": "Reminder",
+    "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
+    "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
+    "reminder message": "Reminder: %{message}",
+    "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
+    "installation message failure": "%{appName}'s installation failed.",
+    "update available notification": "A new version of %{appName} is available.",
+    "stack update available notification": "A new version of the platform is available.",
+    "app broken title": "Broken application",
+    "app broken": "This application is broken. Can you try install again:",
+    "reinstall broken app": "reinstall it.",
+    "error git": "We can't retrieve source code.",
+    "error github repo": "Application repository seems unavailable.",
+    "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
+    "error npm": "We can't installed application dependencies.",
+    "error user linux": "We can't create specific linux user for this application.",
+    "error start": "Application can't start. You can find more details in log application.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "more details": "More details",
+    "noapps": {
+        "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
+    },
+    "pick from files": "Pick a photo",
+    "Crop the photo": "Crop image",
+    "chooseAgain": "choose another photo",
+    "modal ok": "OK",
+    "modal cancel": "Cancel",
+    "no image": "There is no image on your Cozy",
+    "ObjPicker upload btn": "Upload a local file",
+    "or": "or",
+    "drop a file": "Drag & drop a file or",
+    "url of an image": "Paste URL of an image from the web",
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+};
+});
+
+require.register("locales/pt_BR", function(exports, require, module) {
+module.exports = {
+    "home": "Início",
+    "apps": "Aplicativos",
+    "account": "Conta",
+    "email": "E-mail",
+    "timezone": "Fuso horário",
+    "domain": "Domínio",
+    "no domain set": "nenhum.dominio.registrado",
+    "locale": "Localização",
+    "change password": "Alterar senha",
+    "input your current password": "Digite sua senha atual:",
+    "enter a new password": "Digite sua nova senha:",
+    "confirm new password": "Confirme sua nova senha:",
+    "send changes": "Salvar",
+    "manage": "Administrar",
+    "total": "Total",
+    "memory consumption": "Uso da memória",
+    "disk consumption": "Uso do disco",
+    "you have no notifications": "<span>Olá %{name}</span><br>Não há notificações.",
+    "dismiss all": "Deletar tudo",
+    "add application": "Adicionar aplicativo?",
+    "install": "Instalar",
+    "github": "Github",
+    "website": "Website",
+    "your app": "Seu aplicativo!",
+    "community contribution": "Contribuição comunitária",
+    "official application": "Desenvolvido por Cozy",
+    "application description": "Descrição do aplicativo",
+    "downloading description": "Baixando descrição...",
+    "downloading permissions": "Baixando permissões...",
+    "Cancel": "Cancelar",
+    "ok": "Ok",
+    "applications permissions": "Permissões do aplicativo",
+    "confirm": "Confirmar",
+    "installing": "Instalando",
+    "remove": "Remover",
+    "update": "Atualizar",
+    "config application unmark favorite": "desmarcar como favorito",
+    "config application mark favorite": "marcar como favorito",
+    "started": "iniciado",
+    "notifications": "Notificações",
+    "questions and help forum": "Perguntas e fórum de ajuda",
+    "sign out": "Sair",
+    "open in a new tab": "Abrir em uma nova aba",
+    "always on": "sempre ligado",
+    "keep always on": "sempre manter ligado",
+    "stop this app": "Parar esse aplicativo",
+    "update required": "Atualização disponível",
+    "navbar faq": "Perguntas Freqüentes",
+    "application is installing": "Um aplicativo já está sendo instalado.\nAguarde o término, e então tente novamente.",
+    "no app message": "Não há aplicativo no seu Cozy agora.\nEntre em <a href=\"#applications\">Loja Cozy</a> e instale novos aplicativos!",
+    "welcome to app store": "Bem-vindo à Loja Cozy, instale seu próprio aplicativo aqui\nou adicione um na lista de disponíveis.",
+    "installed everything": "Você já instalou tudo!",
+    "already similarly named app": "Você já possui um aplicativo com nome similar.",
+    "your app list": "Acessar seus aplicativos",
+    "customize your cozy": "Customizar seu esboço",
+    "manage your apps": "Aplicativos",
+    "choose your apps": "Escolher seus aplicativos",
+    "configure your cozy": "Configurar seu Cozy",
+    "ask for assistance": "Solicitar ajuda",
+    "logout": "Sair",
+    "navbar logout": "Sair",
+    "welcome to your cozy": "Bem-vindo ao seu Cozy!",
+    "you have no apps": "Você não possui aplicativos.",
+    "app management": "Administração de aplicativo",
+    "app store": "Loja",
+    "configuration": "Configuração",
+    "assistance": "Assistência",
+    "hardware consumption": "Hardware",
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Capacidade",
+    "status memory label": "Memória",
+    "manage your applications": "Aplicativos",
+    "manage your devices": "Dispositivos conectados",
+    "synchronized": "sincronizado",
+    "revoke device access": "Desconectar dispositivo",
+    "no application installed": "Nenhum aplicativo instalado",
+    "your parameters": "Suas configurações",
+    "alerts and password recovery email": "Seu e-mail é usado para notificações ou recuperação de senha.",
+    "public name description": "Seu nome de usuário será exibido quando você compartilhar arquivos com pessoas ou convidá-las para eventos.",
+    "domain name for urls and email": "O nome de domínos é usado para conectar ao seu Cozy de qualquer dispositivo e criar URLs de compartlhamento.",
+    "your timezone is required": "Seu fusa horário ajuda a exibir corretamente seu calendário.",
+    "save": "Salvar",
+    "saved": "Salvo",
+    "error": "Erro",
+    "error proper email": "E-mail informado incorreto",
+    "error email empty": "E-mail informado vazio",
+    "Chose the language you want I use to speak with you:": "Escolha a língua que deseja ver:",
+    "account background selection": "Selecione seu plano de fundo para seu Início Cozy:",
+    "account localization": "Localização",
+    "account identifiers": "Conta",
+    "account personalization": "Customização",
+    "account password": "Senha",
+    "french": "Francês",
+    "english": "Inglês",
+    "german": "Alemão",
+    "spanish": "Espanhol",
+    "korean": "Coreano",
+    "portuguese": "Português",
+    "change password procedure": "Passos para alterar sua senha",
+    "current password": "senha atual",
+    "new password": "nova senha",
+    "confirm your new password": "confirme sua nova senha",
+    "save your new password": "Salvar nova senha",
+    "do you want assistance": "Precisa de ajuda?",
+    "contact us more options": "Ainda existem algumas opções para nos contactar:",
+    "community support content": "Nossa Comunidade cresce todo dia e ficaremos felizes em ajudar você nessas mídias:",
+    "help email title": "E-mail",
+    "help twitter title": "Twitter",
+    "help forum title": "Fórum",
+    "help IRC title": "IRC",
+    "help wiki title": "Wiki",
+    "Visit the project website and learn to build your app:": "Visite o website do projeto:",
+    "your own application": "seu próprio aplicativo",
+    "installed": "instalado",
+    "updated": "atualizado",
+    "updating": "atualizando",
+    "update all": "Atualizar o Stack e os aplicativos",
+    "show home logs": "Mostrar registros do Home",
+    "show data system logs": "Mostrar registros do Data System",
+    "show proxy logs": "Mostrar registros do Proxy",
+    "show logs": "Mostrar Registros",
+    "update stack": "Atualizar a plataforma",
+    "reboot stack waiting message": "Espere por favor, vários minutos são necessários para reiniciar.",
+    "update stack waiting message": "Espere por favor, alguns minutos são necessários para atualizar.",
+    "status no device": "Nenhum dispositivo está conectado a seu Cozy.",
+    "download apk": "Baixar .APK",
+    "mobile app promo": "Faça uma cópia de segurança dos seus fotos e sincronize seus contatos e seus calendários com seu celular utilizando o aplicativo destinado:",
+    "update stack modal title": "Atualizando seu Cozy",
+    "update stack modal content": "Você está prestes a atualizar a plataforma. Seu Cozy não vai estar disponível durante alguns minutos. Está bom para você?",
+    "update stack modal confirm": "Atualizar",
+    "update stack success": "Seus aplicativos estão atualizados, a página vai atualizar.",
+    "update stack error": "Um erro ocorreu durante a atualização, a página vai atualizar.",
+    "applications broken": "Aplicativos quebrados",
+    "cozy platform": "Plataforma",
+    "navbar back button title": "Voltar no Início",
+    "navbar notifications": "Notificações",
+    "or:": "ou:",
+    "reboot stack": "Reiniciar",
+    "update error": "Um erro ocorreu durante a atualização do aplicativo",
+    "error update uninstRlled app": "Você não pode atualizar um aplicativo que não está instalado.",
+    "notification open application": "Abrir o aplicativo",
+    "notification update stack": "Atualizar a plataforma",
+    "notification update application": "Atualizar agora",
+    "broken": "quebrado",
+    "start this app": "Iniciar este aplicativo",
+    "stopped": "parado",
+    "retry to install": "Tentar a instalação de novo",
+    "cozy account title": "Cozy - Configurações",
+    "cozy app store title": "Cozy - Loja",
+    "cozy home title": "Cozy - Início",
+    "cozy applications title": "Cozy - Estado",
+    "running": "em execução",
+    "cozy help title": "Cozy - Ajuda",
+    "help support title": "Suporte Oficial",
+    "help community title": "Suporte da Comunidade",
+    "help documentation title": "Documentação",
+    "changing locale requires reload": "É necessário recarregar a página para mudar de localização.",
+    "cancel": "cancelar",
+    "abort": "abortar",
+    "Once updated, this application will require the following permissions:": "Uma vez atualizado, este aplicativo vai precisar das permissões seguintes:",
+    "confirm update": "confirmar atualização",
+    "confirm install": "confirmar instalação",
+    "no specific permissions needed": "Esta aplicativo não precisa de nenhuma permissão",
+    "removed": "removido",
+    "removing": "removindo",
+    "required permissions": "Permissões necessárias",
+    "finish layout edition": "Salvar",
+    "reset customization": "Reiniciar",
+    "use icon": "Utilizar ícone",
+    "home section favorites": "Favoritos",
+    "home section leave": "Importar",
+    "home section main": "Diário",
+    "home section productivity": "Produtividade",
+    "home section data management": "Dados",
+    "home section personal watch": "Observar",
+    "home section misc": "Diverso",
+    "home section platform": "Plataforma",
+    "app status": "Estado",
+    "settings": "Configurações",
+    "help": "Ajuda",
+    "change layout": "Mudar o layout",
+    "market app install": "Instalando...",
+    "install your app": "Instalar um aplicativo do repositório Github dele",
+    "market install your app": "Só copie/cole o URL do Git dele no campo abaixo:",
+    "market install your app tutorial": "Para saber mais sobre como construir seu próprio aplicativo, sinta-se livre para ler nosso",
+    "market app tutorial": "tutorial",
+    "help send message title": "Escrever diretamente ao time Cozy",
+    "help send message explanation": "Aqui você pode nos dar suas opiniões, reportar erros e solicitar assistência. Nós responderemos o mais rápido possível.",
+    "help send message action": "Envie nos uma mensagem",
+    "help send logs": "Envie registros do servidor para facilitar a eliminação dos erros.",
+    "send message success": "Mensagem enviada com sucesso!",
+    "send message error": "Um erro ocorreu enviando sua mensagem para o suporte. Tente envia-lo utilizando um cliente e-mail a support@cozycloud.cc",
+    "account change password success": "A senha foi alterada com sucesso.",
+    "account change password short": "A nova senha está muito curta.",
+    "account change password difference": "A confirmação da senha não corresponde a nova senha.",
     "account change password error": "There was something wrong while changing your password. Ensure that your previous password is correct.",
     "account background add": "Add background",
     "introduction market": "Welcome to the Cozy store!\nHere, you can install\napps provided by Cozy Cloud, apps from the community or apps built by yourself!",
@@ -3960,8 +4566,6 @@ module.exports = {
     "questions and help forum": "Forum pentru întrebări și ajutor",
     "sign out": "Delogare",
     "open in a new tab": "Deschide în tab nou",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "mereu pornit",
     "keep always on": "păstreaza mereu pornit",
     "stop this app": "Stop this app",
@@ -3987,10 +4591,23 @@ module.exports = {
     "configuration": "Configurare",
     "assistance": "Asistență",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Applications",
     "manage your devices": "Connected devices",
     "synchronized": "sincronizat",
@@ -4016,6 +4633,7 @@ module.exports = {
     "english": "Engleză",
     "german": "Germană",
     "spanish": "Spanish",
+    "korean": "Korean",
     "portuguese": "Portugheză",
     "change password procedure": "Pași pentru a-ți schimba parola",
     "current password": "parola curentă",
@@ -4101,7 +4719,11 @@ module.exports = {
     "help": "Help",
     "change layout": "Schimbă formatul de afișare",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -4230,8 +4852,6 @@ module.exports = {
     "questions and help forum": "Questions and help forum",
     "sign out": "Sign out",
     "open in a new tab": "Open in a new tab",
-    "disk unit": "GB",
-    "memory unit": "MB",
     "always on": "always on",
     "keep always on": "keep always on",
     "stop this app": "Stop this app",
@@ -4257,10 +4877,23 @@ module.exports = {
     "configuration": "Configuration",
     "assistance": "Assistance",
     "hardware consumption": "Hardware",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "Storage",
+    "status memory label": "Memory",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "manage your applications": "Applications",
     "manage your devices": "Connected devices",
     "synchronized": "synchronized",
@@ -4286,6 +4919,7 @@ module.exports = {
     "english": "English",
     "german": "German",
     "spanish": "Spanish",
+    "korean": "Korean",
     "portuguese": "Portuguese",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
@@ -4371,7 +5005,11 @@ module.exports = {
     "help": "Help",
     "change layout": "Change the layout",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Install an app from its Git Repository",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -4463,18 +5101,22 @@ module.exports = {
     "email": "Email",
     "timezone": "Часовой пояс",
     "domain": "Домен",
-    "no domain set": "домен.не.задан",
+    "no domain set": "Домен не задан",
     "locale": "Язык",
     "change password": "Изменить пароль",
-    "input your current password": "Enter your current password:",
-    "enter a new password": "Enter your new password:",
-    "confirm new password": "Confirm your new password:",
+    "input your current password": "Ваш текущий пароль:",
+    "enter a new password": "Новый пароль:",
+    "confirm new password": "Подтвердите новый пароль:",
     "send changes": "Сохранить",
     "manage": "Управление",
     "total": "Всего",
     "memory consumption": "Использование памяти",
     "disk consumption": "Использование диска",
+<<<<<<< HEAD
     "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
+=======
+    "you have no notifications": "<span>Привет %{name}</span><br>Нет новых уведомлений.",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "dismiss all": "Отклонить все",
     "add application": "Добавить приложение?",
     "install": "Установить",
@@ -4491,52 +5133,70 @@ module.exports = {
     "applications permissions": "Права приложения",
     "confirm": "Подтвердить",
     "installing": "Установка",
+<<<<<<< HEAD
     "remove": "Remove",
     "update": "Update",
     "config application unmark favorite": "unmark as favorite",
     "config application mark favorite": "mark as favorite",
+=======
+    "remove": "Удалить",
+    "update": "Обновить",
+    "config application unmark favorite": "убрать из избранного",
+    "config application mark favorite": "добавить в избранное",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "started": "начато",
     "notifications": "Уведомления",
     "questions and help forum": "Вопросы и форум помощи",
     "sign out": "Выйти",
     "open in a new tab": "Открыть в новой вкладке",
-    "disk unit": "Гб",
-    "memory unit": "Мб",
     "always on": "всегда включено",
     "keep always on": "держать всегда включенным",
-    "stop this app": "Stop this app",
+    "stop this app": "Остановить это приложение",
     "update required": "Доступно обновление",
-    "navbar faq": "Frequently Asked Questions",
+    "navbar faq": "Часто задаваемые вопросы",
     "application is installing": "Приложение уже устанавливается.\nДождитесь завершения, затем повторите попытку.",
-    "no app message": "You currently have no app installed on your Cozy.\nGo to the <a href=\"#applications\">Cozy store</a> and install new apps!",
-    "welcome to app store": "Welcome to your Cozy store, install your own app from here\nor add one from the available list.",
+    "no app message": "Приложения не установлены.\nПерейдите в <a href=\"#applications\">магазин приложений Cozy</a> и выберите приложения для установки!",
+    "welcome to app store": "Добро пожаловать в магазин приложений Cozy.",
     "installed everything": "Вы уже все установили!",
     "already similarly named app": "У вас уже есть приложение с таким именем.",
     "your app list": "Доступ к приложениям",
     "customize your cozy": "Настройте свой макет",
-    "manage your apps": "Applications",
+    "manage your apps": "Приложения",
     "choose your apps": "Выберите приложения",
     "configure your cozy": "Настройте ваш cozy",
     "ask for assistance": "Попросить о помощи",
-    "logout": "Sign out",
-    "navbar logout": "Sign out",
+    "logout": "Выход",
+    "navbar logout": "Выход",
     "welcome to your cozy": "Добро пожаловать в ваш Cozy!",
     "you have no apps": "У вас нет приложений.",
     "app management": "Управление приложением",
-    "app store": "Store",
+    "app store": "Магазин",
     "configuration": "Конфигурация",
     "assistance": "Помощь",
     "hardware consumption": "Аппаратные средства",
+<<<<<<< HEAD
     "hard drive gigabytes": "Storage",
     "gigabytes": "GB",
     "megabytes": "MB",
     "memory megabytes": "Memory",
     "manage your applications": "Applications",
     "manage your devices": "Connected devices",
+=======
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "Мб.",
+    "status hard drive label": "Дисковое пространство",
+    "memory megabytes": "Память",
+    "hard drive gigabytes": "Место на диске",
+    "status memory label": "Память",
+    "manage your applications": "Приложения",
+    "manage your devices": "Устройства",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "synchronized": "синхронизировано",
-    "revoke device access": "Revoke device",
+    "revoke device access": "Отозвать доступ устройства",
     "no application installed": "Нет установленных приложений.",
     "your parameters": "Настройки",
+<<<<<<< HEAD
     "alerts and password recovery email": "Your email is used for notifications or password recovery.",
     "public name description": "Your username will be displayed when you share files with people or invite them to events.",
     "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
@@ -4551,13 +5211,31 @@ module.exports = {
     "account localization": "Localization",
     "account identifiers": "Account",
     "account personalization": "Customization",
+=======
+    "alerts and password recovery email": "Ваш e-mail используется для уведомлений или восстановления пароля.",
+    "public name description": "Ваше никнейм будет показан при расшаривании файлов или в приглашениях на события календаря.",
+    "domain name for urls and email": "Домен используется для The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
+    "your timezone is required": "Ваш часовой пояс используется для корректного отображения событий в календаре.",
+    "save": "Сохранить",
+    "saved": "Сохранено",
+    "error": "Ошибка",
+    "error proper email": "Указанный e-mail некорректен",
+    "error email empty": "Указанный e-mail пустой",
+    "Chose the language you want I use to speak with you:": "Выберите язык:",
+    "account background selection": "Выберите фон для Cozy Home:",
+    "account localization": "Локализация",
+    "account identifiers": "Аккаунт",
+    "account personalization": "Настройка",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "account password": "Password",
     "french": "Французский",
     "english": "Английский",
     "german": "Немецкий",
     "spanish": "Spanish",
+    "korean": "Корейский",
     "portuguese": "Португальский",
     "change password procedure": "Этап изменения пароля",
+<<<<<<< HEAD
     "current password": "текущий пароль",
     "new password": "новый пароль",
     "confirm your new password": "подтвердите новый пароль",
@@ -4568,6 +5246,18 @@ module.exports = {
     "help email title": "Email",
     "help twitter title": "Twitter",
     "help forum title": "Forum",
+=======
+    "current password": "Текущий пароль",
+    "new password": "Новый пароль",
+    "confirm your new password": "Подтвердите новый пароль",
+    "save your new password": "Сохранить новый пароль",
+    "do you want assistance": "Вам помочь?",
+    "contact us more options": "Еще несколько способов связаться с нами:",
+    "community support content": "Our Community grows everyday and will be happy to give you a hand on these medias:",
+    "help email title": "Email",
+    "help twitter title": "Twitter",
+    "help forum title": "Форму",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "help IRC title": "IRC",
     "help wiki title": "Wiki",
     "Visit the project website and learn to build your app:": "Visit the project website:",
@@ -4594,27 +5284,40 @@ module.exports = {
     "applications broken": "Приложения испорчены",
     "cozy platform": "Платформа",
     "navbar back button title": "Back Home",
-    "navbar notifications": "Notifications",
-    "or:": "or:",
+    "navbar notifications": "Уведомления",
+    "or:": "или:",
     "reboot stack": "Перезагрузить",
     "update error": "Произошла ошибка при обновлении приложения",
+<<<<<<< HEAD
     "error update uninstRlled app": "You can't update an app that is not installed.",
     "notification open application": "Open application",
     "notification update stack": "Update the platform",
     "notification update application": "Update now",
+=======
+    "error update uninstRlled app": "Вы не можете обновить неустановленное приложение.",
+    "notification open application": "Открыть приложение",
+    "notification update stack": "Обновить платформу",
+    "notification update application": "Обновить",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "broken": "испорчено",
-    "start this app": "Start this app",
+    "start this app": "Запустить приложение",
     "stopped": "остановлено",
-    "retry to install": "Retry installation",
-    "cozy account title": "Cozy - Settings",
-    "cozy app store title": "Cozy - Store",
+    "retry to install": "Попробовать еще раз",
+    "cozy account title": "Cozy - Настройки",
+    "cozy app store title": "Cozy - Магазин",
     "cozy home title": "Cozy - Главная",
-    "cozy applications title": "Cozy - Status",
+    "cozy applications title": "Cozy - Состояние",
     "running": "работает",
     "cozy help title": "Cozy - Помощь",
+<<<<<<< HEAD
     "help support title": "Official Support",
     "help community title": "Community Support",
     "help documentation title": "Documentation",
+=======
+    "help support title": "Официальная поддержка",
+    "help community title": "Поддержка сообщества",
+    "help documentation title": "Документация",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "changing locale requires reload": "Изменение языка требует перезагрузки страницы.",
     "cancel": "отмена",
     "abort": "отменить",
@@ -4641,7 +5344,11 @@ module.exports = {
     "help": "Help",
     "change layout": "Сменить макет",
     "market app install": "Installing...",
+<<<<<<< HEAD
     "install your app": "Install apps from its Git Repository",
+=======
+    "install your app": "Установить приложение из репозитария GitHub",
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
     "market install your app": "Just copy/paste its Git URL in the field below:",
     "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
     "market app tutorial": "tutorial",
@@ -4689,10 +5396,10 @@ module.exports = {
     "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
     "hastebin description": "A simple pastebin, a tool to easily share texts.",
     "polybios description": "Manage your PGP keys from your browser.",
-    "reminder title email": "Reminder",
-    "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
-    "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
-    "reminder message": "Reminder: %{message}",
+    "reminder title email": "Напоминание",
+    "reminder title email expanded": "Напоминание: %{description} - %{date} (%{calendar})",
+    "reminder message expanded": "Напоминание: %{description}\nНачало: %{start} (%{timezone})\nКонец: %{end} (%{timezone})\nМесто: %{place}\nДетали: %{details}",
+    "reminder message": "Напоминание: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
@@ -4722,7 +5429,12 @@ module.exports = {
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
     "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+<<<<<<< HEAD
 };
+=======
+}
+;
+>>>>>>> 78370453ad78b965373882c98d950be621c1a94a
 });
 
 require.register("models/application", function(exports, require, module) {
@@ -5197,6 +5909,25 @@ module.exports = StackApplication = (function(_super) {
 })(Backbone.Model);
 });
 
+;require.register("models/token", function(exports, require, module) {
+var Token, client;
+
+client = require('helpers/client');
+
+module.exports = Token = (function() {
+  function Token(name) {
+    this.name = name;
+  }
+
+  Token.prototype.getToken = function(callbacks) {
+    return client.get("api/getToken/" + this.name, callbacks);
+  };
+
+  return Token;
+
+})();
+});
+
 ;require.register("models/user", function(exports, require, module) {
 var BaseModel, User, client,
   __hasProp = {}.hasOwnProperty,
@@ -5225,11 +5956,13 @@ module.exports = User = (function(_super) {
 });
 
 ;require.register("routers/main_router", function(exports, require, module) {
-var MainRouter, ObjectPickerCroper, _ref,
+var MainRouter, ObjectPickerCroper, Token, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 ObjectPickerCroper = require('../views/object_picker');
+
+Token = require("../models/token");
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
@@ -5258,12 +5991,24 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.initialize = function() {
     var _this = this;
     return window.addEventListener('message', function(event) {
-      var e, intent, intentType;
+      var appName, e, iframeName, intent, intentType, token;
       if (event.origin !== window.location.origin) {
         return false;
       }
       intent = event.data;
       switch (intent.action) {
+        case 'getToken':
+          iframeName = document.activeElement.id;
+          appName = iframeName.substring(0, iframeName.indexOf('-'));
+          token = new Token(appName);
+          return token.getToken({
+            success: function(data) {
+              return app.mainView.displayToken(data, iframeName);
+            },
+            error: function() {
+              return alert('Server error occured, get token failed.');
+            }
+          });
         case 'goto':
           return _this.navigate("apps/" + intent.params, true);
         case void 0:
@@ -5381,6 +6126,9 @@ var __val__ = t('german')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="es">');
 var __val__ = t('spanish')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option><option value="ko">');
+var __val__ = t('korean')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select></div></div><h4>');
 var __val__ = t('account password')
@@ -5585,10 +6333,10 @@ buf.push('</h4></div><div class="mod left w30"><section><h4>');
 var __val__ = t('hardware consumption')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="block-container"><div class="info-block disk-space"><div class="icon-hard-drive"></div><div><span class="title">');
-var __val__ = t('hard drive gigabytes')
+var __val__ = t('status hard drive label')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><div class="line"><span class="amount">0</span><div class="lowlight"> / <span class="total">0</span> ' + escape((interp = t('gigabytes')) == null ? '' : interp) + '</div></div></div></div><div class="info-block memory-free"><div class="icon-speed-counter"></div><div><span class="title">');
-var __val__ = t('memory megabytes')
+var __val__ = t('status memory label')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span><div class="line"><span class="amount">0</span><div class="lowlight"> / <span class="total">0</span> ' + escape((interp = t('megabytes')) == null ? '' : interp) + '</div></div></div></div></div></section><section><h4 class="title-device h4">');
 var __val__ = t('manage your devices')
@@ -5729,7 +6477,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="http://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
+buf.push('<div id="no-app-message" class="w600"><div id="start-title" class="darkbg clearfix"><a href="https://cozy.io"><img src="img/happycloud.png" class="logo"/></a><p class="biggest">');
 var __val__ = t('welcome to your cozy')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></div><p class="bigger">');
@@ -5741,28 +6489,28 @@ buf.push(null == __val__ ? "" : __val__);
 buf.push('</p></div><div id="app-list"><section id="apps-favorite" class="line"><h2>');
 var __val__ = t('home section favorites')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-leave" class="line"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-leave" class="line"><h2>');
 var __val__ = t('home section leave')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-main" class="line"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-main" class="line"><h2>');
 var __val__ = t('home section main')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-productivity" class="line"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-productivity" class="line"><h2>');
 var __val__ = t('home section productivity')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-data" class="line"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-data" class="line"><h2>');
 var __val__ = t('home section data management')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-watch" class="line"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-watch" class="line"><h2>');
 var __val__ = t('home section personal watch')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-misc" class="line"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-misc" class="line"><h2>');
 var __val__ = t('home section misc')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2></section><section id="apps-platform" class="line show"><h2>');
+buf.push('</h2><div class="application-container"></div></section><section id="apps-platform" class="line show"><h2>');
 var __val__ = t('home section platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
+buf.push('</h2><div class="application-container"><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/state.svg" class="icon svg"/><p class="app-title">');
@@ -5774,7 +6522,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#help" class="application-inner"><a href="#help"><img src="img/apps/help.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('help')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div></section></div>');
+buf.push('</p></a></div></div></div></section></div>');
 }
 return buf.join("");
 };
@@ -5843,7 +6591,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p><div class="error alert-error"></div><div class="info alert"></div><p class="more">');
 var __val__ = t('market install your app tutorial')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('<a href="http://cozy.io/hack/getting-started/" target="_blank">');
+buf.push('<a href="https://docs.cozy.io/en/hack/getting-started/" target="_blank">');
 var __val__ = t('market app tutorial')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a>.</p></div></div></div><div class="md-overlay"></div>');
@@ -6157,13 +6905,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button></p></div><div id="end-screen" class="line pa2 question"><p class="help-text mt2">');
 var __val__ = t('tutorial final headline')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><ul><li><a href="http://cozy.io/mobile/files.html">');
+buf.push('</p><ul><li><a href="https://docs.cozy.io/en/mobile/files.html">');
 var __val__ = t('tutorial doc files link')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></li><li><a href="http://cozy.io/mobile/contacts.html">');
+buf.push('</a></li><li><a href="https://docs.cozy.io/en/mobile/contacts.html">');
 var __val__ = t('tutorial doc contacts link')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></li><li><a href="http://cozy.io/mobile/calendar.html">');
+buf.push('</a></li><li><a href="https://docs.cozy.io/en/mobile/calendar.html">');
 var __val__ = t('tutorial doc calendar link')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></li></ul><p class="center"><a href="#home" class="btn">');
@@ -7146,6 +7894,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
 
   ConfigApplicationsView.prototype.displayStackVersion = function() {
     var app, currentVersion, lastVersion, newVersion, _i, _len, _ref;
+    this.toUpdate = false;
     _ref = this.stackApps.models;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       app = _ref[_i];
@@ -7153,7 +7902,6 @@ module.exports = ConfigApplicationsView = (function(_super) {
       currentVersion = app.get('version').split('.');
       lastVersion = app.get('lastVersion') || '0.0.0';
       newVersion = lastVersion.split('.');
-      this.toUpdate = false;
       if (parseInt(currentVersion[2]) < parseInt(newVersion[2])) {
         this.$("." + (app.get('name'))).css('font-weight', "bold");
         this.$("." + (app.get('name'))).css('color', "Orange");
@@ -7177,7 +7925,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
     if (!(this.devices.length === 0)) {
       return this.$el.find('.title-device').after(this.deviceList.$el);
     } else {
-      return this.$el.find('.title-device').after("<div class='no-device'><p>" + (t('status no device')) + "</p><p>" + (t('mobile app promo')) + "</p><a role='button' href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'><i class='fa fa-android'></i><span>" + (t('download apk')) + "<span></a><a target='_blank' href='https://play.google.com/store/apps/details?id=io.cozy.files_client'><img src='http://developer.android.com/images/brand/en_app_rgb_wo_45.png'></a></div>");
+      return this.$el.find('.title-device').after("<div class='no-device'>\n  <p>" + (t('status no device')) + "</p>\n  <p>" + (t('mobile app promo')) + "</p>\n  <a role='button'\n     href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'>\n    <i class='fa fa-android'></i>\n    <span>" + (t('download apk')) + "<span>\n  </a>\n  <a target='_blank'\n     href='https://play.google.com/store/apps/details?id=io.cozy.files_client'>\n    <img src='https://developer.android.com/images/brand/en_app_rgb_wo_45.png'>\n  </a>\n</div>\"");
     }
   };
 
@@ -7190,8 +7938,16 @@ module.exports = ConfigApplicationsView = (function(_super) {
       if (err) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
-        diskUsed = "" + data.usedDiskSpace;
-        diskTotal = "" + data.totalDiskSpace;
+        if (data.usedUnit === 'T') {
+          data.usedUnit = 'G';
+          data.usedDiskSpace *= 1000;
+        }
+        if (data.totalUnit === 'T') {
+          data.totalUnit = 'G';
+          data.totalDiskSpace *= 1000;
+        }
+        diskUsed = "" + data.usedDiskSpace + " ";
+        diskTotal = "" + data.totalDiskSpace + " ";
         _this.displayMemory(data.freeMem, data.totalMem);
         return _this.displayDiskSpace(diskUsed, diskTotal);
       }
@@ -7631,10 +8387,11 @@ module.exports = ApplicationsListView = (function(_super) {
   };
 
   ApplicationsListView.prototype.appendView = function(view) {
-    var section, sectionName;
+    var section, sectionName, section_apps;
     sectionName = view.model.getSection();
     section = this.$("section#apps-" + sectionName);
-    section.append(view.$el);
+    section_apps = this.$("section#apps-" + sectionName + " .application-container");
+    section_apps.append(view.$el);
     section.addClass('show');
     return section.show();
   };
@@ -7668,7 +8425,7 @@ Modal = require('./error_modal');
 module.exports = ApplicationRow = (function(_super) {
   __extends(ApplicationRow, _super);
 
-  ApplicationRow.prototype.className = "application w360-33 w640-25 full-20 mod left";
+  ApplicationRow.prototype.className = "application w360-33 w640-25 full-20";
 
   ApplicationRow.prototype.tagName = "div";
 
@@ -9647,7 +10404,7 @@ module.exports = HomeView = (function(_super) {
     window.document.title = t("cozy applications title");
     window.app.routers.main.navigate('config-applications', false);
     return setTimeout(function() {
-      return _this.configApplications.onUpdateStackClicked();
+      return _this.configApplications.onUpdateClicked();
     }, 500);
   };
 
@@ -9778,6 +10535,14 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.getAppFrame = function(slug) {
     return this.$("#" + slug + "-frame");
+  };
+
+  HomeView.prototype.displayToken = function(token, slug) {
+    var iframeWin;
+    iframeWin = document.getElementById("" + slug).contentWindow;
+    return iframeWin.postMessage({
+      token: token
+    }, '*');
   };
 
   return HomeView;
@@ -11618,10 +12383,15 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.renderDescription = function() {
-    var description, docType, permission, permissions, permissionsDiv, _ref1;
+    var description, docType, localeDesc, localeKey, permission, permissions, permissionsDiv, _ref1;
     this.body.html("");
-    description = t(this.model.get("description"));
-    this.header.parent().append("<p class=\"line\"> " + description + " </p>");
+    description = this.model.get('description');
+    localeKey = "" + (this.model.get('name')) + " description";
+    localeDesc = t(localeKey);
+    if (localeDesc === localeKey) {
+      localeDesc = t(description);
+    }
+    this.header.parent().append("<p class=\"line\"> " + localeDesc + " </p>");
     permissions = this.model.get("permissions");
     if ((permissions == null) || Object.keys(permissions).length === 0) {
       permissionsDiv = $("<div class='permissionsLine'>\n    <h5>" + (t('no specific permissions needed')) + " </h5>\n</div>");

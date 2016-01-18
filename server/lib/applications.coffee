@@ -10,7 +10,7 @@ module.exports = appHelpers =
     # Create an access token at the format expected by the Data System.
     # The token is randomly created and is big enough to ensure uniqueness
     # of every token.
-    createAccessToken: ->
+    newAccessToken: ->
         length = 32
         string = ""
         while (string.length < length)
@@ -44,9 +44,17 @@ module.exports = appHelpers =
 
     # Update app Metadata after an install.
     markInstalled: (appli, callback=->) ->
-        updatedData =
-            state: "installed"
-            port: appli.port
+
+        if appli.type is 'static'
+            updatedData =
+                state: "installed"
+                type: appli.type
+                path: appli.path
+        else
+            updatedData =
+                state: "installed"
+                port: appli.port
+
         appli.updateAttributes updatedData, (err) ->
             return callback err if err
             log.info "Port saved for #{appli.name}: #{appli.port}"
@@ -103,7 +111,7 @@ module.exports = appHelpers =
             if err?
                 callback err
             else
-                app.password = appHelpers.getNewPassword()
+                app.password = appHelpers.newAccessToken()
 
                 # Extract access information
                 access =
@@ -145,12 +153,21 @@ module.exports = appHelpers =
 
             else if not result.drone?
                 err = new Error(
-                    "Controller has no informations about #{appli.name}."
+                    "Controller didn't return informations about #{appli.name}."
                 )
                 console.log err if err
+
             else
-                appli.port = result.drone.port
-                log.info "Install succeeded on port #{appli.port}."
+                if result.drone.type is 'static'
+                    appli.type = result.drone.type
+                    appli.path = result.drone.path
+                    msg = "Static app successfully installed."
+                else
+                    appli.port = result.drone.port
+                    msg = "Install succeeded, app is running on port "
+                    msg += "#{appli.port}."
+
+                log.info msg
                 callback appli
 
 
@@ -167,8 +184,7 @@ module.exports = appHelpers =
             # Update application
             manager.updateApp app, (err, result) ->
                 return callback err if err?
-                if app.state isnt "stopped"
-                    data.state = "installed"
+                data.state = "installed" if app.state isnt "stopped"
 
                 # Update metadata and icon.
                 app.updateAttributes data, (err) ->

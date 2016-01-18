@@ -28,8 +28,6 @@ startedApplications = {}
 # Remove a notification after an update
 removeAppUpdateNotification = (app) ->
     notifier = new NotificationsHelper 'home'
-    messageKey = 'update available notification'
-    message = localizationManager.t messageKey, appName: app.displayName
     notificationSlug = "home_update_notification_app_#{app.name}"
     notifier.destroy notificationSlug, (err) ->
         log.error err if err?
@@ -68,8 +66,7 @@ module.exports =
             if err
                 next err
             else if apps is null or apps.length is 0
-                res.send 404,
-                    error: localizationManager.t 'Application not found'
+                res.send 404, error: localizationManager.t 'app not found'
             else
                 req.application = apps[0]
                 next()
@@ -108,7 +105,7 @@ module.exports =
         Application.find req.params.id, (err, app) ->
             if err then sendError res, err
             else if app is null
-                err = new Error(localizationManager.t 'Application not found')
+                err = new Error(localizationManager.t 'app not found')
                 sendError res, err, 404
             else
                 res.send app
@@ -168,7 +165,7 @@ module.exports =
 
             if apps.length > 0 or req.body.slug is "proxy" or
                     req.body.slug is "home" or req.body.slug is "data-system"
-                err = new Error localizationManager.t "already similarly named app"
+                err = new Error localizationManager.t "similarly named app"
                 return sendError res, err, 400
 
             manifest = new Manifest()
@@ -177,11 +174,14 @@ module.exports =
                 # Retrieve access
                 access.permissions = manifest.getPermissions()
                 access.slug = req.body.slug
+
                 # Retrieve application
                 req.body.widget = manifest.getWidget()
                 req.body.version = manifest.getVersion()
                 req.body.color = manifest.getColor()
                 req.body.state = 'installing'
+                # get type to see if it's a static app
+                req.body.type = manifest.getType()
 
                 # Create application in database
                 Application.create req.body, (err, appli) ->
@@ -214,7 +214,7 @@ module.exports =
                         return sendError res, err if err
                     res.send
                         success: true
-                        msg: localizationManager.t 'application successfuly uninstalled'
+                        msg: localizationManager.t 'successfuly uninstalled'
 
 
         manager.uninstallApp req.application, (err, result) ->
@@ -235,7 +235,7 @@ module.exports =
             return appHelpers.markBroken req.application, err if err?
             res.send
                 success: true
-                msg: localizationManager.t 'application successfuly updated'
+                msg: localizationManager.t 'successfuly updated'
 
 
     # Update all applications :
@@ -263,27 +263,31 @@ module.exports =
             manifest = new Manifest()
             manifest.download app, (err) ->
                 if err?
-                    sendError res, message: error
+                    sendError res, message: err
                 else
                     app.getAccess (err, access) ->
-                        if JSON.stringify(access.permissions) isnt
-                                JSON.stringify(manifest.getPermissions())
-                            return callback()
-                        if app.needsUpdate? and app.needsUpdate or
-                                app.version isnt manifest.getVersion()
-                            if app.state in ["installed", "stopped"]
-                                # Update application
-                                console.log("Update #{app.name} (#{app.state})")
-                                appHelpers.update app, (err) ->
-                                    if err?
-                                        error[app.name] = err
-                                        broken app, err, callback
-                                    else
-                                        callback()
+
+                        if err?
+                            sendError res, message: err
+                        else
+                            if JSON.stringify(access.permissions) isnt
+                                    JSON.stringify(manifest.getPermissions())
+                                return callback()
+                            if app.needsUpdate? and app.needsUpdate or
+                                    app.version isnt manifest.getVersion()
+                                if app.state in ["installed", "stopped"]
+                                    # Update application
+                                    console.log("Update #{app.name} (#{app.state})")
+                                    appHelpers.update app, (err) ->
+                                        if err?
+                                            error[app.name] = err
+                                            broken app, err, callback
+                                        else
+                                            callback()
+                                else
+                                    callback()
                             else
                                 callback()
-                        else
-                            callback()
 
         Application.all (err, apps) ->
             async.forEachSeries apps, updateApps, () ->
@@ -292,7 +296,7 @@ module.exports =
                 else
                     res.send
                         success: true
-                        msg: localizationManager.t 'application successfuly updated'
+                        msg: localizationManager.t 'successfuly updated'
 
 
 
@@ -321,7 +325,8 @@ module.exports =
             req.application.updateAccess data, (err) ->
                 # Start application
                 manager.start req.application, (err, result) ->
-                    if err and err isnt localizationManager.t "not enough memory"
+                    if err and
+                    err isnt localizationManager.t "not enough memory"
                         delete startedApplications[req.application.id]
                         return appHelpers.markBroken req.application, err
                     else if err
@@ -359,7 +364,7 @@ module.exports =
                                 else
                                     res.send
                                         success: true
-                                        msg: localizationManager.t 'application running'
+                                        msg: localizationManager.t 'running'
                                         app: req.application
 
         else
@@ -426,7 +431,6 @@ module.exports =
                         slug: app.slug
                     iconInfos = icons.getIconInfos infos
                 catch err
-                    console.log err
                     iconInfos = null
                 data.iconType = iconInfos?.extension or null
 
@@ -458,4 +462,18 @@ module.exports =
                 , 500
             else
                 res.send 200, data
+
+    # get token for static application access
+    getToken: (req, res, next) ->
+        Application.all key: req.params.name, (err, apps) ->
+            return sendError res, err if err
+            Application.getToken apps[0]._id, (err, access) ->
+                if err?
+                    res.send
+                        error: true
+                        success: false
+                        message: err
+                    , 500
+                else
+                    res.send 200, access.token
 

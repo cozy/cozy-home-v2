@@ -26,6 +26,8 @@ module.exports = Application = cozydb.getModel('Application', {
   icon: String,
   iconPath: String,
   iconType: String,
+  path: String,
+  type: String,
   color: {
     type: String,
     "default": null
@@ -92,7 +94,24 @@ Application.prototype.getAccess = function(callback) {
   return dataClient.post("request/access/byApp/", {
     key: this.id
   }, function(err, res, body) {
-    return callback(err, body[0].value);
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(null, body[0].value);
+    }
+  });
+};
+
+Application.getToken = function(id, callback) {
+  dataClient.setBasicAuth('home', getToken());
+  return dataClient.post("request/access/byApp/", {
+    key: id
+  }, function(err, res, body) {
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(null, body[0].value);
+    }
   });
 };
 
@@ -150,6 +169,7 @@ Application.prototype.getHaibuDescriptor = function() {
   descriptor = {
     user: this.slug,
     name: this.slug,
+    type: this.type,
     domain: "127.0.0.1",
     repository: {
       type: "git",

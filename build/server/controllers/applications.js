@@ -13,9 +13,7 @@ async = require('async');
 
 cozydb = require('cozydb');
 
-log = require('printit');
-
-({
+log = require('printit')({
   prefix: "applications"
 });
 
@@ -38,12 +36,8 @@ icons = require('../lib/icon');
 startedApplications = {};
 
 removeAppUpdateNotification = function(app) {
-  var message, messageKey, notificationSlug, notifier;
+  var notificationSlug, notifier;
   notifier = new NotificationsHelper('home');
-  messageKey = 'update available notification';
-  message = localizationManager.t(messageKey, {
-    appName: app.displayName
-  });
   notificationSlug = "home_update_notification_app_" + app.name;
   return notifier.destroy(notificationSlug, function(err) {
     if (err != null) {
@@ -190,7 +184,7 @@ module.exports = {
         return next(err);
       } else if (apps === null || apps.length === 0) {
         return res.send(404, {
-          error: localizationManager.t('Application not found')
+          error: localizationManager.t('app not found')
         });
       } else {
         req.application = apps[0];
@@ -263,7 +257,7 @@ module.exports = {
       if (err) {
         return sendError(res, err);
       } else if (app === null) {
-        return sendError(res, new Error(localizationManager.t('Application not found')), 404);
+        return sendError(res, new Error(localizationManager.t('app not found')), 404);
       } else {
         return res.send(app);
       }
@@ -332,7 +326,7 @@ module.exports = {
         return sendError(res, err);
       }
       if (apps.length > 0 || req.body.slug === "proxy" || req.body.slug === "home" || req.body.slug === "data-system") {
-        err = new Error(localizationManager.t("already similarly named app"));
+        err = new Error(localizationManager.t("similarly named app"));
         return sendError(res, err, 400);
       }
       manifest = new Manifest();
@@ -346,6 +340,7 @@ module.exports = {
         req.body.version = manifest.getVersion();
         req.body.color = manifest.getColor();
         req.body.state = 'installing';
+        req.body.type = manifest.getType();
         return Application.create(req.body, function(err, appli) {
           if (err) {
             return sendError(res, err);
@@ -388,23 +383,35 @@ module.exports = {
                   sendErrorSocket(err);
                   return;
                 }
-                if (result.drone != null) {
-                  msg = "install succeeded on " + ("port " + appli.port);
-                  console.info(msg);
-                  updatedData = {
-                    state: "installed",
-                    port: result.drone.port
-                  };
+                if (result.drone) {
+                  if (result.drone.type === 'static') {
+                    updatedData = {
+                      state: "installed",
+                      type: result.drone.type,
+                      path: result.drone.path
+                    };
+                    msg = 'install succeeded on type ' + appli.type;
+                  } else {
+                    updatedData = {
+                      state: "installed",
+                      port: result.drone.port
+                    };
+                    msg = 'install succeeded on port ' + appli.port;
+                  }
                   return appli.updateAttributes(updatedData, function(err) {
                     if (err != null) {
                       return sendErrorSocket(err);
                     }
-                    console.info('saved port in db', appli.port);
+                    if (appli.port) {
+                      console.info('saved port in db', appli.port);
+                    } else {
+                      console.info('saved type in db', appli.type);
+                    }
                     return manager.resetProxy(function(err) {
                       if (err != null) {
                         return sendErrorSocket(err);
                       }
-                      return console.info('proxy reset', appli.port);
+                      return console.info('proxy reset', appli.port != null ? appli.port : appli.type);
                     });
                   });
                 } else {
@@ -439,7 +446,7 @@ module.exports = {
           });
           return res.send({
             success: true,
-            msg: localizationManager.t('application successfuly uninstalled')
+            msg: localizationManager.t('successfuly uninstalled')
           });
         });
       });
@@ -461,7 +468,7 @@ module.exports = {
       }
       return res.send({
         success: true,
-        msg: localizationManager.t('application successfuly updated')
+        msg: localizationManager.t('successfuly updated')
       });
     });
   },
@@ -494,30 +501,36 @@ module.exports = {
       return manifest.download(app, function(err) {
         if (err != null) {
           return sendError(res, {
-            message: error
+            message: err
           });
         } else {
           return app.getAccess(function(err, access) {
             var ref;
-            if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
-              return callback();
-            }
-            if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
-              if ((ref = app.state) === "installed" || ref === "stopped") {
-                console.log("Update " + app.name + " (" + app.state + ")");
-                return updateApp(app, function(err) {
-                  if (err != null) {
-                    error[app.name] = err;
-                    return broken(app, err, callback);
-                  } else {
-                    return callback();
-                  }
-                });
+            if (err != null) {
+              return sendError(res, {
+                message: err
+              });
+            } else {
+              if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
+                return callback();
+              }
+              if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
+                if ((ref = app.state) === "installed" || ref === "stopped") {
+                  console.log("Update " + app.name + " (" + app.state + ")");
+                  return updateApp(app, function(err) {
+                    if (err != null) {
+                      error[app.name] = err;
+                      return broken(app, err, callback);
+                    } else {
+                      return callback();
+                    }
+                  });
+                } else {
+                  return callback();
+                }
               } else {
                 return callback();
               }
-            } else {
-              return callback();
             }
           });
         }
@@ -532,7 +545,7 @@ module.exports = {
         } else {
           return res.send({
             success: true,
-            msg: localizationManager.t('application successfuly updated')
+            msg: localizationManager.t('successfuly updated')
           });
         }
       });
@@ -595,7 +608,7 @@ module.exports = {
                 } else {
                   return res.send({
                     success: true,
-                    msg: localizationManager.t('application running'),
+                    msg: localizationManager.t('running'),
                     app: req.application
                   });
                 }
@@ -679,7 +692,6 @@ module.exports = {
             iconInfos = icons.getIconInfos(infos);
           } catch (error1) {
             err = error1;
-            console.log(err);
             iconInfos = null;
           }
           data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
@@ -724,6 +736,26 @@ module.exports = {
       } else {
         return res.send(200, data);
       }
+    });
+  },
+  getToken: function(req, res, next) {
+    return Application.all({
+      key: req.params.name
+    }, function(err, apps) {
+      if (err) {
+        return sendError(res, err);
+      }
+      return Application.getToken(apps[0]._id, function(err, access) {
+        if (err != null) {
+          return res.send({
+            error: true,
+            success: false,
+            message: err
+          }, 500);
+        } else {
+          return res.send(200, access.token);
+        }
+      });
     });
   }
 };

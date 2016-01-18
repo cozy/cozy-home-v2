@@ -1,6 +1,6 @@
 #no-app-message.w600
     .darkbg#start-title.clearfix
-        a(href="http://cozy.io")
+        a(href="https://cozy.io")
             img.logo(src="img/happycloud.png")
         p.biggest= t('welcome to your cozy')
 
@@ -10,40 +10,48 @@
 #app-list
     section#apps-favorite.line
         h2= t('home section favorites')
+        div.application-container
     section#apps-leave.line
         h2= t('home section leave')
+        div.application-container
     section#apps-main.line
         h2= t('home section main')
+        div.application-container
     section#apps-productivity.line
         h2= t('home section productivity')
+        div.application-container
     section#apps-data.line
         h2= t('home section data management')
+        div.application-container
     section#apps-watch.line
         h2= t('home section personal watch')
+        div.application-container
     section#apps-misc.line
         h2= t('home section misc')
+        div.application-container
     section#apps-platform.line.show
         h2= t('home section platform')
-        div.application.mod.w360-33.w640-25.full-20.left.platform-app
-            .application-inner
-                a(href="#applications")
-                    img.icon(src="img/apps/store.svg")
-                    p.app-title= t('app store')
+        div.application-container
+            div.application.mod.w360-33.w640-25.full-20.left.platform-app
+                .application-inner
+                    a(href="#applications")
+                        img.icon(src="img/apps/store.svg")
+                        p.app-title= t('app store')
 
-        div.application.mod.w360-33.w640-25.full-20.left.platform-app
-            .application-inner
-                a(href="#config-applications")
-                    img.icon.svg(src="img/apps/state.svg")
-                    p.app-title= t('app status')
+            div.application.mod.w360-33.w640-25.full-20.left.platform-app
+                .application-inner
+                    a(href="#config-applications")
+                        img.icon.svg(src="img/apps/state.svg")
+                        p.app-title= t('app status')
 
-        div.application.mod.w360-33.w640-25.full-20.left.platform-app
-            .application-inner(href="#account")
-                a(href="#account")
-                    img.icon.svg(src="img/apps/settings.svg")
-                    p.app-title= t('settings')
+            div.application.mod.w360-33.w640-25.full-20.left.platform-app
+                .application-inner(href="#account")
+                    a(href="#account")
+                        img.icon.svg(src="img/apps/settings.svg")
+                        p.app-title= t('settings')
 
-        div.application.mod.w360-33.w640-25.full-20.left.platform-app
-            .application-inner(href="#help")
-                a(href="#help")
-                    img.icon.svg(src="img/apps/help.svg")
-                    p.app-title= t('help')
+            div.application.mod.w360-33.w640-25.full-20.left.platform-app
+                .application-inner(href="#help")
+                    a(href="#help")
+                        img.icon.svg(src="img/apps/help.svg")
+                        p.app-title= t('help')

@@ -1803,8 +1803,29 @@ h4 {
   color: #32363f;
   text-align: center;
 }
+#app-list section .application-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: multiple;
+  -o-box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
 .application {
   cursor: pointer;
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -o-box-flex: 0;
+  box-flex: 0;
+  -webkit-flex: none;
+  -ms-flex: none;
+  flex: none;
 }
 .application .application-inner {
   -webkit-border-radius: 5px;
@@ -2440,14 +2461,8 @@ h4 {
   text-transform: uppercase;
   color: #748192;
 }
-.info-block .amount {
-  font-size: 1.75em;
-  line-height: 1em;
-}
 .info-block .lowlight {
   display: inline-block;
-  font-size: 0.875em;
-  color: #4f5b69;
 }
 .info-block .fa {
   margin-right: 0.208333333333333em;
@@ -2576,6 +2591,7 @@ h4 {
   margin-right: 20px;
 }
 #market-view {
+  width: 100%;
   height: 100%;
 }
 #market-applications-list {
@@ -2598,7 +2614,6 @@ h4 {
   -webkit-justify-content: space-around;
   justify-content: space-around;
 }
-#market-view #no-app-message,
 .cozy-app {
   display: -webkit-box;
   display: -moz-box;
@@ -2631,7 +2646,6 @@ h4 {
   transition: all 0.2s ease-out;
 }
 @media (max-width: 25em) {
-  #market-view #no-app-message,
   .cozy-app {
     -webkit-box-orient: vertical;
     -moz-box-orient: vertical;
@@ -2642,18 +2656,15 @@ h4 {
   }
 }
 @media (max-width: 80em) {
-  #market-view #no-app-message,
   .cozy-app {
     width: 49%;
   }
 }
 @media (max-width: 48em) {
-  #market-view #no-app-message,
   .cozy-app {
     width: 100%;
   }
 }
-#market-view #no-app-message:hover,
 .cozy-app:hover {
   -webkit-transform: scale(1.05);
   -moz-transform: scale(1.05);
@@ -2664,39 +2675,32 @@ h4 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   z-index: 100;
 }
-#market-view #no-app-message.official,
 .cozy-app.official {
   border-color: #5cb8ff;
 }
-#market-view #no-app-message.official .comment,
 .cozy-app.official .comment {
   color: #33a6ff;
 }
-#market-view #no-app-message.install .app-text,
 .cozy-app.install .app-text {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-#market-view #no-app-message.install .installing-label,
 .cozy-app.install .installing-label {
   display: block;
   color: #acb8c5;
   font-style: italic;
 }
-#market-view #no-app-message .installing-label,
 .cozy-app .installing-label {
   display: none;
   margin-bottom: 10px;
 }
-#market-view #no-app-message h3,
 .cozy-app h3 {
   margin: 0;
   padding-bottom: 0;
   font-size: 1.375em;
   line-height: 2.25rem;
 }
-#market-view #no-app-message h3 span.beta,
 .cozy-app h3 span.beta {
   margin-left: 0.8em;
   padding: 0.2em 0.5em;
@@ -2709,22 +2713,18 @@ h4 {
   font-style: italic;
   font-weight: normal;
 }
-#market-view #no-app-message .app-text,
 .cozy-app .app-text {
   padding-left: 1em;
 }
-#market-view #no-app-message .comment,
 .cozy-app .comment {
   font-size: 1em;
   font-style: italic;
   color: #92a0b2;
 }
-#market-view #no-app-message p,
 .cozy-app p {
   margin: 0.25em 0 0.5em;
   line-height: 1.25em;
 }
-#market-view #no-app-message .app-img,
 .cozy-app .app-img {
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
@@ -2742,13 +2742,11 @@ h4 {
   vertical-align: center;
 }
 @media (max-width: 36.25em) {
-  #market-view #no-app-message .app-img,
   .cozy-app .app-img {
     width: 5em;
     height: 5em;
   }
 }
-#market-view #no-app-message .app-img img.svg,
 .cozy-app .app-img img.svg {
   width: 100%;
   height: 100%;
@@ -2766,6 +2764,7 @@ h4 {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding-bottom: 20px;
+  text-align: center;
 }
 #no-app-message #start-title {
   padding: 20px;
