@@ -57,7 +57,10 @@ module.exports = appHelpers =
 
         appli.updateAttributes updatedData, (err) ->
             return callback err if err
-            log.info "Port saved for #{appli.name}: #{appli.port}"
+            if appli.type isnt 'static'
+                log.info "Port saved for #{appli.name}: #{appli.port}"
+            else
+                log.info "Static app successfully installed: #{appli.name}."
 
             manager.resetProxy (err) ->
                 return callback err if err
