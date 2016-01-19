@@ -47,7 +47,8 @@ task 'tests', "Run tests #{taskDetails}", (opts) ->
     env += " USE_JS=true" if options['use-js']? and options['use-js']
     env += " NAME=home TOKEN=token"
     logger.info "Running tests with #{env}..."
-    command = "#{env} mocha " + files.join(" ") + " --reporter spec --colors "
+    command = "#{env} mocha " + files.join(" ") + " --reporter spec --colors " 
+    command += "--globals encode,decode,requestBodyBuffer "
     command += "--compilers coffee:coffee-script/register "
     command += "--timeout 10000 " # longer timeout before test failure
     exec command, (err, stdout, stderr) ->
