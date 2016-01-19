@@ -94,7 +94,7 @@ module.exports = appHelpers =
 
         appHelpers._runInstall appli, (appli) ->
             appHelpers.setIcon appli, (appli) ->
-                appHelpers.markedInstalled appli
+                appHelpers.markInstalled appli
 
 
     # Run the whole application update process:
@@ -148,7 +148,7 @@ module.exports = appHelpers =
     _runInstall: (appli, callback) ->
         manager.installApp appli, (err, result) ->
             if err
-                markBroken res, appli, err
+                appHelpers.markBroken appli, err
                 console.log err if err
 
             else if not result.drone?
