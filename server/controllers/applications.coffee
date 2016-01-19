@@ -158,7 +158,7 @@ module.exports =
         req.body.slug = req.body.slug or slugify req.body.name
         req.body.state = "installing"
         access =
-            password: appHelpers.getNewPassword()
+            password: appHelpers.newAccessToken()
 
         Application.all key: req.body.slug, (err, apps) ->
             return sendError res, err if err
@@ -318,7 +318,7 @@ module.exports =
         unless startedApplications[req.application.id]?
             startedApplications[req.application.id] = true
 
-            req.application.password = appHelpers.getNewPassword()
+            req.application.password = appHelpers.newAccessToken()
             data =
                 password: req.application.password
             # Update access
@@ -408,7 +408,7 @@ module.exports =
             if err?
                 callback err
             else
-                app.password = app.helpers.getNewPassword()
+                app.password = app.helpers.newAccessToken()
                 # Retrieve access
                 access =
                     permissions: manifest.getPermissions()
