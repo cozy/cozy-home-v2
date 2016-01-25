@@ -12,8 +12,8 @@ ControllerClient = require("cozy-clients").ControllerClient;
 client = request.newClient('http://localhost:9104/');
 
 getAuthController = function() {
-  var err, error, token;
-  if (process.env.NODE_ENV === 'production') {
+  var err, error, ref, token;
+  if ((ref = process.env.NODE_ENV) === 'production' || ref === 'test') {
     try {
       token = process.env.TOKEN;
       return token;

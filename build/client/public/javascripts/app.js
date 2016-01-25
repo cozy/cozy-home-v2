@@ -5084,7 +5084,7 @@ module.exports = MainRouter = (function(_super) {
           token = new Token(appName);
           return token.getToken({
             success: function(data) {
-              return app.mainView.displayToken(data, iframeName);
+              return app.mainView.displayToken(data, appName);
             },
             error: function() {
               return alert('Server error occured, get token failed.');
@@ -9620,9 +9620,10 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.displayToken = function(token, slug) {
     var iframeWin;
-    iframeWin = document.getElementById("" + slug).contentWindow;
+    iframeWin = document.getElementById("" + slug + "-frame").contentWindow;
     return iframeWin.postMessage({
-      token: token
+      token: token,
+      appName: slug
     }, '*');
   };
 
