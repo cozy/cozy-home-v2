@@ -316,7 +316,7 @@ module.exports =
                                             appli.port
                                         else console.info 'saved type in db', \
                                             appli.type
-                                        
+
                                         # Reset proxy
                                         manager.resetProxy (err) ->
                                             return sendErrorSocket err if err?

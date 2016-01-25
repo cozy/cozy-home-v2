@@ -46,7 +46,7 @@ class AppManager
 
     # Get token from token file if in production mode.
     getAuthController: ->
-        if process.env.NODE_ENV is 'production'
+        if process.env.NODE_ENV in ['production', 'test']
             try
                 token = process.env.TOKEN
                 return token
