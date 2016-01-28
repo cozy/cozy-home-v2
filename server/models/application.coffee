@@ -29,6 +29,7 @@ module.exports = Application = cozydb.getModel 'Application',
     version: String
     comment: String
     needsUpdate: {type: Boolean, default: false}
+    lastVersion: String
     favorite: {type: Boolean, default: false}
 
 # Get token from token file if in production mode.
@@ -95,8 +96,8 @@ Application.destroyAll = (params, callback) ->
 #
 # callback: function(err, needsUpdate)
 Application::checkForUpdate = (callback) ->
-    setFlag = =>
-        @updateAttributes needsUpdate: true, (err) ->
+    setFlag = (repoVersion) =>
+        @updateAttributes needsUpdate: true, lastVersion: repoVersion, (err) ->
             if err
                 callback err
             else
@@ -123,10 +124,10 @@ Application::checkForUpdate = (callback) ->
                     # worst case, the app on the cozy has the same version, but
                     # there's no way we can
                     # figure out.
-                    setFlag()
+                    setFlag repoVersion
 
                 else if @version isnt repoVersion
-                    setFlag()
+                    setFlag repoVersion
 
                 else
                     callback null, false
