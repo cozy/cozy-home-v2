@@ -52,8 +52,8 @@ module.exports = Application = cozydb.getModel('Application', {
 });
 
 getToken = function() {
-  var err, error, token;
-  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+  var err, error, ref, token;
+  if ((ref = process.env.NODE_ENV) === 'production' || ref === 'test') {
     try {
       token = process.env.TOKEN;
       return token;

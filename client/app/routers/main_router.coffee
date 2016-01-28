@@ -33,7 +33,7 @@ module.exports = class MainRouter extends Backbone.Router
                     token = new Token appName
                     token.getToken
                         success: (data) ->
-                            app.mainView.displayToken data, iframeName
+                            app.mainView.displayToken data, appName
                         error: ->
                             alert 'Server error occured, get token failed.'
                 when 'goto'

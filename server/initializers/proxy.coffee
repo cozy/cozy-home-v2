@@ -6,7 +6,7 @@ ControllerClient = require("cozy-clients").ControllerClient
 client = request.newClient 'http://localhost:9104/'
 
 getAuthController = ->
-    if process.env.NODE_ENV is 'production'
+    if process.env.NODE_ENV in ['production', 'test']
         try
             token = process.env.TOKEN
             return token

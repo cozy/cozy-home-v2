@@ -49,8 +49,8 @@ AppManager = (function() {
   };
 
   AppManager.prototype.getAuthController = function() {
-    var err, error, token;
-    if (process.env.NODE_ENV === 'production') {
+    var err, error, ref, token;
+    if ((ref = process.env.NODE_ENV) === 'production' || ref === 'test') {
       try {
         token = process.env.TOKEN;
         return token;
@@ -309,12 +309,14 @@ AppManager = (function() {
       return callback(null);
     } else {
       return this.client.stop(app.slug, function(err, res, body) {
+        var errMsg;
         if (!status2XX(res)) {
           if (err == null) {
             err = body.error;
           }
         }
-        if (err && err.indexOf('application not started') === -1) {
+        errMsg = 'application not installed';
+        if ((err != null) && typeof err === 'string' && (err.indexOf != null) && err.indexOf(errMsg) === -1) {
           err = new Error(err);
           console.log("Error stopping app: " + app.name);
           console.log(err.message);

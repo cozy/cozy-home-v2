@@ -9,8 +9,8 @@ module.exports = Adapter = (function() {
   function Adapter() {}
 
   Adapter.prototype.updateKeys = function(pwd, callback) {
-    var name, token;
-    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
+    var name, ref, token;
+    if ((ref = process.env.NODE_ENV) === 'production' || ref === 'test') {
       name = process.env.NAME;
       token = process.env.TOKEN;
       client.setBasicAuth(name, token);
@@ -23,8 +23,8 @@ module.exports = Adapter = (function() {
   };
 
   Adapter.prototype.initializeKeys = function(pwd, callback) {
-    var name, token;
-    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
+    var name, ref, token;
+    if ((ref = process.env.NODE_ENV) === 'production' || ref === 'test') {
       name = process.env.NAME;
       token = process.env.TOKEN;
       client.setBasicAuth(name, token);
@@ -37,8 +37,8 @@ module.exports = Adapter = (function() {
   };
 
   Adapter.prototype.updateUser = function(user, data, callback) {
-    var name, token;
-    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
+    var name, ref, token;
+    if ((ref = process.env.NODE_ENV) === 'production' || ref === 'test') {
       name = process.env.NAME;
       token = process.env.TOKEN;
       client.setBasicAuth(name, token);
