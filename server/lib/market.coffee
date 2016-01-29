@@ -80,6 +80,7 @@ getApps = module.exports.getApps = (cb) ->
         else
             download cb
 
+
 module.exports.getApp = (appli) ->
     appsMap = {}
     appsMap[app.slug] = app for app in apps

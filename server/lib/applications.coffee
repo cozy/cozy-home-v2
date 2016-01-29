@@ -87,7 +87,7 @@ module.exports = appHelpers =
 
     # Launch installation process. Build app metadata, save icon fetch app
     # then update app information in database.
-    install: (appli, manifest, access) ->
+    install: (appli, manifest, access, callback) ->
         infos = JSON.stringify appli
 
         log.info "Attempt to install app #{infos}"
@@ -97,7 +97,7 @@ module.exports = appHelpers =
 
         appHelpers._runInstall appli, (appli) ->
             appHelpers.setIcon appli, (appli) ->
-                appHelpers.markInstalled appli
+                appHelpers.markInstalled appli, callback
 
 
     # Run the whole application update process:
