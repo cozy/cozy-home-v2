@@ -2282,7 +2282,8 @@ h4 {
   flex: none;
   margin-right: 1em;
 }
-.config-application .icon-container .icon {
+.config-application .icon-container .icon,
+.config-application .icon-container .spinner {
   -webkit-border-radius: 30em;
   border-radius: 30em;
   padding: 0.8em;
@@ -2291,9 +2292,18 @@ h4 {
   box-shadow: 0 2px 6px rgba(0,0,0,0.16);
 }
 @media (max-width: 31.25em) {
-  .config-application .icon-container .icon {
+  .config-application .icon-container .icon,
+  .config-application .icon-container .spinner {
     width: 3.25em;
     padding: 0.5em;
+  }
+}
+.config-application .icon-container .spinner {
+  padding: 0;
+}
+@media (max-width: 31.25em) {
+  .config-application .icon-container .spinner {
+    padding: 0;
   }
 }
 .config-application .infos {
