@@ -29,12 +29,12 @@ module.exports = class MainRouter extends Backbone.Router
             switch intent.action
                 when 'getToken'
                     path = event.source.location.pathname
-                    appName = path.replace '/apps/', ''
-                    appName = appName.replace '/', '' if appName.slice -1 is '/'
-                    token = new Token appName
+                    slug = path.replace '/apps/', ''
+                    slug = slug.replace '/', '' if slug.slice -1 is '/'
+                    token = new Token slug
                     token.getToken
                         success: (data) ->
-                            app.mainView.displayToken data, appName
+                            app.mainView.displayToken data, slug
                         error: ->
                             alert 'Server error occured, get token failed.'
                 when 'goto'
