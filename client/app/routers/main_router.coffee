@@ -28,9 +28,9 @@ module.exports = class MainRouter extends Backbone.Router
             intent = event.data
             switch intent.action
                 when 'getToken'
-                    elements = document.getElementsByTagName 'iframe'
-                    iframeName = elements[0].getAttribute 'id'
-                    appName = iframeName.substring 0, iframeName.indexOf '-'
+                    path = event.source.location.pathname
+                    appName = path.replace '/apps/', ''
+                    appName = appName.replace '/', '' if appName.slice -1 is '/'
                     token = new Token appName
                     token.getToken
                         success: (data) ->
