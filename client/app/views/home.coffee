@@ -59,6 +59,6 @@ module.exports = class ApplicationsListView extends ViewCollection
     onAppRemoved: (model) =>
         sectionName = model.getSection()
         section = @$ "section#apps-#{sectionName}"
-        if section.children().length is 2
+        if section.find('.application-container').children().length is 1
             section.hide()
 

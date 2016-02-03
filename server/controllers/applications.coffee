@@ -5,7 +5,7 @@ slugify             = require 'cozy-slug'
 async               = require 'async'
 cozydb              = require 'cozydb'
 log                 = require('printit')
-    prefix: "applications"
+                        prefix: "applications"
 
 Application         = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
@@ -15,28 +15,23 @@ manager             = require('../lib/paas').get()
 market              = require '../lib/market'
 autostop            = require '../lib/autostop'
 icons               = require '../lib/icon'
+appHelpers          = require '../lib/applications'
+
 
 # Small hack to ensure that an user doesn't try to start an application twice
 # at the same time. We store there the ID of apps which are already started.
 # IDs are the keys, values are all equal to true.
 startedApplications = {}
 
-# Helpers
 
-# Remove a notification after an update
-removeAppUpdateNotification = (app) ->
-    notifier = new NotificationsHelper 'home'
-    notificationSlug = "home_update_notification_app_#{app.name}"
-    notifier.destroy notificationSlug, (err) ->
-        log.error err if err?
-
+# TODO: rewrite error management in this module.
 sendError = (res, err, code=500) ->
     err ?=
         stack:   null
         message: localizationManager.t "server error"
 
-    console.log "Sending error to client :"
-    console.log err.stack
+    log.info "Sending error to client :"
+    log.error err.stack
 
     res.send code,
         error: true
@@ -44,80 +39,6 @@ sendError = (res, err, code=500) ->
         message: err.message or err
         stack: err.stack
 
-sendErrorSocket = (err) ->
-    console.log "Sending error through socket"
-    console.log err.stack
-
-markBroken = (res, app, err) ->
-    console.log "Marking app #{app.name} as broken because"
-    console.log err.stack
-    data =
-        state: 'broken'
-        password: null
-    if err.result?
-        data.errormsg = err.message + ' :\n' + err.result
-    else if err.message?
-        data.errormsg = err.message + ' :\n' + err.stack
-    else
-        data.errormsg = err
-    data.errorcode = err.code
-    app.updateAttributes data, (saveErr) ->
-        log.error saveErr if saveErr
-
-# Define random function for application's token
-randomString = (length) ->
-    string = ""
-    while (string.length < length)
-        string = string + Math.random().toString(36).substr(2)
-    return string.substr 0, length
-
-updateApp = (app, callback) ->
-    data = {}
-    manifest = new Manifest()
-    manifest.download app, (err) ->
-        if err?
-            callback err
-        else
-            app.password = randomString 32
-            # Retrieve access
-            access =
-                permissions: manifest.getPermissions()
-                slug: app.slug
-                password: app.password
-            # Retrieve application
-            data.widget = manifest.getWidget()
-            data.version = manifest.getVersion()
-            data.iconPath = manifest.getIconPath()
-            data.color = manifest.getColor()
-            data.needsUpdate = false
-            try
-                # `icons.getIconInfos` needs info from 'data' and 'app'.
-                infos =
-                    git: app.git
-                    name: app.name
-                    icon: app.icon
-                    iconPath: data.iconPath
-                    slug: app.slug
-                iconInfos = icons.getIconInfos infos
-            catch err
-                console.log err if process.env.NODE_ENV isnt 'test'
-                iconInfos = null
-            data.iconType = iconInfos?.extension or null
-            # Update access
-            app.updateAccess access, (err) ->
-                return callback err if err?
-                manager.updateApp app, (err, result) ->
-                    return callback err if err?
-                    if app.state isnt "stopped"
-                        data.state = "installed"
-                    # Update application
-                    app.updateAttributes data, (err) ->
-                        removeAppUpdateNotification app
-                        icons.save app, iconInfos, (err) ->
-                            if err and process.env.NODE_ENV isnt 'test'
-                                console.log err.stack
-                            else console.info 'icon attached'
-                            manager.resetProxy callback
 
 baseIdController = new cozydb.SimpleController
     model: Application
@@ -175,8 +96,8 @@ module.exports =
         Application.find req.params.id, (err, app) ->
             if err then sendError res, err
             else if app is null
-                sendError res,
-                    new Error(localizationManager.t 'app not found'), 404
+                err = new Error(localizationManager.t 'app not found')
+                sendError res, err, 404
             else
                 res.send app
 
@@ -228,7 +149,7 @@ module.exports =
         req.body.slug = req.body.slug or slugify req.body.name
         req.body.state = "installing"
         access =
-            password: randomString 32
+            password: appHelpers.newAccessToken()
 
         Application.all key: req.body.slug, (err, apps) ->
             return sendError res, err if err
@@ -263,76 +184,11 @@ module.exports =
                         return sendError res, err if err
 
                         res.send success: true, app: appli, 201
-
-                        infos = JSON.stringify appli
-                        console.info "attempt to install app #{infos}"
-                        appli.password = access.password
-
-                        # Save icon first.
-                        appli.iconPath = manifest.getIconPath()
-                        appli.color = manifest.getColor()
-
-                        try
-                            iconInfos = icons.getIconInfos appli
-                        catch err
-                            if process.env.NODE_ENV isnt 'test'
-                                console.log err
-                            iconInfos = null
-                        appli.iconType = iconInfos?.extension or null
-                        icons.save appli, iconInfos, (err) ->
-
-                            if err and process.env.NODE_ENV isnt 'test'
-                                console.log err.stack
-
-                            else
-                                console.info 'icon attached'
-
-                            # Install / Start application
-                            manager.installApp appli, (err, result) ->
-                                if err
-                                    markBroken res, appli, err
-                                    sendErrorSocket err
-                                    return
-                                if result.drone
-                                    if result.drone.type is 'static'
-                                        # save the path for static app
-                                        updatedData =
-                                            state: "installed"
-                                            type: result.drone.type
-                                            path: result.drone.path
-                                        msg = 'install succeeded on type ' +
-                                            appli.type
-                                    else
-                                        updatedData =
-                                            state: "installed"
-                                            port: result.drone.port
-                                        msg = 'install succeeded on port ' +
-                                            appli.port
-                                    appli.updateAttributes updatedData, (err) ->
-                                        return sendErrorSocket err if err?
-
-                                        if appli.port
-                                            console.info 'saved port in db', \
-                                            appli.port
-                                        else console.info 'saved type in db', \
-                                            appli.type
-
-                                        # Reset proxy
-                                        manager.resetProxy (err) ->
-                                            return sendErrorSocket err if err?
-                                            console.info 'proxy reset', \
-                                            if appli.port?
-                                            then appli.port else appli.type
-                                else
-                                    err = new Error(
-                                        "Controller has no " + \
-                                        "informations about #{appli.name}"
-                                    )
-                                    return sendErrorSocket err if err
+                        appHelpers.install appli, manifest, access
 
 
     # Remove app from 3 places :
-    # * haibu, application managerll
+    # * haibu, application manager
     # * proxy, cozy router
     # * database
     uninstall: (req, res, next) ->
@@ -366,8 +222,8 @@ module.exports =
     # * proxy, cozy router
     # * database
     update: (req, res, next) ->
-        updateApp req.application, (err) ->
-            return markBroken res, req.application, err if err?
+        appHelpers.update req.application, (err) ->
+            return appHelpers.markBroken req.application, err if err?
             res.send
                 success: true
                 msg: localizationManager.t 'successfuly updated'
@@ -381,8 +237,8 @@ module.exports =
 
         error = {}
         broken = (app, err, cb) ->
-            console.log "Marking app #{app.name} as broken because"
-            console.log err.stack
+            log.warn "Marking app #{app.name} as broken because"
+            log.raw err.stack
             data =
                 state: 'broken'
                 password: null
@@ -391,7 +247,7 @@ module.exports =
             else
                 data.errormsg = err.message + ' :\n' + err.stack
             app.updateAttributes data, (saveErr) ->
-                console.log(saveErr) if saveErr?
+                log.error(saveErr) if saveErr?
                 cb()
 
         updateApps = (app, callback) ->
@@ -401,6 +257,7 @@ module.exports =
                     sendError res, message: err
                 else
                     app.getAccess (err, access) ->
+
                         if err?
                             sendError res, message: err
                         else
@@ -411,8 +268,8 @@ module.exports =
                                     app.version isnt manifest.getVersion()
                                 if app.state in ["installed", "stopped"]
                                     # Update application
-                                    console.log("Update #{app.name} (#{app.state})")
-                                    updateApp app, (err) ->
+                                    log.info("Update #{app.name} (#{app.state})")
+                                    appHelpers.update app, (err) ->
                                         if err?
                                             error[app.name] = err
                                             broken app, err, callback
@@ -442,7 +299,7 @@ module.exports =
         setTimeout () ->
             if startedApplications[req.application.id]?
                 delete startedApplications[req.application.id]
-                return markBroken res, req.application,
+                return appHelpers.markBroken req.application,
                     stack: "Installation timeout",
                     message: "Installation timeout"
 
@@ -452,7 +309,7 @@ module.exports =
         unless startedApplications[req.application.id]?
             startedApplications[req.application.id] = true
 
-            req.application.password = randomString 32
+            req.application.password = appHelpers.newAccessToken()
             data =
                 password: req.application.password
             # Update access
@@ -462,7 +319,7 @@ module.exports =
                     if err and
                     err isnt localizationManager.t "not enough memory"
                         delete startedApplications[req.application.id]
-                        return markBroken res, req.application, err
+                        return appHelpers.markBroken req.application, err
                     else if err
                         delete startedApplications[req.application.id]
                         data =
@@ -487,14 +344,14 @@ module.exports =
                         req.application.updateAttributes data, (err) ->
                             if err
                                 delete startedApplications[req.application.id]
-                                return markBroken res, req.application, err
+                                return appHelpers.markBroken req.application, err
 
                             # Reset proxy
                             manager.resetProxy (err) ->
                                 delete startedApplications[req.application.id]
 
                                 if err
-                                    markBroken res, req.application, err
+                                    appHelpers.markBroken req.application, err
                                 else
                                     res.send
                                         success: true
@@ -511,7 +368,7 @@ module.exports =
     stop: (req, res, next) ->
         # Stop application
         manager.stop req.application, (err, result) ->
-            return markBroken res, req.application, err if err
+            return appHelpers.markBroken req.application, err if err
 
             data =
                 state: 'stopped'
@@ -521,7 +378,7 @@ module.exports =
                 return sendError res, err if err
                 # Reset proxy
                 manager.resetProxy (err) ->
-                    return markBroken res, req.application, err if err
+                    return appHelpers.markBroken req.application, err if err
                     res.send
                         success: true
                         msg: localizationManager.t 'application stopped'
@@ -542,7 +399,7 @@ module.exports =
             if err?
                 callback err
             else
-                app.password = randomString 32
+                app.password = app.helpers.newAccessToken()
                 # Retrieve access
                 access =
                     permissions: manifest.getPermissions()
@@ -578,8 +435,8 @@ module.exports =
                         data.branch = branch
                         app.updateAttributes data, (err) ->
                             icons.save app, iconInfos, (err) ->
-                                if err then console.log err.stack
-                                else console.info 'icon attached'
+                                if err then log.error err.stack
+                                else log.info 'icon attached'
                                 manager.resetProxy () ->
                                     res.send
                                         success: true

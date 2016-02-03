@@ -182,6 +182,7 @@ describe "Applications management", ->
                 @client.put "api/applications/my-app/update", {}, done
 
             it "Then it sends me a success response", ->
+                console.log @body unless @response.statusCode is 200
                 @response.statusCode.should.equal 200
                 expect(@body.success).to.be.ok
 
@@ -320,6 +321,10 @@ describe "Applications management", ->
             it "Then it sends me a success response", ->
                 @response.statusCode.should.equal 200
                 expect(@body.success).to.be.ok
+
+            it "Wait a few", (done) ->
+                @timeout 3000
+                setTimeout done, 2000
 
             it "And controller have been requested to clean this app", ->
                 request = @controller.lastCall().request

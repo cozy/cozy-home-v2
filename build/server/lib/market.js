@@ -17,7 +17,7 @@ del = require('del');
 
 url = require('url');
 
-apps = {};
+apps = [];
 
 isDownloading = false;
 
@@ -71,7 +71,7 @@ download = module.exports.download = function(callback) {
     } else if (oldMarket != null) {
       apps = oldMarket.apps_list;
     } else {
-      apps = {};
+      apps = [];
     }
     return callback(err, apps);
   });
@@ -96,10 +96,12 @@ getApps = module.exports.getApps = function(cb) {
   }
 };
 
-module.exports.getApp = function(app) {
-  if (apps[app] != null) {
-    return [null, apps[app]];
-  } else {
-    return ['not found', null];
+module.exports.getApp = function(appli) {
+  var app, appsMap, i, len;
+  appsMap = {};
+  for (i = 0, len = apps.length; i < len; i++) {
+    app = apps[i];
+    appsMap[app.slug] = app;
   }
+  return appsMap[appli];
 };
