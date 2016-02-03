@@ -86,14 +86,14 @@ module.exports = appHelpers = {
     } catch (error) {
       err = error;
       if (process.env.NODE_ENV !== 'test') {
-        console.log(err);
+        log.error(err);
       }
       iconInfos = null;
     }
     appli.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
     return icons.save(appli, iconInfos, function(err) {
       if (err) {
-        console.log(err);
+        log.error(err);
       }
       log.info("Icon attached for " + appli.name);
       return callback(appli);
@@ -144,7 +144,7 @@ module.exports = appHelpers = {
         } catch (error) {
           err = error;
           if (process.env.NODE_ENV !== 'test') {
-            console.log(err);
+            log.error(err);
           }
           iconInfos = null;
         }
@@ -159,12 +159,12 @@ module.exports = appHelpers = {
       if (err) {
         appHelpers.markBroken(appli, err);
         if (err) {
-          return console.log(err);
+          return log.error(err);
         }
       } else if (result.drone == null) {
         err = new Error("Controller didn't return informations about " + appli.name + ".");
         if (err) {
-          return console.log(err);
+          return log.error(err);
         }
       } else {
         if (result.drone.type === 'static') {
@@ -197,9 +197,9 @@ module.exports = appHelpers = {
           removeAppUpdateNotification(app);
           return icons.save(app, iconInfos, function(err) {
             if (err && process.env.NODE_ENV !== 'test') {
-              console.log(err.stack);
+              log.error(err.stack);
             } else {
-              console.info('icon attached');
+              log.info('icon attached');
             }
             return manager.resetProxy(callback);
           });

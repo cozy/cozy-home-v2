@@ -58,8 +58,8 @@ sendError = function(res, err, code) {
       message: localizationManager.t("server error")
     };
   }
-  console.log("Sending error to client :");
-  console.log(err.stack);
+  log.info("Sending error to client :");
+  log.error(err.stack);
   return res.send(code, {
     error: true,
     success: false,
@@ -311,8 +311,8 @@ module.exports = {
     error = {};
     broken = function(app, err, cb) {
       var data;
-      console.log("Marking app " + app.name + " as broken because");
-      console.log(err.stack);
+      log.warn("Marking app " + app.name + " as broken because");
+      log.raw(err.stack);
       data = {
         state: 'broken',
         password: null
@@ -324,7 +324,7 @@ module.exports = {
       }
       return app.updateAttributes(data, function(saveErr) {
         if (saveErr != null) {
-          console.log(saveErr);
+          log.error(saveErr);
         }
         return cb();
       });
@@ -350,7 +350,7 @@ module.exports = {
               }
               if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
                 if ((ref = app.state) === "installed" || ref === "stopped") {
-                  console.log("Update " + app.name + " (" + app.state + ")");
+                  log.info("Update " + app.name + " (" + app.state + ")");
                   return appHelpers.update(app, function(err) {
                     if (err != null) {
                       error[app.name] = err;
@@ -541,9 +541,9 @@ module.exports = {
               return app.updateAttributes(data, function(err) {
                 return icons.save(app, iconInfos, function(err) {
                   if (err) {
-                    console.log(err.stack);
+                    log.error(err.stack);
                   } else {
-                    console.info('icon attached');
+                    log.info('icon attached');
                   }
                   return manager.resetProxy(function() {
                     return res.send({
