@@ -5,7 +5,7 @@ icons = require('../lib/icon');
 
 manager = require('../lib/paas').get();
 
-Manifest = require('../lib/manifest');
+Manifest = require('../lib/manifest').Manifest;
 
 log = require('printit')({
   prefix: "applications"
