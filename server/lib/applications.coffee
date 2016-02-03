@@ -1,8 +1,17 @@
 icons = require '../lib/icon'
 manager = require('../lib/paas').get()
 {Manifest} = require '../lib/manifest'
+NotificationsHelper = require 'cozy-notifications-helper'
+
 log = require('printit')
     prefix: "applications"
+
+# Remove a notification after an update
+removeAppUpdateNotification = (app) ->
+    notifier = new NotificationsHelper 'home'
+    notificationSlug = "home_update_notification_app_#{app.name}"
+    notifier.destroy notificationSlug, (err) ->
+        log.error err if err?
 
 
 module.exports = appHelpers =
@@ -145,7 +154,7 @@ module.exports = appHelpers =
                 data.iconType = iconInfos?.extension or null
 
                 # Run the application process based on collected data.
-                appHelpers._runUpdate app, data, access, callback
+                appHelpers._runUpdate app, data, iconInfos, access, callback
 
 
     # Request controller for installation.
@@ -179,7 +188,7 @@ module.exports = appHelpers =
     #
     # * Request the controller to run the update.
     # * Persist metadata.
-    _runUpdate: (app, data, access, callback) ->
+    _runUpdate: (app, data, iconInfos, access, callback) ->
 
         # Update access token.
         app.updateAccess access, (err) ->

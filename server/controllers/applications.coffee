@@ -24,15 +24,6 @@ appHelpers          = require '../lib/applications'
 startedApplications = {}
 
 
-
-# Remove a notification after an update
-removeAppUpdateNotification = (app) ->
-    notifier = new NotificationsHelper 'home'
-    notificationSlug = "home_update_notification_app_#{app.name}"
-    notifier.destroy notificationSlug, (err) ->
-        log.error err if err?
-
-
 # TODO: rewrite error management in this module.
 sendError = (res, err, code=500) ->
     err ?=
