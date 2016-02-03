@@ -39,8 +39,8 @@ sendError = (res, err, code=500) ->
         stack:   null
         message: localizationManager.t "server error"
 
-    console.log "Sending error to client :"
-    console.log err.stack
+    log.info "Sending error to client :"
+    log.error err.stack
 
     res.send code,
         error: true
@@ -246,8 +246,8 @@ module.exports =
 
         error = {}
         broken = (app, err, cb) ->
-            console.log "Marking app #{app.name} as broken because"
-            console.log err.stack
+            log.warn "Marking app #{app.name} as broken because"
+            log.raw err.stack
             data =
                 state: 'broken'
                 password: null
@@ -256,7 +256,7 @@ module.exports =
             else
                 data.errormsg = err.message + ' :\n' + err.stack
             app.updateAttributes data, (saveErr) ->
-                console.log(saveErr) if saveErr?
+                log.error(saveErr) if saveErr?
                 cb()
 
         updateApps = (app, callback) ->
@@ -277,7 +277,7 @@ module.exports =
                                     app.version isnt manifest.getVersion()
                                 if app.state in ["installed", "stopped"]
                                     # Update application
-                                    console.log("Update #{app.name} (#{app.state})")
+                                    log.info("Update #{app.name} (#{app.state})")
                                     appHelpers.update app, (err) ->
                                         if err?
                                             error[app.name] = err
@@ -444,8 +444,8 @@ module.exports =
                         data.branch = branch
                         app.updateAttributes data, (err) ->
                             icons.save app, iconInfos, (err) ->
-                                if err then console.log err.stack
-                                else console.info 'icon attached'
+                                if err then log.error err.stack
+                                else log.info 'icon attached'
                                 manager.resetProxy () ->
                                     res.send
                                         success: true

@@ -75,12 +75,12 @@ module.exports = appHelpers =
         try
             iconInfos = icons.getIconInfos appli
         catch err
-            console.log err if process.env.NODE_ENV isnt 'test'
+            log.error err if process.env.NODE_ENV isnt 'test'
             iconInfos = null
 
         appli.iconType = iconInfos?.extension or null
         icons.save appli, iconInfos, (err) ->
-            console.log err if err
+            log.error err if err
             log.info "Icon attached for #{appli.name}"
             callback appli
 
@@ -139,7 +139,7 @@ module.exports = appHelpers =
                 try
                     iconInfos = icons.getIconInfos infos
                 catch err
-                    console.log err if process.env.NODE_ENV isnt 'test'
+                    log.error err if process.env.NODE_ENV isnt 'test'
                     iconInfos = null
                 data.iconType = iconInfos?.extension or null
 
@@ -152,13 +152,13 @@ module.exports = appHelpers =
         manager.installApp appli, (err, result) ->
             if err
                 appHelpers.markBroken appli, err
-                console.log err if err
+                log.error err if err
 
             else if not result.drone?
                 err = new Error(
                     "Controller didn't return informations about #{appli.name}."
                 )
-                console.log err if err
+                log.error err if err
 
             else
                 if result.drone.type is 'static'
@@ -195,8 +195,8 @@ module.exports = appHelpers =
 
                     icons.save app, iconInfos, (err) ->
                         if err and process.env.NODE_ENV isnt 'test'
-                            console.log err.stack
+                            log.error err.stack
                         else
-                            console.info 'icon attached'
+                            log.info 'icon attached'
                         manager.resetProxy callback
 
