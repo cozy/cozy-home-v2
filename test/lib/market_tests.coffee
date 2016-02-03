@@ -1,7 +1,7 @@
 should = require('chai').Should()
 
 helpers = require '../helpers'
-market = require "#{helpers.prefix}../server/lib/market"
+market = require "../#{helpers.prefix}server/lib/market"
 
 
 describe "Market helpers", ->

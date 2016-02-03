@@ -1,7 +1,7 @@
 should = require('chai').Should()
 
 helpers = require '../helpers'
-icons = require "#{helpers.prefix}../server/lib/icon"
+icons = require "../#{helpers.prefix}server/lib/icon"
 
 describe "Icon helpers", ->
 

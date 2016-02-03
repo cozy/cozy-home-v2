@@ -3,8 +3,8 @@ expect = require('chai').expect
 Client = require('request-json').JsonClient
 
 helpers = require '../helpers'
-appHelpers = require "#{helpers.prefix}../server/lib/applications"
-Application = require "#{helpers.prefix}../server/models/application"
+appHelpers = require "../#{helpers.prefix}server/lib/applications"
+Application = require "../#{helpers.prefix}server/models/application"
 
 TESTMAIL = "test@test.com"
 TESTPASS = "password"
