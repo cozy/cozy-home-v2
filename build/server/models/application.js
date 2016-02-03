@@ -45,6 +45,7 @@ module.exports = Application = cozydb.getModel('Application', {
     type: Boolean,
     "default": false
   },
+  lastVersion: String,
   favorite: {
     type: Boolean,
     "default": false
@@ -126,9 +127,10 @@ Application.destroyAll = function(params, callback) {
 Application.prototype.checkForUpdate = function(callback) {
   var manifest, setFlag;
   setFlag = (function(_this) {
-    return function() {
+    return function(repoVersion) {
       return _this.updateAttributes({
-        needsUpdate: true
+        needsUpdate: true,
+        lastVersion: repoVersion
       }, function(err) {
         if (err) {
           return callback(err);
@@ -152,9 +154,9 @@ Application.prototype.checkForUpdate = function(callback) {
           if (repoVersion == null) {
             return callback(null, false);
           } else if (_this.version == null) {
-            return setFlag();
+            return setFlag(repoVersion);
           } else if (_this.version !== repoVersion) {
-            return setFlag();
+            return setFlag(repoVersion);
           } else {
             return callback(null, false);
           }

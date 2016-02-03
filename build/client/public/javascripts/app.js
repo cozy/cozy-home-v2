@@ -1364,6 +1364,7 @@ module.exports = {
   "or:": "or:",
   "reboot stack": "Reboot",
   "update error": "An error occured while updating the app",
+  "update failed": "Update failed",
   "error update uninstRlled app": "You can't update an app that is not installed.",
   "notification open application": "Open application",
   "notification update stack": "Update the platform",
@@ -2042,7 +2043,8 @@ module.exports = {
     "drop a file": "Arrastrar & soltar un archivo o",
     "url of an image": "Pegar la URL de una imagen desde el web",
     "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación Mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
-};
+}
+;
 });
 
 require.register("locales/fr", function(exports, require, module) {
@@ -2193,6 +2195,7 @@ module.exports = {
     "or:": "ou :",
     "reboot stack": "Redémarrer",
     "update error": "Une erreur est survenue pendant la mise à jour",
+    "update failed": "Échec",
     "error update uninstRlled app": "Vous ne pouvez pas mettre à jour une application qui n'est pas installée.",
     "notification open application": "Ouvrir l'application",
     "notification update stack": "Mettre à jour la plateforme",
@@ -3692,7 +3695,8 @@ module.exports = {
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
     "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
-};
+}
+;
 });
 
 require.register("locales/ro", function(exports, require, module) {
@@ -5072,19 +5076,22 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.initialize = function() {
     var _this = this;
     return window.addEventListener('message', function(event) {
-      var appName, e, iframeName, intent, intentType, token;
+      var e, intent, intentType, path, slug, token;
       if (event.origin !== window.location.origin) {
         return false;
       }
       intent = event.data;
       switch (intent.action) {
         case 'getToken':
-          iframeName = document.activeElement.id;
-          appName = iframeName.substring(0, iframeName.indexOf('-'));
-          token = new Token(appName);
+          path = event.source.location.pathname;
+          slug = path.replace('/apps/', '');
+          if (slug.slice(-1 === '/')) {
+            slug = slug.replace('/', '');
+          }
+          token = new Token(slug);
           return token.getToken({
             success: function(data) {
-              return app.mainView.displayToken(data, appName);
+              return app.mainView.displayToken(data, slug);
             },
             error: function() {
               return alert('Server error occured, get token failed.');
