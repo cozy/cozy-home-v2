@@ -322,6 +322,10 @@ describe "Applications management", ->
                 @response.statusCode.should.equal 200
                 expect(@body.success).to.be.ok
 
+            it "Wait a few", (done) ->
+                @timeout 3000
+                setTimeout done, 2000
+
             it "And controller have been requested to clean this app", ->
                 request = @controller.lastCall().request
                 request.url.should.equal "/drones/my-app/clean"
