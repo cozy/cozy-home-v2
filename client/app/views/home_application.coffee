@@ -28,18 +28,17 @@ module.exports = class ApplicationRow extends BaseView
 
     afterRender: =>
         @icon = @$ 'img.icon'
-        @stateLabel = @$ '.state-label'
         @title = @$ '.app-title'
         @background = @$ 'img'
 
         @listenTo @model, 'change', @onAppChanged
         @onAppChanged @model
 
+        @setBackgroundColor()
+
         # Only set a background color for SVG icons
         if @model.isIconSvg()
-
             # if there is no set color, we use an auto-generated one
-            @setBackgroundColor()
             @icon.addClass 'svg'
 
 
@@ -59,27 +58,24 @@ module.exports = class ApplicationRow extends BaseView
             when 'broken'
                 @hideSpinner()
                 @icon.attr 'src', "img/broken.svg"
-                @stateLabel.show().text t 'broken'
 
             when 'installed'
                 @hideSpinner()
+                @setBackgroundColor()
                 if @model.isIconSvg()
-                    @setBackgroundColor()
                     extension = 'svg'
                     @icon.addClass 'svg'
                 else
                     extension = 'png'
                     @icon.removeClass 'svg'
 
-                @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
-                @icon.hide()
+                src = "api/applications/#{app.id}.#{extension}"
+                @icon.attr 'src', src
                 @icon.show()
                 @icon.removeClass 'stopped'
-                @stateLabel.hide()
 
             when 'installing'
                 @showSpinner()
-                @stateLabel.show().text 'installing'
                 @setBackgroundColor()
 
             when 'stopped'
@@ -94,7 +90,6 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()
-                @stateLabel.hide()
 
     onAppClicked: (event) =>
         event.preventDefault()
@@ -158,7 +153,8 @@ module.exports = class ApplicationRow extends BaseView
 
             # By default, look for the color in the market.
             color = @inMarket?.get('color') or hashColor
-        @color = color
+
+            @color = color
         @background.css 'background-color', color
 
 
