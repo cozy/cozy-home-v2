@@ -182,6 +182,7 @@ describe "Applications management", ->
                 @client.put "api/applications/my-app/update", {}, done
 
             it "Then it sends me a success response", ->
+                console.log @body unless @response.statusCode is 200
                 @response.statusCode.should.equal 200
                 expect(@body.success).to.be.ok
 
