@@ -264,6 +264,10 @@ describe "Applications management", ->
                 expect(@body.success).to.be.ok
                 expect(@body.app.state).to.equal 'installed'
 
+            it "Wait a few", (done) ->
+                @timeout 3000
+                setTimeout done, 2000
+
             it "And controller have been requested to start this app", ->
                 request = @controller.lastCall().request
                 request.url.should.equal "/drones/my-app/start"
