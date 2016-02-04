@@ -101,9 +101,9 @@ module.exports = class ConfigApplicationsView extends BaseView
   </a>
   <a target='_blank'
      href='https://play.google.com/store/apps/details?id=io.cozy.files_client'>
-    <img src='https://developer.android.com/images/brand/en_app_rgb_wo_45.png'>
+    <img src='img/en-play-badge.png'>
   </a>
-</div>"
+</div>
             """
 
 
