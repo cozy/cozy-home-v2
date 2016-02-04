@@ -25,7 +25,10 @@ module.exports = class Application extends Backbone.Model
     prepareCallbacks: (callbacks, presuccess, preerror) ->
         {success, error} = callbacks or {}
         presuccess ?= (data) =>
-            delete data.app.description if data.app?.description?
+            if data.app?.description?
+                # for applications not in the market
+                data.app.remoteDescription = data.app.description
+                delete data.app.description
             @set data.app if data.app?
         @trigger 'request', @, null, callbacks
         callbacks.success = (data) =>

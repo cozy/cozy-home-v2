@@ -99,8 +99,9 @@ class exports.Manifest
         if @config['cozy-displayName']?
             metaData.displayName = @config['cozy-displayName']
         else
-            metaData.displayName = @config.name.replace 'cozy-', ''
-            metaData.displayName = metaData.displayName.replace '-', ' '
+            # Some app not in marketplace may have no name
+            metaData.displayName = @config.name?.replace 'cozy-', ''
+            metaData.displayName = metaData.displayName?.replace '-', ' '
 
         if @config['icon-path']?
             metaData.iconPath = @config['icon-path']
