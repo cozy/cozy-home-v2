@@ -1,4 +1,5 @@
 request = require 'request-json'
+localizationManager = require '../helpers/localization_manager'
 url = require 'url'
 
 # Interface to implement to add a Git provider"
@@ -29,6 +30,8 @@ module.exports.GithubProvider = class GithubProvider extends GitProvider
             path = @basePath + '/master'
 
         client.get path + '/package.json', (err, res, body) ->
+            if err? and res.statusCode is 404
+                err = localizationManager.t 'manifest not found'
             callback err, body
 
     getStars: (callback) ->

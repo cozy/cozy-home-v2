@@ -150,7 +150,7 @@ module.exports =
     getPermissions: (req, res, next) ->
         manifest = new Manifest()
         manifest.download req.body, (err) ->
-            if err then next err
+            return next err if err
             app = permissions: manifest.getPermissions()
             res.send success: true, app: app
 
@@ -158,7 +158,7 @@ module.exports =
     getDescription: (req, res, next) ->
         manifest = new Manifest()
         manifest.download req.body, (err) ->
-            if err then next err
+            return next err if err
             app = description: manifest.getDescription()
             res.send success: true, app: app
 
@@ -166,7 +166,7 @@ module.exports =
     getMetaData: (req, res, next) ->
         manifest = new Manifest()
         manifest.download req.body, (err) ->
-            if err then next err
+            return next err if err
             metaData = manifest.getMetaData()
             res.send success: true, app: metaData, 200
 

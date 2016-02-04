@@ -41,7 +41,10 @@ module.exports = class PopoverDescriptionView extends BaseView
                     @body.html t 'unknown provider'
                     @$("#confirmbtn").hide()
                 else
-                    @body.html t 'error connectivity issue'
+                    @body.html """
+                        #{t 'error connectivity issue'}
+                        #{error.responseText}
+                        """
 
         @overlay = $ '.md-overlay'
         @overlay.click =>
