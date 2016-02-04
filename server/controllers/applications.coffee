@@ -103,18 +103,27 @@ module.exports =
 
 
     icon: (req, res, next) ->
+
+        # Case where the icon is a SVG picture.
         if req.application?._attachments?['icon.svg']
-            stream = req.application.getFile('icon.svg', (->))
+            stream = req.application.getFile 'icon.svg', ->
             stream.pipefilter = (res, dest) ->
                 dest.set 'Content-Type', 'image/svg+xml'
             stream.pipe res
+
+        # Case where the icon is a PNG picture.
         else if req.application?._attachments?['icon.png']
             res.type 'png'
-            stream = req.application.getFile('icon.png', (->))
+            stream = req.application.getFile 'icon.png', ->
             stream.pipe res
+
+        # Case where the icon is missing. It sends the default SVG one.
         else
-            res.type 'png'
-            fs.createReadStream('./client/app/assets/img/stopped.png').pipe res
+            iconPath = './client/app/assets/img/default.svg'
+            stream = fs.createReadStream(iconPath)
+            stream.pipefilter = (res, dest) ->
+                dest.set 'Content-Type', 'image/svg+xml'
+            stream.pipe res
 
 
     # Update application parameters like autostop or favorite.

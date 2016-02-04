@@ -49,7 +49,7 @@ icons.getPath = (root, appli) ->
 
     # the file name changes based on image type
     else
-        extension = if iconPath.indexOf('.svg') isnt -1 then 'svg' else 'png'
+        extension = if iconPath.indexOf('.png') isnt -1 then 'png' else 'svg'
         result =
             path: iconPath
             extension: extension
