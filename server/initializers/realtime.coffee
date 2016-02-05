@@ -24,16 +24,15 @@ module.exports = (app, callback) ->
     # also create a notification when an app install is complete
     realtime.on 'application.update', (event, id) ->
         Application.find id, (err, app) ->
-            return console.log err.stack if err # no notification, no big deal
-            switch app.state
-                when 'broken'
-                    messageKey = 'installation message failure'
-                    options = appName: app.displayName
-                    message = localizationManager.t messageKey, options
-                    notifhelper.createTemporary
-                        text: message
-                        resource: app: 'home'
-                else return
+            if err # no notification, no big deal
+                console.log err.stack
+            else if app?.state is 'broken'
+                messageKey = 'installation message failure'
+                options = appName: app.displayName
+                message = localizationManager.t messageKey, options
+                notifhelper.createTemporary
+                    text: message
+                    resource: app: 'home'
 
     realtime.on 'usage.application', (event, name) ->
         if name isnt 'home' and name isnt 'proxy'

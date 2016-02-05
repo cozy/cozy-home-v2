@@ -16,23 +16,17 @@ Get right icon path depending on app configuration:
 * returns null otherwise
 ###
 icons.getPath = (root, appli) ->
-    [err, marketApp] = market.getApp(appli.slug)
+    marketApp = market.getApp appli.slug
     iconPath = null
 
     # try to retrieve icon path from manifest, if developer set it.
-    if appli.iconPath? and fs.existsSync(path.join root, appli.iconPath)
-        iconPath = path.join root, appli.iconPath
-        iconPath = null unless fs.existsSync(iconPath)
-
-    # Get the iconPath from the marketplace if possible.
-    if not iconPath? and appli.icon?
-        homeBasePath = path.join process.cwd(), 'client/app/assets'
-        iconPath = path.join homeBasePath, appli.icon
-        iconPath = null unless fs.existsSync(iconPath)
-
-    if not iconPath? and marketApp?
+    if marketApp?
         homeBasePath = path.join process.cwd(), 'client/app/assets'
         iconPath = path.join homeBasePath, marketApp.icon
+        iconPath = null unless fs.existsSync(iconPath)
+
+    else if appli.iconPath? and fs.existsSync(path.join root, appli.iconPath)
+        iconPath = path.join root, appli.iconPath
         iconPath = null unless fs.existsSync(iconPath)
 
     # if it has not been set, or if it doesn't exist, try to guess the icon path
@@ -55,7 +49,7 @@ icons.getPath = (root, appli) ->
 
     # the file name changes based on image type
     else
-        extension = if iconPath.indexOf('.svg') isnt -1 then 'svg' else 'png'
+        extension = if iconPath.indexOf('.png') isnt -1 then 'png' else 'svg'
         result =
             path: iconPath
             extension: extension
@@ -96,8 +90,10 @@ icons.save = (appli, iconInfos, callback = ->) ->
         log.debug "Icon to save for app #{appli.slug}: #{iconStr}"
         name = "icon.#{iconInfos.extension}"
         appli.attachFile iconInfos.path, name: name, (err) ->
-            if err then callback err
-            else callback()
+            return callback err if err
+            appli.updateAttributes iconType: iconInfos.extension, (err) ->
+                return callback err if err
+                callback iconInfos
 
     else
         callback new Error('icon information not found')

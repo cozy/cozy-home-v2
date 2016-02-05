@@ -32,20 +32,18 @@ module.exports = function(app, callback) {
       var message, messageKey, options;
       if (err) {
         return console.log(err.stack);
-      }
-      switch (app.state) {
-        case 'broken':
-          messageKey = 'installation message failure';
-          options = {
-            appName: app.displayName
-          };
-          message = localizationManager.t(messageKey, options);
-          return notifhelper.createTemporary({
-            text: message,
-            resource: {
-              app: 'home'
-            }
-          });
+      } else if ((app != null ? app.state : void 0) === 'broken') {
+        messageKey = 'installation message failure';
+        options = {
+          appName: app.displayName
+        };
+        message = localizationManager.t(messageKey, options);
+        return notifhelper.createTemporary({
+          text: message,
+          resource: {
+            app: 'home'
+          }
+        });
       }
     });
   });

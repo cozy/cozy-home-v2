@@ -5,8 +5,6 @@ url = require 'url'
 # Interface to implement to add a Git provider"
 # getManifest: (callback) ->
 #   where callback is (error, json data from the manifest)
-# getStars: (callback) ->
-#   where callback is (error, number of "stars" for the repository)
 
 class GitProvider
 
@@ -34,12 +32,6 @@ module.exports.GithubProvider = class GithubProvider extends GitProvider
                 err = localizationManager.t 'manifest not found'
             callback err, body
 
-    getStars: (callback) ->
-        client = request.newClient "https://api.github.com/"
-        path = "repos/#{@basePath}/stargazers"
-        client.get path, (err, res, body) ->
-            callback err, body.length
-
 
 # Cozy private Gitlab provider
 # -- MesInfos project only
@@ -55,11 +47,3 @@ module.exports.CozyGitlabProvider = class CozyGitlabProvider extends GitProvider
         client.get path, (err, res, body) ->
             err = body.error if body.error?
             callback err, body
-
-    getStars: (callback) ->
-        # No "stars" nor "likes" are available so we use a random value
-        # as an incentive for the users
-
-        # random number between 5 and 35
-        stars = Math.floor(Math.random() * 30 + 5)
-        callback null, stars

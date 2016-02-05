@@ -48,6 +48,7 @@ task 'tests', "Run tests #{taskDetails}", (opts) ->
     env += " NAME=home TOKEN=token"
     logger.info "Running tests with #{env}..."
     command = "#{env} mocha " + files.join(" ") + " --reporter spec --colors "
+    command += "--globals encode,decode "
     command += "--compilers coffee:coffee-script/register "
     command += "--timeout 10000 " # longer timeout before test failure
     exec command, (err, stdout, stderr) ->

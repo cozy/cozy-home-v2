@@ -11,12 +11,11 @@ module.exports = class Application extends Backbone.Model
         return base
 
     isIconSvg: ->
-        iconType = @get 'iconType'
+        iconType = @get 'iconType' or @get 'icon' or @get 'iconPath'
         if iconType
             return iconType is 'svg'
         else
-            icon = @get 'icon'
-            return icon?.indexOf '.svg'
+            return true
 
     isRunning: -> @get('state') is 'installed'
     isBroken: -> @get('state') is 'broken'

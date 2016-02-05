@@ -25,17 +25,9 @@ class exports.Manifest
 
                 provider = new Provider app
                 provider.getManifest (err, data) =>
-                    if err?
-                        @config = {}
-                        callback err
-                    else
-                        @config = data
-                        provider.getStars (err, stars) =>
-                            if err?
-                                callback err
-                            else
-                                @config.stars = stars
-                                callback null
+                    @config = {}
+                    @config = data unless err?
+                    callback err
         else
             @config = {}
             logger.warn 'App manifest without git URL'
@@ -78,7 +70,7 @@ class exports.Manifest
             return @config['cozy-color']
         else
             return null
-    
+
     getType: =>
         return @config?['cozy-type'] or {}
 
@@ -108,9 +100,6 @@ class exports.Manifest
 
         if @config['cozy-permissions']?
             metaData.permissions = @config['cozy-permissions']
-
-        if @config.stars?
-            metaData.stars = @config.stars
 
         if @config['cozy-color']
             metaData.color = @config['cozy-color']
