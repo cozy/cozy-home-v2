@@ -5,7 +5,8 @@ slugify             = require 'cozy-slug'
 async               = require 'async'
 cozydb              = require 'cozydb'
 log                 = require('printit')
-                        prefix: "applications"
+    date: true
+    prefix: "applications"
 
 Application         = require '../models/application'
 NotificationsHelper = require 'cozy-notifications-helper'
@@ -31,7 +32,7 @@ sendError = (res, err, code=500) ->
         message: localizationManager.t "server error"
 
     log.info "Sending error to client :"
-    log.error err.stack
+    log.error err
 
     res.send code,
         error: true
@@ -247,7 +248,7 @@ module.exports =
         error = {}
         broken = (app, err, cb) ->
             log.warn "Marking app #{app.name} as broken because"
-            log.raw err.stack
+            log.raw err
             data =
                 state: 'broken'
                 password: null
@@ -444,7 +445,7 @@ module.exports =
                         data.branch = branch
                         app.updateAttributes data, (err) ->
                             icons.save app, iconInfos, (err) ->
-                                if err then log.error err.stack
+                                if err then log.error err
                                 else log.info 'icon attached'
                                 manager.resetProxy () ->
                                     res.send
