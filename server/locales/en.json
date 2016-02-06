@@ -11,6 +11,7 @@
   "update notification": "update available notification",
   "server error": "Server error occured",
   "app not found": "Application not found",
+  "manifest not found": "Manifest not found",
   "similarly named app": "already similarly named app",
   "successfuly uninstalled": "Application successfully uninstalled",
   "successfuly updated": "Application successfully updated",

@@ -20,7 +20,6 @@ module.exports = class PopoverDescriptionView extends BaseView
 
 
     afterRender: ->
-        #@model.set "description", ""
         @body = @$ ".md-body"
         @header = @$ ".md-header h3"
         @header.html @model.get 'displayName'
@@ -42,7 +41,10 @@ module.exports = class PopoverDescriptionView extends BaseView
                     @body.html t 'unknown provider'
                     @$("#confirmbtn").hide()
                 else
-                    @body.html t 'error connectivity issue'
+                    @body.html """
+                        #{t 'error connectivity issue'}
+                        #{error.responseText}
+                        """
 
         @overlay = $ '.md-overlay'
         @overlay.click =>
@@ -52,13 +54,23 @@ module.exports = class PopoverDescriptionView extends BaseView
 
         @body.html ""
 
+        # Update displayName for applications not in marketplace
+        @header = @$ ".md-header h3"
+        @header.html @model.get 'displayName'
+
         description = @model.get 'description'
-        localeKey = "#{@model.get 'name'} description"
-        localeDesc = t localeKey
-        if localeDesc is localeKey
-            # description is not translated
-            localeDesc = t description
-        @header.parent().append "<p class=\"line\"> #{localeDesc} </p>"
+        if description?
+            localeKey = "#{@model.get 'name'} description"
+            localeDesc = t localeKey
+            if localeDesc is localeKey
+                # description is not translated
+                localeDesc = t description
+        else
+            # for applications not in the market
+            localeDesc = @model.get 'remoteDescription'
+        # applications not in the market may have no description
+        if localeDesc?
+            @header.parent().append "<p class=\"line\"> #{localeDesc} </p>"
 
         permissions = @model.get("permissions")
         if not permissions? or Object.keys(permissions).length is 0
