@@ -4551,13 +4551,12 @@ module.exports = Application = (function(_super) {
   };
 
   Application.prototype.isIconSvg = function() {
-    var icon, iconType;
-    iconType = this.get('iconType');
+    var iconType;
+    iconType = this.get('iconType' || this.get('icon' || this.get('iconPath')));
     if (iconType) {
       return iconType === 'svg';
     } else {
-      icon = this.get('icon' || this.get('iconPath'));
-      return icon != null ? icon.indexOf('.svg') : void 0;
+      return true;
     }
   };
 
@@ -4577,6 +4576,7 @@ module.exports = Application = (function(_super) {
       presuccess = function(data) {
         var _ref2;
         if (((_ref2 = data.app) != null ? _ref2.description : void 0) != null) {
+          data.app.remoteDescription = data.app.description;
           delete data.app.description;
         }
         if (data.app != null) {
@@ -7040,7 +7040,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
     if (!(this.devices.length === 0)) {
       return this.$el.find('.title-device').after(this.deviceList.$el);
     } else {
-      return this.$el.find('.title-device').after("<div class='no-device'>\n  <p>" + (t('status no device')) + "</p>\n  <p>" + (t('mobile app promo')) + "</p>\n  <a role='button'\n     href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'>\n    <i class='fa fa-android'></i>\n    <span>" + (t('download apk')) + "<span>\n  </a>\n  <a target='_blank'\n     href='https://play.google.com/store/apps/details?id=io.cozy.files_client'>\n    <img src='https://developer.android.com/images/brand/en_app_rgb_wo_45.png'>\n  </a>\n</div>\"");
+      return this.$el.find('.title-device').after("<div class='no-device'>\n  <p>" + (t('status no device')) + "</p>\n  <p>" + (t('mobile app promo')) + "</p>\n  <a role='button'\n     href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'>\n    <i class='fa fa-android'></i>\n    <span>" + (t('download apk')) + "<span>\n  </a>\n  <a target='_blank'\n     href='https://play.google.com/store/apps/details?id=io.cozy.files_client'>\n    <img src='img/en-play-badge.png'>\n  </a>\n</div>");
     }
   };
 
@@ -11483,7 +11483,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
           _this.body.html(t('unknown provider'));
           return _this.$("#confirmbtn").hide();
         } else {
-          return _this.body.html(t('error connectivity issue'));
+          return _this.body.html("" + (t('error connectivity issue')) + "\n" + error.responseText);
         }
       }
     });
@@ -11496,13 +11496,21 @@ module.exports = PopoverDescriptionView = (function(_super) {
   PopoverDescriptionView.prototype.renderDescription = function() {
     var description, docType, localeDesc, localeKey, permission, permissions, permissionsDiv, _ref1;
     this.body.html("");
+    this.header = this.$(".md-header h3");
+    this.header.html(this.model.get('displayName'));
     description = this.model.get('description');
-    localeKey = "" + (this.model.get('name')) + " description";
-    localeDesc = t(localeKey);
-    if (localeDesc === localeKey) {
-      localeDesc = t(description);
+    if (description != null) {
+      localeKey = "" + (this.model.get('name')) + " description";
+      localeDesc = t(localeKey);
+      if (localeDesc === localeKey) {
+        localeDesc = t(description);
+      }
+    } else {
+      localeDesc = this.model.get('remoteDescription');
     }
-    this.header.parent().append("<p class=\"line\"> " + localeDesc + " </p>");
+    if (localeDesc != null) {
+      this.header.parent().append("<p class=\"line\"> " + localeDesc + " </p>");
+    }
     permissions = this.model.get("permissions");
     if ((permissions == null) || Object.keys(permissions).length === 0) {
       permissionsDiv = $("<div class='permissionsLine'>\n    <h5>" + (t('no specific permissions needed')) + " </h5>\n</div>");
