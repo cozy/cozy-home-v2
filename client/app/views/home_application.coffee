@@ -15,8 +15,6 @@ module.exports = class ApplicationRow extends BaseView
 
     events:
         "mouseup .application-inner": "onAppClicked"
-        "mouseover .application-inner": "onMouseOver"
-        "mouseout .application-inner": "onMouseOut"
 
 
     constructor: (options) ->
@@ -43,14 +41,6 @@ module.exports = class ApplicationRow extends BaseView
 
 
     ### Listener ###
-
-
-    onMouseOver: ->
-        @background.css 'background-color', 'background-color'
-
-
-    onMouseOut: ->
-        @background.css 'background-color', @color or 'transparent'
 
 
     onAppChanged: (app) =>
@@ -90,6 +80,7 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()
+
 
     onAppClicked: (event) =>
         event.preventDefault()
