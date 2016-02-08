@@ -88,24 +88,9 @@ module.exports = class ConfigApplicationsView extends BaseView
 
     displayDevices: =>
         if not(@devices.length is 0)
-            @$el.find('.title-device').after @deviceList.$el
+            @$el.find('.no-device').after @deviceList.$el
         else
-            @$el.find('.title-device').after """
-<div class='no-device'>
-  <p>#{t 'status no device'}</p>
-  <p>#{t 'mobile app promo'}</p>
-  <a role='button'
-     href='https://files.cozycloud.cc/android/CozyMobile_lastest.apk'>
-    <i class='fa fa-android'></i>
-    <span>#{t 'download apk'}<span>
-  </a>
-  <a target='_blank'
-     href='https://play.google.com/store/apps/details?id=io.cozy.files_client'>
-    <img src='img/en-play-badge.png'>
-  </a>
-</div>
-            """
-
+            @$el.find('.no-device p').before "<p>#{t 'status no device'}</p>"
 
     fetch: =>
         @$('.amount').html "--"
