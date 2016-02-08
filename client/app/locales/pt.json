@@ -145,6 +145,7 @@
     "or:": "or:",
     "reboot stack": "Reboot",
     "update error": "Ocurreu um erro durante a actualização da aplicação",
+    "update failed": "Update failed",
     "error update uninstRlled app": "You can't update an app that is not installed.",
     "notification open application": "Open application",
     "notification update stack": "Update the platform",
