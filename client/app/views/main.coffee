@@ -93,11 +93,11 @@ module.exports = class HomeView extends BaseView
             alert t 'stack updating block message'
         else
             user = new User()
-            user.logout
-                success: (data) ->
-                    window.location = window.location.origin + '/login/'
-                error: ->
+            user.logout (err) ->
+                if err
                     alert 'Server error occured, logout failed.'
+                else
+                    window.location = window.location.origin + '/login/'
 
 
     displayView: (view, title) =>
