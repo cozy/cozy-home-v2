@@ -242,19 +242,18 @@
     "reminder message expanded": "Recordatorio: %{description}\nComienzo: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLugar: %{place}\nDetalles: %{details}",
     "reminder message": "Recordatorio: %{message}",
     "warning unofficial app": "Esta aplicación es una aplicación comunitaria y no la mantiene el equipo Cozy.\nPara señalar un problema, le rogamos llevarlo a <a href='https://forum.cozy.io'>nuestro foro</a>.",
-    "installation message failure": "Falla en la instalación de %{appName}.",
     "update available notification": "Una nueva versión de %{appName} está disponible.",
     "stack update available notification": "Una nueva versión de la Plataforma está disponible.",
     "app broken title": "Aplicación deteriorada",
-    "app broken": "Esta aplicación está deteriorada. Puede tratar de instalarla de nuevo:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstalarla.",
-    "error git": "No podemos recuperar el código fuente.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "El depósito de aplicaciones no parece válido.",
     "error github": "Github parece que no está disponible. Usted puede verificar su estatus en https://status.github.com/.",
-    "error npm": "No hemos podido instalar las dependencias de la aplicación.",
-    "error user linux": "No hemos podido crear un usuario linux específico para esta aplicación.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "La aplicación no arranca. Ustad puede encontrar más detalles en el log de la aplicación.",
-    "app msg": "Si el error persiste, usted puede contactarnos en contact@cozycloud.cc '+' o por IRC #cozycloud en irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "Más detalles.",
     "noapps": {
         "customize your cozy": "Puede igualmente <a href=\"%{account}\">ir a configuración </a> para personalizar su Cozy,\no <a href=\"%{appstore}\"> a la Apliteca</a> para instalar su primera aplicación."
@@ -269,5 +268,7 @@
     "or": "o",
     "drop a file": "Arrastrar & soltar un archivo o",
     "url of an image": "Pegar la URL de una imagen desde el web",
-    "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación Mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación Mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 }

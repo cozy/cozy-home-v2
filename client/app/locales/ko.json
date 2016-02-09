@@ -242,19 +242,18 @@
     "reminder message expanded": "알림: %{description}\n시작: %{start} (%{timezone})\n종료: %{end} (%{timezone})\n장소: %{place}\n내용: %{details}",
     "reminder message": "알림: %{message}",
     "warning unofficial app": "이 앱은 커뮤니티 앱이며, Cozy팀에서 지원하지 않습니다.\n버그 리포트는  <a href='https://forum.cozy.io'>포럼 게시판</a>을 이용하세요.",
-    "installation message failure": "%{appName} 설치 실패",
     "update available notification": "%{appName}의 새로운 버전이 나왔습니다.",
     "stack update available notification": "새 버전의 플랫폼이 사용 가능 합니다.",
     "app broken title": "앱설치 오류",
-    "app broken": "앱 설치 오류. 다시 설치 하시겠습니까:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "재설치",
-    "error git": "소스 코드를 검색 할 수 없습니다.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "앱 저장소가 사용 할 수 없습니다.",
     "error github": "Github를 사용 할 수 없습니다. https://status.github.com/에 상태를 확인 하세요.",
-    "error npm": "앱 의존성 때문에 설치 할 수 없습니다.",
-    "error user linux": "앱 설치를 위해 시스템에 사용자를 추가 할 수 없습니다.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "앱을 시작 할 수 없습니다. 더 자세한 내용은 로그를 확인 하세요.",
-    "app msg": "오류가 계속해서 발생 한다면, contact@cozycloud.cc 또는 irc.freenode.net에서 #cozycloud를 사용해 보세요.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "더 자세히",
     "noapps": {
         "customize your cozy": "여러분의 취향에 맞게 <a href=\"%{account}\">환경설정</a>에서 원하는 내용을 변경 하거나,\n <a href=\"%{appstore}\">스토어</a> 에 새로운 앱을 추가 해 보세요."
@@ -269,5 +268,7 @@
     "or": "또는",
     "drop a file": "드래그 앤 드롭 파일 또는",
     "url of an image": "웹으로 부터 이미지 URL 붙이기",
-    "you have no album": "<p>사진첩 데이터가 없습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p> <a href='/#applications' target='_blank'>사진첩 앱</a>을 사용해서 새로 생성하거나<br><a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>모바일 앱</a>으로 스마트 폰에서 가져 올 수 있습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>사진첩 데이터가 없습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p> <a href='/#applications' target='_blank'>사진첩 앱</a>을 사용해서 새로 생성하거나<br><a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>모바일 앱</a>으로 스마트 폰에서 가져 올 수 있습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 }
