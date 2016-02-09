@@ -24,12 +24,13 @@ module.exports = class UpdateStackModal extends BaseView
 
     afterRender: ->
         @overlay = $ '.md-overlay'
-        @overlay.click => @hide()
+        @overlay.click @onCancelClicked
         @$('.step2').hide()
         @$('.success').hide()
         @$('.error').hide()
         @$('#ok').hide()
         @body = @$ ".md-body"
+
 
     handleContentHeight: ->
         @body.css 'max-height', "#{$(window).height() / 2}px"
@@ -53,13 +54,17 @@ module.exports = class UpdateStackModal extends BaseView
             @remove()
         $('#home-content').removeClass 'md-open'
 
+
     onSuccess: ->
         @$('.step2').hide()
         @$('.success').show()
         @$('#ok').show()
         @$('#confirmbtn').hide()
 
+
     onError: (err) ->
+        @blocked = false
+        @$('#cancelbtn').removeClass 'disabled'
         @$('.step2').hide()
         @$('.error').show()
         @$('#ok').show()
@@ -82,18 +87,31 @@ module.exports = class UpdateStackModal extends BaseView
                 @body.append appError
 
 
-    onClose: ->
-        @hide()
-        @endCallback true
+    # When the update is running, the modal cannot be closed. The user should
+    # not be able to do anything until update is done.
+    onClose: =>
+        if @blocked
+            alert t 'stack updating block message'
+        else
+            @hide()
+            @endCallback true
 
-    onCancelClicked: ->
-        @hide()
-        @cancelCallback()
+
+    # When the update is running, the modal cannot be closed. The user should
+    # not be able to do anything until update is done.
+    onCancelClicked: =>
+        if @blocked
+            alert t 'stack updating block message'
+        else
+            @hide()
+            @cancelCallback()
 
 
     onConfirmClicked: ->
         @confirmCallback()
+        @blocked = true
         @$('.step1').hide()
         @$('.step2').show()
         @$('#confirmbtn').spin true
-        @$('#cancelbtn').hide()
+        @$('#cancelbtn').addClass 'disabled'
+

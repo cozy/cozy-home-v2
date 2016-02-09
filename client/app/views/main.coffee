@@ -14,6 +14,7 @@ SocketListener         = require 'lib/socket_listener'
 User                   = require 'models/user'
 IntentManager          = require 'lib/intent_manager'
 
+
 # View describing main screen for user once he is logged
 module.exports = class HomeView extends BaseView
     el: 'body'
@@ -23,6 +24,7 @@ module.exports = class HomeView extends BaseView
     subscriptions:
         'backgroundChanged': 'changeBackground'
         'app-state:changed': 'onAppStateChanged'
+        'update-stack:start': 'onUpdateStackStart'
 
 
     constructor: ->
@@ -36,12 +38,13 @@ module.exports = class HomeView extends BaseView
         SocketListener.watch @notifications
         SocketListener.watch @devices
         super
-        
+
 
     # Initialize all views, register main widgets and ensure that currently
     # displayed iframe is rerendered to be rendered properly after everything
     # is loaded.
     afterRender: =>
+        @viewModel ?= new Backbone.Model
         @navbar = new NavbarView @apps, @notifications
         @applicationListView = new ApplicationsListView @apps, @market
         @configApplications = new ConfigApplicationsView(
@@ -86,53 +89,60 @@ module.exports = class HomeView extends BaseView
     # user to automatically redirect user to login page (he's not logged
     # anymore, so cozy proxy will do the redirection).
     logout: (event) ->
-        user = new User()
-        user.logout
-            success: (data) ->
-                window.location = window.location.origin + '/login/'
-            error: ->
-                alert 'Server error occured, logout failed.'
+        if app.mainView.viewModel.get 'updatingStack'
+            alert t 'stack updating block message'
+        else
+            user = new User()
+            user.logout
+                success: (data) ->
+                    window.location = window.location.origin + '/login/'
+                error: ->
+                    alert 'Server error occured, logout failed.'
 
 
     displayView: (view, title) =>
-        if title?
-            title = title.substring 6
+        if app.mainView.viewModel.get 'updatingStack'
+            alert t 'stack updating block message'
         else
-            title ?= t 'home'
 
-        window.document.title = "Cozy - #{title}"
-        $('#current-application').html title
+            if title?
+                title = title.substring 6
+            else
+                title ?= t 'home'
 
-        if view is @applicationListView
-            @backButton.hide()
-        else
-            @backButton.show()
+            window.document.title = "Cozy - #{title}"
+            $('#current-application').html title
+
+            if view is @applicationListView
+                @backButton.hide()
+            else
+                @backButton.show()
 
 
-        displayView = =>
-            @frames.hide()
-            view.$el.hide()
-            @content.show()
-            $('#home-content').append view.$el
-            view.$el.show()
-
-            @currentView = view
-            @forceIframeRendering()
-            @content.scrollTop 0
-
-        if @currentView?
-
-            if view is @currentView
+            displayView = =>
                 @frames.hide()
+                view.$el.hide()
                 @content.show()
-                @forceIframeRendering()
-                return
+                $('#home-content').append view.$el
+                view.$el.show()
 
-            @currentView.$el.hide()
-            @currentView.$el.detach()
-            displayView()
-        else
-            displayView()
+                @currentView = view
+                @forceIframeRendering()
+                @content.scrollTop 0
+
+            if @currentView?
+
+                if view is @currentView
+                    @frames.hide()
+                    @content.show()
+                    @forceIframeRendering()
+                    return
+
+                @currentView.$el.hide()
+                @currentView.$el.detach()
+                displayView()
+            else
+                displayView()
 
 
     # Display application manager page, hides app frames, active home button.
@@ -206,76 +216,81 @@ module.exports = class HomeView extends BaseView
     #
     # Display a spinner if it's the first time that the application is loaded.
     displayApplication: (slug, hash) ->
-        if @apps.length is 0
+        if app.mainView.viewModel.get 'updatingStack'
+            alert t 'stack updating block message'
+
+        else if @apps.length is 0
             @apps.once ?= @apps.on
             @apps.once ?= @apps.on if typeof(@apps.once) isnt 'function'
             @apps.once 'reset', =>
                 @displayApplication slug, hash
-            return null
-
-        @$("#app-btn-#{slug} .spinner").show()
-        @$("#app-btn-#{slug} .icon").hide()
-
-        frame = @$("##{slug}-frame")
-        onLoad = =>
-
-            # We display back the iframes
-            @frames.css 'top', '0'
-            @frames.css 'left', '0'
-            @frames.css 'position', 'inherit'
-            @frames.show()
-
-            @content.hide()
-            @backButton.show()
-
-            @$('#app-frames').find('iframe').hide()
-            frame.show()
-            @selectedApp = slug
-            app = @apps.get slug
-            name = app.get('displayName') or app.get('name') or ''
-            name = name.replace /^./, name[0].toUpperCase() if name.length > 0
-            window.document.title = "Cozy - #{name}"
-            $("#current-application").html name
-
-            @$("#app-btn-#{slug} .spinner").hide()
-            @$("#app-btn-#{slug} .icon").show()
-
-        if frame.length is 0
-            frame = @createApplicationIframe slug, hash
-
-            # We show frames right now because to load properly the app
-            # requires a proper height.
-            @frames.show()
-
-            # Then we hide the frames by moving them far.
-            @frames.css 'top', '-9999px'
-            @frames.css 'left', '-9999px'
-            @frames.css 'position', 'absolute'
-
-            frame.on 'load', _.once onLoad
-
-        # if the app was already open, we want to change its hash
-        # only if there is a hash in the home given url.
-        else if hash
-            contentWindow = frame.prop('contentWindow')
-
-            # Same origin policy may prevent to access location hash
-            try
-                currentHash = contentWindow.location.hash.substring 1
-            catch err
-                console.err err
-            onLoad()
-
-        else if frame.is(':visible')
-            # Same origin policy may prevent to access location hash
-            try
-                frame.prop('contentWindow').location.hash = ''
-            catch err
-                console.err err
-            onLoad()
 
         else
-            onLoad()
+
+            @$("#app-btn-#{slug} .spinner").show()
+            @$("#app-btn-#{slug} .icon").hide()
+
+            frame = @$("##{slug}-frame")
+            onLoad = =>
+
+                # We display back the iframes
+                @frames.css 'top', '0'
+                @frames.css 'left', '0'
+                @frames.css 'position', 'inherit'
+                @frames.show()
+
+                @content.hide()
+                @backButton.show()
+
+                @$('#app-frames').find('iframe').hide()
+                frame.show()
+                @selectedApp = slug
+                app = @apps.get slug
+                name = app.get('displayName') or app.get('name') or ''
+                if name.length > 0
+                    name = name.replace /^./, name[0].toUpperCase()
+                window.document.title = "Cozy - #{name}"
+                $("#current-application").html name
+
+                @$("#app-btn-#{slug} .spinner").hide()
+                @$("#app-btn-#{slug} .icon").show()
+
+            if frame.length is 0
+                frame = @createApplicationIframe slug, hash
+
+                # We show frames right now because to load properly the app
+                # requires a proper height.
+                @frames.show()
+
+                # Then we hide the frames by moving them far.
+                @frames.css 'top', '-9999px'
+                @frames.css 'left', '-9999px'
+                @frames.css 'position', 'absolute'
+
+                frame.on 'load', _.once onLoad
+
+            # if the app was already open, we want to change its hash
+            # only if there is a hash in the home given url.
+            else if hash
+                contentWindow = frame.prop('contentWindow')
+
+                # Same origin policy may prevent to access location hash
+                try
+                    currentHash = contentWindow.location.hash.substring 1
+                catch err
+                    console.err err
+                onLoad()
+
+            else if frame.is(':visible')
+                # Same origin policy may prevent to access location hash
+                try
+                    frame.prop('contentWindow').location.hash = ''
+                catch err
+                    console.err err
+                onLoad()
+
+            else
+                onLoad()
 
 
     createApplicationIframe: (slug, hash="") ->
@@ -318,6 +333,11 @@ module.exports = class HomeView extends BaseView
             frame.off 'load'
 
 
+    # Store the information that the whole stack is updating.
+    onUpdateStackStart: ->
+        @viewModel.set updatingStack: true
+
+
     # Ugly trick for redrawing iframes. It's required because sometimes the
     # browser breaks the Iframe layout (I didn't find any reason for that).
     forceIframeRendering: =>
@@ -331,8 +351,9 @@ module.exports = class HomeView extends BaseView
     getAppFrame: (slug) ->
         return @$("##{slug}-frame")
 
+
     # Returns app iframe corresponding for given app slug.
     displayToken: (token, slug) ->
         iframeWin = document.getElementById("#{slug}-frame").contentWindow
         iframeWin.postMessage token: token, appName:slug, '*'
-        
+

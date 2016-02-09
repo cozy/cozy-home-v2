@@ -273,4 +273,5 @@
   "you have no album": "<p>You haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
   "config application mark favorite": "mark as favorite",
   "config application unmark favorite": "unmark as favorite"
+  "stack updating block message": "Your Cozy is currently updating, you cannot use it until the update is finished."
 }
