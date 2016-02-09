@@ -54,7 +54,6 @@ module.exports = class ConfigApplicationsView extends BaseView
             @updateBtn.show()
         else
             @updateBtn.hide()
-            @updateBtn.show()
 
 
     openUpdatePopover: (slug) ->
@@ -141,11 +140,11 @@ module.exports = class ConfigApplicationsView extends BaseView
         @popover.hide() if @popover?
         @popover = new UpdateStackModal
             confirm: (application) =>
-                @runUpdate
-                    success: =>
+                @runFullUpdate (err) =>
+                    if err
+                        @popover.onError err
+                    else
                         @popover.onSuccess()
-                    error: (err) =>
-                        @popover.onError err.responseText
             cancel: (application) =>
                 @popover.hide()
                 @popover.remove()
@@ -164,29 +163,18 @@ module.exports = class ConfigApplicationsView extends BaseView
     #
     # Both are handled on the server side, the client makes only two different
     # calls to the API.
-    runUpdate: (callbacks) =>
-        {onSuccess, onError} = callbacks or {}
-
+    runFullUpdate: (callback) =>
         Backbone.Mediator.pub 'update-stack:start'
-        @applications.updateAll
-            onSuccess: =>
-                @stackApplications.updateStack callbacks
-            onError: (err) =>
-                onError err if err and onError
+        @applications.updateAll (err) =>
+            return callback err if err
 
-                @stackApplications.updateStack
-                    onSuccess: ->
-                        Backbone.Mediator.pub 'update-stack:end'
-                        onSuccess t "update stack apps success"
-
-                    onError: (stack_err) ->
-                        Backbone.Mediator.pub 'update-stack:end'
-                        err.stack = stack_err
-                        onError err if onError
+            @stackApplications.updateStack (err) =>
+                Backbone.Mediator.pub 'update-stack:end'
+                callback err
 
 
-    # When reboot button is clicked, the reboot procedure is requested to the
-    # server and a loading spinner is displayed.
+    # When the reboot button is clicked, the reboot procedure is requested to
+    # the server and a loading spinner is displayed.
     onRebootStackClicked: ->
         @rebootStackBtn.spin true
         @spanRefresh.show()

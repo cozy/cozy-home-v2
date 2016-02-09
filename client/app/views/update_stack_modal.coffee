@@ -69,32 +69,27 @@ module.exports = class UpdateStackModal extends BaseView
         @$('.error').show()
         @$('#ok').show()
         @$('#confirmbtn').hide()
+
+        if err.data?.message?
+            infos = err.data.message
+            if Object.keys(infos).length > 0
+                @$(".stack-error").hide()
+                html = "<ul>"
+                for app in Object.keys(infos)
+                    html += """
+                    <li class='app-broken'>#{app}</li>
+                    """
+                html += "</ul>"
+                @body.append html
+
         @endCallback false
-        err = JSON.parse err
-        if Object.keys(err.message).length > 0
-            appError = $ """
-                <div class='app-broken'>
-                    <h5> #{t('applications broken')}: </h5>
-                </div>
-            """
-            @body.append appError
-            for app in Object.keys(err.message)
-                appError = $ """
-                    <div class='app-broken'>
-                        #{app}
-                    </div>
-                """
-                @body.append appError
 
 
     # When the update is running, the modal cannot be closed. The user should
     # not be able to do anything until update is done.
     onClose: =>
-        if @blocked
-            alert t 'stack updating block message'
-        else
-            @hide()
-            @endCallback true
+        @hide()
+        @endCallback true
 
 
     # When the update is running, the modal cannot be closed. The user should

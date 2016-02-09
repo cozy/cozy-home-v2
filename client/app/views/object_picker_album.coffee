@@ -1,6 +1,6 @@
 Photo    = require '../models/photo'
 BaseView = require 'lib/base_view'
-client   = require('../lib/client')
+client   = require '../lib/request'
 
 
 module.exports = class ObjectPickerAlbum extends BaseView
