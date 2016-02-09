@@ -300,7 +300,6 @@ module.exports =
                         msg: localizationManager.t 'successfuly updated'
 
 
-
     # Start a stopped application.
     start: (req, res, next) ->
         # If controller is too slow, client receives a timeout
