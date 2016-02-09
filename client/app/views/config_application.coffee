@@ -12,9 +12,13 @@ module.exports = class ApplicationRow extends BaseView
     getRenderData: ->
         gitName = @model.get('git')
         gitName = gitName[...-4] if gitName?
+        website = @model.get('website') or gitName
+        branch  = @model.get('branch') or 'master'
         app: _.extend {}, @model.attributes,
-            website: @model.get('website') or gitName,
-            branch: @model.get('branch') or 'master'
+            website: website,
+            branch: branch,
+            websiteUrl: if branch is 'master' then website \
+                else "#{website}/tree/#{branch}"
 
     events:
         "click .remove-app": "onRemoveClicked"

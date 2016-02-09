@@ -111,7 +111,7 @@ module.exports = class ApplicationRow extends BaseView
             when 'installed'
                 @launchApp(event)
             when 'installing'
-                alert t 'this app is being installed. Wait a little'
+                alert t 'state app installing'
             when 'stopped'
                 @showSpinner()
                 @model.start
@@ -120,9 +120,9 @@ module.exports = class ApplicationRow extends BaseView
                         @hideSpinner()
                     error: =>
                         @hideSpinner()
-                        msg = 'This app cannot start.'
+                        msg = t 'state app stopped error'
                         errormsg = @model.get 'errormsg'
-                        msg += " Error was : #{errormsg}" if errormsg
+                        msg += " : #{errormsg}" if errormsg
                         alert msg
 
 
