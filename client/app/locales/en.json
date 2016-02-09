@@ -243,7 +243,6 @@
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
   "reminder message": "Reminder: %{message}",
   "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-  "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
   "app broken title": "Broken application",
