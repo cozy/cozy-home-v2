@@ -1,5 +1,6 @@
 # Make ajax request easier to write.
 
+
 # Expected callbacks: success and error
 exports.request = (type, url, data, callback) ->
     body = if data? then JSON.stringify data else null
@@ -16,15 +17,26 @@ exports.request = (type, url, data, callback) ->
             callback null, data if callback?
         error: (data) ->
             fired = true
-            if data?
-                data = JSON.parse data.responseText
-                if data.msg? and callback?
-                    callback new Error data.msg, data
-                else if data.error? and callback?
-                    data.msg = data.error
-                    callback new Error data.msg, data
-            else if callback?
-                callback new Error "Server error occured", data
+
+            if callback? and data?
+                try
+                    data = JSON.parse data.responseText
+                catch err
+                    data = data.responseText
+
+                if data.msg?
+                    msg = data.msg
+
+                else if data.error?
+                    msg = data.error
+
+                else
+                    msg = "Server error occured"
+
+                err = new Error msg
+                err.data = data
+                callback err
+
     req.always ->
         unless fired
             callback new Error "Server error occured", data
@@ -48,3 +60,4 @@ exports.put = (url, data, callback) ->
 # Expected callbacks: success and error
 exports.del = (url, callback) ->
     exports.request "DELETE", url, null, callback
+
