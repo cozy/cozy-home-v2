@@ -242,7 +242,6 @@
     "reminder message expanded": "Rappel : %{description}\nDébut : %{start} (%{timezone})\nFin : %{end} (%{timezone})\nEmplacement : %{place}\nDétails : %{details}",
     "reminder message": "Rappel : %{message}",
     "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
-    "installation message failure": "Échec de l'installation de %{appName}.",
     "update available notification": "Une nouvelle version de %{appName} est disponible.",
     "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
     "app broken title": "Application cassée",
