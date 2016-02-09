@@ -4,7 +4,7 @@ slugify             = require 'cozy-slug'
 {AppManager}        = require '../lib/paas'
 spawn               = require('child_process').spawn
 log                 = require('printit')
-prefix: "applications"
+    prefix: "applications"
 
 StackApplication    = require '../models/stack_application'
 localizationManager = require '../helpers/localization_manager'
@@ -26,10 +26,12 @@ sendError = (res, err, code=500) ->
 
 module.exports =
 
+
     get: (req, res, next) ->
         StackApplication.all (err, apps) ->
             if err then next err
             else res.send rows: apps
+
 
     update: (req, res, next) ->
         manager = new AppManager()
@@ -37,6 +39,9 @@ module.exports =
             if err?
                 log.error err
                 sendError res, err
+            else
+                res.send 200
+
 
     reboot: (req, res, next) ->
         manager = new AppManager()
@@ -44,4 +49,6 @@ module.exports =
             if err?
                 log.error err
                 sendError res, err
+            else
+                res.send 200
 

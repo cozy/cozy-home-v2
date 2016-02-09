@@ -157,6 +157,48 @@ module.exports = appHelpers =
                 appHelpers._runUpdate app, data, iconInfos, access, callback
 
 
+    # Before running the update, it checks that an update is required. It's
+    # the case if:
+    #
+    # * Remote version number changes.
+    # * If the app is marked as requiring an update.
+    updateIfNeeded: (app, callback) ->
+        manifest = new Manifest()
+        log.info "Get Metadata and access infos for #{app.name}."
+        manifest.download app, (err) ->
+            return callback err if err
+
+            app.getAccess (err, access) ->
+                return callback err if err
+
+                oldPermissions = JSON.stringify access.permissions
+                newPermissions = JSON.stringify manifest.getPermissions()
+                isNewVersion = app.version isnt manifest.getVersion()
+                isUpdateNeeded = app.needsUpdate? and app.needsUpdate
+                isInstalled = app.state in ["installed", "stopped"]
+
+                if oldPermissions isnt newPermissions
+                    # TODO handle properly that case.
+                    callback()
+
+                else if (isUpdateNeeded or isNewVersion) and isInstalled
+                    log.info "Updating #{app.name} (#{app.state})..."
+
+                    log.info "Start updating app #{app.name}..."
+                    appHelpers.update app, (err) ->
+                        log.info "Update done for #{app.name}."
+
+                        if err?
+                            appHelpers.markBroken app, err, ->
+                                callback err
+                        else
+                            callback()
+
+                else
+                    log.info "Nothing to update for #{app.name}."
+                    callback()
+
+
     # Request controller for installation.
     _runInstall: (appli, callback) ->
         manager.installApp appli, (err, result) ->

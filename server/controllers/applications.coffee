@@ -227,10 +227,7 @@ module.exports =
                 removeMetadata result
 
 
-    # Update an app :
-    # * haibu, application manager
-    # * proxy, cozy router
-    # * database
+    # Update a given application and reset proxy.
     update: (req, res, next) ->
         appHelpers.update req.application, (err) ->
             return appHelpers.markBroken req.application, err if err?
@@ -239,62 +236,29 @@ module.exports =
                 msg: localizationManager.t 'successfuly updated'
 
 
-    # Update all applications :
-    # * haibu, application manager
-    # * proxy, cozy router
-    # * database
+    # Update all applications installed on the Cozy.
     updateAll: (req, res, next) ->
 
-        error = {}
-        broken = (app, err, cb) ->
-            log.warn "Marking app #{app.name} as broken because"
-            log.raw err
-            data =
-                state: 'broken'
-                password: null
-            if err.result?
-                data.errormsg = err.message + ' :\n' + err.result
-            else
-                data.errormsg = err.message + ' :\n' + err.stack
-            app.updateAttributes data, (saveErr) ->
-                log.error(saveErr) if saveErr?
-                cb()
-
-        updateApps = (app, callback) ->
-            manifest = new Manifest()
-            manifest.download app, (err) ->
-                if err?
-                    sendError res, message: err
-                else
-                    app.getAccess (err, access) ->
-
-                        if err?
-                            sendError res, message: err
-                        else
-                            if JSON.stringify(access.permissions) isnt
-                                    JSON.stringify(manifest.getPermissions())
-                                return callback()
-                            if app.needsUpdate? and app.needsUpdate or
-                                    app.version isnt manifest.getVersion()
-                                if app.state in ["installed", "stopped"]
-                                    # Update application
-                                    log.info("Update #{app.name} (#{app.state})")
-                                    appHelpers.update app, (err) ->
-                                        if err?
-                                            error[app.name] = err
-                                            broken app, err, callback
-                                        else
-                                            callback()
-                                else
-                                    callback()
-                            else
-                                callback()
-
+        log.info 'Starting updating all apps...'
         Application.all (err, apps) ->
-            async.forEachSeries apps, updateApps, () ->
-                if Object.keys(error).length > 0
-                    sendError res, message: error
+
+            updateFailures = {}
+            async.forEachSeries apps, (app, done) ->
+
+                appHelpers.updateIfNeeded app, (err) ->
+                    updateFailures[app.name] = err
+                    done()
+
+            , ->
+                log.info 'Updating all apps operation is done.'
+
+                if JSON.stringify(updateFailures).length > 2
+                    log.error 'Errors occured for following apps:'
+                    log.raw(JSON.stringify updateFailures, null, 2)
+                    sendError res, message: updateFailures
+
                 else
+                    log.info 'All updates succeeded.'
                     res.send
                         success: true
                         msg: localizationManager.t 'successfuly updated'
