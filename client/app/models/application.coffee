@@ -1,4 +1,5 @@
 client = require "../helpers/client"
+request = require "../lib/request"
 
 # Describes an application installed in mycloud.
 module.exports = class Application extends Backbone.Model
@@ -120,9 +121,10 @@ module.exports = class Application extends Backbone.Model
 
         return section
 
-    updateAll: (callbacks) ->
-        @prepareCallbacks callbacks
-        client.put "/api/applications/update/all", {}, callbacks
+
+    # Request the server to run the update all apps procedure.
+    updateAll: (callback) ->
+        request.put "/api/applications/update/all", {}, callback
 
 
     # Return true is the app is considered as an official Cozy application.
