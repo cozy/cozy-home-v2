@@ -110,7 +110,9 @@ module.exports = class ApplicationRow extends BaseView
                 @updateButton.displayGrey t 'update'
                 @appStoppable.show()
                 @appStoppable.next().show()
-                @startStopBtn.displayGrey t 'stop this app'
+                @startStopBtn.show()
+                @startStopBtn.button.attr title: t('stop this app')
+                @startStopBtn.button.removeClass('stopped')
             when 'installing'
                 @stateLabel.show().text t 'installing'
                 @removeButton.displayGrey t 'abort'
@@ -124,7 +126,9 @@ module.exports = class ApplicationRow extends BaseView
                 @updateButton.displayGrey t 'update'
                 @appStoppable.hide()
                 @appStoppable.next().hide()
-                @startStopBtn.displayGrey t 'start this app'
+                @startStopBtn.show()
+                @startStopBtn.button.attr title: t('start this app')
+                @startStopBtn.button.addClass('stopped')
 
         @setIconSrc()
 
@@ -195,7 +199,6 @@ module.exports = class ApplicationRow extends BaseView
                 success: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'stopped'
-                    @render()
                     Backbone.Mediator.pub 'app-state:changed',
                         status: 'stopped'
                         updated: false
@@ -208,7 +211,6 @@ module.exports = class ApplicationRow extends BaseView
                 success: =>
                     @startStopBtn.spin false
                     @stateLabel.html t 'started'
-                    @render()
                     Backbone.Mediator.pub 'app-state:changed',
                         status: 'started'
                         updated: false
