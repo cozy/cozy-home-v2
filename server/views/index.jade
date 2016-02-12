@@ -7,7 +7,8 @@ html
     link(rel='stylesheet', href='app-icons/sprite-svg-data.css')
     link(rel='stylesheet', href='/fonts/fonts.css')
     link(rel='stylesheet', href='stylesheets/app.css')
-  body
+
     script!= imports
-    script(src='javascripts/vendor.js')
-    script(src='javascripts/app.js', onload="require('initialize');")
+    script(src='javascripts/vendor.js' defer=true)
+    script(src='javascripts/app.js' onload="require('initialize')" defer=true)
+  body
