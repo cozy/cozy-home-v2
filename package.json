@@ -13,7 +13,6 @@
   "main": "server.js",
   "dependencies": {
     "americano": "0.3.11",
-    "americano-cozy": "0.2.11",
     "async": "0.2.10",
     "cozy-clearance": "0.1.22",
     "cozy-clients": "1.0.4",
