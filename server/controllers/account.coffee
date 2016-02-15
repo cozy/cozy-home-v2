@@ -75,18 +75,18 @@ module.exports =
         User.all (err, users) ->
             next err if err
             if users.length is 0
-                return res.send 400, error: localizationManager.t "no user registered"
+                return res.status(400).send error: localizationManager.t "no user registered"
 
             user = users[0]
             data = {}
 
             updatePassword user, req.body, data, (libErr, userErr) ->
-                return res.send 500, error: libErr if libErr
-                return res.send 400, error: userErr if userErr
+                return res.status(500).send error: libErr if libErr
+                return res.status(400).send error: userErr if userErr
 
                 updateData user, req.body, data, (libErr, userErr) ->
-                    return res.send 500, error: libErr if libErr
-                    return res.send 400, error: userErr if userErr
+                    return res.status(500).send error: libErr if libErr
+                    return res.status(400).send error: userErr if userErr
 
                     res.send
                         success: true
@@ -97,7 +97,7 @@ module.exports =
     users: (req, res, next) ->
         User.all (err, users) ->
             if err
-                res.send 500, error: localizationManager.t "Retrieve users failed."
+                res.status(500).send error: localizationManager.t "Retrieve users failed."
             else
                 res.send rows: users
 
@@ -106,7 +106,7 @@ module.exports =
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->
             if err
-                res.send 500, error: localizationManager.t "retrieve instances failed"
+                res.status(500).send error: localizationManager.t "retrieve instances failed"
             else
                 res.send rows: instances
 
@@ -116,7 +116,7 @@ module.exports =
         {domain, locale, helpUrl, background, connectedOnce} = req.body
 
         unless domain? or locale? or helpUrl? or background? or connectedOnce?
-            res.send 400,
+            res.status(400).send
                 error: true
                 msg: localizationManager.t 'No accepted parameter given'
 

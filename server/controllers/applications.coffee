@@ -34,7 +34,7 @@ sendError = (res, err, code=500) ->
     log.info "Sending error to client :"
     log.error err
 
-    res.send code,
+    res.status(code).send
         error: true
         success: false
         message: err.message or err
@@ -58,7 +58,7 @@ module.exports =
             if err
                 next err
             else if apps is null or apps.length is 0
-                res.send 404, error: localizationManager.t 'app not found'
+                res.status(404).send error: localizationManager.t 'app not found'
             else
                 req.application = apps[0]
                 next()
@@ -90,7 +90,7 @@ module.exports =
         manifest.download req.body, (err) ->
             return next err if err
             metaData = manifest.getMetaData()
-            res.send success: true, app: metaData, 200
+            res.status(200).send success: true, app: metaData
 
 
     read: (req, res, next) ->
@@ -193,7 +193,7 @@ module.exports =
                     Application.createAccess access, (err, app) ->
                         return sendError res, err if err
 
-                        res.send success: true, app: appli, 201
+                        res.status(201).send success: true, app: appli
                         appHelpers.install appli, manifest, access
 
 
@@ -339,13 +339,12 @@ module.exports =
                         req.application.updateAttributes data, (saveErr) ->
                             return sendError res, saveErr if saveErr
 
-                            res.send
+                            res.status(500).send
                                 app: req.application
                                 error: true
                                 success: false
                                 message: err.message
                                 stack: err.stack
-                            , 500
                     else
                         data =
                             state: 'installed'
@@ -456,13 +455,12 @@ module.exports =
     fetchMarket: (req, res, next) ->
         market.getApps (err, data) ->
             if err?
-                res.send
+                res.status(500).send
                     error: true
                     success: false
                     message: err
-                , 500
             else
-                res.send 200, data
+                res.status(200).send data
 
     # get token for static application access
     getToken: (req, res, next) ->
@@ -470,11 +468,10 @@ module.exports =
             return sendError res, err if err
             Application.getToken apps[0]._id, (err, access) ->
                 if err?
-                    res.send
+                    res.status(500).send
                         error: true
                         success: false
                         message: err
-                    , 500
                 else
-                    res.send 200, access.token
+                    res.status(200).send access.token
 
