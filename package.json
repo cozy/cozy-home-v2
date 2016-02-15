@@ -56,6 +56,7 @@
   "scripts": {
     "test": "cake --use-js tests",
     "start": "node build/server.js",
+    "prebuild:client": "cd client && npm update",
     "build:clean": "rm -rf build",
     "build:client": "cd client && brunch b",
     "build:server": "cake build",
