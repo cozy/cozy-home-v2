@@ -3,7 +3,7 @@ request = require 'request-json'
 Application = require '../models/application'
 ControllerClient = require("cozy-clients").ControllerClient
 
-client = request.newClient 'http://localhost:9104/'
+client = request.createClient 'http://localhost:9104/'
 
 getAuthController = ->
     if process.env.NODE_ENV in ['production', 'test']
