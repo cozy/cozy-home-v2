@@ -70,7 +70,7 @@ updateApps = (apps, appDict, callback) ->
 resetProxy = ->
     client.get 'routes/reset/', (err, res, body) ->
         if res? and res.statusCode is 200
-            console.info 'Proxy successfuly reseted.'
+            console.info 'Proxy successfuly reset.'
         else
             console.info 'Something went wrong while reseting proxy.'
 
