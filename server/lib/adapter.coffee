@@ -1,6 +1,6 @@
 request = require("request-json")
 
-client = request.newClient "http://localhost:9101/"
+client = request.createClient "http://localhost:9101/"
 
 
 module.exports = class Adapter
