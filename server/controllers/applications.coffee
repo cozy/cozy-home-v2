@@ -291,7 +291,7 @@ module.exports =
                             done()
 
                     else
-                        log.info "No update required for #{app.name}.."
+                        log.info "No update required for #{app.name}."
                         done()
 
             , ->
@@ -301,7 +301,7 @@ module.exports =
                     log.error 'Errors occured for following apps:'
                     log.raw(JSON.stringify updateFailures, null, 2)
                     sendError res,
-                        message: calendar: updateFailures
+                        message: updateFailures
                         permissionChanges: permissionChanges
 
                 else
