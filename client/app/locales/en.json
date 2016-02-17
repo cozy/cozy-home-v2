@@ -279,5 +279,7 @@
   "update apps error title": "An error occured while updating apps",
   "update apps error": "One or several applications failed. Concerned applications are marked as broken. You will probably have to uninstall and reinstall these applications.",
   "update apps error list title": "Broken applications",
-  "update stack error title": "An error occured while updating your Cozy"
+  "update stack error title": "An error occured while updating your Cozy",
+  "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to chose wether or not you accept the new permissions.",
+  "update stack warning": "Warning",
 }

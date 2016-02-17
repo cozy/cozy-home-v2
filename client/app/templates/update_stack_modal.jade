@@ -6,11 +6,15 @@
         p.step1= t('update stack modal content')
         p.step2= t('update stack waiting message')
         p.success= t('update stack success')
+        .permission-changes
+            h5= t('update stack warning')
+            p= t('update stack permission changes')
         p.error.stack-error.title= t('update stack error title')
         p.error.stack-error= t('update stack error')
         p.error.apps-error.title= t('update apps error title')
         p.error.apps-error= t('update apps error')
         h5.error.apps-error= t('update apps error list title')
+
     .md-footer.clearfix
         button.transparent-grey#cancelbtn= t('cancel')
         button.btn#confirmbtn= t('update stack modal confirm')
