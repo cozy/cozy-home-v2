@@ -130,7 +130,7 @@
     "update stack": "Mettre à jour la plateforme",
     "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes.",
     "update stack waiting message": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
-    "status no device": "Aucun n'appareil n'est connecté à votre Cozy.",
+    "status no device": "Aucun appareil n'est connecté à votre Cozy.",
     "download apk": "Télécharger le .APK",
     "mobile app promo": "Sauvegardez vos photos et synchronisez vos contacts et calendriers avec notre application mobile :",
     "update stack modal title": "Mise à jour de votre Cozy",
@@ -245,15 +245,15 @@
     "update available notification": "Une nouvelle version de %{appName} est disponible.",
     "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
     "app broken title": "Application cassée",
-    "app broken": "This application is broken. Can you try to install it again:",
+    "app broken": "Cette application est cassée. Veuillez essayre de la réinstaller :",
     "reinstall broken app": "réinstallation.",
-    "error git": "We can't retrieve the source code.",
+    "error git": "Impossible de retrouver le code source.",
     "error github repo": "Le dépôt de l'application ne semble pas disponible.",
     "error github": "Github semble indisponible. Vous pouvez vérifier son état sur https://status.github.com/.",
-    "error npm": "We can't install the application dependencies.",
-    "error user linux": "We can't create a specific Linux user for this application.",
-    "error start": "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
+    "error npm": "Impossible d'installer les dépendances de l'application.",
+    "error user linux": "Impossible de créer un utilisateur Linux spécifique pour cette application.",
+    "error start": "L'application ne peut pas démarrer. Vous pouvez trouver plus d'information dans les logs de l'application.",
+    "app msg": "Si cette erreur persiste, vous pouvez nous contacter : contact@cozycloud.cc, sur IRC #cozycloud ou encore irc.freenode.net.",
     "more details": "Plus de détails",
     "noapps": {
         "customize your cozy": "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
@@ -269,6 +269,6 @@
     "drop a file": "Glissez et déposez un fichier ou",
     "url of an image": "Collez l'URL d'une image depuis le web",
     "you have no album": "<p>Vous n'avez aucun album photo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Créez en un depuis <a href='/#applications' target='_blank'>l'application Photo </a><br>et utilisez des photos prises depuis votre smartphone avec <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'application mobile !</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
-    "state app installing": "This app is being installed. Wait a little",
-    "state app stopped error": "This app cannot start"
+    "state app installing": "Cette application est en cours d'installation. Veuillez patienter",
+    "state app stopped error": "Cette application n epeut pas démarrer"
 }
