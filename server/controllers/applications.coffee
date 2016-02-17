@@ -34,12 +34,16 @@ sendError = (res, err, code=500) ->
     log.info "Sending error to client :"
     log.error err
 
-    res.send code,
+    error =
         error: true
         success: false
         message: err.message or err
         stack: err.stack
 
+    if err.permissionChanges?
+        error.permissionChanges = err.permissionChanges
+
+    res.send code, error
 
 baseIdController = new cozydb.SimpleController
     model: Application
@@ -62,6 +66,7 @@ module.exports =
             else
                 req.application = apps[0]
                 next()
+
 
     applications: (req, res, next) ->
         Application.all (err, apps) ->
@@ -130,6 +135,7 @@ module.exports =
     # Update application parameters like autostop or favorite.
     updateData: (req, res, next) ->
         app = req.application
+
         if req.body.isStoppable? and req.body.isStoppable isnt app.isStoppable
             Stoppable = req.body.isStoppable
             Stoppable = if Stoppable? then Stoppable else app.isStoppable
@@ -140,12 +146,14 @@ module.exports =
                 autostop.restartTimeout app.name
                 return sendError res, err if err
                 res.send app
+
         else if req.body.favorite? and req.body.favorite isnt app.favorite
             changes =
                 favorite: req.body.favorite
             app.updateAttributes changes, (err, app) ->
                 return next err if err
                 res.send app
+
         else
             res.send app
 
@@ -236,18 +244,55 @@ module.exports =
                 msg: localizationManager.t 'successfuly updated'
 
 
-    # Update all applications installed on the Cozy.
+    # Check for all applications installed on the Cozy if an update is
+    # required. In case of version changed, it updates the app.
+    #
+    # Other actions performed:
+    #
+    # * Build a list of failed updates and send it in the response body if it's
+    # not empty.
+    # * Build a list of permission changes. Adds it to the response (when an
+    # error occurs too).
     updateAll: (req, res, next) ->
 
         log.info 'Starting updating all apps...'
         Application.all (err, apps) ->
+            return sendError err if err
 
             updateFailures = {}
+            permissionChanges = {}
             async.forEachSeries apps, (app, done) ->
 
-                appHelpers.updateIfNeeded app, (err) ->
-                    updateFailures[app.name] = err
-                    done()
+                log.info "Check if update is required for #{app.name}."
+                appHelpers.isUpdateNeeded app, (err, result) ->
+
+                    if err
+                        updateFailures[app.name] = err
+                        log.error "Check update failed for #{app.name}."
+                        log.raw err
+                        done()
+
+                    else if result.isPermissionsChanged
+                        log.info "Permissions changed for #{app.name}."
+                        log.info "No update performed for #{app.name}."
+                        permissionChanges[app.name] = true
+                        done()
+
+                    else if result.isUpdateNeeded
+                        log.info "Updating #{app.name} (#{app.state})..."
+                        appHelpers.update app, (err) ->
+                            log.info "Update done for #{app.name}."
+                            if err
+                                updateFailures[app.name] = err
+                                log.error "Update failed for #{app.name}."
+                                log.raw err
+                            else
+                                log.info "Update done for #{app.name}."
+                            done()
+
+                    else
+                        log.info "No update required for #{app.name}.."
+                        done()
 
             , ->
                 log.info 'Updating all apps operation is done.'
@@ -255,17 +300,21 @@ module.exports =
                 if JSON.stringify(updateFailures).length > 2
                     log.error 'Errors occured for following apps:'
                     log.raw(JSON.stringify updateFailures, null, 2)
-                    sendError res, message: updateFailures
+                    sendError res,
+                        message: calendar: updateFailures
+                        permissionChanges: permissionChanges
 
                 else
                     log.info 'All updates succeeded.'
                     res.send
                         success: true
+                        permissionChanges: permissionChanges
                         msg: localizationManager.t 'successfuly updated'
 
 
     # Start a stopped application.
     start: (req, res, next) ->
+
         # If controller is too slow, client receives a timeout
         # Below timeout allows to catch timeout error before client
         # If there is a timeout, application is consider like broken
@@ -426,6 +475,7 @@ module.exports =
                 , 500
             else
                 res.send 200, data
+
 
     # get token for static application access
     getToken: (req, res, next) ->
