@@ -54,7 +54,7 @@ module.exports.photoRange = (req, res, next) ->
                 hasNext = true
             else
                 hasNext = false
-            res.send {files: photos, firstRank: skip}, 200
+            res.status(200).send {files: photos, firstRank: skip}
 
 ###*
  * Gets an array that gives the number of photo for each month, from the most
@@ -73,7 +73,7 @@ module.exports.photoMonthDistribution = (req, res, next) ->
                 if monthStr.length == 1
                     monthStr = '0' + monthStr
                 distribution.push(nPhotos:month.value, month:yearStr+monthStr)
-        res.send(distribution, 200)
+        res.status(200).send distribution
 
 ###*
  * Returns thumb for given file.

@@ -4,7 +4,7 @@
 .infos
     .line
         strong
-            a(href="#apps/#{app.slug}")= app.displayName
+            a.app(href="#apps/#{app.slug}")= app.displayName
         button.update-app.outline-blue(title="#{t('update')}")
             i.fa.fa-refresh
             span= t('update')
@@ -40,4 +40,3 @@
             i.fa.fa-power-off
     button.transparent-grey.remove-app(title="#{t('remove')}")
         i.fa.fa-trash
-

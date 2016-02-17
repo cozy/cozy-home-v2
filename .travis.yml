@@ -39,6 +39,10 @@ before_install:
     - cd ..
     - export NAME=home
 
+script:
+    - npm run build
+    - npm run test
+
 after_failure:
     - cat cozy-data-system/forever-ds.log
     - cat cozy-data-system/forever-ds-err.log

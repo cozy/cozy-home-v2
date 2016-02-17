@@ -18,7 +18,7 @@ sendError = (res, err, code=500) ->
     console.log "Sending error to client:"
     console.log err.stack
 
-    res.send code,
+    res.status(code).send
         error: true
         success: false
         message: err.message

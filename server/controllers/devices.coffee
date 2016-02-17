@@ -29,4 +29,4 @@ module.exports =
                         err = err or body.error
                         if err? then next err
                         else
-                            res.send 200, success: true
+                            res.status(200).send success: true

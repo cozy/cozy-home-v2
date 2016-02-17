@@ -1,5 +1,5 @@
 request = require 'request-json'
-client = request.newClient 'http://localhost:9103'
+client = request.createClient 'http://localhost:9103'
 
 User = require './server/models/user'
 CozyInstance = require './server/models/cozyinstance'
