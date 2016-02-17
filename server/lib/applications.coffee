@@ -157,14 +157,17 @@ module.exports = appHelpers =
                 appHelpers._runUpdate app, data, iconInfos, access, callback
 
 
-    # Before running the update, it checks that an update is required. It's
-    # the case if:
+    # Check if an update is required then returns an object with two flags
+    #
+    # A first flag that tells if an update is required:
     #
     # * Remote version number changes.
     # * If the app is marked as requiring an update.
-    updateIfNeeded: (app, callback) ->
+    #
+    # The second flag tells if the new version permissions are different from
+    # the current version.
+    isUpdateNeeded: (app, callback) ->
         manifest = new Manifest()
-        log.info "Get Metadata and access infos for #{app.name}."
         manifest.download app, (err) ->
             return callback err if err
 
@@ -174,29 +177,14 @@ module.exports = appHelpers =
                 oldPermissions = JSON.stringify access.permissions
                 newPermissions = JSON.stringify manifest.getPermissions()
                 isNewVersion = app.version isnt manifest.getVersion()
-                isUpdateNeeded = app.needsUpdate? and app.needsUpdate
                 isInstalled = app.state in ["installed", "stopped"]
+                isUpdateNeeded = app.needsUpdate? and app.needsUpdate
+                isUpdateNeeded = \
+                    (isUpdateNeeded or isNewVersion) and isInstalled
 
-                if oldPermissions isnt newPermissions
-                    # TODO handle properly that case.
-                    callback()
-
-                else if (isUpdateNeeded or isNewVersion) and isInstalled
-                    log.info "Updating #{app.name} (#{app.state})..."
-
-                    log.info "Start updating app #{app.name}..."
-                    appHelpers.update app, (err) ->
-                        log.info "Update done for #{app.name}."
-
-                        if err?
-                            appHelpers.markBroken app, err, ->
-                                callback err
-                        else
-                            callback()
-
-                else
-                    log.info "Nothing to update for #{app.name}."
-                    callback()
+                callback null,
+                    isUpdateNeeded: isUpdateNeeded
+                    isPermissionsChanged: oldPermissions isnt newPermissions
 
 
     # Request controller for installation.
