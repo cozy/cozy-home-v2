@@ -129,45 +129,52 @@ module.exports = class ConfigApplicationsView extends BaseView
         setTimeout @fetch, 10000
 
 
-    popoverManagement: (action) ->
+    # When update stack button is clicked, the update stack dialog is
+    # displayed.
+    onUpdateClicked: ->
+        @showUpdateStackDialog()
+
+
+    # Show the dialog to allow the user to update his stack.
+    showUpdateStackDialog: ->
         @popover.hide() if @popover?
         @popover = new UpdateStackModal
             confirm: (application) =>
-                action
-                    success: =>
-                        @popover.onSuccess()
-                    error: (err) =>
-                        @popover.onError(err.responseText)
+                @runFullUpdate (err, permissionChanges) =>
+                    if err
+                        @popover.onError err, permissionChanges
+                    else
+                        @popover.onSuccess permissionChanges
             cancel: (application) =>
                 @popover.hide()
                 @popover.remove()
             end: (success) ->
-                if success
-                    location.reload()
+                location.reload() if success
 
         $("#config-applications-view").append @popover.$el
         @popover.show()
 
 
-    onUpdateClicked: ->
-        action = (cb) =>
-            {success, error} = cb or {}
-            @applications.updateAll
-                success: =>
-                    @stackApplications.updateStack cb
-                error: (err) =>
-                    @stackApplications.updateStack
-                        success: ->
-                            if error
-                                error err
-                            else
-                                success "ok"
-                        error: (stack_err) ->
-                            err.stack = stack_err
-                            error err if error
-        @popoverManagement action
+    # When update stack button is clicked, two procedures are runned
+    # sequentially:
+    #
+    # * Update of all applications.
+    # * Update of the Cozy stack.
+    #
+    # Both are handled on the server side, the client makes only two different
+    # calls to the API.
+    runFullUpdate: (callback) =>
+        Backbone.Mediator.pub 'update-stack:start'
+        @applications.updateAll (err, permissionChanges) =>
+            return callback err, err.data?.permissionChanges if err
+
+            @stackApplications.updateStack (err) =>
+                Backbone.Mediator.pub 'update-stack:end'
+                callback err, permissionChanges
 
 
+    # When the reboot button is clicked, the reboot procedure is requested to
+    # the server and a loading spinner is displayed.
     onRebootStackClicked: ->
         @rebootStackBtn.spin true
         @spanRefresh.show()

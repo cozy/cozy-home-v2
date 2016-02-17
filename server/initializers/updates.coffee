@@ -1,7 +1,7 @@
 async = require 'async'
 NotificationsHelper = require 'cozy-notifications-helper'
 log = require('printit')
-    prefix: 'application updates'
+    prefix: 'application initializer'
 
 Application = require '../models/application'
 StackApplication = require '../models/stack_application'

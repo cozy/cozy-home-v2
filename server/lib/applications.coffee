@@ -157,6 +157,36 @@ module.exports = appHelpers =
                 appHelpers._runUpdate app, data, iconInfos, access, callback
 
 
+    # Check if an update is required then returns an object with two flags
+    #
+    # A first flag that tells if an update is required:
+    #
+    # * Remote version number changes.
+    # * If the app is marked as requiring an update.
+    #
+    # The second flag tells if the new version permissions are different from
+    # the current version.
+    isUpdateNeeded: (app, callback) ->
+        manifest = new Manifest()
+        manifest.download app, (err) ->
+            return callback err if err
+
+            app.getAccess (err, access) ->
+                return callback err if err
+
+                oldPermissions = JSON.stringify access.permissions
+                newPermissions = JSON.stringify manifest.getPermissions()
+                isNewVersion = app.version isnt manifest.getVersion()
+                isInstalled = app.state in ["installed", "stopped"]
+                isUpdateNeeded = app.needsUpdate? and app.needsUpdate
+                isUpdateNeeded = \
+                    (isUpdateNeeded or isNewVersion) and isInstalled
+
+                callback null,
+                    isUpdateNeeded: isUpdateNeeded
+                    isPermissionsChanged: oldPermissions isnt newPermissions
+
+
     # Request controller for installation.
     _runInstall: (appli, callback) ->
         manager.installApp appli, (err, result) ->

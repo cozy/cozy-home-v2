@@ -5,6 +5,7 @@ module.exports = class Token
 
     constructor: (name) ->
         @name = name
-   
+
     getToken: (callbacks) ->
         client.get "api/getToken/#{@name}", callbacks
+

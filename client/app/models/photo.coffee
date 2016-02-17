@@ -1,4 +1,4 @@
-client = require('../lib/client')
+request = require('../lib/request')
 
 # A photo
 # maintains attributes src / thumbsrc depending of the state of the model
@@ -9,8 +9,10 @@ module.exports = class Photo extends Backbone.Model
         src: ''
         orientation: 1
 
+
     url: ()->
         super + app.urlKey
+
 
     # build img src attributes from id.
     parse: (attrs) ->
@@ -20,16 +22,20 @@ module.exports = class Photo extends Backbone.Model
             src: "photos/#{attrs.id}.jpg" + app.urlKey
             orientation: attrs.orientation
 
+
     # Return screen size photo src built from id.
     getPrevSrc: ()->
         "photos/#{@get 'id'}.jpg"
 
+
 Photo.getMonthdistribution = (callback)->
-    client.get "files/photo/monthdistribution", callback
+    request.get "files/photo/monthdistribution", callback
+
 
 Photo.listFromFiles = (skip, limit, callback)->
-    client.get "files/photo/range/#{skip}/#{limit}", callback
+    request.get "files/photo/range/#{skip}/#{limit}", callback
 
 
 Photo.makeFromFile = (fileid, attr, callback) ->
-    client.post "files/#{fileid}/toPhoto", attr, callback
+    request.post "files/#{fileid}/toPhoto", attr, callback
+

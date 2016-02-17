@@ -1,6 +1,6 @@
-client = require "../helpers/client"
+request = require "../lib/request"
 
-# Describes a stack application.
+
 module.exports = class StackApplication extends Backbone.Model
 
     idAttribute: 'name'
@@ -10,53 +10,47 @@ module.exports = class StackApplication extends Backbone.Model
         return "#{base}byid/#{@get('id')}" if @get('id')
         return base
 
-    # use same events as backbone to enable socket-listener
-    prepareCallbacks: (callbacks, presuccess, preerror) ->
-        {success, error} = callbacks or {}
-        presuccess ?= (data) => @set data.app
-        @trigger 'request', @, null, callbacks
-        callbacks.success = (data) =>
-            presuccess data if presuccess
-            @trigger 'sync', @, null, callbacks
-            success data    if success
-        callbacks.error = (jqXHR) =>
-            preerror jqXHR if preerror
-            @trigger 'error', @, jqXHR, {}
-            error jqXHR     if error
+
+    # Send a series of requests to the server to ensure that it is up.
+    # The callback is fired only when the servers responds successfully to
+    # *remainingSteps* requests.
+    waitServerIsUp: (remainingSteps, callback) ->
+        request.get "api/applications/stack", (err) =>
+            if err
+                console.log 'Server looks down...'
+            else
+                console.log 'Server looks up...'
+                remainingSteps--
+
+            if remainingSteps is 0
+                console.log 'Server is up!'
+                callback()
+            else
+                setTimeout =>
+                    @waitServerIsUp remainingSteps, callback
+                , 1000
 
 
-    waitReboot: (step, total_step, callbacks) ->
-        {success, error} = callbacks or {}
-        client.get "api/applications/stack",
-            success: =>
-                if step is total_step
-                    if success?
-                        success 'ok'
-                    else
-                        callbacks() if callbacks
-                else
-                    if step is 1
-                        step += step
-                    setTimeout () =>
-                        @waitReboot step, total_step, callbacks
-                    , 500
-            error: =>
-                setTimeout () =>
-                    if step is 0 or step is 2
-                        step = step + 1
-                    @waitReboot step, total_step, callbacks
-                , 500
+    # Ask to the server to update all the Cozy stack. This operation
+    # will kill the server. So to guess when the update is done, it keeps
+    # sending request to the server. It considers the server as up when
+    # three requests got proper response. It's the sign that the update is
+    # done.
+    updateStack: (callback) ->
+        request.put "/api/applications/update/stack", {}, (err) =>
+            return callback err if err
+            console.log 'Waiting for reboot...'
+            @waitServerIsUp 3, callback
 
-    updateStack: (callbacks) ->
-        client.put "/api/applications/update/stack", {},
-            success: =>
-                @waitReboot 0, 2, callbacks
-            error: =>
-                @waitReboot 0, 2, callbacks
 
-    rebootStack: (callbacks) ->
-        client.put "/api/applications/reboot/stack", {},
-            success: =>
-                @waitReboot 0, 1, callbacks
-            error: =>
-                @waitReboot 0, 1, callbacks
+    # Ask to the server to reboot the Cozy stack. This operation
+    # will kill the server. So to guess when the reboot is done, it keeps
+    # sending request to the server. It considers the server as up when
+    # three requests got proper response. It's the sign that the reboot is
+    # done.
+    rebootStack: (callback) ->
+        request.put "/api/applications/reboot/stack", {}, (err) =>
+            return callback err if err
+            console.log 'Waiting for reboot...'
+            @waitServerIsUp 3, callback
+
