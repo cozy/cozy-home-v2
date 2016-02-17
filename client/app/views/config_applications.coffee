@@ -140,11 +140,11 @@ module.exports = class ConfigApplicationsView extends BaseView
         @popover.hide() if @popover?
         @popover = new UpdateStackModal
             confirm: (application) =>
-                @runFullUpdate (err) =>
+                @runFullUpdate (err, permissionChanges) =>
                     if err
-                        @popover.onError err
+                        @popover.onError err, permissionChanges
                     else
-                        @popover.onSuccess()
+                        @popover.onSuccess permissionChanges
             cancel: (application) =>
                 @popover.hide()
                 @popover.remove()
@@ -165,12 +165,12 @@ module.exports = class ConfigApplicationsView extends BaseView
     # calls to the API.
     runFullUpdate: (callback) =>
         Backbone.Mediator.pub 'update-stack:start'
-        @applications.updateAll (err) =>
-            return callback err if err
+        @applications.updateAll (err, permissionChanges) =>
+            return callback err, err.data?.permissionChanges if err
 
             @stackApplications.updateStack (err) =>
                 Backbone.Mediator.pub 'update-stack:end'
-                callback err
+                callback err, permissionChanges
 
 
     # When the reboot button is clicked, the reboot procedure is requested to

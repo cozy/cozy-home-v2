@@ -28,6 +28,7 @@ module.exports = class UpdateStackModal extends BaseView
         @$('.step2').hide()
         @$('.success').hide()
         @$('.error').hide()
+        @$('.permission-changes').hide()
         @$('#ok').hide()
         @body = @$ ".md-body"
 
@@ -55,20 +56,28 @@ module.exports = class UpdateStackModal extends BaseView
         $('#home-content').removeClass 'md-open'
 
 
-    onSuccess: ->
+    # Display success message on modal.
+    # Add information about application that requires a dedicated update
+    # because of permission changes.
+    onSuccess: (permissionChanges) ->
         @$('.step2').hide()
         @$('.success').show()
+        @showPermissionsChanged permissionChanges
         @$('#ok').show()
         @$('#confirmbtn').hide()
 
 
-    onError: (err) ->
+    # Inform the user that an error occured during the update.
+    # Add information about application that requires a dedicated update
+    # because of permission changes.
+    onError: (err, permissionChanges) ->
         @blocked = false
         @$('#cancelbtn').removeClass 'disabled'
         @$('.step2').hide()
         @$('.error').show()
         @$('#ok').show()
         @$('#confirmbtn').hide()
+        @showPermissionsChanged permissionChanges
 
         if err.data?.message?
             infos = err.data.message
@@ -83,6 +92,20 @@ module.exports = class UpdateStackModal extends BaseView
                 @body.append html
 
         @endCallback false
+
+
+    # Show the list of application that requires a dedicated update because
+    # of application changes.
+    showPermissionsChanged: (permissionChanges) ->
+        if permissionChanges? and Object.keys(permissionChanges).length > 0
+            html = "<ul>"
+            for app in Object.keys(permissionChanges)
+                html += """
+                <li class='app-changed'>#{app}</li>
+                """
+            html += "</ul>"
+            @$('.permission-changes').append html
+            @$('.permission-changes').show()
 
 
     # When the update is running, the modal cannot be closed. The user should
