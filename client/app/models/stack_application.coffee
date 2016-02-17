@@ -12,20 +12,23 @@ module.exports = class StackApplication extends Backbone.Model
 
 
     # Send a series of requests to the server to ensure that it is up.
-    # The callback is fired only when three requests has been successfully
-    # responded.
-    waitServerIsUp: (step, totalStep, callback) ->
-        return callback() if step is totalStep
-        console.log 'Waiting for reboot...'
+    # The callback is fired only when the servers responds successfully to
+    # *remainingSteps* requests.
+    waitServerIsUp: (remainingSteps, callback) ->
         request.get "api/applications/stack", (err) =>
             if err
                 console.log 'Server looks down...'
             else
-                step++
                 console.log 'Server looks up...'
-            setTimeout =>
-                @waitServerIsUp step, totalStep, callback
-            , 1000
+                remainingSteps--
+
+            if remainingSteps is 0
+                console.log 'Server is up!'
+                callback()
+            else
+                setTimeout =>
+                    @waitServerIsUp remainingSteps, callback
+                , 1000
 
 
     # Ask to the server to update all the Cozy stack. This operation
@@ -36,7 +39,8 @@ module.exports = class StackApplication extends Backbone.Model
     updateStack: (callback) ->
         request.put "/api/applications/update/stack", {}, (err) =>
             return callback err if err
-            @waitServerIsUp 0, 3, callback
+            console.log 'Waiting for reboot...'
+            @waitServerIsUp 3, callback
 
 
     # Ask to the server to reboot the Cozy stack. This operation
@@ -47,5 +51,6 @@ module.exports = class StackApplication extends Backbone.Model
     rebootStack: (callback) ->
         request.put "/api/applications/reboot/stack", {}, (err) =>
             return callback err if err
-            @waitServerIsUp 0, 3, callback
+            console.log 'Waiting for reboot...'
+            @waitServerIsUp 3, callback
 

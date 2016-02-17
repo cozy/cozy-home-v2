@@ -37,9 +37,13 @@ exports.request = (type, url, data, callback) ->
                 err.data = data
                 callback err
 
+            else
+                callback?()
+
     req.always ->
         unless fired
             callback new Error "Server error occured", data
+
 
 # Sends a get request with data as body
 # Expected callbacks: success and error

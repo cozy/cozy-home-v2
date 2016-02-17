@@ -84,7 +84,7 @@ module.exports = class UpdateStackModal extends BaseView
             if Object.keys(infos).length > 0
                 @$(".stack-error").hide()
                 html = "<ul>"
-                for app in Object.keys(infos)
+                for app of infos
                     html += """
                     <li class='app-broken'>#{app}</li>
                     """
@@ -99,7 +99,7 @@ module.exports = class UpdateStackModal extends BaseView
     showPermissionsChanged: (permissionChanges) ->
         if permissionChanges? and Object.keys(permissionChanges).length > 0
             html = "<ul>"
-            for app in Object.keys(permissionChanges)
+            for app of permissionChanges
                 html += """
                 <li class='app-changed'>#{app}</li>
                 """

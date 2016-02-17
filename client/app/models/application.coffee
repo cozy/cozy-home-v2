@@ -125,9 +125,7 @@ module.exports = class Application extends Backbone.Model
     # Request the server to run the update all apps procedure.
     updateAll: (callback) ->
         request.put "/api/applications/update/all", {}, (err, data) ->
-            return callback err if err
-
-            callback null, data.permissionChanges
+            callback err, data?.permissionChanges
 
 
     # Return true is the app is considered as an official Cozy application.
