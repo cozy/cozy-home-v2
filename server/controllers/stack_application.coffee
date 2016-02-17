@@ -1,13 +1,14 @@
 request             = require("request-json")
 fs                  = require('fs')
 slugify             = require 'cozy-slug'
-{AppManager}        = require '../lib/paas'
 spawn               = require('child_process').spawn
 log                 = require('printit')
     prefix: "applications"
 
+{AppManager}        = require '../lib/paas'
 StackApplication    = require '../models/stack_application'
 localizationManager = require '../helpers/localization_manager'
+
 
 sendError = (res, err, code=500) ->
     err ?=
