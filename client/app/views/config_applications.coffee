@@ -177,12 +177,10 @@ module.exports = class ConfigApplicationsView extends BaseView
     # the server and a loading spinner is displayed.
     onRebootStackClicked: ->
         @rebootStackBtn.spin true
-        @spanRefresh.show()
         @stackApplications.rebootStack (err) =>
             if err
                 alert t 'reboot stack error'
                 @rebootStackBtn.spin false
-                @spanRefresh.hide()
             else
                 location.reload()
 
