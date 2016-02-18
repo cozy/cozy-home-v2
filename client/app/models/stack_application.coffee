@@ -15,7 +15,7 @@ module.exports = class StackApplication extends Backbone.Model
     # The callback is fired only when the servers responds successfully to
     # *remainingSteps* requests.
     waitServerIsUp: (remainingSteps, callback) ->
-        request.get "api/applications/stack", (err) =>
+        request.head "api/applications/stack", (err) =>
             if err
                 console.log 'Server looks down...'
             else
