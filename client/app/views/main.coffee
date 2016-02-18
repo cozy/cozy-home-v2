@@ -25,6 +25,7 @@ module.exports = class HomeView extends BaseView
         'backgroundChanged': 'changeBackground'
         'app-state:changed': 'onAppStateChanged'
         'update-stack:start': 'onUpdateStackStart'
+        'update-stack:end': 'onUpdateStackEnd'
 
 
     constructor: ->
@@ -336,6 +337,11 @@ module.exports = class HomeView extends BaseView
     # Store the information that the whole stack is updating.
     onUpdateStackStart: ->
         @viewModel.set updatingStack: true
+
+
+    # Store the information that the whole stack is no more updating.
+    onUpdateStackEnd: ->
+        @viewModel.set updatingStack: false
 
 
     # Ugly trick for redrawing iframes. It's required because sometimes the
