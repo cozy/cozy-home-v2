@@ -118,6 +118,7 @@ module.exports = appHelpers =
     update: (app, callback) ->
         data = {}
         manifest = new Manifest()
+        previousVersion = app.version
 
         # Get updated manifest.
         manifest.download app, (err) ->
@@ -154,7 +155,12 @@ module.exports = appHelpers =
                 data.iconType = iconInfos?.extension or null
 
                 # Run the application process based on collected data.
-                appHelpers._runUpdate app, data, iconInfos, access, callback
+                appHelpers._runUpdate app, data, iconInfos, access, (err) ->
+                    if err
+                        app.updateAttributes version: previousVersion, ->
+                            callback err
+                    else
+                        callback()
 
 
     # Check if an update is required then returns an object with two flags
