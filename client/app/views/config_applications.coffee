@@ -32,8 +32,8 @@ module.exports = class ConfigApplicationsView extends BaseView
         @spanRefresh.hide()
         @memoryFree = @$ '.memory-free'
         @diskSpace = @$ '.disk-space'
-        @updateBtn = new ColorButton  @$ '.update-all'
-        @rebootStackBtn = new ColorButton  @$ '.reboot-stack'
+        @updateBtn = @$ '.update-all'
+        @rebootStackBtn = @$ '.reboot-stack'
         @fetch()
         @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
@@ -178,6 +178,11 @@ module.exports = class ConfigApplicationsView extends BaseView
     onRebootStackClicked: ->
         @rebootStackBtn.spin true
         @spanRefresh.show()
-        @stackApplications.rebootStack ->
-            location.reload()
+        @stackApplications.rebootStack (err) =>
+            if err
+                alert t 'reboot stack error'
+                @rebootStackBtn.spin false
+                @spanRefresh.hide()
+            else
+                location.reload()
 
