@@ -281,4 +281,5 @@
   "update stack error title": "An error occured while updating your Cozy",
   "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to chose wether or not you accept the new permissions.",
   "update stack warning": "Warning",
+  "reboot stack error": "An error occured whil rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore.",
 }
