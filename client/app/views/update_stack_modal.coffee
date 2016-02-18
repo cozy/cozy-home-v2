@@ -72,14 +72,13 @@ module.exports = class UpdateStackModal extends BaseView
     # because of permission changes.
     onError: (err, permissionChanges) ->
         @blocked = false
-        @$('#cancelbtn').removeClass 'disabled'
         @$('.step2').hide()
         @$('.error').show()
         @$('#ok').show()
         @$('#confirmbtn').hide()
         @showPermissionsChanged permissionChanges
 
-        if err.data?.message?
+        if err.data?.message? and err.data.message.length > 0
             infos = err.data.message
             if Object.keys(infos).length > 0
                 @$(".stack-error").hide()
@@ -90,6 +89,8 @@ module.exports = class UpdateStackModal extends BaseView
                     """
                 html += "</ul>"
                 @body.append html
+        else
+            @$('.apps-error').hide()
 
         @endCallback false
 
@@ -126,10 +127,10 @@ module.exports = class UpdateStackModal extends BaseView
 
 
     onConfirmClicked: ->
+        @$('#cancelbtn').addClass 'disabled'
         @confirmCallback()
         @blocked = true
         @$('.step1').hide()
         @$('.step2').show()
         @$('#confirmbtn').spin true
-        @$('#cancelbtn').addClass 'disabled'
 
