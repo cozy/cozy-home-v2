@@ -3,8 +3,8 @@
 
   $.fn.spin = function(doSpin) {
     if(doSpin){
-      this.width(this.outerWidth());
       this.height(this.outerHeight());
+      this.width(this.outerWidth());
       this.data('spinner-content-was', this.contents());
       spinWhite = this.hasClass('btn') && !this.hasClass('spin-black');
       this.html('<div class="spinholder">' +
