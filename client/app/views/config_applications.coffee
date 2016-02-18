@@ -54,6 +54,7 @@ module.exports = class ConfigApplicationsView extends BaseView
             @updateBtn.show()
         else
             @updateBtn.hide()
+            @updateBtn.show()
 
 
     openUpdatePopover: (slug) ->
