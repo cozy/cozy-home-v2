@@ -109,8 +109,8 @@ module.exports = class UpdateStackModal extends BaseView
             @$('.permission-changes').show()
 
 
-    # When the update is running, the modal cannot be closed. The user should
-    # not be able to do anything until update is done.
+    # This is function called when the process ended properly. The modal is
+    # hidden and the ending callback is fired.
     onClose: =>
         @hide()
         @endCallback true
