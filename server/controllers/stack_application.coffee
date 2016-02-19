@@ -41,7 +41,7 @@ module.exports =
                 log.error err
                 sendError res, err
             else
-                res.send 200
+                res.send success: true
 
 
     reboot: (req, res, next) ->
