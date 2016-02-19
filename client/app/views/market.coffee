@@ -9,11 +9,11 @@ slugify = require 'helpers/slugify'
 
 REPOREGEX =  /// ^
     (https?://)?                   #protocol
-    ([\da-z\.-]+\.[a-z\.]{2,6})    #domain
+    ([\da-z\.-]+\.[a-z\.]{2,})     #domain
     (:[0-9]{1,5})?                 #optional domain's port
     ([/\w \.-]*)*                  #path to repo
     (?:\.git)?                     #.git extension
-    (@[-\da-zA-Z\./]+)?            #branch
+    (@[/\w\.-]+)?                  #branch
      $ ///
 
 
