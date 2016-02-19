@@ -297,6 +297,7 @@ module.exports =
             , ->
                 log.info 'Updating all apps operation is done.'
 
+
                 if JSON.stringify(updateFailures).length > 2
                     log.error 'Errors occured for following apps:'
                     log.raw(JSON.stringify updateFailures, null, 2)

@@ -78,7 +78,7 @@ module.exports = class UpdateStackModal extends BaseView
         @$('#confirmbtn').hide()
         @showPermissionsChanged permissionChanges
 
-        if err.data?.message? and err.data.message.length > 0
+        if err.data?.message? and typeof(err.data.message) is 'object'
             infos = err.data.message
             if Object.keys(infos).length > 0
                 @$(".stack-error").hide()
