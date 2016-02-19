@@ -65,3 +65,8 @@ exports.put = (url, data, callback) ->
 exports.del = (url, callback) ->
     exports.request "DELETE", url, null, callback
 
+# Sends a head request
+# Expected callbacks: success and error
+exports.head = (url, callbacks) ->
+    exports.request "HEAD", url, null, callbacks
+
