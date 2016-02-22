@@ -38,7 +38,6 @@ module.exports = class StackApplication extends Backbone.Model
     # done.
     updateStack: (callback) ->
         request.put "/api/applications/update/stack", {}, (err) =>
-            return callback err if err
             console.log 'Waiting for reboot...'
             @waitServerIsUp 3, callback
 
@@ -50,7 +49,6 @@ module.exports = class StackApplication extends Backbone.Model
     # done.
     rebootStack: (callback) ->
         request.put "/api/applications/reboot/stack", {}, (err) =>
-            return callback err if err
             console.log 'Waiting for reboot...'
             @waitServerIsUp 3, callback
 
