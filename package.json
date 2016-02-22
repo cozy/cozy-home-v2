@@ -27,7 +27,7 @@
     "moment-timezone": "0.3.0",
     "multiparty": "4.1.2",
     "node-polyglot": "0.4.1",
-    "printit": "0.1.15",
+    "printit": "0.1.17",
     "request": "2.69.0",
     "request-json": "0.5.5",
     "rrule": "2.0.1",
