@@ -1,4 +1,4 @@
-# Make ajax request more easy to do.
+# Make ajax request easier to do.
 # Expected callbacks: success and error
 exports.request = (type, url, data, callbacks) ->
     $.ajax
