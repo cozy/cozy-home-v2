@@ -41,7 +41,7 @@ module.exports = {
             if (err != null) {
               return next(err);
             } else {
-              return res.send(200, {
+              return res.status(200).send({
                 success: true
               });
             }

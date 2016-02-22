@@ -6,19 +6,19 @@
 
   var modules = {};
   var cache = {};
-  var has = ({}).hasOwnProperty;
-
   var aliases = {};
+  var has = ({}).hasOwnProperty;
 
   var endsWith = function(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   };
 
+  var _cmp = 'components/';
   var unalias = function(alias, loaderPath) {
     var start = 0;
     if (loaderPath) {
-      if (loaderPath.indexOf('components/' === 0)) {
-        start = 'components/'.length;
+      if (loaderPath.indexOf(_cmp) === 0) {
+        start = _cmp.length;
       }
       if (loaderPath.indexOf('/', start) > 0) {
         loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
@@ -26,33 +26,32 @@
     }
     var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
     if (result) {
-      return 'components/' + result.substring(0, result.length - '.js'.length);
+      return _cmp + result.substring(0, result.length - '.js'.length);
     }
     return alias;
   };
 
-  var expand = (function() {
-    var reg = /^\.\.?(\/|$)/;
-    return function(root, name) {
-      var results = [], parts, part;
-      parts = (reg.test(name) ? root + '/' + name : name).split('/');
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part === '..') {
-          results.pop();
-        } else if (part !== '.' && part !== '') {
-          results.push(part);
-        }
+  var _reg = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (_reg.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
       }
-      return results.join('/');
-    };
-  })();
+    }
+    return results.join('/');
+  };
+
   var dirname = function(path) {
     return path.split('/').slice(0, -1).join('/');
   };
 
   var localRequire = function(path) {
-    return function(name) {
+    return function expanded(name) {
       var absolute = expand(dirname(path), name);
       return globals.require(absolute, path);
     };
@@ -107,6 +106,7 @@
   };
 
   require.brunch = true;
+  require._cache = cache;
   globals.require = require;
 })();
 require.register("collections/application", function(exports, require, module) {
@@ -346,6 +346,7 @@ exports.request = function(type, url, data, callbacks) {
     type: type,
     url: url,
     data: data,
+    dataType: 'json',
     success: callbacks.success,
     error: callbacks.error
   });
@@ -365,6 +366,10 @@ exports.put = function(url, data, callbacks) {
 
 exports.del = function(url, callbacks) {
   return exports.request("DELETE", url, null, callbacks);
+};
+
+exports.head = function(url, callbacks) {
+  return exports.request("HEAD", url, null, callbacks);
 };
 });
 
@@ -397,8 +402,7 @@ exports.timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Af
 });
 
 ;require.register("initialize", function(exports, require, module) {
-var Instance, MainRouter, MainView, colorSet,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var Instance, MainRouter, MainView, colorSet;
 
 MainRouter = require('routers/main_router');
 
@@ -436,87 +440,75 @@ window.onerror = function(msg, url, line, col, error) {
   }
 };
 
-exports.Application = (function() {
-  function Application() {
-    this.initialize = __bind(this.initialize, this);
-    $(this.initialize);
-  }
-
-  Application.prototype.initialize = function() {
-    var SocketListener, data, defaultLocales, e, err, exception, locales, xhr, _ref,
-      _this = this;
+document.addEventListener('DOMContentLoaded', function() {
+  var SocketListener, data, defaultLocales, e, err, exception, locales, xhr, _ref,
+    _this = this;
+  try {
+    this.instance = window.cozy_instance || {};
+    this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
+    defaultLocales = require('locales/en');
     try {
-      this.instance = window.cozy_instance || {};
-      this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
-      defaultLocales = require('locales/en');
-      try {
-        locales = require('locales/' + this.locale);
-      } catch (_error) {
-        err = _error;
-        locales = defaultLocales;
-      }
-      window.app = this;
-      this.polyglot = new Polyglot();
-      this.polyglot.extend(locales);
-      this.defaultPolyglot = new Polyglot({
-        locale: 'en',
-        phrases: defaultLocales
-      });
-      window.t = function(key, params) {
-        var _ref1, _ref2;
-        if (params == null) {
-          params = {};
-        }
-        if (params._ == null) {
-          params._ = (_ref1 = _this.defaultPolyglot) != null ? _ref1.t(key, params) : void 0;
-        }
-        return (_ref2 = _this.polyglot) != null ? _ref2.t(key, params) : void 0;
-      };
-      moment.locale(this.locale);
-      ColorHash.addScheme('cozy', colorSet);
-      this.routers = {};
-      this.mainView = new MainView();
-      this.routers.main = new MainRouter();
-      Backbone.history.start();
-      SocketListener = require('lib/socket_listener');
-      return SocketListener.socket.on('installerror', function(err) {
-        console.log("An error occured while attempting to install app");
-        return console.log(err);
-      });
+      locales = require('locales/' + this.locale);
     } catch (_error) {
-      e = _error;
-      console.error(e, e != null ? e.stack : void 0);
-      exception = e.toString();
-      if (exception !== window.lastError) {
-        data = {
-          data: {
-            type: 'error',
-            error: {
-              msg: e.message,
-              name: e != null ? e.name : void 0,
-              full: exception,
-              stack: e != null ? e.stack : void 0
-            },
-            file: e != null ? e.fileName : void 0,
-            line: e != null ? e.lineNumber : void 0,
-            col: e != null ? e.columnNumber : void 0,
-            href: window.location.href
-          }
-        };
-        xhr = new XMLHttpRequest();
-        xhr.open('POST', 'log', true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.send(JSON.stringify(data));
-        return window.lastError = exception;
-      }
+      err = _error;
+      locales = defaultLocales;
     }
-  };
-
-  return Application;
-
-})();
-
-new exports.Application;
+    window.app = this;
+    this.polyglot = new Polyglot();
+    this.polyglot.extend(locales);
+    this.defaultPolyglot = new Polyglot({
+      locale: 'en',
+      phrases: defaultLocales
+    });
+    window.t = function(key, params) {
+      var _ref1, _ref2;
+      if (params == null) {
+        params = {};
+      }
+      if (params._ == null) {
+        params._ = (_ref1 = _this.defaultPolyglot) != null ? _ref1.t(key, params) : void 0;
+      }
+      return (_ref2 = _this.polyglot) != null ? _ref2.t(key, params) : void 0;
+    };
+    moment.locale(this.locale);
+    ColorHash.addScheme('cozy', colorSet);
+    this.routers = {};
+    this.mainView = new MainView();
+    this.routers.main = new MainRouter();
+    Backbone.history.start();
+    SocketListener = require('lib/socket_listener');
+    return SocketListener.socket.on('installerror', function(err) {
+      console.log("An error occured while attempting to install app");
+      return console.log(err);
+    });
+  } catch (_error) {
+    e = _error;
+    console.error(e, e != null ? e.stack : void 0);
+    exception = e.toString();
+    if (exception !== window.lastError) {
+      data = {
+        data: {
+          type: 'error',
+          error: {
+            msg: e.message,
+            name: e != null ? e.name : void 0,
+            full: exception,
+            stack: e != null ? e.stack : void 0
+          },
+          file: e != null ? e.fileName : void 0,
+          line: e != null ? e.lineNumber : void 0,
+          col: e != null ? e.columnNumber : void 0,
+          href: window.location.href
+        }
+      };
+      xhr = new XMLHttpRequest();
+      xhr.open('POST', 'log', true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(JSON.stringify(data));
+      return window.lastError = exception;
+    }
+  }
+});
 });
 
 ;require.register("lib/base_collection", function(exports, require, module) {
@@ -616,51 +608,6 @@ module.exports = BaseView = (function(_super) {
 })(Backbone.View);
 });
 
-;require.register("lib/client", function(exports, require, module) {
-exports.request = function(type, url, data, callback) {
-  return $.ajax({
-    type: type,
-    url: url,
-    data: data != null ? JSON.stringify(data) : null,
-    contentType: "application/json",
-    dataType: "json",
-    success: function(data) {
-      if (callback != null) {
-        return callback(null, data);
-      }
-    },
-    error: function(data) {
-      var _ref;
-      if ((_ref = data.status) === 200 || _ref === 201 || _ref === 204 || _ref === 304) {
-        if (callback != null) {
-          return callback(null, data);
-        }
-      } else if ((data != null) && (data.msg != null) && (callback != null)) {
-        return callback(new Error(data.msg));
-      } else if (callback != null) {
-        return callback(new Error("Server error occured"));
-      }
-    }
-  });
-};
-
-exports.get = function(url, callbacks) {
-  return exports.request("GET", url, null, callbacks);
-};
-
-exports.post = function(url, data, callbacks) {
-  return exports.request("POST", url, data, callbacks);
-};
-
-exports.put = function(url, data, callbacks) {
-  return exports.request("PUT", url, data, callbacks);
-};
-
-exports.del = function(url, callbacks) {
-  return exports.request("DELETE", url, null, callbacks);
-};
-});
-
 ;require.register("lib/intent_manager", function(exports, require, module) {
 var IntentManager, ObjectPicker;
 
@@ -739,17 +686,27 @@ exports.request = function(type, url, data, callback) {
       }
     },
     error: function(data) {
+      var err, msg;
       fired = true;
-      if (data != null) {
-        data = JSON.parse(data.responseText);
-        if ((data.msg != null) && (callback != null)) {
-          return callback(new Error(data.msg, data));
-        } else if ((data.error != null) && (callback != null)) {
-          data.msg = data.error;
-          return callback(new Error(data.msg, data));
+      if ((callback != null) && (data != null)) {
+        try {
+          data = JSON.parse(data.responseText);
+        } catch (_error) {
+          err = _error;
+          data = data.responseText;
         }
-      } else if (callback != null) {
-        return callback(new Error("Server error occured", data));
+        if (data.msg != null) {
+          msg = data.msg;
+        } else if (data.error != null) {
+          msg = data.error;
+        } else {
+          msg = "Server error occured";
+        }
+        err = new Error(msg);
+        err.data = data;
+        return callback(err);
+      } else {
+        return typeof callback === "function" ? callback() : void 0;
       }
     }
   });
@@ -774,6 +731,10 @@ exports.put = function(url, data, callback) {
 
 exports.del = function(url, callback) {
   return exports.request("DELETE", url, null, callback);
+};
+
+exports.head = function(url, callbacks) {
+  return exports.request("HEAD", url, null, callbacks);
 };
 });
 
@@ -1186,19 +1147,18 @@ module.exports = {
     "reminder message expanded": "Erinnerung: %{description}\nAnfang: %{start} (%{timezone})\nEnde: %{end} (%{timezone})\nOrt: %{place}\nDetails: %{details}",
     "reminder message": "Erinnerung: %{message}",
     "warning unofficial app": "Diese App is eine aus der Gemeinschaft und wird nicht durch das Cozy Team betreut.\nUm einen Fehler zu melden, beschreiben Sie bitte das Problem in <a href='https://forum.cozy.io'>unserem Forum</a>.",
-    "installation message failure": "%{appName} Installation fehlgeschlagen.",
     "update available notification": "Eine neue Version von %{appName} ist verfügbar.",
     "stack update available notification": "Eine neue Version der Plattform ist verfügbar.",
     "app broken title": "Fehlerhafte Applikation",
-    "app broken": "Diese Applikation hat einen Fehler. Bitte versuchen Sie eine erneute Installation:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "Erneut Installieren.",
-    "error git": "Wir können den Quellcode nicht empfangen.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application Repository scheint nicht erreichbar zu sein.",
     "error github": "Es scheint als wäre GitHub nicht erreichbar. Sie können den GitHub Status unter https://status.github.com/ überprüfen.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "Spezifischer Linux-Benutzer für diese Anwendung kann nicht erstellt werden.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Die Applikation konnte nicht gestartet werden. Details finden Sie im Protokoll der Applikation.",
-    "app msg": "Wenn der Fehler erneut auftritt können Sie uns unter contact@cozycloud.cc erreichen oder mit IRC im Raum #cozycloud auf irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "Mehr Details",
     "noapps": {
         "customize your cozy": "Sie können außerdem <a href=\"%{account}\">zu den Einstellungen gehen</a> um Ihr Cozy anzupassen,\noder <a href=\"%{appstore}\">den App Store besuchen</a> um Ihre erste App zu installieren."
@@ -1213,7 +1173,9 @@ module.exports = {
     "or": "oder",
     "drop a file": "Drag & drop eine Datei oder",
     "url of an image": "kopieren Sie eine URL eines Bildes aus dem Internet",
-    "you have no album": "<p>Sie haben kein Fotoalbum<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Erstellen Sie eines aus <a href='/#applications' target='_blank'>der Photo App</a><br>und nutzen Sie Bilder, die Sie mit Ihrem Mobiltelefon aufgenommen haben, mit der <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>Mobile App!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>Sie haben kein Fotoalbum<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Erstellen Sie eines aus <a href='/#applications' target='_blank'>der Photo App</a><br>und nutzen Sie Bilder, die Sie mit Ihrem Mobiltelefon aufgenommen haben, mit der <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>Mobile App!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -1348,16 +1310,16 @@ module.exports = {
   "show proxy logs": "Show Proxy Logs",
   "show logs": "Show Logs",
   "update stack": "Update the platform",
-  "reboot stack waiting message": "Wait please, rebooting takes several minutes.",
-  "update stack waiting message": "Wait please, updating takes several minutes.",
+  "reboot stack waiting message": "Please wait, rebooting your Cozy takes several minutes.",
+  "update stack waiting message": "Please wait, updating your Cozy takes several minutes.",
   "status no device": "There is no device connected to your Cozy.",
   "download apk": "Download .APK",
   "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
-  "update stack success": "Your applications are updated, page will refresh.",
-  "update stack error": "An error occured during update, page will refresh.",
+  "update stack success": "Your applications are updated. To finalize the update, it requires that you click on the OK button. It will refresh the current window.",
+  "update stack error": "An error occured during the update. Your Cozy may become unstable. If you notice any troubles, you should contact your hosting provider. When you will click on the OK button, the current window will be refreshed.",
   "applications broken": "Applications broken",
   "cozy platform": "Platform",
   "navbar back button title": "Back Home",
@@ -1404,7 +1366,7 @@ module.exports = {
   "home section personal watch": "Watch",
   "home section misc": "Misc",
   "home section platform": "Platform",
-  "app status": "Status",
+  "app status": "My Apps",
   "app store": "Store",
   "settings": "Settings",
   "help": "Help",
@@ -1463,19 +1425,18 @@ module.exports = {
   "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
   "reminder message": "Reminder: %{message}",
   "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-  "installation message failure": "%{appName}'s installation failed.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
   "app broken title": "Broken application",
-  "app broken": "This application is broken. Can you try install again: ",
+  "app broken": "This application is broken. Can you try to install it again: ",
   "reinstall broken app": "reinstall it.",
-  "error git": "We can't retrieve source code.",
+  "error git": "We can't retrieve the source code.",
   "error github repo": "Application repository seems unavailable.",
   "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-  "error npm": "We can't install application dependencies.",
-  "error user linux": "We can't create specific Linux user for this application.",
+  "error npm": "We can't install the application dependencies.",
+  "error user linux": "We can't create a specific Linux user for this application.",
   "error start": "Application can't start. You can find more details in log application.",
-  "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+  "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
   "more details": "More details",
   "noapps": {
     "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -1492,7 +1453,17 @@ module.exports = {
   "url of an image": "Paste URL of an image from the web",
   "you have no album": "<p>You haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
   "config application mark favorite": "mark as favorite",
-  "config application unmark favorite": "unmark as favorite"
+  "config application unmark favorite": "unmark as favorite",
+  "state app installing": "This app is being installed. Wait a little",
+  "state app stopped error": "This app cannot start",
+  "stack updating block message": "Your Cozy is currently updating, you cannot use it until the update is finished.",
+  "update apps error title": "An error occured while updating apps",
+  "update apps error": "One or several applications failed. Concerned applications are marked as broken. You will probably have to uninstall and reinstall these applications.",
+  "update apps error list title": "Broken applications",
+  "update stack error title": "An error occured while updating your Cozy",
+  "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to chose wether or not you accept the new permissions.",
+  "update stack warning": "Warning",
+  "reboot stack error": "An error occured whil rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore.",
 }
 ;
 });
@@ -1742,19 +1713,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -1769,7 +1739,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -2018,19 +1990,18 @@ module.exports = {
     "reminder message expanded": "Recordatorio: %{description}\nComienzo: %{start} (%{timezone})\nFin: %{end} (%{timezone})\nLugar: %{place}\nDetalles: %{details}",
     "reminder message": "Recordatorio: %{message}",
     "warning unofficial app": "Esta aplicación es una aplicación comunitaria y no la mantiene el equipo Cozy.\nPara señalar un problema, le rogamos llevarlo a <a href='https://forum.cozy.io'>nuestro foro</a>.",
-    "installation message failure": "Falla en la instalación de %{appName}.",
     "update available notification": "Una nueva versión de %{appName} está disponible.",
     "stack update available notification": "Una nueva versión de la Plataforma está disponible.",
     "app broken title": "Aplicación deteriorada",
-    "app broken": "Esta aplicación está deteriorada. Puede tratar de instalarla de nuevo:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstalarla.",
-    "error git": "No podemos recuperar el código fuente.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "El depósito de aplicaciones no parece válido.",
     "error github": "Github parece que no está disponible. Usted puede verificar su estatus en https://status.github.com/.",
-    "error npm": "No hemos podido instalar las dependencias de la aplicación.",
-    "error user linux": "No hemos podido crear un usuario linux específico para esta aplicación.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "La aplicación no arranca. Ustad puede encontrar más detalles en el log de la aplicación.",
-    "app msg": "Si el error persiste, usted puede contactarnos en contact@cozycloud.cc '+' o por IRC #cozycloud en irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "Más detalles.",
     "noapps": {
         "customize your cozy": "Puede igualmente <a href=\"%{account}\">ir a configuración </a> para personalizar su Cozy,\no <a href=\"%{appstore}\"> a la Apliteca</a> para instalar su primera aplicación."
@@ -2045,7 +2016,9 @@ module.exports = {
     "or": "o",
     "drop a file": "Arrastrar & soltar un archivo o",
     "url of an image": "Pegar la URL de una imagen desde el web",
-    "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación Mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>No se ha creado ningún album de fotos<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Crear uno a partir de<a href='/#applications' target='_blank'>la aplicación Photo</a><br>y utilice las fotos tomadas con su smartphone y la<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>aplicación Mobile!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -2174,7 +2147,7 @@ module.exports = {
     "installed": "installée",
     "updated": "mis à jour réussie",
     "updating": "m.à.j en cours",
-    "update all": "Mettre à jour la plateforme et les applications",
+    "update all": "Mettre à jour votre Cozy et ses apps",
     "show home logs": "Voir les logs de la Home",
     "show data system logs": "Voir les logs du Data System",
     "show proxy logs": "Voir les logs du Proxy",
@@ -2182,7 +2155,7 @@ module.exports = {
     "update stack": "Mettre à jour la plateforme",
     "reboot stack waiting message": "Veuillez patienter, le redémarrage peut prendre quelques minutes.",
     "update stack waiting message": "Veuillez patienter, la mise à jour peut prendre quelques minutes.",
-    "status no device": "Aucun n'appareil n'est connecté à votre Cozy.",
+    "status no device": "Aucun appareil n'est connecté à votre Cozy.",
     "download apk": "Télécharger le .APK",
     "mobile app promo": "Sauvegardez vos photos et synchronisez vos contacts et calendriers avec notre application mobile :",
     "update stack modal title": "Mise à jour de votre Cozy",
@@ -2236,7 +2209,7 @@ module.exports = {
     "home section personal watch": "Applications de veille",
     "home section misc": "Divers",
     "home section platform": "Plateforme",
-    "app status": "États",
+    "app status": "Mes Apps",
     "settings": "Paramètres",
     "help": "Aide",
     "change layout": "Modifier la disposition",
@@ -2294,19 +2267,18 @@ module.exports = {
     "reminder message expanded": "Rappel : %{description}\nDébut : %{start} (%{timezone})\nFin : %{end} (%{timezone})\nEmplacement : %{place}\nDétails : %{details}",
     "reminder message": "Rappel : %{message}",
     "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
-    "installation message failure": "Échec de l'installation de %{appName}.",
     "update available notification": "Une nouvelle version de %{appName} est disponible.",
     "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
     "app broken title": "Application cassée",
-    "app broken": "Cette application est cassée. Vous pouvez essayer de la réinstaller:",
+    "app broken": "Cette application est cassée. Veuillez essayre de la réinstaller :",
     "reinstall broken app": "réinstallation.",
-    "error git": "Nous n'arrivons pas à récupérer le code source.",
+    "error git": "Impossible de retrouver le code source.",
     "error github repo": "Le dépôt de l'application ne semble pas disponible.",
     "error github": "Github semble indisponible. Vous pouvez vérifier son état sur https://status.github.com/.",
-    "error npm": "L'installation des dépendances a échouée.",
-    "error user linux": "La création de l'utilisateur pour cette application a échouée.",
-    "error start": "L'application ne peut pas démarrée. Vous pouvez trouver plus d'information dans les logs de l'application.",
-    "app msg": "Si l'erreur persiste, vous pouvez nous contacter par mail à contact@cozycloud.cc\nou sur IRC #cozycloud sur irc.freenode.net.",
+    "error npm": "Impossible d'installer les dépendances de l'application.",
+    "error user linux": "Impossible de créer un utilisateur Linux spécifique pour cette application.",
+    "error start": "L'application ne peut pas démarrer. Vous pouvez trouver plus d'information dans les logs de l'application.",
+    "app msg": "Si cette erreur persiste, vous pouvez nous contacter : contact@cozycloud.cc, sur IRC #cozycloud ou encore irc.freenode.net.",
     "more details": "Plus de détails",
     "noapps": {
         "customize your cozy": "Vous pouvez également <a href=\"%{account}\">aller dans les réglages</a> pour personnaliser votre Cozy\nou <a href=\"%{appstore}\">vous rendre dans le Cozy Store</a> pour installer votre première application."
@@ -2321,8 +2293,11 @@ module.exports = {
     "or": "ou",
     "drop a file": "Glissez et déposez un fichier ou",
     "url of an image": "Collez l'URL d'une image depuis le web",
-    "you have no album": "<p>Vous n'avez aucun album photo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Créez en un depuis <a href='/#applications' target='_blank'>l'application Photo </a><br>et utilisez des photos prises depuis votre smartphone avec <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'application mobile !</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
-};
+    "you have no album": "<p>Vous n'avez aucun album photo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Créez en un depuis <a href='/#applications' target='_blank'>l'application Photo </a><br>et utilisez des photos prises depuis votre smartphone avec <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>l'application mobile !</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "Cette application est en cours d'installation. Veuillez patienter",
+    "state app stopped error": "Cette application n epeut pas démarrer"
+}
+;
 });
 
 require.register("locales/it", function(exports, require, module) {
@@ -2570,19 +2545,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -2597,7 +2571,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -2846,19 +2822,18 @@ module.exports = {
     "reminder message expanded": "알림: %{description}\n시작: %{start} (%{timezone})\n종료: %{end} (%{timezone})\n장소: %{place}\n내용: %{details}",
     "reminder message": "알림: %{message}",
     "warning unofficial app": "이 앱은 커뮤니티 앱이며, Cozy팀에서 지원하지 않습니다.\n버그 리포트는  <a href='https://forum.cozy.io'>포럼 게시판</a>을 이용하세요.",
-    "installation message failure": "%{appName} 설치 실패",
     "update available notification": "%{appName}의 새로운 버전이 나왔습니다.",
     "stack update available notification": "새 버전의 플랫폼이 사용 가능 합니다.",
     "app broken title": "앱설치 오류",
-    "app broken": "앱 설치 오류. 다시 설치 하시겠습니까:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "재설치",
-    "error git": "소스 코드를 검색 할 수 없습니다.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "앱 저장소가 사용 할 수 없습니다.",
     "error github": "Github를 사용 할 수 없습니다. https://status.github.com/에 상태를 확인 하세요.",
-    "error npm": "앱 의존성 때문에 설치 할 수 없습니다.",
-    "error user linux": "앱 설치를 위해 시스템에 사용자를 추가 할 수 없습니다.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "앱을 시작 할 수 없습니다. 더 자세한 내용은 로그를 확인 하세요.",
-    "app msg": "오류가 계속해서 발생 한다면, contact@cozycloud.cc 또는 irc.freenode.net에서 #cozycloud를 사용해 보세요.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "더 자세히",
     "noapps": {
         "customize your cozy": "여러분의 취향에 맞게 <a href=\"%{account}\">환경설정</a>에서 원하는 내용을 변경 하거나,\n <a href=\"%{appstore}\">스토어</a> 에 새로운 앱을 추가 해 보세요."
@@ -2873,7 +2848,9 @@ module.exports = {
     "or": "또는",
     "drop a file": "드래그 앤 드롭 파일 또는",
     "url of an image": "웹으로 부터 이미지 URL 붙이기",
-    "you have no album": "<p>사진첩 데이터가 없습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p> <a href='/#applications' target='_blank'>사진첩 앱</a>을 사용해서 새로 생성하거나<br><a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>모바일 앱</a>으로 스마트 폰에서 가져 올 수 있습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>사진첩 데이터가 없습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p> <a href='/#applications' target='_blank'>사진첩 앱</a>을 사용해서 새로 생성하거나<br><a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>모바일 앱</a>으로 스마트 폰에서 가져 올 수 있습니다.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -3122,19 +3099,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -3149,7 +3125,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -3398,19 +3376,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> to customize your Cozy\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -3425,7 +3402,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -3674,19 +3653,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -3701,7 +3679,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -3950,19 +3930,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "Această aplicație este făcută de comunitate si nu este actualizată de echipa Cozy.\nPentru a raporta un bug, te rog completeaza pe <a href='https://forum.cozy.io'>forumul nostru</a>.",
-    "installation message failure": "Instalarea aplicației %{appName} a eșuat.",
     "update available notification": "Este disponibilă o versiune nouă a aplicației %{appName}.",
     "stack update available notification": "Este disponibilă o versiune nouă a platformei.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "De asemenea <a href=\\\"%{account}\\\">du-te la setări</a> si customizează-ți Cozy-ul,\nsau <a href=\\\"%{appstore}\\\">aruncă o privire la Magazin</a> pentru a-ți instala prima aplicație."
@@ -3977,7 +3956,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -4226,19 +4207,18 @@ module.exports = {
     "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
     "reminder message": "Reminder: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -4253,7 +4233,9 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
@@ -4502,19 +4484,18 @@ module.exports = {
     "reminder message expanded": "Напоминание: %{description}\nНачало: %{start} (%{timezone})\nКонец: %{end} (%{timezone})\nМесто: %{place}\nДетали: %{details}",
     "reminder message": "Напоминание: %{message}",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
-    "installation message failure": "%{appName}'s installation failed.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
     "app broken title": "Broken application",
-    "app broken": "This application is broken. Can you try install again:",
+    "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "reinstall it.",
-    "error git": "We can't retrieve source code.",
+    "error git": "We can't retrieve the source code.",
     "error github repo": "Application repository seems unavailable.",
     "error github": "Github seems unavailable. You can check its status on https://status.github.com/.",
-    "error npm": "We can't installed application dependencies.",
-    "error user linux": "We can't create specific linux user for this application.",
+    "error npm": "We can't install the application dependencies.",
+    "error user linux": "We can't create a specific Linux user for this application.",
     "error start": "Application can't start. You can find more details in log application.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc' + 'or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
     "more details": "More details",
     "noapps": {
         "customize your cozy": "You can also <a href=\"%{account}\">go to your settings</a> and customize your Cozy,\nor <a href=\"%{appstore}\">take a look at the App Store</a> to install your first app."
@@ -4529,17 +4510,21 @@ module.exports = {
     "or": "or",
     "drop a file": "Drag & drop a file or",
     "url of an image": "Paste URL of an image from the web",
-    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>"
+    "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "This app is being installed. Wait a little",
+    "state app stopped error": "This app cannot start"
 };
 });
 
 require.register("models/application", function(exports, require, module) {
-var Application, client, _ref,
+var Application, client, request, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 client = require("../helpers/client");
+
+request = require("../lib/request");
 
 module.exports = Application = (function(_super) {
   __extends(Application, _super);
@@ -4699,9 +4684,10 @@ module.exports = Application = (function(_super) {
     return section;
   };
 
-  Application.prototype.updateAll = function(callbacks) {
-    this.prepareCallbacks(callbacks);
-    return client.put("/api/applications/update/all", {}, callbacks);
+  Application.prototype.updateAll = function(callback) {
+    return request.put("/api/applications/update/all", {}, function(err, data) {
+      return callback(err, data != null ? data.permissionChanges : void 0);
+    });
   };
 
   Application.prototype.isOfficial = function() {
@@ -4827,11 +4813,11 @@ module.exports = Notification = (function(_super) {
 });
 
 ;require.register("models/photo", function(exports, require, module) {
-var Photo, client, _ref,
+var Photo, request, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-client = require('../lib/client');
+request = require('../lib/request');
 
 module.exports = Photo = (function(_super) {
   __extends(Photo, _super);
@@ -4874,24 +4860,24 @@ module.exports = Photo = (function(_super) {
 })(Backbone.Model);
 
 Photo.getMonthdistribution = function(callback) {
-  return client.get("files/photo/monthdistribution", callback);
+  return request.get("files/photo/monthdistribution", callback);
 };
 
 Photo.listFromFiles = function(skip, limit, callback) {
-  return client.get("files/photo/range/" + skip + "/" + limit, callback);
+  return request.get("files/photo/range/" + skip + "/" + limit, callback);
 };
 
 Photo.makeFromFile = function(fileid, attr, callback) {
-  return client.post("files/" + fileid + "/toPhoto", attr, callback);
+  return request.post("files/" + fileid + "/toPhoto", attr, callback);
 };
 });
 
 ;require.register("models/stack_application", function(exports, require, module) {
-var StackApplication, client, _ref,
+var StackApplication, request, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-client = require("../helpers/client");
+request = require("../lib/request");
 
 module.exports = StackApplication = (function(_super) {
   __extends(StackApplication, _super);
@@ -4912,91 +4898,45 @@ module.exports = StackApplication = (function(_super) {
     return base;
   };
 
-  StackApplication.prototype.prepareCallbacks = function(callbacks, presuccess, preerror) {
-    var error, success, _ref1,
-      _this = this;
-    _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
-    if (presuccess == null) {
-      presuccess = function(data) {
-        return _this.set(data.app);
-      };
-    }
-    this.trigger('request', this, null, callbacks);
-    callbacks.success = function(data) {
-      if (presuccess) {
-        presuccess(data);
+  StackApplication.prototype.waitServerIsUp = function(remainingSteps, callback) {
+    var _this = this;
+    return request.head("api/applications/stack", function(err) {
+      if (err) {
+        console.log('Server looks down...');
+      } else {
+        console.log('Server looks up...');
+        remainingSteps--;
       }
-      _this.trigger('sync', _this, null, callbacks);
-      if (success) {
-        return success(data);
-      }
-    };
-    return callbacks.error = function(jqXHR) {
-      if (preerror) {
-        preerror(jqXHR);
-      }
-      _this.trigger('error', _this, jqXHR, {});
-      if (error) {
-        return error(jqXHR);
-      }
-    };
-  };
-
-  StackApplication.prototype.waitReboot = function(step, total_step, callbacks) {
-    var error, success, _ref1,
-      _this = this;
-    _ref1 = callbacks || {}, success = _ref1.success, error = _ref1.error;
-    return client.get("api/applications/stack", {
-      success: function() {
-        if (step === total_step) {
-          if (success != null) {
-            return success('ok');
-          } else {
-            if (callbacks) {
-              return callbacks();
-            }
-          }
-        } else {
-          if (step === 1) {
-            step += step;
-          }
-          return setTimeout(function() {
-            return _this.waitReboot(step, total_step, callbacks);
-          }, 500);
-        }
-      },
-      error: function() {
+      if (remainingSteps === 0) {
+        console.log('Server is up!');
+        return callback();
+      } else {
         return setTimeout(function() {
-          if (step === 0 || step === 2) {
-            step = step + 1;
-          }
-          return _this.waitReboot(step, total_step, callbacks);
-        }, 500);
+          return _this.waitServerIsUp(remainingSteps, callback);
+        }, 1000);
       }
     });
   };
 
-  StackApplication.prototype.updateStack = function(callbacks) {
+  StackApplication.prototype.updateStack = function(callback) {
     var _this = this;
-    return client.put("/api/applications/update/stack", {}, {
-      success: function() {
-        return _this.waitReboot(0, 2, callbacks);
-      },
-      error: function() {
-        return _this.waitReboot(0, 2, callbacks);
+    return request.put("/api/applications/update/stack", {}, function(err) {
+      if (err) {
+        return callback(err);
       }
+      console.log('Waiting for reboot...');
+      return _this.waitServerIsUp(3, callback);
     });
   };
 
-  StackApplication.prototype.rebootStack = function(callbacks) {
+  StackApplication.prototype.rebootStack = function(callback) {
     var _this = this;
-    return client.put("/api/applications/reboot/stack", {}, {
-      success: function() {
-        return _this.waitReboot(0, 1, callbacks);
-      },
-      error: function() {
-        return _this.waitReboot(0, 1, callbacks);
+    return request.put("/api/applications/reboot/stack", {}, function(err) {
+      if (err) {
+        return callback(err);
       }
+      console.log('Waiting for reboot...');
+      return _this.waitServerIsUp(3, callback);
     });
   };
 
@@ -5031,7 +4971,7 @@ var BaseModel, User, client,
 
 BaseModel = require('lib/base_model').BaseModel;
 
-client = require('helpers/client');
+client = require('lib/request');
 
 module.exports = User = (function(_super) {
   __extends(User, _super);
@@ -5042,8 +4982,8 @@ module.exports = User = (function(_super) {
     User.__super__.constructor.call(this);
   }
 
-  User.prototype.logout = function(callbacks) {
-    return client.get("logout/", callbacks);
+  User.prototype.logout = function(callback) {
+    return client.get("logout/", callback);
   };
 
   return User;
@@ -5320,7 +5260,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<div class="icon-container"><img src="/img/spinner-white-thin.svg" class="spinner"/><img src="" class="icon"/></div><div class="infos"><div class="line"><strong><a');
-buf.push(attrs({ 'href':("#apps/" + (app.slug) + "") }, {"href":true}));
+buf.push(attrs({ 'href':("#apps/" + (app.slug) + ""), "class": ('app') }, {"href":true}));
 buf.push('>');
 var __val__ = app.displayName
 buf.push(escape(null == __val__ ? "" : __val__));
@@ -5347,7 +5287,7 @@ else
 buf.push('<span class="state-label">' + escape((interp = app.state) == null ? '' : interp) + '</span>');
 }
 buf.push('</div><div class="line"><div class="comments"><a');
-buf.push(attrs({ 'href':("" + (app.website) + ""), 'target':("_blank") }, {"href":true,"target":true}));
+buf.push(attrs({ 'href':("" + (app.websiteUrl) + ""), 'target':("_blank") }, {"href":true,"target":true}));
 buf.push('>');
 var __val__ = app.website
 buf.push(escape(null == __val__ ? "" : __val__));
@@ -5416,10 +5356,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</a></div><div class="line"><span class="app">Home: </span><span class="version-number home">--</span><a href="/logs/home" target="_blank" class="small">');
 var __val__ = t('show logs')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</a></div><div class="line"><span class="app">Controller: </span><span class="version-number controller">--</span></div><div class="line"><span class="refresh">');
-var __val__ = t('reboot stack waiting message')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></div></div><div class="mod buttons"><button class="update-all small"><i class="fa fa-refresh mr1"></i><span>');
+buf.push('</a></div><div class="line"><span class="app">Controller: </span><span class="version-number controller">--</span></div></div><div class="mod buttons"><button class="update-all small"><i class="fa fa-refresh mr1"></i><span>');
 var __val__ = t('update all')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></button><button class="reboot-stack small outline-blue"><i class="fa fa-power-off mr1"></i><span>');
@@ -5618,7 +5555,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2><div class="application-container"><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/state.svg" class="icon svg"/><p class="app-title">');
+buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/my-apps.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('app status')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
@@ -5657,7 +5594,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2><button id="dismiss-all" class="btn outline-darkgrey small"><span>');
 var __val__ = t('dismiss all')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></button></div><div id="notifications"><ul id="notifications-list"><li id="no-notif-msg"></li></ul></div></div><div class="home-body"><div id="app-frames"></div><div id="content"><!-- Preload spinners and hover icons--><img src="/img/spinner.svg" class="hidden"/><img src="/img/spinner-white.svg" class="hidden"/><img src="/img/notification-orange.png" class="hidden"/><div id="home-content"></div></div></div>');
+buf.push('</span></button></div><div id="notifications"><ul id="notifications-list"><li id="no-notif-msg"></li></ul></div></div><div class="home-body"><div id="app-frames"></div><div id="content"><!-- Preload spinners and hover icons--><img src="/img/spinner.svg" class="hidden"/><img src="/img/spinner-white.svg" class="hidden"/><div id="home-content"></div></div></div>');
 }
 return buf.join("");
 };
@@ -6046,13 +5983,31 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p class="success">');
 var __val__ = t('update stack success')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="error">');
+buf.push('</p><div class="permission-changes"><h5>');
+var __val__ = t('update stack warning')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h5><p>');
+var __val__ = t('update stack permission changes')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p></div><p class="error stack-error title">');
+var __val__ = t('update stack error title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="error stack-error">');
 var __val__ = t('update stack error')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></div><div class="md-footer clearfix"><button id="cancelbtn" class="transparent-grey">');
+buf.push('</p><p class="error apps-error title">');
+var __val__ = t('update apps error title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="error apps-error">');
+var __val__ = t('update apps error')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><h5 class="error apps-error">');
+var __val__ = t('update apps error list title')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h5></div><div class="md-footer clearfix"><button id="cancelbtn" class="transparent-grey">');
 var __val__ = t('cancel')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button><button id="confirmbtn">');
+buf.push('</button><button id="confirmbtn" class="btn">');
 var __val__ = t('update stack modal confirm')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</button><button id="ok">');
@@ -6493,15 +6448,18 @@ module.exports = ApplicationRow = (function(_super) {
   ApplicationRow.prototype.template = require('templates/config_application');
 
   ApplicationRow.prototype.getRenderData = function() {
-    var gitName;
+    var branch, gitName, website;
     gitName = this.model.get('git');
     if (gitName != null) {
       gitName = gitName.slice(0, -4);
     }
+    website = this.model.get('website') || gitName;
+    branch = this.model.get('branch') || 'master';
     return {
       app: _.extend({}, this.model.attributes, {
-        website: this.model.get('website') || gitName,
-        branch: this.model.get('branch') || 'master'
+        website: website,
+        branch: branch,
+        websiteUrl: branch === 'master' ? website : "" + website + "/tree/" + branch
       })
     };
   };
@@ -6603,7 +6561,11 @@ module.exports = ApplicationRow = (function(_super) {
         this.updateButton.displayGrey(t('update'));
         this.appStoppable.show();
         this.appStoppable.next().show();
-        this.startStopBtn.displayGrey(t('stop this app'));
+        this.startStopBtn.show();
+        this.startStopBtn.button.attr({
+          title: t('stop this app')
+        });
+        this.startStopBtn.button.removeClass('stopped');
         break;
       case 'installing':
         this.stateLabel.show().text(t('installing'));
@@ -6619,7 +6581,11 @@ module.exports = ApplicationRow = (function(_super) {
         this.updateButton.displayGrey(t('update'));
         this.appStoppable.hide();
         this.appStoppable.next().hide();
-        this.startStopBtn.displayGrey(t('start this app'));
+        this.startStopBtn.show();
+        this.startStopBtn.button.attr({
+          title: t('start this app')
+        });
+        this.startStopBtn.button.addClass('stopped');
     }
     this.setIconSrc();
     this.updateIcon.toggle(this.model.get('needsUpdate'));
@@ -6708,7 +6674,6 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('stopped'));
-          _this.render();
           return Backbone.Mediator.pub('app-state:changed', {
             status: 'stopped',
             updated: false,
@@ -6724,7 +6689,6 @@ module.exports = ApplicationRow = (function(_super) {
         success: function() {
           _this.startStopBtn.spin(false);
           _this.stateLabel.html(t('started'));
-          _this.render();
           Backbone.Mediator.pub('app-state:changed', {
             status: 'started',
             updated: false,
@@ -6865,6 +6829,10 @@ module.exports = ApplicationsListView = (function(_super) {
 
   ApplicationsListView.prototype.itemView = require('views/config_application');
 
+  ApplicationsListView.prototype.events = {
+    "click .app": "launchApp"
+  };
+
   ApplicationsListView.prototype.itemViewOptions = function(model) {
     var app, comment;
     app = this.market.get(model.get('slug'));
@@ -6930,6 +6898,17 @@ module.exports = ApplicationsListView = (function(_super) {
     }
   };
 
+  ApplicationsListView.prototype.launchApp = function(e) {
+    var dest;
+    e.preventDefault();
+    dest = e.currentTarget.getAttribute('href').slice(1);
+    if (e.which === 2 || e.ctrlKey || e.metaKey || $(window).width() <= 640) {
+      return window.open(dest, "_blank");
+    } else if (e.which === 1) {
+      return window.app.routers.main.navigate(dest, true);
+    }
+  };
+
   return ApplicationsListView;
 
 })(ViewCollection);
@@ -6980,6 +6959,7 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.devices = devices;
     this.stackApps = stackApps;
     this.market = market;
+    this.runFullUpdate = __bind(this.runFullUpdate, this);
     this.fetch = __bind(this.fetch, this);
     this.displayDevices = __bind(this.displayDevices, this);
     this.displayStackVersion = __bind(this.displayStackVersion, this);
@@ -6993,8 +6973,8 @@ module.exports = ConfigApplicationsView = (function(_super) {
     this.spanRefresh.hide();
     this.memoryFree = this.$('.memory-free');
     this.diskSpace = this.$('.disk-space');
-    this.updateBtn = new ColorButton(this.$('.update-all'));
-    this.rebootStackBtn = new ColorButton(this.$('.reboot-stack'));
+    this.updateBtn = this.$('.update-all');
+    this.rebootStackBtn = this.$('.reboot-stack');
     this.fetch();
     this.applicationList = new ConfigApplicationList(this.apps, this.market);
     this.deviceList = new ConfigDeviceList(this.devices);
@@ -7100,19 +7080,22 @@ module.exports = ConfigApplicationsView = (function(_super) {
     return setTimeout(this.fetch, 10000);
   };
 
-  ConfigApplicationsView.prototype.popoverManagement = function(action) {
+  ConfigApplicationsView.prototype.onUpdateClicked = function() {
+    return this.showUpdateStackDialog();
+  };
+
+  ConfigApplicationsView.prototype.showUpdateStackDialog = function() {
     var _this = this;
     if (this.popover != null) {
       this.popover.hide();
     }
     this.popover = new UpdateStackModal({
       confirm: function(application) {
-        return action({
-          success: function() {
-            return _this.popover.onSuccess();
-          },
-          error: function(err) {
-            return _this.popover.onError(err.responseText);
+        return _this.runFullUpdate(function(err, permissionChanges) {
+          if (err) {
+            return _this.popover.onError(err, permissionChanges);
+          } else {
+            return _this.popover.onSuccess(permissionChanges);
           }
         });
       },
@@ -7130,43 +7113,31 @@ module.exports = ConfigApplicationsView = (function(_super) {
     return this.popover.show();
   };
 
-  ConfigApplicationsView.prototype.onUpdateClicked = function() {
-    var action,
-      _this = this;
-    action = function(cb) {
-      var error, success, _ref;
-      _ref = cb || {}, success = _ref.success, error = _ref.error;
-      return _this.applications.updateAll({
-        success: function() {
-          return _this.stackApplications.updateStack(cb);
-        },
-        error: function(err) {
-          return _this.stackApplications.updateStack({
-            success: function() {
-              if (error) {
-                return error(err);
-              } else {
-                return success("ok");
-              }
-            },
-            error: function(stack_err) {
-              err.stack = stack_err;
-              if (error) {
-                return error(err);
-              }
-            }
-          });
-        }
+  ConfigApplicationsView.prototype.runFullUpdate = function(callback) {
+    var _this = this;
+    Backbone.Mediator.pub('update-stack:start');
+    return this.applications.updateAll(function(err, permissionChanges) {
+      var _ref;
+      if (err) {
+        return callback(err, (_ref = err.data) != null ? _ref.permissionChanges : void 0);
+      }
+      return _this.stackApplications.updateStack(function(err) {
+        Backbone.Mediator.pub('update-stack:end');
+        return callback(err, permissionChanges);
       });
-    };
-    return this.popoverManagement(action);
+    });
   };
 
   ConfigApplicationsView.prototype.onRebootStackClicked = function() {
+    var _this = this;
     this.rebootStackBtn.spin(true);
-    this.spanRefresh.show();
-    return this.stackApplications.rebootStack(function() {
-      return location.reload();
+    return this.stackApplications.rebootStack(function(err) {
+      if (err) {
+        alert(t('reboot stack error'));
+        return _this.rebootStackBtn.spin(false);
+      } else {
+        return location.reload();
+      }
     });
   };
 
@@ -7683,7 +7654,7 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installed':
         return this.launchApp(event);
       case 'installing':
-        return alert(t('this app is being installed. Wait a little'));
+        return alert(t('state app installing'));
       case 'stopped':
         this.showSpinner();
         return this.model.start({
@@ -7694,10 +7665,10 @@ module.exports = ApplicationRow = (function(_super) {
           error: function() {
             var msg;
             _this.hideSpinner();
-            msg = 'This app cannot start.';
+            msg = t('state app stopped error');
             errormsg = _this.model.get('errormsg');
             if (errormsg) {
-              msg += " Error was : " + errormsg;
+              msg += " : " + errormsg;
             }
             return alert(msg);
           }
@@ -7743,7 +7714,7 @@ module.exports = ApplicationRow = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/long-list-images", function(exports, require, module) {
+;require.register("views/image_list", function(exports, require, module) {
 var BUFFER_COEF, CELL_PADDING, LongList, MAX_SPEED, MONTH_HEADER_HEIGHT, MONTH_LABEL_TOP, Photo, SAFE_ZONE_COEF, THROTTLE, THROTTLE_INDEX, THUMB_DIM_UNIT, THUMB_HEIGHT,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -9350,7 +9321,9 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.subscriptions = {
     'backgroundChanged': 'changeBackground',
-    'app-state:changed': 'onAppStateChanged'
+    'app-state:changed': 'onAppStateChanged',
+    'update-stack:start': 'onUpdateStackStart',
+    'update-stack:end': 'onUpdateStackEnd'
   };
 
   function HomeView() {
@@ -9378,6 +9351,9 @@ module.exports = HomeView = (function(_super) {
   }
 
   HomeView.prototype.afterRender = function() {
+    if (this.viewModel == null) {
+      this.viewModel = new Backbone.Model;
+    }
     this.navbar = new NavbarView(this.apps, this.notifications);
     this.applicationListView = new ApplicationsListView(this.apps, this.market);
     this.configApplications = new ConfigApplicationsView(this.apps, this.devices, this.stackApps, this.market);
@@ -9419,56 +9395,63 @@ module.exports = HomeView = (function(_super) {
 
   HomeView.prototype.logout = function(event) {
     var user;
-    user = new User();
-    return user.logout({
-      success: function(data) {
-        return window.location = window.location.origin + '/login/';
-      },
-      error: function() {
-        return alert('Server error occured, logout failed.');
-      }
-    });
+    if (app.mainView.viewModel.get('updatingStack')) {
+      return alert(t('stack updating block message'));
+    } else {
+      user = new User();
+      return user.logout(function(err) {
+        if (err) {
+          return alert('Server error occured, logout failed.');
+        } else {
+          return window.location = window.location.origin + '/login/';
+        }
+      });
+    }
   };
 
   HomeView.prototype.displayView = function(view, title) {
     var displayView,
       _this = this;
-    if (title != null) {
-      title = title.substring(6);
+    if (app.mainView.viewModel.get('updatingStack')) {
+      return alert(t('stack updating block message'));
     } else {
-      if (title == null) {
-        title = t('home');
+      if (title != null) {
+        title = title.substring(6);
+      } else {
+        if (title == null) {
+          title = t('home');
+        }
       }
-    }
-    window.document.title = "Cozy - " + title;
-    $('#current-application').html(title);
-    if (view === this.applicationListView) {
-      this.backButton.hide();
-    } else {
-      this.backButton.show();
-    }
-    displayView = function() {
-      _this.frames.hide();
-      view.$el.hide();
-      _this.content.show();
-      $('#home-content').append(view.$el);
-      view.$el.show();
-      _this.currentView = view;
-      _this.forceIframeRendering();
-      return _this.content.scrollTop(0);
-    };
-    if (this.currentView != null) {
-      if (view === this.currentView) {
-        this.frames.hide();
-        this.content.show();
-        this.forceIframeRendering();
-        return;
+      window.document.title = "Cozy - " + title;
+      $('#current-application').html(title);
+      if (view === this.applicationListView) {
+        this.backButton.hide();
+      } else {
+        this.backButton.show();
       }
-      this.currentView.$el.hide();
-      this.currentView.$el.detach();
-      return displayView();
-    } else {
-      return displayView();
+      displayView = function() {
+        _this.frames.hide();
+        view.$el.hide();
+        _this.content.show();
+        $('#home-content').append(view.$el);
+        view.$el.show();
+        _this.currentView = view;
+        _this.forceIframeRendering();
+        return _this.content.scrollTop(0);
+      };
+      if (this.currentView != null) {
+        if (view === this.currentView) {
+          this.frames.hide();
+          this.content.show();
+          this.forceIframeRendering();
+          return;
+        }
+        this.currentView.$el.hide();
+        this.currentView.$el.detach();
+        return displayView();
+      } else {
+        return displayView();
+      }
     }
   };
 
@@ -9528,7 +9511,9 @@ module.exports = HomeView = (function(_super) {
   HomeView.prototype.displayApplication = function(slug, hash) {
     var contentWindow, currentHash, err, frame, onLoad, _base, _base1,
       _this = this;
-    if (this.apps.length === 0) {
+    if (app.mainView.viewModel.get('updatingStack')) {
+      return alert(t('stack updating block message'));
+    } else if (this.apps.length === 0) {
       if ((_base = this.apps).once == null) {
         _base.once = this.apps.on;
       }
@@ -9537,61 +9522,61 @@ module.exports = HomeView = (function(_super) {
           _base1.once = this.apps.on;
         }
       }
-      this.apps.once('reset', function() {
+      return this.apps.once('reset', function() {
         return _this.displayApplication(slug, hash);
       });
-      return null;
-    }
-    this.$("#app-btn-" + slug + " .spinner").show();
-    this.$("#app-btn-" + slug + " .icon").hide();
-    frame = this.$("#" + slug + "-frame");
-    onLoad = function() {
-      var app, name;
-      _this.frames.css('top', '0');
-      _this.frames.css('left', '0');
-      _this.frames.css('position', 'inherit');
-      _this.frames.show();
-      _this.content.hide();
-      _this.backButton.show();
-      _this.$('#app-frames').find('iframe').hide();
-      frame.show();
-      _this.selectedApp = slug;
-      app = _this.apps.get(slug);
-      name = app.get('displayName') || app.get('name') || '';
-      if (name.length > 0) {
-        name = name.replace(/^./, name[0].toUpperCase());
-      }
-      window.document.title = "Cozy - " + name;
-      $("#current-application").html(name);
-      _this.$("#app-btn-" + slug + " .spinner").hide();
-      return _this.$("#app-btn-" + slug + " .icon").show();
-    };
-    if (frame.length === 0) {
-      frame = this.createApplicationIframe(slug, hash);
-      this.frames.show();
-      this.frames.css('top', '-9999px');
-      this.frames.css('left', '-9999px');
-      this.frames.css('position', 'absolute');
-      return frame.on('load', _.once(onLoad));
-    } else if (hash) {
-      contentWindow = frame.prop('contentWindow');
-      try {
-        currentHash = contentWindow.location.hash.substring(1);
-      } catch (_error) {
-        err = _error;
-        console.err(err);
-      }
-      return onLoad();
-    } else if (frame.is(':visible')) {
-      try {
-        frame.prop('contentWindow').location.hash = '';
-      } catch (_error) {
-        err = _error;
-        console.err(err);
-      }
-      return onLoad();
     } else {
-      return onLoad();
+      this.$("#app-btn-" + slug + " .spinner").show();
+      this.$("#app-btn-" + slug + " .icon").hide();
+      frame = this.$("#" + slug + "-frame");
+      onLoad = function() {
+        var app, name;
+        _this.frames.css('top', '0');
+        _this.frames.css('left', '0');
+        _this.frames.css('position', 'inherit');
+        _this.frames.show();
+        _this.content.hide();
+        _this.backButton.show();
+        _this.$('#app-frames').find('iframe').hide();
+        frame.show();
+        _this.selectedApp = slug;
+        app = _this.apps.get(slug);
+        name = app.get('displayName') || app.get('name') || '';
+        if (name.length > 0) {
+          name = name.replace(/^./, name[0].toUpperCase());
+        }
+        window.document.title = "Cozy - " + name;
+        $("#current-application").html(name);
+        _this.$("#app-btn-" + slug + " .spinner").hide();
+        return _this.$("#app-btn-" + slug + " .icon").show();
+      };
+      if (frame.length === 0) {
+        frame = this.createApplicationIframe(slug, hash);
+        this.frames.show();
+        this.frames.css('top', '-9999px');
+        this.frames.css('left', '-9999px');
+        this.frames.css('position', 'absolute');
+        return frame.on('load', _.once(onLoad));
+      } else if (hash) {
+        contentWindow = frame.prop('contentWindow');
+        try {
+          currentHash = contentWindow.location.hash.substring(1);
+        } catch (_error) {
+          err = _error;
+          console.err(err);
+        }
+        return onLoad();
+      } else if (frame.is(':visible')) {
+        try {
+          frame.prop('contentWindow').location.hash = '';
+        } catch (_error) {
+          err = _error;
+          console.err(err);
+        }
+        return onLoad();
+      } else {
+        return onLoad();
+      }
     }
   };
 
@@ -9642,6 +9627,18 @@ module.exports = HomeView = (function(_super) {
     }
   };
 
+  HomeView.prototype.onUpdateStackStart = function() {
+    return this.viewModel.set({
+      updatingStack: true
+    });
+  };
+
+  HomeView.prototype.onUpdateStackEnd = function() {
+    return this.viewModel.set({
+      updatingStack: false
+    });
+  };
+
   HomeView.prototype.forceIframeRendering = function() {
     var _this = this;
     this.frames.find('iframe').height("99%");
@@ -9688,7 +9685,7 @@ Application = require('models/application');
 
 slugify = require('helpers/slugify');
 
-REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[-\da-zA-Z\.\/]+)?$/;
+REPOREGEX = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,})(:[0-9]{1,5})?([\/\w\.-]*)*(?:\.git)?(@[\/\w\.-]+)?$/;
 
 module.exports = MarketView = (function(_super) {
   __extends(MarketView, _super);
@@ -10562,7 +10559,7 @@ ObjectPickerImage = require('./object_picker_image');
 
 ObjectPickerAlbum = require('./object_picker_album');
 
-tabControler = require('views/tab-controler');
+tabControler = require('views/tab_controller');
 
 MARGIN_BETWEEN_IMG_AND_CROPED = 30;
 
@@ -10925,7 +10922,7 @@ Photo = require('../models/photo');
 
 BaseView = require('lib/base_view');
 
-client = require('../lib/client');
+client = require('../lib/request');
 
 module.exports = ObjectPickerAlbum = (function(_super) {
   __extends(ObjectPickerAlbum, _super);
@@ -11148,7 +11145,7 @@ var BaseView, LongList, ObjectPickerImage, Photo,
 
 Photo = require('../models/photo');
 
-LongList = require('views/long-list-images');
+LongList = require('views/image_list');
 
 BaseView = require('lib/base_view');
 
@@ -11582,7 +11579,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
 })(BaseView);
 });
 
-;require.register("views/tab-controler", function(exports, require, module) {
+;require.register("views/tab_controller", function(exports, require, module) {
 var tabControler;
 
 module.exports = tabControler = {
@@ -11649,6 +11646,7 @@ module.exports = tabControler = {
 
 ;require.register("views/update_stack_modal", function(exports, require, module) {
 var ApplicationCollection, BaseView, UpdateStackModal, request, _ref,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -11662,6 +11660,8 @@ module.exports = UpdateStackModal = (function(_super) {
   __extends(UpdateStackModal, _super);
 
   function UpdateStackModal() {
+    this.onCancelClicked = __bind(this.onCancelClicked, this);
+    this.onClose = __bind(this.onClose, this);
     _ref = UpdateStackModal.__super__.constructor.apply(this, arguments);
     return _ref;
   }
@@ -11688,14 +11688,12 @@ module.exports = UpdateStackModal = (function(_super) {
   };
 
   UpdateStackModal.prototype.afterRender = function() {
-    var _this = this;
     this.overlay = $('.md-overlay');
-    this.overlay.click(function() {
-      return _this.hide();
-    });
+    this.overlay.click(this.onCancelClicked);
     this.$('.step2').hide();
     this.$('.success').hide();
     this.$('.error').hide();
+    this.$('.permission-changes').hide();
     this.$('#ok').hide();
     return this.body = this.$(".md-body");
   };
@@ -11728,32 +11726,49 @@ module.exports = UpdateStackModal = (function(_super) {
     return $('#home-content').removeClass('md-open');
   };
 
-  UpdateStackModal.prototype.onSuccess = function() {
+  UpdateStackModal.prototype.onSuccess = function(permissionChanges) {
     this.$('.step2').hide();
     this.$('.success').show();
+    this.showPermissionsChanged(permissionChanges);
     this.$('#ok').show();
     return this.$('#confirmbtn').hide();
   };
 
-  UpdateStackModal.prototype.onError = function(err) {
-    var app, appError, _i, _len, _ref1, _results;
+  UpdateStackModal.prototype.onError = function(err, permissionChanges) {
+    var app, html, infos, _ref1;
+    this.blocked = false;
     this.$('.step2').hide();
     this.$('.error').show();
     this.$('#ok').show();
     this.$('#confirmbtn').hide();
-    this.endCallback(false);
-    err = JSON.parse(err);
-    if (Object.keys(err.message).length > 0) {
-      appError = $("<div class='app-broken'>\n    <h5> " + (t('applications broken')) + ": </h5>\n</div>");
-      this.body.append(appError);
-      _ref1 = Object.keys(err.message);
-      _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        app = _ref1[_i];
-        appError = $("<div class='app-broken'>\n    " + app + "\n</div>");
-        _results.push(this.body.append(appError));
+    this.showPermissionsChanged(permissionChanges);
+    if ((((_ref1 = err.data) != null ? _ref1.message : void 0) != null) && typeof err.data.message === 'object') {
+      infos = err.data.message;
+      if (Object.keys(infos).length > 0) {
+        this.$(".stack-error").hide();
+        html = "<ul>";
+        for (app in infos) {
+          html += "<li class='app-broken'>" + app + "</li>";
+        }
+        html += "</ul>";
+        this.body.append(html);
       }
-      return _results;
+    } else {
+      this.$('.apps-error').hide();
+    }
+    return this.endCallback(false);
+  };
+
+  UpdateStackModal.prototype.showPermissionsChanged = function(permissionChanges) {
+    var app, html;
+    if ((permissionChanges != null) && Object.keys(permissionChanges).length > 0) {
+      html = "<ul>";
+      for (app in permissionChanges) {
+        html += "<li class='app-changed'>" + app + "</li>";
+      }
+      html += "</ul>";
+      this.$('.permission-changes').append(html);
+      return this.$('.permission-changes').show();
     }
   };
 
@@ -11763,16 +11778,21 @@ module.exports = UpdateStackModal = (function(_super) {
   };
 
   UpdateStackModal.prototype.onCancelClicked = function() {
-    this.hide();
-    return this.cancelCallback();
+    if (this.blocked) {
+      return alert(t('stack updating block message'));
+    } else {
+      this.hide();
+      return this.cancelCallback();
+    }
   };
 
   UpdateStackModal.prototype.onConfirmClicked = function() {
+    this.$('#cancelbtn').addClass('disabled');
     this.confirmCallback();
+    this.blocked = true;
     this.$('.step1').hide();
     this.$('.step2').show();
-    this.$('#confirmbtn').spin(true);
-    return this.$('#cancelbtn').hide();
+    return this.$('#confirmbtn').spin(true);
   };
 
   return UpdateStackModal;

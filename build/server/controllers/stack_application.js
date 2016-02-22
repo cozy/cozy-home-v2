@@ -7,15 +7,13 @@ fs = require('fs');
 
 slugify = require('cozy-slug');
 
-AppManager = require('../lib/paas').AppManager;
-
 spawn = require('child_process').spawn;
 
-log = require('printit');
-
-({
+log = require('printit')({
   prefix: "applications"
 });
+
+AppManager = require('../lib/paas').AppManager;
 
 StackApplication = require('../models/stack_application');
 
@@ -33,7 +31,7 @@ sendError = function(res, err, code) {
   }
   console.log("Sending error to client:");
   console.log(err.stack);
-  return res.send(code, {
+  return res.status(code).send({
     error: true,
     success: false,
     message: err.message,
@@ -60,6 +58,10 @@ module.exports = {
       if (err != null) {
         log.error(err);
         return sendError(res, err);
+      } else {
+        return res.send({
+          success: true
+        });
       }
     });
   },
@@ -70,6 +72,10 @@ module.exports = {
       if (err != null) {
         log.error(err);
         return sendError(res, err);
+      } else {
+        return res.send({
+          success: true
+        });
       }
     });
   }

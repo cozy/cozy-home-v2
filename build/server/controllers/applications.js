@@ -39,6 +39,7 @@ appHelpers = require('../lib/applications');
 startedApplications = {};
 
 sendError = function(res, err, code) {
+  var error;
   if (code == null) {
     code = 500;
   }
@@ -50,12 +51,16 @@ sendError = function(res, err, code) {
   }
   log.info("Sending error to client :");
   log.error(err);
-  return res.send(code, {
+  error = {
     error: true,
     success: false,
     message: err.message || err,
     stack: err.stack
-  });
+  };
+  if (err.permissionChanges != null) {
+    error.permissionChanges = err.permissionChanges;
+  }
+  return res.status(code).send(error);
 };
 
 baseIdController = new cozydb.SimpleController({
@@ -73,7 +78,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (apps === null || apps.length === 0) {
-        return res.send(404, {
+        return res.status(404).send({
           error: localizationManager.t('app not found')
         });
       } else {
@@ -136,10 +141,10 @@ module.exports = {
         return next(err);
       }
       metaData = manifest.getMetaData();
-      return res.send({
+      return res.status(200).send({
         success: true,
         app: metaData
-      }, 200);
+      });
     });
   },
   read: function(req, res, next) {
@@ -245,10 +250,10 @@ module.exports = {
             if (err) {
               return sendError(res, err);
             }
-            res.send({
+            res.status(201).send({
               success: true,
               app: appli
-            }, 201);
+            });
             return appHelpers.install(appli, manifest, access);
           });
         });
@@ -301,78 +306,59 @@ module.exports = {
     });
   },
   updateAll: function(req, res, next) {
-    var broken, error, updateApps;
-    error = {};
-    broken = function(app, err, cb) {
-      var data;
-      log.warn("Marking app " + app.name + " as broken because");
-      log.raw(err);
-      data = {
-        state: 'broken',
-        password: null
-      };
-      if (err.result != null) {
-        data.errormsg = err.message + ' :\n' + err.result;
-      } else {
-        data.errormsg = err.message + ' :\n' + err.stack;
-      }
-      return app.updateAttributes(data, function(saveErr) {
-        if (saveErr != null) {
-          log.error(saveErr);
-        }
-        return cb();
-      });
-    };
-    updateApps = function(app, callback) {
-      var manifest;
-      manifest = new Manifest();
-      return manifest.download(app, function(err) {
-        if (err != null) {
-          return sendError(res, {
-            message: err
-          });
-        } else {
-          return app.getAccess(function(err, access) {
-            var ref;
-            if (err != null) {
-              return sendError(res, {
-                message: err
-              });
-            } else {
-              if (JSON.stringify(access.permissions) !== JSON.stringify(manifest.getPermissions())) {
-                return callback();
-              }
-              if ((app.needsUpdate != null) && app.needsUpdate || app.version !== manifest.getVersion()) {
-                if ((ref = app.state) === "installed" || ref === "stopped") {
-                  log.info("Update " + app.name + " (" + app.state + ")");
-                  return appHelpers.update(app, function(err) {
-                    if (err != null) {
-                      error[app.name] = err;
-                      return broken(app, err, callback);
-                    } else {
-                      return callback();
-                    }
-                  });
-                } else {
-                  return callback();
-                }
-              } else {
-                return callback();
-              }
-            }
-          });
-        }
-      });
-    };
+    log.info('Starting updating all apps...');
     return Application.all(function(err, apps) {
-      return async.forEachSeries(apps, updateApps, function() {
-        if (Object.keys(error).length > 0) {
+      var permissionChanges, updateFailures;
+      if (err) {
+        return sendError(err);
+      }
+      updateFailures = {};
+      permissionChanges = {};
+      return async.forEachSeries(apps, function(app, done) {
+        log.info("Check if update is required for " + app.name + ".");
+        return appHelpers.isUpdateNeeded(app, function(err, result) {
+          if (err) {
+            updateFailures[app.name] = err;
+            log.error("Check update failed for " + app.name + ".");
+            log.raw(err);
+            return done();
+          } else if (result.isPermissionsChanged) {
+            log.info("Permissions changed for " + app.name + ".");
+            log.info("No update performed for " + app.name + ".");
+            permissionChanges[app.name] = true;
+            return done();
+          } else if (result.isUpdateNeeded) {
+            log.info("Updating " + app.name + " (" + app.state + ")...");
+            return appHelpers.update(app, function(err) {
+              log.info("Update done for " + app.name + ".");
+              if (err) {
+                updateFailures[app.name] = err;
+                log.error("Update failed for " + app.name + ".");
+                log.raw(err);
+              } else {
+                log.info("Update done for " + app.name + ".");
+              }
+              return done();
+            });
+          } else {
+            log.info("No update required for " + app.name + ".");
+            return done();
+          }
+        });
+      }, function() {
+        log.info('Updating all apps operation is done.');
+        if (JSON.stringify(updateFailures).length > 2) {
+          log.error('Errors occured for following apps:');
+          log.raw(JSON.stringify(updateFailures, null, 2));
           return sendError(res, {
-            message: error
+            message: updateFailures,
+            permissionChanges: permissionChanges
           });
         } else {
+          log.info('All updates succeeded.');
           return res.send({
             success: true,
+            permissionChanges: permissionChanges,
             msg: localizationManager.t('successfuly updated')
           });
         }
@@ -411,13 +397,13 @@ module.exports = {
               if (saveErr) {
                 return sendError(res, saveErr);
               }
-              return res.send({
+              return res.status(500).send({
                 app: req.application,
                 error: true,
                 success: false,
                 message: err.message,
                 stack: err.stack
-              }, 500);
+              });
             });
           } else {
             data = {
@@ -556,13 +542,13 @@ module.exports = {
   fetchMarket: function(req, res, next) {
     return market.getApps(function(err, data) {
       if (err != null) {
-        return res.send({
+        return res.status(500).send({
           error: true,
           success: false,
           message: err
-        }, 500);
+        });
       } else {
-        return res.send(200, data);
+        return res.status(200).send(data);
       }
     });
   },
@@ -575,13 +561,13 @@ module.exports = {
       }
       return Application.getToken(apps[0]._id, function(err, access) {
         if (err != null) {
-          return res.send({
+          return res.status(500).send({
             error: true,
             success: false,
             message: err
-          }, 500);
+          });
         } else {
-          return res.send(200, access.token);
+          return res.status(200).send(access.token);
         }
       });
     });

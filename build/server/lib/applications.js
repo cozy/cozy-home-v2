@@ -128,9 +128,10 @@ module.exports = appHelpers = {
     });
   },
   update: function(app, callback) {
-    var data, manifest;
+    var data, manifest, previousVersion;
     data = {};
     manifest = new Manifest();
+    previousVersion = app.version;
     return manifest.download(app, function(err) {
       var access, error, iconInfos, infos;
       if (err != null) {
@@ -164,8 +165,43 @@ module.exports = appHelpers = {
           iconInfos = null;
         }
         data.iconType = (iconInfos != null ? iconInfos.extension : void 0) || null;
-        return appHelpers._runUpdate(app, data, iconInfos, access, callback);
+        return appHelpers._runUpdate(app, data, iconInfos, access, function(err) {
+          if (err) {
+            return app.updateAttributes({
+              version: previousVersion
+            }, function() {
+              return callback(err);
+            });
+          } else {
+            return callback();
+          }
+        });
       }
+    });
+  },
+  isUpdateNeeded: function(app, callback) {
+    var manifest;
+    manifest = new Manifest();
+    return manifest.download(app, function(err) {
+      if (err) {
+        return callback(err);
+      }
+      return app.getAccess(function(err, access) {
+        var isInstalled, isNewVersion, isUpdateNeeded, newPermissions, oldPermissions, ref;
+        if (err) {
+          return callback(err);
+        }
+        oldPermissions = JSON.stringify(access.permissions);
+        newPermissions = JSON.stringify(manifest.getPermissions());
+        isNewVersion = app.version !== manifest.getVersion();
+        isInstalled = (ref = app.state) === "installed" || ref === "stopped";
+        isUpdateNeeded = (app.needsUpdate != null) && app.needsUpdate;
+        isUpdateNeeded = (isUpdateNeeded || isNewVersion) && isInstalled;
+        return callback(null, {
+          isUpdateNeeded: isUpdateNeeded,
+          isPermissionsChanged: oldPermissions !== newPermissions
+        });
+      });
     });
   },
   _runInstall: function(appli, callback) {
