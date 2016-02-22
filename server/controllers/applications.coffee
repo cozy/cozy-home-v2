@@ -482,10 +482,15 @@ module.exports =
             return sendError res, err if err
             Application.getToken apps[0]._id, (err, access) ->
                 if err?
+                    console.log 'err?'
+                    console.log err
                     res.status(500).send
                         error: true
                         success: false
                         message: err
                 else
-                    res.status(200).send access.token
+                    res.status(200).send 
+                        error: false
+                        success: true
+                        token: access.token
 
