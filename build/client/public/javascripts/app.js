@@ -681,9 +681,7 @@ exports.request = function(type, url, data, callback) {
     dataType: "json",
     success: function(data) {
       fired = true;
-      if (callback != null) {
-        return callback(null, data);
-      }
+      return typeof callback === "function" ? callback(null, data) : void 0;
     },
     error: function(data) {
       var err, msg;
@@ -695,13 +693,7 @@ exports.request = function(type, url, data, callback) {
           err = _error;
           data = data.responseText;
         }
-        if (data.msg != null) {
-          msg = data.msg;
-        } else if (data.error != null) {
-          msg = data.error;
-        } else {
-          msg = "Server error occured";
-        }
+        msg = data.msg || data.error || "Server error occured";
         err = new Error(msg);
         err.data = data;
         return callback(err);
@@ -733,8 +725,8 @@ exports.del = function(url, callback) {
   return exports.request("DELETE", url, null, callback);
 };
 
-exports.head = function(url, callbacks) {
-  return exports.request("HEAD", url, null, callbacks);
+exports.head = function(url, callback) {
+  return exports.request("HEAD", url, null, callback);
 };
 });
 
@@ -4921,9 +4913,6 @@ module.exports = StackApplication = (function(_super) {
   StackApplication.prototype.updateStack = function(callback) {
     var _this = this;
     return request.put("/api/applications/update/stack", {}, function(err) {
-      if (err) {
-        return callback(err);
-      }
       console.log('Waiting for reboot...');
       return _this.waitServerIsUp(3, callback);
     });
@@ -4932,9 +4921,6 @@ module.exports = StackApplication = (function(_super) {
   StackApplication.prototype.rebootStack = function(callback) {
     var _this = this;
     return request.put("/api/applications/reboot/stack", {}, function(err) {
-      if (err) {
-        return callback(err);
-      }
       console.log('Waiting for reboot...');
       return _this.waitServerIsUp(3, callback);
     });

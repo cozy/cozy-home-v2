@@ -247,8 +247,8 @@ module.exports = appHelpers = {
         return app.updateAttributes(data, function(err) {
           removeAppUpdateNotification(app);
           return icons.save(app, iconInfos, function(err) {
-            if (err && process.env.NODE_ENV !== 'test') {
-              log.error(err.stack);
+            if (err) {
+              log.error(err);
             } else {
               log.info('icon attached');
             }
