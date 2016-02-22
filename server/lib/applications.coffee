@@ -240,8 +240,8 @@ module.exports = appHelpers =
                     removeAppUpdateNotification app
 
                     icons.save app, iconInfos, (err) ->
-                        if err and process.env.NODE_ENV isnt 'test'
-                            log.error err.stack
+                        if err
+                            log.error err
                         else
                             log.info 'icon attached'
                         manager.resetProxy callback
