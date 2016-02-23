@@ -487,5 +487,7 @@ module.exports =
                         success: false
                         message: err
                 else
-                    res.status(200).send access.token
+                    res.status(200).send
+                        success: true
+                        token: access.token
 

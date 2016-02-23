@@ -36,8 +36,8 @@ module.exports = class MainRouter extends Backbone.Router
                     token = new Token slug
                     token.getToken
                         success: (data) ->
-                            app.mainView.displayToken data, slug
-                        error: ->
+                            app.mainView.displayToken data.token, slug
+                        error: (message) ->
                             alert 'Server error occured, get token failed.'
                 when 'goto'
                     @navigate "apps/#{intent.params}", true
