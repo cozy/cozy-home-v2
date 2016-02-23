@@ -5028,9 +5028,9 @@ module.exports = MainRouter = (function(_super) {
           token = new Token(slug);
           return token.getToken({
             success: function(data) {
-              return app.mainView.displayToken(data, slug);
+              return app.mainView.displayToken(data.token, slug);
             },
-            error: function() {
+            error: function(message) {
               return alert('Server error occured, get token failed.');
             }
           });

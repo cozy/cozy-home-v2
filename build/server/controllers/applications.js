@@ -567,7 +567,10 @@ module.exports = {
             message: err
           });
         } else {
-          return res.status(200).send(access.token);
+          return res.status(200).send({
+            success: true,
+            token: access.token
+          });
         }
       });
     });
