@@ -32,5 +32,9 @@
   "not allowed": "Not allowed",
   "stack update available notification": "A new version of the platform is available.",
   "installation message failure": "%{appName}'s installation failed.",
-  "update available notification": "A new version of %{appName} is available."
+  "update available notification": "A new version of %{appName} is available.",
+  "reminder title email": "Reminder",
+  "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
+  "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
+  "reminder message": "Reminder: %{message}"
 }

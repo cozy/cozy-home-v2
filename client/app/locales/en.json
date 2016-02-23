@@ -238,10 +238,6 @@
   "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
   "hastebin description": "A simple pastebin, a tool to easily share texts.",
   "polybios description": "Manage your PGP keys from your browser.",
-  "reminder title email": "Reminder",
-  "reminder title email expanded": "Reminder: %{description} - %{date} (%{calendar})",
-  "reminder message expanded": "Reminder: %{description}\nStart: %{start} (%{timezone})\nEnd: %{end} (%{timezone})\nPlace: %{place}\nDetails: %{details}",
-  "reminder message": "Reminder: %{message}",
   "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
@@ -281,5 +277,5 @@
   "update stack error title": "An error occured while updating your Cozy",
   "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to chose wether or not you accept the new permissions.",
   "update stack warning": "Warning",
-  "reboot stack error": "An error occured whil rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore.",
+  "reboot stack error": "An error occured whil rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
 }
