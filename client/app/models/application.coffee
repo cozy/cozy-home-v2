@@ -18,6 +18,7 @@ module.exports = class Application extends Backbone.Model
         else
             return true
 
+    isInstalling: -> @get('state') is 'installing'
     isRunning: -> @get('state') is 'installed'
     isBroken: -> @get('state') is 'broken'
 
@@ -47,6 +48,7 @@ module.exports = class Application extends Backbone.Model
         @prepareCallbacks callbacks
         params = @attributes
         delete params.id
+        @set state: 'installing'
         client.post '/api/applications/install', params, callbacks
 
     # Send to server uninstallation request.
