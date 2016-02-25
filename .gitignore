@@ -16,5 +16,8 @@ client/app/assets/app-icons/sprite-loader-fragment.html
 client/app/assets/app-icons/sprite-png-sprite.css
 client/app/assets/app-icons/sprite-png-data.css
 
+# keep only the source for transifex
+locales
+!locales/en.json
+
 test/photo-set/photo
-client/public
