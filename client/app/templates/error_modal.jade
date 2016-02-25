@@ -18,4 +18,6 @@
         p.details= details
 
     .md-footer.clearfix
-        button.btn.right#ok= t('ok')
+        if cancel
+            button.transparent-grey#cancelbtn= cancel
+        button.btn.right#ok= ok
