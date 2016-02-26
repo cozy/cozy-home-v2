@@ -43,7 +43,7 @@ module.exports = class ApplicationRow extends BaseView
     ### Listener ###
 
 
-    onAppChanged: (app) =>
+    onAppChanged: =>
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
@@ -59,10 +59,11 @@ module.exports = class ApplicationRow extends BaseView
                     extension = 'png'
                     @icon.removeClass 'svg'
 
-                src = "api/applications/#{app.id}.#{extension}"
+                src = "api/applications/#{@model.id}.#{extension}"
                 @icon.attr 'src', src
                 @icon.show()
                 @icon.removeClass 'stopped'
+                $("##{@model.get 'slug'}-frame").remove()
 
             when 'installing'
                 @showSpinner()
@@ -77,7 +78,7 @@ module.exports = class ApplicationRow extends BaseView
                     extension = 'png'
                     @icon.removeClass 'svg'
 
-                @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
+                @icon.attr 'src', "api/applications/#{@model.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()
 
