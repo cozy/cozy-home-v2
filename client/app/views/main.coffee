@@ -6,7 +6,6 @@ NotificationCollection = require 'collections/notifications'
 DeviceCollection       = require 'collections/device'
 NavbarView             = require 'views/navbar'
 AccountView            = require 'views/account'
-HelpView               = require 'views/help'
 ConfigApplicationsView = require 'views/config_applications'
 MarketView             = require 'views/market'
 ApplicationsListView   = require 'views/home'
@@ -51,7 +50,6 @@ module.exports = class HomeView extends BaseView
         @configApplications = new ConfigApplicationsView(
             @apps, @devices, @stackApps, @market)
         @accountView = new AccountView()
-        @helpView = new HelpView()
         @marketView = new MarketView @apps, @market
 
         @frames = @$ '#app-frames'
@@ -164,10 +162,6 @@ module.exports = class HomeView extends BaseView
     # Display account manager page, hides app frames, active account button.
     displayAccount: =>
         @displayView @accountView, t 'cozy account title'
-
-
-    displayHelp: =>
-        @displayView @helpView, t "cozy help title"
 
 
     displayConfigApplications: =>
