@@ -1,6 +1,6 @@
 BaseView = require 'lib/base_view'
 
-module.exports = class UpdateStackModal extends BaseView
+module.exports = class ErrorModal extends BaseView
     id: 'market-popover-description-view'
     className: 'modal md-modal md-effect-1'
     tagName: 'div'
@@ -8,17 +8,23 @@ module.exports = class UpdateStackModal extends BaseView
 
     events:
         'click #more':'onMore'
-        'click #ok':'onClose'
+        'click #ok':'onConfirm'
+        'click #cancelbtn':'onClose'
 
     initialize: (options) ->
         @errortype = options.errortype
         @details = options.details
+        @confirmCallback = options.onConfirm or ->
+        @ok = options.confirm or t('ok')
+        @cancel = options.cancel or false
         super
         $('body').keyup(@onKeyStroke)
 
     getRenderData: ->
         errortype: @errortype
         details: @details
+        ok: @ok
+        cancel: @cancel
 
     afterRender: ->
         @overlay = $ '.md-overlay'
@@ -45,6 +51,10 @@ module.exports = class UpdateStackModal extends BaseView
             @$el.removeClass 'md-show'
             @remove()
         $('#home-content').removeClass 'md-open'
+
+    onConfirm: ->
+        @hide()
+        @confirmCallback()
 
     onClose: ->
         @hide()

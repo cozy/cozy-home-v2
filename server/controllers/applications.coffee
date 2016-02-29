@@ -342,7 +342,12 @@ module.exports =
                     if err and
                     err isnt localizationManager.t "not enough memory"
                         delete startedApplications[req.application.id]
-                        return appHelpers.markBroken req.application, err
+                        appHelpers.markBroken req.application, err
+                        res.status(500).send
+                            app: req.application
+                            error: true
+                            message: err.message
+                            stack: err.stack
                     else if err
                         delete startedApplications[req.application.id]
                         data =
@@ -366,7 +371,13 @@ module.exports =
                         req.application.updateAttributes data, (err) ->
                             if err
                                 delete startedApplications[req.application.id]
-                                return appHelpers.markBroken req.application, err
+                                appHelpers.markBroken req.application, err
+                                res.status(500).send
+                                    app: req.application
+                                    error: true
+                                    message: err.message
+                                    stack: err.stack
+                                return
 
                             # Reset proxy
                             manager.resetProxy (err) ->
@@ -374,6 +385,11 @@ module.exports =
 
                                 if err
                                     appHelpers.markBroken req.application, err
+                                    res.status(500).send
+                                        app: req.application
+                                        error: true
+                                        message: err.message
+                                        stack: err.stack
                                 else
                                     res.send
                                         success: true
