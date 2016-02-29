@@ -30,6 +30,7 @@ module.exports = class ApplicationRow extends BaseView
         @background = @$ 'img'
 
         @listenTo @model, 'change', @onAppChanged
+        @listenTo @model, 'uninstall', @onUninstall
         @onAppChanged @model
 
         @setBackgroundColor()
@@ -81,6 +82,13 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', "api/applications/#{@model.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()
+
+
+    onUninstall: =>
+        @$el.addClass 'uninstalling'
+        @showSpinner()
+        $("##{@model.get 'slug'}-frame").remove()
+        @enabled = false
 
 
     onAppClicked: (event) =>

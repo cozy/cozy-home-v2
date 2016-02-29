@@ -54,6 +54,7 @@ module.exports = class Application extends Backbone.Model
     # Send to server uninstallation request.
     # Will delete the app in the database.
     uninstall: (callbacks) =>
+        @trigger 'uninstall', @, @collection, {}
         @prepareCallbacks callbacks, => @trigger 'destroy', @, @collection, {}
         client.del "/api/applications/#{@id}/uninstall", callbacks
 
