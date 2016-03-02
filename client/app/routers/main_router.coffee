@@ -3,6 +3,7 @@ Token = require "../models/token"
 
 module.exports = class MainRouter extends Backbone.Router
 
+
     routes :
         "home"                : "applicationList"
         "customize"           : "applicationListEdit"
@@ -17,6 +18,7 @@ module.exports = class MainRouter extends Backbone.Router
         "apps/:slug/*hash"    : "application"
         "*path"               : "applicationList"
         '*notFound'           : 'applicationList'
+
 
     initialize: ->
 
@@ -34,8 +36,8 @@ module.exports = class MainRouter extends Backbone.Router
                     token = new Token slug
                     token.getToken
                         success: (data) ->
-                            app.mainView.displayToken data, slug
-                        error: ->
+                            app.mainView.displayToken data.token, slug
+                        error: (message) ->
                             alert 'Server error occured, get token failed.'
                 when 'goto'
                     @navigate "apps/#{intent.params}", true
@@ -59,26 +61,35 @@ module.exports = class MainRouter extends Backbone.Router
     applicationList: ->
         app.mainView.displayApplicationsList()
 
+
     configApplications: ->
         app.mainView.displayConfigApplications()
+
 
     updateApp: (slug) ->
         app.mainView.displayUpdateApplication slug
 
+
     updateStack: ->
         app.mainView.displayUpdateStack()
+
 
     help: ->
         app.mainView.displayHelp()
 
+
     market: ->
         app.mainView.displayMarket()
+
 
     account: ->
         app.mainView.displayAccount()
 
+
     application: (slug, hash) ->
         app.mainView.displayApplication slug, hash
 
+
     logout: ->
         app.mainView.logout()
+

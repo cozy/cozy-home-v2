@@ -34,12 +34,16 @@ sendError = (res, err, code=500) ->
     log.info "Sending error to client :"
     log.error err
 
-    res.send code,
+    error =
         error: true
         success: false
         message: err.message or err
         stack: err.stack
 
+    if err.permissionChanges?
+        error.permissionChanges = err.permissionChanges
+
+    res.status(code).send error
 
 baseIdController = new cozydb.SimpleController
     model: Application
@@ -58,10 +62,11 @@ module.exports =
             if err
                 next err
             else if apps is null or apps.length is 0
-                res.send 404, error: localizationManager.t 'app not found'
+                res.status(404).send error: localizationManager.t 'app not found'
             else
                 req.application = apps[0]
                 next()
+
 
     applications: (req, res, next) ->
         Application.all (err, apps) ->
@@ -90,7 +95,7 @@ module.exports =
         manifest.download req.body, (err) ->
             return next err if err
             metaData = manifest.getMetaData()
-            res.send success: true, app: metaData, 200
+            res.status(200).send success: true, app: metaData
 
 
     read: (req, res, next) ->
@@ -130,6 +135,7 @@ module.exports =
     # Update application parameters like autostop or favorite.
     updateData: (req, res, next) ->
         app = req.application
+
         if req.body.isStoppable? and req.body.isStoppable isnt app.isStoppable
             Stoppable = req.body.isStoppable
             Stoppable = if Stoppable? then Stoppable else app.isStoppable
@@ -140,12 +146,14 @@ module.exports =
                 autostop.restartTimeout app.name
                 return sendError res, err if err
                 res.send app
+
         else if req.body.favorite? and req.body.favorite isnt app.favorite
             changes =
                 favorite: req.body.favorite
             app.updateAttributes changes, (err, app) ->
                 return next err if err
                 res.send app
+
         else
             res.send app
 
@@ -193,7 +201,7 @@ module.exports =
                     Application.createAccess access, (err, app) ->
                         return sendError res, err if err
 
-                        res.send success: true, app: appli, 201
+                        res.status(201).send success: true, app: appli
                         appHelpers.install appli, manifest, access
 
 
@@ -227,10 +235,7 @@ module.exports =
                 removeMetadata result
 
 
-    # Update an app :
-    # * haibu, application manager
-    # * proxy, cozy router
-    # * database
+    # Update a given application and reset proxy.
     update: (req, res, next) ->
         appHelpers.update req.application, (err) ->
             return appHelpers.markBroken req.application, err if err?
@@ -239,70 +244,78 @@ module.exports =
                 msg: localizationManager.t 'successfuly updated'
 
 
-    # Update all applications :
-    # * haibu, application manager
-    # * proxy, cozy router
-    # * database
+    # Check for all applications installed on the Cozy if an update is
+    # required. In case of version changed, it updates the app.
+    #
+    # Other actions performed:
+    #
+    # * Build a list of failed updates and send it in the response body if it's
+    # not empty.
+    # * Build a list of permission changes. Adds it to the response (when an
+    # error occurs too).
     updateAll: (req, res, next) ->
 
-        error = {}
-        broken = (app, err, cb) ->
-            log.warn "Marking app #{app.name} as broken because"
-            log.raw err
-            data =
-                state: 'broken'
-                password: null
-            if err.result?
-                data.errormsg = err.message + ' :\n' + err.result
-            else
-                data.errormsg = err.message + ' :\n' + err.stack
-            app.updateAttributes data, (saveErr) ->
-                log.error(saveErr) if saveErr?
-                cb()
-
-        updateApps = (app, callback) ->
-            manifest = new Manifest()
-            manifest.download app, (err) ->
-                if err?
-                    sendError res, message: err
-                else
-                    app.getAccess (err, access) ->
-
-                        if err?
-                            sendError res, message: err
-                        else
-                            if JSON.stringify(access.permissions) isnt
-                                    JSON.stringify(manifest.getPermissions())
-                                return callback()
-                            if app.needsUpdate? and app.needsUpdate or
-                                    app.version isnt manifest.getVersion()
-                                if app.state in ["installed", "stopped"]
-                                    # Update application
-                                    log.info("Update #{app.name} (#{app.state})")
-                                    appHelpers.update app, (err) ->
-                                        if err?
-                                            error[app.name] = err
-                                            broken app, err, callback
-                                        else
-                                            callback()
-                                else
-                                    callback()
-                            else
-                                callback()
-
+        log.info 'Starting updating all apps...'
         Application.all (err, apps) ->
-            async.forEachSeries apps, updateApps, () ->
-                if Object.keys(error).length > 0
-                    sendError res, message: error
+            return sendError err if err
+
+            updateFailures = {}
+            permissionChanges = {}
+            async.forEachSeries apps, (app, done) ->
+
+                log.info "Check if update is required for #{app.name}."
+                appHelpers.isUpdateNeeded app, (err, result) ->
+
+                    if err
+                        updateFailures[app.name] = err
+                        log.error "Check update failed for #{app.name}."
+                        log.raw err
+                        done()
+
+                    else if result.isPermissionsChanged
+                        log.info "Permissions changed for #{app.name}."
+                        log.info "No update performed for #{app.name}."
+                        permissionChanges[app.name] = true
+                        done()
+
+                    else if result.isUpdateNeeded
+                        log.info "Updating #{app.name} (#{app.state})..."
+                        appHelpers.update app, (err) ->
+                            log.info "Update done for #{app.name}."
+                            if err
+                                updateFailures[app.name] = err
+                                log.error "Update failed for #{app.name}."
+                                log.raw err
+                            else
+                                log.info "Update done for #{app.name}."
+                            done()
+
+                    else
+                        log.info "No update required for #{app.name}."
+                        done()
+
+            , ->
+                log.info 'Updating all apps operation is done.'
+
+
+                if JSON.stringify(updateFailures).length > 2
+                    log.error 'Errors occured for following apps:'
+                    log.raw(JSON.stringify updateFailures, null, 2)
+                    sendError res,
+                        message: updateFailures
+                        permissionChanges: permissionChanges
+
                 else
+                    log.info 'All updates succeeded.'
                     res.send
                         success: true
+                        permissionChanges: permissionChanges
                         msg: localizationManager.t 'successfuly updated'
-
 
 
     # Start a stopped application.
     start: (req, res, next) ->
+
         # If controller is too slow, client receives a timeout
         # Below timeout allows to catch timeout error before client
         # If there is a timeout, application is consider like broken
@@ -329,7 +342,12 @@ module.exports =
                     if err and
                     err isnt localizationManager.t "not enough memory"
                         delete startedApplications[req.application.id]
-                        return appHelpers.markBroken req.application, err
+                        appHelpers.markBroken req.application, err
+                        res.status(500).send
+                            app: req.application
+                            error: true
+                            message: err.message
+                            stack: err.stack
                     else if err
                         delete startedApplications[req.application.id]
                         data =
@@ -339,13 +357,12 @@ module.exports =
                         req.application.updateAttributes data, (saveErr) ->
                             return sendError res, saveErr if saveErr
 
-                            res.send
+                            res.status(500).send
                                 app: req.application
                                 error: true
                                 success: false
                                 message: err.message
                                 stack: err.stack
-                            , 500
                     else
                         data =
                             state: 'installed'
@@ -354,7 +371,13 @@ module.exports =
                         req.application.updateAttributes data, (err) ->
                             if err
                                 delete startedApplications[req.application.id]
-                                return appHelpers.markBroken req.application, err
+                                appHelpers.markBroken req.application, err
+                                res.status(500).send
+                                    app: req.application
+                                    error: true
+                                    message: err.message
+                                    stack: err.stack
+                                return
 
                             # Reset proxy
                             manager.resetProxy (err) ->
@@ -362,6 +385,11 @@ module.exports =
 
                                 if err
                                     appHelpers.markBroken req.application, err
+                                    res.status(500).send
+                                        app: req.application
+                                        error: true
+                                        message: err.message
+                                        stack: err.stack
                                 else
                                     res.send
                                         success: true
@@ -456,13 +484,13 @@ module.exports =
     fetchMarket: (req, res, next) ->
         market.getApps (err, data) ->
             if err?
-                res.send
+                res.status(500).send
                     error: true
                     success: false
                     message: err
-                , 500
             else
-                res.send 200, data
+                res.status(200).send data
+
 
     # get token for static application access
     getToken: (req, res, next) ->
@@ -470,11 +498,12 @@ module.exports =
             return sendError res, err if err
             Application.getToken apps[0]._id, (err, access) ->
                 if err?
-                    res.send
+                    res.status(500).send
                         error: true
                         success: false
                         message: err
-                    , 500
                 else
-                    res.send 200, access.token
+                    res.status(200).send
+                        success: true
+                        token: access.token
 

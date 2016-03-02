@@ -4,7 +4,7 @@ ObjectPickerPhotoURL = require './object_picker_photourl'
 ObjectPickerUpload   = require './object_picker_upload'
 ObjectPickerImage    = require './object_picker_image'
 ObjectPickerAlbum    = require './object_picker_album'
-tabControler         = require 'views/tab-controler'
+tabControler         = require 'views/tab_controller'
 
 
 MARGIN_BETWEEN_IMG_AND_CROPED = 30 # px

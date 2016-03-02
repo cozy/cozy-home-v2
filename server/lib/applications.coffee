@@ -118,6 +118,7 @@ module.exports = appHelpers =
     update: (app, callback) ->
         data = {}
         manifest = new Manifest()
+        previousVersion = app.version
 
         # Get updated manifest.
         manifest.download app, (err) ->
@@ -154,7 +155,42 @@ module.exports = appHelpers =
                 data.iconType = iconInfos?.extension or null
 
                 # Run the application process based on collected data.
-                appHelpers._runUpdate app, data, iconInfos, access, callback
+                appHelpers._runUpdate app, data, iconInfos, access, (err) ->
+                    if err
+                        app.updateAttributes version: previousVersion, ->
+                            callback err
+                    else
+                        callback()
+
+
+    # Check if an update is required then returns an object with two flags
+    #
+    # A first flag that tells if an update is required:
+    #
+    # * Remote version number changes.
+    # * If the app is marked as requiring an update.
+    #
+    # The second flag tells if the new version permissions are different from
+    # the current version.
+    isUpdateNeeded: (app, callback) ->
+        manifest = new Manifest()
+        manifest.download app, (err) ->
+            return callback err if err
+
+            app.getAccess (err, access) ->
+                return callback err if err
+
+                oldPermissions = JSON.stringify access.permissions
+                newPermissions = JSON.stringify manifest.getPermissions()
+                isNewVersion = app.version isnt manifest.getVersion()
+                isInstalled = app.state in ["installed", "stopped"]
+                isUpdateNeeded = app.needsUpdate? and app.needsUpdate
+                isUpdateNeeded = \
+                    (isUpdateNeeded or isNewVersion) and isInstalled
+
+                callback null,
+                    isUpdateNeeded: isUpdateNeeded
+                    isPermissionsChanged: oldPermissions isnt newPermissions
 
 
     # Request controller for installation.
@@ -204,8 +240,8 @@ module.exports = appHelpers =
                     removeAppUpdateNotification app
 
                     icons.save app, iconInfos, (err) ->
-                        if err and process.env.NODE_ENV isnt 'test'
-                            log.error err.stack
+                        if err
+                            log.error err
                         else
                             log.info 'icon attached'
                         manager.resetProxy callback

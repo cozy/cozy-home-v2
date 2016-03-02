@@ -80,7 +80,7 @@ reseting routes"
                 console.log err.stack
                 callback err
             else
-                log.info "Proxy successfully reseted."
+                log.info "Proxy successfully reset."
                 callback null
 
     # 1. Send a install request to controller server ("start" request).

@@ -9,7 +9,7 @@ Application = require('../models/application');
 
 ControllerClient = require("cozy-clients").ControllerClient;
 
-client = request.newClient('http://localhost:9104/');
+client = request.createClient('http://localhost:9104/');
 
 getAuthController = function() {
   var err, error, ref, token;
@@ -88,7 +88,7 @@ updateApps = function(apps, appDict, callback) {
 resetProxy = function() {
   return client.get('routes/reset/', function(err, res, body) {
     if ((res != null) && res.statusCode === 200) {
-      return console.info('Proxy successfuly reseted.');
+      return console.info('Proxy successfuly reset.');
     } else {
       return console.info('Something went wrong while reseting proxy.');
     }

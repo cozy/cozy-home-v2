@@ -1,4 +1,5 @@
 client = require "../helpers/client"
+request = require "../lib/request"
 
 # Describes an application installed in mycloud.
 module.exports = class Application extends Backbone.Model
@@ -17,6 +18,7 @@ module.exports = class Application extends Backbone.Model
         else
             return true
 
+    isInstalling: -> @get('state') is 'installing'
     isRunning: -> @get('state') is 'installed'
     isBroken: -> @get('state') is 'broken'
 
@@ -46,11 +48,13 @@ module.exports = class Application extends Backbone.Model
         @prepareCallbacks callbacks
         params = @attributes
         delete params.id
+        @set state: 'installing'
         client.post '/api/applications/install', params, callbacks
 
     # Send to server uninstallation request.
     # Will delete the app in the database.
     uninstall: (callbacks) =>
+        @trigger 'uninstall', @, @collection, {}
         @prepareCallbacks callbacks, => @trigger 'destroy', @, @collection, {}
         client.del "/api/applications/#{@id}/uninstall", callbacks
 
@@ -120,9 +124,11 @@ module.exports = class Application extends Backbone.Model
 
         return section
 
-    updateAll: (callbacks) ->
-        @prepareCallbacks callbacks
-        client.put "/api/applications/update/all", {}, callbacks
+
+    # Request the server to run the update all apps procedure.
+    updateAll: (callback) ->
+        request.put "/api/applications/update/all", {}, (err, data) ->
+            callback err, data?.permissionChanges
 
 
     # Return true is the app is considered as an official Cozy application.

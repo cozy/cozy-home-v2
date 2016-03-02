@@ -1,5 +1,5 @@
 Photo    = require '../models/photo'
-LongList = require 'views/long-list-images'
+LongList = require 'views/image_list'
 BaseView = require 'lib/base_view'
 
 

@@ -96,7 +96,7 @@ AppManager = (function() {
         console.log(err.stack);
         return callback(err);
       } else {
-        log.info("Proxy successfully reseted.");
+        log.info("Proxy successfully reset.");
         return callback(null);
       }
     });

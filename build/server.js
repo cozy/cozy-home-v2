@@ -21,7 +21,7 @@ application = module.exports = function(callback) {
     host: process.env.HOST || "127.0.0.1",
     root: __dirname
   };
-  return americano.start(options, function(app, server) {
+  return americano.start(options, function(err, app, server) {
     app.server = server;
     if (process.env.NODE_ENV !== "test") {
       initProxy();

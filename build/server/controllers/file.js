@@ -65,10 +65,10 @@ module.exports.photoRange = function(req, res, next) {
       } else {
         hasNext = false;
       }
-      return res.send({
+      return res.status(200).send({
         files: photos,
         firstRank: skip
-      }, 200);
+      });
     }
   });
 };
@@ -102,7 +102,7 @@ module.exports.photoMonthDistribution = function(req, res, next) {
         });
       }
     }
-    return res.send(distribution, 200);
+    return res.status(200).send(distribution);
   });
 };
 

@@ -18,7 +18,7 @@ application = module.exports = (callback) ->
         host: process.env.HOST or "127.0.0.1"
         root: __dirname
 
-    americano.start options, (app, server) ->
+    americano.start options, (err, app, server) ->
         app.server = server
 
         if process.env.NODE_ENV isnt "test"

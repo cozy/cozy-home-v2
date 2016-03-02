@@ -966,9 +966,9 @@ input,
 select,
 textarea {
   padding: 0 0.666666666666667em;
-  background: #fff;
+  background: #eaeef2;
   border: 0;
-  border: 1px solid #acb8c5;
+  border: 2px solid #eaeef2;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
   -webkit-border-radius: 3px;
@@ -982,11 +982,12 @@ textarea {
 input:hover,
 select:hover,
 textarea:hover {
-  border-color: #33a6ff;
+  border-color: #acb8c5;
 }
 input:focus,
 select:focus,
 textarea:focus {
+  background: #fff;
   border-color: #33a6ff;
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
@@ -1318,6 +1319,7 @@ h4 {
 }
 .md-body h5 {
   padding-bottom: 0.625em;
+  padding-top: 0.625em;
   font-weight: normal;
   font-size: 1em;
   text-transform: uppercase;
@@ -1337,6 +1339,10 @@ h4 {
 }
 .md-body .permissionsLine p {
   color: #4f5b69;
+}
+.md-body .error.title {
+  font-size: 1.5em;
+  color: #ff3713;
 }
 .md-footer {
   display: -webkit-box;
@@ -1359,6 +1365,14 @@ h4 {
 }
 .md-footer button {
   width: 49%;
+}
+.md-footer button.disabled {
+  -webkit-transition: visibility 0s;
+  -moz-transition: visibility 0s;
+  -o-transition: visibility 0s;
+  -ms-transition: visibility 0s;
+  transition: visibility 0s;
+  visibility: hidden;
 }
 .md-show {
   opacity: 1;
@@ -1658,9 +1672,10 @@ h4 {
   top: 3px;
   right: -4px;
   height: 20px;
-  width: 20px;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
+  min-width: 20px;
+  padding: 0 0.125em;
+  -webkit-border-radius: 200em;
+  border-radius: 200em;
   background: #ff3713;
   border: 2px solid #32363f;
   font-size: 0.875em;
@@ -2162,6 +2177,9 @@ h4 {
 }
 .sys-infos {
   padding-right: 20px;
+}
+.refresh {
+  margin-right: 1em;
 }
 .config-application:first-child {
   border-top: 0;

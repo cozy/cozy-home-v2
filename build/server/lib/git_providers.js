@@ -29,7 +29,7 @@ module.exports.GithubProvider = GithubProvider = (function(superClass) {
 
   GithubProvider.prototype.getManifest = function(callback) {
     var client, path;
-    client = request.newClient("https://raw.github.com/");
+    client = request.createClient("https://raw.github.com/");
     if (this.repoBranch != null) {
       path = this.basePath + '/' + this.repoBranch;
     } else {
@@ -58,7 +58,7 @@ module.exports.CozyGitlabProvider = CozyGitlabProvider = (function(superClass) {
     var client, domain, path, repo;
     repo = url.parse(this.repoUrl, true);
     domain = repo.protocol + "//" + repo.host;
-    client = request.newClient(domain);
+    client = request.createClient(domain);
     this.basePath = repo.pathname.replace('.git', '');
     path = this.basePath + "/raw/master/package.json";
     return client.get(path, function(err, res, body) {

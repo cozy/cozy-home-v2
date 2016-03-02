@@ -11,7 +11,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return res.send(200, notifs);
+        return res.status(200).send(notifs);
       }
     });
   },
@@ -20,7 +20,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return res.send(204, {
+        return res.status(204).send({
           success: true
         });
       }
@@ -31,11 +31,11 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (!notif) {
-        return res.send(404, {
+        return res.status(404).send({
           error: localizationManager.t('notification not found')
         });
       } else {
-        return res.send(200, notif);
+        return res.status(200).send(notif);
       }
     });
   },
@@ -44,7 +44,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (!notif) {
-        return res.send(404, {
+        return res.status(404).send({
           error: localizationManager.t('notification not found')
         });
       } else {
@@ -52,7 +52,7 @@ module.exports = {
           if (err) {
             return next(err);
           } else {
-            return res.send(204, {
+            return res.status(204).send({
               success: true
             });
           }
@@ -74,7 +74,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else {
-        return res.send(201, {
+        return res.status(201).send({
           success: localizationManager.t('notification created')
         });
       }
@@ -83,7 +83,7 @@ module.exports = {
   updateOrCreate: function(req, res, next) {
     var attributes, params;
     if (!req.params.app || !req.params.ref) {
-      return res.send(500, {
+      return res.status(500).send({
         error: localizationManager.t('wrong usage')
       });
     }
@@ -108,7 +108,7 @@ module.exports = {
           if (err) {
             return next(err);
           } else {
-            return res.send(201, notif);
+            return res.status(201).send(notif);
           }
         });
       } else {
@@ -116,7 +116,7 @@ module.exports = {
           if (err) {
             return next(err);
           } else {
-            return res.send(200, notif);
+            return res.status(200).send(notif);
           }
         });
       }
@@ -131,7 +131,7 @@ module.exports = {
       if (err) {
         return next(err);
       } else if (!notifs || notifs.length === 0) {
-        return res.send(204, {
+        return res.status(204).send({
           success: true
         });
       } else {
@@ -139,7 +139,7 @@ module.exports = {
           if (err) {
             return next(err);
           } else {
-            return res.send(204, {
+            return res.status(204).send({
               success: true
             });
           }

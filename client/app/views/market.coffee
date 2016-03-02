@@ -9,11 +9,11 @@ slugify = require 'helpers/slugify'
 
 REPOREGEX =  /// ^
     (https?://)?                   #protocol
-    ([\da-z\.-]+\.[a-z\.]{2,6})    #domain
+    ([\da-z\.-]+\.[a-z\.]{2,})     #domain
     (:[0-9]{1,5})?                 #optional domain's port
     ([/\w \.-]*)*                  #path to repo
     (?:\.git)?                     #.git extension
-    (@[-\da-zA-Z\./]+)?            #branch
+    (@[/\w\.-]+)?                  #branch
      $ ///
 
 
@@ -87,7 +87,6 @@ module.exports = class MarketView extends BaseView
 
     onInstallClicked: (event) =>
         data = git: @$("#app-git-field").val()
-
         @parsedGit data
         event.preventDefault()
 
@@ -118,20 +117,10 @@ module.exports = class MarketView extends BaseView
                 @popover.hide()
                 @appList.show()
                 if appWidget.$el
-                    @waitApplication appWidget, true
-                    appWidget.$el.addClass 'install'
-                    @runInstallation appWidget.app
-                    , ->
-                        console.log(
-                            'application installation started',
-                            appWidget.app
-                        )
-
-                    , =>
-                        @waitApplication appWidget, false
+                    appWidget.installing()
+                    @runInstallation appWidget.app, false
                 else
-                    appWidget.app
-                    @runInstallation appWidget.app
+                    @runInstallation appWidget.app, true
             cancel: (application) =>
                 @popover.hide()
                 @appList.show()
@@ -143,34 +132,8 @@ module.exports = class MarketView extends BaseView
             @appList.hide()
 
 
-    waitApplication: (appWidget, toggle = true) ->
-        if toggle
-            appWidget.installInProgress = true
-            appWidget.$('.app-img img').attr 'src', '/img/spinner-white-thin.svg'
-
-        else
-            appWidget.installInProgress = false
-            appWidget.$('.app-img img').attr 'src', ''
-            appWidget.$el.removeClass 'install'
-
-
-
-    hideApplication: (appWidget, callback) ->
-        # Test if application is installed by the market
-        # or directly with a repo github
-        if appWidget.$el?
-            appWidget.$el.fadeOut ->
-                setTimeout ->
-                    callback() if typeof callback is 'function'
-                , 600
-        else
-            callback()
-
-
-    runInstallation: (application, shouldRedirect = true, errCallback) =>
+    runInstallation: (application, shouldRedirect) ->
         @hideError()
-
-        cb = shouldRedirect if typeof shouldRedirect is 'function'
 
         application.install
             ignoreMySocketNotification: true
@@ -179,15 +142,11 @@ module.exports = class MarketView extends BaseView
                     alert data.message
                 else
                     @resetForm()
-
-                if cb
-                    cb()
-                else if shouldRedirect
+                if shouldRedirect
                     app?.routers.main.navigate 'home', true
 
             error: (jqXHR) =>
                 @displayError t JSON.parse(jqXHR.responseText).message
-                errCallback() if typeof errCallback is 'function'
 
 
     parseGitUrl: (url) ->

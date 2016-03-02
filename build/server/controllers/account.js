@@ -82,7 +82,7 @@ module.exports = {
         next(err);
       }
       if (users.length === 0) {
-        return res.send(400, {
+        return res.status(400).send({
           error: localizationManager.t("no user registered")
         });
       }
@@ -90,23 +90,23 @@ module.exports = {
       data = {};
       return updatePassword(user, req.body, data, function(libErr, userErr) {
         if (libErr) {
-          return res.send(500, {
+          return res.status(500).send({
             error: libErr
           });
         }
         if (userErr) {
-          return res.send(400, {
+          return res.status(400).send({
             error: userErr
           });
         }
         return updateData(user, req.body, data, function(libErr, userErr) {
           if (libErr) {
-            return res.send(500, {
+            return res.status(500).send({
               error: libErr
             });
           }
           if (userErr) {
-            return res.send(400, {
+            return res.status(400).send({
               error: userErr
             });
           }
@@ -121,7 +121,7 @@ module.exports = {
   users: function(req, res, next) {
     return User.all(function(err, users) {
       if (err) {
-        return res.send(500, {
+        return res.status(500).send({
           error: localizationManager.t("Retrieve users failed.")
         });
       } else {
@@ -134,7 +134,7 @@ module.exports = {
   instances: function(req, res, next) {
     return CozyInstance.all(function(err, instances) {
       if (err) {
-        return res.send(500, {
+        return res.status(500).send({
           error: localizationManager.t("retrieve instances failed")
         });
       } else {
@@ -148,7 +148,7 @@ module.exports = {
     var background, connectedOnce, domain, helpUrl, locale, ref;
     ref = req.body, domain = ref.domain, locale = ref.locale, helpUrl = ref.helpUrl, background = ref.background, connectedOnce = ref.connectedOnce;
     if (!((domain != null) || (locale != null) || (helpUrl != null) || (background != null) || (connectedOnce != null))) {
-      return res.send(400, {
+      return res.status(400).send({
         error: true,
         msg: localizationManager.t('No accepted parameter given')
       });

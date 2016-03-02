@@ -21,7 +21,7 @@ module.exports.GithubProvider = class GithubProvider extends GitProvider
 
     getManifest: (callback) ->
 
-        client = request.newClient "https://raw.github.com/"
+        client = request.createClient "https://raw.github.com/"
         if @repoBranch?
             path = @basePath + '/' + @repoBranch
         else
@@ -40,7 +40,7 @@ module.exports.CozyGitlabProvider = class CozyGitlabProvider extends GitProvider
     getManifest: (callback) ->
         repo = url.parse(@repoUrl, true)
         domain = "#{repo.protocol}//#{repo.host}"
-        client = request.newClient domain
+        client = request.createClient domain
 
         @basePath = repo.pathname.replace('.git', '')
         path = "#{@basePath}/raw/master/package.json"
