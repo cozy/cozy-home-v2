@@ -109,8 +109,9 @@ module.exports = appHelpers = {
     return icons.save(appli, iconInfos, function(err) {
       if (err) {
         log.error(err);
+      } else {
+        log.info("Icon attached for " + appli.name);
       }
-      log.info("Icon attached for " + appli.name);
       return callback(appli);
     });
   },

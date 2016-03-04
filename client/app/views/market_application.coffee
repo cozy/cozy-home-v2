@@ -8,7 +8,6 @@ module.exports = class ApplicationRow extends BaseView
     className: "cozy-app"
     template: require 'templates/market_application'
 
-
     events:
         "click .website": "onWebsiteClicked"
         "click .btn": "onInstallClicked"
@@ -20,14 +19,12 @@ module.exports = class ApplicationRow extends BaseView
         if match = app.icon.match REGEXP_SPRITED_SVG
             [all, slug] = match
             app = _.extend {}, app, svgSpriteSlug: 'svg-' + slug
-
         return {app}
 
 
     constructor: (@app, @marketView) ->
         super()
         @mouseOut = true
-        @installInProgress = false
 
 
     afterRender: =>
@@ -38,7 +35,6 @@ module.exports = class ApplicationRow extends BaseView
 
         slug = @app.get 'slug'
         color = @app.get 'color'
-        @$el.addClass 'install' if @app.get('state') is 'installing'
 
         # Only set a background color for SVG icons
         if @app.get('icon').indexOf('.svg') isnt -1
@@ -50,13 +46,18 @@ module.exports = class ApplicationRow extends BaseView
             iconNode.addClass 'svg'
             iconNode.css 'background-color', color
 
+        @installing() if @app.isInstalling()
+
+
+    installing: ->
+        @$el.addClass 'install'
+        @$('.app-img img').attr 'src', '/img/spinner-white-thin.svg'
+
 
     onInstallClicked: =>
-        return if @installInProgress
-        @marketView.showDescription this, @installButton
-
+        return if @app.isInstalling()
+        @marketView.showDescription @, @installButton
 
     onWebsiteClicked: (e) ->
         # prevent starting installation when clicking on Github or website links
         e.stopPropagation()
-

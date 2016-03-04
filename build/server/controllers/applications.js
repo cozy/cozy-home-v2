@@ -386,7 +386,13 @@ module.exports = {
         return manager.start(req.application, function(err, result) {
           if (err && err !== localizationManager.t("not enough memory")) {
             delete startedApplications[req.application.id];
-            return appHelpers.markBroken(req.application, err);
+            appHelpers.markBroken(req.application, err);
+            return res.status(500).send({
+              app: req.application,
+              error: true,
+              message: err.message,
+              stack: err.stack
+            });
           } else if (err) {
             delete startedApplications[req.application.id];
             data = {
@@ -413,12 +419,25 @@ module.exports = {
             return req.application.updateAttributes(data, function(err) {
               if (err) {
                 delete startedApplications[req.application.id];
-                return appHelpers.markBroken(req.application, err);
+                appHelpers.markBroken(req.application, err);
+                res.status(500).send({
+                  app: req.application,
+                  error: true,
+                  message: err.message,
+                  stack: err.stack
+                });
+                return;
               }
               return manager.resetProxy(function(err) {
                 delete startedApplications[req.application.id];
                 if (err) {
-                  return appHelpers.markBroken(req.application, err);
+                  appHelpers.markBroken(req.application, err);
+                  return res.status(500).send({
+                    app: req.application,
+                    error: true,
+                    message: err.message,
+                    stack: err.stack
+                  });
                 } else {
                   return res.send({
                     success: true,

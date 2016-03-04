@@ -90,8 +90,10 @@ module.exports = appHelpers =
 
         appli.iconType = iconInfos?.extension or null
         icons.save appli, iconInfos, (err) ->
-            log.error err if err
-            log.info "Icon attached for #{appli.name}"
+            if err
+                log.error err
+            else
+                log.info "Icon attached for #{appli.name}"
             callback appli
 
 

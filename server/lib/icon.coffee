@@ -27,7 +27,6 @@ icons.getPath = (root, appli) ->
 
     else if appli.iconPath? and fs.existsSync(path.join root, appli.iconPath)
         iconPath = path.join root, appli.iconPath
-        iconPath = null unless fs.existsSync(iconPath)
 
     # if it has not been set, or if it doesn't exist, try to guess the icon path
     # first check for svg icon, then for png.
@@ -61,6 +60,7 @@ icons.getIconInfos = (appli) ->
     if appli?
         repoName = (appli.git.split('/')[4]).replace '.git', ''
         name = appli.name.toLowerCase()
+        slug = appli.slug or name
         basePath = '/' + path.join 'usr', 'local', 'cozy', 'apps'
 
         # This path matches the old controller paths.
@@ -69,7 +69,7 @@ icons.getIconInfos = (appli) ->
 
         # Else it checks the new controller paths.
         unless fs.existsSync(root)
-            root = path.join basePath, name
+            root = path.join basePath, slug
 
         iconInfos = icons.getPath root, appli
 
@@ -92,8 +92,7 @@ icons.save = (appli, iconInfos, callback = ->) ->
         appli.attachFile iconInfos.path, name: name, (err) ->
             return callback err if err
             appli.updateAttributes iconType: iconInfos.extension, (err) ->
-                return callback err if err
-                callback iconInfos
+                callback err, iconInfos
 
     else
         callback new Error('icon information not found')

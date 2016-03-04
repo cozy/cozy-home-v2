@@ -95,10 +95,7 @@ module.exports = class exports.AccountView extends BaseView
                     @password0Field.val null
                     @password1Field.val null
                     @password2Field.val null
-                    @errorAlert.show()
-                    timeout =>
-                        @errorAlert.hide()
-                    , 10000
+                    showError 'account change password error'
 
                 else
                     if data.success
@@ -106,7 +103,7 @@ module.exports = class exports.AccountView extends BaseView
                         @password0Field.val null
                         @password1Field.val null
                         @password2Field.val null
-                        timeout =>
+                        setTimeout =>
                             @infoAlert.hide()
                         , 10000
                     else

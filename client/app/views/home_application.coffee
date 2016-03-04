@@ -30,6 +30,7 @@ module.exports = class ApplicationRow extends BaseView
         @background = @$ 'img'
 
         @listenTo @model, 'change', @onAppChanged
+        @listenTo @model, 'uninstall', @onUninstall
         @onAppChanged @model
 
         @setBackgroundColor()
@@ -43,7 +44,7 @@ module.exports = class ApplicationRow extends BaseView
     ### Listener ###
 
 
-    onAppChanged: (app) =>
+    onAppChanged: =>
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
@@ -59,10 +60,11 @@ module.exports = class ApplicationRow extends BaseView
                     extension = 'png'
                     @icon.removeClass 'svg'
 
-                src = "api/applications/#{app.id}.#{extension}"
+                src = "api/applications/#{@model.id}.#{extension}"
                 @icon.attr 'src', src
                 @icon.show()
                 @icon.removeClass 'stopped'
+                $("##{@model.get 'slug'}-frame").remove()
 
             when 'installing'
                 @showSpinner()
@@ -77,9 +79,16 @@ module.exports = class ApplicationRow extends BaseView
                     extension = 'png'
                     @icon.removeClass 'svg'
 
-                @icon.attr 'src', "api/applications/#{app.id}.#{extension}"
+                @icon.attr 'src', "api/applications/#{@model.id}.#{extension}"
                 @icon.addClass 'stopped'
                 @hideSpinner()
+
+
+    onUninstall: =>
+        @$el.addClass 'uninstalling'
+        @showSpinner()
+        $("##{@model.get 'slug'}-frame").remove()
+        @enabled = false
 
 
     onAppClicked: (event) =>
@@ -88,8 +97,8 @@ module.exports = class ApplicationRow extends BaseView
         switch @model.get 'state'
             when 'broken'
                 errortype = ''
-                if @model.get('errorcode')?
-                    errorcode = @model.get 'errorcode'
+                errorcode = @model.get 'errorcode'
+                if errorcode?
                     switch errorcode[0]
                         when '1' then msg += '\n' + t('error user linux')
                         when '2'
@@ -102,10 +111,15 @@ module.exports = class ApplicationRow extends BaseView
                         when '3' then errortype = t('error npm')
                         when '4' then errortype = t('error start')
                 errormsg = @model.get 'errormsg'
-                modal = new Modal
+                modalOptions =
                     title: 'Broken application'
                     errortype: errortype
                     details: errormsg
+                if errorcode[0] is '4'
+                    modalOptions.confirm = t('start this app')
+                    modalOptions.cancel = t('cancel')
+                    modalOptions.onConfirm = @startApp
+                modal = new Modal modalOptions
                 $("##{@id}").append modal.$el
                 modal.show()
             when 'installed'
@@ -113,20 +127,23 @@ module.exports = class ApplicationRow extends BaseView
             when 'installing'
                 alert t 'state app installing'
             when 'stopped'
-                @showSpinner()
-                @model.start
-                    success: =>
-                        @launchApp(event)
-                        @hideSpinner()
-                    error: =>
-                        @hideSpinner()
-                        msg = t 'state app stopped error'
-                        errormsg = @model.get 'errormsg'
-                        msg += " : #{errormsg}" if errormsg
-                        alert msg
+                @startApp()
 
 
     ### Functions ###
+
+    startApp: =>
+        @showSpinner()
+        @model.start
+            success: =>
+                @launchApp(event)
+                @hideSpinner()
+            error: =>
+                @hideSpinner()
+                msg = t 'state app stopped error'
+                errormsg = @model.get 'errormsg'
+                msg += " : #{errormsg}" if errormsg
+                alert msg
 
     launchApp: (e) =>
         # if ctrl or middle click or small device

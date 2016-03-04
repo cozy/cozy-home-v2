@@ -60,14 +60,15 @@ module.exports = class NotificationsView extends ViewCollection
             @hideNotifList()
 
     showNotifList: =>
-        if $('.right-menu').is ':visible'
+        if $('#notifications-menu').is ':visible'
             @hideNotifList()
         else
-            $('.right-menu').show()
+            $('.right-menu').hide()
+            $('#notifications-menu').show()
             @clickcatcher.show()
 
     hideNotifList: (event) =>
-        $('.right-menu').hide()
+        $('#notifications-menu').hide()
         @clickcatcher.hide()
 
     dismissAll: =>
