@@ -57,9 +57,10 @@
     "start": "node build/server.js",
     "prebuild:client": "cd client && npm update",
     "build:clean": "rm -rf build",
+    "build:tx": "tx pull --all || true",
     "build:client": "cd client && brunch b",
     "build:server": "cake build",
-    "build": "npm run build:clean && npm run build:client && npm run build:server",
+    "build": "npm run build:clean && npm run build:tx && npm run build:client && npm run build:server",
     "postinstall": "node postinstall.js"
   }
 }
