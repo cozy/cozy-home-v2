@@ -6,7 +6,7 @@ request = require 'lib/request'
 # * available links to find support.
 # * a widget to send a message easily to the cozy support email.
 module.exports = class exports.HelpView extends BaseView
-    id: 'help-view'
+    el: '#help-menu'
     template: require 'templates/help'
 
     events:
@@ -18,8 +18,8 @@ module.exports = class exports.HelpView extends BaseView
         @sendMessageInput = @$ '#send-message-textarea'
         @alertMessageError = @$ '#send-message-error'
         @alertMessageSuccess = @$ '#send-message-success'
-
         @configureHelpUrl()
+        @$el.hide()
 
 
     # If a special help url is defined at the instance level, it's the one used
@@ -28,7 +28,7 @@ module.exports = class exports.HelpView extends BaseView
         helpUrl = window.app.instance?.helpUrl
         if helpUrl?
             template = require 'templates/help_url'
-            $(@$el.find('.line')[1]).prepend template helpUrl: helpUrl
+            @$el.find('.help-section:last').prepend template helpUrl: helpUrl
 
 
     # When send message is clicked, the content of the message textarea is
@@ -52,3 +52,9 @@ module.exports = class exports.HelpView extends BaseView
                 else
                     @alertMessageSuccess.show()
 
+    toggle: ->
+        if @$el.is ':visible'
+            @$el.hide()
+        else
+            $('.right-menu').hide()
+            @$el.show()

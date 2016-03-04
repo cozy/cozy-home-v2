@@ -17,6 +17,7 @@ module.exports = class NotificationView extends BaseView
     getRenderData: ->
         model: _.extend @model.attributes,
             actionText: @actionText or null
+            update: @update
             date: moment(parseInt @model.get 'publishDate').fromNow()
 
 
@@ -25,6 +26,7 @@ module.exports = class NotificationView extends BaseView
     # * Prepare the action text depending on the URL.
     initialize: ->
         @listenTo @model, 'change', @render
+        @update = false
         action = @model.get 'resource'
 
         if action?
@@ -36,9 +38,11 @@ module.exports = class NotificationView extends BaseView
 
                 if action.url.indexOf('update-stack') >= 0
                     @actionText = 'notification update stack'
+                    @update = true
 
                 else if action.url.indexOf('update') >= 0
                     @actionText = 'notification update application'
+                    @update = true
 
 
     # Depending on given parameters for action, it builds the correct URL to
