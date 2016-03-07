@@ -3231,7 +3231,7 @@ module.exports = {
     "error": "エラー",
     "error proper email": "指定されたメールは正しくありません",
     "error email empty": "メールが指定されていません",
-    "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
+    "Chose the language you want I use to speak with you:": "表示する言語を選択してください:",
     "account background selection": "Cozy ホームの背景を選択してください:",
     "account localization": "ローカライズ",
     "account identifiers": "アカウント",
@@ -3299,7 +3299,7 @@ module.exports = {
     "cozy help title": "Cozy - ヘルプ",
     "help support title": "公式サポート",
     "help community title": "コミュニティ サポート",
-    "help direct title": "Direct Message",
+    "help direct title": "ダイレクトメッセージ",
     "help documentation title": "ドキュメント",
     "changing locale requires reload": "ロケールを変更するには、ページを再読み込みする必要があります。",
     "cancel": "キャンセル",
@@ -3329,10 +3329,10 @@ module.exports = {
     "market app install": "インストール中...",
     "install your app": "Git リポジトリからアプリをインストール",
     "market install your app": "次のフィールドに Git URL をコピー/貼り付けしてください:",
-    "market install your app tutorial": "To know more about how to build you own app, feel free to read our",
+    "market install your app tutorial": "独自のアプリを構築する方法に関してさらに知りたい場合は、お読みください",
     "market app tutorial": "チュートリアル",
     "help send message title": "Cozy チームに直接書き込み",
-    "help send message action": "Send",
+    "help send message action": "送信",
     "help send logs": "デバッグを容易にするサーバーログを送信",
     "send message success": "メッセージを正常に送信しました!",
     "send message error": "サポートのメッセージを送信中にエラーが発生しました。 support@cozycloud.cc に、メールクライアントで送信してみてください",
@@ -3409,9 +3409,9 @@ module.exports = {
     "update apps error": "一つまたは複数のアプリケーションが失敗しました。懸念のあるアプリケーションが破損としてマークされています。おそらく、これらのアプリケーションをアンインストールして、再インストールする必要があります。",
     "update apps error list title": "破損したアプリケーション",
     "update stack error title": "Cozy のアップデート中にエラーが発生しました",
-    "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to chose wether or not you accept the new permissions.",
+    "update stack permission changes": "次に記載されているアプリケーションは、アクセス許可の変更のためにアップデートされませんでした。 個別にアップデートして、新しいアクセス許可を受け入れるかどうかを選択してください。",
     "update stack warning": "警告",
-    "reboot stack error": "An error occured whil rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
+    "reboot stack error": "Cozy の再起動中にエラーが発生しました。Cozy が不安定になる可能性があります。Cozy が動作しなくなった場合は、ホスティングプロバイダーにお問い合わせください。"
 };
 });
 
@@ -6411,9 +6411,6 @@ var __val__ = t('app status')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('settings')
-buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#help" class="application-inner"><a href="#help"><img src="img/apps/help.svg" class="icon svg"/><p class="app-title">');
-var __val__ = t('help')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div></div></section></div>');
 }
