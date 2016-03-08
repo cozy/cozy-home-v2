@@ -1,8 +1,3 @@
-// ================================================
-// TODO => CLEAN UNUSED CSS
-// in comments, according to the icon set we choose
-// ================================================
-
 .help-text
     text-align center
 
@@ -13,111 +8,20 @@
             width 24px
 
 .help-section
-    display flex
-    flex-direction column
-    align-items center
+    border-top: 1px solid grey-02
 
-    .cover
-        width 100%
+    .line
+        margin-top: 1.2em
 
-    textarea
-        min-height 8em
-        padding (10/16)em 1em
-        line-height 1.25em
-        margin-top (12/16)em
-
-        @media (max-width (540/16)em)
-            min-height (192/16)em
-
-
-    .btn-group-big
-        display flex
-        justify-content space-between
-        margin-top (12/16)em
-
-        @media (max-width (540/16)em)
-            flex-wrap wrap
-
-    .btn-big-icon
-        display flex
-        flex-direction column
-        align-items center
-        justify-content center
-        padding (16/16)em (16/16)em (20/16)em
-        width 32%
-        background-color white
-        border 1px solid transparent
-        color grey-08
-        text-align center
-
-        @media (max-width (540/16)em)
-            width 100%
-            margin-bottom (10/16)em
-
-        span
-            padding-top (8/18)em
-            font-size 1.125em
-
-        span:last-child
-            padding 0
-            font-size 1em
-            font-style italic
-            color grey-05
-            text-transform none
-            line-height 1.2em
-            transition color ease-out 0.3s
-
-        &.btn-forum
-            color pink
-
-        &.btn-irc
-            color turquoise
-
-        &.btn-wiki
-            color tomato-dry
-
-        &.btn-contact
-            color joker
-
-        &.btn-twitter
-            color twitter
-
-        &.btn-doc
-            color gold
-
+    a
+        display: block
+        margin-bottom: 5px
+        text-transform: uppercase
+        color: grey-07
         &:hover
-            transform scale(1.1)
-            box-shadow 0 2px 6px rgba(0,0,0,.16)
-
-
-#help-view
-    p
-        margin 0
-
-        &.mt2
-            margin-top 20px
-
-        &.help-text
-            text-align left
-
-        &.help-logs
-            margin-bottom (10/16)em
-
-    .help-section
-        .mod
-            padding (40/16)em 0
-            width 100%
-            max-width (800/16)em
-            overflow visible
-
-            &:first-child
-                padding-top (10/16)em
-
-        .send-message-btn
-            width (256/16)em
-
-            @media (max-width (540/16)em)
-                width 100%
-
-    .alert
-        margin-top 10px
+            color: blue
+        span
+            display: inline-block
+            vertical-align: middle
+            padding-bottom: 12px
+            margin-left: 15px

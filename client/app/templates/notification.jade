@@ -2,5 +2,9 @@ a.dismiss &times;
 .notification-text #{model.text}
 .notification-date #{model.date}
 if model.actionText !== undefined && model.actionText !== null
-    a.doaction.btn.grey= t(model.actionText)
-
+    if model.update
+        a.doaction.btn.outline-blue
+            i.fa.fa-refresh
+            = t(model.actionText)
+    else
+        a.doaction.btn.grey= t(model.actionText)

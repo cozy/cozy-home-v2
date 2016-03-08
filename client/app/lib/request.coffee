@@ -18,7 +18,10 @@ exports.request = (type, url, data, callback) ->
         error: (data) ->
             fired = true
 
-            if callback? and data?
+            if data?.getResponseHeader("X-Cozy-Login-Page")
+                window.location.replace '/login'
+
+            else if callback? and data?
                 try
                     data = JSON.parse data.responseText
                 catch err
@@ -57,3 +60,7 @@ exports.del = (url, callback) ->
 exports.head = (url, callback) ->
     exports.request "HEAD", url, null, callback
 
+
+$(document).ajaxError (event, xhr) ->
+    if xhr?.getResponseHeader("X-Cozy-Login-Page")
+        window.location.replace '/login'

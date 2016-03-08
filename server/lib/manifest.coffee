@@ -84,6 +84,9 @@ class exports.Manifest
         if @config.name?
             metaData.name = @config.name.replace 'cozy-', ''
 
+        if @config.slug?
+            metaData.slug = @config.slug
+
         # add the fact it's a static app in metadata
         if @config['cozy-type']?
             metaData.type = @config['cozy-type']

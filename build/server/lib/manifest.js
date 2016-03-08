@@ -119,6 +119,9 @@ exports.Manifest = (function() {
     if (this.config.name != null) {
       metaData.name = this.config.name.replace('cozy-', '');
     }
+    if (this.config.slug != null) {
+      metaData.slug = this.config.slug;
+    }
     if (this.config['cozy-type'] != null) {
       metaData.type = this.config['cozy-type'];
     }

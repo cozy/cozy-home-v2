@@ -35,9 +35,6 @@ icons.getPath = function(root, appli) {
     }
   } else if ((appli.iconPath != null) && fs.existsSync(path.join(root, appli.iconPath))) {
     iconPath = path.join(root, appli.iconPath);
-    if (!fs.existsSync(iconPath)) {
-      iconPath = null;
-    }
   }
   if (iconPath == null) {
     basePath = path.join(root, "client", "app", "assets", "icons");
@@ -64,14 +61,15 @@ icons.getPath = function(root, appli) {
 };
 
 icons.getIconInfos = function(appli) {
-  var basePath, iconInfos, name, repoName, root;
+  var basePath, iconInfos, name, repoName, root, slug;
   if (appli != null) {
     repoName = (appli.git.split('/')[4]).replace('.git', '');
     name = appli.name.toLowerCase();
+    slug = appli.slug || name;
     basePath = '/' + path.join('usr', 'local', 'cozy', 'apps');
     root = path.join(basePath, name, name, repoName);
     if (!fs.existsSync(root)) {
-      root = path.join(basePath, name);
+      root = path.join(basePath, slug);
     }
     iconInfos = icons.getPath(root, appli);
     if (iconInfos != null) {
@@ -102,10 +100,7 @@ icons.save = function(appli, iconInfos, callback) {
       return appli.updateAttributes({
         iconType: iconInfos.extension
       }, function(err) {
-        if (err) {
-          return callback(err);
-        }
-        return callback(iconInfos);
+        return callback(err, iconInfos);
       });
     });
   } else {

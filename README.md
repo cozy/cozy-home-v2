@@ -61,11 +61,6 @@ Here are the source for the backgrounds:
 * [Trianglify Background Generator](http://qrohlf.com/trianglify-generator/)
 * [Unsplash](http://unsplash.com) (Jonathan Bean, Jeff Sheldon, Francesco Gallaroti, Brian Jimenez) - License CC-Zero
 
-## Icons
-
-by [iconmonstr](http://iconmonstr.com/)
-Apps icons by [Elegant Themes](http://www.elegantthemes.com/blog/freebie-of-the-week/beautiful-flat-icons-for-free).
-
 ## Contribute with Transifex
 
 Transifex can be used the same way as git. It can push or pull translations. The config file in the .tx repository configure the way Transifex is working : it will get the json files from the client/app/locales repository.
