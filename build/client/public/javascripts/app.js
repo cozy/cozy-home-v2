@@ -148,7 +148,7 @@ module.exports = ApplicationCollection = (function(_super) {
   };
 
   ApplicationCollection.prototype.comparator = function(modelLeft, modelRight) {
-    var leftIsOfficial, rightIsOfficial;
+    var left, leftIsOfficial, right, rightIsOfficial;
     leftIsOfficial = modelLeft.isOfficial();
     rightIsOfficial = modelRight.isOfficial();
     if (leftIsOfficial && !rightIsOfficial) {
@@ -156,7 +156,9 @@ module.exports = ApplicationCollection = (function(_super) {
     } else if (rightIsOfficial && !leftIsOfficial) {
       return 1;
     } else {
-      return modelLeft.get('displayName').localeCompare(modelRight.get('displayName'));
+      left = modelLeft.get('displayName') || modelLeft.get('name');
+      right = modelRight.get('displayName') || modelRight.get('name');
+      return left.localeCompare(right);
     }
   };
 
@@ -1547,13 +1549,13 @@ module.exports = {
   "alerts and password recovery email": "Your email is used for notifications or password recovery.",
   "public name description": "Your username will be displayed when you share files with people or invite them to events.",
   "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
-  "your timezone is required": "Your time zone helps to properly display your calendar.",
+  "account timezone field description": "Your time zone helps to properly display your calendar.",
   "save": "Save",
   "saved": "Saved",
   "error": "Error",
   "error proper email": "Given email is not correct",
   "error email empty": "Given email is empty",
-  "Chose the language you want I use to speak with you:": "Choose the language you want to see:",
+  "account language field description": "Choose the language you want to see:",
   "account background selection": "Select your background for your Cozy Home:",
   "account localization": "Localization",
   "account identifiers": "Account",
@@ -1564,6 +1566,7 @@ module.exports = {
   "german": "German",
   "spanish": "Spanish",
   "korean": "Korean",
+  "japanese": "Japanese",
   "portuguese": "Portuguese",
   "change password procedure": "Steps to change your password",
   "current password": "current password",
@@ -1652,7 +1655,7 @@ module.exports = {
   "market app install": "Installing...",
   "install your app": "Install an app from its Git Repository",
   "market install your app": "Just copy/paste its Git URL in the field below:",
-  "market install your app tutorial": "To know more about how to build you own app, feel free to read our ",
+  "market install your app tutorial": "To know more about how to build your own app, feel free to read our ",
   "market app tutorial": " tutorial",
   "help send message title": "Write directly to the Cozy Team",
   "help send message action": "Send",
@@ -1734,9 +1737,9 @@ module.exports = {
   "update apps error": "One or several applications failed. Concerned applications are marked as broken. You will probably have to uninstall and reinstall these applications.",
   "update apps error list title": "Broken applications",
   "update stack error title": "An error occured while updating your Cozy",
-  "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to chose wether or not you accept the new permissions.",
+  "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to choose whether or not you accept the new permissions.",
   "update stack warning": "Warning",
-  "reboot stack error": "An error occured whil rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
+  "reboot stack error": "An error occured while rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
 }
 ;
 });
@@ -5998,10 +6001,10 @@ buf.push('</button></div><p class="error domain hide"></p></div><h4>');
 var __val__ = t('account localization')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h4><div class="input"><p>');
-var __val__ = t('your timezone is required')
+var __val__ = t('account timezone field description')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="account-field"><select id="account-timezone-field"></select></div></div><div class="input"><p>');
-var __val__ = t('Chose the language you want I use to speak with you:')
+var __val__ = t('account language field description')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="account-field"><select id="account-locale-field"><option value="fr">');
 var __val__ = t('french')
@@ -6017,6 +6020,9 @@ var __val__ = t('spanish')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option><option value="ko">');
 var __val__ = t('korean')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option><option value="ja">');
+var __val__ = t('japanese')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</option></select></div></div><h4>');
 var __val__ = t('account password')
