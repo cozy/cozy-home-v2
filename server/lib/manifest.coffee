@@ -8,6 +8,12 @@ logger = require('printit')
 class exports.Manifest
 
 
+    # Attempt to download application NPM manifest from three different
+    # location (location selection is based on manifest information):
+    #
+    # * NPM registry
+    # * Gitlab repository
+    # * Github repository
     download: (app, callback) ->
 
         if app.package?
@@ -27,6 +33,7 @@ class exports.Manifest
                 callback null, {}
 
         else if app.git?
+
             providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
             if not providerName?
                 logger.error "Unknown provider '#{app.git}'"
@@ -35,10 +42,10 @@ class exports.Manifest
             else
                 providerName = providerName[0]
 
-                # This could be moved to a separate factory class...
                 if providerName is "gitlab.cozycloud.cc"
                     Provider = require('./git_providers').CozyGitlabProvider
-                else # fallback to github
+
+                else
                     Provider = require('./git_providers').GithubProvider
 
                 provider = new Provider app
@@ -54,6 +61,9 @@ class exports.Manifest
             callback null, {}
 
 
+    # Download the manifest from the NPM registry. This manifest has many
+    # information (it includes history). So we extract the lastest version
+    # of the application manifest.
     downloadFromNpm: (packageName, callback) ->
         client = request.createClient "https://registry.npmjs.org/"
         client.get packageName, (err, res, data) ->
