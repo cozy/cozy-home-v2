@@ -2,13 +2,31 @@ request = require 'request-json'
 logger = require('printit')
     prefix: 'manifest'
 
-# Class to facilitate applications' permissions management
+
+# Abstraction for application manifest helpers (download and information
+# extraction).
 class exports.Manifest
+
 
     download: (app, callback) ->
 
-        # we can be smarter here
-        if app.git?
+        if app.package?
+
+            if typeof(app.package) is 'string'
+                packageName = app.package
+                @downloadFromNpm packageName, callback
+
+            else if app.package.type is 'npm'
+                packageName = app.package.name
+                @downloadFromNpm packageName, callback
+
+            else
+                logger.warn(
+                    "Cannot get manifest for #{app.name}, wrong package type")
+                @config = {}
+                callback null, {}
+
+        else if app.git?
             providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
             if not providerName?
                 logger.error "Unknown provider '#{app.git}'"
@@ -27,12 +45,23 @@ class exports.Manifest
                 provider.getManifest (err, data) =>
                     @config = {}
                     @config = data unless err?
-                    callback err
+                    callback err, data
         else
             @config = {}
-            logger.warn 'App manifest without git URL'
+            logger.warn(
+                'App manifest without recognized git URL or package field')
             logger.raw app
-            callback null
+            callback null, {}
+
+
+    downloadFromNpm: (packageName, callback) ->
+        client = request.createClient "https://registry.npmjs.org/"
+        client.get packageName, (err, res, data) ->
+            manifest = data.versions[data['dist-tags'].latest]
+            if err? and res.statusCode is 404
+                err = localizationManager.t 'manifest not found'
+            @config = manifest
+            callback err, manifest
 
 
     getPermissions: =>
@@ -41,11 +70,13 @@ class exports.Manifest
         else
             return {}
 
+
     getWidget: =>
         if @config['cozy-widget']?
             return @config["cozy-widget"]
         else
             return null
+
 
     getVersion: =>
         if @config?['version']?
@@ -53,11 +84,13 @@ class exports.Manifest
         else
             return "0.0.0"
 
+
     getDescription: =>
         if @config?['description']?
             return  @config["description"]
         else
             return null
+
 
     getIconPath: =>
         if @config?['icon-path']?
@@ -65,11 +98,13 @@ class exports.Manifest
         else
             return null
 
+
     getColor: ->
         if @config?['cozy-color']?
             return @config['cozy-color']
         else
             return null
+
 
     getType: =>
         return @config?['cozy-type'] or {}
@@ -108,3 +143,4 @@ class exports.Manifest
             metaData.color = @config['cozy-color']
 
         return metaData
+

@@ -19,6 +19,7 @@ module.exports = Application = cozydb.getModel 'Application',
     path: String
     type: String
     color: {type: String, default: null}
+    package: String
     git: String
     errormsg: String
     errorcode: String
@@ -139,6 +140,7 @@ Application::getHaibuDescriptor = () ->
         name: @slug
         type: @type
         domain: "127.0.0.1"
+        package: @package
         repository:
             type: "git",
             url: @git
@@ -148,3 +150,4 @@ Application::getHaibuDescriptor = () ->
     if @branch? and @branch isnt "null"
         descriptor.repository.branch = @branch
     return descriptor
+
