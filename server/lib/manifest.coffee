@@ -62,7 +62,7 @@ class exports.Manifest
 
 
     # Download the manifest from the NPM registry. This manifest has many
-    # information (it includes history). So we extract the lastest version
+    # information (it includes history). So we extract the latest version
     # of the application manifest.
     downloadFromNpm: (packageName, callback) ->
         client = request.createClient "https://registry.npmjs.org/"
