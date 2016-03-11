@@ -67,11 +67,14 @@ class exports.Manifest
     downloadFromNpm: (packageName, callback) ->
         client = request.createClient "https://registry.npmjs.org/"
         client.get packageName, (err, res, data) ->
-            manifest = data.versions[data['dist-tags'].latest]
-            if err? and res.statusCode is 404
-                err = localizationManager.t 'manifest not found'
-            @config = manifest
-            callback err, manifest
+            if res.statusCode is 404
+                callback localizationManager.t 'manifest not found'
+            else if err
+                callback err
+            else
+                manifest = data.versions[data['dist-tags'].latest]
+                @config = manifest
+                callback null, manifest
 
 
     getPermissions: =>
