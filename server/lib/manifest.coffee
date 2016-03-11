@@ -67,7 +67,7 @@ class exports.Manifest
     downloadFromNpm: (packageName, callback) ->
         client = request.createClient "https://registry.npmjs.org/"
         client.get packageName, (err, res, data) ->
-            if res.statusCode is 404
+            if res?.statusCode is 404
                 callback localizationManager.t 'manifest not found'
             else if err
                 callback err
