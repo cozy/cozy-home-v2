@@ -30,5 +30,7 @@ module.exports = class ApplicationCollection extends BaseCollection
         else if rightIsOfficial and not leftIsOfficial
             1
         else
-            modelLeft.get('displayName').localeCompare modelRight.get 'displayName'
+            left = modelLeft.get('displayName') or modelLeft.get('name')
+            right = modelRight.get('displayName') or modelRight.get('name')
+            left.localeCompare right
 

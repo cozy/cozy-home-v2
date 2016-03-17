@@ -36,12 +36,12 @@
             h4= t('account localization')
 
             .input
-                p= t('your timezone is required')
+                p= t('account timezone field description')
                 div.account-field
                     select#account-timezone-field
 
             .input
-                p= t('Chose the language you want I use to speak with you:')
+                p= t('account language field description')
                 div.account-field
                     select#account-locale-field
                         option(value="fr")= t('french')
@@ -49,6 +49,7 @@
                         option(value="de")= t('german')
                         option(value="es")= t('spanish')
                         option(value="ko")= t('korean')
+                        option(value="ja")= t('japanese')
 
             h4= t('account password')
             #change-password-form

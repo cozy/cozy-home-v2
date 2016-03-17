@@ -2581,9 +2581,10 @@ h4 {
   line-height: 2.25rem;
 }
 .cozy-app h3 span.beta {
+  display: none;
   margin-left: 0.8em;
   padding: 0.2em 0.5em;
-  background-color: #ff3713;
+  background-color: #bbb;
   -webkit-border-radius: 10em;
   border-radius: 10em;
   vertical-align: middle;
