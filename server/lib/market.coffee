@@ -27,7 +27,7 @@ download = module.exports.download = (callback) ->
             version = oldMarket.version
             commit = oldMarket.commit
 
-    # Turn this two line one to experiment market locally
+    # Turn these two line on to experiment with market locally
     # apps = oldMarket.apps_list
     # return callback null, apps
 
