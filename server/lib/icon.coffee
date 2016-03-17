@@ -58,7 +58,7 @@ icons.getPath = (root, appli) ->
 # Retrieves icon information
 icons.getIconInfos = (appli) ->
     if appli?
-        repoName = (appli.git.split('/')[4]).replace '.git', ''
+        repoName = (appli.git.split('/')[4]).replace /\.git$/, ''
         name = appli.name.toLowerCase()
         slug = appli.slug or name
         basePath = '/' + path.join 'usr', 'local', 'cozy', 'apps'
