@@ -60,13 +60,13 @@ icons.getPath = (root, appli) ->
 # @FIXME : this is brittle as it takes some logic from the controller
 #          the controller should instead return necessary data
 icons.getIconInfos = (appli) ->
+    name = appli.name.toLowerCase()
+    slug = appli.slug or name
     if appli?.package
-        name = appli.package.name or appli.package
-        root = path.join APPS_FOLDER, 'node_modules', name
+        packageName = appli.package.name or appli.package
+        root = path.join APPS_FOLDER, slug, 'node_modules', packageName
     else if appli?.git
         repoName = (appli.git.split('/')[4]).replace '.git', ''
-        name = appli.name.toLowerCase()
-        slug = appli.slug or name
         # This path matches the old controller paths.
         # It's required for backward compatibilities.
         oldPath = path.join APPS_FOLDER, name, name, repoName
