@@ -32,6 +32,7 @@ module.exports = Application = cozydb.getModel('Application', {
     type: String,
     "default": null
   },
+  "package": String,
   git: String,
   errormsg: String,
   errorcode: String,
@@ -173,6 +174,7 @@ Application.prototype.getHaibuDescriptor = function() {
     name: this.slug,
     type: this.type,
     domain: "127.0.0.1",
+    "package": this["package"],
     repository: {
       type: "git",
       url: this.git

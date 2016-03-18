@@ -1,29 +1,10 @@
 request = require 'request-json'
 Client = request.JsonClient
-log = require('printit')
-    prefix: 'market'
-exec = require('child_process').exec
 fs = require 'fs'
-del = require 'del'
 url = require 'url'
 
 apps = []
 isDownloading = false
-
-# sort the applications list by official/community status, then by name
-comparator = (a, b) ->
-    if a.comment is 'official application' \
-    and b.comment isnt 'official application'
-        return -1
-    else if a.comment isnt 'official application' \
-    and b.comment is 'official application'
-        return 1
-    else if a.name > b.name
-        return 1
-    else if a.name < b.name
-        return -1
-    else
-        return 0
 
 download = module.exports.download = (callback) ->
 
@@ -45,6 +26,10 @@ download = module.exports.download = (callback) ->
             oldMarket = JSON.parse(data)
             version = oldMarket.version
             commit = oldMarket.commit
+
+    # Turn these two line on to experiment with market locally
+    # apps = oldMarket.apps_list
+    # return callback null, apps
 
     client = new Client "#{urlRegistry.protocol}//#{urlRegistry.host}"
     switch process.env.NODE_ENV
@@ -85,4 +70,3 @@ module.exports.getApp = (appli) ->
     appsMap = {}
     appsMap[app.slug] = app for app in apps
     return appsMap[appli]
-

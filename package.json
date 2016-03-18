@@ -44,6 +44,7 @@
     "Borjan Tchakaloff"
   ],
   "devDependencies": {
+    "brunch": "1.8.5",
     "chai": "1.9.0",
     "coffee-script": "latest",
     "mocha": "2.3.3",

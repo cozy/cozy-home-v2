@@ -1,4 +1,5 @@
 request = require 'request-json'
+localizationManager = require '../helpers/localization_manager'
 logger = require('printit')
     prefix: 'manifest'
 
@@ -66,7 +67,7 @@ class exports.Manifest
     # of the application manifest.
     downloadFromNpm: (packageName, callback) ->
         client = request.createClient "https://registry.npmjs.org/"
-        client.get packageName, (err, res, data) ->
+        client.get packageName, (err, res, data) =>
             if res?.statusCode is 404
                 callback localizationManager.t 'manifest not found'
             else if err
@@ -156,4 +157,3 @@ class exports.Manifest
             metaData.color = @config['cozy-color']
 
         return metaData
-
