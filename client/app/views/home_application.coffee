@@ -127,12 +127,12 @@ module.exports = class ApplicationRow extends BaseView
             when 'installing'
                 alert t 'state app installing'
             when 'stopped'
-                @startApp()
+                @startApp(event)
 
 
     ### Functions ###
 
-    startApp: =>
+    startApp: (e) =>
         @showSpinner()
         @model.start
             success: =>
