@@ -1,0 +1,14 @@
+.tx
+test
+server
+!build/server
+client
+!build/client
+log
+server.coffee
+.editorconfig
+.travis.yml
+coffeelint.json
+Cakefile
+market
+market.json

@@ -6,6 +6,7 @@ log = require('printit')
 module.exports = icons = {}
 market = require './market'
 
+APPS_FOLDER = '/' + path.join 'usr', 'local', 'cozy', 'apps'
 
 ###
 Get right icon path depending on app configuration:
@@ -56,30 +57,32 @@ icons.getPath = (root, appli) ->
 
 
 # Retrieves icon information
+# @FIXME : this is brittle as it takes some logic from the controller
+#          the controller should instead return necessary data
 icons.getIconInfos = (appli) ->
-    if appli?
+    name = appli.name.toLowerCase()
+    slug = appli.slug or name
+    if appli?.package
+        packageName = appli.package.name or appli.package
+        root = path.join APPS_FOLDER, slug, 'node_modules', packageName
+    else if appli?.git
         repoName = (appli.git.split('/')[4]).replace '.git', ''
-        name = appli.name.toLowerCase()
-        slug = appli.slug or name
-        basePath = '/' + path.join 'usr', 'local', 'cozy', 'apps'
-
         # This path matches the old controller paths.
         # It's required for backward compatibilities.
-        root = path.join basePath, name, name, repoName
-
-        # Else it checks the new controller paths.
-        unless fs.existsSync(root)
-            root = path.join basePath, slug
-
-        iconInfos = icons.getPath root, appli
-
-        if iconInfos?
-            return iconInfos
-        else
-            throw new Error "Icon not found"
-
+        oldPath = path.join APPS_FOLDER, name, name, repoName
+        newPath = path.join APPS_FOLDER, slug
+        root = if fs.existsSync(oldPath) then oldPath else newPath
+    else if appli
+        throw new Error 'Appli has neither package nor git'
     else
         throw new Error 'Appli cannot be reached'
+
+    iconInfos = icons.getPath root, appli
+
+    if iconInfos?
+        return iconInfos
+    else
+        throw new Error "Icon not found"
 
 
 # Save app's icon into the data system. The home displays this icon.
@@ -96,4 +99,3 @@ icons.save = (appli, iconInfos, callback = ->) ->
 
     else
         callback new Error('icon information not found')
-
