@@ -127,12 +127,12 @@ module.exports = class ApplicationRow extends BaseView
             when 'installing'
                 alert t 'state app installing'
             when 'stopped'
-                @startApp()
+                @startApp(event)
 
 
     ### Functions ###
 
-    startApp: =>
+    startApp: (event) =>
         @showSpinner()
         @model.start
             success: =>
@@ -145,11 +145,11 @@ module.exports = class ApplicationRow extends BaseView
                 msg += " : #{errormsg}" if errormsg
                 alert msg
 
-    launchApp: (e) =>
+    launchApp: (event) =>
         # if ctrl or middle click or small device
-        if e.which is 2 or e.ctrlKey or e.metaKey or $(window).width() <= 640
+        if event.which is 2 or event.ctrlKey or event.metaKey or $(window).width() <= 640
             window.open "apps/#{@model.id}/", "_blank"
-        else if e.which is 1 # left click
+        else if event.which is 1 # left click
             window.app.routers.main.navigate "apps/#{@model.id}/", true
 
 
