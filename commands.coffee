@@ -1,9 +1,15 @@
 request = require 'request-json'
 client = request.createClient 'http://localhost:9103'
 
-User = require './server/models/user'
-CozyInstance = require './server/models/cozyinstance'
-Application = require './server/models/application'
+requireModel = (what) ->
+    try require "./server/models/#{what}"
+    catch error then require "./build/server/models/#{what}"
+
+exit = (code) -> setTimeout (-> process.exit code), 10
+
+User = requireModel 'user'
+CozyInstance = requireModel 'cozyinstance'
+Application = requireModel 'application'
 
 runCmd = ->
     switch process.argv[2]
@@ -60,7 +66,7 @@ runCmd = ->
                     console.log 'Something went wrong while changing help url'
                     console.log body
                 else console.log "Help url name set with #{url}"
-                process.exit 0
+                exit 0
             break
 
         when 'setdomain'
@@ -71,20 +77,20 @@ runCmd = ->
                     console.log 'Something went wrong while changing domain'
                     console.log body
                 else console.log "Domain name set with #{domain}"
-                process.exit 0
+                exit 0
             break
 
         when 'getdomain'
             client.get 'api/instances', (err, res, instances) ->
                 if err
                     console.log '{\"domain\":"error"}'
-                    process.exit 1
+                    exit 1
                 else if instances.rows.length is 0
                     console.log '{\"domain\":\"null\"}'
-                    process.exit 0
+                    exit 0
                 else
                     console.log "{\"domain\":\"#{instances.rows[0].domain}\"}"
-                    process.exit 0
+                    exit 0
             break
 
 runCmd()
