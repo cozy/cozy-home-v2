@@ -1,9 +1,14 @@
 request = require 'request-json'
 client = request.createClient 'http://localhost:9103'
 
-User = require './server/models/user'
-CozyInstance = require './server/models/cozyinstance'
-Application = require './server/models/application'
+try
+    User = require './server/models/user'
+    CozyInstance = require './server/models/cozyinstance'
+    Application = require './server/models/application'
+catch err
+    User = require './build/server/models/user'
+    CozyInstance = require './build/server/models/cozyinstance'
+    Application = require './build/server/models/application'
 
 runCmd = ->
     switch process.argv[2]
