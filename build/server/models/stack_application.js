@@ -32,6 +32,7 @@ StackApplication.prototype.checkForUpdate = function(callback) {
     };
   })(this);
   manifest = new Manifest();
+  manifest["package"] = "cozy-" + this.name;
   return manifest.download(this, (function(_this) {
     return function(err) {
       var repoVersion;
