@@ -189,6 +189,7 @@ module.exports =
                 req.body.version = manifest.getVersion()
                 req.body.color = manifest.getColor()
                 req.body.state = 'installing'
+
                 # get type to see if it's a static app
                 req.body.type = manifest.getType()
 

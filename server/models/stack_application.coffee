@@ -27,6 +27,7 @@ StackApplication::checkForUpdate = (callback) ->
 
     # Retrieve manifest
     manifest = new Manifest()
+    manifest.package = "cozy-#{@name}"
     manifest.download @, (err) =>
         if err
             callback err

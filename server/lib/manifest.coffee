@@ -54,6 +54,7 @@ class exports.Manifest
                     @config = {}
                     @config = data unless err?
                     callback err, data
+
         else
             @config = {}
             logger.warn(
@@ -157,3 +158,4 @@ class exports.Manifest
             metaData.color = @config['cozy-color']
 
         return metaData
+
