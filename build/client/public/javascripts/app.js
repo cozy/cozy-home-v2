@@ -1702,6 +1702,7 @@ module.exports = {
   "mstsc.js description": "Manage your Windows Desktop remotely through the RDP protocol.",
   "hastebin description": "A simple pastebin, a tool to easily share texts.",
   "polybios description": "Manage your PGP keys from your browser.",
+  "frost description": "Build your internet memories by archiving web pages into your Cozy.",
   "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
@@ -3235,13 +3236,13 @@ module.exports = {
     "alerts and password recovery email": "あなたのメールアドレスは通知やパスワードの回復のために使用されます。",
     "public name description": "人とファイルを共有したり、イベントに招待するときに、ユーザー名が表示されます。",
     "domain name for urls and email": "ドメイン名は、任意のデバイスから Cozy に接続し、共有 URL を構築するために使用されます。",
-    "account timezone field description": "Your time zone helps to properly display your calendar.",
+    "account timezone field description": "タイムゾーンは、カレンダーを正しく表示するのに役立ちます。",
     "save": "保存",
     "saved": "保存しました",
     "error": "エラー",
     "error proper email": "指定されたメールは正しくありません",
     "error email empty": "メールが指定されていません",
-    "account language field description": "Choose the language you want to see:",
+    "account language field description": "表示する言語を選択してください:",
     "account background selection": "Cozy ホームの背景を選択してください:",
     "account localization": "ローカライズ",
     "account identifiers": "アカウント",
@@ -3252,7 +3253,7 @@ module.exports = {
     "german": "German",
     "spanish": "スペイン語",
     "korean": "韓国語",
-    "japanese": "Japanese",
+    "japanese": "日本語",
     "portuguese": "ポルトガル語",
     "change password procedure": "パスワードを変更するステップ",
     "current password": "現在のパスワード",
@@ -3285,16 +3286,16 @@ module.exports = {
     "update stack modal content": "プラットフォームを更新しようとしています。Cozy は数分間使用できなくなります。 大丈夫ですか?",
     "update stack modal confirm": "アップデート",
     "update stack success": "アプリケーションが更新されます。更新を確定するには、OK ボタンをクリックする必要があります。これにより、現在のウィンドウを更新します。",
-    "update stack error": "An error occurred during the update. Your Cozy may become unstable. If you notice any troubles, you should contact your hosting provider. When you will click on the OK button, the current window will be refreshed.",
+    "update stack error": "アップデート中にエラーが発生しました。Cozy が不安定になる可能性があります。何かトラブルに気付いた場合は、ホスティング プロバイダーにお問い合わせください。 OK ボタンをクリックすると、現在のウィンドウが更新されます。",
     "applications broken": "アプリケーションが破損しています",
     "cozy platform": "プラットフォーム",
     "navbar back button title": "ホームに戻る",
     "navbar notifications": "通知",
     "or:": "または:",
     "reboot stack": "再起動",
-    "update error": "An error occurred while updating the app",
+    "update error": "アプリのアップデート中にエラーが発生しました",
     "update failed": "アップデートに失敗しました",
-    "error update uninstalled app": "You can't update an app that is not installed.",
+    "error update uninstalled app": "インストールされていないアプリはアップデートできません。",
     "notification open application": "アプリケーションを開く",
     "notification update stack": "プラットフォームをアップデート",
     "notification update application": "今すぐアップデート",
@@ -3340,13 +3341,13 @@ module.exports = {
     "market app install": "インストール中...",
     "install your app": "Git リポジトリからアプリをインストール",
     "market install your app": "次のフィールドに Git URL をコピー/貼り付けしてください:",
-    "market install your app tutorial": "To know more about how to build your own app, feel free to read our",
+    "market install your app tutorial": "独自のアプリを構築する方法に関してさらに知りたい場合は、お読みください",
     "market app tutorial": "チュートリアル",
     "help send message title": "Cozy チームに直接書き込み",
     "help send message action": "送信",
     "help send logs": "デバッグを容易にするサーバーログを送信",
     "send message success": "メッセージを正常に送信しました!",
-    "send message error": "An error occurred while sending your support message. Try to send it via an email client to support@cozycloud.cc",
+    "send message error": "サポートのメッセージを送信中にエラーが発生しました。 メールクライアントで support@cozycloud.cc に送信してみてください",
     "account change password success": "パスワードを正常に変更しました。",
     "account change password short": "新しいパスワードが短すぎます。",
     "account change password difference": "確認のパスワードが新しいパスワードと一致しません。",
@@ -3416,13 +3417,13 @@ module.exports = {
     "state app installing": "このアプリをインストールしています。しばらくお待ちください",
     "state app stopped error": "このアプリを起動できません",
     "stack updating block message": "Cozy は現在アップデート中です。アップデートが完了するまで使用できません。",
-    "update apps error title": "An error occurred while updating apps",
+    "update apps error title": "アプリのアップデート中にエラーが発生しました",
     "update apps error": "一つまたは複数のアプリケーションが失敗しました。懸念のあるアプリケーションが破損としてマークされています。おそらく、これらのアプリケーションをアンインストールして、再インストールする必要があります。",
     "update apps error list title": "破損したアプリケーション",
-    "update stack error title": "An error occurred while updating your Cozy",
-    "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to choose whether or not you accept the new permissions.",
+    "update stack error title": "Cozy のアップデート中にエラーが発生しました",
+    "update stack permission changes": "次に記載されているアプリケーションは、アクセス許可の変更のためにアップデートされませんでした。 個別にアップデートして、新しいアクセス許可を受け入れるかどうかを選択してください。",
     "update stack warning": "警告",
-    "reboot stack error": "An error occurred while rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
+    "reboot stack error": "Cozy の再起動中にエラーが発生しました。Cozy が不安定になる可能性があります。Cozy が動作しなくなった場合は、ホスティングプロバイダーにお問い合わせください。"
 };
 });
 
@@ -8603,14 +8604,14 @@ module.exports = ApplicationRow = (function(_super) {
       case 'installing':
         return alert(t('state app installing'));
       case 'stopped':
-        return this.startApp();
+        return this.startApp(event);
     }
   };
 
   /* Functions*/
 
 
-  ApplicationRow.prototype.startApp = function() {
+  ApplicationRow.prototype.startApp = function(event) {
     var _this = this;
     this.showSpinner();
     return this.model.start({
@@ -8631,10 +8632,10 @@ module.exports = ApplicationRow = (function(_super) {
     });
   };
 
-  ApplicationRow.prototype.launchApp = function(e) {
-    if (e.which === 2 || e.ctrlKey || e.metaKey || $(window).width() <= 640) {
+  ApplicationRow.prototype.launchApp = function(event) {
+    if (event.which === 2 || event.ctrlKey || event.metaKey || $(window).width() <= 640) {
       return window.open("apps/" + this.model.id + "/", "_blank");
-    } else if (e.which === 1) {
+    } else if (event.which === 1) {
       return window.app.routers.main.navigate("apps/" + this.model.id + "/", true);
     }
   };
