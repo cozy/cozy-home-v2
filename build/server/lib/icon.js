@@ -31,6 +31,9 @@ icons.getPath = function(root, appli) {
   iconPath = null;
   if (marketApp != null) {
     homeBasePath = path.join(process.cwd(), 'client/app/assets');
+    if (!fs.existsSync(homeBasePath)) {
+      homeBasePath = path.join(process.cwd(), 'build/client/public');
+    }
     iconPath = path.join(homeBasePath, marketApp.icon);
     if (!fs.existsSync(iconPath)) {
       iconPath = null;
