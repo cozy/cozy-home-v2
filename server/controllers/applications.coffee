@@ -126,7 +126,8 @@ module.exports =
         else
             iconPath = './client/app/assets/img/default.svg'
             unless fs.existsSync iconPath
-                iconPath = path.join './build/client/public/default.svg'
+                iconPath = path.join(
+                    process.cwd(), './build/client/public/img/default.svg')
             stream = fs.createReadStream iconPath
             stream.pipefilter = (res, dest) ->
                 dest.set 'Content-Type', 'image/svg+xml'

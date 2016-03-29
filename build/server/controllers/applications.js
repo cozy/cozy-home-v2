@@ -174,7 +174,7 @@ module.exports = {
     } else {
       iconPath = './client/app/assets/img/default.svg';
       if (!fs.existsSync(iconPath)) {
-        iconPath = path.join('./build/client/public/default.svg');
+        iconPath = path.join(process.cwd(), './build/client/public/img/default.svg');
       }
       stream = fs.createReadStream(iconPath);
       stream.pipefilter = function(res, dest) {
