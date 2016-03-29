@@ -1,5 +1,6 @@
 request             = require 'request-json'
 fs                  = require 'fs'
+path                = require 'path'
 slugify             = require 'cozy-slug'
 {exec}              = require 'child_process'
 async               = require 'async'
@@ -115,21 +116,23 @@ module.exports =
             stream = req.application.getFile 'icon.svg', ->
             stream.pipefilter = (res, dest) ->
                 dest.set 'Content-Type', 'image/svg+xml'
-            stream.pipe res
 
         # Case where the icon is a PNG picture.
         else if req.application?._attachments?['icon.png']
             res.type 'png'
             stream = req.application.getFile 'icon.png', ->
-            stream.pipe res
 
         # Case where the icon is missing. It sends the default SVG one.
         else
             iconPath = './client/app/assets/img/default.svg'
-            stream = fs.createReadStream(iconPath)
+            unless fs.existsSync iconPath
+                iconPath = path.join './build/client/public/default.svg'
+            stream = fs.createReadStream iconPath
             stream.pipefilter = (res, dest) ->
                 dest.set 'Content-Type', 'image/svg+xml'
-            stream.pipe res
+
+        stream.on 'err', (err) -> next err
+        stream.pipe res
 
 
     # Update application parameters like autostop or favorite.

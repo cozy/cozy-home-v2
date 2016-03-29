@@ -8,6 +8,7 @@ market = require './market'
 
 APPS_FOLDER = '/' + path.join 'usr', 'local', 'cozy', 'apps'
 
+
 ###
 Get right icon path depending on app configuration:
 * returns root folder + path mentioned in the manifest file if path is in the
@@ -23,6 +24,8 @@ icons.getPath = (root, appli) ->
     # try to retrieve icon path from manifest, if developer set it.
     if marketApp?
         homeBasePath = path.join process.cwd(), 'client/app/assets'
+        unless fs.existsSync homeBasePath
+            homeBasePath = path.join process.cwd(), 'build/client/public'
         iconPath = path.join homeBasePath, marketApp.icon
         iconPath = null unless fs.existsSync(iconPath)
 
