@@ -117,7 +117,7 @@ module.exports = class Application extends Backbone.Model
             'kresus', 'konnectors', 'kyou', 'databrowser', 'import-from-google'
         ]
             section = 'data'
-        else if name in ['todos', 'notes', 'tasky']
+        else if name in ['todos', 'notes', 'tasky', 'tiddlywiki']
             section = 'productivity'
         else if name in ['sync']
             section = 'platform'
