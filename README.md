@@ -7,7 +7,7 @@ launchers and widgets.
 
 ## Install
 
-We assume here that the Cozy platform is correctly [installed](https://raw.github.com/cozy/cozy-setup/gh-pages/assets/images/happycloud.png)
+We assume here that the Cozy platform is correctly [installed](https://docs.cozy.io/en/host/install)
  on your server.
 
 Type this command to install the home application:
