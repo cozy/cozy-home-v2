@@ -19,6 +19,9 @@ module.exports = {
       var stream;
       if (exists) {
         stream = fs.createReadStream("" + filepath);
+        res.set({
+          'Content-Type': 'text/plain'
+        });
         stream.on('data', function(data) {
           return res.write(data.toString().replace(logs.colors, ''));
         });

@@ -14,7 +14,10 @@ module.exports =
         fs.exists filepath, (exists) ->
             if exists
                 stream = fs.createReadStream("#{filepath}")
-
+                # Set text/plain header so that the log can be opened in the
+                # browser.
+                res.set
+                    'Content-Type': 'text/plain'
                 # We remove color markers during the stream.
                 stream.on 'data', (data) ->
                     res.write data.toString().replace logs.colors, ''
