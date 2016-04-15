@@ -31,7 +31,8 @@
     "request": "2.69.0",
     "request-json": "0.5.5",
     "rrule": "2.0.1",
-    "tar": "2.1.1"
+    "tar": "2.1.1",
+    "thirty-two": "1.0.1"
   },
   "contributors": [
     "Zoe Bellot",

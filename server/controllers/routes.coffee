@@ -61,8 +61,10 @@ module.exports =
     'api/sys-data': get: monitor.sysData
 
     # Users routes
-    'api/users' : get: account.users
-    'api/user'  : post: account.updateAccount
+    'api/users'     : get: account.users
+    'api/user'      : post: account.updateAccount
+    # Two factors authentication routes
+    'api/user/2fa'  : get: account.send2FAToken
 
     # Instances routes
     'api/instances' : get: account.instances

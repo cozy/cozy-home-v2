@@ -68,8 +68,8 @@
                         label= t('confirm new password')
                     input#account-password2-field(type="password", placeholder="#{t('new password')}")
 
-                p
-                    .account-field
+                .account-field
+                    p
                         button#account-form-button.full-width= t('save your new password')
 
                     p.loading-indicator &nbsp;
@@ -79,3 +79,56 @@
 
                     #account-error.alert.alert-error.main-alert.hide
                         #account-form-error-text= t('account change password error')
+                        
+            h4= t('account two factors auth')
+            #2fa-form
+                .account-field
+                    p= t('account 2fa strategy')
+                    select#account-2fa-field
+                        option(value="hotp")= t('account 2fa hotp')
+                        option(value="totp")= t('account 2fa totp')
+
+                .account-field
+                    p
+                    button#account-2fa-button.full-width= t('enable 2fa')
+
+                    p.loading-indicator &nbsp;
+
+                    .account-2fa-info.alert.main-alert.alert-success.hide
+                        .account-info-text= t('account 2fa enabled')
+
+                    .account-2fa-error.alert.alert-error.main-alert.hide
+                        .account-form-error-text= t('account 2fa error')
+
+            #2fa-infos.account-field
+                p.full-width= t('account 2fa token explanation')
+                
+                h3#2fa-token.center &nbsp;
+                
+                p= t('account 2fa qrcode explanation')
+                    
+                p.center
+                    img#qrcode
+                    
+                p#2fa-strategy
+                
+                #2fa-hotp-reset.hidden
+                    p= t('account 2fa hotp reset explanation')
+                
+                    .account-field
+                        p
+                        button#account-2fa-reset-button.full-width= t('2fa reset hotp')
+                    
+                p= t('account 2fa disable explanation')
+                    
+                .account-field
+                    p
+                    button#account-2fa-off-button.full-width= t('disable 2fa')
+                    
+                    p.loading-indicator &nbsp;
+
+                    .account-2fa-info.alert.main-alert.alert-success.hide
+                        #account-info-text= t('account 2fa disabled')
+
+                    .account-2fa-error.alert.alert-error.main-alert.hide
+                        #account-form-error-text= t('account 2fa error')
