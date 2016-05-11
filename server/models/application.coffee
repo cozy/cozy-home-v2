@@ -83,6 +83,8 @@ Application.getToken = (id, callback) ->
     dataClient.post "request/access/byApp/", key: id, (err, res, body) ->
         if err
             callback err
+        else if not body?[0]?.value?
+            callback null, 'there_is_no_token_for_this_app'
         else
             callback null, body[0].value
 
