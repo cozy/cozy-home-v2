@@ -6,7 +6,7 @@ The panel is located below the password one in the Setting page, and looks like 
 
 ![capture d ecran de 2016-04-15 20-36-58](https://cloud.githubusercontent.com/assets/5547783/14571515/ed669f5a-0349-11e6-9b95-9cb8ff43325f.png)
 
-The user selects the authentication strategy (algorithm) of its choice between the available ones (only HOTP and TOTP for now), then clicks the button. The server will then edit the current user in the DS: it will generate an OTP key (10-char-long random string) and will fill the auth type accordingly ("hotp" or "totp").
+The user selects the authentication strategy (algorithm) of its choice between the available ones (only HOTP and TOTP for now), then clicks the button. The server will then edit the current user in the DS: it will generate an OTP key (random string) and will fill the auth type accordingly ("hotp" or "totp").
 
 Once the user has clicked the button, the page will display a success message and reload after 2s. The Settings page now displays this as the 2FA panel:
 
