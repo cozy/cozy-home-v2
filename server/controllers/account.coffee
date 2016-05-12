@@ -39,7 +39,7 @@ module.exports =
             # 2FA settings has been changed    
             if body.authType isnt undefined
                 data.authType = body.authType
-                data.otpKey = body.otpKey
+                data.encryptedOtpKey = body.encryptedOtpKey
                 data.hotpCounter = body.hotpCounter
 
             if data.timezone or data.email or data.password or data.public_name\
@@ -122,9 +122,9 @@ module.exports =
             else    
                 user = users[0]
                 res.status(200).send 
-                    token: base32.encode(user.otpKey).toString()
-                            
-    
+                    token: base32.encode(user.encryptedOtpKey).toString()
+
+
     # Return list of instances
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->

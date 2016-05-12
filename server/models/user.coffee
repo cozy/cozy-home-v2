@@ -8,7 +8,7 @@ module.exports = User = cozydb.getModel 'User',
     owner: {type: Boolean, default: false}
     activated: {type: Boolean, default: false}
     authType: String
-    otpKey: String
+    encryptedOtpKey: String
     hotpCounter: Number
 
 

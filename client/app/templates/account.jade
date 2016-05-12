@@ -85,8 +85,8 @@
                 .account-field
                     p= t('account 2fa strategy')
                     select#account-2fa-field
-                        option(value="hotp")= t('account 2fa hotp')
                         option(value="totp")= t('account 2fa totp')
+                        option(value="hotp")= t('account 2fa hotp')
 
                 .account-field
                     p
@@ -103,7 +103,7 @@
             #2fa-infos.account-field
                 p.full-width= t('account 2fa token explanation')
                 
-                h3#2fa-token.center &nbsp;
+                p#2fa-token.token.bold.center &nbsp;
                 
                 p= t('account 2fa qrcode explanation')
                     

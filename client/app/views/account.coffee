@@ -161,7 +161,7 @@ module.exports = class exports.AccountView extends BaseView
         
         form =
             authType: authType
-            otpKey: @getOtpKey()
+            encryptedOtpKey: @getOtpKey()
             hotpCounter: 0 if authType is 'hotp'
         @twoFactorSubmitButton.spin true
         
@@ -181,6 +181,7 @@ module.exports = class exports.AccountView extends BaseView
     on2faDisableSubmit: (event) ->
         form =
             authType: null
+        @twoFactorSubmitButton.spin true
         
         request.post 'api/user', form, (err, data) =>
             @twoFactorSubmitButton.spin false
@@ -218,17 +219,15 @@ module.exports = class exports.AccountView extends BaseView
                     @on2faError()
 
 
-    # OTP key is generated client-side, in this function. If consists in a
-    # 10-char long alphanumeric random string.
+    # OTP key is generated client-side, in this function.
     getOtpKey: () ->
-        buf = []
-        chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+        PRNG = new Uint32Array 5
+        window.crypto.getRandomValues PRNG
 
-        for [0..9]
-            index = Math.floor(Math.random() * chars.length);
-            buf.push(chars[index]);
-            
-        buf.join ''
+        key = PRNG.reduce (key, subkey) ->
+            # pad each PRNG hex with '0'
+            key += ('0000' + subkey.toString(16)).slice(-8)
+        , ''
     
     
     # Retrieve two-factor auth specific token, which is the base32-encoded key
