@@ -3,12 +3,12 @@ Adapter = require '../lib/adapter'
 User = require '../models/user'
 CozyInstance = require '../models/cozyinstance'
 localizationManager = require '../helpers/localization_manager'
+base32 = require 'thirty-two'
 adapter = new Adapter()
 
 EMAILREGEX = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|
     (\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|
     (([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$///
-
 
 # Update current user data (email and password with given ones)
 # Password is encrypted with bcrypt algorithm.
@@ -35,10 +35,18 @@ module.exports =
                 else
                     errors = ["error email empty"]
                     return cb null, errors
+                    
+            # 2FA settings has been changed    
+            if body.authType isnt undefined
+                data.authType = body.authType
+                data.encryptedOtpKey = body.encryptedOtpKey
+                data.hotpCounter = body.hotpCounter
 
-            if data.timezone or data.email or data.password or data.public_name
+            if data.timezone or data.email or data.password or data.public_name\
+            or data.authType isnt undefined
                 adapter.updateUser user, data, (err) ->
                     cb err, null
+                
             else
                 cb null
 
@@ -97,9 +105,24 @@ module.exports =
     users: (req, res, next) ->
         User.all (err, users) ->
             if err
-                res.status(500).send error: localizationManager.t "Retrieve users failed."
+                res.status(500).send 
+                    error: localizationManager.t "Retrieve users failed."
             else
                 res.send rows: users
+
+
+    # Return base32-encoded 2FA token
+    send2FAToken: (req, res, next) ->
+        User.all (err, users) ->
+            if err
+                res.status(400).send error: err
+            else if users.length is 0
+                res.status(400).send 
+                    error: localizationManager.t "no user registered"
+            else    
+                user = users[0]
+                res.status(200).send 
+                    token: base32.encode(user.encryptedOtpKey).toString()
 
 
     # Return list of instances

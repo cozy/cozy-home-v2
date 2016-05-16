@@ -7,6 +7,8 @@ User = require "#{helpers.prefix}server/models/user"
 TESTPORT = 8889
 TESTMAIL = 'test@test.com'
 TESTPASS = 'password'
+TESTOTPKEY = '8b234fb156f8d39555ea0a7538db878b0d1357cc'
+TESTOTPTOKEN = 'HBRDEMZUMZRDCNJWMY4GIMZZGU2TKZLBGBQTONJTHBSGEOBXHBRDAZBRGM2TOY3D'
 
 describe 'Modify account failure', ->
 
@@ -136,3 +138,77 @@ describe 'Modify account success', ->
     #it 'it have beeen updated', ->
         #@body.should.have.property('rows').with.length 1
         #@body.rows[0].domain.should.equal 'domain.newnew'
+
+
+describe 'Modify 2FA settings', ->
+
+    before helpers.setup TESTPORT
+    before helpers.createUser TESTMAIL, TESTPASS
+    before ->
+        @client = helpers.getClient TESTPORT, @
+        @dataClient = helpers.getClient 9101, @
+
+    after helpers.takeDown
+
+    it 'When I enable 2FA', (done) ->
+        data =
+            authType: 'hotp'
+            encryptedOtpKey: TESTOTPKEY
+            hotpCounter: 42
+        @client.post 'api/user', data, done
+
+    it 'Then success response should be returned', ->
+        @response.statusCode.should.equal 200
+
+    it 'And the fields should be correctly set', (done) ->
+        User.all (err, users) ->
+            should.not.exist err
+            should.exist users
+            user = users[0]
+            user.authType.should.equal 'hotp'
+            user.encryptedOtpKey.should.equal TESTOTPKEY
+            user.hotpCounter.should.equal 42
+            done()
+
+    it 'When I request the OTP token', (done) ->
+        @client.get 'api/user/2fa', done
+
+    it 'Then success response should be returned', ->
+        @response.statusCode.should.equal 200
+
+    it 'And the right token should be returned', ->
+        @body.should.have.property 'token'
+        @body.token.should.equal TESTOTPTOKEN
+
+    it 'When I reset the HOTP token', (done) ->
+        data =
+            authType: 'hotp'
+            hotpCounter: 0
+        @client.post 'api/user', data, done
+
+    it 'Then success response should be returned', ->
+        @response.statusCode.should.equal 200
+
+    it 'And the counter is set to 0', (done) ->
+        User.all (err, users) ->
+            should.not.exist err
+            should.exist users
+            user = users[0]
+            user.hotpCounter.should.equal 0
+            done()
+
+    it 'When I disable 2FA', (done) ->
+        data =
+            authType: null
+        @client.post 'api/user', data, done
+        
+    it 'Then success response should be returned', ->
+        @response.statusCode.should.equal 200
+
+    it 'And 2FA is disabled', (done) ->
+        User.all (err, users) ->
+            should.not.exist err
+            should.exist users
+            user = users[0]
+            (user.authType is undefined).should.be.true
+            done()
