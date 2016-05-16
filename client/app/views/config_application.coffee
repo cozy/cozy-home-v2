@@ -133,7 +133,7 @@ module.exports = class ApplicationRow extends BaseView
         @setIconSrc()
 
         @updateIcon.toggle @model.get 'needsUpdate'
-        if (not @model.get("branch")? or @model.get 'branch' is 'master') and
+        if (not @model.get("branch")? or (@model.get('branch') is 'master')) and
             not(@model.get('needsUpdate'))
                 @$(".update-app").hide()
 
