@@ -18,7 +18,10 @@ module.exports = User = cozydb.getModel('User', {
   activated: {
     type: Boolean,
     "default": false
-  }
+  },
+  authType: String,
+  encryptedOtpKey: String,
+  hotpCounter: Number
 });
 
 User.all = function(callback) {

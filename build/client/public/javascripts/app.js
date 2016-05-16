@@ -1571,6 +1571,23 @@ module.exports = {
   "account identifiers": "Account",
   "account personalization": "Customization",
   "account password": "Password",
+  "account two factors auth": "Two-factor authentication",
+  "account 2fa strategy": "Authentication strategy",
+  "account 2fa hotp": "HOTP (based on a counter)",
+  "account 2fa totp": "TOTP (based on a timer)",
+  "enable 2fa": "Enable two-factor authentication",
+  "disable 2fa": "Disable two-factor authentication",
+  "account 2fa enabled": "Two-factor authentication has been enabled. Page will now reload.",
+  "account 2fa disabled": "Two-factor authentication has been disabled. Page will now reload.",
+  "account 2fa error": "There was something wrong while enabling two-factor authentication. Please try again in a few minutes or contact the support.",
+  "account 2fa token explanation": "Two-factor authentication is enabled on Cozy. To use it with your favourite app or device, you have to enter the following key when setting up the account:",
+  "account 2fa qrcode explanation": "You can also scan the QR code below if your app supports it.",
+  "2fa strategy hotp": "You are using the HOTP 2FA strategy (counter-based).",
+  "2fa strategy totp": "You are using the TOTP 2FA strategy (timer-based).",
+  "account 2fa hotp reset explanation": "If you're changing from one authentication app or device to another, you must reset the HOTP counter in order to not get locked outside of your Cozy.",
+  "2fa reset hotp": "Reset the HOTP counter",
+  "account 2fa reset": "The HOTP counter has been successfully reset.",
+  "account 2fa disable explanation": "You can disable the two-factor authentication at any time:",
   "french": "French",
   "english": "English",
   "german": "German",
@@ -6126,16 +6143,61 @@ var __val__ = t('confirm new password')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</label></p><input');
 buf.push(attrs({ 'id':('account-password2-field'), 'type':("password"), 'placeholder':("" + (t('new password')) + "") }, {"type":true,"placeholder":true}));
-buf.push('/></div><p><div class="account-field"><button id="account-form-button" class="full-width">');
+buf.push('/></div><div class="account-field"><p><button id="account-form-button" class="full-width">');
 var __val__ = t('save your new password')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</button></div><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text">');
+buf.push('</button></p><p class="loading-indicator">&nbsp;</p><div id="account-info" class="alert main-alert alert-success hide"><div id="account-info-text">');
 var __val__ = t('account change password success')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div><div id="account-error" class="alert alert-error main-alert hide"><div id="account-form-error-text">');
 var __val__ = t('account change password error')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div></p></div></div></div></div>');
+buf.push('</div></div></div></div><h4>');
+var __val__ = t('account two factors auth')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</h4><div id="2fa-form"><div class="account-field"><p>');
+var __val__ = t('account 2fa strategy')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><select id="account-2fa-field"><option value="totp">');
+var __val__ = t('account 2fa totp')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option><option value="hotp">');
+var __val__ = t('account 2fa hotp')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</option></select></div><div class="account-field"><p></p><button id="account-2fa-button" class="full-width">');
+var __val__ = t('enable 2fa')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><p class="loading-indicator">&nbsp;</p><div class="account-2fa-info alert main-alert alert-success hide"><div class="account-info-text">');
+var __val__ = t('account 2fa enabled')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div><div class="account-2fa-error alert alert-error main-alert hide"><div class="account-form-error-text">');
+var __val__ = t('account 2fa error')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div></div></div><div id="2fa-infos" class="account-field"><p class="full-width">');
+var __val__ = t('account 2fa token explanation')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p id="2fa-token" class="token bold center">&nbsp;</p><p>');
+var __val__ = t('account 2fa qrcode explanation')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p class="center"><img id="qrcode"/></p><p id="2fa-strategy"></p><div id="2fa-hotp-reset" class="hidden"><p>');
+var __val__ = t('account 2fa hotp reset explanation')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><div class="account-field"><p></p><button id="account-2fa-reset-button" class="full-width">');
+var __val__ = t('2fa reset hotp')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></div></div><p>');
+var __val__ = t('account 2fa disable explanation')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><div class="account-field"><p></p><button id="account-2fa-off-button" class="full-width">');
+var __val__ = t('disable 2fa')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button><p class="loading-indicator">&nbsp;</p><div class="account-2fa-info alert main-alert alert-success hide"><div id="account-info-text">');
+var __val__ = t('account 2fa disabled')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div><div class="account-2fa-error alert alert-error main-alert hide"><div id="account-form-error-text">');
+var __val__ = t('account 2fa error')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</div></div></div></div></div></div></div>');
 }
 return buf.join("");
 };
@@ -7027,6 +7089,8 @@ module.exports = exports.AccountView = (function(_super) {
 
   function AccountView() {
     this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
+    this.on2faError = __bind(this.on2faError, this);
+    this.on2faStatusChageSuccess = __bind(this.on2faStatusChageSuccess, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
     _ref = AccountView.__super__.constructor.apply(this, arguments);
     return _ref;
@@ -7052,11 +7116,36 @@ module.exports = exports.AccountView = (function(_super) {
     this.infoAlert.hide();
     this.errorAlert = this.$('#account-error');
     this.errorAlert.hide();
+    this.info2faAlert = this.$('.account-2fa-info');
+    this.info2faAlert.hide();
+    this.error2faAlert = this.$('.account-2fa-error');
+    this.error2faAlert.hide();
+    this.twoFactorInfo = this.$('#2fa-infos');
+    this.twoFactorToken = this.$('#2fa-token');
     this.changePasswordForm = this.$('#change-password-form');
+    this.twoFactorForm = this.$('#2fa-form');
     this.accountSubmitButton = this.$('#account-form-button');
+    this.twoFactorSubmitButton = this.$('#account-2fa-button');
+    this.twoFactorOffButton = this.$('#account-2fa-off-button');
+    this.twoFactorStrategy = this.$('#2fa-strategy');
+    this.twoFactorResetForm = this.$('#2fa-hotp-reset');
+    this.twoFactorResetButton = this.$('#account-2fa-reset-button');
+    this.twoFactorQrCode = this.$('#qrcode');
     this.accountSubmitButton.click(function(event) {
       event.preventDefault();
       return _this.onNewPasswordSubmit();
+    });
+    this.twoFactorSubmitButton.click(function(event) {
+      event.preventDefault();
+      return _this.on2faEnableSubmit();
+    });
+    this.twoFactorOffButton.click(function(event) {
+      event.preventDefault();
+      return _this.on2faDisableSubmit();
+    });
+    this.twoFactorResetButton.click(function(event) {
+      event.preventDefault();
+      return _this.on2faResetSubmit();
     });
     for (_i = 0, _len = timezones.length; _i < _len; _i++) {
       timezone = timezones[_i];
@@ -7121,6 +7210,121 @@ module.exports = exports.AccountView = (function(_super) {
         }
       });
     }
+  };
+
+  AccountView.prototype.on2faStatusChageSuccess = function(message) {
+    var hideFunc,
+      _this = this;
+    this.info2faAlert.html(t(message));
+    this.info2faAlert.fadeIn();
+    clearTimeout(hideFunc);
+    return hideFunc = setTimeout(function() {
+      return window.location.reload();
+    }, 2000);
+  };
+
+  AccountView.prototype.on2faError = function() {
+    var _this = this;
+    console.error(err);
+    this.error2faAlert.fadeIn();
+    return setTimeout(function() {
+      return _this.error2faAlert.fadeOut();
+    }, 5000);
+  };
+
+  AccountView.prototype.on2faEnableSubmit = function(event) {
+    var authType, form,
+      _this = this;
+    authType = this.twoFactorField.val();
+    form = {
+      authType: authType,
+      encryptedOtpKey: this.getOtpKey(),
+      hotpCounter: authType === 'hotp' ? 0 : void 0
+    };
+    this.twoFactorSubmitButton.spin(true);
+    return request.post('api/user', form, function(err, data) {
+      _this.twoFactorSubmitButton.spin(false);
+      if (err) {
+        return _this.on2faError();
+      } else {
+        if (data.success) {
+          return _this.on2faStatusChageSuccess('account 2fa enabled');
+        } else {
+          return _this.on2faError();
+        }
+      }
+    });
+  };
+
+  AccountView.prototype.on2faDisableSubmit = function(event) {
+    var form,
+      _this = this;
+    form = {
+      authType: null
+    };
+    this.twoFactorSubmitButton.spin(true);
+    return request.post('api/user', form, function(err, data) {
+      _this.twoFactorSubmitButton.spin(false);
+      if (err) {
+        return _this.on2faError();
+      } else {
+        if (data.success) {
+          return _this.on2faStatusChageSuccess('account 2fa disabled');
+        } else {
+          return _this.on2faError();
+        }
+      }
+    });
+  };
+
+  AccountView.prototype.on2faResetSubmit = function(event) {
+    var form,
+      _this = this;
+    form = {
+      authType: 'hotp',
+      hotpCounter: 0
+    };
+    return request.post('api/user', form, function(err, data) {
+      var hideFunc;
+      _this.twoFactorSubmitButton.spin(false);
+      if (err) {
+        return _this.on2faError();
+      } else {
+        if (data.success) {
+          _this.info2faAlert.html(t('account 2fa reset'));
+          _this.info2faAlert.fadeIn();
+          clearTimeout(hideFunc);
+          return hideFunc = setTimeout(function() {
+            return _this.info2faAlert.fadeOut();
+          }, 5000);
+        } else {
+          return _this.on2faError();
+        }
+      }
+    });
+  };
+
+  AccountView.prototype.getOtpKey = function() {
+    var PRNG, key;
+    PRNG = new Uint32Array(5);
+    window.crypto.getRandomValues(PRNG);
+    return key = PRNG.reduce(function(key, subkey) {
+      return key += ('0000' + subkey.toString(16)).slice(-8);
+    }, '');
+  };
+
+  AccountView.prototype.getUserToken = function(next) {
+    return request.get('api/user/2fa', function(err, data) {
+      if (err) {
+        return next(err);
+      } else {
+        return next(null, data.token);
+      }
+    });
+  };
+
+  AccountView.prototype.get2faQRCodeString = function(data, token) {
+    return "otpauth://" + data.authType + "/Cozy:" + data.email + "?secret=" + token + "&issuer=Cozy";
   };
 
   AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
@@ -7212,11 +7416,40 @@ module.exports = exports.AccountView = (function(_super) {
         return _this.password2Field.focus();
       }
     });
-    return this.password2Field.keyup(function(event) {
+    this.password2Field.keyup(function(event) {
       if (event.keyCode === 13 || event.which === 13) {
         return _this.onNewPasswordSubmit();
       }
     });
+    if (userData.authType) {
+      this.twoFactorForm.hide();
+      this.twoFactorInfo.show();
+      this.twoFactorStrategy.html(t('2fa strategy ' + userData.authType));
+      if (userData.authType === 'hotp') {
+        this.twoFactorResetForm.show();
+      }
+      return this.getUserToken(function(err, token) {
+        var data;
+        if (err) {
+          return console.error(err);
+        } else if (token) {
+          _this.twoFactorToken.html(token);
+          data = qr.toDataURL({
+            mime: 'image/png',
+            size: 10,
+            level: 'H',
+            value: _this.get2faQRCodeString(userData, token)
+          });
+          return _this.twoFactorQrCode.attr('src', data);
+        } else {
+          return _this.twoFactorToken.html(t('cant find token'));
+        }
+      });
+    } else {
+      this.twoFactorForm.show();
+      this.twoFactorInfo.hide();
+      return this.twoFactorField = this.$('#account-2fa-field');
+    }
   };
 
   AccountView.prototype.onAddBackgroundClicked = function() {

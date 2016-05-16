@@ -1163,6 +1163,13 @@ h4 {
 .red {
   background: #ff3713;
 }
+.bold {
+  font-weight: bold;
+}
+.token {
+  font-family: 'Monospace';
+  word-wrap: break-word;
+}
 .application .permissionsLine p {
   text-shadow: none;
   color: #ff3713;

@@ -124,6 +124,9 @@ module.exports = {
   'api/user': {
     post: account.updateAccount
   },
+  'api/user/2fa': {
+    get: account.send2FAToken
+  },
   'api/instances': {
     get: account.instances
   },
