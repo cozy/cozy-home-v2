@@ -109,8 +109,11 @@ Application.getToken = function(id, callback) {
   return dataClient.post("request/access/byApp/", {
     key: id
   }, function(err, res, body) {
+    var ref;
     if (err) {
       return callback(err);
+    } else if ((body != null ? (ref = body[0]) != null ? ref.value : void 0 : void 0) == null) {
+      return callback(null, 'there_is_no_token_for_this_app');
     } else {
       return callback(null, body[0].value);
     }
