@@ -32,7 +32,7 @@ module.exports = Application = cozydb.getModel('Application', {
     type: String,
     "default": null
   },
-  "package": String,
+  "package": cozydb.NoSchema,
   git: String,
   errormsg: String,
   errorcode: String,
