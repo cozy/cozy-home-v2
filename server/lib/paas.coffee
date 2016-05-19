@@ -42,7 +42,7 @@ class AppManager
                 done()
         else
             msg = "Cannot process action. Method '#{method}' doesn't exist"
-            console.log msg
+            log.info msg
             callback.call null, msg
             done()
 
@@ -53,8 +53,7 @@ class AppManager
                 token = process.env.TOKEN
                 return token
             catch err
-                console.log err.message
-                console.log err.stack
+                log.error err
                 return null
         else
             return ""
@@ -75,9 +74,8 @@ class AppManager
                 err ?= new Error "Something went wrong on proxy side when \
 reseting routes"
             if err
-                console.log "Error reseting routes"
-                console.log err.message
-                console.log err.stack
+                log.error "Error reseting routes"
+                log.error err
                 callback err
             else
                 log.info "Proxy successfully reset."
@@ -91,7 +89,7 @@ reseting routes"
 
     processInstall: (app, callback) ->
         manifest = app.getHaibuDescriptor()
-        console.info "Request controller for spawning #{app.name}..."
+        log.info "Request controller for spawning #{app.name}..."
 
         @checkMemory (err) =>
             return callback err if err
@@ -100,10 +98,10 @@ reseting routes"
                 err ?= body unless status2XX res
 
                 if err
-                    console.log "Error spawning app: #{app.name}"
+                    log.error "Error spawning app: #{app.name}"
                     callback err
                 else
-                    console.info "Successfully spawned app: #{app.name}"
+                    log.info "Successfully spawned app: #{app.name}"
                     callback null, body
 
 
@@ -116,7 +114,7 @@ reseting routes"
     processUpdate: (app, callback) ->
         manifest = app.getHaibuDescriptor()
 
-        console.info "Request controller for updating #{app.name}..."
+        log.info "Request controller for updating #{app.name}..."
         @checkMemory (err) =>
             return callback err if err
 
@@ -124,11 +122,11 @@ reseting routes"
                 err ?= new Error body.error.message unless status2XX res
 
                 if err
-                    console.log "Error updating app: #{app.name}"
-                    console.log err.stack
+                    log.error "Error updating app: #{app.name}"
+                    log.error err
                     callback err
                 else
-                    console.info "Successfully updated app: #{app.name}"
+                    log.info "Successfully updated app: #{app.name}"
                     callback null, body
 
     # Change application branch inside Controller.
@@ -142,17 +140,17 @@ reseting routes"
         [app, branch] = params
         manifest = app.getHaibuDescriptor()
 
-        console.info "Request controller for change #{app.name} branch..."
+        log.info "Request controller for change #{app.name} branch..."
 
         @client.changeBranch manifest, branch, (err, res, body) ->
             err ?= new Error body.error.message unless status2XX res
 
             if err
-                console.log "Error change branch of app: #{app.name}"
-                console.log err.stack
+                log.error "Error change branch of app: #{app.name}"
+                log.error err
                 callback err
             else
-                console.info "Successfully branch change for app: #{app.name}"
+                log.info "Successfully branch change for app: #{app.name}"
                 callback null, body
 
 
@@ -165,7 +163,7 @@ reseting routes"
     processUninstall: (app, callback) ->
         if app?
             manifest = app.getHaibuDescriptor()
-            console.info "Request controller for cleaning #{app.name}..."
+            log.info "Request controller for cleaning #{app.name}..."
 
             @client.clean manifest, (err, res, body) ->
                 err ?= body.error unless status2XX res
@@ -174,14 +172,12 @@ reseting routes"
                 if err? and typeof err is 'string' and
                         err.indexOf? and err.indexOf(errMsg) is -1
                     err = new Error err
-                    console.log "Error cleaning app: #{app.name}"
-                    console.log err.message
-                    console.log err.stack
+                    log.error "Error cleaning app: #{app.name}"
+                    log.error err
                     callback err
                 else
-                    if err
-                        console.log "[Warning] #{err}"
-                    console.info "Successfully cleaning app: #{app.name}"
+                    log.warn err if err
+                    log.info "Successfully cleaning app: #{app.name}"
                     callback null
         else
             callback null
@@ -198,9 +194,9 @@ reseting routes"
     # Send a start request to controller server
     start: (app, callback) ->
         manifest = app.getHaibuDescriptor()
-        console.info "Request controller for starting #{app.name}..."
+        log.info "Request controller for starting #{app.name}..."
         @checkAppStopped app, (err) =>
-            console.log err if err?
+            log.error err if err?
             @checkMemory (err) ->
                 return callback err if err
 
@@ -208,23 +204,22 @@ reseting routes"
                     err ?= new Error body.error.message unless status2XX res
 
                     if err
-                        console.log "Error starting app: #{app.name}"
-                        console.log err.message
-                        console.log err.stack
+                        log.error "Error starting app: #{app.name}"
+                        log.error err
                         callback err
                     else
-                        console.info "Successfully starting app: #{app.name}"
+                        log.info "Successfully starting app: #{app.name}"
                         callback null, res.body
 
 
     # Send a stop request to controller server
     stop: (app, callback) ->
         manifest = app.getHaibuDescriptor()
-        console.info "Request controller for stopping #{app.name}..."
+        log.info "Request controller for stopping #{app.name}..."
 
         if app.type is 'static'
             # don't need to stop app in controller if it's a static app
-            console.info "Successfully stopping app: #{app.name}"
+            log.info "Successfully stopping app: #{app.name}"
             callback null
         else
             @client.stop app.slug, (err,res, body) ->
@@ -234,40 +229,38 @@ reseting routes"
                 if err? and typeof err is 'string' and
                         err.indexOf? and err.indexOf(errMsg) is -1
                     err = new Error err
-                    console.log "Error stopping app: #{app.name}"
-                    console.log err.message
-                    console.log err.stack
+                    log.error "Error stopping app: #{app.name}"
+                    log.error err
                     callback err
                 else
-                    if err
-                        console.log "[Warning] #{err}"
-                    console.info "Successfully stopping app: #{app.name}"
+                    log.warn err if err
+                    log.info "Successfully stopping app: #{app.name}"
                     callback null
 
     # Remove and reinstall app inside Haibu.
     updateStack: (callback) ->
-        console.info "Request controller for updating stack..."
+        log.info "Request controller for updating stack..."
         @client.updateStack (err, res, body) ->
             err ?= new Error body.error.message unless status2XX res
             if err
-                console.log "Error updating stack"
-                console.log err.stack
+                log.error "Error updating stack"
+                log.error err
                 callback err
             else
-                console.info "Successfully updated stack"
+                log.info "Successfully updated stack"
                 callback null, body
 
     # Remove and reinstall app inside Haibu.
     restartController: (callback) ->
-        console.info "Request controller for restarting stack..."
+        log.info "Request controller for restarting stack..."
         @client.restartController (err, res, body) ->
             err ?= new Error body.error.message unless status2XX res
             if err
-                console.log "Error reboot stack"
-                console.log err.stack
+                log.error "Error reboot stack"
+                log.error err
                 callback err
             else
-                console.info "Successfully reboot stack"
+                log.info "Successfully reboot stack"
                 callback null, body
 
 # Exports the class itself to ease testing
