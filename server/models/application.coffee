@@ -19,7 +19,7 @@ module.exports = Application = cozydb.getModel 'Application',
     path: String
     type: String
     color: {type: String, default: null}
-    package: String
+    package: cozydb.NoSchema # can be string or object
     git: String
     errormsg: String
     errorcode: String

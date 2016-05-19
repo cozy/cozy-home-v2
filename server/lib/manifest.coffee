@@ -2,6 +2,7 @@ request = require 'request-json'
 localizationManager = require '../helpers/localization_manager'
 logger = require('printit')
     prefix: 'manifest'
+cozydb = require 'cozydb'
 
 
 # Abstraction for application manifest helpers (download and information
@@ -19,7 +20,25 @@ class exports.Manifest
 
         if app.package?
 
-            if typeof(app.package) is 'string'
+            if app.package is '[object Object]'
+                # the app is corrupted, we have lost package name
+                packageName = app.name # try with the app name
+                @downloadFromNpm packageName, (err, manifest) ->
+                    return callback null, manifest unless err
+
+                    err = new Error("Application #{app.name} manifest was lost")
+                    # the app name isnt package name
+                    if app.id
+                        cozydb.updateAttributes 'application', app.id, {
+                            state: 'broken'
+                            password: null
+                            errormsg: "#{err.message}:\n #{err.stack}"
+                            errorcode: 500
+                        }, -> callback err
+                    else
+                        callback err
+
+            else if typeof(app.package) is 'string'
                 packageName = app.package
                 @downloadFromNpm packageName, callback
 
@@ -158,4 +177,3 @@ class exports.Manifest
             metaData.color = @config['cozy-color']
 
         return metaData
-
