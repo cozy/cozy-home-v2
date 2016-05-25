@@ -5,6 +5,7 @@ RealtimeAdapter     = require 'cozy-realtime-adapter'
 autostop            = require '../lib/autostop'
 AlarmManager        = require '../lib/alarm_manager'
 localizationManager = require '../helpers/localization_manager'
+SharingManager      = require '../lib/sharing_manager'
 
 User                = require '../models/user'
 CozyInstance        = require '../models/cozyinstance'
@@ -14,7 +15,6 @@ Notification        = require '../models/notification'
 
 # notification and application events should be proxyed to client
 notifhelper = new NotificationsHelper 'home'
-
 
 module.exports = (app, callback) ->
 
@@ -37,6 +37,12 @@ module.exports = (app, callback) ->
     realtime.on 'usage.application', (event, name) ->
         if name isnt 'home' and name isnt 'proxy'
             autostop.restartTimeout name
+
+
+    # listen for modifications on the sharing
+    realtime.on 'sharing.*', (event, id) ->
+        SharingManager.handleNotification event, id, (err) ->
+            callback err
 
 
     # setup alarm manager for alarm events handling
