@@ -5,6 +5,7 @@ module.exports = Sharing = cozydb.getModel 'Sharing',
     sharerName: String
     desc: String
     rules: [Object]
+    targets: [Object]
 
 Sharing.all = (params, callback) ->
     Sharing.request "all", params, callback
