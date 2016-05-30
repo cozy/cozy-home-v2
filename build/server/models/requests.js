@@ -62,5 +62,8 @@ module.exports = {
       },
       reduce: '_count'
     }
+  },
+  sharing: {
+    all: cozydb.defaultRequests.all
   }
 };

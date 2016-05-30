@@ -46,7 +46,7 @@ AppManager = (function() {
       });
     } else {
       msg = "Cannot process action. Method '" + method + "' doesn't exist";
-      console.log(msg);
+      log.info(msg);
       callback.call(null, msg);
       return done();
     }
@@ -60,8 +60,7 @@ AppManager = (function() {
         return token;
       } catch (error) {
         err = error;
-        console.log(err.message);
-        console.log(err.stack);
+        log.error(err);
         return null;
       }
     } else {
@@ -91,9 +90,8 @@ AppManager = (function() {
         }
       }
       if (err) {
-        console.log("Error reseting routes");
-        console.log(err.message);
-        console.log(err.stack);
+        log.error("Error reseting routes");
+        log.error(err);
         return callback(err);
       } else {
         log.info("Proxy successfully reset.");
@@ -115,7 +113,7 @@ AppManager = (function() {
   AppManager.prototype.processInstall = function(app, callback) {
     var manifest;
     manifest = app.getHaibuDescriptor();
-    console.info("Request controller for spawning " + app.name + "...");
+    log.info("Request controller for spawning " + app.name + "...");
     return this.checkMemory((function(_this) {
       return function(err) {
         if (err) {
@@ -128,10 +126,10 @@ AppManager = (function() {
             }
           }
           if (err) {
-            console.log("Error spawning app: " + app.name);
+            log.error("Error spawning app: " + app.name);
             return callback(err);
           } else {
-            console.info("Successfully spawned app: " + app.name);
+            log.info("Successfully spawned app: " + app.name);
             return callback(null, body);
           }
         });
@@ -152,7 +150,7 @@ AppManager = (function() {
   AppManager.prototype.processUpdate = function(app, callback) {
     var manifest;
     manifest = app.getHaibuDescriptor();
-    console.info("Request controller for updating " + app.name + "...");
+    log.info("Request controller for updating " + app.name + "...");
     return this.checkMemory((function(_this) {
       return function(err) {
         if (err) {
@@ -165,11 +163,11 @@ AppManager = (function() {
             }
           }
           if (err) {
-            console.log("Error updating app: " + app.name);
-            console.log(err.stack);
+            log.error("Error updating app: " + app.name);
+            log.error(err);
             return callback(err);
           } else {
-            console.info("Successfully updated app: " + app.name);
+            log.info("Successfully updated app: " + app.name);
             return callback(null, body);
           }
         });
@@ -192,7 +190,7 @@ AppManager = (function() {
     var app, branch, manifest;
     app = params[0], branch = params[1];
     manifest = app.getHaibuDescriptor();
-    console.info("Request controller for change " + app.name + " branch...");
+    log.info("Request controller for change " + app.name + " branch...");
     return this.client.changeBranch(manifest, branch, function(err, res, body) {
       if (!status2XX(res)) {
         if (err == null) {
@@ -200,11 +198,11 @@ AppManager = (function() {
         }
       }
       if (err) {
-        console.log("Error change branch of app: " + app.name);
-        console.log(err.stack);
+        log.error("Error change branch of app: " + app.name);
+        log.error(err);
         return callback(err);
       } else {
-        console.info("Successfully branch change for app: " + app.name);
+        log.info("Successfully branch change for app: " + app.name);
         return callback(null, body);
       }
     });
@@ -224,7 +222,7 @@ AppManager = (function() {
     var manifest;
     if (app != null) {
       manifest = app.getHaibuDescriptor();
-      console.info("Request controller for cleaning " + app.name + "...");
+      log.info("Request controller for cleaning " + app.name + "...");
       return this.client.clean(manifest, function(err, res, body) {
         var errMsg;
         if (!status2XX(res)) {
@@ -235,15 +233,14 @@ AppManager = (function() {
         errMsg = 'application not installed';
         if ((err != null) && typeof err === 'string' && (err.indexOf != null) && err.indexOf(errMsg) === -1) {
           err = new Error(err);
-          console.log("Error cleaning app: " + app.name);
-          console.log(err.message);
-          console.log(err.stack);
+          log.error("Error cleaning app: " + app.name);
+          log.error(err);
           return callback(err);
         } else {
           if (err) {
-            console.log("[Warning] " + err);
+            log.warn(err);
           }
-          console.info("Successfully cleaning app: " + app.name);
+          log.info("Successfully cleaning app: " + app.name);
           return callback(null);
         }
       });
@@ -273,11 +270,11 @@ AppManager = (function() {
   AppManager.prototype.start = function(app, callback) {
     var manifest;
     manifest = app.getHaibuDescriptor();
-    console.info("Request controller for starting " + app.name + "...");
+    log.info("Request controller for starting " + app.name + "...");
     return this.checkAppStopped(app, (function(_this) {
       return function(err) {
         if (err != null) {
-          console.log(err);
+          log.error(err);
         }
         return _this.checkMemory(function(err) {
           if (err) {
@@ -290,12 +287,11 @@ AppManager = (function() {
               }
             }
             if (err) {
-              console.log("Error starting app: " + app.name);
-              console.log(err.message);
-              console.log(err.stack);
+              log.error("Error starting app: " + app.name);
+              log.error(err);
               return callback(err);
             } else {
-              console.info("Successfully starting app: " + app.name);
+              log.info("Successfully starting app: " + app.name);
               return callback(null, res.body);
             }
           });
@@ -307,9 +303,9 @@ AppManager = (function() {
   AppManager.prototype.stop = function(app, callback) {
     var manifest;
     manifest = app.getHaibuDescriptor();
-    console.info("Request controller for stopping " + app.name + "...");
+    log.info("Request controller for stopping " + app.name + "...");
     if (app.type === 'static') {
-      console.info("Successfully stopping app: " + app.name);
+      log.info("Successfully stopping app: " + app.name);
       return callback(null);
     } else {
       return this.client.stop(app.slug, function(err, res, body) {
@@ -322,15 +318,14 @@ AppManager = (function() {
         errMsg = 'application not installed';
         if ((err != null) && typeof err === 'string' && (err.indexOf != null) && err.indexOf(errMsg) === -1) {
           err = new Error(err);
-          console.log("Error stopping app: " + app.name);
-          console.log(err.message);
-          console.log(err.stack);
+          log.error("Error stopping app: " + app.name);
+          log.error(err);
           return callback(err);
         } else {
           if (err) {
-            console.log("[Warning] " + err);
+            log.warn(err);
           }
-          console.info("Successfully stopping app: " + app.name);
+          log.info("Successfully stopping app: " + app.name);
           return callback(null);
         }
       });
@@ -338,7 +333,7 @@ AppManager = (function() {
   };
 
   AppManager.prototype.updateStack = function(callback) {
-    console.info("Request controller for updating stack...");
+    log.info("Request controller for updating stack...");
     return this.client.updateStack(function(err, res, body) {
       if (!status2XX(res)) {
         if (err == null) {
@@ -346,18 +341,18 @@ AppManager = (function() {
         }
       }
       if (err) {
-        console.log("Error updating stack");
-        console.log(err.stack);
+        log.error("Error updating stack");
+        log.error(err);
         return callback(err);
       } else {
-        console.info("Successfully updated stack");
+        log.info("Successfully updated stack");
         return callback(null, body);
       }
     });
   };
 
   AppManager.prototype.restartController = function(callback) {
-    console.info("Request controller for restarting stack...");
+    log.info("Request controller for restarting stack...");
     return this.client.restartController(function(err, res, body) {
       if (!status2XX(res)) {
         if (err == null) {
@@ -365,11 +360,11 @@ AppManager = (function() {
         }
       }
       if (err) {
-        console.log("Error reboot stack");
-        console.log(err.stack);
+        log.error("Error reboot stack");
+        log.error(err);
         return callback(err);
       } else {
-        console.info("Successfully reboot stack");
+        log.info("Successfully reboot stack");
         return callback(null, body);
       }
     });
