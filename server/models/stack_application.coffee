@@ -7,6 +7,7 @@ module.exports = StackApplication = cozydb.getModel 'StackApplication',
     name: String
     version: String
     lastVersion: String
+    package: cozydb.NoSchema # can be string or object
     git: String
 
 StackApplication.all = (params, callback) ->
