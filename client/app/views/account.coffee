@@ -37,6 +37,7 @@ module.exports = class exports.AccountView extends BaseView
 
         @twoFactorInfo = @$ '#2fa-infos'
         @twoFactorToken = @$ '#2fa-token'
+        @twoFactorRecToken = @$ '#2fa-recovery-tokens'
         @changePasswordForm = @$ '#change-password-form'
         @twoFactorForm = @$ '#2fa-form'
         @accountSubmitButton = @$ '#account-form-button'
@@ -45,6 +46,7 @@ module.exports = class exports.AccountView extends BaseView
         @twoFactorStrategy = @$ '#2fa-strategy'
         @twoFactorResetForm = @$ '#2fa-hotp-reset'
         @twoFactorResetButton = @$ '#account-2fa-reset-button'
+        @twoFactorResetTokensButton = @$ '#account-2fa-reset-tokens'
 
         @twoFactorQrCode = @$('#qrcode')
         
@@ -61,6 +63,9 @@ module.exports = class exports.AccountView extends BaseView
         @twoFactorResetButton.click (event) =>
             event.preventDefault()
             @on2faResetSubmit()
+        @twoFactorResetTokensButton.click (event) =>
+            event.preventDefault()
+            @on2faResetTokens()
 
         # Fill timezone selector
         for timezone in timezones
@@ -135,7 +140,7 @@ module.exports = class exports.AccountView extends BaseView
                                     
     # Displays success message on the two-factor auth panel and reload the page.
     # Only called when 2FA is enabled or disabled (else we don't reload).
-    on2faStatusChageSuccess: (message) =>
+    on2faStatusChangeSuccess: (message) =>
         @info2faAlert.html t message
         @info2faAlert.fadeIn()
         clearTimeout hideFunc
@@ -163,6 +168,7 @@ module.exports = class exports.AccountView extends BaseView
             authType: authType
             encryptedOtpKey: @getOtpKey()
             hotpCounter: 0 if authType is 'hotp'
+            recoveryCodes: @getRecoveryTokens()
         @twoFactorSubmitButton.spin true
         
         request.post 'api/user', form, (err, data) =>
@@ -171,7 +177,7 @@ module.exports = class exports.AccountView extends BaseView
                 @on2faError()
             else
                 if data.success
-                    @on2faStatusChageSuccess 'account 2fa enabled'
+                    @on2faStatusChangeSuccess 'account 2fa enabled'
                 else
                     @on2faError()
                     
@@ -189,14 +195,14 @@ module.exports = class exports.AccountView extends BaseView
                 @on2faError()
             else
                 if data.success
-                    @on2faStatusChageSuccess 'account 2fa disabled'
+                    @on2faStatusChangeSuccess 'account 2fa disabled'
                 else
                     @on2faError()
 
 
     # Resets the HOTP counter. This function can be called only in HOTP mode
     # (and it will set the 2FA mode to HOTP otherwise).
-    # We don't use @on2faStatusChageSuccess here because we don't need to
+    # We don't use @on2faStatusChangeSuccess here because we don't need to
     # reload the page after resetting the counter.
     on2faResetSubmit: (event) ->
         form =
@@ -219,6 +225,22 @@ module.exports = class exports.AccountView extends BaseView
                     @on2faError()
 
 
+    # Reset recovery tokens in the DS
+    on2faResetTokens: (event) ->
+        form =
+            recoveryCodes: @getRecoveryTokens()
+
+        request.post 'api/user', form, (err, data) =>
+            @twoFactorSubmitButton.spin false
+            if err
+                @on2faError()
+            else
+                if data.success
+                    @on2faStatusChangeSuccess 'account 2fa enabled'
+                else
+                    @on2faError()
+        
+
     # OTP key is generated client-side, in this function.
     getOtpKey: () ->
         PRNG = new Uint32Array 5
@@ -230,6 +252,15 @@ module.exports = class exports.AccountView extends BaseView
         , ''
     
     
+    # Generate tokens for recovery in case of device loss
+    getRecoveryTokens: () ->
+        tokens = []
+        for [0..9]
+            tempToken = Math.floor Math.random()*100000000
+            tokens.push tempToken
+        tokens
+
+
     # Retrieve two-factor auth specific token, which is the base32-encoded key
     # (10-char long string we first generate in the above function).
     getUserToken: (next) ->
@@ -339,6 +370,8 @@ module.exports = class exports.AccountView extends BaseView
             @twoFactorForm.hide()
             @twoFactorInfo.show()
             @twoFactorStrategy.html t '2fa strategy ' + userData.authType
+            tokensStr = userData.encryptedRecoveryCodes[0].join(', ')
+            @twoFactorRecToken.html tokensStr
             # If HOTP is enabled, show the conter reset panel
             if userData.authType is 'hotp'
                 @twoFactorResetForm.show()
