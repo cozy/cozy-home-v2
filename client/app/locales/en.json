@@ -150,6 +150,7 @@
   "status no device": "There is no device connected to your Cozy.",
   "download apk": "Download .APK",
   "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
+  "desktop app promo": "You can also download the cozy-desktop client to synchronize your files on your laptop/desktop:",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
