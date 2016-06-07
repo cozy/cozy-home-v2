@@ -122,7 +122,7 @@ module.exports =
             else    
                 user = users[0]
                 res.status(200).send 
-                    token: base32.encode(user.encryptedOtpKey).toString()
+                    token: base32.encode(new Buffer(user.encryptedOtpKey, 'hex')).toString()
 
 
     # Return list of instances
