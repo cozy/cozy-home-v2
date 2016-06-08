@@ -101,18 +101,17 @@ module.exports = class ConfigApplicationsView extends BaseView
                 alert t 'Server error occured, infos cannot be displayed.'
 
             else
-                if data.usedUnit is 'T'
-                    data.usedUnit = 'G'
-                    data.usedDiskSpace *= 1000
-
-                if data.totalUnit is 'T'
-                    data.totalUnit = 'G'
-                    data.totalDiskSpace *= 1000
-
-                diskUsed  = "#{data.usedDiskSpace} "
-                diskTotal = "#{data.totalDiskSpace} "
+                diskUsed  = @toGigabytes data.usedDiskSpace, data.usedUnit
+                diskTotal = @toGigabytes data.totalDiskSpace, data.totalUnit
                 @displayMemory data.freeMem, data.totalMem
                 @displayDiskSpace diskUsed, diskTotal
+
+    toGigabytes: (value, unit) ->
+        switch unit
+            when 'T' then value * 1000;
+            when 'G' then value;
+            when 'M' then value / 1000;
+            else 0
 
 
     displayMemory: (amount, total) ->
@@ -121,8 +120,8 @@ module.exports = class ConfigApplicationsView extends BaseView
 
 
     displayDiskSpace: (amount, total) ->
-        @diskSpace.find('.amount').html amount
-        @diskSpace.find('.total').html total
+        @diskSpace.find('.amount').html "#{amount} "
+        @diskSpace.find('.total').html "#{total} "
 
 
     onAppStateChanged: ->
