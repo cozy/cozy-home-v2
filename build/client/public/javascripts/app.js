@@ -1659,6 +1659,7 @@ module.exports = {
   "status no device": "There is no device connected to your Cozy.",
   "download apk": "Download .APK",
   "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
+  "desktop app promo": "You can also download the cozy-desktop client to synchronize your files on your laptop/desktop:",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
@@ -4619,27 +4620,27 @@ module.exports = {
     "alerts and password recovery email": "Seu e-mail é usado para notificações ou recuperação de senha.",
     "public name description": "Seu nome de usuário será exibido quando você compartilhar arquivos com pessoas ou convidá-las para eventos.",
     "domain name for urls and email": "O nome de domínos é usado para conectar ao seu Cozy de qualquer dispositivo e criar URLs de compartlhamento.",
-    "account timezone field description": "Your time zone helps to properly display your calendar.",
+    "account timezone field description": "Seu fusa horário ajuda a exibir corretamente seu calendário.",
     "save": "Salvar",
     "saved": "Salvo",
     "error": "Erro",
     "error proper email": "E-mail informado incorreto",
     "error email empty": "E-mail informado vazio",
-    "account language field description": "Choose the language you want to see:",
+    "account language field description": "Escolha a língua que deseja ver:",
     "account background selection": "Selecione seu plano de fundo para seu Início Cozy:",
     "account localization": "Localização",
     "account identifiers": "Conta",
     "account personalization": "Customização",
     "account password": "Senha",
-    "account two factors auth": "Two-factor authentication",
-    "account 2fa strategy": "Authentication strategy",
-    "account 2fa hotp": "HOTP (based on a counter)",
-    "account 2fa totp": "TOTP (based on a timer)",
-    "enable 2fa": "Enable two-factor authentication",
-    "disable 2fa": "Disable two-factor authentication",
-    "account 2fa enabled": "Two-factor authentication has been enabled. Page will now reload.",
-    "account 2fa disabled": "Two-factor authentication has been disabled. Page will now reload.",
-    "account 2fa error": "There was something wrong while enabling two-factor authentication. Please try again in a few minutes or contact the support.",
+    "account two factors auth": "Identificação por dois fatores",
+    "account 2fa strategy": "Estratégia de identificação",
+    "account 2fa hotp": "HOTP (baseado num contador)",
+    "account 2fa totp": "TOTP (baseado num relógio)",
+    "enable 2fa": "Ativar a identificação por dois fatores",
+    "disable 2fa": "Desativar a identificação por dois fatores",
+    "account 2fa enabled": "A identificação por dois fatores foi ativada. A página vai recarregar agora.",
+    "account 2fa disabled": "A identificação por dois fatores foi desativada. A página vai recarregar agora.",
+    "account 2fa error": "Algo errado ocorreu ativando a identificação por dois fatores. Por favor, tente de novo em alguns minutos ou entre em contato com suporte.",
     "account 2fa token explanation": "Two-factor authentication is enabled on Cozy. To use it with your favourite app or device, you have to enter the following key when setting up the account:",
     "account 2fa qrcode explanation": "You can also scan the QR code below if your app supports it.",
     "2fa strategy hotp": "You are using the HOTP 2FA strategy (counter-based).",
@@ -6661,7 +6662,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><a role="button" href="https://files.cozycloud.cc/android/CozyMobile_lastest.apk"><i class="fa fa-android"></i><span>');
 var __val__ = t('download apk')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><a target="_blank" href="https://play.google.com/store/apps/details?id=io.cozy.files_client"><img src="img/en-play-badge.png"/></a></div></section></div></div></div>');
+buf.push('</span></a><a target="_blank" href="https://play.google.com/store/apps/details?id=io.cozy.files_client"><img src="img/en-play-badge.png"/></a><p>');
+var __val__ = t('desktop app promo')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><a target="_blank" href="https://docs.cozy.io/en/mobile/desktop.html"><img src="img/linux.svg" width="48px"/></a></div></section></div></div></div>');
 }
 return buf.join("");
 };

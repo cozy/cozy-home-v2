@@ -9,6 +9,7 @@ module.exports = StackApplication = cozydb.getModel('StackApplication', {
   name: String,
   version: String,
   lastVersion: String,
+  "package": cozydb.NoSchema,
   git: String
 });
 
