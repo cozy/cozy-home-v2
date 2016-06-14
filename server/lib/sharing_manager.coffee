@@ -89,7 +89,7 @@ module.exports.handleNotification = (event, id, callback) ->
             if err?
                 log.error err
             # The sharer shouldn't be notified as he created the request.
-            else if not sharing.targets?
+            else if not sharing.targets?.length > 0
                 # The rules could contains different docTypes, but
                 # for now we support only one type.
                 docType = sharing.rules[0].docType
@@ -111,7 +111,7 @@ module.exports.handleNotification = (event, id, callback) ->
                 if err?
                     log.error err
                 # The sharer shouldn't be notified as he created the request.
-                else if not sharing.targets? and docType?
+                else if not sharing.targets?.length > 0 and docType?
                     sharerName = sharing.sharerName
                     article = articleBeforeDocType docType
                     messageKey = 'sharing update notification'
@@ -132,7 +132,7 @@ module.exports.handleNotification = (event, id, callback) ->
                 if err?
                     log.error err
                 # The sharer shouldn't be notified as he created the request.
-                else if not sharing.targets? and docType?
+                else if not sharing.targets?.length > 0 and docType?
                     sharerName = sharing.sharerName
                     article = articleBeforeDocType docType
                     messageKey = 'sharing delete notification'
