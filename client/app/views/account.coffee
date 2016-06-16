@@ -254,11 +254,7 @@ module.exports = class exports.AccountView extends BaseView
     
     # Generate tokens for recovery in case of device loss
     getRecoveryTokens: () ->
-        tokens = []
-        for [0..9]
-            tempToken = Math.floor Math.random()*100000000
-            tokens.push tempToken
-        tokens
+        tokens = (Math.floor Math.random()*100000000 for [0..9])
 
 
     # Retrieve two-factor auth specific token, which is the base32-encoded key
