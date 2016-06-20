@@ -102,6 +102,13 @@
                         .account-form-error-text= t('account 2fa error')
 
             #2fa-infos.account-field
+                p#2fa-strategy
+                
+                p.bold= t('account 2fa rectokens')
+                p#2fa-recovery-tokens.bold
+                p
+                    button#account-2fa-reset-tokens.full-width= t('reset 2fa tokens')
+            
                 p.full-width= t('account 2fa token explanation')
                 
                 p#2fa-token.token.bold.center &nbsp;
@@ -110,8 +117,6 @@
                     
                 p.center
                     img#qrcode
-                    
-                p#2fa-strategy
                 
                 #2fa-hotp-reset.hidden
                     p= t('account 2fa hotp reset explanation')

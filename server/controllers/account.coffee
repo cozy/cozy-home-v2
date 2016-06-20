@@ -41,9 +41,14 @@ module.exports =
                 data.authType = body.authType
                 data.encryptedOtpKey = body.encryptedOtpKey
                 data.hotpCounter = body.hotpCounter
+                data.encryptedRecoveryCodes = body.recoveryCodes
+                
+            # Case of recovery tokens reset
+            if body.recoveryCodes?
+                data.encryptedRecoveryCodes = body.recoveryCodes
 
             if data.timezone or data.email or data.password or data.public_name\
-            or data.authType isnt undefined
+            or data.encryptedRecoveryCodes or data.authType isnt undefined
                 adapter.updateUser user, data, (err) ->
                     cb err, null
                 

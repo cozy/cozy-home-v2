@@ -10,6 +10,7 @@ module.exports = User = cozydb.getModel 'User',
     authType: String
     encryptedOtpKey: String
     hotpCounter: Number
+    encryptedRecoveryCodes: Array
 
 
 # Request methods
