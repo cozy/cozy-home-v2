@@ -186,13 +186,20 @@
         display inline-block
 
         &[role=button]
-            padding 0.625em 0.875em
             background-color green
-
             &:hover
                 background-color green - 10%
 
+        &[role=button]:last-child
+            color grey-07
+            background-color grey-03
+            &:hover
+                background-color grey-03 - 10%
+            img
+                margin-right 0.625em
+
         &[role=button]
+            padding 0.625em 0.875em
             margin (5/16)em (10/16)em (5/16)em 0
 
             img
