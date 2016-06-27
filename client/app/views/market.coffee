@@ -151,6 +151,7 @@ module.exports = class MarketView extends BaseView
 
     parseGitUrl: (url) ->
         url = url.trim()
+        url = url.slice(0, url.length - 1) if url.lastIndexOf('/') is url.length - 1
         url = url.replace 'git@github.com:', 'https://github.com/'
         url = url.replace 'git://', 'https://'
         parsed = REPOREGEX.exec url
@@ -201,4 +202,3 @@ module.exports = class MarketView extends BaseView
 
     resetForm: =>
         @appGitField.val ''
-
