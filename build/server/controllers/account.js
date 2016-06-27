@@ -45,8 +45,12 @@ module.exports = {
         data.authType = body.authType;
         data.encryptedOtpKey = body.encryptedOtpKey;
         data.hotpCounter = body.hotpCounter;
+        data.encryptedRecoveryCodes = body.recoveryCodes;
       }
-      if (data.timezone || data.email || data.password || data.public_name || data.authType !== void 0) {
+      if (body.recoveryCodes != null) {
+        data.encryptedRecoveryCodes = body.recoveryCodes;
+      }
+      if (data.timezone || data.email || data.password || data.public_name || data.encryptedRecoveryCodes || data.authType !== void 0) {
         return adapter.updateUser(user, data, function(err) {
           return cb(err, null);
         });
