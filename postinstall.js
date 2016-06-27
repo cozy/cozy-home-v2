@@ -2,7 +2,7 @@
 
 var spawn = require('child_process').spawn;
 var major = process.versions.node.split('.')[0];
-var bcrypt = 'bcrypt@0.8.5';
+var bcrypt = 'bcrypt@0.8.7';
 
 if (major === '0') {
   bcrypt = 'bcrypt@0.8.1';
