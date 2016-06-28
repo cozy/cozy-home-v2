@@ -162,6 +162,10 @@ describe 'Modify 2FA settings', ->
 
     after helpers.takeDown
 
+    it "When I send a request to log in", (done) ->
+        @dataClient.post 'accounts/password/', password: TESTPASS , done
+
+
     it 'When I enable 2FA', (done) ->
         data =
             authType: 'hotp'
@@ -208,7 +212,7 @@ describe 'Modify 2FA settings', ->
             user = users[0]
             user.hotpCounter.should.equal 0
             done()
-    
+
     it 'When I set 2FA recovery tokens', (done) ->
         data =
             recoveryCodes: TESTRECOVERYTOKENS
@@ -230,7 +234,7 @@ describe 'Modify 2FA settings', ->
         data =
             authType: null
         @client.post 'api/user', data, done
-        
+
     it 'Then success response should be returned', ->
         @response.statusCode.should.equal 200
 
