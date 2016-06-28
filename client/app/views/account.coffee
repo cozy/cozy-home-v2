@@ -2,7 +2,6 @@ BaseView = require 'lib/base_view'
 
 Background = require '../models/background'
 timezones = require('helpers/timezone').timezones
-locales =   require('helpers/locales' ).locales
 request = require 'lib/request'
 BackgroundList = require 'views/background_list'
 Instance = require 'models/instance'
@@ -88,7 +87,7 @@ module.exports = class exports.AccountView extends BaseView
 
     # When password data are submited, it sends a request to backend to save
     # them. If an error occurs, message is displayed.
-    onNewPasswordSubmit: (event) =>
+    onNewPasswordSubmit:  =>
 
         form =
             password0: @password0Field.val()
@@ -136,41 +135,41 @@ module.exports = class exports.AccountView extends BaseView
                         , 10000
                     else
                         showError 'account change password error'
-                        
-                                    
+
+
     # Displays success message on the two-factor auth panel and reload the page.
     # Only called when 2FA is enabled or disabled (else we don't reload).
     on2faStatusChangeSuccess: (message) =>
         @info2faAlert.html t message
         @info2faAlert.fadeIn()
         clearTimeout hideFunc
-        hideFunc = setTimeout =>
+        hideFunc = setTimeout ->
             window.location.reload()
         , 2000
-    
-    
+
+
     # Displays error on the two-factor auth panel.
     # This one is also used for counter reset.
-    on2faError: =>
-        console.error err
+    on2faError: (error) =>
+        console.error error
         @error2faAlert.fadeIn()
         setTimeout =>
             @error2faAlert.fadeOut()
         , 5000
-            
-    
+
+
     # Enables two-factor auth by generating a new key (if there's already one
     # in base, resetting it), and set the HOTP counter if the auth type is HOTP
-    on2faEnableSubmit: (event) ->
+    on2faEnableSubmit: ->
         authType = @twoFactorField.val()
-        
+
         form =
             authType: authType
             encryptedOtpKey: @getOtpKey()
             hotpCounter: 0 if authType is 'hotp'
             recoveryCodes: @getRecoveryTokens()
         @twoFactorSubmitButton.spin true
-        
+
         request.post 'api/user', form, (err, data) =>
             @twoFactorSubmitButton.spin false
             if err
@@ -180,15 +179,15 @@ module.exports = class exports.AccountView extends BaseView
                     @on2faStatusChangeSuccess 'account 2fa enabled'
                 else
                     @on2faError()
-                    
-    
+
+
     # Disables two-factor auth. No resetting of the key nor the counter, but
     # that will happen if the user enables it back.
-    on2faDisableSubmit: (event) ->
+    on2faDisableSubmit: ->
         form =
             authType: null
         @twoFactorSubmitButton.spin true
-        
+
         request.post 'api/user', form, (err, data) =>
             @twoFactorSubmitButton.spin false
             if err
@@ -204,11 +203,11 @@ module.exports = class exports.AccountView extends BaseView
     # (and it will set the 2FA mode to HOTP otherwise).
     # We don't use @on2faStatusChangeSuccess here because we don't need to
     # reload the page after resetting the counter.
-    on2faResetSubmit: (event) ->
+    on2faResetSubmit: ->
         form =
             authType: 'hotp'
             hotpCounter: 0
-        
+
         request.post 'api/user', form, (err, data) =>
             @twoFactorSubmitButton.spin false
             if err
@@ -226,7 +225,7 @@ module.exports = class exports.AccountView extends BaseView
 
 
     # Reset recovery tokens in the DS
-    on2faResetTokens: (event) ->
+    on2faResetTokens: ->
         form =
             recoveryCodes: @getRecoveryTokens()
 
@@ -239,22 +238,22 @@ module.exports = class exports.AccountView extends BaseView
                     @on2faStatusChangeSuccess 'account 2fa enabled'
                 else
                     @on2faError()
-        
+
 
     # OTP key is generated client-side, in this function.
     getOtpKey: () ->
         PRNG = new Uint32Array 5
         window.crypto.getRandomValues PRNG
 
-        key = PRNG.reduce (key, subkey) ->
+        return PRNG.reduce (key, subkey) ->
             # pad each PRNG hex with '0'
             key += ('0000' + subkey.toString(16)).slice(-8)
         , ''
-    
-    
+
+
     # Generate tokens for recovery in case of device loss
     getRecoveryTokens: () ->
-        tokens = (Math.floor Math.random()*100000000 for [0..9])
+        return (Math.floor Math.random()*100000000 for [0..9])
 
 
     # Retrieve two-factor auth specific token, which is the base32-encoded key
@@ -263,16 +262,17 @@ module.exports = class exports.AccountView extends BaseView
         request.get 'api/user/2fa', (err, data) ->
             if err
                 next err
-            else 
+            else
                 next null, data.token
-    
-    
+
+
     # Return the string to be encoded as a QR code, containing user datas and
     # encoded token
     get2faQRCodeString: (data, token) ->
-        return "otpauth://#{data.authType}/Cozy:#{data.email}?secret=#{token}&issuer=Cozy"
-        
-        
+        return "otpauth://#{data.authType}/Cozy:#{data.email}" +
+               "?secret=#{token}&issuer=Cozy"
+
+
     # Build a function that save given data when triggered and display
     # a loading indicator on the save button of the field.
     getSaveFunction: (fieldName, fieldWidget, path) ->
@@ -429,10 +429,8 @@ module.exports = class exports.AccountView extends BaseView
                         @backgroundList.collection.add background
                         @backgroundList.select background
 
-                    error: (data) ->
-                        alert t 'account background added error'
-                    complete: =>
-                        @backgroundAddButton.spin false
+                    error: -> alert t 'account background added error'
+                    complete: => @backgroundAddButton.spin false
 
 
     # When background is changed, data are saved and a backgroundChanged event
@@ -444,4 +442,3 @@ module.exports = class exports.AccountView extends BaseView
                 alert t 'account background saved error'
             else
                 Backbone.Mediator.pub 'backgroundChanged', data.background
-
