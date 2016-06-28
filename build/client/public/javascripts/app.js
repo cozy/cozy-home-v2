@@ -7651,7 +7651,7 @@ return buf.join("");
 });
 
 require.register("views/account", function(exports, require, module) {
-var Background, BackgroundList, BaseView, Instance, ObjectPicker, locales, request, timezones, _ref,
+var Background, BackgroundList, BaseView, Instance, ObjectPicker, request, timezones, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -7661,8 +7661,6 @@ BaseView = require('lib/base_view');
 Background = require('../models/background');
 
 timezones = require('helpers/timezone').timezones;
-
-locales = require('helpers/locales').locales;
 
 request = require('lib/request');
 
@@ -7757,7 +7755,7 @@ module.exports = exports.AccountView = (function(_super) {
     }
   };
 
-  AccountView.prototype.onNewPasswordSubmit = function(event) {
+  AccountView.prototype.onNewPasswordSubmit = function() {
     var form, hideFunc, showError,
       _this = this;
     form = {
@@ -7807,8 +7805,7 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.on2faStatusChangeSuccess = function(message) {
-    var hideFunc,
-      _this = this;
+    var hideFunc;
     this.info2faAlert.html(t(message));
     this.info2faAlert.fadeIn();
     clearTimeout(hideFunc);
@@ -7817,16 +7814,16 @@ module.exports = exports.AccountView = (function(_super) {
     }, 2000);
   };
 
-  AccountView.prototype.on2faError = function() {
+  AccountView.prototype.on2faError = function(error) {
     var _this = this;
-    console.error(err);
+    console.error(error);
     this.error2faAlert.fadeIn();
     return setTimeout(function() {
       return _this.error2faAlert.fadeOut();
     }, 5000);
   };
 
-  AccountView.prototype.on2faEnableSubmit = function(event) {
+  AccountView.prototype.on2faEnableSubmit = function() {
     var authType, form,
       _this = this;
     authType = this.twoFactorField.val();
@@ -7851,7 +7848,7 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
-  AccountView.prototype.on2faDisableSubmit = function(event) {
+  AccountView.prototype.on2faDisableSubmit = function() {
     var form,
       _this = this;
     form = {
@@ -7872,7 +7869,7 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
-  AccountView.prototype.on2faResetSubmit = function(event) {
+  AccountView.prototype.on2faResetSubmit = function() {
     var form,
       _this = this;
     form = {
@@ -7899,7 +7896,7 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
-  AccountView.prototype.on2faResetTokens = function(event) {
+  AccountView.prototype.on2faResetTokens = function() {
     var form,
       _this = this;
     form = {
@@ -7920,17 +7917,16 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.getOtpKey = function() {
-    var PRNG, key;
+    var PRNG;
     PRNG = new Uint32Array(5);
     window.crypto.getRandomValues(PRNG);
-    return key = PRNG.reduce(function(key, subkey) {
+    return PRNG.reduce(function(key, subkey) {
       return key += ('0000' + subkey.toString(16)).slice(-8);
     }, '');
   };
 
   AccountView.prototype.getRecoveryTokens = function() {
-    var tokens;
-    return tokens = (function() {
+    return (function() {
       var _i, _results;
       _results = [];
       for (_i = 0; _i <= 9; _i++) {
@@ -7951,7 +7947,7 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.get2faQRCodeString = function(data, token) {
-    return "otpauth://" + data.authType + "/Cozy:" + data.email + "?secret=" + token + "&issuer=Cozy";
+    return ("otpauth://" + data.authType + "/Cozy:" + data.email) + ("?secret=" + token + "&issuer=Cozy");
   };
 
   AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
@@ -7994,7 +7990,7 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.fetchData = function() {
-    var domain, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, tokensStr, userData,
+    var codes, domain, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, tokensStr, userData,
       _this = this;
     userData = window.cozy_user || {};
     this.emailField.val(userData.email);
@@ -8052,7 +8048,12 @@ module.exports = exports.AccountView = (function(_super) {
       this.twoFactorForm.hide();
       this.twoFactorInfo.show();
       this.twoFactorStrategy.html(t('2fa strategy ' + userData.authType));
-      tokensStr = userData.encryptedRecoveryCodes[0].join(', ');
+      codes = userData.encryptedRecoveryCodes;
+      if (codes) {
+        tokensStr = codes[0].join(', ');
+      } else {
+        tokensStr = t("error problem 2fa codes");
+      }
       this.twoFactorRecToken.html(tokensStr);
       if (userData.authType === 'hotp') {
         this.twoFactorResetForm.show();
@@ -8114,7 +8115,7 @@ module.exports = exports.AccountView = (function(_super) {
             _this.backgroundList.collection.add(background);
             return _this.backgroundList.select(background);
           },
-          error: function(data) {
+          error: function() {
             return alert(t('account background added error'));
           },
           complete: function() {
