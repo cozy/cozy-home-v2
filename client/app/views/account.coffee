@@ -49,7 +49,7 @@ module.exports = class exports.AccountView extends BaseView
         @twoFactorResetTokensButton = @$ '#account-2fa-reset-tokens'
 
         @twoFactorQrCode = @$('#qrcode')
-        
+
         # Configure Background
         @accountSubmitButton.click (event) =>
             event.preventDefault()
@@ -360,13 +360,17 @@ module.exports = class exports.AccountView extends BaseView
         @password2Field.keyup (event) =>
             if event.keyCode is 13 or event.which is 13
                 @onNewPasswordSubmit()
-        
+
         # Two-factor authentication
         if userData.authType
             @twoFactorForm.hide()
             @twoFactorInfo.show()
             @twoFactorStrategy.html t '2fa strategy ' + userData.authType
-            tokensStr = userData.encryptedRecoveryCodes[0].join(', ')
+            codes = userData.encryptedRecoveryCodes
+            if codes
+                tokensStr = codes[0].join(', ')
+            else
+                tokensStr = t "error problem 2fa codes"
             @twoFactorRecToken.html tokensStr
             # If HOTP is enabled, show the conter reset panel
             if userData.authType is 'hotp'
