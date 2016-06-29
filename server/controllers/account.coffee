@@ -68,8 +68,8 @@ module.exports =
                     return cb null, errors
 
                 unless utils.checkPassword oldPassword, user.password
-                    errors.push localizationManager.t "current password" +
-                                                                " incorrect"
+                    msg = localizationManager.t "current password incorrect"
+                    errors.push msg
 
                 unless newPassword is newPassword2
                     errors.push localizationManager.t "passwords don't match"
