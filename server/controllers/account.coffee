@@ -35,23 +35,23 @@ module.exports =
                 else
                     errors = ["error email empty"]
                     return cb null, errors
-                    
-            # 2FA settings has been changed    
+
+            # 2FA settings has been changed
             if body.authType isnt undefined
                 data.authType = body.authType
                 data.encryptedOtpKey = body.encryptedOtpKey
                 data.hotpCounter = body.hotpCounter
-                data.encryptedRecoveryCodes = body.recoveryCodes
-                
+                data.encryptedRecoveryCodes = JSON.stringify(body.recoveryCodes)
+
             # Case of recovery tokens reset
             if body.recoveryCodes?
-                data.encryptedRecoveryCodes = body.recoveryCodes
+                data.encryptedRecoveryCodes = JSON.stringify(body.recoveryCodes)
 
             if data.timezone or data.email or data.password or data.public_name\
             or data.encryptedRecoveryCodes or data.authType isnt undefined
                 adapter.updateUser user, data, (err) ->
                     cb err, null
-                
+
             else
                 cb null
 
@@ -68,7 +68,8 @@ module.exports =
                     return cb null, errors
 
                 unless utils.checkPassword oldPassword, user.password
-                    errors.push localizationManager.t "current password incorrect"
+                    msg = localizationManager.t "current password incorrect"
+                    errors.push msg
 
                 unless newPassword is newPassword2
                     errors.push localizationManager.t "passwords don't match"
@@ -88,7 +89,8 @@ module.exports =
         User.all (err, users) ->
             next err if err
             if users.length is 0
-                return res.status(400).send error: localizationManager.t "no user registered"
+                return res.status(400).send
+                    error: localizationManager.t "no user registered"
 
             user = users[0]
             data = {}
@@ -110,7 +112,7 @@ module.exports =
     users: (req, res, next) ->
         User.all (err, users) ->
             if err
-                res.status(500).send 
+                res.status(500).send
                     error: localizationManager.t "Retrieve users failed."
             else
                 res.send rows: users
@@ -122,11 +124,11 @@ module.exports =
             if err
                 res.status(400).send error: err
             else if users.length is 0
-                res.status(400).send 
+                res.status(400).send
                     error: localizationManager.t "no user registered"
-            else    
+            else
                 user = users[0]
-                res.status(200).send 
+                res.status(200).send
                     token: base32.encode(user.encryptedOtpKey).toString()
 
 
@@ -134,7 +136,8 @@ module.exports =
     instances: (req, res, next) ->
         CozyInstance.all (err, instances) ->
             if err
-                res.status(500).send error: localizationManager.t "retrieve instances failed"
+                res.status(500).send
+                    error: localizationManager.t "retrieve instances failed"
             else
                 res.send rows: instances
 

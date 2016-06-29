@@ -366,10 +366,11 @@ module.exports = class exports.AccountView extends BaseView
             @twoFactorForm.hide()
             @twoFactorInfo.show()
             @twoFactorStrategy.html t '2fa strategy ' + userData.authType
-            codes = userData.encryptedRecoveryCodes
-            if codes
-                tokensStr = codes[0].join(', ')
-            else
+            tokensStr = ''
+            try
+                codes = JSON.parse(userData.encryptedRecoveryCodes)
+                tokensStr = codes.join(', ')
+            catch err
                 tokensStr = t "error problem 2fa codes"
             @twoFactorRecToken.html tokensStr
             # If HOTP is enabled, show the conter reset panel

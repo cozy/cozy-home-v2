@@ -22,7 +22,7 @@ module.exports = User = cozydb.getModel('User', {
   authType: String,
   encryptedOtpKey: String,
   hotpCounter: Number,
-  encryptedRecoveryCodes: Array
+  encryptedRecoveryCodes: String
 });
 
 User.all = function(callback) {

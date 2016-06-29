@@ -7990,7 +7990,7 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.fetchData = function() {
-    var codes, domain, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, tokensStr, userData,
+    var codes, domain, err, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, tokensStr, userData,
       _this = this;
     userData = window.cozy_user || {};
     this.emailField.val(userData.email);
@@ -8048,10 +8048,12 @@ module.exports = exports.AccountView = (function(_super) {
       this.twoFactorForm.hide();
       this.twoFactorInfo.show();
       this.twoFactorStrategy.html(t('2fa strategy ' + userData.authType));
-      codes = userData.encryptedRecoveryCodes;
-      if (codes) {
-        tokensStr = codes[0].join(', ');
-      } else {
+      tokensStr = '';
+      try {
+        codes = JSON.parse(userData.encryptedRecoveryCodes);
+        tokensStr = codes.join(', ');
+      } catch (_error) {
+        err = _error;
         tokensStr = t("error problem 2fa codes");
       }
       this.twoFactorRecToken.html(tokensStr);
