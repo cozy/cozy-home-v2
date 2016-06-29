@@ -226,7 +226,7 @@ describe 'Modify 2FA settings', ->
             should.not.exist err
             should.exist users
             user = users[0]
-            str = JSON.stringify user.encryptedRecoveryCodes[0]
+            str = user.encryptedRecoveryCodes
             str.should.equal JSON.stringify TESTRECOVERYTOKENS
             done()
 
