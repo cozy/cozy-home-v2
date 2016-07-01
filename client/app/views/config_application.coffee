@@ -11,7 +11,7 @@ module.exports = class ApplicationRow extends BaseView
 
     getRenderData: ->
         gitName = @model.get('git')
-        gitName = gitName[...-4] if gitName?
+        gitName = gitName.replace(/\.git$/, '') if gitName?
         website = @model.get('website') or gitName
         branch  = @model.get('branch') or 'master'
         app: _.extend {}, @model.attributes,
