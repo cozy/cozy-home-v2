@@ -2280,18 +2280,18 @@ h4 {
 .no-device a[role=button]:hover {
   background-color: #14c33c;
 }
-.no-device a[role=button]:last-child {
+.no-device a.linux {
   color: #4f5b69;
-  background-color: #c8d5df;
+  background-color: #eaeef2;
 }
-.no-device a[role=button]:last-child:hover {
-  background-color: #adc1cf;
+.no-device a.linux:hover {
+  background-color: #cdd6e0;
 }
-.no-device a[role=button]:last-child img {
-  margin-right: 0.625em;
+.no-device a.linux img {
+  margin-right: 0.5em;
 }
 .no-device a[role=button] {
-  padding: 0.625em 0.875em;
+  padding: 0.5em 0.875em;
   margin: 0.3125em 0.625em 0.3125em 0;
 }
 @media (max-width: 800px) {

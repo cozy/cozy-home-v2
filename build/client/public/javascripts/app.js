@@ -2350,7 +2350,7 @@ module.exports = {
     "revoke device confirmation message": "Esta acción impedirá que el periférico asociado acceda a su Cozy. ¿Está usted seguro(a)?",
     "dashboard": "Tablero de Control",
     "calendars description": "Administre su agenda y sincronícela con su teléfono.",
-    "contacts description": "Administre sus contactos y sincronícelos con su teléfono.",
+    "contacts description": "Gestione sus contactos y sincronícelos con su teléfono.",
     "emails description": "Lea, envíe y guarde sus mensajes.",
     "files description": "Su sistema de archivos en línea sincronizados con sus periféricos.",
     "photos description": "Organice sus fotos y compártalas con sus amigos.",
@@ -6976,7 +6976,7 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></a><a target="_blank" href="https://play.google.com/store/apps/details?id=io.cozy.files_client"><img src="img/en-play-badge.png"/></a><p>');
 var __val__ = t('desktop app promo')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><a role="button" target="_blank" href="https://docs.cozy.io/en/mobile/desktop.html"><img src="img/linux.svg" width="32px"/><span>');
+buf.push('</p><a role="button" target="_blank" href="https://docs.cozy.io/en/mobile/desktop.html" class="linux"><img src="img/linux.svg"/><span>');
 var __val__ = t('download desktop linux')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</span></a></div></section></div></div></div>');
