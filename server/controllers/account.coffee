@@ -130,6 +130,7 @@ module.exports =
                 user = users[0]
                 res.status(200).send
                     token: base32.encode(user.encryptedOtpKey).toString()
+                    key: user.encryptedOtpKey
 
 
     # Return list of instances
