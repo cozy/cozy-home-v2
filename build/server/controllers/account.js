@@ -45,8 +45,12 @@ module.exports = {
         data.authType = body.authType;
         data.encryptedOtpKey = body.encryptedOtpKey;
         data.hotpCounter = body.hotpCounter;
+        data.encryptedRecoveryCodes = JSON.stringify(body.recoveryCodes);
       }
-      if (data.timezone || data.email || data.password || data.public_name || data.authType !== void 0) {
+      if (body.recoveryCodes != null) {
+        data.encryptedRecoveryCodes = JSON.stringify(body.recoveryCodes);
+      }
+      if (data.timezone || data.email || data.password || data.public_name || data.encryptedRecoveryCodes || data.authType !== void 0) {
         return adapter.updateUser(user, data, function(err) {
           return cb(err, null);
         });
@@ -55,7 +59,7 @@ module.exports = {
       }
     };
     updatePassword = function(user, body, data, cb) {
-      var errors, newPassword, newPassword2, oldPassword;
+      var errors, msg, newPassword, newPassword2, oldPassword;
       oldPassword = body.password0;
       newPassword = body.password1;
       newPassword2 = body.password2;
@@ -66,7 +70,8 @@ module.exports = {
           return cb(null, errors);
         }
         if (!utils.checkPassword(oldPassword, user.password)) {
-          errors.push(localizationManager.t("current password incorrect"));
+          msg = localizationManager.t("current password incorrect");
+          errors.push(msg);
         }
         if (newPassword !== newPassword2) {
           errors.push(localizationManager.t("passwords don't match"));

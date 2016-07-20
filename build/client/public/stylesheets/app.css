@@ -992,6 +992,9 @@ textarea:focus {
   -webkit-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
 }
+textarea {
+  padding: 1rem;
+}
 input,
 select {
   height: 48px;
@@ -1704,6 +1707,7 @@ h4 {
 }
 .right-menu {
   z-index: 200;
+  overflow-y: auto;
   position: fixed;
   top: 36px;
   right: 0;
@@ -2271,13 +2275,23 @@ h4 {
   display: inline-block;
 }
 .no-device a[role=button] {
-  padding: 0.625em 0.875em;
   background-color: #16d943;
 }
 .no-device a[role=button]:hover {
   background-color: #14c33c;
 }
+.no-device a[role=button]:last-child {
+  color: #4f5b69;
+  background-color: #c8d5df;
+}
+.no-device a[role=button]:last-child:hover {
+  background-color: #adc1cf;
+}
+.no-device a[role=button]:last-child img {
+  margin-right: 0.625em;
+}
 .no-device a[role=button] {
+  padding: 0.625em 0.875em;
   margin: 0.3125em 0.625em 0.3125em 0;
 }
 @media (max-width: 800px) {

@@ -1223,7 +1223,7 @@ module.exports = {
     "total": "Total",
     "memory consumption": "Arbeitsspeicher Verbrauch",
     "disk consumption": "Speicherplatz Verbrauch",
-    "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
+    "you have no notifications": "<span>Hallo %{name}</span><br>Du hast keine neuen Benachrichtigungen.",
     "dismiss all": "Alle ausblenden",
     "add application": "App hinzufügen?",
     "install": "Installieren",
@@ -1233,11 +1233,11 @@ module.exports = {
     "community contribution": "Community Mitwirkung",
     "official application": "Developed by Cozy",
     "application description": "App Beschreibung",
-    "downloading description": "Herunterladen Beschreibung…",
-    "downloading permissions": "Herunterladen Rechte…",
+    "downloading description": "Beschreibungen herunterladen…",
+    "downloading permissions": "Berechtigungen herunterladen…",
     "Cancel": "Abbrechen",
     "ok": "Ok",
-    "applications permissions": "App Rechte",
+    "applications permissions": "App Berechtigungen",
     "confirm": "Bestätigen",
     "installing": "Installieren",
     "remove": "Entfernen",
@@ -1293,35 +1293,35 @@ module.exports = {
     "alerts and password recovery email": "Ihre E-Mail wird für Mitteilungen oder eine Passwortwiederherstellung benötigt.",
     "public name description": "Ihr Benutzername wird angezeigt, wenn sie Dateien mit anderen Personen teilen oder diese zu Veranstaltungen einladen.",
     "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
-    "account timezone field description": "Your time zone helps to properly display your calendar.",
+    "account timezone field description": "Ihre Zeitzone hilft, Ihre Kalender korrekt darzustellen.",
     "save": "Speichern",
     "saved": "Gespeichert",
     "error": "Fehler",
     "error proper email": "Angegebene E-Mail ist falsch",
     "error email empty": "Angegebene E-Mail ist leer",
-    "account language field description": "Choose the language you want to see:",
+    "account language field description": "Wählen Sie die Sprache, die Sie sehen möchten:",
     "account background selection": "Wählen sie den Hintergrund für Cozy Home aus:",
     "account localization": "Localization",
     "account identifiers": "Account",
     "account personalization": "Customization",
     "account password": "Passwort",
-    "account two factors auth": "Two-factor authentication",
-    "account 2fa strategy": "Authentication strategy",
-    "account 2fa hotp": "HOTP (based on a counter)",
-    "account 2fa totp": "TOTP (based on a timer)",
-    "enable 2fa": "Enable two-factor authentication",
-    "disable 2fa": "Disable two-factor authentication",
-    "account 2fa enabled": "Two-factor authentication has been enabled. Page will now reload.",
-    "account 2fa disabled": "Two-factor authentication has been disabled. Page will now reload.",
-    "account 2fa error": "There was something wrong while enabling two-factor authentication. Please try again in a few minutes or contact the support.",
-    "account 2fa token explanation": "Two-factor authentication is enabled on Cozy. To use it with your favourite app or device, you have to enter the following key when setting up the account:",
-    "account 2fa qrcode explanation": "You can also scan the QR code below if your app supports it.",
-    "2fa strategy hotp": "You are using the HOTP 2FA strategy (counter-based).",
-    "2fa strategy totp": "You are using the TOTP 2FA strategy (timer-based).",
-    "account 2fa hotp reset explanation": "If you're changing from one authentication app or device to another, you must reset the HOTP counter in order to not get locked outside of your Cozy.",
-    "2fa reset hotp": "Reset the HOTP counter",
-    "account 2fa reset": "The HOTP counter has been successfully reset.",
-    "account 2fa disable explanation": "You can disable the two-factor authentication at any time:",
+    "account two factors auth": "Zwei-Wege-Authentifizierung",
+    "account 2fa strategy": "Authentifizierungs-Strategie",
+    "account 2fa hotp": "HOTP (auf einem Zähler basierend)",
+    "account 2fa totp": "TOTP (auf einem Timer basierend)",
+    "enable 2fa": "Aktiviere Zwei-Wege-Authentifizierung",
+    "disable 2fa": "Deaktiviere Zwei-Wege-Authentifizierung",
+    "account 2fa enabled": "Zwei-Wege-Authentifizierung wurde aktiviert. Die Seite wird jetzt neu geladen.",
+    "account 2fa disabled": "Zwei-Wege-Authentifizierung wurde deaktiviert. Die Seite wird jetzt neu geladen.",
+    "account 2fa error": "Es ist bei der Aktivierung der Zwei-Wege-Authentifizierung etwas schief gegangen. Bitte versuchen Sie es in ein paar Minuten erneut oder kontaktieren Sie den Support.",
+    "account 2fa token explanation": "Die Zwei-Wege-Authentifizierung auf Cozy wurde aktiviert. Um sie auf Ihrer bevorzugten App oder Gerät zu nutzen, müssen Sie den folgenden Schlüssel eingeben, wenn Sie das Konto einrichten: ",
+    "account 2fa qrcode explanation": "Sie können auch den QR-Code unten einscannen, wenn Ihre App dies unterstützt.",
+    "2fa strategy hotp": "Du benutzt das HOTP 2FA Verfahren (Zählerbasiert).",
+    "2fa strategy totp": "Du benutzt das TOTP 2FA Verfahren (Zeitbasiert)",
+    "account 2fa hotp reset explanation": "Wenn du von einer Authentifizierungs- App oder Gerät zu einer anderen wechselst, musst du denn HOTP Zähler zurücksetzen um nicht aus deinem Cozy ausgesperrt zu werden.",
+    "2fa reset hotp": "HOTP Zähler zurücksetzen",
+    "account 2fa reset": "Der HOTP Zähler wurde erfolgreich zurückgesetzt",
+    "account 2fa disable explanation": "Du kannst die Zwei-Wege-Authentifizierung jederzeit deaktivieren:",
     "french": "Französisch",
     "english": "Englisch",
     "german": "Deutsch",
@@ -1329,7 +1329,7 @@ module.exports = {
     "korean": "Koreanisch",
     "japanese": "Japanisch",
     "portuguese": "Portugisisch",
-    "russian": "Russian",
+    "russian": "Russisch",
     "change password procedure": "Schritte um Ihr Passwort zu ändern",
     "current password": "Aktuelles Passwort",
     "new password": "Neues Passwort",
@@ -1361,16 +1361,16 @@ module.exports = {
     "update stack modal content": "Sie sind dabei die Plattform zu aktualisieren. Ihr Cozy wird einige Minuten nicht verfügbar sein. Ist das OK?",
     "update stack modal confirm": "Aktualisierung",
     "update stack success": "Ihre Applikation wurde aktualisiert, Seite wird neu geladen.",
-    "update stack error": "An error occurred during the update. Your Cozy may become unstable. If you notice any troubles, you should contact your hosting provider. When you will click on the OK button, the current window will be refreshed.",
+    "update stack error": "Es trat ein Fehler während der Aktualisierung auf. Dein Cozy läuft möglicherweise instabil. Sollten Fehler auftreten wende dich bitte an deinen Provider. Klicke Ok um das aktuelle Fenster neu zu laden.",
     "applications broken": "Applikation abgestürtzt",
     "cozy platform": "Plattform",
     "navbar back button title": "Zurück Home",
     "navbar notifications": "Benachrichtigungen:",
     "or:": "oder:",
     "reboot stack": "Neustart",
-    "update error": "An error occurred while updating the app",
+    "update error": "Es trat ein fehler während der aktualisierung der App auf",
     "update failed": "Update failed",
-    "error update uninstalled app": "You can't update an app that is not installed.",
+    "error update uninstalled app": "Sie können keine App aktualisieren, die nicht installiert ist.",
     "notification open application": "Applikation öffnen",
     "notification update stack": "Plattform aktualisieren",
     "notification update application": "Jetzt aktualisieren",
@@ -1386,7 +1386,7 @@ module.exports = {
     "cozy help title": "Cozy - Hilfe",
     "help support title": "Offizieller Support",
     "help community title": "Community Support",
-    "help direct title": "Direct Message",
+    "help direct title": "Direkte Nachricht",
     "help documentation title": "Dokumentation",
     "changing locale requires reload": "Ändern Sie das Gebietsschema um die Seite neu zu laden.",
     "cancel": "Abbrechen",
@@ -1416,13 +1416,13 @@ module.exports = {
     "market app install": "Installiere...",
     "install your app": "Installieren sie eine App von einem Git Repository",
     "market install your app": "Kopieren sie einfach die Git URL in das untenstehende Feld:",
-    "market install your app tutorial": "To know more about how to build your own app, feel free to read our",
+    "market install your app tutorial": "Um mehr darüber zu erfahren wie eingene Apps baut werden, lies doch einfach in unserem ",
     "market app tutorial": "Anleitung",
     "help send message title": "Direkt an das Cozy Team schreiben",
     "help send message action": "Senden",
     "help send logs": "Serverprotokolle senden, um die Fehlersuche und -beseitigung zu erleichtern",
     "send message success": "Nachricht erfolgreich gesendet.",
-    "send message error": "An error occurred while sending your support message. Try to send it via an email client to support@cozycloud.cc",
+    "send message error": "Es trat ein Fehler beim Versenden der Support Nachricht auf. Bitte sende diese direkt per E-Mail an support@cozycloud.cc",
     "account change password success": "Das Passwort wurde erfolgreich geändert.",
     "account change password short": "Das neue Passwort ist zu kurz.",
     "account change password difference": "Die Passwortbestätigung stimmt nicht mit dem neuen Passwort überein.",
@@ -1461,23 +1461,23 @@ module.exports = {
     "mstsc.js description": "Verwalten Sie Ihren Windows Desktop entfernt durch das RDP-Protokoll.",
     "hastebin description": "Ein simples pastebin, ein Hilfsmittel um einfach Texte zu teilen.",
     "polybios description": "Verwalten Sie Ihre PGP-Schlüssel direkt von Ihrem Browser.",
-    "frost description": "Build your internet memories by archiving web pages into your Cozy.",
-    "tiddlywiki description": "A non-linear personal web notebook.",
-    "hari description": "Encrypted personal diary.",
-    "map description": "Open Street Map in your Cozy",
+    "frost description": "Erbaue deine eigenen Internet-Erinnerungen indem du Webseiten in deinem Cozy archivierst.",
+    "tiddlywiki description": "Ein persönliches nicht-lineares Web-Notizbuch",
+    "hari description": "Verschlüsseltes Tagebuch",
+    "map description": "Open Street Map in deinem Cozy",
     "warning unofficial app": "Diese App is eine aus der Gemeinschaft und wird nicht durch das Cozy Team betreut.\nUm einen Fehler zu melden, beschreiben Sie bitte das Problem in <a href='https://forum.cozy.io'>unserem Forum</a>.",
     "update available notification": "Eine neue Version von %{appName} ist verfügbar.",
     "stack update available notification": "Eine neue Version der Plattform ist verfügbar.",
     "app broken title": "Fehlerhafte Applikation",
     "app broken": "This application is broken. Can you try to install it again:",
     "reinstall broken app": "Erneut Installieren.",
-    "error git": "We can't retrieve the source code.",
+    "error git": "Wir können den Quellcode nicht empfangen.",
     "error github repo": "Application Repository scheint nicht erreichbar zu sein.",
     "error github": "Es scheint als wäre GitHub nicht erreichbar. Sie können den GitHub Status unter https://status.github.com/ überprüfen.",
-    "error npm": "We can't install the application dependencies.",
-    "error user linux": "We can't create a specific Linux user for this application.",
+    "error npm": "Die Abhängigkeiten der App onnten nicht installiert werden.",
+    "error user linux": "Spezifischer Linux-Benutzer für diese Anwendung kann nicht erstellt werden.",
     "error start": "Die Applikation konnte nicht gestartet werden. Details finden Sie im Protokoll der Applikation.",
-    "app msg": "If error persists, you can contact us at contact@cozycloud.cc or on IRC #cozycloud on irc.freenode.net.",
+    "app msg": "Wenn der Fehler erneut Auftritt können Sie uns unter contact@cozycloud.cc erreichen oder mit IRC im Raum #cozycloud auf irc.freenode.net.",
     "more details": "Mehr Details",
     "noapps": {
         "customize your cozy": "Sie können außerdem <a href=\"%{account}\">zu den Einstellungen gehen</a> um Ihr Cozy anzupassen,\noder <a href=\"%{appstore}\">den App Store besuchen</a> um Ihre erste App zu installieren."
@@ -1487,22 +1487,22 @@ module.exports = {
     "chooseAgain": "Ein anderes Foto auswählen",
     "modal ok": "OK",
     "modal cancel": "Abbrechen",
-    "no image": "Kein Foto in Ihrem Cozy vorhanden",
+    "no image": "Es sind keine Fotos in Ihrem Cozy vorhanden",
     "ObjPicker upload btn": "Eine Datei hochladen",
     "or": "oder",
-    "drop a file": "Drag & drop eine Datei oder",
-    "url of an image": "kopieren Sie eine URL eines Bildes aus dem Internet",
+    "drop a file": "Drag & Drop eine Datei oder",
+    "url of an image": "Kopieren Sie eine URL eines Bildes aus dem Internet",
     "you have no album": "<p>Sie haben kein Fotoalbum<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Erstellen Sie eines aus <a href='/#applications' target='_blank'>der Photo App</a><br>und nutzen Sie Bilder, die Sie mit Ihrem Mobiltelefon aufgenommen haben, mit der <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>Mobile App!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
-    "state app installing": "This app is being installed. Wait a little",
-    "state app stopped error": "This app cannot start",
-    "stack updating block message": "Your Cozy is currently updating, you cannot use it until the update is finished.",
-    "update apps error title": "An error occurred while updating apps",
-    "update apps error": "One or several applications failed. Concerned applications are marked as broken. You will probably have to uninstall and reinstall these applications.",
-    "update apps error list title": "Broken applications",
-    "update stack error title": "An error occurred while updating your Cozy",
-    "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to choose whether or not you accept the new permissions.",
+    "state app installing": "Die App wird installiert. Bitte warte einen Moment",
+    "state app stopped error": "Die App kann nicht gestartet werden",
+    "stack updating block message": "Du kannst dein Cozy aktuell nicht benutzen, da es gerade aktualisiert wird.",
+    "update apps error title": "Ein Fehler ist während der Aktualisierung der Apps aufgetreten",
+    "update apps error": "Eine oder mehrere Apps sind defekt und wurden makrkiert. Du musst diese möglicherweise deinstallieren oder erneut installieren.",
+    "update apps error list title": "Fehlerhafte Applikationen",
+    "update stack error title": "Ein Fehler ist während der Aktualisierung von Cozy aufgetreten",
+    "update stack permission changes": "Die unten aufgeführten Apps konnten Aufgrund geänderter Berechtigungen nicht aktualisiert werden. Bitte aktualisiere diese manuell um die neuen Berechtigungen anzunehmen oder abzulehnen.",
     "update stack warning": "Warnung",
-    "reboot stack error": "An error occurred while rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
+    "reboot stack error": "Es ist ein Fehler während des Neustarts von Cozy aufgetreten. Es läuft möglicherweise instabil. Bitte kontaktiere deinen Provider, wenn dein Cozy nicht mehr funktioniert."
 };
 });
 
@@ -1613,13 +1613,15 @@ module.exports = {
   "account 2fa totp": "TOTP (based on a timer)",
   "enable 2fa": "Enable two-factor authentication",
   "disable 2fa": "Disable two-factor authentication",
+  "reset 2fa tokens": "Reset your recovery tokens",
   "account 2fa enabled": "Two-factor authentication has been enabled. Page will now reload.",
   "account 2fa disabled": "Two-factor authentication has been disabled. Page will now reload.",
   "account 2fa error": "There was something wrong while enabling two-factor authentication. Please try again in a few minutes or contact the support.",
   "account 2fa token explanation": "Two-factor authentication is enabled on Cozy. To use it with your favourite app or device, you have to enter the following key when setting up the account:",
   "account 2fa qrcode explanation": "You can also scan the QR code below if your app supports it.",
-  "2fa strategy hotp": "You are using the HOTP 2FA strategy (counter-based).",
-  "2fa strategy totp": "You are using the TOTP 2FA strategy (timer-based).",
+  "account 2fa rectokens": "Below are your recovery tokens. Make sure to copy them somewhere safe (not on Cozy) so you won't get locked outside of your Cozy.",
+  "2fa strategy hotp": "Two-factor authentication is enabled on Cozy with the HOTP strategy (counter-based).",
+  "2fa strategy totp": "Two-factor authentication is enabled on Cozy with the TOTP strategy (timer-based).",
   "account 2fa hotp reset explanation": "If you're changing from one authentication app or device to another, you must reset the HOTP counter in order to not get locked outside of your Cozy.",
   "2fa reset hotp": "Reset the HOTP counter",
   "account 2fa reset": "The HOTP counter has been successfully reset.",
@@ -1659,6 +1661,8 @@ module.exports = {
   "status no device": "There is no device connected to your Cozy.",
   "download apk": "Download .APK",
   "mobile app promo": "Backup you photos and synchronize your contacts and calendars with your mobile via the dedicated mobile app:",
+  "desktop app promo": "You can also download the cozy-desktop client to synchronize your files on your laptop/desktop:",
+  "download desktop linux": "Download cozy desktop for Linux",
   "update stack modal title": "Updating your Cozy",
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
@@ -1814,74 +1818,74 @@ module.exports = {
 
 require.register("locales/eo", function(exports, require, module) {
 module.exports = {
-    "home": "Home",
-    "apps": "Apps",
-    "account": "Account",
-    "email": "Email",
-    "timezone": "Time zone",
-    "domain": "Domain",
+    "home": "Hejmo",
+    "apps": "Aplikaĵoj",
+    "account": "Konto",
+    "email": "Retpoŝtadreso",
+    "timezone": "Horzono",
+    "domain": "Domajno",
     "no domain set": "no.domain.set",
-    "locale": "Locale",
-    "change password": "Change password",
-    "input your current password": "Enter your current password:",
-    "enter a new password": "Enter your new password:",
-    "confirm new password": "Confirm your new password:",
-    "send changes": "Save",
-    "manage": "Manage",
-    "total": "Total",
-    "memory consumption": "Memory usage",
-    "disk consumption": "Disk usage",
-    "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
-    "dismiss all": "Dismiss all",
-    "add application": "Add app?",
-    "install": "Install",
+    "locale": "Lokaĵaro",
+    "change password": "Ŝanĝi pasvorton",
+    "input your current password": "Entajpu vian aktualan pasvorton:",
+    "enter a new password": "Entajpu vian novan pasvorton:",
+    "confirm new password": "Konfirmu vian novan pasvorton:",
+    "send changes": "Konservi",
+    "manage": "Administri",
+    "total": "Totalo",
+    "memory consumption": "Memoruzado",
+    "disk consumption": "Diskuzado",
+    "you have no notifications": "<span>Saluton %{name}</span><br>Vi momente havas neniun sciigon.",
+    "dismiss all": "Rezigni pri ĉiuj",
+    "add application": "Ĉu aldoni aplikaĵon?",
+    "install": "Instali",
     "github": "Github",
-    "website": "Website",
-    "your app": "Your app!",
-    "community contribution": "Community contribution",
-    "official application": "Developed by Cozy",
+    "website": "Retejo",
+    "your app": "Via aplikaĵo!",
+    "community contribution": "Komunuma kontribuo",
+    "official application": "Programita de Cozy",
     "application description": "App Description",
-    "downloading description": "Downloading description…",
-    "downloading permissions": "Downloading permissions…",
-    "Cancel": "Cancel",
-    "ok": "Ok",
-    "applications permissions": "App permissions",
-    "confirm": "Confirm",
-    "installing": "Installing",
-    "remove": "Remove",
-    "update": "Update",
-    "config application unmark favorite": "unmark as favorite",
-    "config application mark favorite": "mark as favorite",
-    "started": "started",
-    "notifications": "Notifications",
-    "questions and help forum": "Questions and help forum",
-    "sign out": "Sign out",
-    "open in a new tab": "Open in a new tab",
-    "always on": "always on",
-    "keep always on": "keep always on",
-    "stop this app": "Stop this app",
-    "update required": "Update available",
-    "navbar faq": "Frequently Asked Questions",
+    "downloading description": "Elŝutado de la priskribo…",
+    "downloading permissions": "Elŝutado de la permesoj…",
+    "Cancel": "Nuligi",
+    "ok": "Bone",
+    "applications permissions": "Permesoj de la aplikaĵo",
+    "confirm": "Konfirmi",
+    "installing": "Instalado",
+    "remove": "Forigi",
+    "update": "Ĝisdatigi",
+    "config application unmark favorite": "malmarki kiel  preferatan",
+    "config application mark favorite": "marki kiel preferatan",
+    "started": "startigita",
+    "notifications": "Sciigoj",
+    "questions and help forum": "Demandoj kaj helpoforumo",
+    "sign out": "Elsaluti",
+    "open in a new tab": "Malfermi en novan langeton",
+    "always on": "ĉiam aktiva",
+    "keep always on": "teni ĉiam aktiva",
+    "stop this app": "Haltigi tiun ĉi aplikaĵon",
+    "update required": "Disponebla ĝisdatigo",
+    "navbar faq": "Oftaj demandoj",
     "application is installing": "An app is already installing.\nWait for it to finish, then try again.",
-    "no app message": "You currently have no app installed on your Cozy.\nGo to the <a href=\"#applications\">Cozy store</a> and install new apps!",
+    "no app message": "Vi momente havas neniun instalitan aplikaĵon ĉe via Cozy.\nIru al la <a href=\"#applications\">Cozy-butiko</a> kaj instalu novajn aplikaĵojn!",
     "welcome to app store": "Welcome to your Cozy store, install your own app from here\nor add one from the available list.",
-    "installed everything": "You have already installed everything!",
-    "already similarly named app": "You already have an app with a similar name.",
-    "your app list": "Access your apps",
-    "customize your cozy": "Customize your layout",
-    "manage your apps": "Applications",
-    "choose your apps": "Choose your apps",
-    "configure your cozy": "Configure your cozy",
-    "ask for assistance": "Ask for help",
-    "logout": "Sign out",
-    "navbar logout": "Sign out",
-    "welcome to your cozy": "Welcome to your Cozy!",
-    "you have no apps": "You have no apps.",
-    "app management": "App management",
-    "app store": "Store",
-    "configuration": "Configuration",
-    "assistance": "Assistance",
-    "hardware consumption": "Hardware",
+    "installed everything": "Vi jam instalis ĉion!",
+    "already similarly named app": "Vi jam havas aplikaĵon kun simila nomo.",
+    "your app list": "Aliri viajn aplikaĵojn",
+    "customize your cozy": "Tajloru vian paĝoaranĝon",
+    "manage your apps": "Aplikaĵoj",
+    "choose your apps": "Elektu viajn aplikaĵojn",
+    "configure your cozy": "Agordu vian cozy",
+    "ask for assistance": "Peti helpon",
+    "logout": "Elsaluti",
+    "navbar logout": "Elsaluti",
+    "welcome to your cozy": "Bonvenon al via Cozy!",
+    "you have no apps": "Vi ha havas aplikaĵojn.",
+    "app management": "Administrado de aplikaĵoj",
+    "app store": "Butiko",
+    "configuration": "Agordoj",
+    "assistance": "Asistado",
+    "hardware consumption": "Aparataro",
     "gigabytes": "GB",
     "megabytes": "MB",
     "terabyte": "MB",
@@ -1890,21 +1894,21 @@ module.exports = {
     "T": "MB",
     "disk unit": "GB",
     "memory unit": "MB",
-    "status hard drive label": "Storage",
-    "status memory label": "Memory",
-    "manage your applications": "Applications",
-    "manage your devices": "Connected devices",
-    "synchronized": "synchronized",
-    "revoke device access": "Revoke device",
-    "no application installed": "There is no app installed.",
-    "your parameters": "Your settings",
-    "alerts and password recovery email": "Your email is used for notifications or password recovery.",
+    "status hard drive label": "Enmemorigo",
+    "status memory label": "Memoro",
+    "manage your applications": "Aplikaĵoj",
+    "manage your devices": "Konektitaj aparatoj",
+    "synchronized": "sinkronigite",
+    "revoke device access": "Senrajtigi aparaton",
+    "no application installed": "Neniu aplikaĵo instalita.",
+    "your parameters": "Viaj agordoj",
+    "alerts and password recovery email": "Via retpoŝtadreso estas uzata por sciigoj aŭ rememorigo de la pasporto.",
     "public name description": "Your username will be displayed when you share files with people or invite them to events.",
     "domain name for urls and email": "The domain name is used to connect to your Cozy from any devices and build sharing URLs.",
     "account timezone field description": "Via horzono helpas adekvate montri vian kalendaron.",
-    "save": "Save",
-    "saved": "Saved",
-    "error": "Error",
+    "save": "Konservi",
+    "saved": "Konservite",
+    "error": "Eraro",
     "error proper email": "Given email is not correct",
     "error email empty": "Given email is empty",
     "account language field description": "Elektu la lingvon vi volas vidi:",
@@ -3030,16 +3034,16 @@ module.exports = {
     "domain": "Domain",
     "no domain set": "no.domain.set",
     "locale": "Locale",
-    "change password": "Change password",
-    "input your current password": "Enter your current password:",
-    "enter a new password": "Enter your new password:",
-    "confirm new password": "Confirm your new password:",
-    "send changes": "Save",
-    "manage": "Manage",
-    "total": "Total",
-    "memory consumption": "Memory usage",
-    "disk consumption": "Disk usage",
-    "you have no notifications": "<span>Hello %{name}</span><br>You have currently no notification.",
+    "change password": "Cambia la password",
+    "input your current password": "Inserisci la tua password attuale:",
+    "enter a new password": "Inserisci la nuova password:",
+    "confirm new password": "Conferma la nuova password:",
+    "send changes": "Salva",
+    "manage": "Gestisci",
+    "total": "Totale",
+    "memory consumption": "Uso della memoria",
+    "disk consumption": "Uso del disco",
+    "you have no notifications": "<span>Ciao %{name}</span><br>Non c'è nessuna notifica.",
     "dismiss all": "Dismiss all",
     "add application": "Add app?",
     "install": "Install",
@@ -3143,9 +3147,9 @@ module.exports = {
     "german": "German",
     "spanish": "Spanish",
     "korean": "Korean",
-    "japanese": "Japanese",
+    "japanese": "Giapponese",
     "portuguese": "Portuguese",
-    "russian": "Russian",
+    "russian": "Russo",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -3186,7 +3190,7 @@ module.exports = {
     "reboot stack": "Reboot",
     "update error": "An error occurred while updating the app",
     "update failed": "Update failed",
-    "error update uninstalled app": "You can't update an app that is not installed.",
+    "error update uninstalled app": "Non puoi aggiornare un'applicazione che non è installata.",
     "notification open application": "Open application",
     "notification update stack": "Update the platform",
     "notification update application": "Update now",
@@ -3202,7 +3206,7 @@ module.exports = {
     "cozy help title": "Cozy - Help",
     "help support title": "Official Support",
     "help community title": "Community Support",
-    "help direct title": "Direct Message",
+    "help direct title": "Messaggio diretto",
     "help documentation title": "Documentation",
     "changing locale requires reload": "Changing the locale requires to reload the page.",
     "cancel": "cancel",
@@ -3235,7 +3239,7 @@ module.exports = {
     "market install your app tutorial": "To know more about how to build your own app, feel free to read our",
     "market app tutorial": "tutorial",
     "help send message title": "Write directly to the Cozy Team",
-    "help send message action": "Send",
+    "help send message action": "Invia",
     "help send logs": "Send server logs to ease debug",
     "send message success": "Message successfully sent!",
     "send message error": "An error occurred while sending your support message. Try to send it via an email client to support@cozycloud.cc",
@@ -3278,9 +3282,9 @@ module.exports = {
     "hastebin description": "A simple pastebin, a tool to easily share texts.",
     "polybios description": "Manage your PGP keys from your browser.",
     "frost description": "Build your internet memories by archiving web pages into your Cozy.",
-    "tiddlywiki description": "A non-linear personal web notebook.",
+    "tiddlywiki description": "Un web notebook personale non lineare",
     "hari description": "Encrypted personal diary.",
-    "map description": "Open Street Map in your Cozy",
+    "map description": "Apri Street map nel tuo Cozy",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -3311,13 +3315,13 @@ module.exports = {
     "you have no album": "<p>You've haven't got any photo album<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>Create one from the <a href='/#applications' target='_blank'>the Photo app</a><br>and use photos taken from your smartphone with the <a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>mobile app!</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
     "state app installing": "This app is being installed. Wait a little",
     "state app stopped error": "This app cannot start",
-    "stack updating block message": "Your Cozy is currently updating, you cannot use it until the update is finished.",
+    "stack updating block message": "Il tuo Cozy è in fase di aggiornamento, non puoi usarlo fino a quando l'aggiornamento non è finito.",
     "update apps error title": "An error occurred while updating apps",
     "update apps error": "One or several applications failed. Concerned applications are marked as broken. You will probably have to uninstall and reinstall these applications.",
     "update apps error list title": "Broken applications",
     "update stack error title": "An error occurred while updating your Cozy",
     "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to choose whether or not you accept the new permissions.",
-    "update stack warning": "Warning",
+    "update stack warning": "Avviso",
     "reboot stack error": "An error occurred while rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
 };
 });
@@ -4619,43 +4623,43 @@ module.exports = {
     "alerts and password recovery email": "Seu e-mail é usado para notificações ou recuperação de senha.",
     "public name description": "Seu nome de usuário será exibido quando você compartilhar arquivos com pessoas ou convidá-las para eventos.",
     "domain name for urls and email": "O nome de domínos é usado para conectar ao seu Cozy de qualquer dispositivo e criar URLs de compartlhamento.",
-    "account timezone field description": "Your time zone helps to properly display your calendar.",
+    "account timezone field description": "Seu fusa horário ajuda a exibir corretamente seu calendário.",
     "save": "Salvar",
     "saved": "Salvo",
     "error": "Erro",
     "error proper email": "E-mail informado incorreto",
     "error email empty": "E-mail informado vazio",
-    "account language field description": "Choose the language you want to see:",
+    "account language field description": "Escolha a língua que deseja ver:",
     "account background selection": "Selecione seu plano de fundo para seu Início Cozy:",
     "account localization": "Localização",
     "account identifiers": "Conta",
     "account personalization": "Customização",
     "account password": "Senha",
-    "account two factors auth": "Two-factor authentication",
-    "account 2fa strategy": "Authentication strategy",
-    "account 2fa hotp": "HOTP (based on a counter)",
-    "account 2fa totp": "TOTP (based on a timer)",
-    "enable 2fa": "Enable two-factor authentication",
-    "disable 2fa": "Disable two-factor authentication",
-    "account 2fa enabled": "Two-factor authentication has been enabled. Page will now reload.",
-    "account 2fa disabled": "Two-factor authentication has been disabled. Page will now reload.",
-    "account 2fa error": "There was something wrong while enabling two-factor authentication. Please try again in a few minutes or contact the support.",
-    "account 2fa token explanation": "Two-factor authentication is enabled on Cozy. To use it with your favourite app or device, you have to enter the following key when setting up the account:",
-    "account 2fa qrcode explanation": "You can also scan the QR code below if your app supports it.",
-    "2fa strategy hotp": "You are using the HOTP 2FA strategy (counter-based).",
-    "2fa strategy totp": "You are using the TOTP 2FA strategy (timer-based).",
-    "account 2fa hotp reset explanation": "If you're changing from one authentication app or device to another, you must reset the HOTP counter in order to not get locked outside of your Cozy.",
-    "2fa reset hotp": "Reset the HOTP counter",
-    "account 2fa reset": "The HOTP counter has been successfully reset.",
-    "account 2fa disable explanation": "You can disable the two-factor authentication at any time:",
+    "account two factors auth": "Identificação por dois fatores",
+    "account 2fa strategy": "Estratégia de identificação",
+    "account 2fa hotp": "HOTP (baseado num contador)",
+    "account 2fa totp": "TOTP (baseado num relógio)",
+    "enable 2fa": "Ativar a identificação por dois fatores",
+    "disable 2fa": "Desativar a identificação por dois fatores",
+    "account 2fa enabled": "A identificação por dois fatores foi ativada. A página vai recarregar agora.",
+    "account 2fa disabled": "A identificação por dois fatores foi desativada. A página vai recarregar agora.",
+    "account 2fa error": "Algo errado ocorreu ativando a identificação por dois fatores. Por favor, tente de novo em alguns minutos ou entre em contato com suporte.",
+    "account 2fa token explanation": "A identificação por dois fatores é ativada no seu Cozy. Para usar com seu aplicativo ou seu aparelho favorito, precisa entrar esse código quando configurar a conta:",
+    "account 2fa qrcode explanation": "Também pode escanear esse código QR se for suportado pelo aplicativo.",
+    "2fa strategy hotp": "Você está usando a identificação por dois fatores HOTP (baseada sobre um contador).",
+    "2fa strategy totp": "Você está usando a identificação por dois fatores TOTP (baseada sobre um timer).",
+    "account 2fa hotp reset explanation": "Se você trocar um aparelho ou aplicativo de identificação por um outro, você precisa zerar o contador HOTP para não se trancar fora do seu Cozy.",
+    "2fa reset hotp": "Zerar o contador HOTP.",
+    "account 2fa reset": "O contador HOTP foi zerado.",
+    "account 2fa disable explanation": "Pode desativar a identificação por dois fatores quando você quiser:",
     "french": "Francês",
     "english": "Inglês",
     "german": "Alemão",
     "spanish": "Espanhol",
     "korean": "Coreano",
-    "japanese": "Japanese",
+    "japanese": "Japonés",
     "portuguese": "Português",
-    "russian": "Russian",
+    "russian": "Russo",
     "change password procedure": "Passos para alterar sua senha",
     "current password": "senha atual",
     "new password": "nova senha",
@@ -4687,16 +4691,16 @@ module.exports = {
     "update stack modal content": "Você está prestes a atualizar a plataforma. Seu Cozy não vai estar disponível durante alguns minutos. Está bom para você?",
     "update stack modal confirm": "Atualizar",
     "update stack success": "Seus aplicativos estão atualizados, a página vai atualizar.",
-    "update stack error": "An error occurred during the update. Your Cozy may become unstable. If you notice any troubles, you should contact your hosting provider. When you will click on the OK button, the current window will be refreshed.",
+    "update stack error": "Um erro ocorreu durante a atualização. Seu Cozy pode virar instável. Se você perceber qualquer problema, deveria contatar seu fornecedor de alojamento. Quando você vai clicar o botão OK, a janela atual será atualizada.",
     "applications broken": "Aplicativos quebrados",
     "cozy platform": "Plataforma",
     "navbar back button title": "Voltar no Início",
     "navbar notifications": "Notificações",
     "or:": "ou:",
     "reboot stack": "Reiniciar",
-    "update error": "An error occurred while updating the app",
+    "update error": "Um erro ocorreu durante a atualização do aplicativo.",
     "update failed": "A atualização falhou",
-    "error update uninstalled app": "You can't update an app that is not installed.",
+    "error update uninstalled app": "Você não pode atualizar um aplicativo que não é instalado.",
     "notification open application": "Abrir o aplicativo",
     "notification update stack": "Atualizar a plataforma",
     "notification update application": "Atualizar agora",
@@ -4712,7 +4716,7 @@ module.exports = {
     "cozy help title": "Cozy - Ajuda",
     "help support title": "Suporte Oficial",
     "help community title": "Suporte da Comunidade",
-    "help direct title": "Direct Message",
+    "help direct title": "Mensagem direta",
     "help documentation title": "Documentação",
     "changing locale requires reload": "É necessário recarregar a página para mudar de localização.",
     "cancel": "cancelar",
@@ -4742,13 +4746,13 @@ module.exports = {
     "market app install": "Instalando...",
     "install your app": "Instalar um aplicativo do repositório Github dele",
     "market install your app": "Só copie/cole o URL do Git dele no campo abaixo:",
-    "market install your app tutorial": "To know more about how to build your own app, feel free to read our",
+    "market install your app tutorial": "Para saber mais sobre como construir seu próprio aplicativo, sinta-se livre para ler nosso",
     "market app tutorial": "tutorial",
     "help send message title": "Escrever diretamente ao time Cozy",
-    "help send message action": "Send",
+    "help send message action": "Enviar",
     "help send logs": "Envie registros do servidor para facilitar a eliminação dos erros.",
     "send message success": "Mensagem enviada com sucesso!",
-    "send message error": "An error occurred while sending your support message. Try to send it via an email client to support@cozycloud.cc",
+    "send message error": "Um erro ocorreu enviando sua mensagem para o suporte. Tente envia-lo utilizando um cliente e-mail a support@cozycloud.cc",
     "account change password success": "A senha foi alterada com sucesso.",
     "account change password short": "A nova senha está muito curta.",
     "account change password difference": "A confirmação da senha não corresponde a nova senha.",
@@ -4787,10 +4791,10 @@ module.exports = {
     "mstsc.js description": "Administre remotamente sua área de trabalho Windows a traves do protocolo RDP.",
     "hastebin description": "Um pastebin simples, uma ferramenta para compartlhar textos facilmente.",
     "polybios description": "Administre suas chaves PGP no seu browser.",
-    "frost description": "Build your internet memories by archiving web pages into your Cozy.",
-    "tiddlywiki description": "A non-linear personal web notebook.",
-    "hari description": "Encrypted personal diary.",
-    "map description": "Open Street Map in your Cozy",
+    "frost description": "Construir suas lembranças do internet arquivando paginas web no seu Cozy.",
+    "tiddlywiki description": "Um caderno web pessoal e não linear.",
+    "hari description": "Diário pessoal cifrado.",
+    "map description": "Open Street Map no seu Cozy",
     "warning unofficial app": "Esse aplicativo é um aplicativo da comunidade e a manutenção dele não é feito pela equipe Cozy.\nPara reportar um erro, abre por favor uma discussão no <a href='https://forum.cozy.io'>nosso forum</a>.",
     "update available notification": "Uma nova versão de %{appName} é disponível.",
     "stack update available notification": "Uma nova versão da plataforma é disponível.",
@@ -4822,13 +4826,13 @@ module.exports = {
     "state app installing": "Esse aplicativo está sendo instalado. Espere um pouco",
     "state app stopped error": "Esse aplicativo não inicia",
     "stack updating block message": "Seu Cozy está sendo atualizado, não pode utiliza-o antes da atualização acabar.",
-    "update apps error title": "An error occurred while updating apps",
+    "update apps error title": "Um erro aconteceu atualizando os aplicativos",
     "update apps error": "Um ou vários aplicativos falharam. Aplicativos afetados estão marcados como quebrados. Você precisará provavelmente desinstalar e instalar de novo esses aplicativos.",
     "update apps error list title": "Aplicativos quebrados",
-    "update stack error title": "An error occurred while updating your Cozy",
-    "update stack permission changes": "Applications listed below were not updated due to permission changes. Please, update them individually to choose whether or not you accept the new permissions.",
+    "update stack error title": "Um erro aconteceu atualizando seu Cozy",
+    "update stack permission changes": "Aplicativos enumerados abaixo não foram atualizados por causa de mudanças de permissões. Por favor atualize-os individualmente para escolher se você aceita as novas permissões.",
     "update stack warning": "Aviso",
-    "reboot stack error": "An error occurred while rebooting your Cozy. The Cozy may become unstable. Contact your hosting provider if your Cozy doesn't work anymore."
+    "reboot stack error": "Um erro aconteceu reiniciando seu Cozy. O Cozy poderia virar instável. Contate seu fornecedor de alojamento se seu Cozy não funcionar mais."
 };
 });
 
@@ -5738,6 +5742,308 @@ module.exports = {
 };
 });
 
+require.register("locales/zh_CN", function(exports, require, module) {
+module.exports = {
+    "home": "主页",
+    "apps": "应用",
+    "account": "帐户",
+    "email": "邮箱",
+    "timezone": "时区",
+    "domain": "域名",
+    "no domain set": "域名未设置",
+    "locale": "语言环境",
+    "change password": "更改密码",
+    "input your current password": "输入当前密码",
+    "enter a new password": "输入新密码",
+    "confirm new password": "确认新密码",
+    "send changes": "保存",
+    "manage": "管理",
+    "total": "总计",
+    "memory consumption": "内存占用",
+    "disk consumption": "磁盘占用",
+    "you have no notifications": "<span>你好，%{name}</span><br>当前尚无通知.",
+    "dismiss all": "忽略所有",
+    "add application": "添加应用？",
+    "install": "安装",
+    "github": "Github",
+    "website": "网站",
+    "your app": "你的应用！",
+    "community contribution": "社区贡献",
+    "official application": "由 Cozy 开发",
+    "application description": "应用描述",
+    "downloading description": "载入描述中…",
+    "downloading permissions": "载入权限中…",
+    "Cancel": "取消",
+    "ok": "确定",
+    "applications permissions": "应用权限",
+    "confirm": "确认",
+    "installing": "安装中",
+    "remove": "删除",
+    "update": "更新",
+    "config application unmark favorite": "取消标记为收藏",
+    "config application mark favorite": "标记为收藏",
+    "started": "已开始",
+    "notifications": "通知",
+    "questions and help forum": "问题与帮助论坛",
+    "sign out": "退出",
+    "open in a new tab": "在新标签页中打开",
+    "always on": "总是打开",
+    "keep always on": "保持总是打开",
+    "stop this app": "停止此应用",
+    "update required": "更新可用",
+    "navbar faq": "常见问题",
+    "application is installing": "应用正在安装中.\n请等待完成后重试.",
+    "no app message": "当前Cozy上没有安装任何应用.\n前往 <a href=\"#applications\">Cozy 应用商店</a> 安装新应用.",
+    "welcome to app store": "欢迎来到 Cozy 应用商店，你可以从这里安装你自己的应用\n或者选择列表中已有的应用进行安装.",
+    "installed everything": "你已经安装了所有应用！",
+    "already similarly named app": "你已有一个名字类似的应用.",
+    "your app list": "访问你的应用",
+    "customize your cozy": "自定义布局",
+    "manage your apps": "应用",
+    "choose your apps": "选择你的应用",
+    "configure your cozy": "配置你的 Cozy",
+    "ask for assistance": "寻求帮助",
+    "logout": "退出",
+    "navbar logout": "退出",
+    "welcome to your cozy": "欢迎来到你的 Cozy ！",
+    "you have no apps": "你尚无应用.",
+    "app management": "应用管理",
+    "app store": "应用商店",
+    "configuration": "配置",
+    "assistance": "协助",
+    "hardware consumption": "硬件配置",
+    "gigabytes": "GB",
+    "megabytes": "MB",
+    "terabyte": "MB",
+    "G": "GB",
+    "M": "MB",
+    "T": "MB",
+    "disk unit": "GB",
+    "memory unit": "MB",
+    "status hard drive label": "存储空间",
+    "status memory label": "内存",
+    "manage your applications": "应用",
+    "manage your devices": "已连接的设备",
+    "synchronized": "已同步",
+    "revoke device access": "解除设备连接",
+    "no application installed": "尚无已安装的应用",
+    "your parameters": "你的设置",
+    "alerts and password recovery email": "邮箱用来接收通知和恢复密码.",
+    "public name description": "用户名将在与他人分享文件或邀请他们加入日程时显示.",
+    "domain name for urls and email": "域名用来访问你的 Cozy 和生成分享链接.",
+    "account timezone field description": "时区用来正确地显示你的日程表.",
+    "save": "保存",
+    "saved": "已保存",
+    "error": "错误",
+    "error proper email": "填写的邮箱不正确",
+    "error email empty": "填写的邮箱为空",
+    "account language field description": "选择你想使用的语言：",
+    "account background selection": "选择 Cozy 主页的背景：",
+    "account localization": "本地化",
+    "account identifiers": "帐户",
+    "account personalization": "自定义",
+    "account password": "密码",
+    "account two factors auth": "两步验证",
+    "account 2fa strategy": "验证策略",
+    "account 2fa hotp": "HOTP (基于计数器)",
+    "account 2fa totp": "TOTP (基于计时器)",
+    "enable 2fa": "启用两步验证",
+    "disable 2fa": "禁用两步验证",
+    "account 2fa enabled": "两步验证已启用.页面将重新载入.",
+    "account 2fa disabled": "两步验证已禁用.页面将重新载入.",
+    "account 2fa error": "启用两步验证时出错.请过会儿重试或联系支持人员.",
+    "account 2fa token explanation": "两步验证已在 Cozy 上启用.你需要在你的验证应用或设备上输入以下密钥以正确配置.",
+    "account 2fa qrcode explanation": "如果应用支持，你也可以扫描二维码.",
+    "2fa strategy hotp": "你正在使用 HOTP 两步验证策略(基于计数器).",
+    "2fa strategy totp": "你正在使用 TOTP 两步验证策略(基于计时器).",
+    "account 2fa hotp reset explanation": "如果你要更换验证应用或设备，你必须重置 HOTP 计数器以防止不能登陆 Cozy.",
+    "2fa reset hotp": "重置 HOTP 计数器",
+    "account 2fa reset": "HOTP 计数器已重置.",
+    "account 2fa disable explanation": "你可以随时禁用两步验证.",
+    "french": "法语",
+    "english": "英语",
+    "german": "德语",
+    "spanish": "西班牙语",
+    "korean": "韩语",
+    "japanese": "日语",
+    "portuguese": "葡萄牙语",
+    "russian": "俄罗斯语",
+    "change password procedure": "更改密码的步骤",
+    "current password": "当前密码",
+    "new password": "新密码",
+    "confirm your new password": "确认新密码",
+    "save your new password": "保存新密码",
+    "do you want assistance": "你需要帮助吗？",
+    "help email title": "邮箱",
+    "help twitter title": "Twitter",
+    "help forum title": "论坛",
+    "help IRC title": "IRC",
+    "help github title": "Github",
+    "Visit the project website and learn to build your app:": "访问项目网站：",
+    "your own application": "你自己的应用",
+    "installed": "已安装",
+    "updated": "已更新",
+    "updating": "更新中",
+    "update all": "更新Stack和应用",
+    "show home logs": "显示主页日志",
+    "show data system logs": "显示数据系统日志",
+    "show proxy logs": "显示代理日志",
+    "show logs": "显示日志",
+    "update stack": "更新平台",
+    "reboot stack waiting message": "请稍候，需要几分钟以重启 Cozy.",
+    "update stack waiting message": "请稍候，需要几分钟以更新 Cozy.",
+    "status no device": "没有设备连接到 Cozy.",
+    "download apk": "下载 APK",
+    "mobile app promo": "在你的手机上通过独立应用来备份照片和同步联系人与日程表.",
+    "update stack modal title": "更新 Cozy 中",
+    "update stack modal content": "你正要更新平台… Cozy 将在几分钟内不可用.确定吗？",
+    "update stack modal confirm": "更新",
+    "update stack success": "你的应用已更新.点击确认后将最终完成，这将刷新当前页面.",
+    "update stack error": "更新时出错. Cozy 可能变得不稳定.如果遇到任何问题，你应当联系你的空间提供商.点击确认后，当前页面将刷新.",
+    "applications broken": "应用损坏",
+    "cozy platform": "平台",
+    "navbar back button title": "返回主页",
+    "navbar notifications": "通知",
+    "or:": "或：",
+    "reboot stack": "重启",
+    "update error": "更新应用时出错",
+    "update failed": "更新失败",
+    "error update uninstalled app": "你不能更新一个未安装的应用.",
+    "notification open application": "打开应用",
+    "notification update stack": "更新平台",
+    "notification update application": "立即更新",
+    "broken": "损坏",
+    "start this app": "启动此应用",
+    "stopped": "已停止",
+    "retry to install": "重试安装",
+    "cozy account title": "Cozy - 设置",
+    "cozy app store title": "Cozy - 应用商店",
+    "cozy home title": "Cozy - 主页",
+    "cozy applications title": "Cozy - 状态",
+    "running": "运行中",
+    "cozy help title": "Cozy - 帮助",
+    "help support title": "官方支持",
+    "help community title": "社区支持",
+    "help direct title": "私信",
+    "help documentation title": "文档",
+    "changing locale requires reload": "更改语言环境需要重新载入页面.",
+    "cancel": "取消",
+    "abort": "中止",
+    "Once updated, this application will require the following permissions:": "一旦更新，此应用将需要以下权限：",
+    "confirm update": "确认更新",
+    "confirm install": "确认安装",
+    "no specific permissions needed": "此应用不需要任何权限",
+    "removed": "已删除",
+    "removing": "删除中",
+    "required permissions": "已获取的权限",
+    "finish layout edition": "保存",
+    "reset customization": "重置",
+    "use icon": "使用图标",
+    "home section favorites": "收藏",
+    "home section leave": "导入",
+    "home section main": "日常",
+    "home section productivity": "生产力",
+    "home section data management": "数据",
+    "home section personal watch": "观看",
+    "home section misc": "杂项",
+    "home section platform": "平台",
+    "app status": "我的应用",
+    "settings": "设置",
+    "help": "帮助",
+    "change layout": "更改布局",
+    "market app install": "安装中…",
+    "install your app": "从 Git 库安装应用",
+    "market install your app": "粘贴 Git 地址至以下区域",
+    "market install your app tutorial": "想要了解更多如何开发你自己的应用，请查看我们的",
+    "market app tutorial": "教程",
+    "help send message title": "直接与 Cozy 团队沟通",
+    "help send message action": "发送",
+    "help send logs": "发送服务器日志以便于排除故障",
+    "send message success": "消息已成功发送",
+    "send message error": "发送支持消息时出错.尝试通过邮件发送到 support@cozycloud.cc",
+    "account change password success": "密码已更改.",
+    "account change password short": "新密码太短.",
+    "account change password difference": "密码不匹配.",
+    "account change password error": "更改密码时出错.请确认当前密码是否正确.",
+    "account background add": "添加背景",
+    "introduction market": "欢迎来到 Cozy 应用商店\n在这里，你可以安装\nCozy Cloud或社区或你自己提供的应用！",
+    "error connectivity issue": "接收数据时出错.<br />请稍后重试.",
+    "package.json not found": "未能获取 package.json. 请检查你的 Git 地址.",
+    "unknown provider": "从现在开始，应用只能从 Github 或 CozyCloud 市场安装.",
+    "please wait data retrieval": "请稍候，数据接收中…",
+    "revoke device confirmation message": "这将防止设备访问你的 Cozy. 确定吗？",
+    "dashboard": "仪表盘",
+    "calendars description": "管理你的日程并和手机保持同步",
+    "contacts description": "管理你的联系人并和手机保持同步",
+    "emails description": "阅读，发送和备份你的邮件.",
+    "files description": "你的在线文件系统并与你的设备保持同步.",
+    "photos description": "组织你的照片并和朋友们分享",
+    "sync description": "需要此工具来与手机同步联系人和日程表.",
+    "quickmarks description": "保存并管理你的书签.",
+    "cozic description": "在线收听你的音乐.",
+    "databrowser description": "浏览并可视化你的所有数据(原始格式).",
+    "zero-feeds description": "聚合你的RSS订阅并将你收藏的链接保存为书签.",
+    "kyou description": "通过量化你自己提升健康和心情,",
+    "konnectors description": "从外部服务(Twitter, Jawbone…)导入数据",
+    "kresus description": "管理你个人金融数据的工具",
+    "nirc description": "连接到你喜欢的IRC频道",
+    "shout description": "通过 Shout 网页应用连接到你喜欢的IRC频道",
+    "notes description": "组织和撰写智能笔记",
+    "owm description": "了解世界各地的天气",
+    "remote storage description": "远程存储应用允许你把未支持应用的数据保存到Cozy.",
+    "tasky description": "超级快且简单的基于标签的任务管理工具.",
+    "todos description": "记录你的任务，排序并有效率地完成它们.",
+    "term description": "Cozy 上的终端应用",
+    "ghost description": "通过 Ghost 博客平台上的此应用与全世界分享你的故事.",
+    "leave google description": "从你的 Google 帐户导入数据",
+    "mstsc.js description": "通过 RDP 协议管理你的 Windows 远程桌面.",
+    "hastebin description": "简单的 pastebin 应用使你能快速地分享文字.",
+    "polybios description": "从你的浏览器中管理 PGP 密钥.",
+    "frost description": "通过把网页存档到 Cozy 来记录你的互联网记忆.",
+    "tiddlywiki description": "一个非线性的个人网页笔记本.",
+    "hari description": "加密的个人日记.",
+    "map description": "在 Cozy 中打开街景.",
+    "warning unofficial app": "这是一个不由 Cozy 团队维护的社区应用.\n请在 <a href='https://forum.cozy.io'>我们的论坛</a>反馈.",
+    "update available notification": "%{appName} 的新版本可用.",
+    "stack update available notification": "平台的新版本可用.",
+    "app broken title": "损坏的应用",
+    "app broken": "此应用已损坏.你要尝试再次安装吗：",
+    "reinstall broken app": "重新安装",
+    "error git": "我们未能接收源码.",
+    "error github repo": "应用仓库似乎不可用.",
+    "error github": "Github 似乎不可用. 你可以在 https://status.github.com/ 查看它的状态.",
+    "error npm": "我们未能安装应用依赖.",
+    "error user linux": "我们未能创建此应用专属的 Linux 用户.",
+    "error start": "应用未能启动. 你可以在日志应用中获取详情.",
+    "app msg": "如果错误持续发生，你可以通过 contact@cozycloud.cc 或 IRC 频道 #cozycloud@ irc.freenode.net 联系我们.",
+    "more details": "详情",
+    "noapps": {
+        "customize your cozy": "你也可以 <a href=\"%{account}\">前往设置</a> 并自定义你的 Cozy,\n或者 <a href=\"%{appstore}\">查看应用商店</a> 来安装你的第一个应用."
+    },
+    "pick from files": "挑选图片",
+    "Crop the photo": "裁剪图像",
+    "chooseAgain": "选择另一个图片",
+    "modal ok": "确认",
+    "modal cancel": "取消",
+    "no image": "没有图片在你的 Cozy 上",
+    "ObjPicker upload btn": "上传本地文件",
+    "or": "或者",
+    "drop a file": "拖放文件 或者",
+    "url of an image": "粘贴网络图片链接",
+    "you have no album": "<p>你还没有任何相册<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-(</p><p>在 <a href='/#applications' target='_blank'>图片</a><br>创建相册并通过<a href='https://play.google.com/store/apps/details?id=io.cozy.files_client&hl=en' target='_blank'>手机应用</a>使用拍摄的照片<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:-)</p>",
+    "state app installing": "此应用正在安装，请稍候",
+    "state app stopped error": "此应用未能启动",
+    "stack updating block message": "Cozy 正在更新，你不能使用直到更新完成.",
+    "update apps error title": "更新应用时出错",
+    "update apps error": "一个或若干个应用出错. 相关应用已标记为损坏. 你可能需要删除并重新安装这些应用.",
+    "update apps error list title": "损坏的应用",
+    "update stack error title": "更新 Cozy 时出错",
+    "update stack permission changes": "下列应用由于权限改变未能更新. 请单独更新它们以决定是否接受新的权限.",
+    "update stack warning": "警告",
+    "reboot stack error": "重启 Cozy 时出错. Cozy 可能变得不稳定. 如果 Cozy 不能正常运行，请联系你的空间提供商."
+};
+});
+
 require.register("models/application", function(exports, require, module) {
 var Application, client, request, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -6443,13 +6749,19 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</div></div><div class="account-2fa-error alert alert-error main-alert hide"><div class="account-form-error-text">');
 var __val__ = t('account 2fa error')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</div></div></div></div><div id="2fa-infos" class="account-field"><p class="full-width">');
+buf.push('</div></div></div></div><div id="2fa-infos" class="account-field"><p id="2fa-strategy"></p><p class="bold">');
+var __val__ = t('account 2fa rectokens')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p id="2fa-recovery-tokens" class="bold"></p><p><button id="account-2fa-reset-tokens" class="full-width">');
+var __val__ = t('reset 2fa tokens')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</button></p><p class="full-width">');
 var __val__ = t('account 2fa token explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p id="2fa-token" class="token bold center">&nbsp;</p><p>');
 var __val__ = t('account 2fa qrcode explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="center"><img id="qrcode"/></p><p id="2fa-strategy"></p><div id="2fa-hotp-reset" class="hidden"><p>');
+buf.push('</p><p class="center"><img id="qrcode"/></p><div id="2fa-hotp-reset" class="hidden"><p>');
 var __val__ = t('account 2fa hotp reset explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="account-field"><p></p><button id="account-2fa-reset-button" class="full-width">');
@@ -6661,7 +6973,13 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><a role="button" href="https://files.cozycloud.cc/android/CozyMobile_lastest.apk"><i class="fa fa-android"></i><span>');
 var __val__ = t('download apk')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><a target="_blank" href="https://play.google.com/store/apps/details?id=io.cozy.files_client"><img src="img/en-play-badge.png"/></a></div></section></div></div></div>');
+buf.push('</span></a><a target="_blank" href="https://play.google.com/store/apps/details?id=io.cozy.files_client"><img src="img/en-play-badge.png"/></a><p>');
+var __val__ = t('desktop app promo')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><a role="button" target="_blank" href="https://docs.cozy.io/en/mobile/desktop.html"><img src="img/linux.svg" width="32px"/><span>');
+var __val__ = t('download desktop linux')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</span></a></div></section></div></div></div>');
 }
 return buf.join("");
 };
@@ -7333,7 +7651,7 @@ return buf.join("");
 });
 
 require.register("views/account", function(exports, require, module) {
-var Background, BackgroundList, BaseView, Instance, ObjectPicker, locales, request, timezones, _ref,
+var Background, BackgroundList, BaseView, Instance, ObjectPicker, request, timezones, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -7343,8 +7661,6 @@ BaseView = require('lib/base_view');
 Background = require('../models/background');
 
 timezones = require('helpers/timezone').timezones;
-
-locales = require('helpers/locales').locales;
 
 request = require('lib/request');
 
@@ -7360,7 +7676,7 @@ module.exports = exports.AccountView = (function(_super) {
   function AccountView() {
     this.onBackgroundChanged = __bind(this.onBackgroundChanged, this);
     this.on2faError = __bind(this.on2faError, this);
-    this.on2faStatusChageSuccess = __bind(this.on2faStatusChageSuccess, this);
+    this.on2faStatusChangeSuccess = __bind(this.on2faStatusChangeSuccess, this);
     this.onNewPasswordSubmit = __bind(this.onNewPasswordSubmit, this);
     _ref = AccountView.__super__.constructor.apply(this, arguments);
     return _ref;
@@ -7392,6 +7708,7 @@ module.exports = exports.AccountView = (function(_super) {
     this.error2faAlert.hide();
     this.twoFactorInfo = this.$('#2fa-infos');
     this.twoFactorToken = this.$('#2fa-token');
+    this.twoFactorRecToken = this.$('#2fa-recovery-tokens');
     this.changePasswordForm = this.$('#change-password-form');
     this.twoFactorForm = this.$('#2fa-form');
     this.accountSubmitButton = this.$('#account-form-button');
@@ -7400,6 +7717,7 @@ module.exports = exports.AccountView = (function(_super) {
     this.twoFactorStrategy = this.$('#2fa-strategy');
     this.twoFactorResetForm = this.$('#2fa-hotp-reset');
     this.twoFactorResetButton = this.$('#account-2fa-reset-button');
+    this.twoFactorResetTokensButton = this.$('#account-2fa-reset-tokens');
     this.twoFactorQrCode = this.$('#qrcode');
     this.accountSubmitButton.click(function(event) {
       event.preventDefault();
@@ -7417,6 +7735,10 @@ module.exports = exports.AccountView = (function(_super) {
       event.preventDefault();
       return _this.on2faResetSubmit();
     });
+    this.twoFactorResetTokensButton.click(function(event) {
+      event.preventDefault();
+      return _this.on2faResetTokens();
+    });
     for (_i = 0, _len = timezones.length; _i < _len; _i++) {
       timezone = timezones[_i];
       this.timezoneField.append("<option value=\"" + timezone + "\">" + timezone + "</option>");
@@ -7433,7 +7755,7 @@ module.exports = exports.AccountView = (function(_super) {
     }
   };
 
-  AccountView.prototype.onNewPasswordSubmit = function(event) {
+  AccountView.prototype.onNewPasswordSubmit = function() {
     var form, hideFunc, showError,
       _this = this;
     form = {
@@ -7482,9 +7804,8 @@ module.exports = exports.AccountView = (function(_super) {
     }
   };
 
-  AccountView.prototype.on2faStatusChageSuccess = function(message) {
-    var hideFunc,
-      _this = this;
+  AccountView.prototype.on2faStatusChangeSuccess = function(message) {
+    var hideFunc;
     this.info2faAlert.html(t(message));
     this.info2faAlert.fadeIn();
     clearTimeout(hideFunc);
@@ -7493,23 +7814,24 @@ module.exports = exports.AccountView = (function(_super) {
     }, 2000);
   };
 
-  AccountView.prototype.on2faError = function() {
+  AccountView.prototype.on2faError = function(error) {
     var _this = this;
-    console.error(err);
+    console.error(error);
     this.error2faAlert.fadeIn();
     return setTimeout(function() {
       return _this.error2faAlert.fadeOut();
     }, 5000);
   };
 
-  AccountView.prototype.on2faEnableSubmit = function(event) {
+  AccountView.prototype.on2faEnableSubmit = function() {
     var authType, form,
       _this = this;
     authType = this.twoFactorField.val();
     form = {
       authType: authType,
       encryptedOtpKey: this.getOtpKey(),
-      hotpCounter: authType === 'hotp' ? 0 : void 0
+      hotpCounter: authType === 'hotp' ? 0 : void 0,
+      recoveryCodes: this.getRecoveryTokens()
     };
     this.twoFactorSubmitButton.spin(true);
     return request.post('api/user', form, function(err, data) {
@@ -7518,7 +7840,7 @@ module.exports = exports.AccountView = (function(_super) {
         return _this.on2faError();
       } else {
         if (data.success) {
-          return _this.on2faStatusChageSuccess('account 2fa enabled');
+          return _this.on2faStatusChangeSuccess('account 2fa enabled');
         } else {
           return _this.on2faError();
         }
@@ -7526,7 +7848,7 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
-  AccountView.prototype.on2faDisableSubmit = function(event) {
+  AccountView.prototype.on2faDisableSubmit = function() {
     var form,
       _this = this;
     form = {
@@ -7539,7 +7861,7 @@ module.exports = exports.AccountView = (function(_super) {
         return _this.on2faError();
       } else {
         if (data.success) {
-          return _this.on2faStatusChageSuccess('account 2fa disabled');
+          return _this.on2faStatusChangeSuccess('account 2fa disabled');
         } else {
           return _this.on2faError();
         }
@@ -7547,7 +7869,7 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
-  AccountView.prototype.on2faResetSubmit = function(event) {
+  AccountView.prototype.on2faResetSubmit = function() {
     var form,
       _this = this;
     form = {
@@ -7574,13 +7896,44 @@ module.exports = exports.AccountView = (function(_super) {
     });
   };
 
+  AccountView.prototype.on2faResetTokens = function() {
+    var form,
+      _this = this;
+    form = {
+      recoveryCodes: this.getRecoveryTokens()
+    };
+    return request.post('api/user', form, function(err, data) {
+      _this.twoFactorSubmitButton.spin(false);
+      if (err) {
+        return _this.on2faError();
+      } else {
+        if (data.success) {
+          return _this.on2faStatusChangeSuccess('account 2fa enabled');
+        } else {
+          return _this.on2faError();
+        }
+      }
+    });
+  };
+
   AccountView.prototype.getOtpKey = function() {
-    var PRNG, key;
+    var PRNG;
     PRNG = new Uint32Array(5);
     window.crypto.getRandomValues(PRNG);
-    return key = PRNG.reduce(function(key, subkey) {
+    return PRNG.reduce(function(key, subkey) {
       return key += ('0000' + subkey.toString(16)).slice(-8);
     }, '');
+  };
+
+  AccountView.prototype.getRecoveryTokens = function() {
+    return (function() {
+      var _i, _results;
+      _results = [];
+      for (_i = 0; _i <= 9; _i++) {
+        _results.push(Math.floor(Math.random() * 100000000));
+      }
+      return _results;
+    })();
   };
 
   AccountView.prototype.getUserToken = function(next) {
@@ -7594,7 +7947,7 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.get2faQRCodeString = function(data, token) {
-    return "otpauth://" + data.authType + "/Cozy:" + data.email + "?secret=" + token + "&issuer=Cozy";
+    return ("otpauth://" + data.authType + "/Cozy:" + data.email) + ("?secret=" + token + "&issuer=Cozy");
   };
 
   AccountView.prototype.getSaveFunction = function(fieldName, fieldWidget, path) {
@@ -7637,7 +7990,7 @@ module.exports = exports.AccountView = (function(_super) {
   };
 
   AccountView.prototype.fetchData = function() {
-    var domain, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, userData,
+    var codes, domain, err, instance, locale, saveDomain, saveEmail, saveLocale, savePublicName, saveTimezone, tokensStr, userData,
       _this = this;
     userData = window.cozy_user || {};
     this.emailField.val(userData.email);
@@ -7695,6 +8048,15 @@ module.exports = exports.AccountView = (function(_super) {
       this.twoFactorForm.hide();
       this.twoFactorInfo.show();
       this.twoFactorStrategy.html(t('2fa strategy ' + userData.authType));
+      tokensStr = '';
+      try {
+        codes = JSON.parse(userData.encryptedRecoveryCodes);
+        tokensStr = codes.join(', ');
+      } catch (_error) {
+        err = _error;
+        tokensStr = t("error problem 2fa codes");
+      }
+      this.twoFactorRecToken.html(tokensStr);
       if (userData.authType === 'hotp') {
         this.twoFactorResetForm.show();
       }
@@ -7755,7 +8117,7 @@ module.exports = exports.AccountView = (function(_super) {
             _this.backgroundList.collection.add(background);
             return _this.backgroundList.select(background);
           },
-          error: function(data) {
+          error: function() {
             return alert(t('account background added error'));
           },
           complete: function() {
@@ -7932,7 +8294,7 @@ module.exports = ApplicationRow = (function(_super) {
     var branch, gitName, website;
     gitName = this.model.get('git');
     if (gitName != null) {
-      gitName = gitName.slice(0, -4);
+      gitName = gitName.replace(/\.git$/, '');
     }
     website = this.model.get('website') || gitName;
     branch = this.model.get('branch') || 'master';
@@ -8531,20 +8893,25 @@ module.exports = ConfigApplicationsView = (function(_super) {
       if (err) {
         return alert(t('Server error occured, infos cannot be displayed.'));
       } else {
-        if (data.usedUnit === 'T') {
-          data.usedUnit = 'G';
-          data.usedDiskSpace *= 1000;
-        }
-        if (data.totalUnit === 'T') {
-          data.totalUnit = 'G';
-          data.totalDiskSpace *= 1000;
-        }
-        diskUsed = "" + data.usedDiskSpace + " ";
-        diskTotal = "" + data.totalDiskSpace + " ";
+        diskUsed = _this.toGigabytes(data.usedDiskSpace, data.usedUnit);
+        diskTotal = _this.toGigabytes(data.totalDiskSpace, data.totalUnit);
         _this.displayMemory(data.freeMem, data.totalMem);
         return _this.displayDiskSpace(diskUsed, diskTotal);
       }
     });
+  };
+
+  ConfigApplicationsView.prototype.toGigabytes = function(value, unit) {
+    switch (unit) {
+      case 'T':
+        return value * 1000;
+      case 'G':
+        return value;
+      case 'M':
+        return value / 1000;
+      default:
+        return 0;
+    }
   };
 
   ConfigApplicationsView.prototype.displayMemory = function(amount, total) {
@@ -8553,8 +8920,8 @@ module.exports = ConfigApplicationsView = (function(_super) {
   };
 
   ConfigApplicationsView.prototype.displayDiskSpace = function(amount, total) {
-    this.diskSpace.find('.amount').html(amount);
-    return this.diskSpace.find('.total').html(total);
+    this.diskSpace.find('.amount').html("" + amount + " ");
+    return this.diskSpace.find('.total').html("" + total + " ");
   };
 
   ConfigApplicationsView.prototype.onAppStateChanged = function() {
@@ -11370,6 +11737,9 @@ module.exports = MarketView = (function(_super) {
   MarketView.prototype.parseGitUrl = function(url) {
     var branch, domain, error, git, name, out, parsed, parts, path, port, proto, slug;
     url = url.trim();
+    if (url.lastIndexOf('/') === url.length - 1) {
+      url = url.slice(0, url.length - 1);
+    }
     url = url.replace('git@github.com:', 'https://github.com/');
     url = url.replace('git://', 'https://');
     parsed = REPOREGEX.exec(url);

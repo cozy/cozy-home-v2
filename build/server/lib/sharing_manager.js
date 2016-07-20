@@ -105,10 +105,10 @@ module.exports.handleNotification = function(event, id, callback) {
   tokens = event.split(".");
   if (tokens[1] === "create") {
     return Sharing.find(id, function(err, sharing) {
-      var article, docType, message, messageKey;
+      var article, docType, message, messageKey, ref1;
       if (err != null) {
         return log.error(err);
-      } else if (sharing.targets == null) {
+      } else if (!((ref1 = sharing.targets) != null ? ref1.length : void 0) > 0) {
         docType = sharing.rules[0].docType;
         article = articleBeforeDocType(docType);
         messageKey = 'sharing create request notification';
@@ -124,10 +124,10 @@ module.exports.handleNotification = function(event, id, callback) {
     ref1 = extractIds(id), id = ref1[0], shareID = ref1[1];
     if ((id != null) && (shareID != null)) {
       return getSharingInfos(id, shareID, function(err, sharing, docType) {
-        var article, message, messageKey, sharerName, slug;
+        var article, message, messageKey, ref2, sharerName, slug;
         if (err != null) {
           return log.error(err);
-        } else if ((sharing.targets == null) && (docType != null)) {
+        } else if (!((ref2 = sharing.targets) != null ? ref2.length : void 0) > 0 && (docType != null)) {
           sharerName = sharing.sharerName;
           article = articleBeforeDocType(docType);
           messageKey = 'sharing update notification';
@@ -145,10 +145,10 @@ module.exports.handleNotification = function(event, id, callback) {
     ref2 = extractIds(id), id = ref2[0], shareID = ref2[1];
     if ((id != null) && (shareID != null)) {
       return getSharingInfos(id, shareID, function(err, sharing, docType) {
-        var article, message, messageKey, sharerName, slug;
+        var article, message, messageKey, ref3, sharerName, slug;
         if (err != null) {
           return log.error(err);
-        } else if ((sharing.targets == null) && (docType != null)) {
+        } else if (!((ref3 = sharing.targets) != null ? ref3.length : void 0) > 0 && (docType != null)) {
           sharerName = sharing.sharerName;
           article = articleBeforeDocType(docType);
           messageKey = 'sharing delete notification';

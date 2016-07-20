@@ -9,6 +9,18 @@ TESTMAIL = 'test@test.com'
 TESTPASS = 'password'
 TESTOTPKEY = '8b234fb156f8d39555ea0a7538db878b0d1357cc'
 TESTOTPTOKEN = 'RMRU7MKW7DJZKVPKBJ2TRW4HRMGRGV6M'
+TESTRECOVERYTOKENS = [
+    24383427
+    94122669
+    66187413
+    95999368
+    955875
+    34514463
+    94504055
+    61096172
+    93430255
+    63856009
+]
 
 describe 'Modify account failure', ->
 
@@ -150,6 +162,10 @@ describe 'Modify 2FA settings', ->
 
     after helpers.takeDown
 
+    it "When I send a request to log in", (done) ->
+        @dataClient.post 'accounts/password/', password: TESTPASS , done
+
+
     it 'When I enable 2FA', (done) ->
         data =
             authType: 'hotp'
@@ -197,11 +213,28 @@ describe 'Modify 2FA settings', ->
             user.hotpCounter.should.equal 0
             done()
 
+    it 'When I set 2FA recovery tokens', (done) ->
+        data =
+            recoveryCodes: TESTRECOVERYTOKENS
+        @client.post 'api/user', data, done
+
+    it 'Then success response should be returned', ->
+        @response.statusCode.should.equal 200
+
+    it 'And the recovery tokens are correctly set', (done) ->
+        User.all (err, users) ->
+            should.not.exist err
+            should.exist users
+            user = users[0]
+            str = user.encryptedRecoveryCodes
+            str.should.equal JSON.stringify TESTRECOVERYTOKENS
+            done()
+
     it 'When I disable 2FA', (done) ->
         data =
             authType: null
         @client.post 'api/user', data, done
-        
+
     it 'Then success response should be returned', ->
         @response.statusCode.should.equal 200
 

@@ -10,6 +10,7 @@ module.exports = User = cozydb.getModel 'User',
     authType: String
     encryptedOtpKey: String
     hotpCounter: Number
+    encryptedRecoveryCodes: String
 
 
 # Request methods
@@ -22,4 +23,3 @@ User.first = (callback) ->
 
 User.destroyAll = (callback) ->
     User.requestDestroy "all", callback
-
