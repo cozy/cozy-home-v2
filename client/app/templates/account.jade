@@ -117,6 +117,10 @@
                     
                 p.center
                     img#qrcode
+
+                #2fa-hotp-yubikey.hidden
+                    p= t('2fa if yubikey')
+                    p#2fa-raw-key.bold.center &nbsp;
                 
                 #2fa-hotp-reset.hidden
                     p= t('account 2fa hotp reset explanation')

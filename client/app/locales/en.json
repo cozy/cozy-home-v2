@@ -117,6 +117,7 @@
   "2fa reset hotp": "Reset the HOTP counter",
   "account 2fa reset": "The HOTP counter has been successfully reset.",
   "account 2fa disable explanation": "You can disable the two-factor authentication at any time:",
+  "2fa if yubikey": "If you are using a Yubikey to authenticate, use the key below as your Secret Key.",
   "french": "French",
   "english": "English",
   "german": "German",

@@ -46,6 +46,8 @@ module.exports = class exports.AccountView extends BaseView
         @twoFactorResetForm = @$ '#2fa-hotp-reset'
         @twoFactorResetButton = @$ '#account-2fa-reset-button'
         @twoFactorResetTokensButton = @$ '#account-2fa-reset-tokens'
+        @twoFactorYubikeyBlock = @$ '#2fa-hotp-yubikey'
+        @twoFactorRawKey = @$ '#2fa-raw-key'
 
         @twoFactorQrCode = @$('#qrcode')
 
@@ -263,7 +265,7 @@ module.exports = class exports.AccountView extends BaseView
             if err
                 next err
             else
-                next null, data.token
+                next null, data.token, data.key
 
 
     # Return the string to be encoded as a QR code, containing user datas and
@@ -376,12 +378,14 @@ module.exports = class exports.AccountView extends BaseView
             # If HOTP is enabled, show the conter reset panel
             if userData.authType is 'hotp'
                 @twoFactorResetForm.show()
+                @twoFactorYubikeyBlock.show()
             # Retrieve 2FA token, display it and generate a QR code from it
-            @getUserToken (err, token) =>
+            @getUserToken (err, token, key) =>
                 if err
                     console.error err
                 else if token
                     @twoFactorToken.html token
+                    @twoFactorRawKey.html key
                     # Retrieve the QR Code data URL and fill the img tag's
                     # src attribute with it
                     data = qr.toDataURL
