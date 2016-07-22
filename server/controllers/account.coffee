@@ -128,8 +128,9 @@ module.exports =
                     error: localizationManager.t "no user registered"
             else
                 user = users[0]
-                res.status(200).send
-                    token: base32.encode(user.encryptedOtpKey).toString()
+                buffer = new Buffer(user.encryptedOtpKey, 'hex')
+                res.status(200).send 
+                    token: base32.encode(buffer).toString()
 
 
     # Return list of instances
