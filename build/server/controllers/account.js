@@ -145,7 +145,7 @@ module.exports = {
   },
   send2FAToken: function(req, res, next) {
     return User.all(function(err, users) {
-      var user;
+      var buffer, user;
       if (err) {
         return res.status(400).send({
           error: err
@@ -156,8 +156,10 @@ module.exports = {
         });
       } else {
         user = users[0];
+        buffer = new Buffer(user.encryptedOtpKey, 'hex');
         return res.status(200).send({
-          token: base32.encode(user.encryptedOtpKey).toString()
+          token: base32.encode(buffer).toString(),
+          key: user.encryptedOtpKey
         });
       }
     });

@@ -1626,6 +1626,7 @@ module.exports = {
   "2fa reset hotp": "Reset the HOTP counter",
   "account 2fa reset": "The HOTP counter has been successfully reset.",
   "account 2fa disable explanation": "You can disable the two-factor authentication at any time:",
+  "2fa if yubikey": "If you are using a Yubikey to authenticate, use the key below as your Secret Key.",
   "french": "French",
   "english": "English",
   "german": "German",
@@ -2228,7 +2229,7 @@ module.exports = {
     "account 2fa enabled": "La autenticación de dos factores ha sido activada. La página va a recargarse.",
     "account 2fa disabled": "La autenticación de dos factores ha sido desactivada. La página va a recargarse.",
     "account 2fa error": "Hay algo que no funciona al activar la autenticación de dos factores. Por favor, ensaye de nuevo en algunos minutos o contacte la asistencia técnica.",
-    "account 2fa token explanation": "La autenticación de dos factores etá activada en Cozy. Para utilizarla con sus aplicaciones favoritas o con su periférico, debe ingresar la siguiente clave al configurar la cuenta.",
+    "account 2fa token explanation": "La autenticación de dos factores está activada en Cozy. Para utilizarla con sus aplicaciones favoritas o con su periférico, debe ingresar la siguiente clave al configurar la cuenta.",
     "account 2fa qrcode explanation": "usted también puede numerizar el código QR si su aplicación lo acepta.",
     "2fa strategy hotp": "Usted utliza la estrategia HOTP 2FA (basada en el valor del contador)",
     "2fa strategy totp": "Usted utliza la estrategia TOTP 2FA (basada en el temporizador).",
@@ -2283,7 +2284,7 @@ module.exports = {
     "or:": "o:",
     "reboot stack": "Reiniciar",
     "update error": "Ha ocurrido un error al actualizar su aplicación",
-    "update failed": "Fallo la actualización",
+    "update failed": "Falló la actualización",
     "error update uninstalled app": "Usted no puede actualizar una aplicación que no está instalada.",
     "notification open application": "Abrir la aplicación",
     "notification update stack": "Actualizar la plataforma",
@@ -2330,7 +2331,7 @@ module.exports = {
     "market app install": "Se está instalando...",
     "install your app": "Instalar una aplicación desde su Repositorio Git",
     "market install your app": "Copie/pegue su Git URL en el campo siguiente:",
-    "market install your app tutorial": "Para saber más sobre la manera como construir su propia aplicación, no dude en leer nuestro",
+    "market install your app tutorial": "Para saber más sobre la manera como construir su propia aplicación, no dude en leer nuestra ",
     "market app tutorial": "guía",
     "help send message title": "Escribir directamente al equipo de Cozy",
     "help send message action": "Enviar",
@@ -6761,7 +6762,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><p id="2fa-token" class="token bold center">&nbsp;</p><p>');
 var __val__ = t('account 2fa qrcode explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p><p class="center"><img id="qrcode"/></p><div id="2fa-hotp-reset" class="hidden"><p>');
+buf.push('</p><p class="center"><img id="qrcode"/></p><div id="2fa-hotp-yubikey" class="hidden"><p>');
+var __val__ = t('2fa if yubikey')
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</p><p id="2fa-raw-key" class="bold center">&nbsp;</p></div><div id="2fa-hotp-reset" class="hidden"><p>');
 var __val__ = t('account 2fa hotp reset explanation')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p><div class="account-field"><p></p><button id="account-2fa-reset-button" class="full-width">');
@@ -7718,6 +7722,8 @@ module.exports = exports.AccountView = (function(_super) {
     this.twoFactorResetForm = this.$('#2fa-hotp-reset');
     this.twoFactorResetButton = this.$('#account-2fa-reset-button');
     this.twoFactorResetTokensButton = this.$('#account-2fa-reset-tokens');
+    this.twoFactorYubikeyBlock = this.$('#2fa-hotp-yubikey');
+    this.twoFactorRawKey = this.$('#2fa-raw-key');
     this.twoFactorQrCode = this.$('#qrcode');
     this.accountSubmitButton.click(function(event) {
       event.preventDefault();
@@ -7941,7 +7947,7 @@ module.exports = exports.AccountView = (function(_super) {
       if (err) {
         return next(err);
       } else {
-        return next(null, data.token);
+        return next(null, data.token, data.key);
       }
     });
   };
@@ -8059,13 +8065,15 @@ module.exports = exports.AccountView = (function(_super) {
       this.twoFactorRecToken.html(tokensStr);
       if (userData.authType === 'hotp') {
         this.twoFactorResetForm.show();
+        this.twoFactorYubikeyBlock.show();
       }
-      return this.getUserToken(function(err, token) {
+      return this.getUserToken(function(err, token, key) {
         var data;
         if (err) {
           return console.error(err);
         } else if (token) {
           _this.twoFactorToken.html(token);
+          _this.twoFactorRawKey.html(key);
           data = qr.toDataURL({
             mime: 'image/png',
             size: 10,
