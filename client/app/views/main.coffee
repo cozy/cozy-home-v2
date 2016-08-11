@@ -267,11 +267,9 @@ module.exports = class HomeView extends BaseView
             # if the app was already open, we want to change its hash
             # only if there is a hash in the home given url.
             else if hash
-                contentWindow = frame.prop('contentWindow')
-
                 # Same origin policy may prevent to access location hash
                 try
-                    currentHash = contentWindow.location.hash.substring 1
+                    frame.prop('contentWindow').location.hash = hash
                 catch err
                     console.err err
                 onLoad()
@@ -356,4 +354,3 @@ module.exports = class HomeView extends BaseView
     displayToken: (token, slug) ->
         iframeWin = document.getElementById("#{slug}-frame").contentWindow
         iframeWin.postMessage token: token, appName:slug, '*'
-
