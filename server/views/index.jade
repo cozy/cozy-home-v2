@@ -9,8 +9,8 @@ html
     link(rel='stylesheet', href='stylesheets/app.css')
 
     script.
-        var argsFromLocationSearch = #{argsFromLocationSearch}
-        window.urlArguments = argsFromLocationSearch(window.location.search)
+        var argsFromLocationHash = #{argsFromLocationHash}
+        window.urlArguments = argsFromLocationHash(window.location.hash)
     script!= imports
     script(src='javascripts/vendor.js' defer=true)
     script(src='javascripts/app.js' onload="require('initialize')" defer=true)
