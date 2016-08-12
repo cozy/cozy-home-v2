@@ -58,6 +58,31 @@
     background-color white
 
 
+/** Search bar */
+.search
+    float         right
+    margin-top    -31px
+    margin-right  120px
+    border-radius 3px
+
+    input
+        text-align       initial
+        height           1.6em
+        width            8em
+        background-color #999 !important  // needed to overwrite JS properties
+        border           1px solid #000 !important  // needed to overwrite JS properties
+        border-radius    3px
+        color            #000
+        font-size        1em
+        font-family      "Source Sans Pro", sans-serif
+        transition       width 0.2s ease-out, background-color 0.3s ease-out
+
+        &:focus
+            width            36vw
+            background-color #fff !important  // needed to overwrite JS properties
+            color            #333
+
+
 // navbar
 // ========================================================
 .navbar
@@ -362,4 +387,3 @@ button.btn
             height 100%
             max-width 100%
             max-height 100%
-
