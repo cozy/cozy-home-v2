@@ -24,8 +24,37 @@ module.exports =
             if err then next err
             else
                 imports = ""
+                # if qwant application is installed
+                isQwantInstalled = (results.applications.find((application) ->
+                    application.name is 'qwant')) isnt undefined
+                if isQwantInstalled
+                    imports += "window.qwantInstalled = #{true};\n"
+                # if node development environment
+                if process.env.NODE_ENV is 'development'
+                    imports += "window.DEV_ENV = #{true};\n"
                 for key, value of results
                     imports += "window.#{key} = #{JSON.stringify(value)};\n"
                 imports += "window.managed = #{process.env.MANAGED};\n"
 
-                res.render 'index', {imports}
+                # function to grab queries from window.location.search
+                argsFromLocationSearch = (searchString) ->
+                    # remove the '?'
+                    queryString = searchString.substring 1
+                    # split by '&'
+                    queries = queryString.split '&'
+                    urlArguments = {}
+                    for query of queries
+                        if queries[query] is '' then continue
+                        # query=value -> [query, value]
+                        pair = queries[query].split '='
+                        # to check if many values
+                        values = pair[1].split(',')
+                        # if at least two values -> value is array
+                        if values[1]
+                            urlArguments[pair[0]] = values
+                        else
+                            # one value, value is string
+                            urlArguments[pair[0]] = pair[1]
+                    return urlArguments
+
+                res.render 'index', {imports, argsFromLocationSearch}
