@@ -36,10 +36,11 @@ module.exports =
                     imports += "window.#{key} = #{JSON.stringify(value)};\n"
                 imports += "window.managed = #{process.env.MANAGED};\n"
 
-                # function to grab queries from window.location.search
-                argsFromLocationSearch = (searchString) ->
+                # function to grab queries from window.location.hash
+                argsFromLocationHash = (hashString) ->
                     # remove the '?'
-                    queryString = searchString.substring 1
+                    queryString =
+                        hashString.substring (hashString.indexOf('?')+1)
                     # split by '&'
                     queries = queryString.split '&'
                     urlArguments = {}
@@ -57,4 +58,4 @@ module.exports =
                             urlArguments[pair[0]] = pair[1]
                     return urlArguments
 
-                res.render 'index', {imports, argsFromLocationSearch}
+                res.render 'index', {imports, argsFromLocationHash}
