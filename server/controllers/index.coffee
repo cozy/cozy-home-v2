@@ -48,6 +48,7 @@ module.exports =
                         if queries[query] is '' then continue
                         # query=value -> [query, value]
                         pair = queries[query].split '='
+                        if pair.length isnt 2 then continue
                         # to check if many values
                         values = pair[1].split(',')
                         # if at least two values -> value is array
