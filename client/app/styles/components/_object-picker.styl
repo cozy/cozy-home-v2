@@ -239,11 +239,20 @@
                     z-index     100
                     box-shadow  0em 0em .3em #555
                     transition  .2s
-            .searchItem.selected
-                border          .35em solid rgb(0, 185, 255)
-                transform       scale(1.05)
-                z-index         50
-                box-shadow      0em 0em .3em #555
+                &.selected
+                    border          .35em solid rgb(0, 185, 255)
+                    transform       scale(1.05)
+                    z-index         50
+                    box-shadow      0em 0em .3em #555
+        .error
+            text-align          center
+            padding             .5em
+            border              .2em solid rgb(255, 100, 0)
+            background-color    rgb(255, 240, 240)
+            border-radius       .3em
+            &.notFound
+                border              .2em solid rgb(180, 180, 180)
+                background-color    rgb(240, 240, 240)
 
 
     // ========================================= //
