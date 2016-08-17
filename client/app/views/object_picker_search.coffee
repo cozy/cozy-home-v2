@@ -25,7 +25,7 @@ module.exports = class ObjectPickerSearch extends BaseView
 
         ####
         # listeners
-        @input.addEventListener 'change', @_inputListener
+        @input.addEventListener 'change', @_inputOnChange
 
         ####
         # input helpers and properties
@@ -33,7 +33,10 @@ module.exports = class ObjectPickerSearch extends BaseView
         @input.container = @blocContainer
 
     getObject : () ->
+        # get selected image source if it exists
+        @selectedUrl = $('div.selected img')[0]?.data
         if @selectedUrl
+            @selectedUrl = "api/proxy/?url=#{@selectedUrl}"
             return urlToFetch: @selectedUrl
         else
             return false
@@ -51,7 +54,7 @@ module.exports = class ObjectPickerSearch extends BaseView
 #
 
     # input listener
-    _inputListener: (e) ->
+    _inputOnChange: (e) ->
         # here, @ is the input object running this listener
         newQuery = @value
         if newQuery.trim() isnt ''
@@ -86,14 +89,25 @@ module.exports = class ObjectPickerSearch extends BaseView
                 for index of imagesArray
                     item$ = $("<div class='searchItem'></div>")[0]
                     currentImage = imagesArray[index]
+
                     # create image with properties
                     thumb$ = new Image()
-                    thumb$.src = currentImage.media_fullsize
+                    thumb$.src = currentImage.thumbnail
+                    thumb$.data = currentImage.media
                     thumb$.style.height = currentImage.thumb_height + 'px'
                     thumb$.style.width = currentImage.thumb_width + 'px'
+
                     # hide if broken url
                     thumb$.onerror = () ->
                         $(@).parent().hide();
+
+                    # selection listener
+                    thumb$.onclick = () ->
+                        # unselect all
+                        $('.searchItem').removeClass('selected')
+                        # select this item
+                        $(@).parent().addClass('selected')
+
                     # append to parents
                     item$.append(thumb$)
                     results$.append(item$)

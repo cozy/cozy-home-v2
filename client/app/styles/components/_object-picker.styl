@@ -229,10 +229,21 @@
             flex-wrap           wrap
             justify-content     space-around
             .searchItem
-                margin  .2em .1em
-                border  .1em solid #777
+                margin          .2em .1em
+                border          .35em solid white
+                transition      .2s
+                border-radius   .2em
                 &:hover
-                    cursor  pointer
+                    cursor      pointer
+                    transform   scale(1.05)
+                    z-index     100
+                    box-shadow  0em 0em .3em #555
+                    transition  .2s
+            .searchItem.selected
+                border          .35em solid rgb(0, 185, 255)
+                transform       scale(1.05)
+                z-index         50
+                box-shadow      0em 0em .3em #555
 
 
     // ========================================= //
