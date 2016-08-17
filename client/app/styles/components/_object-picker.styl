@@ -208,21 +208,31 @@
     .imagesSearch
         flex-direction  column
         align-items     stretch
-        justify-content center
+        justify-content flex-start
         margin-bottom   margin-imagesSearch
 
     .search-tab-container
         display         flex
         flex-direction  column
-        justify-content stretch
+        justify-content space-around
         align-items     stretch
         padding         1em
 
-    .modal-search-input
-        flex none
-        margin    0 auto
-        max-width 36em
-        width     80%
+        .modal-search-input
+            flex            none
+            margin          0 auto
+            max-width       36em
+            width           80%
+            margin-bottom   1em
+        .results
+            display             flex
+            flex-wrap           wrap
+            justify-content     space-around
+            .searchItem
+                margin  .2em .1em
+                border  .1em solid #777
+                &:hover
+                    cursor  pointer
 
 
     // ========================================= //
