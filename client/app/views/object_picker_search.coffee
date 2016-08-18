@@ -87,11 +87,11 @@ module.exports = class ObjectPickerSearch extends BaseView
                 # remove potential error message
                 container.children('.error').remove()
                 # variables
-                results$ = $("<div class='results'></div>")[0]
+                results$ = $("<div class='results'></div>")
                 imagesArray = res.data.result.items
                 # display the gallery
                 for index of imagesArray
-                    item$ = $("<div class='searchItem'></div>")[0]
+                    item$ = $("<div class='searchItem'></div>")
                     currentImage = imagesArray[index]
 
                     # create image with properties
