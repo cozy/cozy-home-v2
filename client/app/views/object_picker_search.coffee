@@ -25,7 +25,7 @@ module.exports = class ObjectPickerSearch extends BaseView
 
         ####
         # listeners
-        @input.addEventListener 'change', @_inputOnChange
+        @input.addEventListener 'keyup', @_inputOnChange
 
         ####
         # input helpers and properties
@@ -54,12 +54,14 @@ module.exports = class ObjectPickerSearch extends BaseView
 #
 
     # input listener
-    _inputOnChange: (e) ->
+    _inputOnChange: _.debounce( (e) ->
         # here, @ is the input object running this listener
         newQuery = @value
-        if newQuery.trim() isnt ''
+        # if not empty and not equal to the last query
+        if newQuery.trim() isnt '' and newQuery isnt @query
             @query = newQuery
             @getImages()
+    , 500)
 
     _getQwantImages: () ->
         # here, @ is the input object running the previous listener
@@ -68,8 +70,9 @@ module.exports = class ObjectPickerSearch extends BaseView
         container.children('.results').remove()
         # remove potential error message
         container.children('.error').remove()
-        # add the loading spinner
-        container.append($("<img src='/img/spinner.svg' class='spinner'/>"))
+        # add the loading spinner if not exist
+        if !$('.search-tab-container .spinner').length
+            container.append($("<img src='/img/spinner.svg' class='spinner'/>"))
         # request
         client.get "apps/qwant/imagesSearch?q=#{@query}&count=50", (err, res) =>
             # remove loading spinner
