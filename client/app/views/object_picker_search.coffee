@@ -64,6 +64,10 @@ module.exports = class ObjectPickerSearch extends BaseView
     _getQwantImages: () ->
         # here, @ is the input object running the previous listener
         container = $('.search-tab-container')
+        # remove last results
+        container.children('.results').remove()
+        # remove potential error message
+        container.children('.error').remove()
         # add the loading spinner
         container.append($("<img src='/img/spinner.svg' class='spinner'/>"))
         # request
@@ -72,29 +76,17 @@ module.exports = class ObjectPickerSearch extends BaseView
             container.children('.spinner').remove()
             # if error
             if err
-                # remove last results
-                container.children('.results').remove()
-                # remove potential error message
-                container.children('.error').remove()
                 # display a not found message
                 container.append($("<div class='error'>#{t 'a server error occured'}</div>"))
                 console.error err
                 return
             # if no results
             if res?.data?.result?.items.length == 0
-                # remove last results
-                container.children('.results').remove()
-                # remove potential error message
-                container.children('.error').remove()
                 # display a not found message
                 container.append($("<div class='error notFound'>#{t 'qwant results not found'}</div>"))
                 return
             # if results
             if res?.data?.result?.items
-                # remove last results
-                container.children('.results').remove()
-                # remove potential error message
-                container.children('.error').remove()
                 # variables
                 results$ = $("<div class='results'></div>")
                 imagesArray = res.data.result.items
