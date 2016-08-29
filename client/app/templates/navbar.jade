@@ -11,6 +11,8 @@
     #menu-applications-container
     //- parent should already be window.parent by default
     - var qwantMode = parent.urlArguments && parent.urlArguments.modes && parent.urlArguments.modes.indexOf('qwant_search') !== -1;
-    if (parent.DEV_ENV || qwantMode || parent.ENABLE_QWANT_SEARCH) && (parent.qwantInstalled)
+    if ((parent.DEV_ENV || qwantMode || parent.ENABLE_QWANT_SEARCH) && parent.qwantInstalled)
         div.search
             input#search-bar(type="text")
+    if parent.BEN_DEMO
+        input#search-bar(type="text")
