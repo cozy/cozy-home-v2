@@ -84,7 +84,7 @@ module.exports = class PhotoPickerCroper extends Modal
         @panelsControlers[@photoURLpanel.name] = @photoURLpanel
         # images search panel if qwant app installed and correct env
         qwantMode = window.urlArguments && window.urlArguments.modes && window.urlArguments.modes.indexOf 'qwant_search' isnt -1
-        if (window.DEV_ENV or qwantMode) and (window.qwantInstalled)
+        if (window.DEV_ENV or qwantMode or window.ENABLE_QWANT_SEARCH) and (window.qwantInstalled)
             @imagesSearchPanel = new ObjectPickerSearch()
             tabControler.addTab @objectPickerCont, @tablist, @imagesSearchPanel
             @panelsControlers[@imagesSearchPanel.name] = @imagesSearchPanel

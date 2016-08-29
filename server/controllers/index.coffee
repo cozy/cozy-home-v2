@@ -32,6 +32,10 @@ module.exports =
                 # if node development environment
                 if process.env.NODE_ENV is 'development'
                     imports += "window.DEV_ENV = #{true};\n"
+                if process.env.ENABLE_QWANT_SEARCH is 'true'
+                    imports += "window.ENABLE_QWANT_SEARCH = #{true};\n"
+                if process.env.BEN_DEMO is 'true'
+                    imports += "window.BEN_DEMO = #{true};\n"
                 for key, value of results
                     imports += "window.#{key} = #{JSON.stringify(value)};\n"
                 imports += "window.managed = #{process.env.MANAGED};\n"
