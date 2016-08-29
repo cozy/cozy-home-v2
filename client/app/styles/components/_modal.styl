@@ -315,3 +315,81 @@
         height        100%
         width         100%
         border-radius 0
+
+
+.permissionsLine.flag-ben-demo
+    display flex
+
+    &.header > *
+        font-weight normal !important
+        color #333 !important
+
+    &.header .fake-checkbox
+        visibility hidden
+
+    .fake-checkbox
+        flex 0
+        min-width 25px
+        height 15px
+        border-radius 15px
+        position relative
+        background red
+        cursor pointer
+        margin auto 5px
+
+        &.checked
+            background green
+            .circle
+                left 0
+
+        .circle
+            right 0
+            position absolute
+            display inline-block
+            width 15px
+            height 15px
+            border-radius 15px
+            background white
+
+    .doctype-name
+        font-weight bold
+        margin auto 15px auto 5px
+        flex 1
+        max-width 175px
+
+    .doctype-filter
+        width 45px
+        margin auto 5px
+        text-align center
+        position relative
+
+        i
+            cursor help
+
+    .doctype-use
+        flex 0
+        margin auto 5px
+        color grey
+        cursor help
+        position relative
+
+        &.shared
+            color darkred
+
+    .doctype-filter
+    .doctype-use
+        .tooltip
+            display none
+            position absolute
+            background darkgrey
+            color #fff
+            z-index 2500
+            top 0
+            left 100%
+            width 250px
+            font-size 13px
+            text-align left
+            padding 5px
+
+        &:hover .tooltip
+            display block

@@ -81,15 +81,63 @@ module.exports = class PopoverDescriptionView extends BaseView
             """
             @body.append permissionsDiv
         else
-            @body.append "<h5>#{t('required permissions')}</h5>"
-            for docType, permission of @model.get("permissions")
-                permissionsDiv = $ """
-                  <div class='permissionsLine'>
-                    <strong> #{docType} </strong>
-                    <p> #{permission.description} </p>
-                  </div>
-                """
-                @body.append permissionsDiv
+
+            # Hide a fake permission screen behind a the flag `BEN_DEMO`
+            if window.BEN_DEMO
+                @body.append "<h4>#{t('required permissions')}</h4>"
+                headerDiv = $ "<div class='permissionsLine header flag-ben-demo'>
+                        <div class='fake-checkbox checked'><div class='circle'></div></div>
+                        <div class='doctype-name'>Doctype</div>
+                        <div class='doctype-filter'>Filtre</div>
+                        <div class='doctype-use'>Usage</div>"
+                @body.append headerDiv
+
+                filtersType = [
+                    'Accès restreint aux documents possédant le tag "Travail".'
+                    'Accès restreint aux documents possédant le tag "Personnel".'
+                    'Accès restreint aux documents possédant le tag "Vacances".'
+                    'Accès restreint aux documents créés il y a plus de deux semaines.'
+                    'Accès restreint aux documents créé il y a plus de deux semaines.'
+                ]
+
+                for docType, permission of @model.get("permissions")
+                    hasFilter = (Math.round(Math.random() * 100) + 1) <= 50
+                    isShared = (Math.round(Math.random() * 100) + 1) <= 50
+
+
+                    if hasFilter
+                        filterTag = "&nbsp;"
+                    else
+                        drawFilterType = Math.round(Math.random() * filtersType.length)
+                        filterType = filtersType[drawFilterType]
+                        filterTag = "<i class='fa fa-filter'></i>
+                                     <div class='tooltip'>#{filterType}</div>"
+
+                    if isShared
+                        sharedClass = ""
+                        sharedTag = "Local <div class='tooltip'>Cette donnée ne sera utilisée qu'en local et ne sortira pas de Cozy.</div>"
+                    else
+                        sharedClass = "shared"
+                        sharedTag = "Partagé <div class='tooltip'>L'application demande l'autorisation d'envoyer cette donnée à l'extérieur. En savoir plus…</div>"
+
+                    permissionsDiv = $ "<div class='permissionsLine flag-ben-demo'>
+                            <div class='fake-checkbox checked'><div class='circle'></div></div>
+                            <div class='doctype-name'>#{docType}</div>
+                            <div class='doctype-filter'>#{filterTag}</div>
+                            <div class='doctype-use #{sharedClass}'>#{sharedTag}</div>"
+                    @body.append permissionsDiv
+
+            # Production case
+            else
+                @body.append "<h5>#{t('required permissions')}</h5>"
+                for docType, permission of @model.get("permissions")
+                    permissionsDiv = $ """
+                      <div class='permissionsLine'>
+                        <strong> #{docType} </strong>
+                        <p> #{permission.description} </p>
+                      </div>
+                    """
+                    @body.append permissionsDiv
 
         @handleContentHeight()
         @body.slideDown()
