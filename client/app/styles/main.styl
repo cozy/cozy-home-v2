@@ -91,9 +91,9 @@
         text-align       initial
         height           1.6em
         width            8em
-        padding          0 0.5em
-        background-color #999 !important  // needed to overwrite JS properties
-        border           1px solid #000 !important  // needed to overwrite JS properties
+        padding          0 .5em
+        background-color grey-06 !important  // needed to overwrite JS properties
+        border           none !important  // needed to overwrite JS properties
         border-radius    3px
         color            #000
         font-size        1em
@@ -106,38 +106,37 @@
             color            #333
 
     .tt-menu
-        padding 0em 0em
-        width 100%
+        padding          0
+        width            100%
         background-color #fff
-        border-radius 3px
-        border 1px solid #e5e5e5
-        box-shadow 0 3px 6px rgba(0,0,0,0.12)
-        font-family   "Source Sans Pro", sans-serif
+        border-radius    5px
+        box-shadow       0 1px 3px rgba(grey-08,.19), 0 5px 20px rgba(grey-08,.22)
+        font-family      "Source Sans Pro", sans-serif
 
     .tt-suggestion
-        padding 0.2em 1em
-
+        padding .25em 1em
+        margin  0
+        color   grey-07
+        strong
+            color grey-08
     .tt-cursor
     .tt-suggestion:hover
-        background-color grey-07
+        background-color blue
         color            #fff
         cursor           pointer
+        strong
+            color #fff
     .sourceTitle
-        font-weight   800
-        font-size     12pt
-        padding-left  .2em
-    .tt-dataset-qwant
-        padding             .2em 0em .2em .0em
-        background-color    rgb(255, 249, 241)
-        .tt-cursor
-        .tt-suggestion:hover
-            background-color #694e4e
+        padding        0 16px
+        font-size      .75em
+        color          orange
+        text-transform uppercase
+    .tt-dataset
+        padding .75em 0
     .tt-dataset-states
-        padding             .2em 0em .2em .0em
-        border-top          1px solid grey-03
-        background-color    rgb(244, 251, 255)
-        p.tt-suggestion
-            margin-top      .3em
+        border-top 1px solid grey-03
+        .sourceTitle
+            color blue
 
 
 // navbar
