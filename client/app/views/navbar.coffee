@@ -4,6 +4,7 @@ NotificationsView = require './notifications_view'
 HelpView          = require './help'
 SearchBarView     = require './search_bar'
 SearchBarBen     = require './search_bar_ben'
+SearchBarMix     = require './search_bar_mix'
 AppsMenu = require './menu_applications'
 
 module.exports = class NavbarView extends BaseView
@@ -24,8 +25,10 @@ module.exports = class NavbarView extends BaseView
         @helpView = new HelpView()
         @appMenu = new AppsMenu @apps
         qwantMode = window.urlArguments && window.urlArguments.modes && window.urlArguments.modes.indexOf 'qwant_search' isnt -1
-        if (window.DEV_ENV or qwantMode or window.ENABLE_QWANT_SEARCH) and (window.qwantInstalled)
+        if (window.DEV_ENV or qwantMode or window.ENABLE_QWANT_SEARCH) and (window.qwantInstalled) and !window.BEN_DEMO
             @searchBar = new SearchBarView()
+        else if (window.DEV_ENV or qwantMode or window.ENABLE_QWANT_SEARCH) and (window.qwantInstalled) and window.BEN_DEMO
+            @searchBar = new SearchBarMix()
         else if window.BEN_DEMO
             @searchBar = new SearchBarBen()
 
