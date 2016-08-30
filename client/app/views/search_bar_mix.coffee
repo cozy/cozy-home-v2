@@ -25,6 +25,8 @@ module.exports = class SearchBarView extends BaseView
             (query, cb) =>
                 # an array that will be populated with the item wich matches
                 matches = []
+                if query.length <= 3
+                    cb []
 
                 # regexs used to determine if a string matches
                 queryWords = query.toLowerCase().trim().split(' ')
