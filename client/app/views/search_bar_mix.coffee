@@ -9,12 +9,17 @@ module.exports = class SearchBarView extends BaseView
     constructor: () ->
         qwantMode = window.urlArguments && window.urlArguments.modes && window.urlArguments.modes.indexOf 'qwant_search' isnt -1
         @qwantEnable = (window.DEV_ENV or qwantMode or window.ENABLE_QWANT_SEARCH) and (window.qwantInstalled)
-        qwantSearchDataset = ["Search Qwant"]
+        qwantSearchDataset = ["web", 'images']
         qwantSource = (items) =>
-            (query, cb) => cb ["Qwant-#{query}"]
+            (query, cb) =>
+                cb ["QwantWeb-#{query}", "QwantImages-#{query}"]
         qwantDisplay = (query) =>
-            query = query.replace("Qwant-", "")
-            return "Search Qwant for #{query}"
+            if query.indexOf('QwantWeb-') >= 0
+                query = query.replace("QwantWeb-", "")
+                return "Qwant web for #{query}"
+            if query.indexOf('QwantImages-') >= 0
+                query = query.replace("QwantImages-", "")
+                return "Qwant images for #{query}"
 
         substringMatcher = (items) =>
             (query, cb) =>
@@ -214,14 +219,14 @@ module.exports = class SearchBarView extends BaseView
             display: qwantDisplay
             templates:
               header: () =>
-                  return "<p class='sourceTitle'>Qwant app features</p>"
+                  return "<p class='sourceTitle'>Search in application Qwant</p>"
         },
         {
           name: 'states'
           source: substringMatcher(states)
           templates:
             header: () =>
-                return "<p class='sourceTitle'>Search in files</p>"
+                return "<p class='sourceTitle'>Search in application Files</p>"
             suggestion: (item)=>
                 queryWords = typeah.typeahead('val').toLowerCase().trim().split(' ')
                 itemLC = item.toLowerCase()
@@ -259,9 +264,9 @@ module.exports = class SearchBarView extends BaseView
 
         $('.twitter-typeahead').bind 'typeahead:select', (ev, suggestion) =>
             console.log 'Selection: ' , suggestion, ev
-            # if qwant feature
-            if suggestion and suggestion.indexOf('Qwant-') >= 0
-                suggestion = suggestion.replace("Qwant-", "")
+            # if qwant web feature
+            if suggestion and suggestion.indexOf('QwantWeb-') >= 0
+                suggestion = suggestion.replace("QwantWeb-", "")
                 typeah.typeahead 'val', ''
                 query = encodeURIComponent(suggestion)
                 # do the intent
@@ -269,15 +274,29 @@ module.exports = class SearchBarView extends BaseView
                     action: 'goto'
                     params: "qwant/search/web/#{query}"
                 window.postMessage(intent, window.location.origin)
+            # if qwant images feature
+            else if suggestion and suggestion.indexOf('QwantImages-') >= 0
+                suggestion = suggestion.replace("QwantImages-", "")
+                typeah.typeahead 'val', ''
+                query = encodeURIComponent(suggestion)
+                # do the intent
+                intent =
+                    action: 'goto'
+                    params: "qwant/search/images/#{query}"
+                window.postMessage(intent, window.location.origin)
             else
                 # search in files
                 window.app.routers.main.navigate "apps/files/folders/be2639a48e5ee0775d5b34bebf2e6b60", true
                 typeah.typeahead 'val', ''
 
         $('.twitter-typeahead').bind 'typeahead:cursorchange', (ev, suggestion) =>
-            # if qwant feature
-            if suggestion and suggestion.indexOf('Qwant-') >= 0
-                suggestion = suggestion.replace("Qwant-", "")
+            # if qwant web feature
+            if suggestion and suggestion.indexOf('QwantWeb-') >= 0
+                suggestion = suggestion.replace("QwantWeb-", "")
+                typeah.typeahead 'val', suggestion
+            # if qwant images feature
+            if suggestion and suggestion.indexOf('QwantImages-') >= 0
+                suggestion = suggestion.replace("QwantImages-", "")
                 typeah.typeahead 'val', suggestion
 
 
