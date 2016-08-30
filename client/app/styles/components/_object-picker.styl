@@ -223,7 +223,32 @@
             margin          0 auto
             max-width       36em
             width           80%
-            margin-bottom   1em
+            background white
+
+            // reset default styles
+            padding 0
+            border none
+            border-radius 0
+
+            // add qwant styles
+            border-bottom 2px solid rgba(77,84,92,.8)
+            padding 6px 2px
+
+            &:hover
+            &:focus
+                border none
+                border-bottom 2px solid rgba(77,84,92,.8)
+
+        .subsection
+            text-align right
+            width 100%
+            font-size 12px
+
+            img
+                height 50px
+
+
+
         .results
             display             flex
             flex-wrap           wrap
