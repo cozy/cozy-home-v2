@@ -25,8 +25,8 @@ module.exports =
             else
                 imports = ""
                 # if qwant application is installed
-                isQwantInstalled = (results.applications.find((application) ->
-                    application.name is 'qwant')) isnt undefined
+                isQwantInstalled = (results.applications.filter((application) ->
+                    application.name is 'qwant')).length >= 1
                 if isQwantInstalled
                     imports += "window.qwantInstalled = #{true};\n"
                 # if node development environment
