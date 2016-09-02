@@ -35,7 +35,13 @@ module.exports = class MainRouter extends Backbone.Router
                     token = new Token slug
                     token.getToken
                         success: (data) ->
-                            app.mainView.displayToken data.token, slug
+                            source = null
+                            # If we opened the app in another tab (mobile),
+                            # the message will be sent to the event.source as
+                            # we don't have any iframe with it.
+                            if $(window).width() <= 640
+                                source = event.source
+                            app.mainView.displayToken data.token, slug, source
                         error: (message) ->
                             alert 'Server error occured, get token failed.'
                 when 'goto'
