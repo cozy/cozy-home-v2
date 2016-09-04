@@ -115,7 +115,7 @@ module.exports = class ApplicationRow extends BaseView
                     title: 'Broken application'
                     errortype: errortype
                     details: errormsg
-                if errorcode[0] is '4'
+                if errorcode? and errorcode[0] is '4'
                     modalOptions.confirm = t('start this app')
                     modalOptions.cancel = t('cancel')
                     modalOptions.onConfirm = @startApp
