@@ -48,9 +48,11 @@
   "devDependencies": {
     "brunch": "1.8.5",
     "chai": "1.9.0",
-    "coffee-script": "latest",
+    "coffee-script": "1.10.0",
     "mocha": "2.3.3",
     "nock": "0.29.1",
+    "nodemon": "1.10.2",
+    "npm-run-all": "3.1.0",
     "numeral": "^1.5.3",
     "should": "^4.6.1",
     "sinon": "^1.12.2"
@@ -58,12 +60,18 @@
   "scripts": {
     "test": "cake --use-js tests",
     "start": "node build/server.js",
-    "prebuild:client": "cd client && npm update",
-    "build:clean": "rm -rf build",
-    "build:tx": "tx pull --all || true",
-    "build:client": "cd client && brunch b",
+    "clean": "rm -rf build",
+    "build:client": "cd client && brunch build",
     "build:server": "cake build",
-    "build": "npm run build:clean && npm run build:tx && npm run build:client && npm run build:server",
-    "postinstall": "node postinstall.js"
+    "build": "npm-run-all 'build:*'",
+    "ensure:client": "cd client && npm update",
+    "prebuild": "npm-run-all clean tx",
+    "prebuild:client": "npm run 'ensure:client'",
+    "prewatch:client": "npm run 'ensure:client'",
+    "postinstall": "node postinstall.js",
+    "tx": "tx pull --all || true",
+    "watch": "npm-run-all --parallel 'watch:*'",
+    "watch:client": "cd client && brunch watch",
+    "watch:server": "nodemon server.coffee --ignore client/ --ignore market.json"
   }
 }
