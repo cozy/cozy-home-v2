@@ -40,12 +40,12 @@ First, clone the repo:
     
 Then, you should use tools that monitor your changes so you can reload your workflow without any pain:
 
-    npm install -g nodemon brunch coffee-script
+    npm install -g nodemon brunch@1 coffee-script
     
 To launch a development-aware processes:
 
 1. in a terminal, launch `nodemon server.coffee --ignore client/`
-2. in another terminal, launch the frontend assets build tool `cd client && brunch -w`
+2. in another terminal, launch the frontend assets build tool `cd client && brunch watch`
 
 You can now point your browser to http://localhost:9103 to access your dev instance.
 
