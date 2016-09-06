@@ -44,7 +44,7 @@ Then, you should use tools that monitor your changes so you can reload your work
     
 To launch a development-aware processes:
 
-1. in a terminal, launch `nodemon server.coffee --ignore client/`
+1. in a terminal, launch `nodemon server.coffee --ignore client/ --ignore market.json`
 2. in another terminal, launch the frontend assets build tool `cd client && brunch watch`
 
 You can now point your browser to http://localhost:9103 to access your dev instance.
