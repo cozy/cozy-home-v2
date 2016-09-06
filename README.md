@@ -28,11 +28,28 @@ You can contribute to the Cozy Home in many ways:
 ## Hack
 
 To be hacked, the Cozy Home dev environment requires that a CouchDB instance
-and a Cozy Data System instance are running. Then you can start the Cozy Home
-this way:
+and a Cozy Data System instance are running, as furbish by the development VM.
+
+First, clone the repo:
 
     git clone https://github.com/cozy/cozy-home.git
-    node server.js
+    cd cozy-home
+    npm install
+    cd client
+    npm install
+    
+Then, you should use tools that monitor your changes so you can reload your workflow without any pain:
+
+    npm install -g nodemon brunch coffee-script
+    
+To launch a development-aware processes:
+
+1. in a terminal, launch `nodemon server.coffee --ignore client/`
+2. in another terminal, launch the frontend assets build tool `cd client && brunch -w`
+
+You can now point your browser to http://localhost:9103 to access your dev instance.
+
+## Build
 
 Each modification requires a new build, here is how to run a build:
 
