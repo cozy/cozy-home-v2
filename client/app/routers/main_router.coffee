@@ -93,4 +93,3 @@ module.exports = class MainRouter extends Backbone.Router
 
     logout: ->
         app.mainView.logout()
-

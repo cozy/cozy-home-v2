@@ -226,6 +226,7 @@ module.exports = class HomeView extends BaseView
             @$("#app-btn-#{slug} .icon").hide()
 
             frame = @$("##{slug}-frame")
+
             onLoad = =>
 
                 # We display back the iframes
@@ -262,7 +263,7 @@ module.exports = class HomeView extends BaseView
                 @frames.css 'left', '-9999px'
                 @frames.css 'position', 'absolute'
 
-                frame.on 'load', _.once onLoad
+                frame[0].contentWindow.addEventListener 'load', onLoad
 
             # if the app was already open, we want to change its hash
             # only if there is a hash in the home given url.

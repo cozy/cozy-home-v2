@@ -31,7 +31,7 @@ module.exports = class ApplicationRow extends BaseView
 
         @listenTo @model, 'change', @onAppChanged
         @listenTo @model, 'uninstall', @onUninstall
-        @onAppChanged @model
+        @onAppChanged()
 
         @setBackgroundColor()
 
@@ -44,7 +44,7 @@ module.exports = class ApplicationRow extends BaseView
     ### Listener ###
 
 
-    onAppChanged: =>
+    onAppChanged: ->
         switch @model.get 'state'
             when 'broken'
                 @hideSpinner()
@@ -64,7 +64,9 @@ module.exports = class ApplicationRow extends BaseView
                 @icon.attr 'src', src
                 @icon.show()
                 @icon.removeClass 'stopped'
-                $("##{@model.get 'slug'}-frame").remove()
+
+                if @model.previous('state') isnt 'stopped'
+                    $("##{@model.get 'slug'}-frame").remove()
 
             when 'installing'
                 @showSpinner()

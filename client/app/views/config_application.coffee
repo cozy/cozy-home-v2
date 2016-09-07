@@ -300,4 +300,3 @@ module.exports = class ApplicationRow extends BaseView
     hideLoading: ->
         @$('.spinner').hide()
         @icon.show()
-
