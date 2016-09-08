@@ -226,9 +226,8 @@ module.exports = class HomeView extends BaseView
             @$("#app-btn-#{slug} .spinner").show()
             @$("#app-btn-#{slug} .icon").hide()
 
-
             iframeID = @getAppFrameID slug
-            frame = $("##{iframeID}")
+            frame = @$("##{iframeID}")
 
             onLoad = =>
                 # We display back the iframes
@@ -238,10 +237,15 @@ module.exports = class HomeView extends BaseView
                 @frames.show()
 
                 @content.hide()
+
+                # Display global navigation
                 @backButton.show()
 
+                # Hide other applications
+                # and show current one
                 @$('#app-frames').find('iframe').hide()
-                frame.show()
+                @$("##{iframeID}").show()
+
                 @selectedApp = slug
                 app = @apps.get slug
                 name = app.get('displayName') or app.get('name') or ''
