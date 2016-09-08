@@ -226,7 +226,9 @@ module.exports = class HomeView extends BaseView
             @$("#app-btn-#{slug} .spinner").show()
             @$("#app-btn-#{slug} .icon").hide()
 
-            frame = @getAppFrame slug
+
+            iframeID = @getAppFrameID slug
+            frame = $("##{iframeID}")
 
             onLoad = =>
                 # We display back the iframes
@@ -251,9 +253,8 @@ module.exports = class HomeView extends BaseView
                 @$("#app-btn-#{slug} .spinner").hide()
                 @$("#app-btn-#{slug} .icon").show()
 
-            if frame.length is 0
-
-                @createApplicationIframe slug, hash
+            unless frame.length
+                @createApplicationIframe slug, hash, id: iframeID
 
                 # We show frames right now because to load properly the app
                 # requires a proper height.
@@ -265,7 +266,7 @@ module.exports = class HomeView extends BaseView
                 @frames.css 'position', 'absolute'
 
                 @redirectIframe {slug, hash}
-                @getAppFrame(slug).prop('contentWindow').addEventListener 'load', onLoad
+                $("##{iframeID}").prop('contentWindow').addEventListener 'load', onLoad
 
             # if the app was already open, we want to change its hash
             # only if there is a hash in the home given url.
@@ -285,19 +286,24 @@ module.exports = class HomeView extends BaseView
         # prepends '#' only if there is an actual hash
         hash = "##{hash}" if hash?.length > 0
 
+        id = @getAppFrameID slug
+        source = @getIframeLocation {hash, slug}
+
         # Add Iframe
-        iframeHTML = appIframeTemplate(id: slug, hash:hash)
+        iframeHTML = appIframeTemplate {id, source}
         iframe$    = $(iframeHTML).appendTo @frames
 
         # Use Element added to the DOM
         # not Element to add to the DOM
-        iframe$    = @getAppFrame(slug)
+        iframe$    = $("##{id}")
 
-        # Listen to Iframe added to DOM
-        iframe$.prop('contentWindow').onhashchange = ->
-            location = iframe$.prop('contentWindow').location
-            newhash  = location.hash.replace '#', ''
-            @onAppHashChanged slug, newhash
+        console.log source, iframeHTML
+
+        # # Listen to Iframe added to DOM
+        # iframe$.prop('contentWindow').onhashchange = ->
+        #     location = iframe$.prop('contentWindow').location
+        #     newhash  = location.hash.replace '#', ''
+        #     @onAppHashChanged slug, newhash
 
         @forceIframeRendering()
 
@@ -324,9 +330,9 @@ module.exports = class HomeView extends BaseView
     # iframe is removed.
     onAppStateChanged: (appState) ->
         if appState.status in ['updating', 'broken', 'uninstalled']
-            frame = @getAppFrame appState.slug
-            frame.remove()
-            frame.off 'load'
+            iframeID = @getAppFrameID appState.slug
+            $("##{iframeID}").off 'load'
+            $("##{iframeID}").remove()
 
 
     # Store the information that the whole stack is updating.
@@ -348,15 +354,15 @@ module.exports = class HomeView extends BaseView
         , 10
 
 
-    # Returns app iframe corresponding for given app slug.
-    getAppFrame: (slug) ->
-        return @$ "##{slug}-frame"
+    getAppFrameID: (slug) ->
+        return "#{slug}-frame"
 
 
     # Returns app iframe corresponding for given app slug.
     displayToken: (token, slug, source) ->
         iframeWin = source
-        iframeWin ?= @getAppFrame(slug).prop 'contentWindow'
+        iframeID = @getAppFrameID slug
+        iframeWin ?= $("##{iframeID}").prop 'contentWindow'
         iframeWin.postMessage token: token, appName:slug, '*'
 
 

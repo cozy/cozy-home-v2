@@ -38,4 +38,4 @@ exports.head = (url, callbacks) ->
 # Invalid hash could be iframe source
 # Force refresh to root application
 exports.getSAMEORIGINError = (hash) ->
-    return hash.match /^(\w*:\/\/\w+\.)/)
+    return hash.match /^(\w*:\/\/\w+\.)/
