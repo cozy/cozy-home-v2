@@ -293,17 +293,11 @@ module.exports = class HomeView extends BaseView
         iframeHTML = appIframeTemplate {id, source}
         iframe$    = $(iframeHTML).appendTo @frames
 
-        # Use Element added to the DOM
-        # not Element to add to the DOM
-        iframe$    = $("##{id}")
-
-        console.log source, iframeHTML
-
-        # # Listen to Iframe added to DOM
-        # iframe$.prop('contentWindow').onhashchange = ->
-        #     location = iframe$.prop('contentWindow').location
-        #     newhash  = location.hash.replace '#', ''
-        #     @onAppHashChanged slug, newhash
+        # Listen to Iframe added to DOM
+        $("##{id}").prop('contentWindow').onhashchange = ->
+            location = $("##{id}").prop('contentWindow').location
+            newhash  = location.hash.replace '#', ''
+            @onAppHashChanged slug, newhash
 
         @forceIframeRendering()
 
@@ -381,4 +375,4 @@ module.exports = class HomeView extends BaseView
     redirectIframe: (hash) ->
         iframeHash = @getIframeLocation hash
         unless (client.getSAMEORIGINError iframeHash)
-            @navigate iframeHash, false
+            window?.app?.routers?.main?.navigate iframeHash, false
