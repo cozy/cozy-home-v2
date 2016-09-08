@@ -128,15 +128,20 @@ module.exports = class ConfigApplicationsView extends BaseView
         setTimeout @fetch, 10000
 
 
-    # When update stack button is clicked, the update stack dialog is
-    # displayed.
-    onUpdateClicked: ->
-        @showUpdateStackDialog()
+    # When update stack button is clicked,
+    # the update stack dialog is displayed.
+    # Disabled button while updating
+    # not to launch several time the same request
+    onUpdateClicked: (event) ->
+        unless !!(isDisabled = @updateBtn.attr 'disable')
+            @updateBtn.attr 'disable', true
+            @showUpdateStackDialog()
 
 
     # Show the dialog to allow the user to update his stack.
     showUpdateStackDialog: ->
         @popover.hide() if @popover?
+
         @popover = new UpdateStackModal
             confirm: (application) =>
                 @runFullUpdate (err, permissionChanges) =>
@@ -144,9 +149,12 @@ module.exports = class ConfigApplicationsView extends BaseView
                         @popover.onError err, permissionChanges
                     else
                         @popover.onSuccess permissionChanges
+
             cancel: (application) =>
                 @popover.hide()
                 @popover.remove()
+                @updateBtn.removeAttr 'disable'
+
             end: (success) ->
                 location.reload() if success
 
@@ -182,4 +190,3 @@ module.exports = class ConfigApplicationsView extends BaseView
                 @rebootStackBtn.spin false
             else
                 location.reload()
-
