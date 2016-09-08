@@ -172,7 +172,7 @@ module.exports = class HomeView extends BaseView
 
     displayUpdateApplication: (slug) =>
         @displayView @configApplications, t "cozy applications title"
-        @redirectIframe 'config-applications'
+        @navigate 'config-applications'
 
         # When the route is called on browser loading, it must wait for
         # apps list to be retrieved
@@ -198,7 +198,7 @@ module.exports = class HomeView extends BaseView
     displayUpdateStack: ->
         @displayView @configApplications
         window.document.title = t "cozy applications title"
-        @redirectIframe 'config-applications'
+        @navigate 'config-applications'
 
         # wait for 500ms before triggering the popover opening, because
         # the configApplications view is not completely rendered yet (??)
@@ -269,17 +269,16 @@ module.exports = class HomeView extends BaseView
                 @frames.css 'left', '-9999px'
                 @frames.css 'position', 'absolute'
 
-                @redirectIframe {slug, hash}
                 $("##{iframeID}").prop('contentWindow').addEventListener 'load', onLoad
 
             # if the app was already open, we want to change its hash
             # only if there is a hash in the home given url.
             else if hash
-                @redirectIframe {slug, hash}
+                @navigate {slug, hash}
                 onLoad()
 
             else if frame.is(':visible')
-                @redirectIframe ''
+                @navigate ''
                 onLoad()
 
             else
@@ -312,12 +311,11 @@ module.exports = class HomeView extends BaseView
         @intentManager.registerIframe iframe$[0], '*'
 
 
-
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             currentHash = location.hash.substring "#apps/#{slug}/".length
             if currentHash isnt newhash
-                @redirectIframe slug, newhash
+                @navigate slug, newhash
 
             # Ugly trick required because app state changes sometime
             # breaks the iframe layout.
@@ -356,12 +354,11 @@ module.exports = class HomeView extends BaseView
         return "#{slug}-frame"
 
 
-    # Returns app iframe corresponding for given app slug.
+
     displayToken: (token, slug, source) ->
-        iframeWin = source
         iframeID = @getAppFrameID slug
-        iframeWin ?= $("##{iframeID}").prop 'contentWindow'
-        iframeWin.postMessage token: token, appName:slug, '*'
+        iframeWin = @$("##{iframeID}").prop 'contentWindow'
+        iframeWin.postMessage token: token, appName: slug, '*'
 
 
     getIframeLocation: (data) ->
@@ -374,9 +371,11 @@ module.exports = class HomeView extends BaseView
 
         return value
 
-    # If hash is malicious
-    # do not redirect Iframe
-    redirectIframe: (hash) ->
+
+    navigate: (hash) ->
         iframeHash = @getIframeLocation hash
+
+        # If hash isnt malicious
+        # Update location.hash
         unless (client.getSAMEORIGINError iframeHash)
             window?.app?.routers?.main?.navigate iframeHash, false
