@@ -35,17 +35,10 @@ First, clone the repo:
     git clone https://github.com/cozy/cozy-home.git
     cd cozy-home
     npm install
-    cd client
-    npm install
-    
-Then, you should use tools that monitor your changes so you can reload your workflow without any pain:
 
-    npm install -g nodemon brunch@1 coffee-script
-    
-To launch a development-aware processes:
+To launch a development-aware processes, simply run:
 
-1. in a terminal, launch `nodemon server.coffee --ignore client/ --ignore market.json`
-2. in another terminal, launch the frontend assets build tool `cd client && brunch watch`
+    npm run watch
 
 You can now point your browser to http://localhost:9103 to access your dev instance.
 
@@ -53,7 +46,8 @@ You can now point your browser to http://localhost:9103 to access your dev insta
 
 Each modification requires a new build, here is how to run a build:
 
-    cake build
+    npm run build
+    npm start
 
 ## Tests
 
