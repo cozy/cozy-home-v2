@@ -30,17 +30,23 @@ module.exports = class ConfigApplicationsView extends BaseView
     afterRender: ->
         @spanRefresh = @$ '.refresh'
         @spanRefresh.hide()
+
         @memoryFree = @$ '.memory-free'
         @diskSpace = @$ '.disk-space'
         @updateBtn = @$ '.update-all'
         @rebootStackBtn = @$ '.reboot-stack'
+
         @fetch()
+
         @applicationList = new ConfigApplicationList @apps, @market
         @deviceList = new ConfigDeviceList @devices
         @$el.find('.title-app').after @applicationList.$el
         @applications = new Application()
+
         @stackApps.fetch reset: true
+
         @displayDevices()
+
         @stackApplications = new StackApplication
         @showOrHideUpdateBtn()
 
@@ -50,10 +56,16 @@ module.exports = class ConfigApplicationsView extends BaseView
     showOrHideUpdateBtn: ->
         appNeedUpdate = @apps.where(needsUpdate: true).length > 0
 
+        # FIXME: there may be a bug server side
+        # application are setted as updated
+        # when they are not
+
         if @toUpdate or appNeedUpdate
             @updateBtn.show()
+            @updateBtn.removeAttr 'disable'
         else
             @updateBtn.hide()
+            @updateBtn.attr 'disable', true
 
 
     openUpdatePopover: (slug) ->
@@ -143,20 +155,18 @@ module.exports = class ConfigApplicationsView extends BaseView
         @popover.hide() if @popover?
 
         @popover = new UpdateStackModal
-            confirm: (application) =>
-                @runFullUpdate (err, permissionChanges) =>
+            confirm: (model) =>
+                @runFullUpdate (err, changes) =>
                     if err
-                        @popover.onError err, permissionChanges
+                        @popover.onError err, changes
                     else
-                        @popover.onSuccess permissionChanges
+                        @popover.onSuccess changes
 
-            cancel: (application) =>
-                @popover.hide()
-                @popover.remove()
-                @updateBtn.removeAttr 'disable'
+            cancel: (model) =>
+                @render()
 
-            end: (success) ->
-                location.reload() if success
+            end: (success) =>
+                @render() if success
 
         $("#config-applications-view").append @popover.$el
         @popover.show()
@@ -172,12 +182,13 @@ module.exports = class ConfigApplicationsView extends BaseView
     # calls to the API.
     runFullUpdate: (callback) =>
         Backbone.Mediator.pub 'update-stack:start'
-        @applications.updateAll (err, permissionChanges) =>
-            return callback err, err.data?.permissionChanges if err
+
+        @applications.updateAll (err, changes) =>
+            return callback err, err.data?.changes if err
 
             @stackApplications.updateStack (err) =>
                 Backbone.Mediator.pub 'update-stack:end'
-                callback err, permissionChanges
+                callback err, changes
 
 
     # When the reboot button is clicked, the reboot procedure is requested to
