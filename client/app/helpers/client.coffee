@@ -33,3 +33,9 @@ exports.del = (url, callbacks) ->
 # Expected callbacks: success and error
 exports.head = (url, callbacks) ->
     exports.request "HEAD", url, null, callbacks
+
+# Handle SAMEORIGIN error
+# Invalid hash could be iframe source
+# Force refresh to root application
+exports.getSAMEORIGINError = (hash) ->
+    return hash.match /^(\w*:\/\/\w+\.)/

@@ -13,6 +13,8 @@ SocketListener         = require 'lib/socket_listener'
 User                   = require 'models/user'
 IntentManager          = require 'lib/intent_manager'
 
+client                 = require 'helpers/client'
+
 
 # View describing main screen for user once he is logged
 module.exports = class HomeView extends BaseView
@@ -170,7 +172,7 @@ module.exports = class HomeView extends BaseView
 
     displayUpdateApplication: (slug) =>
         @displayView @configApplications, t "cozy applications title"
-        window.app.routers.main.navigate 'config-applications', false
+        @navigate 'config-applications'
 
         # When the route is called on browser loading, it must wait for
         # apps list to be retrieved
@@ -196,7 +198,7 @@ module.exports = class HomeView extends BaseView
     displayUpdateStack: ->
         @displayView @configApplications
         window.document.title = t "cozy applications title"
-        window.app.routers.main.navigate 'config-applications', false
+        @navigate 'config-applications'
 
         # wait for 500ms before triggering the popover opening, because
         # the configApplications view is not completely rendered yet (??)
@@ -221,14 +223,13 @@ module.exports = class HomeView extends BaseView
                 @displayApplication slug, hash
 
         else
-
             @$("#app-btn-#{slug} .spinner").show()
             @$("#app-btn-#{slug} .icon").hide()
 
-            frame = @$("##{slug}-frame")
+            iframeID = @getAppFrameID slug
+            frame = @$("##{iframeID}")
 
             onLoad = =>
-
                 # We display back the iframes
                 @frames.css 'top', '0'
                 @frames.css 'left', '0'
@@ -236,10 +237,15 @@ module.exports = class HomeView extends BaseView
                 @frames.show()
 
                 @content.hide()
+
+                # Display global navigation
                 @backButton.show()
 
+                # Hide other applications
+                # and show current one
                 @$('#app-frames').find('iframe').hide()
-                frame.show()
+                @$("##{iframeID}").show()
+
                 @selectedApp = slug
                 app = @apps.get slug
                 name = app.get('displayName') or app.get('name') or ''
@@ -251,8 +257,8 @@ module.exports = class HomeView extends BaseView
                 @$("#app-btn-#{slug} .spinner").hide()
                 @$("#app-btn-#{slug} .icon").show()
 
-            if frame.length is 0
-                frame = @createApplicationIframe slug, hash
+            unless frame.length
+                @createApplicationIframe slug, hash, id: iframeID
 
                 # We show frames right now because to load properly the app
                 # requires a proper height.
@@ -263,24 +269,16 @@ module.exports = class HomeView extends BaseView
                 @frames.css 'left', '-9999px'
                 @frames.css 'position', 'absolute'
 
-                frame[0].contentWindow.addEventListener 'load', onLoad
+                $("##{iframeID}").prop('contentWindow').addEventListener 'load', onLoad
 
             # if the app was already open, we want to change its hash
             # only if there is a hash in the home given url.
             else if hash
-                # Same origin policy may prevent to access location hash
-                try
-                    frame.prop('contentWindow').location.hash = hash
-                catch err
-                    console.err err
+                @navigate {slug, hash}
                 onLoad()
 
             else if frame.is(':visible')
-                # Same origin policy may prevent to access location hash
-                try
-                    frame.prop('contentWindow').location.hash = ''
-                catch err
-                    console.err err
+                @navigate ''
                 onLoad()
 
             else
@@ -291,27 +289,33 @@ module.exports = class HomeView extends BaseView
         # prepends '#' only if there is an actual hash
         hash = "##{hash}" if hash?.length > 0
 
-        iframeHTML = appIframeTemplate(id: slug, hash:hash)
+        id = @getAppFrameID slug
+        source = @getIframeLocation {hash, slug}
+
+        # Add Iframe
+        iframeHTML = appIframeTemplate {id, source}
         iframe$    = $(iframeHTML).appendTo @frames
-        iframe$.prop('contentWindow').addEventListener 'hashchange', =>
-            location = iframe$.prop('contentWindow').location
+
+        # Listen to Iframe added to DOM
+        $("##{id}").prop('contentWindow').onhashchange = ->
+            location = $("##{id}").prop('contentWindow').location
             newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
 
         @forceIframeRendering()
+
         # declare the iframe to the intent manager.
         # TODO : when each iFrame will
         # have its own domain, then precise it
         # (ex : https://app1.joe.cozycloud.cc:8080)
         @intentManager.registerIframe iframe$[0], '*'
-        return iframe$
 
 
     onAppHashChanged: (slug, newhash) =>
         if slug is @selectedApp
             currentHash = location.hash.substring "#apps/#{slug}/".length
             if currentHash isnt newhash
-                app?.routers.main.navigate "apps/#{slug}/#{newhash}", false
+                @navigate slug, newhash
 
             # Ugly trick required because app state changes sometime
             # breaks the iframe layout.
@@ -322,9 +326,9 @@ module.exports = class HomeView extends BaseView
     # iframe is removed.
     onAppStateChanged: (appState) ->
         if appState.status in ['updating', 'broken', 'uninstalled']
-            frame = @getAppFrame appState.slug
-            frame.remove()
-            frame.off 'load'
+            iframeID = @getAppFrameID appState.slug
+            $("##{iframeID}").off 'load'
+            $("##{iframeID}").remove()
 
 
     # Store the information that the whole stack is updating.
@@ -346,13 +350,32 @@ module.exports = class HomeView extends BaseView
         , 10
 
 
-    # Returns app iframe corresponding for given app slug.
-    getAppFrame: (slug) ->
-        return @$("##{slug}-frame")
+    getAppFrameID: (slug) ->
+        return "#{slug}-frame"
 
 
-    # Returns app iframe corresponding for given app slug.
+
     displayToken: (token, slug, source) ->
-        iframeWin = source
-        iframeWin ?= document.getElementById("#{slug}-frame").contentWindow
-        iframeWin.postMessage token: token, appName:slug, '*'
+        iframeID = @getAppFrameID slug
+        iframeWin = @$("##{iframeID}").prop 'contentWindow'
+        iframeWin.postMessage token: token, appName: slug, '*'
+
+
+    getIframeLocation: (data) ->
+        value = '/'
+        if _.isObject data
+            {slug, hash} = data
+            value += "apps/#{slug}/#{hash}"
+        else
+            value += data.toString()
+
+        return value
+
+
+    navigate: (hash) ->
+        iframeHash = @getIframeLocation hash
+
+        # If hash isnt malicious
+        # Update location.hash
+        unless (client.getSAMEORIGINError iframeHash)
+            window?.app?.routers?.main?.navigate iframeHash, false

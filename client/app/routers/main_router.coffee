@@ -1,5 +1,6 @@
 ObjectPickerCroper = require '../views/object_picker'
 Token = require "../models/token"
+client = require '../helpers/client'
 
 module.exports = class MainRouter extends Backbone.Router
 
@@ -15,12 +16,11 @@ module.exports = class MainRouter extends Backbone.Router
         "update-stack"        : "updateStack"
         "apps/:slug"          : "application"
         "apps/:slug/*hash"    : "application"
-        "*path"               : "applicationList"
-        '*notFound'           : 'applicationList'
+        "*path"               : "default"
+        '*notFound'           : 'default'
 
 
     initialize: ->
-
         # Wait for applications to send intents. Intents are sent trough
         # messages. Messages between app and home are possible only when the
         # app is displayed with the home top bar.
@@ -60,8 +60,22 @@ module.exports = class MainRouter extends Backbone.Router
                 else
                     console.log "Weird intent, cannot handle it.", intent
 
+    # Always goto Home
+    # when hash is unkwnow
+    default: (hash) ->
+        @navigate 'home', true
 
-    ## Route behaviors
+
+    navigate: (hash, trigger) ->
+        # Handle SAMEORIGIN error
+        # Invalid hash could be iframe source
+        # Force refresh to root application
+        if (client.getSAMEORIGINError hash)
+            hash = ''
+            trigger = true
+
+        super hash, trigger
+
 
     applicationList: ->
         app.mainView.displayApplicationsList()
@@ -87,7 +101,7 @@ module.exports = class MainRouter extends Backbone.Router
         app.mainView.displayAccount()
 
 
-    application: (slug, hash) ->
+    application: (slug, hash='') ->
         app.mainView.displayApplication slug, hash
 
 
