@@ -59,24 +59,26 @@ module.exports = class UpdateStackModal extends BaseView
     # Display success message on modal.
     # Add information about application that requires a dedicated update
     # because of permission changes.
-    onSuccess: (permissionChanges) ->
+    onSuccess: (changes) ->
         @$('.step2').hide()
         @$('.success').show()
-        @showPermissionsChanged permissionChanges
+        @showPermissionsChanged changes
         @$('#ok').show()
         @$('#confirmbtn').hide()
+
+        @endCallback changes
 
 
     # Inform the user that an error occured during the update.
     # Add information about application that requires a dedicated update
     # because of permission changes.
-    onError: (err, permissionChanges) ->
+    onError: (err, changes) ->
         @blocked = false
         @$('.step2').hide()
         @$('.error').show()
         @$('#ok').show()
         @$('#confirmbtn').hide()
-        @showPermissionsChanged permissionChanges
+        @showPermissionsChanged changes
 
         if err.data?.message? and typeof(err.data.message) is 'object'
             infos = err.data.message
@@ -97,10 +99,10 @@ module.exports = class UpdateStackModal extends BaseView
 
     # Show the list of application that requires a dedicated update because
     # of application changes.
-    showPermissionsChanged: (permissionChanges) ->
-        if permissionChanges? and Object.keys(permissionChanges).length > 0
+    showPermissionsChanged: (changes) ->
+        if changes? and Object.keys(changes).length > 0
             html = "<ul>"
-            for app of permissionChanges
+            for app of changes
                 html += """
                 <li class='app-changed'>#{app}</li>
                 """
@@ -133,4 +135,3 @@ module.exports = class UpdateStackModal extends BaseView
         @$('.step1').hide()
         @$('.step2').show()
         @$('#confirmbtn').spin true
-
