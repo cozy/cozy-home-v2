@@ -54,7 +54,7 @@ module.exports = class ApplicationRow extends BaseView
         @$('.app-img img').attr 'src', '/img/spinner-white-thin.svg'
 
 
-    onInstallClicked: =>
+    onInstallClicked: ->
         return if @app.isInstalling()
         @marketView.showDescription @, @installButton
 
