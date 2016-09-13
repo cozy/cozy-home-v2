@@ -13,7 +13,7 @@ module.exports = class PopoverDescriptionView extends BaseView
 
     initialize: (options) ->
         super
-        @confirmCallback = options.confirm
+        @confirmCallback = _.once options.confirm
         @cancelCallback = options.cancel
         @label = if options.label? then options.label else t 'install'
         @$("#confirmbtn").html @label
@@ -123,5 +123,5 @@ module.exports = class PopoverDescriptionView extends BaseView
         @hide()
         @cancelCallback(@model)
 
-    onConfirmClicked: () =>
-        @confirmCallback(@model)
+    onConfirmClicked: ->
+        @confirmCallback @model
