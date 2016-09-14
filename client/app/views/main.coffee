@@ -297,7 +297,7 @@ module.exports = class HomeView extends BaseView
         iframe$    = $(iframeHTML).appendTo @frames
 
         # Listen to Iframe added to DOM
-        $("##{id}").prop('contentWindow').onhashchange = ->
+        $("##{id}").prop('contentWindow').onhashchange = =>
             location = $("##{id}").prop('contentWindow').location
             newhash  = location.hash.replace '#', ''
             @onAppHashChanged slug, newhash
