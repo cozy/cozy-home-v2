@@ -152,7 +152,7 @@ module.exports = class ConfigApplicationsView extends BaseView
 
     # Show the dialog to allow the user to update his stack.
     showUpdateStackDialog: ->
-        @popover.hide() if @popover?
+        @popover.remove() if @popover?
 
         @popover = new UpdateStackModal
             confirm: (model) =>
@@ -163,10 +163,8 @@ module.exports = class ConfigApplicationsView extends BaseView
                         @popover.onSuccess changes
 
             cancel: (model) =>
+                @popover.remove()
                 @render()
-
-            end: (success) =>
-                @render() if success
 
         $("#config-applications-view").append @popover.$el
         @popover.show()
