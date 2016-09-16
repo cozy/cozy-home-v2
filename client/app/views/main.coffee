@@ -248,7 +248,7 @@ module.exports = class HomeView extends BaseView
 
                 @selectedApp = slug
                 app = @apps.get slug
-                name = app.get('displayName') or app.get('name') or ''
+                name = app?.get('displayName') or app?.get('name') or ''
                 if name.length > 0
                     name = name.replace /^./, name[0].toUpperCase()
                 window.document.title = "Cozy - #{name}"
