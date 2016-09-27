@@ -114,12 +114,12 @@ module.exports = class Application extends Backbone.Model
         ]
             section = 'watch'
         else if name in [
-            'kresus', 'konnectors', 'kyou', 'databrowser', 'import-from-google'
+            'kresus', 'kyou', 'databrowser', 'import-from-google'
         ]
             section = 'data'
         else if name in ['todos', 'notes', 'tasky', 'tiddlywiki']
             section = 'productivity'
-        else if name in ['sync']
+        else if name in ['sync', 'konnectors']
             section = 'platform'
 
         return section
@@ -134,4 +134,3 @@ module.exports = class Application extends Backbone.Model
     # Return true is the app is considered as an official Cozy application.
     isOfficial: ->
         @get('comment') is 'official application'
-
