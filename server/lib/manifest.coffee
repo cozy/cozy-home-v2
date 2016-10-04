@@ -54,25 +54,21 @@ class exports.Manifest
 
         else if app.git?
 
-            providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc)/
+            providerName = app.git.match /(github\.com|gitlab\.cozycloud\.cc|framagit\.org)/
             if not providerName?
-                logger.error "Unknown provider '#{app.git}'"
-                callback "unknown provider"
+                logger.warn "Unknown provider '#{app.git}'"
 
+            # By default, the provider will be Gitlab
+            if providerName?[0] is "github.com"
+                Provider = require('./git_providers').GithubProvider
             else
-                providerName = providerName[0]
+                Provider = require('./git_providers').CozyGitlabProvider
 
-                if providerName is "gitlab.cozycloud.cc"
-                    Provider = require('./git_providers').CozyGitlabProvider
-
-                else
-                    Provider = require('./git_providers').GithubProvider
-
-                provider = new Provider app
-                provider.getManifest (err, data) =>
-                    @config = {}
-                    @config = data unless err?
-                    callback err, data
+            provider = new Provider app
+            provider.getManifest (err, data) =>
+                @config = {}
+                @config = data unless err?
+                callback err, data
 
         else
             @config = {}
