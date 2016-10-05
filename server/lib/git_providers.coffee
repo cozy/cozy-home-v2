@@ -12,6 +12,10 @@ class GitProvider
         @repoUrl = repoDescriptor.git
         @repoBranch = repoDescriptor.branch
 
+
+    getManifest: (callback) ->
+        throw new Error('getManifest must be defined.')
+
 # Github provider
 module.exports.GithubProvider = class GithubProvider extends GitProvider
 
