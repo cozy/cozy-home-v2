@@ -24,8 +24,43 @@ module.exports =
             if err then next err
             else
                 imports = ""
+                # if qwant application is installed
+                isQwantInstalled = (results.applications.filter((application) ->
+                    application.name is 'qwant')).length >= 1
+                if isQwantInstalled
+                    imports += "window.qwantInstalled = #{true};\n"
+                # if node development environment
+                if process.env.NODE_ENV is 'development'
+                    imports += "window.DEV_ENV = #{true};\n"
+                if process.env.ENABLE_QWANT_SEARCH is 'true'
+                    imports += "window.ENABLE_QWANT_SEARCH = #{true};\n"
+                if process.env.BEN_DEMO is 'true'
+                    imports += "window.BEN_DEMO = #{true};\n"
                 for key, value of results
                     imports += "window.#{key} = #{JSON.stringify(value)};\n"
                 imports += "window.managed = #{process.env.MANAGED};\n"
 
-                res.render 'index', {imports}
+                # function to grab queries from window.location.hash
+                argsFromLocationHash = (hashString) ->
+                    # remove the '?'
+                    queryString =
+                        hashString.substring (hashString.indexOf('?')+1)
+                    # split by '&'
+                    queries = queryString.split '&'
+                    urlArguments = {}
+                    for query of queries
+                        if queries[query] is '' then continue
+                        # query=value -> [query, value]
+                        pair = queries[query].split '='
+                        if pair.length isnt 2 then continue
+                        # to check if many values
+                        values = pair[1].split(',')
+                        # if at least two values -> value is array
+                        if values[1]
+                            urlArguments[pair[0]] = values
+                        else
+                            # one value, value is string
+                            urlArguments[pair[0]] = pair[1]
+                    return urlArguments
+
+                res.render 'index', {imports, argsFromLocationHash}

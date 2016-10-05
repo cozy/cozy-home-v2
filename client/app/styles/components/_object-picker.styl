@@ -202,6 +202,87 @@
 
 
     // ========================================= //
+    // imagesSearch panel
+    margin-imagesSearch = 1.3em
+
+    .imagesSearch
+        flex-direction  column
+        align-items     stretch
+        justify-content flex-start
+        margin-bottom   margin-imagesSearch
+
+    .search-tab-container
+        display         flex
+        flex-direction  column
+        justify-content space-around
+        align-items     stretch
+        padding         1em
+
+        .modal-search-input
+            flex            none
+            margin          0 auto
+            max-width       36em
+            width           80%
+            background white
+
+            // reset default styles
+            padding 0
+            border none
+            border-radius 0
+
+            // add qwant styles
+            border-bottom 2px solid rgba(77,84,92,.8)
+            padding 6px 2px
+
+            &:hover
+            &:focus
+                border none
+                border-bottom 2px solid rgba(77,84,92,.8)
+
+        .subsection
+            text-align right
+            width 100%
+            font-size 12px
+
+            img
+                height 50px
+
+
+
+        .results
+            display             flex
+            flex-wrap           wrap
+            justify-content     space-around
+            .searchItem
+                margin          .2em .1em
+                border          .35em solid white
+                transition      .2s
+                border-radius   .2em
+                &:hover
+                    cursor      pointer
+                    transform   scale(1.05)
+                    z-index     100
+                    box-shadow  0em 0em .3em #555
+                    transition  .2s
+                &.selected
+                    border          .35em solid rgb(0, 185, 255)
+                    transform       scale(1.05)
+                    z-index         50
+                    box-shadow      0em 0em .3em #555
+        .error
+            text-align          center
+            padding             .5em
+            border              .2em solid rgb(255, 100, 0)
+            background-color    rgb(255, 240, 240)
+            border-radius       .3em
+            &.notFound
+                border              .2em solid rgb(180, 180, 180)
+                background-color    rgb(240, 240, 240)
+        .spinner
+            height      2em
+
+
+    // ========================================= //
     // album picker panel
     .albumPicker.noAlbum
         flex-direction column

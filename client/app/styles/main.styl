@@ -58,6 +58,87 @@
     background-color white
 
 
+/** Search bar */
+.search
+    float         right
+    margin-top    -31px
+    margin-right  120px
+    border-radius 3px
+
+    input
+        text-align       initial
+        height           1.6em
+        width            8em
+        background-color #999 !important  // needed to overwrite JS properties
+        border           1px solid #000 !important  // needed to overwrite JS properties
+        border-radius    3px
+        color            #000
+        font-size        1em
+        font-family      "Source Sans Pro", sans-serif
+        transition       width 0.2s ease-out, background-color 0.3s ease-out
+
+        &:focus
+            width            36vw
+            background-color #fff !important  // needed to overwrite JS properties
+            color            #333
+
+// with typeahead
+.twitter-typeahead
+    float         right
+    border-radius 3px
+
+    input
+        text-align       initial
+        height           1.6em
+        width            8em
+        padding          0 .5em
+        background-color grey-06 !important  // needed to overwrite JS properties
+        border           none !important  // needed to overwrite JS properties
+        border-radius    3px
+        color            #000
+        font-size        1em
+        font-family      "Source Sans Pro", sans-serif
+        transition       width 0.2s ease-out, background-color 0.3s ease-out
+
+        &:focus
+            width            36vw
+            background-color #fff !important  // needed to overwrite JS properties
+            color            #333
+
+    .tt-menu
+        padding          0
+        width            100%
+        background-color #fff
+        border-radius    5px
+        box-shadow       0 1px 3px rgba(grey-08,.19), 0 5px 20px rgba(grey-08,.22)
+        font-family      "Source Sans Pro", sans-serif
+
+    .tt-suggestion
+        padding .25em 1em
+        margin  0
+        color   grey-07
+        strong
+            color grey-08
+    .tt-cursor
+    .tt-suggestion:hover
+        background-color blue
+        color            #fff
+        cursor           pointer
+        strong
+            color #fff
+    .sourceTitle
+        padding        0 16px
+        font-size      .75em
+        color          orange
+        text-transform uppercase
+    .tt-dataset
+        padding .75em 0
+    .tt-dataset-states
+        border-top 1px solid grey-03
+        .sourceTitle
+            color blue
+
+
 // navbar
 // ========================================================
 .navbar
@@ -362,4 +443,3 @@ button.btn
             height 100%
             max-width 100%
             max-height 100%
-

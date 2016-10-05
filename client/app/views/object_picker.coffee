@@ -1,6 +1,7 @@
 Modal                = require '../views/modal'
 template             = require '../templates/object_picker'
 ObjectPickerPhotoURL = require './object_picker_photourl'
+ObjectPickerSearch   = require './object_picker_search'
 ObjectPickerUpload   = require './object_picker_upload'
 ObjectPickerImage    = require './object_picker_image'
 ObjectPickerAlbum    = require './object_picker_album'
@@ -81,6 +82,21 @@ module.exports = class PhotoPickerCroper extends Modal
         @photoURLpanel = new ObjectPickerPhotoURL()
         tabControler.addTab @objectPickerCont, @tablist, @photoURLpanel
         @panelsControlers[@photoURLpanel.name] = @photoURLpanel
+        # images search panel if qwant app installed and correct env
+        qwantMode = window.urlArguments && window.urlArguments.modes && window.urlArguments.modes.indexOf 'qwant_search' isnt -1
+        if (window.DEV_ENV or qwantMode or window.ENABLE_QWANT_SEARCH) and (window.qwantInstalled)
+            # image modal panel
+            @imagePanel = new ObjectPickerImage()
+            tabControler.addTab @objectPickerCont, @tablist, @imagePanel
+            @panelsControlers[@imagePanel.name] = @imagePanel
+            # album modal panel
+            @albumPanel = new ObjectPickerAlbum()
+            tabControler.addTab @objectPickerCont, @tablist, @albumPanel
+            @panelsControlers[@albumPanel.name] = @albumPanel
+            # search modal panel
+            @imagesSearchPanel = new ObjectPickerSearch()
+            tabControler.addTab @objectPickerCont, @tablist, @imagesSearchPanel
+            @panelsControlers[@imagesSearchPanel.name] = @imagesSearchPanel
         # init tabs
         tabControler.initializeTabs(body)
         @_listenTabsSelection()

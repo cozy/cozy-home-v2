@@ -9,3 +9,8 @@
         span
             = t("navbar back button title")
     #menu-applications-container
+    //- parent should already be window.parent by default
+    - var qwantMode = parent.urlArguments && parent.urlArguments.modes && parent.urlArguments.modes.indexOf('qwant_search') !== -1;
+    if ((parent.DEV_ENV || qwantMode || parent.ENABLE_QWANT_SEARCH) && parent.qwantInstalled) || parent.BEN_DEMO
+        div.search
+            input#search-bar(type="text")
