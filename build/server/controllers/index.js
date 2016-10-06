@@ -42,18 +42,56 @@ module.exports = {
         return Market.getApps(cb);
       }
     }, function(err, results) {
-      var imports, key, value;
+      var argsFromLocationHash, imports, isQwantInstalled, key, value;
       if (err) {
         return next(err);
       } else {
         imports = "";
+        isQwantInstalled = (results.applications.filter(function(application) {
+          return application.name === 'qwant';
+        })).length >= 1;
+        if (isQwantInstalled) {
+          imports += "window.qwantInstalled = " + true + ";\n";
+        }
+        if (process.env.NODE_ENV === 'development') {
+          imports += "window.DEV_ENV = " + true + ";\n";
+        }
+        if (process.env.ENABLE_QWANT_SEARCH === 'true') {
+          imports += "window.ENABLE_QWANT_SEARCH = " + true + ";\n";
+        }
+        if (process.env.BEN_DEMO === 'true') {
+          imports += "window.BEN_DEMO = " + true + ";\n";
+        }
         for (key in results) {
           value = results[key];
           imports += "window." + key + " = " + (JSON.stringify(value)) + ";\n";
         }
         imports += "window.managed = " + process.env.MANAGED + ";\n";
+        argsFromLocationHash = function(hashString) {
+          var pair, queries, query, queryString, urlArguments, values;
+          queryString = hashString.substring(hashString.indexOf('?') + 1);
+          queries = queryString.split('&');
+          urlArguments = {};
+          for (query in queries) {
+            if (queries[query] === '') {
+              continue;
+            }
+            pair = queries[query].split('=');
+            if (pair.length !== 2) {
+              continue;
+            }
+            values = pair[1].split(',');
+            if (values[1]) {
+              urlArguments[pair[0]] = values;
+            } else {
+              urlArguments[pair[0]] = pair[1];
+            }
+          }
+          return urlArguments;
+        };
         return res.render('index', {
-          imports: imports
+          imports: imports,
+          argsFromLocationHash: argsFromLocationHash
         });
       }
     });

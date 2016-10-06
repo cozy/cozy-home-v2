@@ -58,28 +58,25 @@ exports.Manifest = (function() {
         return callback(null, {});
       }
     } else if (app.git != null) {
-      providerName = app.git.match(/(github\.com|gitlab\.cozycloud\.cc)/);
+      providerName = app.git.match(/(github\.com|gitlab\.cozycloud\.cc|framagit\.org)/);
       if (providerName == null) {
-        logger.error("Unknown provider '" + app.git + "'");
-        return callback("unknown provider");
-      } else {
-        providerName = providerName[0];
-        if (providerName === "gitlab.cozycloud.cc") {
-          Provider = require('./git_providers').CozyGitlabProvider;
-        } else {
-          Provider = require('./git_providers').GithubProvider;
-        }
-        provider = new Provider(app);
-        return provider.getManifest((function(_this) {
-          return function(err, data) {
-            _this.config = {};
-            if (err == null) {
-              _this.config = data;
-            }
-            return callback(err, data);
-          };
-        })(this));
+        logger.warn("Unknown provider '" + app.git + "'");
       }
+      if ((providerName != null ? providerName[0] : void 0) === "github.com") {
+        Provider = require('./git_providers').GithubProvider;
+      } else {
+        Provider = require('./git_providers').CozyGitlabProvider;
+      }
+      provider = new Provider(app);
+      return provider.getManifest((function(_this) {
+        return function(err, data) {
+          _this.config = {};
+          if (err == null) {
+            _this.config = data;
+          }
+          return callback(err, data);
+        };
+      })(this));
     } else {
       this.config = {};
       logger.warn('App manifest without recognized git URL or package field');

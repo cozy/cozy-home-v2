@@ -15,6 +15,10 @@ GitProvider = (function() {
     this.repoBranch = repoDescriptor.branch;
   }
 
+  GitProvider.prototype.getManifest = function(callback) {
+    throw new Error('getManifest must be defined.');
+  };
+
   return GitProvider;
 
 })();

@@ -371,6 +371,10 @@ exports.del = function(url, callbacks) {
 exports.head = function(url, callbacks) {
   return exports.request("HEAD", url, null, callbacks);
 };
+
+exports.getSAMEORIGINError = function(hash) {
+  return hash.match(/^(\w*:\/\/\w+\.)/);
+};
 });
 
 ;require.register("helpers/color-set", function(exports, require, module) {
@@ -2487,7 +2491,7 @@ module.exports = {
     "welcome to your cozy": "Bienvenue sur votre Cozy !",
     "you have no apps": "Vous n'avez aucune application installée.",
     "app management": "Gestion des applications",
-    "app store": "Ajouter",
+    "app store": "Store",
     "configuration": "Configuration",
     "assistance": "Aide",
     "hardware consumption": "Matériel",
@@ -6513,11 +6517,11 @@ module.exports = Application = (function(_super) {
       section = 'main';
     } else if (name === 'blog' || name === 'feeds' || name === 'bookmarks' || name === 'quickmarks' || name === 'zero-feeds') {
       section = 'watch';
-    } else if (name === 'kresus' || name === 'konnectors' || name === 'kyou' || name === 'databrowser' || name === 'import-from-google') {
+    } else if (name === 'kresus' || name === 'kyou' || name === 'databrowser' || name === 'import-from-google') {
       section = 'data';
     } else if (name === 'todos' || name === 'notes' || name === 'tasky' || name === 'tiddlywiki') {
       section = 'productivity';
-    } else if (name === 'sync') {
+    } else if (name === 'sync' || name === 'konnectors') {
       section = 'platform';
     }
     return section;
@@ -6825,13 +6829,15 @@ module.exports = User = (function(_super) {
 });
 
 ;require.register("routers/main_router", function(exports, require, module) {
-var MainRouter, ObjectPickerCroper, Token, _ref,
+var MainRouter, ObjectPickerCroper, Token, client, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 ObjectPickerCroper = require('../views/object_picker');
 
 Token = require("../models/token");
+
+client = require('../helpers/client');
 
 module.exports = MainRouter = (function(_super) {
   __extends(MainRouter, _super);
@@ -6852,8 +6858,8 @@ module.exports = MainRouter = (function(_super) {
     "update-stack": "updateStack",
     "apps/:slug": "application",
     "apps/:slug/*hash": "application",
-    "*path": "applicationList",
-    '*notFound': 'applicationList'
+    "*path": "default",
+    '*notFound': 'default'
   };
 
   MainRouter.prototype.initialize = function() {
@@ -6905,6 +6911,18 @@ module.exports = MainRouter = (function(_super) {
     });
   };
 
+  MainRouter.prototype["default"] = function(hash) {
+    return this.navigate('home', true);
+  };
+
+  MainRouter.prototype.navigate = function(hash, trigger) {
+    if (client.getSAMEORIGINError(hash)) {
+      hash = '';
+      trigger = true;
+    }
+    return MainRouter.__super__.navigate.call(this, hash, trigger);
+  };
+
   MainRouter.prototype.applicationList = function() {
     return app.mainView.displayApplicationsList();
   };
@@ -6930,6 +6948,9 @@ module.exports = MainRouter = (function(_super) {
   };
 
   MainRouter.prototype.application = function(slug, hash) {
+    if (hash == null) {
+      hash = '';
+    }
     return app.mainView.displayApplication(slug, hash);
   };
 
@@ -7117,7 +7138,7 @@ var buf = [];
 with (locals || {}) {
 var interp;
 buf.push('<iframe');
-buf.push(attrs({ 'src':("apps/" + (id) + "/" + (hash) + ""), 'id':("" + (id) + "-frame") }, {"src":true,"id":true}));
+buf.push(attrs({ 'src':("" + (source) + ""), 'id':("" + (id) + "") }, {"src":true,"id":true}));
 buf.push('></iframe>');
 }
 return buf.join("");
@@ -7467,10 +7488,10 @@ buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</h2><div class="application-container"></div></section><section id="apps-platform" class="line show"><h2>');
 var __val__ = t('home section platform')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</h2><div class="application-container"><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
+buf.push('</h2><div class="application-container"><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner store"><a href="#applications"><img src="img/apps/store.svg" class="icon"/><p class="app-title">');
 var __val__ = t('app store')
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner"><a href="#config-applications"><img src="img/apps/my-apps.svg" class="icon svg"/><p class="app-title">');
+buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div class="application-inner myapps"><a href="#config-applications"><img src="img/apps/my-apps.svg" class="icon svg"/><p class="app-title">');
 var __val__ = t('app status')
 buf.push(escape(null == __val__ ? "" : __val__));
 buf.push('</p></a></div></div><div class="application mod w360-33 w640-25 full-20 left platform-app"><div href="#account" class="application-inner"><a href="#account"><img src="img/apps/settings.svg" class="icon svg"/><p class="app-title">');
@@ -7660,7 +7681,13 @@ buf.push(attrs({ 'href':("#home"), 'title':("" + (t('navbar back button title'))
 buf.push('><div class="fa fa-chevron-left"></div><span>');
 var __val__ = t("navbar back button title")
 buf.push(escape(null == __val__ ? "" : __val__));
-buf.push('</span></a><div id="menu-applications-container"></div></div>');
+buf.push('</span></a><div id="menu-applications-container"></div>');
+ var qwantMode = parent.urlArguments && parent.urlArguments.modes && parent.urlArguments.modes.indexOf('qwant_search') !== -1;
+if ( ((parent.DEV_ENV || qwantMode || parent.ENABLE_QWANT_SEARCH) && parent.qwantInstalled) || parent.BEN_DEMO)
+{
+buf.push('<div class="search"><input id="search-bar" type="text"/></div>');
+}
+buf.push('</div>');
 }
 return buf.join("");
 };
@@ -7751,6 +7778,21 @@ var interp;
 buf.push('<div class="bloc-container"><div class="img-container"><div class="url-preview"></div></div><input');
 buf.push(attrs({ 'placeholder':("" + (t('url of an image')) + ""), 'value':(""), "class": ('modal-url-input') }, {"placeholder":true,"value":true}));
 buf.push('/></div>');
+}
+return buf.join("");
+};
+});
+
+require.register("templates/object_picker_search", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<div class="search-tab-container"><input');
+buf.push(attrs({ 'placeholder':("" + (t('What are you looking for?')) + ""), 'value':(""), "class": ('modal-search-input') }, {"placeholder":true,"value":true}));
+buf.push('/><div class="subsection">Powered by <img src="img/qwant-logo.jpg" alt="Qwant logo"/></div></div>');
 }
 return buf.join("");
 };
@@ -9152,9 +9194,11 @@ module.exports = ConfigApplicationsView = (function(_super) {
       needsUpdate: true
     }).length > 0;
     if (this.toUpdate || appNeedUpdate) {
-      return this.updateBtn.show();
+      this.updateBtn.show();
+      return this.updateBtn.removeAttr('disable');
     } else {
-      return this.updateBtn.hide();
+      this.updateBtn.hide();
+      return this.updateBtn.attr('disable', true);
     }
   };
 
@@ -9243,33 +9287,32 @@ module.exports = ConfigApplicationsView = (function(_super) {
     return setTimeout(this.fetch, 10000);
   };
 
-  ConfigApplicationsView.prototype.onUpdateClicked = function() {
-    return this.showUpdateStackDialog();
+  ConfigApplicationsView.prototype.onUpdateClicked = function(event) {
+    var isDisabled;
+    if (!(isDisabled = this.updateBtn.attr('disable'))) {
+      this.updateBtn.attr('disable', true);
+      return this.showUpdateStackDialog();
+    }
   };
 
   ConfigApplicationsView.prototype.showUpdateStackDialog = function() {
     var _this = this;
     if (this.popover != null) {
-      this.popover.hide();
+      this.popover.remove();
     }
     this.popover = new UpdateStackModal({
-      confirm: function(application) {
-        return _this.runFullUpdate(function(err, permissionChanges) {
+      confirm: function(model) {
+        return _this.runFullUpdate(function(err, changes) {
           if (err) {
-            return _this.popover.onError(err, permissionChanges);
+            return _this.popover.onError(err, changes);
           } else {
-            return _this.popover.onSuccess(permissionChanges);
+            return _this.popover.onSuccess(changes);
           }
         });
       },
-      cancel: function(application) {
-        _this.popover.hide();
-        return _this.popover.remove();
-      },
-      end: function(success) {
-        if (success) {
-          return location.reload();
-        }
+      cancel: function(model) {
+        _this.popover.remove();
+        return _this.render();
       }
     });
     $("#config-applications-view").append(this.popover.$el);
@@ -9279,14 +9322,14 @@ module.exports = ConfigApplicationsView = (function(_super) {
   ConfigApplicationsView.prototype.runFullUpdate = function(callback) {
     var _this = this;
     Backbone.Mediator.pub('update-stack:start');
-    return this.applications.updateAll(function(err, permissionChanges) {
+    return this.applications.updateAll(function(err, changes) {
       var _ref;
       if (err) {
-        return callback(err, (_ref = err.data) != null ? _ref.permissionChanges : void 0);
+        return callback(err, (_ref = err.data) != null ? _ref.changes : void 0);
       }
       return _this.stackApplications.updateStack(function(err) {
         Backbone.Mediator.pub('update-stack:end');
-        return callback(err, permissionChanges);
+        return callback(err, changes);
       });
     });
   };
@@ -9734,7 +9777,6 @@ module.exports = ApplicationRow = (function(_super) {
     this.startApp = __bind(this.startApp, this);
     this.onAppClicked = __bind(this.onAppClicked, this);
     this.onUninstall = __bind(this.onUninstall, this);
-    this.onAppChanged = __bind(this.onAppChanged, this);
     this.afterRender = __bind(this.afterRender, this);
     this.id = "app-btn-" + options.model.id;
     this.enabled = true;
@@ -9750,7 +9792,7 @@ module.exports = ApplicationRow = (function(_super) {
     this.background = this.$('img');
     this.listenTo(this.model, 'change', this.onAppChanged);
     this.listenTo(this.model, 'uninstall', this.onUninstall);
-    this.onAppChanged(this.model);
+    this.onAppChanged();
     this.setBackgroundColor();
     if (this.model.isIconSvg()) {
       return this.icon.addClass('svg');
@@ -9780,7 +9822,10 @@ module.exports = ApplicationRow = (function(_super) {
         this.icon.attr('src', src);
         this.icon.show();
         this.icon.removeClass('stopped');
-        return $("#" + (this.model.get('slug')) + "-frame").remove();
+        if (this.model.previous('state') !== 'stopped') {
+          return $("#" + (this.model.get('slug')) + "-frame").remove();
+        }
+        break;
       case 'installing':
         this.showSpinner();
         return this.setBackgroundColor();
@@ -11482,7 +11527,7 @@ module.exports = LongList = (function() {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate, client,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -11514,6 +11559,8 @@ SocketListener = require('lib/socket_listener');
 User = require('models/user');
 
 IntentManager = require('lib/intent_manager');
+
+client = require('helpers/client');
 
 module.exports = HomeView = (function(_super) {
   __extends(HomeView, _super);
@@ -11680,7 +11727,7 @@ module.exports = HomeView = (function(_super) {
   HomeView.prototype.displayUpdateApplication = function(slug) {
     var action, method, timeout;
     this.displayView(this.configApplications, t("cozy applications title"));
-    window.app.routers.main.navigate('config-applications', false);
+    this.navigate('config-applications');
     method = this.configApplications.openUpdatePopover;
     action = method.bind(this.configApplications, slug);
     timeout = null;
@@ -11699,14 +11746,14 @@ module.exports = HomeView = (function(_super) {
     var _this = this;
     this.displayView(this.configApplications);
     window.document.title = t("cozy applications title");
-    window.app.routers.main.navigate('config-applications', false);
+    this.navigate('config-applications');
     return setTimeout(function() {
       return _this.configApplications.onUpdateClicked();
     }, 500);
   };
 
   HomeView.prototype.displayApplication = function(slug, hash) {
-    var err, frame, onLoad, _base, _base1,
+    var frame, iframeID, onLoad, _base, _base1,
       _this = this;
     if (app.mainView.viewModel.get('updatingStack')) {
       return alert(t('stack updating block message'));
@@ -11725,7 +11772,8 @@ module.exports = HomeView = (function(_super) {
     } else {
       this.$("#app-btn-" + slug + " .spinner").show();
       this.$("#app-btn-" + slug + " .icon").hide();
-      frame = this.$("#" + slug + "-frame");
+      iframeID = this.getAppFrameID(slug);
+      frame = this.$("#" + iframeID);
       onLoad = function() {
         var app, name;
         _this.frames.css('top', '0');
@@ -11735,10 +11783,10 @@ module.exports = HomeView = (function(_super) {
         _this.content.hide();
         _this.backButton.show();
         _this.$('#app-frames').find('iframe').hide();
-        frame.show();
+        _this.$("#" + iframeID).show();
         _this.selectedApp = slug;
         app = _this.apps.get(slug);
-        name = app.get('displayName') || app.get('name') || '';
+        name = (app != null ? app.get('displayName') : void 0) || (app != null ? app.get('name') : void 0) || '';
         if (name.length > 0) {
           name = name.replace(/^./, name[0].toUpperCase());
         }
@@ -11747,28 +11795,23 @@ module.exports = HomeView = (function(_super) {
         _this.$("#app-btn-" + slug + " .spinner").hide();
         return _this.$("#app-btn-" + slug + " .icon").show();
       };
-      if (frame.length === 0) {
-        frame = this.createApplicationIframe(slug, hash);
+      if (!frame.length) {
+        this.createApplicationIframe(slug, hash, {
+          id: iframeID
+        });
         this.frames.show();
         this.frames.css('top', '-9999px');
         this.frames.css('left', '-9999px');
         this.frames.css('position', 'absolute');
-        return frame.on('load', _.once(onLoad));
+        return $("#" + iframeID).prop('contentWindow').addEventListener('load', onLoad);
       } else if (hash) {
-        try {
-          frame.prop('contentWindow').location.hash = hash;
-        } catch (_error) {
-          err = _error;
-          console.err(err);
-        }
+        this.navigate({
+          slug: slug,
+          hash: hash
+        });
         return onLoad();
       } else if (frame.is(':visible')) {
-        try {
-          frame.prop('contentWindow').location.hash = '';
-        } catch (_error) {
-          err = _error;
-          console.err(err);
-        }
+        this.navigate('');
         return onLoad();
       } else {
         return onLoad();
@@ -11777,7 +11820,7 @@ module.exports = HomeView = (function(_super) {
   };
 
   HomeView.prototype.createApplicationIframe = function(slug, hash) {
-    var iframe$, iframeHTML,
+    var id, iframe$, iframeHTML, iframeWindow, source,
       _this = this;
     if (hash == null) {
       hash = "";
@@ -11785,20 +11828,24 @@ module.exports = HomeView = (function(_super) {
     if ((hash != null ? hash.length : void 0) > 0) {
       hash = "#" + hash;
     }
+    id = this.getAppFrameID(slug);
+    source = this.getIframeLocation({
+      hash: hash,
+      slug: slug
+    });
     iframeHTML = appIframeTemplate({
-      id: slug,
-      hash: hash
+      id: id,
+      source: source
     });
     iframe$ = $(iframeHTML).appendTo(this.frames);
-    iframe$.prop('contentWindow').addEventListener('hashchange', function() {
-      var location, newhash;
-      location = iframe$.prop('contentWindow').location;
-      newhash = location.hash.replace('#', '');
+    iframeWindow = this.$("#" + id).prop('contentWindow');
+    iframeWindow.onhashchange = function() {
+      var newhash;
+      newhash = iframeWindow.location.hash.replace('#', '');
       return _this.onAppHashChanged(slug, newhash);
-    });
+    };
     this.forceIframeRendering();
-    this.intentManager.registerIframe(iframe$[0], '*');
-    return iframe$;
+    return this.intentManager.registerIframe(iframe$[0], '*');
   };
 
   HomeView.prototype.onAppHashChanged = function(slug, newhash) {
@@ -11806,20 +11853,18 @@ module.exports = HomeView = (function(_super) {
     if (slug === this.selectedApp) {
       currentHash = location.hash.substring(("#apps/" + slug + "/").length);
       if (currentHash !== newhash) {
-        if (typeof app !== "undefined" && app !== null) {
-          app.routers.main.navigate("apps/" + slug + "/" + newhash, false);
-        }
+        this.navigate(slug, newhash);
       }
       return this.forceIframeRendering();
     }
   };
 
   HomeView.prototype.onAppStateChanged = function(appState) {
-    var frame, _ref;
+    var iframeID, _ref;
     if ((_ref = appState.status) === 'updating' || _ref === 'broken' || _ref === 'uninstalled') {
-      frame = this.getAppFrame(appState.slug);
-      frame.remove();
-      return frame.off('load');
+      iframeID = this.getAppFrameID(appState.slug);
+      $("#" + iframeID).off('load');
+      return $("#" + iframeID).remove();
     }
   };
 
@@ -11843,20 +11888,38 @@ module.exports = HomeView = (function(_super) {
     }, 10);
   };
 
-  HomeView.prototype.getAppFrame = function(slug) {
-    return this.$("#" + slug + "-frame");
+  HomeView.prototype.getAppFrameID = function(slug) {
+    return "" + slug + "-frame";
   };
 
   HomeView.prototype.displayToken = function(token, slug, source) {
-    var iframeWin;
-    iframeWin = source;
-    if (iframeWin == null) {
-      iframeWin = document.getElementById("" + slug + "-frame").contentWindow;
-    }
+    var iframeID, iframeWin;
+    iframeID = this.getAppFrameID(slug);
+    iframeWin = this.$("#" + iframeID).prop('contentWindow');
     return iframeWin.postMessage({
       token: token,
       appName: slug
     }, '*');
+  };
+
+  HomeView.prototype.getIframeLocation = function(data) {
+    var hash, slug, value;
+    value = '/';
+    if (_.isObject(data)) {
+      slug = data.slug, hash = data.hash;
+      value += "apps/" + slug + "/" + hash;
+    } else {
+      value += data.toString();
+    }
+    return value;
+  };
+
+  HomeView.prototype.navigate = function(hash) {
+    var iframeHash, _ref, _ref1, _ref2;
+    iframeHash = this.getIframeLocation(hash);
+    if (!(client.getSAMEORIGINError(iframeHash))) {
+      return typeof window !== "undefined" && window !== null ? (_ref = window.app) != null ? (_ref1 = _ref.routers) != null ? (_ref2 = _ref1.main) != null ? _ref2.navigate(iframeHash, false) : void 0 : void 0 : void 0 : void 0;
+    }
   };
 
   return HomeView;
@@ -12168,7 +12231,6 @@ module.exports = ApplicationRow = (function(_super) {
   function ApplicationRow(app, marketView) {
     this.app = app;
     this.marketView = marketView;
-    this.onInstallClicked = __bind(this.onInstallClicked, this);
     this.afterRender = __bind(this.afterRender, this);
     ApplicationRow.__super__.constructor.call(this);
     this.mouseOut = true;
@@ -12439,7 +12501,7 @@ module.exports = Modal;
 });
 
 ;require.register("views/navbar", function(exports, require, module) {
-var AppsMenu, BaseView, HelpView, NavbarView, NotificationsView, appButtonTemplate,
+var AppsMenu, BaseView, HelpView, NavbarView, NotificationsView, SearchBarMix, appButtonTemplate,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12451,6 +12513,8 @@ appButtonTemplate = require("templates/navbar_app_btn");
 NotificationsView = require('./notifications_view');
 
 HelpView = require('./help');
+
+SearchBarMix = require('./search_bar_mix');
 
 AppsMenu = require('./menu_applications');
 
@@ -12477,7 +12541,8 @@ module.exports = NavbarView = (function(_super) {
       collection: this.notifications
     });
     this.helpView = new HelpView();
-    return this.appMenu = new AppsMenu(this.apps);
+    this.appMenu = new AppsMenu(this.apps);
+    return this.searchBar = new SearchBarMix();
   };
 
   NavbarView.prototype.toggleHelp = function(event) {
@@ -12718,7 +12783,7 @@ module.exports = NotificationsView = (function(_super) {
 });
 
 ;require.register("views/object_picker", function(exports, require, module) {
-var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
+var MARGIN_BETWEEN_IMG_AND_CROPED, Modal, ObjectPickerAlbum, ObjectPickerImage, ObjectPickerPhotoURL, ObjectPickerSearch, ObjectPickerUpload, PhotoPickerCroper, THUMB_HEIGHT, THUMB_WIDTH, tabControler, template, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12728,6 +12793,8 @@ Modal = require('../views/modal');
 template = require('../templates/object_picker');
 
 ObjectPickerPhotoURL = require('./object_picker_photourl');
+
+ObjectPickerSearch = require('./object_picker_search');
 
 ObjectPickerUpload = require('./object_picker_upload');
 
@@ -12765,7 +12832,7 @@ module.exports = PhotoPickerCroper = (function(_super) {
   };
 
   PhotoPickerCroper.prototype.initialize = function(params, cb) {
-    var body, previewTops, tab;
+    var body, previewTops, qwantMode, tab;
     this.id = 'object-picker';
     this.title = t('pick from files');
     this.config = {
@@ -12805,6 +12872,18 @@ module.exports = PhotoPickerCroper = (function(_super) {
     this.photoURLpanel = new ObjectPickerPhotoURL();
     tabControler.addTab(this.objectPickerCont, this.tablist, this.photoURLpanel);
     this.panelsControlers[this.photoURLpanel.name] = this.photoURLpanel;
+    qwantMode = window.urlArguments && window.urlArguments.modes && window.urlArguments.modes.indexOf('qwant_search' !== -1);
+    if ((window.DEV_ENV || qwantMode || window.ENABLE_QWANT_SEARCH) && window.qwantInstalled) {
+      this.imagePanel = new ObjectPickerImage();
+      tabControler.addTab(this.objectPickerCont, this.tablist, this.imagePanel);
+      this.panelsControlers[this.imagePanel.name] = this.imagePanel;
+      this.albumPanel = new ObjectPickerAlbum();
+      tabControler.addTab(this.objectPickerCont, this.tablist, this.albumPanel);
+      this.panelsControlers[this.albumPanel.name] = this.albumPanel;
+      this.imagesSearchPanel = new ObjectPickerSearch();
+      tabControler.addTab(this.objectPickerCont, this.tablist, this.imagesSearchPanel);
+      this.panelsControlers[this.imagesSearchPanel.name] = this.imagesSearchPanel;
+    }
     tabControler.initializeTabs(body);
     this._listenTabsSelection();
     tab = this.params.defaultTab;
@@ -13336,14 +13415,11 @@ module.exports = ObjectPickerImage = (function(_super) {
   }
 
   ObjectPickerImage.prototype.initialize = function() {
-    var _this = this;
     this.name = 'thumbPicker';
     this.tabLabel = 'image';
     this.tab = $("<div class='fa fa-photo'>" + this.tabLabel + "</div>")[0];
     this.panel = this.el;
-    return this.el.addEventListener('panelSelect', function() {
-      return _this.longList = new LongList(_this.panel, _this.modal);
-    });
+    return this.longList = new LongList(this.panel, this.modal);
   };
 
   ObjectPickerImage.prototype.getObject = function() {
@@ -13473,6 +13549,128 @@ module.exports = ObjectPickerPhotoURL = (function(_super) {
   };
 
   return ObjectPickerPhotoURL;
+
+})(BaseView);
+});
+
+;require.register("views/object_picker_search", function(exports, require, module) {
+var BaseView, ObjectPickerSearch, client, proxyclient, _ref,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+proxyclient = require('lib/proxyclient');
+
+BaseView = require('lib/base_view');
+
+client = require('../lib/request');
+
+module.exports = ObjectPickerSearch = (function(_super) {
+  __extends(ObjectPickerSearch, _super);
+
+  function ObjectPickerSearch() {
+    _ref = ObjectPickerSearch.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  ObjectPickerSearch.prototype.template = require('../templates/object_picker_search');
+
+  ObjectPickerSearch.prototype.tagName = 'section';
+
+  ObjectPickerSearch.prototype.initialize = function() {
+    this.render();
+    this.name = 'imagesSearch';
+    this.tabLabel = 'search';
+    this.tab = $("<div class='fa fa-search'>" + this.tabLabel + "</div>")[0];
+    this.panel = this.el;
+    this.blocContainer = this.panel.querySelector('.search-tab-container');
+    this.input = this.panel.querySelector('.modal-search-input');
+    this.selectedUrl = this.selectedUrl;
+    this.selectedImage = {};
+    this.input.addEventListener('keyup', this._inputOnChange);
+    this.input.getImages = this._getQwantImages;
+    return this.input.container = this.blocContainer;
+  };
+
+  ObjectPickerSearch.prototype.getObject = function() {
+    var _ref1;
+    this.selectedUrl = (_ref1 = $('div.selected img')[0]) != null ? _ref1.data : void 0;
+    if (this.selectedUrl) {
+      this.selectedUrl = "api/proxy/?url=" + this.selectedUrl;
+      return {
+        urlToFetch: this.selectedUrl
+      };
+    } else {
+      return false;
+    }
+  };
+
+  ObjectPickerSearch.prototype.setFocusIfExpected = function() {
+    this.input.focus();
+    this.input.select();
+    return true;
+  };
+
+  ObjectPickerSearch.prototype.keyHandler = function(e) {
+    return false;
+  };
+
+  ObjectPickerSearch.prototype._inputOnChange = _.debounce(function(e) {
+    var newQuery;
+    newQuery = this.value;
+    if (newQuery.trim() !== '' && newQuery !== this.query) {
+      this.query = newQuery;
+      return this.getImages();
+    }
+  }, 500);
+
+  ObjectPickerSearch.prototype._getQwantImages = function() {
+    var container,
+      _this = this;
+    container = $('.search-tab-container');
+    container.children('.results').remove();
+    container.children('.error').remove();
+    if (!$('.search-tab-container .spinner').length) {
+      container.append($("<img src='/img/spinner.svg' class='spinner'/>"));
+    }
+    return client.get("apps/qwant/imagesSearch?q=" + this.query + "&count=50", function(err, res) {
+      var currentImage, imagesArray, index, item$, results$, thumb$, _ref1, _ref2, _ref3, _ref4;
+      container.children('.spinner').remove();
+      if (err) {
+        container.append($("<div class='error'>" + (t('a server error occured')) + "</div>"));
+        console.error(err);
+        return;
+      }
+      if ((res != null ? (_ref1 = res.data) != null ? (_ref2 = _ref1.result) != null ? _ref2.items.length : void 0 : void 0 : void 0) === 0) {
+        container.append($("<div class='error notFound'>" + (t('qwant results not found')) + "</div>"));
+        return;
+      }
+      if (res != null ? (_ref3 = res.data) != null ? (_ref4 = _ref3.result) != null ? _ref4.items : void 0 : void 0 : void 0) {
+        results$ = $("<div class='results'></div>");
+        imagesArray = res.data.result.items;
+        for (index in imagesArray) {
+          item$ = $("<div class='searchItem'></div>");
+          currentImage = imagesArray[index];
+          thumb$ = new Image();
+          thumb$.src = currentImage.thumbnail;
+          thumb$.data = currentImage.media;
+          thumb$.style.height = currentImage.thumb_height + 'px';
+          thumb$.style.width = currentImage.thumb_width + 'px';
+          thumb$.onerror = function() {
+            return $(this).parent().hide();
+          };
+          thumb$.onclick = function() {
+            $('.searchItem').removeClass('selected');
+            return $(this).parent().addClass('selected');
+          };
+          item$.append(thumb$);
+          results$.append(item$);
+        }
+        return container.append(results$);
+      }
+    });
+  };
+
+  return ObjectPickerSearch;
 
 })(BaseView);
 });
@@ -13611,7 +13809,6 @@ module.exports = PopoverDescriptionView = (function(_super) {
   __extends(PopoverDescriptionView, _super);
 
   function PopoverDescriptionView() {
-    this.onConfirmClicked = __bind(this.onConfirmClicked, this);
     this.onCancelClicked = __bind(this.onCancelClicked, this);
     this.hide = __bind(this.hide, this);
     this.show = __bind(this.show, this);
@@ -13635,7 +13832,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
 
   PopoverDescriptionView.prototype.initialize = function(options) {
     PopoverDescriptionView.__super__.initialize.apply(this, arguments);
-    this.confirmCallback = options.confirm;
+    this.confirmCallback = _.once(options.confirm);
     this.cancelCallback = options.cancel;
     this.label = options.label != null ? options.label : t('install');
     return this.$("#confirmbtn").html(this.label);
@@ -13674,7 +13871,7 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   PopoverDescriptionView.prototype.renderDescription = function() {
-    var description, docType, localeDesc, localeKey, permission, permissions, permissionsDiv, _ref1;
+    var description, docType, drawFilterType, filterTag, filterType, filtersType, hasFilter, headerDiv, isShared, localeDesc, localeKey, permission, permissions, permissionsDiv, sharedClass, sharedTag, _ref1, _ref2;
     this.body.html("");
     this.header = this.$(".md-header h3");
     this.header.html(this.model.get('displayName'));
@@ -13696,12 +13893,41 @@ module.exports = PopoverDescriptionView = (function(_super) {
       permissionsDiv = $("<div class='permissionsLine'>\n    <h5>" + (t('no specific permissions needed')) + " </h5>\n</div>");
       this.body.append(permissionsDiv);
     } else {
-      this.body.append("<h5>" + (t('required permissions')) + "</h5>");
-      _ref1 = this.model.get("permissions");
-      for (docType in _ref1) {
-        permission = _ref1[docType];
-        permissionsDiv = $("<div class='permissionsLine'>\n  <strong> " + docType + " </strong>\n  <p> " + permission.description + " </p>\n</div>");
-        this.body.append(permissionsDiv);
+      if (window.BEN_DEMO) {
+        this.body.append("<h4>" + (t('required permissions')) + "</h4>");
+        headerDiv = $("<div class='permissionsLine header flag-ben-demo'>                        <div class='fake-checkbox checked'><div class='circle'></div></div>                        <div class='doctype-name'>Doctype</div>                        <div class='doctype-filter'>Filtre</div>                        <div class='doctype-use'>Usage</div>");
+        this.body.append(headerDiv);
+        filtersType = ['Accès restreint aux documents possédant le tag "Travail".', 'Accès restreint aux documents possédant le tag "Personnel".', 'Accès restreint aux documents possédant le tag "Vacances".', 'Accès restreint aux documents créés il y a plus de deux semaines.', 'Accès restreint aux documents créé il y a plus de deux semaines.'];
+        _ref1 = this.model.get("permissions");
+        for (docType in _ref1) {
+          permission = _ref1[docType];
+          hasFilter = (Math.round(Math.random() * 100) + 1) <= 50;
+          isShared = (Math.round(Math.random() * 100) + 1) <= 50;
+          if (hasFilter) {
+            filterTag = "&nbsp;";
+          } else {
+            drawFilterType = Math.round(Math.random() * filtersType.length);
+            filterType = filtersType[drawFilterType];
+            filterTag = "<i class='fa fa-filter'></i>                                     <div class='tooltip'>" + filterType + "</div>";
+          }
+          if (isShared) {
+            sharedClass = "";
+            sharedTag = "Local <div class='tooltip'>Cette donnée ne sera utilisée qu'en local et ne sortira pas de Cozy.</div>";
+          } else {
+            sharedClass = "shared";
+            sharedTag = "Partagé <div class='tooltip'>L'application demande l'autorisation d'envoyer cette donnée à l'extérieur. En savoir plus…</div>";
+          }
+          permissionsDiv = $("<div class='permissionsLine flag-ben-demo'>                            <div class='fake-checkbox checked'><div class='circle'></div></div>                            <div class='doctype-name'>" + docType + "</div>                            <div class='doctype-filter'>" + filterTag + "</div>                            <div class='doctype-use " + sharedClass + "'>" + sharedTag + "</div>");
+          this.body.append(permissionsDiv);
+        }
+      } else {
+        this.body.append("<h5>" + (t('required permissions')) + "</h5>");
+        _ref2 = this.model.get("permissions");
+        for (docType in _ref2) {
+          permission = _ref2[docType];
+          permissionsDiv = $("<div class='permissionsLine'>\n  <strong> " + docType + " </strong>\n  <p> " + permission.description + " </p>\n</div>");
+          this.body.append(permissionsDiv);
+        }
       }
     }
     this.handleContentHeight();
@@ -13751,6 +13977,366 @@ module.exports = PopoverDescriptionView = (function(_super) {
   };
 
   return PopoverDescriptionView;
+
+})(BaseView);
+});
+
+;require.register("views/search_bar_mix", function(exports, require, module) {
+var BaseView, SearchBarView,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseView = require('lib/base_view');
+
+module.exports = SearchBarView = (function(_super) {
+  __extends(SearchBarView, _super);
+
+  SearchBarView.prototype.el = '.navbar';
+
+  SearchBarView.prototype.regExpHistory = {};
+
+  SearchBarView.prototype.onSearchClick = function(e) {
+    return e.target.select();
+  };
+
+  SearchBarView.prototype.searchWebQwant = function(e) {
+    var intent, query;
+    if (e.keyCode && e.keyCode === 13) {
+      query = encodeURIComponent(e.target.value);
+      intent = {
+        action: 'goto',
+        params: "qwant/search/web/" + query
+      };
+      return window.postMessage(intent, window.location.origin);
+    }
+  };
+
+  SearchBarView.prototype.handleSubmit = function(e) {
+    return this.searchWebQwant(e);
+  };
+
+  function SearchBarView() {
+    var highlightItem, qwantDisplay, qwantMode, qwantSearchDataset, qwantSource, states, substringMatcher, trackCharsToHighlight, typeah,
+      _this = this;
+    qwantMode = window.urlArguments && window.urlArguments.modes && window.urlArguments.modes.indexOf('qwant_search' !== -1);
+    this.qwantEnable = (window.DEV_ENV || qwantMode || window.ENABLE_QWANT_SEARCH) && window.qwantInstalled;
+    this.BEN_DEMO = window.BEN_DEMO;
+    if (this.qwantEnable && this.BEN_DEMO) {
+      qwantSearchDataset = ["web", 'images'];
+      qwantSource = function(items) {
+        return function(query, cb) {
+          return cb(["QwantWeb-" + query, "QwantImages-" + query]);
+        };
+      };
+      qwantDisplay = function(query) {
+        if (query.indexOf('QwantWeb-') >= 0) {
+          query = query.replace("QwantWeb-", "");
+          return "Qwant web for " + query;
+        }
+        if (query.indexOf('QwantImages-') >= 0) {
+          query = query.replace("QwantImages-", "");
+          return "Qwant images for " + query;
+        }
+      };
+      substringMatcher = function(items) {
+        return function(query, cb) {
+          var item, itemMatched, matches, queryWords, reg, regExp, regExpList, word, _i, _j, _k, _len, _len1, _len2;
+          matches = [];
+          if (query.length <= 3) {
+            cb([]);
+          }
+          queryWords = query.toLowerCase().trim().split(' ');
+          regExpList = [];
+          for (_i = 0, _len = queryWords.length; _i < _len; _i++) {
+            word = queryWords[_i];
+            if (!(reg = _this.regExpHistory[word])) {
+              reg = new RegExp(word.split('').join('.*?'), 'g');
+              _this.regExpHistory[word] = reg;
+            }
+            regExpList.push(reg);
+          }
+          for (_j = 0, _len1 = items.length; _j < _len1; _j++) {
+            item = items[_j];
+            itemMatched = true;
+            for (_k = 0, _len2 = regExpList.length; _k < _len2; _k++) {
+              regExp = regExpList[_k];
+              if (!regExp.test(item.toLowerCase())) {
+                itemMatched = false;
+                break;
+              }
+              regExp.lastIndex = 0;
+            }
+            if (itemMatched) {
+              matches.push(item);
+            }
+          }
+          return cb(matches);
+        };
+      };
+      states = ["/Administratif", "/Administratif/Bank statements", "/Administratif/Bank statements/Bank Of America", "/Administratif/Bank statements/Deutsche Bank", "/Administratif/Bank statements/Société Générale", "/Administratif/CPAM", "/Administratif/EDF", "/Administratif/EDF/Contrat", "/Administratif/EDF/Factures", "/Administratif/Emploi", "/Administratif/Impôts", "/Administratif/Logement", "/Administratif/Logement/Loyer 158 rue de Verdun", "/Administratif/Orange", "/Administratif/Pièces identité", "/Administratif/Pièces identité/Carte identité", "/Administratif/Pièces identité/Passeport", "/Administratif/Pièces identité/Permis de conduire", "/Appareils photo", "/Boulot", "/Cours ISEN", "/Cours ISEN/CIR", "/Cours ISEN/CIR/LINUX", "/Cours ISEN/CIR/MICROCONTROLEUR", "/Cours ISEN/CIR/RESEAUX", "/Cours ISEN/CIR/TRAITEMENT_SIGNAL", "/Divers photo", "/Divers photo/wallpapers", "/Films", "/Notes", "/Notes/Communication", "/Notes/Notes techniques", "/Notes/Recrutement", "/Projet appartement à Lyon", "/Vacances Périgord"];
+      trackCharsToHighlight = function(item, charsToHighlight, startIndex, word) {
+        var char, charIndex, nChars, wordIndex;
+        charsToHighlight[startIndex] = true;
+        nChars = item.length;
+        charIndex = startIndex;
+        wordIndex = 1;
+        while (charIndex < nChars) {
+          char = item[charIndex];
+          if (char === word[wordIndex]) {
+            charsToHighlight[charIndex] = true;
+            if (++wordIndex >= word.length) {
+              return;
+            }
+          }
+          charIndex++;
+        }
+      };
+      highlightItem = function(item, charsToHighlight) {
+        var isToHighlight, n, previousWasToHighlight, res, _i, _len;
+        res = '<p>';
+        previousWasToHighlight = void 0;
+        for (n = _i = 0, _len = charsToHighlight.length; _i < _len; n = ++_i) {
+          isToHighlight = charsToHighlight[n];
+          if (isToHighlight === previousWasToHighlight) {
+            res += item[n];
+          } else {
+            if (previousWasToHighlight) {
+              res += '</strong>' + item[n];
+            } else {
+              res += '<strong class="tt-highlight">' + item[n];
+            }
+          }
+          previousWasToHighlight = isToHighlight;
+        }
+        if (previousWasToHighlight) {
+          return res += '</strong></p>';
+        } else {
+          return res += '</p>';
+        }
+      };
+      typeah = $('#search-bar');
+      typeah.typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1,
+        limit: 8
+      }, {
+        name: 'qwant',
+        source: qwantSource(qwantSearchDataset),
+        display: qwantDisplay,
+        templates: {
+          header: function() {
+            return "<p class='sourceTitle'>Search in application Qwant</p>";
+          }
+        }
+      }, {
+        name: 'states',
+        source: substringMatcher(states),
+        templates: {
+          header: function() {
+            return "<p class='sourceTitle'>Search in application Files</p>";
+          },
+          suggestion: function(item) {
+            var fullWordMatch_N, fullWordsToHighlight, fuzzyWordsToHighlight, html, isToHighlight, itemLC, match, n, queryWords, word, wordRegexp, _i, _j, _len, _len1;
+            queryWords = typeah.typeahead('val').toLowerCase().trim().split(' ');
+            itemLC = item.toLowerCase();
+            fullWordsToHighlight = Array(item.length);
+            for (_i = 0, _len = queryWords.length; _i < _len; _i++) {
+              word = queryWords[_i];
+              wordRegexp = _this.regExpHistory[word];
+              wordRegexp.lastIndex = 0;
+              fullWordMatch_N = 0;
+              fuzzyWordsToHighlight = Array(item.length);
+              while (match = wordRegexp.exec(itemLC)) {
+                if (match[0].length === word.length) {
+                  fullWordMatch_N++;
+                  trackCharsToHighlight(itemLC, fullWordsToHighlight, match.index, word);
+                } else if (fullWordMatch_N === 0) {
+                  trackCharsToHighlight(itemLC, fuzzyWordsToHighlight, match.index, word);
+                }
+              }
+              if (fullWordMatch_N === 0) {
+                for (n = _j = 0, _len1 = fuzzyWordsToHighlight.length; _j < _len1; n = ++_j) {
+                  isToHighlight = fuzzyWordsToHighlight[n];
+                  if (isToHighlight) {
+                    fullWordsToHighlight[n] = true;
+                  }
+                }
+              }
+            }
+            return html = highlightItem(item, fullWordsToHighlight);
+          }
+        }
+      });
+      $('.twitter-typeahead').bind('typeahead:select', function(ev, suggestion) {
+        var intent, query;
+        console.log('Selection: ', suggestion, ev);
+        if (suggestion && suggestion.indexOf('QwantWeb-') >= 0) {
+          suggestion = suggestion.replace("QwantWeb-", "");
+          typeah.typeahead('val', '');
+          query = encodeURIComponent(suggestion);
+          intent = {
+            action: 'goto',
+            params: "qwant/search/web/" + query
+          };
+          return window.postMessage(intent, window.location.origin);
+        } else if (suggestion && suggestion.indexOf('QwantImages-') >= 0) {
+          suggestion = suggestion.replace("QwantImages-", "");
+          typeah.typeahead('val', '');
+          query = encodeURIComponent(suggestion);
+          intent = {
+            action: 'goto',
+            params: "qwant/search/images/" + query
+          };
+          return window.postMessage(intent, window.location.origin);
+        } else {
+          window.app.routers.main.navigate("apps/files/folders/be2639a48e5ee0775d5b34bebf2e6b60", true);
+          return typeah.typeahead('val', '');
+        }
+      });
+      $('.twitter-typeahead').bind('typeahead:cursorchange', function(ev, suggestion) {
+        if (suggestion && suggestion.indexOf('QwantWeb-') >= 0) {
+          suggestion = suggestion.replace("QwantWeb-", "");
+          typeah.typeahead('val', suggestion);
+        }
+        if (suggestion && suggestion.indexOf('QwantImages-') >= 0) {
+          suggestion = suggestion.replace("QwantImages-", "");
+          return typeah.typeahead('val', suggestion);
+        }
+      });
+    } else if (this.BEN_DEMO) {
+      substringMatcher = function(items) {
+        return function(query, cb) {
+          var item, itemMatched, matches, queryWords, reg, regExp, regExpList, word, _i, _j, _k, _len, _len1, _len2;
+          matches = [];
+          queryWords = query.toLowerCase().trim().split(' ');
+          regExpList = [];
+          for (_i = 0, _len = queryWords.length; _i < _len; _i++) {
+            word = queryWords[_i];
+            if (!(reg = _this.regExpHistory[word])) {
+              reg = new RegExp(word.split('').join('.*?'), 'g');
+              _this.regExpHistory[word] = reg;
+            }
+            regExpList.push(reg);
+          }
+          for (_j = 0, _len1 = items.length; _j < _len1; _j++) {
+            item = items[_j];
+            itemMatched = true;
+            for (_k = 0, _len2 = regExpList.length; _k < _len2; _k++) {
+              regExp = regExpList[_k];
+              if (!regExp.test(item.toLowerCase())) {
+                itemMatched = false;
+                break;
+              }
+              regExp.lastIndex = 0;
+            }
+            if (itemMatched) {
+              matches.push(item);
+            }
+          }
+          return cb(matches);
+        };
+      };
+      states = ["/Administratif", "/Administratif/Bank statements", "/Administratif/Bank statements/Bank Of America", "/Administratif/Bank statements/Deutsche Bank", "/Administratif/Bank statements/Société Générale", "/Administratif/CPAM", "/Administratif/EDF", "/Administratif/EDF/Contrat", "/Administratif/EDF/Factures", "/Administratif/Emploi", "/Administratif/Impôts", "/Administratif/Logement", "/Administratif/Logement/Loyer 158 rue de Verdun", "/Administratif/Orange", "/Administratif/Pièces identité", "/Administratif/Pièces identité/Carte identité", "/Administratif/Pièces identité/Passeport", "/Administratif/Pièces identité/Permis de conduire", "/Appareils photo", "/Boulot", "/Cours ISEN", "/Cours ISEN/CIR", "/Cours ISEN/CIR/LINUX", "/Cours ISEN/CIR/MICROCONTROLEUR", "/Cours ISEN/CIR/RESEAUX", "/Cours ISEN/CIR/TRAITEMENT_SIGNAL", "/Divers photo", "/Divers photo/wallpapers", "/Films", "/Notes", "/Notes/Communication", "/Notes/Notes techniques", "/Notes/Recrutement", "/Projet appartement à Lyon", "/Vacances Périgord"];
+      trackCharsToHighlight = function(item, charsToHighlight, startIndex, word) {
+        var char, charIndex, nChars, wordIndex;
+        charsToHighlight[startIndex] = true;
+        nChars = item.length;
+        charIndex = startIndex;
+        wordIndex = 1;
+        while (charIndex < nChars) {
+          char = item[charIndex];
+          if (char === word[wordIndex]) {
+            charsToHighlight[charIndex] = true;
+            if (++wordIndex >= word.length) {
+              return;
+            }
+          }
+          charIndex++;
+        }
+      };
+      highlightItem = function(item, charsToHighlight) {
+        var isToHighlight, n, previousWasToHighlight, res, _i, _len;
+        res = '<p>';
+        previousWasToHighlight = void 0;
+        for (n = _i = 0, _len = charsToHighlight.length; _i < _len; n = ++_i) {
+          isToHighlight = charsToHighlight[n];
+          if (isToHighlight === previousWasToHighlight) {
+            res += item[n];
+          } else {
+            if (previousWasToHighlight) {
+              res += '</strong>' + item[n];
+            } else {
+              res += '<strong class="tt-highlight">' + item[n];
+            }
+          }
+          previousWasToHighlight = isToHighlight;
+        }
+        if (previousWasToHighlight) {
+          return res += '</strong></p>';
+        } else {
+          return res += '</p>';
+        }
+      };
+      typeah = $('#search-bar');
+      typeah.typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1,
+        limit: 8
+      }, {
+        name: 'states',
+        source: substringMatcher(states),
+        templates: {
+          suggestion: function(item) {
+            var fullWordMatch_N, fullWordsToHighlight, fuzzyWordsToHighlight, html, isToHighlight, itemLC, match, n, queryWords, word, wordRegexp, _i, _j, _len, _len1;
+            queryWords = typeah.typeahead('val').toLowerCase().trim().split(' ');
+            itemLC = item.toLowerCase();
+            fullWordsToHighlight = Array(item.length);
+            for (_i = 0, _len = queryWords.length; _i < _len; _i++) {
+              word = queryWords[_i];
+              wordRegexp = _this.regExpHistory[word];
+              wordRegexp.lastIndex = 0;
+              fullWordMatch_N = 0;
+              fuzzyWordsToHighlight = Array(item.length);
+              while (match = wordRegexp.exec(itemLC)) {
+                if (match[0].length === word.length) {
+                  fullWordMatch_N++;
+                  trackCharsToHighlight(itemLC, fullWordsToHighlight, match.index, word);
+                } else if (fullWordMatch_N === 0) {
+                  trackCharsToHighlight(itemLC, fuzzyWordsToHighlight, match.index, word);
+                }
+              }
+              if (fullWordMatch_N === 0) {
+                for (n = _j = 0, _len1 = fuzzyWordsToHighlight.length; _j < _len1; n = ++_j) {
+                  isToHighlight = fuzzyWordsToHighlight[n];
+                  if (isToHighlight) {
+                    fullWordsToHighlight[n] = true;
+                  }
+                }
+              }
+            }
+            return html = highlightItem(item, fullWordsToHighlight);
+          }
+        }
+      });
+      $('.twitter-typeahead').bind('typeahead:select', function(ev, suggestion) {
+        console.log('Selection: ', suggestion, ev);
+        window.app.routers.main.navigate("apps/files/folders/be2639a48e5ee0775d5b34bebf2e6b60", true);
+        return typeah.typeahead('val', '');
+      });
+    } else if (this.qwantEnable) {
+      this.events = {
+        "keyup #search-bar": "handleSubmit",
+        'click #search-bar': "onSearchClick"
+      };
+    }
+    SearchBarView.__super__.constructor.apply(this, arguments);
+  }
+
+  SearchBarView.prototype.appendView = function(view) {};
+
+  return SearchBarView;
 
 })(BaseView);
 });
@@ -13859,8 +14445,7 @@ module.exports = UpdateStackModal = (function(_super) {
   UpdateStackModal.prototype.initialize = function(options) {
     UpdateStackModal.__super__.initialize.apply(this, arguments);
     this.confirmCallback = options.confirm;
-    this.cancelCallback = options.cancel;
-    return this.endCallback = options.end;
+    return this.cancelCallback = options.cancel;
   };
 
   UpdateStackModal.prototype.afterRender = function() {
@@ -13902,22 +14487,22 @@ module.exports = UpdateStackModal = (function(_super) {
     return $('#home-content').removeClass('md-open');
   };
 
-  UpdateStackModal.prototype.onSuccess = function(permissionChanges) {
+  UpdateStackModal.prototype.displaySuccessChanges = function(changes) {
     this.$('.step2').hide();
     this.$('.success').show();
-    this.showPermissionsChanged(permissionChanges);
-    this.$('#ok').show();
-    return this.$('#confirmbtn').hide();
-  };
-
-  UpdateStackModal.prototype.onError = function(err, permissionChanges) {
-    var app, html, infos, _ref1;
-    this.blocked = false;
-    this.$('.step2').hide();
-    this.$('.error').show();
     this.$('#ok').show();
     this.$('#confirmbtn').hide();
-    this.showPermissionsChanged(permissionChanges);
+    return this.showPermissionsChanged(changes);
+  };
+
+  UpdateStackModal.prototype.onSuccess = function(changes) {
+    return this.displaySuccessChanges(changes);
+  };
+
+  UpdateStackModal.prototype.onError = function(err, changes) {
+    var app, html, infos, _ref1;
+    this.blocked = false;
+    this.displaySuccessChanges(changes);
     if ((((_ref1 = err.data) != null ? _ref1.message : void 0) != null) && typeof err.data.message === 'object') {
       infos = err.data.message;
       if (Object.keys(infos).length > 0) {
@@ -13927,19 +14512,18 @@ module.exports = UpdateStackModal = (function(_super) {
           html += "<li class='app-broken'>" + app + "</li>";
         }
         html += "</ul>";
-        this.body.append(html);
+        return this.body.append(html);
       }
     } else {
-      this.$('.apps-error').hide();
+      return this.$('.apps-error').hide();
     }
-    return this.endCallback(false);
   };
 
-  UpdateStackModal.prototype.showPermissionsChanged = function(permissionChanges) {
+  UpdateStackModal.prototype.showPermissionsChanged = function(changes) {
     var app, html;
-    if ((permissionChanges != null) && Object.keys(permissionChanges).length > 0) {
+    if ((changes != null) && Object.keys(changes).length > 0) {
       html = "<ul>";
-      for (app in permissionChanges) {
+      for (app in changes) {
         html += "<li class='app-changed'>" + app + "</li>";
       }
       html += "</ul>";
@@ -13950,7 +14534,7 @@ module.exports = UpdateStackModal = (function(_super) {
 
   UpdateStackModal.prototype.onClose = function() {
     this.hide();
-    return this.endCallback(true);
+    return this.cancelCallback();
   };
 
   UpdateStackModal.prototype.onCancelClicked = function() {
