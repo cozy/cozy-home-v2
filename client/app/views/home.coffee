@@ -50,7 +50,13 @@ module.exports = class ApplicationsListView extends ViewCollection
         sectionName = view.model.getSection()
         section = @$ "section#apps-#{sectionName}"
         section_apps= @$ "section#apps-#{sectionName} .application-container"
-        section_apps.append view.$el
+        if view.id is "app-btn-konnectors"
+            # my Apps is the second app in the plateform apps list
+            myApps_app =
+                @$ "#apps-platform .application-container div:nth-child(2)"
+            myApps_app.after(view.$el)
+        else
+            section_apps.append view.$el
         section.addClass 'show'
         section.show()
 
@@ -61,4 +67,3 @@ module.exports = class ApplicationsListView extends ViewCollection
         section = @$ "section#apps-#{sectionName}"
         if section.find('.application-container').children().length is 1
             section.hide()
-
