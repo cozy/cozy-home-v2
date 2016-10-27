@@ -12,6 +12,7 @@ ApplicationsListView   = require 'views/home'
 SocketListener         = require 'lib/socket_listener'
 User                   = require 'models/user'
 IntentManager          = require 'lib/intent_manager'
+UseTracker             = require 'lib/usetracker'
 
 client                 = require 'helpers/client'
 
@@ -39,6 +40,8 @@ module.exports = class HomeView extends BaseView
         SocketListener.watch @apps
         SocketListener.watch @notifications
         SocketListener.watch @devices
+        @useTracker = new UseTracker()
+
         super
 
 
@@ -113,6 +116,7 @@ module.exports = class HomeView extends BaseView
 
             window.document.title = "Cozy - #{title}"
             $('#current-application').html title
+            @useTracker.setApp title
 
             if view is @applicationListView
                 @backButton.hide()
@@ -256,6 +260,7 @@ module.exports = class HomeView extends BaseView
 
                 @$("#app-btn-#{slug} .spinner").hide()
                 @$("#app-btn-#{slug} .icon").show()
+                @useTracker.setApp slug
 
             unless frame.length
                 @createApplicationIframe slug, hash, id: iframeID

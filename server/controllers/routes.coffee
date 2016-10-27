@@ -12,6 +12,7 @@ photo             = require './photo'
 logs              = require './logs'
 backgrounds       = require './backgrounds'
 help              = require './help'
+usetrackers       = require './usetrackers'
 
 
 module.exports =
@@ -126,3 +127,5 @@ module.exports =
     'photos/thumbs/:photoid.jpg' : get : photo.thumb
     'photos/raws/:photoid.jpg'   :
         get : photo.raw
+
+    'usetrackers': post: usetrackers.heartbeat
