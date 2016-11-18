@@ -264,6 +264,7 @@
   "tiddlywiki description": "A non-linear personal web notebook.",
   "hari description": "Encrypted personal diary.",
   "map description": "Open Street Map in your Cozy",
+  "moi description": "A new experience to visualize your data",
   "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
