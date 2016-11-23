@@ -35,5 +35,8 @@
     "reminder title email": "Rappel",
     "reminder title email expanded": "Rappel : %{description} - %{date} (%{calendar})",
     "reminder message expanded": "Rappel : %{description}\nDébut : %{start} (%{timezone})\nFin : %{end} (%{timezone})\nEmplacement : %{place}\nDétails : %{details}",
-    "reminder message": "Rappel : %{message}"
+    "reminder message": "Rappel : %{message}",
+    "sharing create request notification": "%{sharerName} veut partager %{article} %{docType}",
+    "sharing update notification": "%{article} %{docType} partagé avec vous a été modifié par %{sharerName}",
+    "sharing delete notification": "%{article} %{docType} partagé avec vous a été supprimé par %{sharerName}"
 }
