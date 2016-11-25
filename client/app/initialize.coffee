@@ -30,6 +30,8 @@ window.onerror = (msg, url, line, col, error) ->
 # start application when DOM is ready (scripts execution is defered)
 document.addEventListener 'DOMContentLoaded', ->
     try
+        @mesinfosUseTracker = window.cozy_user.mesinfosUseTracker
+
         @instance = window.cozy_instance or {}
         @locale = @instance?.locale or 'en'
 

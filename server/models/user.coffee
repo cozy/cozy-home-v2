@@ -11,6 +11,7 @@ module.exports = User = cozydb.getModel 'User',
     encryptedOtpKey: String
     hotpCounter: Number
     encryptedRecoveryCodes: String
+    mesinfosUseTracker: {type: Boolean, default: false}
 
 
 # Request methods
