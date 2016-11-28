@@ -448,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var SocketListener, data, defaultLocales, e, err, exception, locales, xhr, _ref,
     _this = this;
   try {
+    this.mesinfosUseTracker = window.cozy_user.mesinfosUseTracker;
     this.instance = window.cozy_instance || {};
     this.locale = ((_ref = this.instance) != null ? _ref.locale : void 0) || 'en';
     defaultLocales = require('locales/en');
@@ -802,6 +803,38 @@ SocketListener = (function(_super) {
 module.exports = new SocketListener();
 });
 
+;require.register("lib/usetracker", function(exports, require, module) {
+var INTERVAL, UseTracker,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+INTERVAL = 1 * 1000;
+
+module.exports = UseTracker = (function() {
+  function UseTracker() {
+    this._heartbeat = __bind(this._heartbeat, this);
+    if (app.mesinfosUseTracker) {
+      setInterval(this._heartbeat, INTERVAL);
+    }
+  }
+
+  UseTracker.prototype.setApp = function(appName) {
+    return this.appName = appName;
+  };
+
+  UseTracker.prototype._heartbeat = function() {
+    if (document.hasFocus()) {
+      return $.post('usetrackers', {
+        timestamp: new Date().toISOString(),
+        appName: this.appName
+      }, 'json');
+    }
+  };
+
+  return UseTracker;
+
+})();
+});
+
 ;require.register("lib/view_collection", function(exports, require, module) {
 var BaseView, ViewCollection, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1035,6 +1068,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portugisisk",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "nuværende adgangskode",
     "new password": "ny adgangskode",
@@ -1173,6 +1207,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -1343,6 +1378,7 @@ module.exports = {
     "japanese": "Japanisch",
     "portuguese": "Portugisisch",
     "russian": "Russisch",
+    "dutch": "Dutch",
     "change password procedure": "Schritte um Ihr Passwort zu ändern",
     "current password": "Aktuelles Passwort",
     "new password": "Neues Passwort",
@@ -1481,6 +1517,7 @@ module.exports = {
     "hari description": "Verschlüsseltes Tagebuch",
     "map description": "Open Street Map in deinem Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "Diese App is eine aus der Gemeinschaft und wird nicht durch das Cozy Team betreut.\nUm einen Fehler zu melden, beschreiben Sie bitte das Problem in <a href='https://forum.cozy.io'>unserem Forum</a>.",
     "update available notification": "Eine neue Version von %{appName} ist verfügbar.",
     "stack update available notification": "Eine neue Version der Plattform ist verfügbar.",
@@ -1791,6 +1828,7 @@ module.exports = {
   "hari description": "Encrypted personal diary.",
   "map description": "Open Street Map in your Cozy",
   "moi description": "A new experience to visualize your data",
+  "mes-infos-maif description": "A Maif application to visualize your Maif data.",
   "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
   "update available notification": "A new version of %{appName} is available.",
   "stack update available notification": "A new version of the platform is available.",
@@ -1964,6 +2002,7 @@ module.exports = {
     "japanese": "Japana lingvo",
     "portuguese": "Portuguese",
     "russian": "Rusa lingvo",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -2102,6 +2141,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -2272,6 +2312,7 @@ module.exports = {
     "japanese": "Japonés",
     "portuguese": "Portugués",
     "russian": "Ruso",
+    "dutch": "Neerlandés",
     "change password procedure": "Pasos a seguir para cambiar la contraseña",
     "current password": "contraseña actual",
     "new password": "nueva contraseña",
@@ -2410,6 +2451,7 @@ module.exports = {
     "hari description": "Diario personal cifrado.",
     "map description": "Open Street Map en su Cozy",
     "moi description": "Una nueva vivencia al visualizar sus datos",
+    "mes-infos-maif description": "Una aplicación Maif para visualizar sus datos Maif.",
     "warning unofficial app": "Esta aplicación es una aplicación comunitaria y no la mantiene el equipo Cozy.\nPara señalar un problema, le rogamos llevarlo a <a href='https://forum.cozy.io'>nuestro foro</a>.",
     "update available notification": "Una nueva versión de %{appName} está disponible.",
     "stack update available notification": "Una nueva versión de la Plataforma está disponible.",
@@ -2580,6 +2622,7 @@ module.exports = {
     "japanese": "Japonais",
     "portuguese": "Portugais",
     "russian": "Russe",
+    "dutch": "Hollandais",
     "change password procedure": "Procédure de changement de mot de passe",
     "current password": "Mot de passe actuel",
     "new password": "Nouveau mot de passe",
@@ -2718,6 +2761,7 @@ module.exports = {
     "hari description": "Journal chiffré virtuel.",
     "map description": "Open Street Map dans votre Cozy",
     "moi description": "Une nouvelle expérience pour visualiser ses données",
+    "mes-infos-maif description": "Une application Maif pour visualiser vos données Maif.",
     "warning unofficial app": "Cette application est une application communautaire et n'est pas maintenue par l'équipe Cozy.\nPour signaler un problème, merci de le rapporter sur <a href='https://forum.cozy.io'>notre forum</a>.",
     "update available notification": "Une nouvelle version de %{appName} est disponible.",
     "stack update available notification": "Une nouvelle version de la plateforme est disponible.",
@@ -2888,6 +2932,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portuguese",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -3026,6 +3071,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -3196,6 +3242,7 @@ module.exports = {
     "japanese": "Giapponese",
     "portuguese": "Portuguese",
     "russian": "Russo",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -3334,6 +3381,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Apri Street map nel tuo Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -3504,6 +3552,7 @@ module.exports = {
     "japanese": "日本語",
     "portuguese": "ポルトガル語",
     "russian": "ロシア語",
+    "dutch": "オランダ語",
     "change password procedure": "パスワードを変更するステップ",
     "current password": "現在のパスワード",
     "new password": "新しいパスワード",
@@ -3642,6 +3691,7 @@ module.exports = {
     "hari description": "暗号化された個人用日記。",
     "map description": "Cozy で Open Street Map",
     "moi description": "データをビジュアライズする新しい体験",
+    "mes-infos-maif description": "Maif データを視覚化するための Maif アプリケーション。",
     "warning unofficial app": "このアプリは、コミュニティのアプリで、Cozy チームは管理していません。\nバグを報告するには、<a href='https://forum.cozy.io'>私たちのフォーラム</a> に問題を提出してください。",
     "update available notification": "新しいバージョンの %{appName} が利用できます。",
     "stack update available notification": "新しいバージョンのプラットフォームが利用できます。",
@@ -3812,6 +3862,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "포르투칼어",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "비밀번호를 변경 단계",
     "current password": "현재 비밀번호",
     "new password": "새로운 비밀번호",
@@ -3950,6 +4001,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "이 앱은 커뮤니티 앱이며, Cozy팀에서 지원하지 않습니다.\n버그 리포트는  <a href='https://forum.cozy.io'>포럼 게시판</a>을 이용하세요.",
     "update available notification": "%{appName}의 새로운 버전이 나왔습니다.",
     "stack update available notification": "새 버전의 플랫폼이 사용 가능 합니다.",
@@ -4120,6 +4172,7 @@ module.exports = {
     "japanese": "Japans",
     "portuguese": "Portugees",
     "russian": "Russisch",
+    "dutch": "Nederlands",
     "change password procedure": "Stappen om jouw wachtwoord te veranderen",
     "current password": "huidig wachtwoord",
     "new password": "nieuw wachtwoord",
@@ -4257,7 +4310,8 @@ module.exports = {
     "tiddlywiki description": "Een niet lineair persoonlijk web schrijfblok.",
     "hari description": "Versleutelt persoonlijk dagboek.",
     "map description": "Open Street Map in jouw Cozy.",
-    "moi description": "A new experience to visualize your data",
+    "moi description": "Een nieuwe ervaring om jouw gegevens te visualiseren",
+    "mes-infos-maif description": "Een Maif toepassing om jouw Maif gegevens te visualiseren",
     "warning unofficial app": "Dit is een gemeenschaps app en wordt niet onderhouden door het Cozy team.\nOm een fout te melden, leg een probleem in in <a href='https://forum.cozy.io'>ons forum</a>.",
     "update available notification": "Er is een nieuwe versie van %{appName} beschikbaar.",
     "stack update available notification": "Er is een nieuwe versie van het platform beschikbaar.",
@@ -4428,6 +4482,7 @@ module.exports = {
     "japanese": "japoński",
     "portuguese": "Portugalski",
     "russian": "Rosyjski",
+    "dutch": "Dutch",
     "change password procedure": "Etapy zmiany hasła",
     "current password": "aktualne hasło",
     "new password": "nowe hasło",
@@ -4566,6 +4621,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -4736,6 +4792,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Português",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Mudar procedimento de password",
     "current password": "password actual",
     "new password": "password nova",
@@ -4874,6 +4931,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a communautary app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -5044,6 +5102,7 @@ module.exports = {
     "japanese": "Japonés",
     "portuguese": "Português",
     "russian": "Russo",
+    "dutch": "Dutch",
     "change password procedure": "Passos para alterar sua senha",
     "current password": "senha atual",
     "new password": "nova senha",
@@ -5182,6 +5241,7 @@ module.exports = {
     "hari description": "Diário pessoal cifrado.",
     "map description": "Open Street Map no seu Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "Esse aplicativo é um aplicativo da comunidade e a manutenção dele não é feito pela equipe Cozy.\nPara reportar um erro, abre por favor uma discussão no <a href='https://forum.cozy.io'>nosso forum</a>.",
     "update available notification": "Uma nova versão de %{appName} é disponível.",
     "stack update available notification": "Uma nova versão da plataforma é disponível.",
@@ -5352,6 +5412,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portugheză",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Pași pentru a-ți schimba parola",
     "current password": "parola curentă",
     "new password": "noua parolă",
@@ -5490,6 +5551,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "Această aplicație este făcută de comunitate si nu este actualizată de echipa Cozy.\nPentru a raporta un bug, te rog completeaza pe <a href='https://forum.cozy.io'>forumul nostru</a>.",
     "update available notification": "Este disponibilă o versiune nouă a aplicației %{appName}.",
     "stack update available notification": "Este disponibilă o versiune nouă a platformei.",
@@ -5660,6 +5722,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portuguese",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -5798,6 +5861,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -5968,6 +6032,7 @@ module.exports = {
     "japanese": "Японский",
     "portuguese": "Португальский",
     "russian": "Русский",
+    "dutch": "Голландский",
     "change password procedure": "Этап изменения пароля",
     "current password": "Текущий пароль",
     "new password": "Новый пароль",
@@ -6105,7 +6170,8 @@ module.exports = {
     "tiddlywiki description": "Персональный нелинейный веб блокнот.",
     "hari description": "Зашифрованный личный дневник",
     "map description": "Открыть Street Map в вашем Cozy",
-    "moi description": "A new experience to visualize your data",
+    "moi description": "Новый опыт в отображении ваших данных",
+    "mes-infos-maif description": "Приложение Маиф, чтобы визуализировать ваши данные Маиф.",
     "warning unofficial app": "Это приложение разработано сообществом и не поддержвиется командой разработчиком Cozy.\nЧтобы сообщить о проблеме, задайте вопрос на  <a href='https://forum.cozy.io'>нашем форуме</a>.",
     "update available notification": "Доступна новая версия %{appName}.",
     "stack update available notification": "Доступна новая версия платформы.",
@@ -6276,6 +6342,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portuguese",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -6414,6 +6481,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -6584,6 +6652,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portuguese",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -6722,6 +6791,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -6892,6 +6962,7 @@ module.exports = {
     "japanese": "Japonca",
     "portuguese": "Portekizce",
     "russian": "Rusça",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "geçerli şifre",
     "new password": "yeni şifre",
@@ -7030,6 +7101,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -7200,6 +7272,7 @@ module.exports = {
     "japanese": "Japanese",
     "portuguese": "Portuguese",
     "russian": "Russian",
+    "dutch": "Dutch",
     "change password procedure": "Steps to change your password",
     "current password": "current password",
     "new password": "new password",
@@ -7338,6 +7411,7 @@ module.exports = {
     "hari description": "Encrypted personal diary.",
     "map description": "Open Street Map in your Cozy",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "This app is a community app and isn't maintained by the Cozy team.\nTo report a bug, please file an issue in <a href='https://forum.cozy.io'>our forum</a>.",
     "update available notification": "A new version of %{appName} is available.",
     "stack update available notification": "A new version of the platform is available.",
@@ -7508,6 +7582,7 @@ module.exports = {
     "japanese": "日语",
     "portuguese": "葡萄牙语",
     "russian": "俄罗斯语",
+    "dutch": "Dutch",
     "change password procedure": "更改密码的步骤",
     "current password": "当前密码",
     "new password": "新密码",
@@ -7646,6 +7721,7 @@ module.exports = {
     "hari description": "加密的个人日记.",
     "map description": "在 Cozy 中打开街景.",
     "moi description": "A new experience to visualize your data",
+    "mes-infos-maif description": "A Maif application to visualize your Maif data.",
     "warning unofficial app": "这是一个不由 Cozy 团队维护的社区应用.\n请在 <a href='https://forum.cozy.io'>我们的论坛</a>反馈.",
     "update available notification": "%{appName} 的新版本可用.",
     "stack update available notification": "平台的新版本可用.",
@@ -12871,7 +12947,7 @@ module.exports = LongList = (function() {
 });
 
 ;require.register("views/main", function(exports, require, module) {
-var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, User, appIframeTemplate, client,
+var AccountView, AppCollection, ApplicationsListView, BaseView, ConfigApplicationsView, DeviceCollection, HomeView, IntentManager, MarketView, NavbarView, NotificationCollection, SocketListener, StackAppCollection, UseTracker, User, appIframeTemplate, client,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12903,6 +12979,8 @@ SocketListener = require('lib/socket_listener');
 User = require('models/user');
 
 IntentManager = require('lib/intent_manager');
+
+UseTracker = require('lib/usetracker');
 
 client = require('helpers/client');
 
@@ -12940,6 +13018,7 @@ module.exports = HomeView = (function(_super) {
     SocketListener.watch(this.apps);
     SocketListener.watch(this.notifications);
     SocketListener.watch(this.devices);
+    this.useTracker = new UseTracker();
     HomeView.__super__.constructor.apply(this, arguments);
   }
 
@@ -13016,6 +13095,7 @@ module.exports = HomeView = (function(_super) {
       }
       window.document.title = "Cozy - " + title;
       $('#current-application').html(title);
+      this.useTracker.setApp(title);
       if (view === this.applicationListView) {
         this.backButton.hide();
       } else {
@@ -13137,7 +13217,8 @@ module.exports = HomeView = (function(_super) {
         window.document.title = "Cozy - " + name;
         $("#current-application").html(name);
         _this.$("#app-btn-" + slug + " .spinner").hide();
-        return _this.$("#app-btn-" + slug + " .icon").show();
+        _this.$("#app-btn-" + slug + " .icon").show();
+        return _this.useTracker.setApp(slug);
       };
       if (!frame.length) {
         this.createApplicationIframe(slug, hash, {
