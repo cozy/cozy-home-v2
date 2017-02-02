@@ -119,6 +119,9 @@ module.exports = class ConfigApplicationsView extends BaseView
                 @displayDiskSpace diskUsed, diskTotal
 
     toGigabytes: (value, unit) ->
+        # Depending on the locale on server side, value may use '.' or ','
+        # as decimal separator
+        value = value.replace ',', '.'
         switch unit
             when 'T' then value * 1000;
             when 'G' then value;
