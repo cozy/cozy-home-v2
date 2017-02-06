@@ -160,7 +160,7 @@
   "update stack modal content": "You are about to update the platform. Your Cozy will be unavailable a few minutes. Is that OK?",
   "update stack modal confirm": "Update",
   "update stack success": "Your applications are updated. To finalize the update, it requires that you click on the OK button. It will refresh the current window.",
-  "update stack error": "An error occurred during the update. Your Cozy may become unstable. If you notice any troubles, you should contact your hosting provider. When you will click on the OK button, the current window will be refreshed.",
+  "update stack error": "An error occurred during the update. Your Cozy may become unstable. If you notice any trouble, you should contact your hosting provider. Click the OK button to refresh the current window.",
   "applications broken": "Applications broken",
   "cozy platform": "Platform",
   "navbar back button title": "Back Home",
